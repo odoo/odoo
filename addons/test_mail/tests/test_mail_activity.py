@@ -145,7 +145,8 @@ class TestActivityFlow(TestActivityCommon):
         self.user_employee.notification_type = 'email'
         activity = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
         with self.assertNoNotifications():
-            activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
+            with self.assertRaises(exceptions.UserError):
+                activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
 

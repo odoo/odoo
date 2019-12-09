@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 import logging
 import pytz
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
 
 from odoo.tools.misc import clean_context
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -342,7 +342,14 @@ class MailActivity(models.Model):
                 {'type': 'activity_updated', 'activity_created': True})
         return activity
 
+    def check_rights(self, msg):
+        if self.env.user.id != SUPERUSER_ID:
+            records = self.filtered(lambda record: self.env.user.id not in [record.create_uid.id, record.user_id.id])
+            if records:
+                raise exceptions.UserError(_("you can't %s activitie." % (msg)))
+
     def write(self, values):
+        self.check_rights("edit")
         if values.get('user_id'):
             user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
             pre_responsibles = user_changes.mapped('user_id.partner_id')
@@ -369,6 +376,7 @@ class MailActivity(models.Model):
         return res
 
     def unlink(self):
+        self.check_rights("delete")
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
                 self.env['bus.bus'].sendone(
@@ -487,7 +495,7 @@ class MailActivity(models.Model):
             messages |= record.message_ids[0]
 
         next_activities = self.env['mail.activity'].create(next_activities_values)
-        self.unlink()  # will unlink activity, dont access `self` after that
+        self.with_user(SUPERUSER_ID).unlink()  # will unlink activity, dont access `self` after that
 
         return messages, next_activities
 

@@ -125,7 +125,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_employee.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_employee.id).action_draft()
 
     def test_base_user_draft_other_employee_leave(self):
         """
@@ -173,7 +174,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_employee.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_employee.id).action_draft()
 
     def test_base_user_draft_refused_leave(self):
         """
@@ -216,7 +218,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_hruser.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hruser.id).action_draft()
 
     def test_holiday_user_draft_other_employee_leave(self):
         """
@@ -264,7 +267,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_hruser.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hruser.id).action_draft()
 
     def test_holiday_user_draft_refused_leave(self):
         """
@@ -306,7 +310,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_hrmanager.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hrmanager.id).action_draft()
 
     def test_holiday_manager_draft_other_employee_leave(self):
         """
@@ -319,7 +324,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_hrmanager.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hrmanager.id).action_draft()
 
     def test_holiday_manager_draft_other_employee_leave_and_is_leave_manager_id(self):
         """
@@ -333,7 +339,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_hrmanager.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hrmanager.id).action_draft()
 
     def test_holiday_manager_draft_self_and_is_manager_id(self):
         """
@@ -347,7 +354,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
-            leave.with_user(self.user_hrmanager.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hrmanager.id).action_draft()
 
     def test_holiday_manager_draft_refused_leave(self):
         """
@@ -374,7 +382,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=-20 + i), 1, values)
-            leave.with_user(self.user_hrmanager.id).action_draft()
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hrmanager.id).action_draft()
 
 @tests.tagged('access_rights', 'access_rights_create')
 class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):

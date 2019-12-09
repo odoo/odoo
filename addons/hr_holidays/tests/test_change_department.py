@@ -4,6 +4,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from odoo.exceptions import UserError
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -54,7 +55,8 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         self.employee_emp.department_id = self.rd_dept
         hol3_employee_group = create_holiday("hol3", -6, -5)
         hol3_user_group = hol3_employee_group.with_user(self.user_hruser_id)
-        hol3_user_group.action_refuse()
+        with self.assertRaises(UserError):
+            hol3_user_group.action_refuse()
         self.employee_emp.department_id = self.hr_dept # Change department
         self.assertEqual(hol3_employee_group.department_id, self.rd_dept, 'hr_holidays: refused passed leave request should stay in previous department if employee change department')
 
@@ -62,6 +64,7 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         self.employee_emp.department_id = self.rd_dept
         hol32_employee_group = create_holiday("hol32", 5, 6)
         hol32_user_group = hol32_employee_group.with_user(self.user_hruser_id)
-        hol32_user_group.action_refuse()
+        with self.assertRaises(UserError):
+            hol32_user_group.action_refuse()
         self.employee_emp.department_id = self.hr_dept # Change department
         self.assertEqual(hol32_employee_group.department_id, self.hr_dept, 'hr_holidays: refused futur leave request should change department if employee change department')
