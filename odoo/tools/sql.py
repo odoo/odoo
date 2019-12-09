@@ -36,7 +36,13 @@ def table_kind(cr, tablename):
         ``'f'`` (foreign table), ``'t'`` (temporary table),
         ``'m'`` (materialized view), or ``None``.
     """
-    query = "SELECT relkind FROM pg_class WHERE relname = %s"
+    query = """
+        SELECT c.relkind
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname = %s
+           AND n.nspname = 'public'
+    """
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
 
