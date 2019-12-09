@@ -72,7 +72,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     _onBreadcrumbClick: function (event) {
         event.preventDefault();
-        this._submitForm($(event.currentTarget));
+        var $breadcrumbItem = $(event.currentTarget).closest('.breadcrumb-item');
+        this._submitForm($breadcrumbItem);
     },
 
     _onSubmit: function (event) {
@@ -87,7 +88,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if (self.options.isStartScreen) {
             params = {'start': true};
         } else {
-            params = $target.data('previousPageId') ? {'previous_page_id': $target.data('previousPageId')} : {}
+            if ($target.hasClass('breadcrumb-item')) {
+                params = {'previous_page_id': $target.data('pageId')};
+            } else {
+                params = $target.val() === 'previous' ? {'previous_page_id': $target.data('previousPageId')} : {};
+            }
             var $form = this.$('form');
             var formData = new FormData($form[0]);
 
@@ -111,10 +116,35 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             params: params,
         });
         Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
+            var breadcrumbItems = self.$('.breadcrumb-item');
             if (self.options.isStartScreen) {
                 self.options.isStartScreen = false;
                 self._initTimer();
-                self.$('.breadcrumb').toggleClass('d-none', false);
+                if (breadcrumbItems.length > 0) {
+                    self._updateBreadcrumb($(breadcrumbItems[0]));
+                }
+            } else if (breadcrumbItems.length > 0) {
+                // Find the next item to activate
+                var activeBreadcrumbItem = self.$('.breadcrumb-item.active')[0];
+                var nextBreadcrumbItem;
+                var activeFound = false;
+                var goPrevious = 'previous_page_id' in params;
+                breadcrumbItems.each(function () {
+                    var pageId = goPrevious ? params['previous_page_id'] : $(activeBreadcrumbItem).data('pageId');
+                    if (goPrevious || activeFound) {
+                        nextBreadcrumbItem = $(this);
+                        if (!goPrevious) {
+                            return false;
+                        }
+                    }
+                    if ($(this).data('pageId') === pageId) {
+                        activeFound = true;
+                        if (goPrevious) {
+                            return false;
+                        }
+                    }
+                });
+                self._updateBreadcrumb(nextBreadcrumbItem);
             }
             return self._onSubmitDone(results[1]);
         });
@@ -129,6 +159,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 self._initDateTimePicker($(this));
             });
             self.$('.o_survey_form_content').fadeIn(400);
+            $("html, body").animate({ scrollTop: 0 }, "fast");
         }
         else if (result && result.fields && result.error === 'validation') {
             var fieldKeys = _.keys(result.fields);
@@ -297,6 +328,26 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
 
+    _updateBreadcrumb: function ($target) {
+        var $breadcrumb = this.$('.breadcrumb');
+        var activeFound = false;
+        $breadcrumb.find('.breadcrumb-item').each(function () {
+            var span = "<span>"+ $(this).data('pageTitle') +"</span>";
+            if ($target && $(this).data('pageId') === $target.data('pageId')) {
+                $(this).addClass("active");
+                activeFound = true;
+            } else {
+                $(this).removeClass("active");
+            }
+            if (activeFound) {
+                $(this).html(span);
+            } else {
+                $(this).html("<a href='#'>" + span + "</a>");
+            }
+        });
+        $breadcrumb.toggleClass('d-none', $target ? false : true);
+    },
+    
     _initTimer: function () {
         var self = this;
         var $timer = $('.o_survey_timer');
