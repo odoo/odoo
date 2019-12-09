@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--<record id="view_document_type_form" model="ir.ui.view">
-        <field name="name">l10n_latam.document.type.form.edit.enable</field>
-        <field name="model">l10n_latam.document.type</field>
-        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//form" position="attributes">
-                <attribute name="edit">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='code']" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='name']" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='doc_code_prefix']" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='report_name']" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='internal_type']" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='country_id']" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </xpath>
-            <xpath expr="//form/group/field[@name='internal_type']" position="after">
-                <field name="active"/>
-            </xpath>
-        </field>
-    </record>-->
-
     <record id="view_document_type_tree" model="ir.ui.view">
         <field name="name">l10n_latam.document.type.tree.editable</field>
         <field name="model">l10n_latam.document.type</field>
