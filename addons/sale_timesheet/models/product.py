@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
             policy = None
             if product.invoice_policy == 'delivery':
                 policy = 'delivered_manual' if product.service_type == 'manual' else 'delivered_timesheet'
-            elif product.invoice_policy == 'order' and product.service_type == 'timesheet':
+            elif product.invoice_policy == 'order' and (product.service_type == 'timesheet' or product.type == 'service'):
                 policy = 'ordered_timesheet'
             product.service_policy = policy
 
