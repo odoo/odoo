@@ -18,4 +18,8 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ch_isr_scan_line_left", readonly=False)
     l10n_ch_isr_scan_line_top = fields.Float(string='Vertical offset',
         related="company_id.l10n_ch_isr_scan_line_top", readonly=False)
+    l10n_ch_isr_margin_left = fields.Float(string='Horizontal margin',
+        related="company_id.l10n_ch_isr_margin_left", readonly=False)
+    l10n_ch_isr_margin_top = fields.Float(string='Vertical margin',
+        related="company_id.l10n_ch_isr_margin_top", readonly=False)
     l10n_ch_print_qrcode = fields.Boolean("Print Swiss QR Code", config_parameter='l10n_ch.print_qrcode')

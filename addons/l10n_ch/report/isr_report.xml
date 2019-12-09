@@ -38,16 +38,13 @@
         </template>
 
         <template id="l10n_ch_isr_report_template">
-            <t t-call="web.external_layout">
+            <t t-call="l10n_ch.external_layout_l10n_ch_isr">
                 <t t-set="split_total_amount" t-value="invoice.split_total_amount()"/>
                 <t t-set="print_bank" t-value="invoice.company_id.l10n_ch_isr_print_bank_location"/>
 
-                <!-- add class to body tag -->
-                <script>document.body.className += " l10n_ch_isr";</script>
-
                 <!-- since the body content take the whole page we need a way to add margin
                      back on content outside the ISR so it does not overlap with the header -->
-                <div id="content_outside_isr">
+                <div id="content_outside_isr" t-attf-style="padding-left: {{ invoice.company_id.l10n_ch_isr_margin_left }}mm;">
                     <h1>ISR for invoice <t t-esc="invoice.name"/></h1>
                 </div>
 
@@ -60,7 +57,7 @@
                         <!--If we use the alternate ISR layout, displaying name
                         and location of the bank.-->
                         <t t-if="print_bank">
-                            <div id="voucher-for-bank">
+                            <div id="voucher-for-bank" t-attf-style="left: {{ invoice.company_id.l10n_ch_isr_margin_left }}mm;">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
                                     <t t-esc="invoice.invoice_partner_bank_id.bank_id.name"/><br />
                                     <t t-esc="invoice.invoice_partner_bank_id.bank_id.zip"/>
@@ -69,7 +66,7 @@
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->
                         </t>
-                        <div id="voucher-for-contact">
+                        <div id="voucher-for-contact" t-attf-style="left: {{ invoice.company_id.l10n_ch_isr_margin_left }}mm;">
                             <p id="voucher-for_name" t-field="invoice.company_id.display_name"/>
                             <p id="voucher-for_address1" t-field="invoice.company_id.street"/>
                             <p id="voucher-for_address2" t-field="invoice.company_id.street2"/>
@@ -87,7 +84,7 @@
                         <p id="voucher-amount_units" t-esc="split_total_amount[0]"/>
                         <p id="voucher-amount_cents" t-esc="split_total_amount[1]"/>
 
-                        <div id="voucher-by">
+                        <div id="voucher-by" t-attf-style="left: {{ invoice.company_id.l10n_ch_isr_margin_left }}mm;">
                             <!--Einbezahlt von/Versé par/Versato da-->
                             <p id="voucher-by_reference_number" t-field="invoice.l10n_ch_isr_number"/>
                             <address id="voucher-by_customer_address" t-field="invoice.partner_id" t-options='{"widget": "contact", "fields": ["address","name"], "no_marker": True}' />
@@ -149,6 +146,52 @@
                     </div>
                 </div>
             </t>
+        </template>
+
+        <template id="external_layout_l10n_ch_isr">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <t t-esc="company.update_scss()"/>
+
+            <div class="header" t-attf-style="padding-top: {{ invoice.company_id.l10n_ch_isr_margin_top }}mm; padding-left: {{ invoice.company_id.l10n_ch_isr_margin_left }}mm;">
+                <div class="row">
+                    <div class="col-3 mb4">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
+                    </div>
+                    <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+                </div>
+                <div t-if="company.logo or company.report_header" class="row zero_min_height">
+                    <div class="col-12">
+                        <div style="border-bottom: 1px solid black;"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6" name="company_address">
+                        <div t-field="company.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="article o_report_layout_standard l10n_ch_isr"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+            </div>
+
         </template>
 
         <template id="l10n_ch.isr_report_main">
