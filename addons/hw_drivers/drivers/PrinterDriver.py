@@ -93,7 +93,7 @@ class PrinterDriver(Driver):
     @classmethod
     def supported(cls, device):
         protocol = ['dnssd', 'lpd']
-        if any(x in device['url'] for x in protocol) or 'direct' in device['device-class']:
+        if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
             model = cls.get_device_model(device)
             ppdFile = ''
             for ppd in PPDs:
