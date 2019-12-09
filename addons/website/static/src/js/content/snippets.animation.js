@@ -1652,6 +1652,14 @@ registry.chart = publicWidget.Widget.extend({
                 }],
             };
         }
+
+        // Disable animation in edit mode
+        if (this.editableMode) {
+            chartData.options.animation = {
+                duration: 0,
+            };
+        }
+
         const canvas = this.el.querySelector('canvas');
         this.chart = new window.Chart(canvas, chartData);
         return this._super.apply(this, arguments);
