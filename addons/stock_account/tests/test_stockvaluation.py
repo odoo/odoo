@@ -914,7 +914,7 @@ class TestStockValuation(SavepointCase):
 
         self.assertEqual(self.product1.standard_price, 16)
 
-        self.assertEqual(return_pick.move_lines.stock_valuation_layer_ids.unit_cost, 16)
+        self.assertAlmostEqual(return_pick.move_lines.stock_valuation_layer_ids.unit_cost, 11.2)
 
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
