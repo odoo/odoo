@@ -1043,7 +1043,7 @@ class AccountMoveLine(models.Model):
                 part_reconcile = self.env['account.partial.reconcile']
                 for aml_to_balance, total in to_balance.values():
                     if total:
-                        rate_diff_amls, rate_diff_partial_rec = part_reconcile._create_exchange_rate_entry(aml_to_balance, exchange_move)
+                        rate_diff_amls, rate_diff_partial_rec = part_reconcile._create_exchange_rate_entry_fix(aml_to_balance, exchange_move)
                         amls += rate_diff_amls
                         partial_rec_ids += rate_diff_partial_rec.ids
                     else:
@@ -1748,6 +1748,16 @@ class AccountPartialReconcile(models.Model):
             )
 
     @api.model
+    def _prepare_exchange_diff_partial_reconcile_fix(self, aml, line_to_reconcile, currency):
+        return {
+            'debit_move_id': aml.credit and line_to_reconcile.id or aml.id,
+            'credit_move_id': aml.debit and line_to_reconcile.id or aml.id,
+            'amount': abs(aml.amount_residual),
+            'amount_currency': abs(aml.amount_residual_currency),
+            'currency_id': currency and currency.id or False,
+        }
+
+    @api.model
     def _prepare_exchange_diff_partial_reconcile(self, aml, line_to_reconcile, currency):
         """
         Prepares the values for the partial reconciliation between an account.move.line
@@ -1791,7 +1801,7 @@ class AccountPartialReconcile(models.Model):
         }
 
     @api.model
-    def _create_exchange_rate_entry(self, aml_to_fix, move):
+    def _create_exchange_rate_entry_fix(self, aml_to_fix, move):
         """
         Automatically create a journal items to book the exchange rate
         differences that can occur in multi-currencies environment. That
@@ -1837,7 +1847,7 @@ class AccountPartialReconcile(models.Model):
 
             #reconcile all aml_to_fix
             partial_rec |= self.create(
-                self._prepare_exchange_diff_partial_reconcile(
+                self._prepare_exchange_diff_partial_reconcile_fix(
                         aml=aml,
                         line_to_reconcile=line_to_rec,
                         currency=aml.currency_id or False)
