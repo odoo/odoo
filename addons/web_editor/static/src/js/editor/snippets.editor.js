@@ -697,6 +697,7 @@ var SnippetsMenu = Widget.extend({
         'drag_and_drop_stop': '_onDragAndDropStop',
         'go_to_parent': '_onGoToParent',
         'remove_snippet': '_onRemoveSnippet',
+        'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_removed': '_onSnippetRemoved',
         'snippet_cloned': '_onSnippetCloned',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
@@ -735,6 +736,8 @@ var SnippetsMenu = Widget.extend({
         this.snippetEditors = [];
         this._activateSnippetMutex = new concurrency.Mutex();
         this._enabledEditorHierarchy = [];
+
+        this._snippetEditionMutex = new concurrency.Mutex();
 
         this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
     },
@@ -1867,6 +1870,15 @@ var SnippetsMenu = Widget.extend({
         this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
             editor.removeSnippet();
         });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {function} ev.data.exec
+     */
+    _onSnippetEditionRequest: function (ev) {
+        this._snippetEditionMutex.exec(ev.data.exec);
     },
     /**
      * @private
