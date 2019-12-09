@@ -84,7 +84,7 @@ class AccountTaxReport(models.Model):
 
         if 'country_id' in vals:
             tags_cache = {}
-            for record in self:
+            for record in self.filtered(lambda x: x.country_id.id != vals['country_id']):
                 for line in record.line_ids:
                     if line.tag_ids:
                         #The tags for this country may have been created by a previous line in this loop
