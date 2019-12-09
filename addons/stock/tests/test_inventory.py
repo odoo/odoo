@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
 class TestInventory(TransactionCase):
@@ -80,7 +81,7 @@ class TestInventory(TransactionCase):
         self.assertEqual(lot1.product_qty, 1.0)
 
     def test_inventory_3(self):
-        """ Check that it's not posisble to have multiple products with a serial number through an
+        """ Check that it's not possible to have multiple products with a serial number through an
         inventory adjustment
         """
         inventory = self.env['stock.inventory'].create({
@@ -102,7 +103,7 @@ class TestInventory(TransactionCase):
         inventory.line_ids.prod_lot_id = lot1
         inventory.line_ids.product_qty = 2
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError), mute_logger('odoo.addons.stock.models.stock_quant'):
             inventory.action_done()
 
     def test_inventory_4(self):
