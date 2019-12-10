@@ -20,7 +20,6 @@ class Discuss extends Component {
      */
     constructor(...args) {
         super(...args);
-        this.IS_DEV = true;
         this.state = useState({
             /**
              * Determine whether current user is currently adding a channel from
@@ -131,7 +130,7 @@ class Discuss extends Component {
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
 
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.discuss = this;
         }
     }
@@ -587,21 +586,21 @@ class Discuss extends Component {
     }
 }
 
-Discuss.components = {
-    AutocompleteInput,
-    Composer,
-    MobileMailboxSelection,
-    MobileNavbar,
-    Sidebar,
-    Thread,
-    ThreadPreviewList,
-};
-
-Discuss.props = {
-    initActiveThreadLocalId: String,
-};
-
-Discuss.template = 'mail.component.Discuss';
+Object.assign(Discuss, {
+    components: {
+        AutocompleteInput,
+        Composer,
+        MobileMailboxSelection,
+        MobileNavbar,
+        Sidebar,
+        Thread,
+        ThreadPreviewList,
+    },
+    props: {
+        initActiveThreadLocalId: String,
+    },
+    template: 'mail.component.Discuss',
+});
 
 return Discuss;
 

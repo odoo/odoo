@@ -23,11 +23,10 @@ QUnit.module('Discuss', {
             if (this.widget) {
                 this.widget.destroy();
             }
-            let { discuss, env, widget } = await utilsStart(Object.assign({}, params, {
+            let { env, widget } = await utilsStart(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
             }));
-            this.discuss = discuss;
             this.env = env;
             this.widget = widget;
         };
@@ -3068,9 +3067,9 @@ QUnit.test('post a simple message', async function (assert) {
                     "should set message type as 'comment'"
                 );
                 assert.strictEqual(
-                    args.kwargs.subtype,
+                    args.kwargs.subtype_xmlid,
                     "mail.mt_comment",
-                    "should set subtype as 'comment'"
+                    "should set subtype_xmlid as 'comment'"
                 );
                 // simulate receiving a new message
                 const data = {
@@ -3081,7 +3080,7 @@ QUnit.test('post a simple message', async function (assert) {
                     id: 101,
                     message_type: args.kwargs.message_type,
                     model: 'mail.channel',
-                    subtype: args.kwargs.subtype,
+                    subtype_xmlid: args.kwargs.subtype_xmlid,
                     record_name: 'General',
                     res_id: 20,
                 };
@@ -3560,9 +3559,9 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
                     "should set message type as 'comment'"
                 );
                 assert.strictEqual(
-                    args.kwargs.subtype,
+                    args.kwargs.subtype_xmlid,
                     "mail.mt_comment",
-                    "should set subtype as 'comment'"
+                    "should set subtype_xmlid as 'comment'"
                 );
                 messagesData.push({
                     author_id: [3, "Admin"],
@@ -3571,7 +3570,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
                     id: 101,
                     message_type: args.kwargs.message_type,
                     model: args.model,
-                    subtype: args.kwargs.subtype,
+                    subtype_xmlid: args.kwargs.subtype_xmlid,
                     record_name: 'Refactoring',
                     res_id: 20,
                 });

@@ -14,11 +14,10 @@ class DialogManager extends Component {
      */
     constructor(...args) {
         super(...args);
-        this.IS_DEV = true;
         this.storeProps = useStore(state => {
             return Object.assign({}, state.dialogManager);
         });
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.dialog_manager = this;
         }
     }
@@ -47,9 +46,10 @@ class DialogManager extends Component {
     }
 }
 
-DialogManager.components = { Dialog };
-
-DialogManager.template = 'mail.component.DialogManager';
+Object.assign(DialogManager, {
+    components: { Dialog },
+    template: 'mail.component.DialogManager',
+});
 
 return DialogManager;
 

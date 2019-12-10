@@ -2,29 +2,20 @@ odoo.define('mail.service.Dialog', function (require) {
 'use strict';
 
 const DialogManager = require('mail.component.DialogManager');
-const OwlMixin = require('mail.widget.OwlMixin');
+const messagingEnv = require('mail.messagingEnv');
 
 const AbstractService = require('web.AbstractService');
 const { bus, serviceRegistry } = require('web.core');
 
-const DialogService = AbstractService.extend(OwlMixin, {
-    IS_DEV: true,
-    /**
-     * This is set when dialog service is used in a test environment.
-     * Useful to prevent sending and/or receiving events from
-     * core.bus.
-     */
-    IS_TEST: false,
-    TEST_TARGET: 'body',
-    dependencies: ['owl'],
+const DialogService = AbstractService.extend({
+    env: messagingEnv,
     /**
      * @override {web.AbstractService}
      */
     init() {
         this._super(...arguments);
         this._webClientReady = false;
-        DialogManager.env = OwlMixin.getEnv.call(this);
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.dialog_service = this;
         }
     },
@@ -33,7 +24,7 @@ const DialogService = AbstractService.extend(OwlMixin, {
      */
     start() {
         this._super(...arguments);
-        if (!this.IS_TEST) {
+        if (!this.env.isTest) {
             bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
             bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
             bus.on('web_client_ready', this, this._onWebClientReady.bind(this));
@@ -65,10 +56,11 @@ const DialogService = AbstractService.extend(OwlMixin, {
             this.component.destroy();
             this.component = undefined;
         }
+        DialogManager.env = this.env;
         this.component = new DialogManager(null);
         let parentNode;
-        if (this.IS_TEST) {
-            parentNode = document.querySelector(this.TEST_TARGET);
+        if (this.env.isTest) {
+            parentNode = document.querySelector(this.env.TEST_SERVICE_TARGET);
         } else {
             parentNode = document.querySelector('body');
         }

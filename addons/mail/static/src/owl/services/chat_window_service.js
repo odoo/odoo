@@ -2,30 +2,17 @@ odoo.define('mail.service.ChatWindow', function (require) {
 'use strict';
 
 const ChatWindowManager = require('mail.component.ChatWindowManager');
-const OwlMixin = require('mail.widget.OwlMixin');
+const messagingEnv = require('mail.messagingEnv');
 
 const AbstractService = require('web.AbstractService');
 const { bus, serviceRegistry } = require('web.core');
 
-const ChatWindowService = AbstractService.extend(OwlMixin, {
-    /**
-     * If set, chat window service instance is avaible from dev tools with
-     * `chat_window_service`.
-     */
-    IS_DEV: true,
-    /**
-     * This value is set when chat window service is used in a test
-     * environment. Useful to prevent sending and/or receiving events from
-     * core.bus.
-     */
-    IS_TEST: false,
-    TEST_TARGET: 'body',
-    dependencies: ['owl'],
+const ChatWindowService = AbstractService.extend({
+    env: messagingEnv,
     init() {
         this._super(...arguments);
         this._webClientReady = false;
-        ChatWindowManager.env = OwlMixin.getEnv.call(this);
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.chat_windows_service = this;
         }
     },
@@ -34,7 +21,7 @@ const ChatWindowService = AbstractService.extend(OwlMixin, {
      */
     start() {
         this._super(...arguments);
-        if (!this.IS_TEST) {
+        if (!this.env.isTest) {
             bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
             bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
             bus.on('web_client_ready', this, this._onWebClientReady.bind(this));
@@ -66,15 +53,15 @@ const ChatWindowService = AbstractService.extend(OwlMixin, {
      * @private
      */
     async _mount() {
-        await this.getEnv();
         if (this.component) {
             this.component.destroy();
             this.component = undefined;
         }
+        ChatWindowManager.env = this.env;
         this.component = new ChatWindowManager(null);
         let parentNode;
-        if (this.IS_TEST) {
-            parentNode = document.querySelector(this.TEST_TARGET);
+        if (this.env.isTest) {
+            parentNode = document.querySelector(this.env.testServiceTarget);
         } else {
             parentNode = document.querySelector('body');
         }

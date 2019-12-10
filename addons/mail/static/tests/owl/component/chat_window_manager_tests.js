@@ -751,8 +751,7 @@ QUnit.test('open 2 different chat windows: enough screen width', async function 
 QUnit.test('open 3 different chat windows: not enough screen width', async function (assert) {
     /**
      * computation uses following info:
-     * ([mocked] global window width: 900px @see initStoreState param passed
-     *   to `mail.component.test_utils:create()` method)
+     * ([mocked] global window width: 900px)
      * (others: @see store action `_computeChatWindows`)
      *
      * - chat window width: 325px
@@ -786,19 +785,19 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         },
     });
     await this.start({
-        initStoreState: {
-            globalWindow: {
-                innerHeight: 900,
-                innerWidth: 900,
-            },
-            isMobile: false,
-        },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
             }
             return this._super(...arguments);
         },
+    });
+    Object.assign(this.env.store.state, {
+        globalWindow: {
+            innerHeight: 900,
+            innerWidth: 900,
+        },
+        isMobile: false,
     });
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3

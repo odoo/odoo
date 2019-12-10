@@ -1,4 +1,4 @@
-odoo.define('mail.component.EditableText', function () {
+odoo.define('mail.component.EditableText', function (require) {
 'use strict';
 
 const { Component } = owl;

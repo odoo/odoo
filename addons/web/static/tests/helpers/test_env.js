@@ -19,7 +19,8 @@ odoo.define('web.test_env', async function (require) {
             if (
                 target.hasOwnProperty(prop) &&
                 typeof target[prop] === 'object' &&
-                target[prop] !== null
+                target[prop] !== null &&
+                !(target[prop] instanceof Promise)
             ) {
                 target[prop] = _proxify(target[prop], `${name}.${prop}`);
             }

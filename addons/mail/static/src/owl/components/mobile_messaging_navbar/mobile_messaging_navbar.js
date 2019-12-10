@@ -1,4 +1,4 @@
-odoo.define('mail.component.MobileMessagingNavbar', function () {
+odoo.define('mail.component.MobileMessagingNavbar', function (require) {
 'use strict';
 
 const { Component } = owl;

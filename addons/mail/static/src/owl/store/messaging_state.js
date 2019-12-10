@@ -3,12 +3,8 @@ odoo.define('mail.store.state', function (require) {
 
 const config = require('web.config');
 
-/**
- * @param {Object} [alteration] used for tests to partially alter state initially
- * @return {Object}
- */
-function init(alteration) {
-    let state = {
+function initState() {
+    const state = {
         isMessagingReady: false,
         attachments: {},
         cannedResponses: {},
@@ -201,12 +197,9 @@ function init(alteration) {
         threads: {},
         threadCaches: {},
     };
-    if (alteration) {
-        state = Object.assign(state, alteration);
-    }
     return state;
 }
 
-return { init };
+return initState;
 
 });

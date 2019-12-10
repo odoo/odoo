@@ -1,4 +1,4 @@
-odoo.define('mail.component.Attachment', function () {
+odoo.define('mail.component.Attachment', function (require) {
 'use strict';
 
 const { Component } = owl;

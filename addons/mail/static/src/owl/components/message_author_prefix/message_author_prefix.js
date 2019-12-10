@@ -1,4 +1,4 @@
-odoo.define('mail.component.MessageAuthorPrefix', function () {
+odoo.define('mail.component.MessageAuthorPrefix', function (require) {
 'use strict';
 
 const { Component } = owl;
