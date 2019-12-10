@@ -356,10 +356,10 @@ body.editor_enable.editor_has_snippets {
             }
             we-select-menu {
                 @include o-position-absolute(100%, 0, auto, 0);
+                margin-top: -1px;
                 display: none;
                 z-index: $zindex-dropdown;
                 border: 1px solid var(--o-we-color);
-                border-top-style: none;
                 background-color: var(--o-we-bg-color-dark);
             }
         }
@@ -400,9 +400,6 @@ body.editor_enable.editor_has_snippets {
             }
             we-toggler {
                 display: none;
-            }
-            we-select-menu {
-                border-top-style: solid;
             }
         }
 
