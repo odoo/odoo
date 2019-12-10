@@ -20,17 +20,20 @@
                             <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <label for="product_uom_qty"/>
                             <div class="o_row">
-                                <span><field name="product_uom_qty" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" nolabel="1"/></span>
-                                <span><field name="product_uom" readonly="1" force_save="1" nolabel="1"/></span>
+                                <span><field name="product_uom_qty" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', ('parent.state', '!=', 'confirmed'), ('parent.consumption', '=', 'strict')]}" nolabel="1"/></span>
+                                <span>
+                                    <field name="product_uom" attrs="{'readonly': [('id', '!=', False)]}" force_save="1" nolabel="1" groups="uom.group_uom"/>
+                                </span>
                             </div>
-                            <label for="quantity_done" attrs="{'invisible': [('parent.state', '=', 'draft')]}"/>
-                            <div class="o_row" attrs="{'invisible': [('parent.state', '=', 'draft')]}">
+                            <label for="quantity_done" attrs="{'invisible': ['|', ('parent.state', '=', 'draft'), ('id', '=', False)]}"/>
+                            <div class="o_row" attrs="{'invisible': ['|', ('parent.state', '=', 'draft'), ('id', '=', False)]}">
                                 <span><field name="quantity_done" attrs="{'readonly': ['|', '|', ('move_line_ids', '!=', False), ('is_locked', '=', True), '|', ('finished_lots_exist', '=', True), ('has_tracking', '!=', 'none')]}" nolabel="1"/></span>
                                 <span> / </span>
                                 <span><field name="reserved_availability" nolabel="1"/></span>
                             </div>
                             <field name="operation_id" attrs="{'invisible': ['|', ('parent.routing_id', '=', False), ('id', '!=', False)]}"/>
                             <field name="routing_id" invisible="1"/>
+                            <field name="unit_factor" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="is_done" invisible="1"/>
                             <field name="workorder_id" invisible="1"/>
@@ -49,9 +52,10 @@
                             <field name="has_tracking" invisible="1"/>
                             <field name="order_finished_lot_ids" invisible="1"/>
                             <field name="finished_lots_exist" invisible="1"/>
+                            <field name="product_uom_category_id" invisible="1"/>
                         </group>
                     </group>
-                    <field name="move_line_ids" attrs="{'invisible': [('parent.state', '=', 'draft')], 'readonly': ['|', ('is_locked', '=', True), ('state', '=', 'cancel')]}" context="{'default_workorder_id': workorder_id, 'default_product_uom_id': product_uom, 'default_product_id': product_id,  'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_production_id': production_id or raw_material_production_id}">
+                    <field name="move_line_ids" attrs="{'invisible': ['|', ('parent.state', '=', 'draft'), ('id', '=', False)], 'readonly': ['|', ('is_locked', '=', True), ('state', '=', 'cancel')]}" context="{'default_workorder_id': workorder_id, 'default_product_uom_id': product_uom, 'default_product_id': product_id,  'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_production_id': production_id or raw_material_production_id}">
                         <tree editable="bottom" decoration-success="product_uom_qty==qty_done" decoration-danger="(product_uom_qty &gt; 0) and (qty_done&gt;product_uom_qty)">
                             <field name="lot_id" attrs="{'column_invisible': [('parent.has_tracking', '=', 'none')]}" context="{'default_product_id': parent.product_id}"/>
                             <field name="lot_produced_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', parent.order_finished_lot_ids)]" invisible="not context.get('final_lots')"/>

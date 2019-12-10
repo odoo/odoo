@@ -72,6 +72,7 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="post_visible" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
+                    <field name="consumption" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
@@ -171,7 +172,7 @@
                     </group>
                     <notebook>
                         <page string="Components" name="components">
-                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'tree_view_ref': 'mrp.view_stock_move_raw_tree', 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True)]}"/>
+                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'tree_view_ref': 'mrp.view_stock_move_raw_tree', 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', '&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True), '|', ('state', '!=', 'confirmed'), ('consumption', '=', 'strict')]}"/>
                         </page>
                         <page string="Finished Products" name="finished_products">
                             <field name="move_finished_ids" invisible="1"/>
