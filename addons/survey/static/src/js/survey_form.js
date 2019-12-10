@@ -127,11 +127,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             if (self.options.isStartScreen) {
                 self.options.isStartScreen = false;
             }
-            return self._onSubmitDone(results[1]);
+            return self._onSubmitDone(results[1], $target);
         });
     },
 
-    _onSubmitDone: function (result) {
+    _onSubmitDone: function (result, $target) {
         var self = this;
         if (result && !result.error) {
             self.$(".o_survey_form_content").empty();
@@ -141,6 +141,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             });
             self._initTimer();
             self._updateBreadcrumb();
+            if ($target.val() === 'finish') {
+                self._initResultWidget();
+            }
             self.$('.o_survey_form_content').fadeIn(400);
             $("html, body").animate({ scrollTop: 0 }, "fast");
         }
@@ -149,9 +152,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self._showErrors(result.fields);
             return false;
         } else {
-            var $target = self.$('.o_survey_error');
-            $target.addClass("slide_in");
-            self._scrollToError($target);
+            var $errorTarget = self.$('.o_survey_error');
+            $errorTarget.addClass("slide_in");
+            self._scrollToError($errorTarget);
             return false;
         }
     },
@@ -519,6 +522,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     _formatDateTime: function (datetimeValue) {
         return field_utils.format.datetime(moment(datetimeValue), null, {timezone: true});
+    },
+
+    _initResultWidget: function () {
+        var $result = this.$('.o_survey_result');
+        if ($result.length) {
+            this.surveyResultWidget = new publicWidget.registry.SurveyResultWidget(this);
+            this.surveyResultWidget.attachTo($result);
+            $result.fadeIn(400);
+        }
     },
 
     // ERRORS TOOLS
