@@ -224,6 +224,7 @@ class Partner(models.Model):
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
+    barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
@@ -379,6 +380,11 @@ class Partner(models.Model):
     @api.onchange('company_type')
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
+
+    @api.constrains('barcode')
+    def _check_barcode_unicity(self):
+        if self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
+            raise ValidationError('An other user already has this barcode')
 
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
