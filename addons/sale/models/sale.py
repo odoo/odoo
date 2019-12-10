@@ -625,6 +625,13 @@ class SaleOrder(models.Model):
         else:
             out_invoice_vals_list = invoice_vals_list
 
+        if invoice_vals['type'] in self.env['account.move'].get_outbound_types():
+            invoice_bank_id = self.partner_id.bank_ids[:1]
+        else:
+            invoice_bank_id = self.company_id.partner_id.bank_ids[:1]
+
+        invoice_vals['invoice_partner_bank_id'] = invoice_bank_id
+
         # Create invoices.
         moves = self.env['account.move'].with_context(default_type='out_invoice').create(out_invoice_vals_list)
         moves += self.env['account.move'].with_context(default_type='out_refund').create(refund_invoice_vals_list)
