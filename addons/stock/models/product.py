@@ -458,7 +458,10 @@ class Product(models.Model):
         domain = [('product_id', 'in', self.ids)]
         hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
         hide_lot = all([product.tracking == 'none' for product in self])
-        self = self.with_context(hide_location=hide_location, hide_lot=hide_lot)
+        self = self.with_context(
+            hide_location=hide_location, hide_lot=hide_lot,
+            no_at_date=True, search_default_on_hand=True,
+        )
 
         # If user have rights to write on quant, we define the view as editable.
         if self.user_has_groups('stock.group_stock_manager'):
@@ -479,9 +482,7 @@ class Product(models.Model):
             )
         else:
             self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
-        ctx = dict(self.env.context)
-        ctx.update({'no_at_date': True, 'search_default_on_hand': True})
-        return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
+        return self.env['stock.quant']._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
         return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
