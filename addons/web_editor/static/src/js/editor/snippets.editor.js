@@ -1106,7 +1106,7 @@ var SnippetsMenu = Widget.extend({
         _.each($invisibleSnippets, el => {
             const $invisEntry = $('<div/>', {
                 class: 'o_we_invisible_entry d-flex align-items-center',
-                text: el.title,
+                text: _t(el.getAttribute('string')),
             }).append($('<i/>', {class: 'fa fa-edit ml-2'}));
             $invisibleDOMPanelEl.append($invisEntry);
             this.invisibleDOMMap.set($invisEntry[0], el);
