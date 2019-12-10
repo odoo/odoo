@@ -34,6 +34,7 @@
         <field name='description'>Sin identificar/venta global diaria</field>
         <field name='country_id' ref='base.ar'/>
         <field name='l10n_ar_afip_code'>99</field>
+        <field name='sequence'>110</field>
     </record>
     <record model='l10n_latam.identification.type' id='it_CPF'>
         <field name='name'>CPF</field>
@@ -323,7 +324,7 @@
         <field name='active' eval='False'/>
     </record>
     <record model='l10n_latam.identification.type' id='it_Sigd'>
-        <field name='active' eval='False'/>
+        <field name='active' eval='True'/>
     </record>
     <record model='l10n_latam.identification.type' id='it_CPF'>
         <field name='active' eval='False'/>
