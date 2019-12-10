@@ -332,13 +332,15 @@ class AccountMove(models.Model):
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
-        company_currency = self.company_id.currency_id
-        has_foreign_currency = self.currency_id and self.currency_id != company_currency
+        if self.is_invoice(include_receipts=True):
+            company_currency = self.company_id.currency_id
+            has_foreign_currency = self.currency_id and self.currency_id != company_currency
 
-        for line in self.line_ids:
-            new_currency = has_foreign_currency and self.currency_id
-            line.currency_id = new_currency
-            line._onchange_currency()
+            for line in self.line_ids:
+                new_currency = has_foreign_currency and self.currency_id
+                line.currency_id = new_currency
+
+        self.line_ids._onchange_currency()
         self._recompute_dynamic_lines()
 
     @api.onchange('invoice_payment_ref')
