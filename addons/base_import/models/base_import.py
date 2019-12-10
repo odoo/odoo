@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import binascii
 import codecs
 import collections
 import unicodedata
@@ -29,7 +30,7 @@ FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
 DEFAULT_IMAGE_TIMEOUT = 3
 DEFAULT_IMAGE_MAXBYTES = 10 * 1024 * 1024
-DEFAULT_IMAGE_REGEX = r"(?:http|https)://.*(?:png|jpe?g|tiff?|gif|bmp)"
+DEFAULT_IMAGE_REGEX = r"^(?:http|https)://"
 DEFAULT_IMAGE_CHUNK_SIZE = 32768
 IMAGE_FIELDS = ["icon", "image", "logo", "picture"]
 _logger = logging.getLogger(__name__)
@@ -782,6 +783,11 @@ class Import(models.TransientModel):
                                 raise AccessError(_("You can not import images via URL, check with your administrator or support for the reason."))
 
                             line[index] = self._import_image_by_url(line[index], session, name, num)
+                        else:
+                            try:
+                                base64.b64decode(line[index], validate=True)
+                            except binascii.Error:
+                                raise ValueError(_("Found invalid image data, images should be imported as either URLs or base64-encoded data."))
 
         return data
 
