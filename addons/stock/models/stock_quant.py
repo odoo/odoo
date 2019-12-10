@@ -640,10 +640,7 @@ class StockQuant(models.Model):
                 ('company_id', '=', self.env.company.id),
                 ('location_id.usage', 'in', ['internal', 'transit'])
             ]):
-                action['context'].update({
-                    'search_default_productgroup': 0,
-                    'search_default_locationgroup': 0
-                })
+                action['context'] = dict(action['context'], search_default_productgroup=0, search_default_locationgroup=0)
         else:
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree').id
             # Enables form view in readonly list
