@@ -448,61 +448,37 @@ class Meeting(models.Model):
 
         return result
 
-    def create_attendees(self):
-        current_user = self.env.user
-        result = {}
-        for meeting in self:
-            alreay_meeting_partners = meeting.attendee_ids.mapped('partner_id')
-            meeting_attendees = self.env['calendar.attendee']
-            meeting_partners = self.env['res.partner']
-            for partner in meeting.partner_ids.filtered(lambda partner: partner not in alreay_meeting_partners):
-                values = {
-                    'partner_id': partner.id,
-                    'email': partner.email,
-                    'event_id': meeting.id,
-                }
+    def _attendees_values(self, partner_commands):
+        """
+        :param partner_commands: ORM commands for partner_id field (0 and 1 commands not supported)
+        :return: associated attendee_ids ORM commands
+        """
+        attendee_commands = []
 
-                # TODO move this in the correct module
-                if self._context.get('google_internal_event_id', False):
-                    values['google_internal_event_id'] = self._context.get('google_internal_event_id')
+        removed_partner_ids = []
+        added_partner_ids = []
+        for command in partner_commands:
+            op = command[0]
+            if op in (2, 3):  # Remove partner
+                removed_partner_ids += [command[1]]
+            elif op == 6:  # Replace all
+                removed_partner_ids += set(self.partner_ids.ids) - set(command[2])  # Don't recreate attendee if partner already attend the event
+                added_partner_ids += set(command[2]) - set(self.partner_ids.ids)
+            elif op == 4:
+                added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
+            # commands 0 and 1 not supported
 
-                # current user don't have to accept his own meeting
-                if partner == self.env.user.partner_id:
-                    values['state'] = 'accepted'
+        attendees_to_unlink = self.env['calendar.attendee'].search([
+            ('event_id', 'in', self.ids),
+            ('partner_id', 'in', removed_partner_ids),
+        ])
+        attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
-                attendee = self.env['calendar.attendee'].create(values)
-
-                meeting_attendees |= attendee
-                meeting_partners |= partner
-
-            if meeting_attendees and not self._context.get('detaching'):
-                to_notify = meeting_attendees.filtered(lambda a: a.email != current_user.email)
-                to_notify._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
-
-            if meeting_attendees:
-                meeting.write({'attendee_ids': [(4, meeting_attendee.id) for meeting_attendee in meeting_attendees]})
-
-            if meeting_partners:
-                meeting.message_subscribe(partner_ids=meeting_partners.ids)
-
-            # We remove old attendees who are not in partner_ids now.
-            all_partners = meeting.partner_ids
-            all_partner_attendees = meeting.attendee_ids.mapped('partner_id')
-            old_attendees = meeting.attendee_ids
-            partners_to_remove = all_partner_attendees + meeting_partners - all_partners
-
-            attendees_to_remove = self.env["calendar.attendee"]
-            if partners_to_remove:
-                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)])
-                attendees_to_remove.unlink()
-
-            result[meeting.id] = {
-                'new_attendees': meeting_attendees,
-                'old_attendees': old_attendees,
-                'removed_attendees': attendees_to_remove,
-                'removed_partners': partners_to_remove
-            }
-        return result
+        attendee_commands += [
+            [0, 0, dict(partner_id=partner_id)]
+            for partner_id in added_partner_ids
+        ]
+        return attendee_commands
 
     def get_interval(self, interval, tz=None):
         """ Format and localize some dates to be used in email templates
@@ -646,6 +622,11 @@ class Meeting(models.Model):
         break_recurrence = values.get('recurrency') is False
         self._sync_activities(values)
 
+        if 'partner_ids' in values:
+            values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+
+        previous_attendees = self.attendee_ids
+
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
         if update_recurrence:
             if break_recurrence:
@@ -660,39 +641,24 @@ class Meeting(models.Model):
         else:
             super().write(values)
 
+        if recurrence_update_setting != 'self_only' and not break_recurrence:
+            detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
-        for meeting in self:
-
-            attendees_create = False
-            if values.get('partner_ids'):
-                attendees_create = self.with_context(dont_notify=True).create_attendees()  # to prevent multiple _notify_next_alarm
-
-            # Notify attendees if there is an alarm on the modified event, or if there was an alarm
-            # that has just been removed, as it might have changed their next event notification
-            if not self._context.get('dont_notify'):
-                if len(meeting.alarm_ids) > 0 or values.get('alarm_ids'):
-                    partners_to_notify = meeting.partner_ids.ids
-                    event_attendees_changes = attendees_create and meeting and attendees_create[meeting.id]
-                    if event_attendees_changes:
-                        partners_to_notify.extend(event_attendees_changes['removed_partners'].ids)
-                    self.env['calendar.alarm_manager']._notify_next_alarm(partners_to_notify)
-
-            if (values.get('start_date') or values.get('start_datetime') or
-                    (values.get('start') and self.env.context.get('from_ui'))) and values.get('active', True):
-                for current_meeting in self:
-                    if attendees_create:
-                        attendees_create = attendees_create[current_meeting.id]
-                        attendee_to_email = attendees_create['old_attendees'] - attendees_create['removed_attendees']
-                    else:
-                        attendee_to_email = current_meeting.attendee_ids
-
-                    if attendee_to_email:
-                        attendee_to_email._send_mail_to_attendees('calendar.calendar_template_meeting_changedate')
-
-        if recurrence_update != 'self_only' and not break_recurrence:
-            detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update == 'future_events')
         (detached_events & self).active = False
         (detached_events - self).unlink()
+
+        # Notify attendees if there is an alarm on the modified event, or if there was an alarm
+        # that has just been removed, as it might have changed their next event notification
+        if not self._context.get('dont_notify'):
+            if self.alarm_ids or values.get('alarm_ids'):
+                self.env['calendar.alarm_manager']._notify_next_alarm(self.partner_ids.ids)
+
+        current_attendees = self.filtered('active').attendee_ids
+        if 'partner_ids' in values:
+            (current_attendees - previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
+        if 'start' in values:
+            (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
+
         return True
 
     @api.model  # LUL TODO create multi
@@ -719,6 +685,9 @@ class Meeting(models.Model):
                             activity_vals['user_id'] = user_id
                         values['activity_ids'] = [(0, 0, activity_vals)]
 
+        if 'partner_ids' in values:
+            values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
         meeting = super(Meeting, self).create(values)
 
@@ -726,10 +695,8 @@ class Meeting(models.Model):
             detached_events = meeting._apply_recurrence_values(recurrence_values)
             detached_events.active = False
 
+        meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         meeting._sync_activities(values)
-
-        # `dont_notify=True` in context to prevent multiple _notify_next_alarm
-        meeting.with_context(dont_notify=True).create_attendees()
 
         # Notify attendees if there is an alarm on the created event, as it might have changed their
         # next event notification

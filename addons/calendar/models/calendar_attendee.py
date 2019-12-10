@@ -2,9 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
 import base64
+import logging
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class Attendee(models.Model):
@@ -24,43 +28,59 @@ class Attendee(models.Model):
         ('accepted', 'Accepted'),
     ]
 
+    event_id = fields.Many2one('calendar.event', 'Meeting linked', required=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', 'Contact', required=True, readonly=True)
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
                              help="Status of the attendee's participation")
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
-    partner_id = fields.Many2one('res.partner', 'Contact', readonly=True)
-    email = fields.Char('Email', help="Email of Invited Person")
+    email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
     availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
-    event_id = fields.Many2one('calendar.event', 'Meeting linked', ondelete='cascade')
+    recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
 
     @api.depends('partner_id', 'partner_id.name', 'email')
     def _compute_common_name(self):
         for attendee in self:
             attendee.common_name = attendee.partner_id.name or attendee.email
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        """ Make entry on email and availability on change of partner_id field. """
-        self.email = self.partner_id.email
-
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
+            if values.get('partner_id') == self.env.user.partner_id.id:
+                values['state'] = 'accepted'
             if not values.get("email") and values.get("common_name"):
                 common_nameval = values.get("common_name").split(':')
                 email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
                 values['email'] = email and email[0] or ''
                 values['common_name'] = values.get("common_name")
-        return super(Attendee, self).create(vals_list)
+        attendees = super().create(vals_list)
+        attendees._subscribe_partner()
+        return attendees
+
+    def unlink(self):
+        self._unsubscribe_partner()
+        return super().unlink()
+
+    def _subscribe_partner(self):
+        for event in self.event_id:
+            partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
+            partners -= self.env.user.partner_id  # current user is automatically added as followers, don't add it twice.
+            event.message_subscribe(partner_ids=partners.ids)
+
+    def _unsubscribe_partner(self):
+        for event in self.event_id:
+            partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
+            event.message_unsubscribe(partner_ids=partners.ids)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False, force_event_id=None):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False, ignore_recurrence=False):
         """ Send mail for event invitation to event attendees.
             :param template_xmlid: xml id of the email template to use to send the invitation
             :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
+            :param ignore_recurrence: ignore event recurrence
         """
         res = False
 
@@ -68,10 +88,12 @@ class Attendee(models.Model):
             return res
 
         calendar_view = self.env.ref('calendar.view_calendar_event_calendar')
-        invitation_template = self.env.ref(template_xmlid)
-
+        invitation_template = self.env.ref(template_xmlid, raise_if_not_found=False)
+        if not invitation_template:
+            _logger.warning("Template %s could not be found. %s not notified." % (template_xmlid, self))
+            return
         # get ics file for all meetings
-        ics_files = force_event_id._get_ics_file() if force_event_id else self.mapped('event_id')._get_ics_file()
+        ics_files = self.mapped('event_id')._get_ics_file()
 
         # prepare rendering context for mail template
         colors = {
@@ -82,40 +104,41 @@ class Attendee(models.Model):
         }
         rendering_context = dict(self._context)
         rendering_context.update({
-            'color': colors,
+            'colors': colors,
+            'ignore_recurrence': ignore_recurrence,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
             'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069'),
-            'force_event_id': force_event_id,
         })
-        invitation_template = invitation_template.with_context(rendering_context)
 
-        # send email with attachments
-        mail_ids = []
         for attendee in self:
-            if attendee.email or attendee.partner_id.email:
+            if attendee.email and attendee.partner_id != self.env.user.partner_id:
                 # FIXME: is ics_file text or bytes?
-                event_id = force_event_id.id if force_event_id else attendee.event_id.id
+                event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
-                email_values = {
-                    'model': None,  # We don't want to have the mail in the tchatter while in queue!
-                    'res_id': None,
-                }
                 if ics_file:
-                    email_values['attachment_ids'] = [
+                    attachment_values = [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                    mail_ids.append(invitation_template.with_context(no_document=True).send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
-                else:
-                    mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
-
-        if force_send and mail_ids:
-            res = self.env['mail.mail'].browse(mail_ids).send()
-
-        return res
+                body = self.env['mail.template'].with_context(rendering_context)._render_template(
+                    invitation_template.body_html,
+                    self._name,
+                    attendee.ids)
+                # TODO check lang
+                subject = self.env['mail.template']._render_template(
+                    invitation_template.subject,
+                    self._name,
+                    attendee.ids)
+                attendee.event_id.with_context(no_document=True).message_notify(
+                    body=body,
+                    subject=subject,
+                    partner_ids=attendee.partner_id.ids,
+                    email_layout_xmlid='mail.mail_notification_light',
+                    attachment_ids=attachment_values,
+                    force_send=force_send)
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """
@@ -123,17 +146,13 @@ class Attendee(models.Model):
 
     def do_accept(self):
         """ Marks event invitation as Accepted. """
-        result = self.write({'state': 'accepted'})
         for attendee in self:
-            if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
-        return result
+            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
+        return self.write({'state': 'accepted'})
 
     def do_decline(self):
         """ Marks event invitation as Declined. """
-        res = self.write({'state': 'declined'})
         for attendee in self:
-            if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
-        return res
+            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
+        return self.write({'state': 'declined'})
 

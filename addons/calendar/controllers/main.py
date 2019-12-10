@@ -24,6 +24,32 @@ class CalendarController(http.Controller):
                 attendee.do_accept()
         return self.view(db, token, action, id, view='form')
 
+    @http.route('/calendar/recurrence/accept', type='http', auth="calendar")
+    def accept_recurrence(self, db, token, action, id, **kwargs):
+        # LUL TODO db required?
+        attendee = request.env['calendar.attendee'].sudo().search([('access_token', '=', token), ('state', '!=', 'accepted')])
+        if attendee:
+            attendees = request.env['calendar.attendee'].sudo().search([
+                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
+                ('partner_id', '=', attendee.partner_id.id),
+                ('state', '!=', 'accepted'),
+            ])
+            attendees.do_accept()
+        return self.view(db, token, action, id, view='form')
+
+    @http.route('/calendar/recurrence/decline', type='http', auth="calendar")
+    def decline_recurrence(self, db, token, action, id, **kwargs):
+        # LUL TODO db required?
+        attendee = request.env['calendar.attendee'].sudo().search([('access_token', '=', token), ('state', '!=', 'declined')])
+        if attendee:
+            attendees = request.env['calendar.attendee'].sudo().search([
+                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
+                ('partner_id', '=', attendee.partner_id.id),
+                ('state', '!=', 'declined'),
+            ])
+            attendees.do_decline()
+        return self.view(db, token, action, id, view='form')
+
     @http.route('/calendar/meeting/decline', type='http', auth="calendar")
     def declined(self, db, token, action, id):
         registry = registry_get(db)
