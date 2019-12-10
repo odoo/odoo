@@ -12,8 +12,8 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True, related_sudo=False)
+    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True, related_sudo=False)
 
     def _is_cost_method_standard(self):
         return self.categ_id.property_cost_method == 'standard'
