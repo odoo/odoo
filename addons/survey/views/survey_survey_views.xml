@@ -42,6 +42,7 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="background_image" widget="image" class="oe_avatar"/>
                     <div class="oe_title" style="width: 100%;">
                         <label for="title" class="oe_edit_only"/>
                         <h1><field name="title" placeholder="e.g. Satisfaction Survey"/></h1>
@@ -75,6 +76,7 @@
                             <group name="options">
                                 <group string="Questions" name="questions">
                                     <field name="questions_layout" widget="radio" />
+                                    <field name="progression_mode" widget="radio" />
                                     <label for="is_time_limited" string="Time Limit"/>
                                     <div>
                                         <field name="is_time_limited" nolabel="1"/>

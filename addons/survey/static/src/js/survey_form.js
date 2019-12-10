@@ -6,11 +6,13 @@ var publicWidget = require('web.public.widget');
 var time = require('web.time');
 var core = require('web.core');
 var _t = core._t;
+var dom = require('web.dom');
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
+        'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click button[type="submit"]': '_onSubmit',
     },
     custom_events: {
@@ -29,6 +31,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         this.fadeInOutDelay = 400;
         return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
+            // Init fields
             if (!self.options.isStartScreen) {
                 self._initTimer();
                 self._initBreadcrumb();
@@ -36,6 +39,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
+            self._initChoiceItems();
+            self._initTextArea();
+            self._focusOnFirstInput();
+            // Init event listener
+            if (!self.options.readonly) {
+                $(document).on('keypress', self._onKeyPress.bind(self));
+            }
         });
     },
 
@@ -46,6 +56,35 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
+    _onKeyPress: function (event) {
+        // If user is answering a textarea, do not handle keyPress
+        if (this.$("textarea").is(":focus")) {
+            return;
+        }
+
+        var self = this;
+        var keyCode = event.keyCode;
+        var letter = String.fromCharCode(keyCode).toUpperCase();
+
+        // Handle Start / Next / Submit
+        if (keyCode === 13) {  // Enter : go Next
+            event.preventDefault();
+            this._submitForm({});
+        } else if (self.options.questionsLayout === 'page_per_question'
+                   && letter.match(/[a-z]/i)) {
+            var $choiceInput = this.$(`input[data-selection-key=${letter}]`);
+            if ($choiceInput.length === 1) {
+                if ($choiceInput.attr('type') === 'radio') {
+                    $choiceInput.prop("checked", true).trigger('change');
+                } else {
+                    $choiceInput.prop("checked", !$choiceInput.prop("checked")).trigger('change');
+                }
+                // Avoid selection key to be typed into the textbox if 'other' is selected by key
+                event.preventDefault();
+            }
+        }
+    },
+
     /**
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
     *   If not checked : Clear the comment textarea and disable it
@@ -55,7 +94,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * @param {Event} event
     */
     _onChangeChoiceItem: function (event) {
-        var $choiceItemGroup = $(event.currentTarget).parents('.o_survey_form_choice');
+        var $target = $(event.currentTarget);
+        var $choiceItemGroup = $target.closest('.o_survey_form_choice');
         var $otherItem = $choiceItemGroup.find('.o_survey_js_form_other_comment');
         var $commentInput = $choiceItemGroup.find('textarea[type="text"]');
 
@@ -67,6 +107,36 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         } else {
             $commentInput.val('');
             $commentInput.enable(false);
+        }
+
+        var $matrixBtn = $target.closest('.o_survey_matrix_btn');
+        if ($target.attr('type') === 'radio') {
+            if ($matrixBtn.length > 0) {
+                $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
+                $matrixBtn.addClass('o_survey_selected');
+            } else {
+                $choiceItemGroup.find('label').removeClass('o_survey_selected');
+                $target.closest('label').addClass('o_survey_selected');
+            }
+        } else {  // $target.attr('type') === 'checkbox'
+            if ($matrixBtn.length > 0) {
+                $matrixBtn.toggleClass('o_survey_selected', !$matrixBtn.hasClass('o_survey_selected'));
+            } else {
+                var $label = $target.closest('label');
+                $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
+            }
+        }
+    },
+
+    _onMatrixBtnClick: function (event) {
+        if (!this.options.readonly) {
+            var $target = $(event.currentTarget);
+            var $input = $target.find('input');
+            if ($input.attr('type') === 'radio') {
+                $input.prop("checked", true).trigger('change');
+            } else {
+                $input.prop("checked", !$input.prop("checked")).trigger('change');
+            }
         }
     },
 
@@ -177,8 +247,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             } else {
                 this._updateBreadcrumb();
             }
+            self._initChoiceItems();
+            self._initTextArea();
             this.$('.o_survey_form_content').fadeIn(this.fadeInOutDelay);
             $("html, body").animate({ scrollTop: 0 }, this.fadeInOutDelay);
+            self._focusOnFirstInput();
         }
         else if (result && result.fields && result.error === 'validation') {
             this.$('.o_survey_form_content').fadeIn(0);
@@ -321,7 +394,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     _prepareSubmitValues: function (formData, params) {
         var self = this;
-        formData.forEach(function (value, key){
+        formData.forEach(function (value, key) {
             switch (key) {
                 case 'csrf_token':
                 case 'token':
@@ -463,6 +536,25 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
 
+   /**
+    * Will allow the textarea to resize on carriage return instead of showing scrollbar.
+    */
+    _initTextArea: function () {
+        this.$('textarea').each(function () {
+            dom.autoresize($(this));
+        });
+    },
+
+    _initChoiceItems: function () {
+        this.$("input[type='radio'],input[type='checkbox']").each(function () {
+            var matrixBtn = $(this).parents('.o_survey_matrix_btn');
+            if ($(this).prop("checked")) {
+                var $target = matrixBtn.length > 0 ? matrixBtn : $(this).closest('label');
+                $target.addClass('o_survey_selected');
+            }
+        });
+    },
+
     /**
      * Will initialize the breadcrumb widget that handles navigation to a previously filled in page.
      *
@@ -573,6 +665,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
+   /**
+    * Will automatically focus on the first input to allow the user to complete directly the survey,
+    * without having to manually get the focus (only if the input has the right type - can write something inside -)
+    */
+    _focusOnFirstInput: function () {
+        var $inputs = this.$("input[type='text'],input[type='number'],textarea").not('.o_survey_comment');
+        if ($inputs.length > 0) {
+            $inputs.first().focus();
+        }
+    },
+
     // ERRORS TOOLS
     // -------------------------------------------------------------------------
 
@@ -591,10 +694,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var scrollLocation = $target.offset().top;
         var navbarHeight = $('.o_main_navbar').height();
         if (navbarHeight) {
-            scrollLocation -= navbarHeight;
+            // In overflow auto, scrollLocation of target can be negative if target is out of screen (up side)
+            scrollLocation = scrollLocation >= 0 ? scrollLocation - navbarHeight : scrollLocation + navbarHeight;
         }
-        $('html, body').animate({
-            scrollTop: scrollLocation
+        var scrollinside = $("#wrapwrap").scrollTop();
+        $('#wrapwrap').animate({
+            scrollTop: scrollinside + scrollLocation
         }, 500);
     },
 

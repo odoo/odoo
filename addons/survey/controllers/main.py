@@ -15,6 +15,8 @@ from odoo.http import request, content_disposition
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date
 
+from odoo.addons.web.controllers.main import Binary
+
 _logger = logging.getLogger(__name__)
 
 
@@ -283,6 +285,24 @@ class Survey(http.Controller):
         return request.render('survey.survey_page_fill',
             self._prepare_survey_data(access_data['survey_sudo'], access_data['answer_sudo'], **post))
 
+    @http.route('/survey/get_background_image/<string:survey_token>/<string:answer_token>', type='http', auth="public", website=True, sitemap=False)
+    def survey_get_background(self, survey_token, answer_token):
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True:
+            return werkzeug.exceptions.Forbidden()
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
+            model='survey.survey', id=survey_sudo.id, field='background_image',
+            default_mimetype='image/png')
+
+        return Binary._content_image_get_response(status, headers, image_base64)
+
+    # ----------------------------------------------------------------
+    # JSON ROUTES to begin / continue survey (ajax navigation) + Tools
+    # ----------------------------------------------------------------
+
     @http.route('/survey/begin/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
     def survey_begin(self, survey_token, answer_token, **post):
         """ Route used to start the survey user input and display the first survey page. """
@@ -427,6 +447,7 @@ class Survey(http.Controller):
             'review': review,
             'survey': survey_sudo,
             'answer': answer_sudo,
+            'scoring_display_correction': survey_sudo.scoring_type == 'scoring_with_answers' and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         })
@@ -464,23 +485,8 @@ class Survey(http.Controller):
 
         return self._generate_report(succeeded_attempt, download=True)
 
-    def _generate_report(self, user_input, download=True):
-        report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
-
-        report_content_disposition = content_disposition('Certification.pdf')
-        if not download:
-            content_split = report_content_disposition.split(';')
-            content_split[0] = 'inline'
-            report_content_disposition = ';'.join(content_split)
-
-        return request.make_response(report, headers=[
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(report)),
-            ('Content-Disposition', report_content_disposition),
-        ])
-
     # ------------------------------------------------------------
-    # REPORTING SURVEY ROUTES
+    # REPORTING SURVEY ROUTES AND TOOLS
     # ------------------------------------------------------------
 
     @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
@@ -508,6 +514,21 @@ class Survey(http.Controller):
             'search_filters': search_filters,
             'search_finished': post.get('finished') == 'true',
         })
+
+    def _generate_report(self, user_input, download=True):
+        report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
+
+        report_content_disposition = content_disposition('Certification.pdf')
+        if not download:
+            content_split = report_content_disposition.split(';')
+            content_split[0] = 'inline'
+            report_content_disposition = ';'.join(content_split)
+
+        return request.make_response(report, headers=[
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(report)),
+            ('Content-Disposition', report_content_disposition),
+        ])
 
     def _extract_filters_data(self, survey, post):
         search_filters = []
