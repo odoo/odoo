@@ -304,7 +304,7 @@ class ProductTemplate(models.Model):
         for template in unique_variants:
             template.default_code = template.product_variant_ids.default_code
         for template in (self - unique_variants):
-            template.default_code = ''
+            template.default_code = False
 
     @api.one
     def _set_default_code(self):
