@@ -79,7 +79,9 @@ class StockMove(models.Model):
     consume_unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation To Consume', check_company=True)  # TDE FIXME: naming
+        'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
+        domain="[('routing_id', '=', routing_id), ('company_id', '=?', company_id)]")
+    routing_id = fields.Many2one(related='raw_material_production_id.routing_id')
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume', check_company=True)
     # Quantities to process, in normalized UoMs

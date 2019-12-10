@@ -873,6 +873,8 @@ class MrpProduction(models.Model):
             workorders += workorder
 
             moves_raw = self.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.bom_line_id.bom_id.routing_id == bom.routing_id)
+            additional_moves = self.move_raw_ids.filtered(lambda move: move.operation_id == operation and not move.bom_line_id)
+            moves_raw |= additional_moves
             moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation)
 
             # - Raw moves from a BoM where a routing was set but no operation was precised should
