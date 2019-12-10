@@ -453,6 +453,12 @@ class Product(models.Model):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
+<<<<<<< HEAD
+=======
+    def action_update_quantity_on_hand(self):
+        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
+
+>>>>>>> d0e7957954a... temp
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
