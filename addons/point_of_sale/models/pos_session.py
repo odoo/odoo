@@ -445,7 +445,7 @@ class PosSession(models.Model):
                         ('product_id.categ_id.property_valuation', '=', 'real_time')
                     ])
                     for move in stock_moves:
-                        exp_key = move.product_id.property_account_expense_id or move.product_id.categ_id.property_account_expense_categ_id
+                        exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                         amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
@@ -467,7 +467,7 @@ class PosSession(models.Model):
                     ('product_id.categ_id.property_valuation', '=', 'real_time'),
                 ])
                 for move in stock_moves:
-                    exp_key = move.product_id.property_account_expense_id or move.product_id.categ_id.property_account_expense_categ_id
+                    exp_key = move.product_id._get_product_accounts()['expense']
                     out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                     amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
@@ -600,7 +600,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_company(order_line.company_id).property_account_income_id or product.categ_id.with_company(order_line.company_id).property_account_income_categ_id
+            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income']
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))

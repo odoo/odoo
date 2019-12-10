@@ -101,7 +101,7 @@ class ProductProduct(models.Model):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
             for product_product in self:
                 if product_product.cost_method != 'fifo':
-                    counterpart_account_id = product_product.property_account_expense_id.id or product_product.categ_id.property_account_expense_categ_id.id
+                    counterpart_account_id = product_product._get_product_accounts()['expense'].id
                     product_product._change_standard_price(vals['standard_price'], counterpart_account_id)
 
         return super(ProductProduct, self).write(vals)
@@ -460,7 +460,7 @@ class ProductProduct(models.Model):
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
         for out_stock_valuation_layer in stock_valuation_layers:
             product = out_stock_valuation_layer.product_id
-            expense_account = product.property_account_expense_id or product.categ_id.property_account_expense_categ_id
+            expense_account = product._get_product_accounts()['expense']
             if not expense_account:
                 raise UserError(_('Please define an expense account for this product: "%s" (id:%d) - or for its category: "%s".') % (product.name, product.id, self.name))
             if not product_accounts[product.id].get('stock_valuation'):
