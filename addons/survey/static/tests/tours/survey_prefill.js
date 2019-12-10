@@ -16,11 +16,7 @@ tour.register('test_survey_prefill', {
         trigger: 'div.js_question-wrapper:contains("When is your date of birth ?") input',
         run: 'text 05/05/1980',
     }, { // Question: How frequently do you buy products online ?
-        trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online ?") select',
-        run: function() {
-            var optionID = $('option:contains("Once a week")').val();
-            $('div.js_question-wrapper:contains("How frequently do you buy products online ?") select').val(optionID);
-        },
+        trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online ?") label:contains("Once a week") input',
     }, { // Question: How many times did you order products on our website ?
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website ?") input',
         run: 'text 42',
@@ -80,8 +76,8 @@ tour.register('test_survey_prefill', {
                 return;
             }
 
-            var $selectQ3 = $('div.js_question-wrapper:contains("How frequently do you buy products online ?") select');
-            if ($selectQ3.val() !== $('option:contains("Once a week")').val()) {
+            var $inputQ3 = $('div.js_question-wrapper:contains("How frequently do you buy products online ?") label:contains("Once a week") input');
+            if (!$inputQ3.is(':checked')) {
                 return;
             }
 

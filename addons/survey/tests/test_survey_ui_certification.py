@@ -37,7 +37,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Do we sell Acoustic Bloc Screens?',
                     'sequence': 2,
                     'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -116,7 +115,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'How many versions of the Corner Desk do we have?',
                     'sequence': 5,
                     'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -149,7 +147,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'How much do we sell our Cable Management Box?',
                     'sequence': 8,
                     'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -213,7 +210,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'What do you think about our prices (not rated)?',
                     'sequence': 10,
                     'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {

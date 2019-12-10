@@ -40,7 +40,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'title': 'How frequently do you buy products online ?',
                     'sequence': 4,
                     'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
                     'comments_allowed': True,
                     'comment_count_as_answer': True,
                     'constr_mandatory': True,

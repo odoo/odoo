@@ -234,35 +234,7 @@
     <template id="question_simple_choice" name="Question: simple choice">
         <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id)"/>
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
-        <div t-if="question.display_mode == 'dropdown'" class="o_survey_form_choice o_survey_question_simple_choice_dropdown row"
-             t-att-data-name="question.id"
-             data-question-type="simple_choice_dropdown">
-            <div class="col-lg-12">
-                <select class="form-control o_survey_form_choice_item">
-                    <option disabled="1" selected="1" value=""
-                            t-att-selected="not answer_line and (not comment_line or not question.comment_count_as_answer) and 'selected' or None">Choose...</option>
-                    <t t-foreach='question.suggested_answer_ids' t-as='label'>
-                        <option t-att-value='label.id'
-                                t-att-selected="answer_line and answer_line.suggested_answer_id == label and 'selected' or None"><t t-esc='label.value'/></option>
-                    </t>
-                    <t t-if='question.comments_allowed and question.comment_count_as_answer'>
-                        <option class="o_survey_js_form_other_comment" value="-1"
-                                t-att-selected="comment_line and question.comment_count_as_answer and 'selected' or None">
-                            <span t-esc="question.comments_message"/>
-                        </option>
-                    </t>
-                </select>
-            </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
-                <textarea type="text" class="form-control"
-                          t-attf-class="form-control #{'' if comment_line else 'd-none'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
-            </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
-            </div>
-        </div>
-        <div t-if="question.display_mode == 'columns'" class="row o_survey_form_choice o_survey_question_simple_choice_radio"
+        <div class="row o_survey_form_choice"
              t-att-data-name="question.id"
              data-question-type="simple_choice_radio">
             <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">

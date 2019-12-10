@@ -14,7 +14,7 @@ class SurveyQuestion(models.Model):
     """ Questions that will be asked in a survey.
 
         Each question can have one of more suggested answers (eg. in case of
-        dropdown choices, multi-answer checkboxes, radio buttons...).
+        multi-answer checkboxes, radio buttons...).
 
         Technical note:
 
@@ -98,9 +98,6 @@ class SurveyQuestion(models.Model):
         ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
         string='Number of columns', default='12',
         help='These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for dropdown-based simple and multiple choice questions.')
-    display_mode = fields.Selection(
-        [('columns', 'Radio Buttons'), ('dropdown', 'Selection Box')],
-        string='Display Mode', default='columns', help='Display mode of simple choice questions.')
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
