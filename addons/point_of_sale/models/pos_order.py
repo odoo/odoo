@@ -832,12 +832,12 @@ class ReportSaleDetails(models.AbstractModel):
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
         return data
 
-    class AccountCashRounding(models.Model):
-        _inherit = 'account.cash.rounding'
+class AccountCashRounding(models.Model):
+    _inherit = 'account.cash.rounding'
 
-        @api.constrains('rounding', 'rounding_method', 'strategy')
-        def _check_session_state(self):
-            open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
-            if open_session:
-                raise ValidationError(
-                    _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
+    @api.constrains('rounding', 'rounding_method', 'strategy')
+    def _check_session_state(self):
+        open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+        if open_session:
+            raise ValidationError(
+                _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
