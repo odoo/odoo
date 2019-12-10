@@ -2473,7 +2473,7 @@ class TestStockValuation(TransactionCase):
 
         move2.move_line_ids.qty_done = 20
 
-        self.assertEqual(self.product1.stock_value, 87.5)
+        self.assertEqual(self.product1.stock_value, 75)
 
     def test_average_perpetual_3(self):
         self.product1.product_tmpl_id.cost_method = 'average'
@@ -2997,7 +2997,7 @@ class TestStockValuation(TransactionCase):
         move5._action_done()
 
         self.assertEqual(move5.value, 400.0)
-        self.assertEqual(self.product1.standard_price, 35)
+        self.assertEqual(self.product1.standard_price, 20)
 
         self.assertEqual(self.product1.qty_available, 5)
 
@@ -3014,8 +3014,8 @@ class TestStockValuation(TransactionCase):
         move6.quantity_done = 5.0
         move6._action_done()
 
-        self.assertEqual(move6.value, -175.0)
-        self.assertEqual(self.product1.standard_price, 35)
+        self.assertEqual(move6.value, -100.0)
+        self.assertEqual(self.product1.standard_price, 20)
 
         # in 10 @ 10, the new average price should be 10
         move7 = self.env['stock.move'].create({
