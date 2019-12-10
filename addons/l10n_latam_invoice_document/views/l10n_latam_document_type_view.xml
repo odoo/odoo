@@ -1,34 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_document_type_form" model="ir.ui.view">
-        <field name="name">l10n_latam.document.type.form</field>
-        <field name="model">l10n_latam.document.type</field>
-        <field name="arch" type="xml">
-            <form string="Document Type" create="0" edit="0">
-                <group>
-                    <field name='code'/>
-                    <field name="name"/>
-                    <field name='doc_code_prefix'/>
-                    <field name='report_name'/>
-                    <field name='internal_type'/>
-                    <field name='country_id'/>
-                </group>
-            </form>
-        </field>
-    </record>
-
     <record id="view_document_type_tree" model="ir.ui.view">
         <field name="name">l10n_latam.document.type.tree</field>
         <field name="model">l10n_latam.document.type</field>
         <field name="arch" type="xml">
-            <tree string="Document Type" decoration-muted="(not active)" create="0" edit="0">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="doc_code_prefix"/>
-                <field name='report_name'/>
-                <field name='internal_type'/>
-                <field name='country_id'/>
+            <tree string="Document Type" decoration-muted="(not active)" create="0" edit="1" editable="bottom">
+                <field name="code" readonly="1"/>
+                <field name="name" readonly="1"/>
+                <field name="doc_code_prefix" readonly="1"/>
+                <field name='report_name' readonly="1"/>
+                <field name='internal_type' readonly="1"/>
+                <field name='country_id' readonly="1"/>
                 <field name="active" widget="boolean_toggle"/>
             </tree>
         </field>
