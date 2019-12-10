@@ -307,6 +307,11 @@ class Survey(http.Controller):
             }
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
+        if answer_sudo.state == 'done':
+            return {
+                'error': "survey_done",
+            }
+
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),
                                                                            question_id=post.get('question_id'))
