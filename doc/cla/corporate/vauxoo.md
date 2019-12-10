@@ -46,3 +46,4 @@ Erick Birbe erick@vauxoo.com https://github.com/ebirbe
 Tomas Alvarez tomas@vauxoo.com https://github.com/tomeyro
 Carmen Liliana Miranda González carmen@vauxoo.com https://github.com/CarmenMiranda
 Deivis Laya deivis@vauxoo.com https://github.com/deivislaya
+Yennifer Santiago yennifer@vauxoo.com https://github.com/ysantiago
