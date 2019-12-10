@@ -1,9 +1,9 @@
 odoo.define('mail.component.Message', function (require) {
 'use strict';
 
-const mailUtils = require('mail.utils');
 const AttachmentList = require('mail.component.AttachmentList');
 const PartnerImStatusIcon = require('mail.component.PartnerImStatusIcon');
+const mailUtils = require('mail.utils');
 
 const core = require('web.core');
 const time = require('web.time');

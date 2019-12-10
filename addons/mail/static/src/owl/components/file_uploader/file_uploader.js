@@ -1,9 +1,10 @@
 odoo.define('mail.component.FileUploader', function (require) {
 'use strict';
 
+const core = require('web.core');
+
 const { Component } = owl;
 const { useDispatch, useRef } = owl.hooks;
-const core = require('web.core');
 
 class FileUploader extends Component {
     /**

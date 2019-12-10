@@ -9,7 +9,6 @@ const useDragVisibleDropZone = require('mail.hooks.useDragVisibleDropZone');
 const { Component } = owl;
 const { useDispatch, useRef, useStore } = owl.hooks;
 
-
 class AttachmentBox extends Component {
 
     /**

@@ -1,4 +1,4 @@
-odoo.define('mail.component.ThreadIcon', function () {
+odoo.define('mail.component.ThreadIcon', function (require) {
 'use strict';
 
 const { Component } = owl;

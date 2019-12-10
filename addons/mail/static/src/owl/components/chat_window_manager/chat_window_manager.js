@@ -15,7 +15,6 @@ class ChatWindowManager extends Component {
      */
     constructor(...args) {
         super(...args);
-        this.IS_DEV = true;
         this.TEXT_DIRECTION = this.env._t.database.parameters.direction;
         this.storeDispatch = useDispatch();
         this.storeProps = useStore(state => {
@@ -46,7 +45,7 @@ class ChatWindowManager extends Component {
          */
         this._lastAutofocusedCounter = 0;
         this._lastAutofocusedChatWindowLocalId = undefined;
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.chat_window_manager = this;
         }
     }
@@ -277,9 +276,10 @@ class ChatWindowManager extends Component {
     }
 }
 
-ChatWindowManager.components = { ChatWindow, HiddenMenu };
-
-ChatWindowManager.template = 'mail.component.ChatWindowManager';
+Object.assign(ChatWindowManager, {
+    components: { ChatWindow, HiddenMenu },
+    template: 'mail.component.ChatWindowManager',
+});
 
 return ChatWindowManager;
 

@@ -1,4 +1,4 @@
-odoo.define('mail.component.Dialog', function () {
+odoo.define('mail.component.Dialog', function (require) {
 'use strict';
 
 const { Component } = owl;
@@ -69,7 +69,7 @@ class Dialog extends Component {
 }
 
 Dialog.props = {
-    Component: Object,
+    componentName: String,
     id: String,
     info: Object,
 };

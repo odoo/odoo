@@ -1,4 +1,4 @@
-odoo.define('mail.component.DiscussMobileMailboxSelection', function () {
+odoo.define('mail.component.DiscussMobileMailboxSelection', function (require) {
 'use strict';
 
 const { Component } = owl;

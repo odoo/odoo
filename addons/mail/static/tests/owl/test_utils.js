@@ -3,21 +3,18 @@ odoo.define('mail.owl.testUtils', function (require) {
 
 const BusService = require('bus.BusService');
 
+const ComposerTextInput = require('mail.component.ComposerTextInput');
+const makeMessagingTestEnvironment = require('mail.messagingTestEnv');
 const ChatWindowService = require('mail.service.ChatWindow');
-const OwlService = require('mail.service.Owl');
-const Discuss = require('mail.widget.Discuss');
-const MessagingMenu = require('mail.widget.MessagingMenu');
+const DiscussWidget = require('mail.widget.Discuss');
+const MessagingMenuWidget = require('mail.widget.MessagingMenu');
 
 const AbstractStorageService = require('web.AbstractStorageService');
 const Class = require('web.Class');
 const NotificationService = require('web.NotificationService');
 const RamStorage = require('web.RamStorage');
-const { mock: { addMockEnvironment } } = require('web.test_utils');
+const { makeTestPromise, mock: { addMockEnvironment } } = require('web.test_utils');
 const Widget = require('web.Widget');
-
-const ComposerTextInput = require('mail.component.ComposerTextInput');
-
-const { makeTestPromise } = require('web.test_utils');
 
 //------------------------------------------------------------------------------
 // Private
@@ -43,16 +40,12 @@ const MockMailService = Class.extend({
     notification() {
         return NotificationService;
     },
-    owl() {
-        return OwlService;
-    },
     getServices() {
         return {
             bus_service: this.bus_service(),
             chat_window: this.chat_window(),
             local_storage: this.local_storage(),
             notification: this.notification(),
-            owl: this.owl(),
         };
     },
 });
@@ -256,9 +249,6 @@ function beforeEach(self) {
         },
     };
 
-    self.ORIGINAL_OwlService__resizeGlobalWindow = OwlService.prototype._resizeGlobalWindow;
-    OwlService.prototype._resizeGlobalWindow = () => {};
-
     self.ORIGINAL_ComposerTextInput__loadSummernote = ComposerTextInput.prototype._loadSummernote;
     ComposerTextInput.prototype._loadSummernote = () => {};
 
@@ -296,7 +286,6 @@ function beforeEach(self) {
  * @param {boolean} [param0.autoOpenDiscuss=false]
  * @param {boolean} [param0.debug=false]
  * @param {Object} [param0.discuss={}]
- * @param {Object} [param0.initStoreState]
  * @param {function} [param0.mockRPC]
  * @param {Object} [param0.services]
  * @param {Object} [param0.session={}]
@@ -312,7 +301,6 @@ async function start(param0) {
         autoOpenDiscuss = false,
         debug = false,
         discuss: discussData = {},
-        initStoreState,
         services = getMailServices(),
         session = {},
     } = param0;
@@ -324,7 +312,6 @@ async function start(param0) {
     }, param0);
     delete kwargs.autoOpenDiscuss;
     delete kwargs.discuss;
-    delete kwargs.initStoreState;
     const Parent = Widget.extend({ do_push_state() {} });
     const parent = new Parent();
     _.defaults(session, {
@@ -333,75 +320,60 @@ async function start(param0) {
         partner_display_name: "Your Company, Admin",
         uid: 2,
     });
-    const selector = debug ? 'body' : '#qunit-fixture';
-    const ORIGINAL_OWL_SERVICE_IS_TEST = services.owl.prototype.IS_TEST;
-    const ORIGINAL_OWL_SERVICE_TEST_STORE_INIT_STATE = services.owl.prototype.TEST_STORE_INIT_STATE;
 
-    const ORIGINAL_CHAT_WINDOW_SERVICE_IS_TEST = services.chat_window.prototype.IS_TEST;
-    const ORIGINAL_CHAT_WINDOW_SERVICE_TEST_TARGET = services.chat_window.prototype.TEST_TARGET;
-
-    // Enable test mode for owl service
-    services.owl.prototype.IS_TEST = true;
-    services.owl.prototype.TEST_STORE_INIT_STATE = initStoreState || {
+    const widget = new Widget(parent);
+    const env = makeMessagingTestEnvironment(widget, {
+        debug,
+        providedRPC: param0.mockRPC,
+        session,
+        testServiceTarget: debug ? 'body' : '#qunit-fixture',
+    });
+    Object.assign(env.store.state, {
         globalWindow: {
             innerHeight: 1080,
             innerWidth: 1920,
         },
         isMobile: false,
-    };
-
-    // Enable test mode for chat window service
-    services.chat_window.prototype.IS_TEST = true;
-    services.chat_window.prototype.TEST_TARGET = selector;
-
+    });
     addMockEnvironment(parent, kwargs);
-    const discuss = new Discuss(parent, discussData);
-    const menu = new MessagingMenu(parent, {});
-    const widget = new Widget(parent);
+    const discussWidget = new DiscussWidget(parent, discussData);
+    const menuWidget = new MessagingMenuWidget(parent, {});
+    const selector = debug ? 'body' : '#qunit-fixture';
+    await widget.appendTo($(selector));
 
     Object.assign(widget, {
         closeDiscuss() {
-            discuss.on_detach_callback();
+            discussWidget.on_detach_callback();
         },
         destroy() {
-            // restore store service
-            services.owl.prototype.IS_TEST = ORIGINAL_OWL_SERVICE_IS_TEST;
-            services.owl.prototype.TEST_STORE_INIT_STATE = ORIGINAL_OWL_SERVICE_TEST_STORE_INIT_STATE;
-
-            // restore chat window service
-            services.chat_window.prototype.IS_TEST = ORIGINAL_CHAT_WINDOW_SERVICE_IS_TEST;
-            services.chat_window.prototype.TEST_TARGET = ORIGINAL_CHAT_WINDOW_SERVICE_TEST_TARGET;
-
             delete widget.destroy;
             delete window.o_test_env;
             widget.call('chat_window', 'destroy');
             parent.destroy();
         },
         openDiscuss() {
-            return discuss.on_attach_callback();
+            return discussWidget.on_attach_callback();
         },
     });
 
-    await widget.appendTo($(selector));
-    const env = widget.call('owl', 'getEnv');
     if (debug) {
         window.o_test_env = env;
     }
     widget.call('chat_window', 'test:web_client_ready'); // trigger mounting of chat window manager
     await afterNextRender();
 
-    await menu.appendTo($(selector));
-    menu.on_attach_callback(); // trigger mounting of menu component
+    await menuWidget.appendTo($(selector));
+    menuWidget.on_attach_callback(); // trigger mounting of menu component
     await afterNextRender();
 
-    await discuss.appendTo($(selector));
+    await discussWidget.appendTo($(selector));
 
     if (autoOpenDiscuss) {
         await widget.openDiscuss();
         await afterNextRender();
     }
 
-    return { discuss, env, widget };
+    return { env, widget };
 }
 
 /**
@@ -413,7 +385,6 @@ function afterEach(self) {
     _.throttle = self.underscoreThrottle;
     window.fetch = self.ORIGINAL_WINDOW_FETCH;
     ComposerTextInput.prototype._loadSummernote = self.ORIGINAL_ComposerTextInput__loadSummernote;
-    OwlService.prototype._resizeGlobalWindow = self.ORIGINAL_OwlService__resizeGlobalWindow;
 }
 
 async function pause() {

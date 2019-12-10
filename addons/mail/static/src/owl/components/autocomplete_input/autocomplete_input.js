@@ -1,4 +1,4 @@
-odoo.define('mail.component.AutocompleteInput', function () {
+odoo.define('mail.component.AutocompleteInput', function (require) {
 'use strict';
 
 const { Component } = owl;

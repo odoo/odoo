@@ -1,4 +1,4 @@
-odoo.define('mail.component.DropZone', function () {
+odoo.define('mail.component.DropZone', function (require) {
 'use strict';
 
 const { Component, useState } = owl;

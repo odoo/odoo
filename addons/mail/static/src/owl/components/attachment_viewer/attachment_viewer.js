@@ -1,4 +1,4 @@
-odoo.define('mail.component.AttachmentViewer', function () {
+odoo.define('mail.component.AttachmentViewer', function (require) {
 'use strict';
 
 const { Component, QWeb, useState } = owl;

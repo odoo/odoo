@@ -1,15 +1,15 @@
 odoo.define('mail.widget.Discuss', function (require) {
 'use strict';
 
-const DiscussOwl = require('mail.component.Discuss');
+const DiscussComponent = require('mail.component.Discuss');
+const messagingEnv = require('mail.messagingEnv');
 const InvitePartnerDialog = require('mail.widget.DiscussInvitePartnerDialog');
-const OwlMixin = require('mail.widget.OwlMixin');
 
 const AbstractAction = require('web.AbstractAction');
 const { _t, action_registry, qweb } = require('web.core');
 
-const Discuss = AbstractAction.extend(OwlMixin, {
-    IS_DEV: true,
+const DiscussWidget = AbstractAction.extend({
+    env: messagingEnv,
     template: 'mail.widget.Discuss',
     hasControlPanel: true,
     loadControlPanel: true,
@@ -55,10 +55,7 @@ const Discuss = AbstractAction.extend(OwlMixin, {
             'mail.box_inbox';
         this._lastPushStateActiveThreadLocalId = null;
 
-        this.env = OwlMixin.getEnv.call(this);
-        DiscussOwl.env = this.env;
-
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.discuss_widget = this;
         }
     },
@@ -84,7 +81,8 @@ const Discuss = AbstractAction.extend(OwlMixin, {
             // prevent twice call to on_attach_callback (FIXME)
             return;
         }
-        this.component = new DiscussOwl(null, {
+        DiscussComponent.env = this.env;
+        this.component = new DiscussComponent(null, {
             initActiveThreadLocalId: this._initActiveThreadLocalId,
         });
         this._pushStateActionManagerEventListener = ev => {
@@ -247,7 +245,7 @@ const Discuss = AbstractAction.extend(OwlMixin, {
     _onClickInvite() {
         new InvitePartnerDialog(this, {
             activeThreadLocalId: this.component.storeProps.activeThreadLocalId,
-            store: this.env.store,
+            messagingEnv: this.env,
         }).open();
     },
     /**
@@ -285,8 +283,8 @@ const Discuss = AbstractAction.extend(OwlMixin, {
     },
 });
 
-action_registry.add('mail.widget.discuss', Discuss);
+action_registry.add('mail.widget.discuss', DiscussWidget);
 
-return Discuss;
+return DiscussWidget;
 
 });

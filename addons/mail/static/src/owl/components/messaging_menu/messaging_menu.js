@@ -16,7 +16,6 @@ class MessagingMenu extends Component {
      */
     constructor(...args) {
         super(...args);
-        this.IS_DEV = true;
         /**
          * global JS generated ID for this component. Useful to provide a
          * custom class to autocomplete input, so that click in an autocomplete
@@ -45,7 +44,7 @@ class MessagingMenu extends Component {
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
 
-        if (this.IS_DEV) {
+        if (this.env.isDev) {
             window.messaging_menu = this;
         }
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
@@ -233,13 +232,14 @@ class MessagingMenu extends Component {
     }
 }
 
-MessagingMenu.components = {
-    AutocompleteInput,
-    MobileNavbar,
-    ThreadPreviewList,
-};
-
-MessagingMenu.template = 'mail.component.MessagingMenu';
+Object.assign(MessagingMenu, {
+    components: {
+        AutocompleteInput,
+        MobileNavbar,
+        ThreadPreviewList,
+    },
+    template: 'mail.component.MessagingMenu',
+});
 
 return MessagingMenu;
 

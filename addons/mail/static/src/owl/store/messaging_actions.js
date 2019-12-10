@@ -1,7 +1,6 @@
 odoo.define('mail.store.actions', function (require) {
 'use strict';
 
-const AttachmentViewer = require('mail.component.AttachmentViewer');
 const emojis = require('mail.emojis');
 const mailUtils = require('mail.utils');
 
@@ -435,6 +434,7 @@ const actions = {
      */
     async initMessaging({ dispatch, env, state }) {
         await env.session.is_bound;
+        dispatch('_listenGlobalWindowResize');
         const context = Object.assign({
             isMobile: config.device.isMobile,
         }, env.session.user_context);
@@ -778,8 +778,8 @@ const actions = {
      * @param {string} data.htmlContent
      * @param {boolean} [data.isLog=false]
      * @param {string} data.subject
-     * @param {string} [data.subtype='mail.mt_comment']
      * @param {integer} [data.subtype_id]
+     * @param {string} [data.subtype_xmlid='mail.mt_comment']
      * @param {Object} [options]
      * @param {integer} options.res_id
      * @param {string} options.res_model
@@ -804,8 +804,8 @@ const actions = {
             htmlContent,
             isLog=false,
             subject,
-            // subtype='mail.mt_comment',
             subtype_id,
+            // subtype_xmlid='mail.mt_comment',
         } = data;
         let body = htmlContent.replace(/&nbsp;/g, ' ').trim();
         // This message will be received from the mail composer as html content
@@ -827,7 +827,7 @@ const actions = {
             const command = dispatch('_getCommandFromText', body);
             Object.assign(postData, {
                 command,
-                subtype: 'mail.mt_comment'
+                subtype_xmlid: 'mail.mt_comment'
             });
             await env.rpc({
                 model: 'mail.channel',
@@ -845,8 +845,8 @@ const actions = {
             }
             Object.assign(postData, {
                 context,
-                subtype: isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                subtype_id
+                subtype_id,
+                subtype_xmlid: isLog ? 'mail.mt_note' : 'mail.mt_comment',
             });
             const id = await env.rpc({
                 model: thread._model,
@@ -1302,7 +1302,7 @@ const actions = {
         if (!attachmentLocalIds.includes(attachmentLocalId)) {
             return;
         }
-        return dispatch('_openDialog', AttachmentViewer, {
+        return dispatch('_openDialog', 'AttachmentViewer', {
             attachmentLocalId,
             attachmentLocalIds,
         });
@@ -1707,7 +1707,7 @@ const actions = {
         const partnerLocalId = partner.localId;
         if (state.partners[partnerLocalId]) {
             // partner already exists in store
-            return;
+            return partnerLocalId;
         }
         state.partners[partnerLocalId] = partner;
         // todo: links
@@ -3062,6 +3062,20 @@ const actions = {
      * @private
      * @param {Object} param0
      * @param {function} param0.dispatch
+     */
+    _listenGlobalWindowResize({ dispatch }) {
+        window.addEventListener('resize', _.debounce(() => {
+            dispatch('handleGlobalWindowResize', {
+                globalWindowInnerHeight: window.innerHeight,
+                globalWindowInnerWidth: window.innerWidth,
+                isMobile: config.device.isMobile,
+            });
+        }), 100);
+    },
+    /**
+     * @private
+     * @param {Object} param0
+     * @param {function} param0.dispatch
      * @param {Object} param0.env
      * @param {Object} param0.state
      * @param {string} threadLocalId
@@ -3298,14 +3312,14 @@ const actions = {
      * @private
      * @param {Object} param0
      * @param {Object} param0.state
-     * @param {owl.Component} Component
+     * @param {string} componentName
      * @param {any} info
      * @return {string} unique id of the newly open dialog
      */
-    _openDialog({ state }, Component, info) {
+    _openDialog({ state }, componentName, info) {
         const id = _.uniqueId('o_Dialog');
         state.dialogManager.dialogs.push({
-            Component,
+            componentName,
             id,
             info,
         });

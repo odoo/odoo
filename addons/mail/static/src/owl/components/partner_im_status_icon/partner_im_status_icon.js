@@ -1,4 +1,4 @@
-odoo.define('mail.component.PartnerImStatusIcon', function () {
+odoo.define('mail.component.PartnerImStatusIcon', function (require) {
 'use strict';
 
 const { Component } = owl;
