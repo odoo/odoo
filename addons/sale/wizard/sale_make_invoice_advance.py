@@ -119,6 +119,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
             'team_id': order.team_id.id,
             'user_id': order.user_id.id,
+            'company_id': order.company_id.id,
             'comment': order.note,
         })
         invoice.compute_taxes()
