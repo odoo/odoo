@@ -1,6 +1,7 @@
 odoo.define('payment_stripe_sca.payment_form', function (require) {
     "use strict";
-    
+
+    require('web.dom_ready');
     var ajax = require('web.ajax');
     var core = require('web.core');
     var rpc = require('web.rpc');
@@ -12,9 +13,13 @@ odoo.define('payment_stripe_sca.payment_form', function (require) {
     PaymentForm.include({
     
         willStart: function () {
-            return this._super.apply(this, arguments).then(function () {
-                return ajax.loadJS("https://js.stripe.com/v3/");
-            })
+            var res = this._super.apply(this, arguments);
+            if (this.$('[data-provider="stripe"]').length) {
+                return res.then(function () {
+                    return ajax.loadJS("https://js.stripe.com/v3/");
+                });
+            }
+            return res;
         },
     
         //--------------------------------------------------------------------------
