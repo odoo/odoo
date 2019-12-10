@@ -52,10 +52,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     /*
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
-    * In case of dropdownlist:
-    *   If not checked : Clear the comment textarea and hide it
-    *   If checked : show the comment textarea and focus on it
-    * In case of radio buttons
     *   If not checked : Clear the comment textarea and disable it
     *   If checked : enable the comment textarea and focus on it
     *
@@ -67,24 +63,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var $otherItem = $choiceItemGroup.find('.o_survey_js_form_other_comment');
         var $commentInput = $choiceItemGroup.find('textarea[type="text"]');
 
-        // Handle dropdownlist
-        var $dropdownlist = $choiceItemGroup.find('select');
-        var isDropdown = $dropdownlist.length > 0;
-
-        var isOtherSelected = (isDropdown && $dropdownlist.val() === $otherItem.val()) || $otherItem.prop('checked');
-
-        if (isOtherSelected || $commentInput.hasClass('o_survey_comment')) {
-            if (isDropdown) {
-                $commentInput.toggleClass('d-none', false);
-            }
-            if (isOtherSelected) {
-                $commentInput.enable();
+        if ($otherItem.prop('checked') || $commentInput.hasClass('o_survey_comment')) {
+            $commentInput.enable();
+            if ($otherItem.prop('checked')) {
                 $commentInput.focus();
             }
         } else {
-            if (isDropdown) {
-                $commentInput.toggleClass('d-none', true);
-            }
             $commentInput.val('');
             $commentInput.enable(false);
         }
@@ -188,12 +172,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 case 'datetime':
                     params = self._prepareSubmitDates(params, this.name, this.value, true);
                     break;
-                case 'simple_choice_dropdown':
-                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'), 'option:selected');
-                    break;
                 case 'simple_choice_radio':
                 case 'multiple_choice':
-                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'), 'input:checked');
+                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'));
                     break;
                 case 'matrix':
                     params = self._prepareSubmitAnswersMatrix(params, $(this));
@@ -219,9 +200,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   If the answer is not the 'comment selection' (=Other), calls the _prepareSubmitAnswer method to add the answer to the params
     *   If there is a comment linked to that question, calls the _prepareSubmitComment method to add the comment to the params
     */
-    _prepareSubmitChoices: function(params, $parent, questionId, selector) {
+    _prepareSubmitChoices: function (params, $parent, questionId) {
         var self = this;
-        $parent.find(selector).each(function () {
+        $parent.find('input:checked').each(function () {
             if (this.value !== '-1') {
                 params = self._prepareSubmitAnswer(params, questionId, this.value);
             }
