@@ -1761,7 +1761,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         journal = self.journal_id
-        if self.type in ('entry', 'out_invoice', 'in_invoice') or not journal.refund_sequence:
+        if self.type in ('entry', 'out_invoice', 'in_invoice', 'out_receipt', 'in_receipt') or not journal.refund_sequence:
             return journal.sequence_id
         if not journal.refund_sequence_id:
             return
