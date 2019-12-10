@@ -1810,7 +1810,7 @@ class Binary(Field):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
-        if value[:1] == b'P':  # Fast detection of first 6 bits of '<' (0x3C)
+        if value[:1] in (b'P', 'P') and value[:4] != b'PK\x03\x04':  # Fast detection of first 6 bits of '<' (0x3C)
             decoded_value = base64.b64decode(value)
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
