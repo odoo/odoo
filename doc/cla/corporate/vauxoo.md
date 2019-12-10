@@ -47,3 +47,4 @@ Tomas Alvarez tomas@vauxoo.com https://github.com/tomeyro
 Carmen Liliana Miranda González carmen@vauxoo.com https://github.com/CarmenMiranda
 Arturo Flores arturo@vauxoo.com https://github.com/umiphos
 Deivis Laya deivis@vauxoo.com https://github.com/deivislaya
+Yennifer Santiago yennifer@vauxoo.com https://github.com/ysantiago
