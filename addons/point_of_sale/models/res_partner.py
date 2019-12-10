@@ -13,11 +13,6 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
-    barcode = fields.Char(help="Use a barcode to identify this contact from the Point of Sale.", copy=False)
-
-    _sql_constraints = [
-        ('unique_barcode', 'unique(barcode, company_id)', 'This barcode is already assigned to another contact. Please make sure you assign a unique barcode to this contact.'),
-    ]
 
     def _compute_pos_order(self):
         partners_data = self.env['pos.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
