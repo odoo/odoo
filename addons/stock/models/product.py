@@ -580,9 +580,6 @@ class ProductTemplate(models.Model):
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids', readonly=False)
 
-    def _is_cost_method_standard(self):
-        return True
-
     @api.depends(
         'product_variant_ids',
         'product_variant_ids.stock_move_ids.product_qty',
