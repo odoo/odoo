@@ -105,6 +105,12 @@ var LivechatButton = Widget.extend({
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
+        if (this.options.button_background_color) {
+            this.$el.css('background-color', this.options.button_background_color);
+        }
+        if (this.options.button_text_color) {
+            this.$el.css('color', this.options.button_text_color);
+        }
         return this._super();
     },
 
@@ -123,6 +129,14 @@ var LivechatButton = Widget.extend({
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
+
+        var hasAlreadyMessage = _.some(this._messages, function (msg) {
+            return message.getID() === msg.getID();
+        });
+        if (hasAlreadyMessage) {
+            return;
+        }
+
         if (this._livechat) {
             this._livechat.addMessage(message);
         }
@@ -178,6 +192,11 @@ var LivechatButton = Widget.extend({
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
             } else { // normal message
+                // If message from notif is already in chatter messages, stop handling
+                if (this._messages.some(message => message.getID() === notification[1].id)) {
+                    this._livechat.unregisterTyping({ partnerID: notification[1].author_id[0] });
+                    return;
+                }
                 this._addMessage(notification[1]);
                 this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
@@ -227,7 +246,9 @@ var LivechatButton = Widget.extend({
                     data: livechatData
                 });
                 return self._openChatWindow().then(function () {
-                    self._sendWelcomeMessage();
+                    if (!self._history) {
+                        self._sendWelcomeMessage();
+                    }
                     self._renderMessages();
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');
@@ -275,7 +296,9 @@ var LivechatButton = Widget.extend({
         var self = this;
         var options = {
             displayStars: false,
+            headerBackgroundColor: this.options.header_background_color,
             placeholder: this.options.input_placeholder || "",
+            titleColor: this.options.title_color,
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
         return this._chatWindow.appendTo($('body')).then(function () {
@@ -410,6 +433,8 @@ var Feedback = Widget.extend({
         'click .o_livechat_rating_choices img': '_onClickSmiley',
         'click .o_livechat_no_feedback span': '_onClickNoFeedback',
         'click .o_rating_submit_button': '_onClickSend',
+        'click .o_email_chat_button': '_onEmailChat',
+        'click .o_livechat_email_error .alert-link': '_onTryAgain',
     },
 
     /**
@@ -432,24 +457,30 @@ var Feedback = Widget.extend({
      * @private
      * @param {Object} options
      */
-    _sendFeedback: function (options) {
+    _sendFeedback: function (reason) {
         var self = this;
         var args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
-            reason : options.reason
+            reason: reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function () {
-            if (options.close) {
-                var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
-                var content = _.str.sprintf(_t("Rating: %s"), emoji);
-                if (options.reason) {
-                    content += " \n" + options.reason;
-                }
-                self.trigger('send_message', { content: content });
-                self.trigger('feedback_sent'); // will close the chat
+            var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
+            var content = _.str.sprintf(_t("Rating: %s"), emoji);
+            if (reason) {
+                content += " \n" + reason;
             }
+            self.trigger('send_message', { content: content });
         });
+    },
+    /**
+    * @private
+    */
+    _showThanksMessage: function () {
+        this.$('.o_livechat_rating_box').empty().append($('<div />', {
+            text: _t('Thank you for your feedback'),
+            class: 'text-muted'
+        }));
     },
 
     //--------------------------------------------------------------------------
@@ -466,8 +497,10 @@ var Feedback = Widget.extend({
      * @private
      */
     _onClickSend: function () {
+        this.$('.o_livechat_rating_reason').hide();
+        this._showThanksMessage();
         if (_.isNumber(this.rating)) {
-            this._sendFeedback({ reason: this.$('textarea').val(), close: true });
+            this._sendFeedback(this.$('textarea').val());
         }
     },
     /**
@@ -480,14 +513,48 @@ var Feedback = Widget.extend({
         this.$('.o_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
 
         // only display textearea if bad smiley selected
-        var shouldCloseChatWindow = false;
         if (this.rating !== 10) {
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
-            shouldCloseChatWindow = true;
+            this._showThanksMessage();
+            this._sendFeedback();
         }
-        this._sendFeedback({ close: shouldCloseChatWindow });
+    },
+    /**
+    * @private
+    */
+    _onEmailChat: function () {
+        var self = this;
+        var $email = this.$('#o_email');
+
+        if (utils.is_email($email.val())) {
+            $email.removeAttr('title').removeClass('is-invalid').prop('disabled', true);
+            this.$('.o_email_chat_button').prop('disabled', true);
+            this._rpc({
+                route: '/im_livechat/email_livechat_transcript',
+                params: {
+                    uuid: this._livechat.getUUID(),
+                    email: $email.val(),
+                }
+            }).then(function () {
+                self.$('.o_livechat_email').html($('<strong />', { text: _t('Conversation Sent') }));
+            }).guardedCatch(function () {
+                self.$('.o_livechat_email').hide();
+                self.$('.o_livechat_email_error').show();
+            });
+        } else {
+            $email.addClass('is-invalid').prop('title', _t('Invalid email address'));
+        }
+    },
+    /**
+    * @private
+    */
+    _onTryAgain: function () {
+        this.$('#o_email').prop('disabled', false);
+        this.$('.o_email_chat_button').prop('disabled', false);
+        this.$('.o_livechat_email_error').hide();
+        this.$('.o_livechat_email').show();
     },
 });
 

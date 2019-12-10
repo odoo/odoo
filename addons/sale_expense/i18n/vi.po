@@ -1,18 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_expense
+# 	* sale_expense
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,9 +36,9 @@ msgid "Activate Expense Emails"
 msgstr ""
 
 #. module: sale_expense
-#: model:ir.model,name:sale_expense.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analytic Line"
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
+msgid "Can be reinvoiced"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -53,19 +53,36 @@ msgid "Expenses"
 msgstr "Chi phí"
 
 #. module: sale_expense
-#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
-msgid "Invoicing"
-msgstr "Lên hóa đơn"
+#: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
+msgid ""
+"If the product has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
 
 #. module: sale_expense
-#: model:ir.model,name:sale_expense.model_sale_order
-msgid "Quotation"
-msgstr "Báo giá"
+#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
+msgid "Invoicing"
+msgstr "Xuất hóa đơn"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move_line
+msgid "Journal Item"
+msgstr "Bút toán"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_product_template
+msgid "Product Template"
+msgstr "Bản mẫu sản phẩm"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
-msgid "Sale Order"
-msgstr "Đơn hàng Bán"
+msgid "Reinvoice Customer"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
 
 #. module: sale_expense
 #: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0

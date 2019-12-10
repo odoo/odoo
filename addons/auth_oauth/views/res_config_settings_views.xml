@@ -7,13 +7,15 @@
             <field name="arch" type="xml">
                 <div id="msg_module_auth_oauth" position="replace">
                     <div class="content-group" attrs="{'invisible': [('module_auth_oauth','=',False)]}">
-                        <div class="mt16">
+                        <div class="mt8">
                             <button type="action" name="%(auth_oauth.action_oauth_provider)d" string="OAuth Providers" icon="fa-arrow-right" class="btn-link"/>
                         </div>
                     </div>
                 </div>
                 <div id="module_auth_oauth" position="after">
-                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('module_auth_oauth','=',False)]}">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                        id="signin_google_setting"
+                        attrs="{'invisible': [('module_auth_oauth','=',False)]}">
                         <div class="o_setting_left_pane">
                             <field name="auth_oauth_google_enabled"/>
                         </div>

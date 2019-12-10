@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import Form, SavepointCase
 
 
 class TestInventory(SavepointCase):
@@ -64,6 +64,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -97,6 +98,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -125,6 +127,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -310,6 +313,131 @@ class TestInventory(SavepointCase):
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 2)
+
+    def test_inventory_8(self):
+        """ Check inventory lines product quantity is 0 when inventory is
+        started with `prefill_counted_quantity` disable.
+        """
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        inventory_form = Form(self.env['stock.inventory'].with_context(
+                default_prefill_counted_quantity='zero',
+             ), view='stock.view_inventory_form')
+        inventory = inventory_form.save()
+        inventory.action_start()
+        self.assertNotEqual(len(inventory.line_ids), 0)
+        # Checks all inventory lines quantities are correctly set.
+        for line in inventory.line_ids:
+            self.assertEqual(line.product_qty, 0)
+            self.assertNotEqual(line.theoretical_qty, 0)
+
+    def test_inventory_9_cancel_then_start(self):
+        """ Checks when we cancel an inventory, then change its locations and/or
+        products setup and restart it, it will remove all its lines and restart
+        like a new inventory.
+        """
+        # Creates some records needed for the test...
+        product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        loc1 = self.env['stock.location'].create({
+            'name': 'SafeRoom A',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        # Adds some quants.
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': loc1.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product2.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': loc1.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product2.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        # Creates the inventory and configures if for product1
+        inventory_form = Form(self.env['stock.inventory'], view='stock.view_inventory_form')
+        inventory_form.product_ids.add(self.product1)
+        inventory = inventory_form.save()
+        inventory.action_start()
+        # Must have two inventory lines about product1.
+        self.assertEqual(len(inventory.line_ids), 2)
+        for line in inventory.line_ids:
+            self.assertEqual(line.product_id.id, self.product1.id)
+
+        # Cancels the inventory and changes for product2 in its setup.
+        inventory.action_cancel_draft()
+        inventory_form = Form(inventory)
+        inventory_form.product_ids.remove(self.product1.id)
+        inventory_form.product_ids.add(product2)
+        inventory = inventory_form.save()
+        inventory.action_start()
+        # Must have two inventory lines about product2.
+        self.assertEqual(len(inventory.line_ids), 2)
+        self.assertEqual(inventory.line_ids.product_id.id, product2.id)
+
+    def test_inventory_prefill_counted_quantity(self):
+        """ Checks that inventory lines have a `product_qty` set on zero or
+        equals to quantity on hand, depending of the `prefill_counted_quantity`.
+        """
+        # Set product quantity to 42.
+        vals = {
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'quantity': 42,
+        }
+        self.env['stock.quant'].create(vals)
+        # Generate new inventory, its line must have a theoretical
+        # quantity to 42 and a counted quantity to 42.
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Default Qty',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+            'prefill_counted_quantity': 'counted',
+        })
+        inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 42)
+        self.assertEqual(inventory.line_ids.product_qty, 42)
+
+        # Generate new inventory, its line must have a theoretical
+        # quantity to 42 and a counted quantity to 0.
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Default Qty',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+            'prefill_counted_quantity': 'zero',
+        })
+        inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 42)
+        self.assertEqual(inventory.line_ids.product_qty, 0)
 
     def test_inventory_outdate_1(self):
         """ Checks that inventory adjustment line is marked as outdated after

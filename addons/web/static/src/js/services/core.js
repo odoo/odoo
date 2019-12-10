@@ -2,8 +2,8 @@ odoo.define('web.core', function (require) {
 "use strict";
 
 var Bus = require('web.Bus');
-var Class = require('web.Class');
 var config = require('web.config');
+var Class = require('web.Class');
 var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
@@ -27,7 +27,7 @@ _.each('resize,scroll'.split(','), function (evtype) {
 });
 
 return {
-    qweb: new QWeb(config.debug),
+    qweb: new QWeb(config.isDebug()),
 
     // core classes and functions
     Class: Class,

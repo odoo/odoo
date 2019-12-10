@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='notify']" position="after">
-                    <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
+                    <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
                         attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
                     <field name="mass_mailing_name"
                         attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>

@@ -4,51 +4,10 @@ odoo.define('portal.chatter', function (require) {
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
+var portalComposer = require('portal.composer');
 
 var qweb = core.qweb;
 var _t = core._t;
-
-/**
- * Widget PortalComposer
- *
- * Display the composer (according to access right)
- *
- */
-var PortalComposer = publicWidget.Widget.extend({
-    template: 'portal.Composer',
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
-    events: {
-        'click .o_portal_chatter_composer_btn': 'async _onSubmitButtonClick',
-    },
-
-    /**
-     * @constructor
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
-        this.options = _.defaults(options || {}, {
-            'allow_composer': true,
-            'display_composer': false,
-            'csrf_token': odoo.csrf_token,
-            'token': false,
-            'res_model': false,
-            'res_id': false,
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onSubmitButtonClick: function () {
-        return new Promise(function() {});
-    },
-});
-
-
 
 /**
  * Widget PortalChatter
@@ -61,7 +20,8 @@ var PortalChatter = publicWidget.Widget.extend({
     template: 'portal.Chatter',
     xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
-        "click .o_portal_chatter_pager_btn": '_onClickPager',
+        'click .o_portal_chatter_pager_btn': '_onClickPager',
+        'click .o_portal_chatter_js_is_internal': 'async _onClickUpdateIsInternal',
     },
 
     /**
@@ -86,6 +46,7 @@ var PortalChatter = publicWidget.Widget.extend({
             'pager_scope': 5,
             'pager_start': 1,
             'is_user_public': true,
+            'is_user_employee': false,
             'is_user_publisher': false,
             'hash': false,
             'pid': false,
@@ -129,7 +90,7 @@ var PortalChatter = publicWidget.Widget.extend({
 
         // instanciate and insert composer widget
         if (this.options['display_composer']) {
-            this._composer = new PortalComposer(this, this.options);
+            this._composer = new portalComposer.PortalComposer(this, this.options);
             defs.push(this._composer.replace(this.$('.o_portal_chatter_composer')));
         }
 
@@ -295,6 +256,35 @@ var PortalChatter = publicWidget.Widget.extend({
         var page = $(ev.currentTarget).data('page');
         this._changeCurrentPage(page);
     },
+
+    /**
+     * Toggle is_internal state of message. Update both node data and
+     * classes to ensure DOM is updated accordingly to RPC call result.
+     * @private
+     * @returns {Promise}
+     */
+    _onClickUpdateIsInternal: function (ev) {
+        ev.preventDefault();
+
+        var $elem = $(ev.currentTarget);
+        return this._rpc({
+            route: '/mail/update_is_internal',
+            params: {
+                message_id: $elem.data('message-id'),
+                is_internal: ! $elem.data('is-internal'),
+            },
+        }).then(function (result) {
+            $elem.data('is-internal', result);
+            if (result === true) {
+                $elem.addClass('o_portal_message_internal_on');
+                $elem.removeClass('o_portal_message_internal_off');
+            }
+            else {
+                $elem.addClass('o_portal_message_internal_off');
+                $elem.removeClass('o_portal_message_internal_on');
+            }
+        });
+    },
 });
 
 publicWidget.registry.portalChatter = publicWidget.Widget.extend({
@@ -304,15 +294,20 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        var self = this;
         var defs = [this._super.apply(this, arguments)];
         var chatter = new PortalChatter(this, this.$el.data());
         defs.push(chatter.appendTo(this.$el));
-        return Promise.all(defs);
+        return Promise.all(defs).then(function () {
+            // scroll to the right place after chatter loaded
+            if (window.location.hash === '#' + self.$el.attr('id')) {
+                $('html, body').scrollTop(self.$el.offset().top);
+            }
+        });
     },
 });
 
 return {
-    PortalComposer: PortalComposer,
     PortalChatter: PortalChatter,
 };
 });

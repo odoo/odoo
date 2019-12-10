@@ -42,9 +42,12 @@ var PosDB = core.Class.extend({
         this.category_search_string = {};
     },
 
-    /* 
-     * sets an uuid to prevent conflict in locally stored data between multiple databases running
-     * in the same browser at the same origin (Doing this is not advised !)
+    /** 
+     * sets an uuid to prevent conflict in locally stored data between multiple PoS Configs. By
+     * using the uuid of the config the local storage from other configs will not get effected nor
+     * loaded in sessions that don't belong to them.
+     *
+     * @param {string} uuid Unique identifier of the PoS Config linked to the current session.
      */
     set_uuid: function(uuid){
         this.name = this.name + '_' + uuid;
@@ -211,7 +214,7 @@ var PosDB = core.Class.extend({
         }
     },
     _partner_search_string: function(partner){
-        var str =  partner.name;
+        var str =  partner.name || '';
         if(partner.barcode){
             str += '|' + partner.barcode;
         }
@@ -277,10 +280,11 @@ var PosDB = core.Class.extend({
                 if(partner.barcode){
                     this.partner_by_barcode[partner.barcode] = partner;
                 }
-                partner.address = (partner.street || '') +', '+ 
-                                  (partner.zip || '')    +' '+
-                                  (partner.city || '')   +', '+ 
-                                  (partner.country_id[1] || '');
+                partner.address = (partner.street ? partner.street + ', ': '') +
+                                  (partner.zip ? partner.zip + ', ': '') +
+                                  (partner.city ? partner.city + ', ': '') +
+                                  (partner.state_id ? partner.state_id[1] + ', ': '') +
+                                  (partner.country_id ? partner.country_id[1]: '');
                 this.partner_search_string += this._partner_search_string(partner);
             }
         }
@@ -483,6 +487,54 @@ var PosDB = core.Class.extend({
             orders.push(saved[i].data);
         }
         return orders;
+    },
+    /**
+     * Return the orders with requested ids if they are unpaid.
+     * @param {array<number>} ids order_ids.
+     * @return {array<object>} list of orders.
+     */
+    get_unpaid_orders_to_sync: function(ids){
+        var saved = this.load('unpaid_orders',[]);
+        var orders = [];
+        saved.forEach(function(o) {
+            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length)){
+                orders.push(o);
+            }
+        });
+        return orders;
+    },
+    /**
+     * Add a given order to the orders to be removed from the server.
+     *
+     * If an order is removed from a table it also has to be removed from the server to prevent it from reapearing 
+     * after syncing. This function will add the server_id of the order to a list of orders still to be removed.
+     * @param {object} order object.
+     */
+    set_order_to_remove_from_server: function(order){
+        if (order.server_id !== undefined) {
+            var to_remove = this.load('unpaid_orders_to_remove',[]);
+            to_remove.push(order.server_id);
+            this.save('unpaid_orders_to_remove', to_remove);
+        }
+    },
+    /**
+     * Get a list of server_ids of orders to be removed.
+     * @return {array<number>} list of server_ids.
+     */
+    get_ids_to_remove_from_server: function(){
+        return this.load('unpaid_orders_to_remove',[]);
+    },
+    /**
+     * Remove server_ids from the list of orders to be removed.
+     * @param {array<number>} ids
+     */
+    set_ids_removed_from_server: function(ids){
+        var to_remove = this.load('unpaid_orders_to_remove',[]);
+        
+        to_remove = _.filter(to_remove, function(id){
+            return !ids.includes(id);
+        });
+        this.save('unpaid_orders_to_remove', to_remove);
     },
     set_cashier: function(cashier) {
         // Always update if the user is the same as before

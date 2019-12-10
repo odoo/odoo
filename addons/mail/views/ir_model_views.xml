@@ -8,6 +8,7 @@
             <field name="transient" position="after">
                 <field name="is_mail_thread" attrs="{'readonly': [('state','!=', 'manual')]}" groups="base.group_no_one"/>
                 <field name="is_mail_activity" attrs="{'readonly': [('state','!=', 'manual')]}" groups="base.group_no_one"/>
+                <field name="is_mail_blacklist" attrs="{'readonly': [('state','!=', 'manual')]}" groups="base.group_no_one"/>
             </field>
             <xpath expr="//field[@name='field_id']//field[@name='copied']" position="after">
                 <field name="tracking" attrs="{'readonly': [('state','!=', 'manual')]}"/>
@@ -22,6 +23,7 @@
             <field name="model" position="after">
                 <filter string="Mail Thread" name="is_mail_thread" domain="[('is_mail_thread', '=', True)]"/>
                 <filter string="Mail Activity" name="is_mail_activity" domain="[('is_mail_activity', '=', True)]"/>
+                <filter string="Mail Blacklist" name="is_mail_blacklist" domain="[('is_mail_blacklist', '=', True)]"/>
             </field>
         </field>
     </record>

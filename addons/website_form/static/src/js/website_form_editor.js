@@ -7,11 +7,58 @@ odoo.define('website_form_editor', function (require) {
 
     var ajax = require('web.ajax');
     var core = require('web.core');
+    var Dialog = require('web.Dialog');
     var FormEditorRegistry = require('website_form.form_editor_registry');
     var options = require('web_editor.snippets.options');
     var wUtils = require('website.utils');
+    var Wysiwyg = require('web_editor.wysiwyg');
 
     var qweb = core.qweb;
+    var _t = core._t;
+
+    var FormEditorDialog = Dialog.extend({
+        /**
+         * @constructor
+         */
+        init: function (parent, options) {
+            this._super(parent, _.extend({
+                buttons: [{
+                    text: _t('Save'),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: this._onSaveModal.bind(this),
+                }, {
+                    text: _t('Cancel'),
+                    close: true
+                }],
+            }, options));
+
+            this.opened(() => {
+                this.$modal.find('.o_website_form_input, .modal-footer .btn').first().focus();
+            });
+        },
+
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _onSaveModal: function () {
+            if (this.$el[0].checkValidity()) {
+                this.trigger_up('save');
+            } else {
+                _.each(this.$el.find('.o_website_form_input'), function (input) {
+                    var $field = $(input).closest('.form-field');
+                    $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                    if (!input.checkValidity()) {
+                        $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                    }
+                });
+            }
+        },
+    });
 
     options.registry['website_form_editor'] = options.Class.extend({
         xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
@@ -19,45 +66,7 @@ odoo.define('website_form_editor', function (require) {
         start: function () {
             this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
             this.$target.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
-        },
-
-        // Generic modal code
-        build_modal: function (modal_title, modal_body, on_save) {
-            var self = this;
-
-            // Build the form parameters modal
-            var modal = qweb.render("website_form.modal", {
-                modal_title: modal_title,
-                modal_body: modal_body
-            });
-
-            self.$modal = $(modal);
-            self.$modal.appendTo('body');
-
-            // Process the modal on_save then hide it
-            self.$modal.find("#modal-save").on('click', function (e){
-                if (self.$modal.find("form")[0].checkValidity()) {
-                    on_save();
-                    self.$modal.modal('hide');
-                } else {
-                    _.each(self.$modal.find('.o_website_form_input'), function (input) {
-                        var $field = $(input).closest('.form-field');
-                        $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-                        if (!input.checkValidity()) {
-                            $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-                        }
-                    });
-                }
-            });
-
-            // Destroy the modal when it is closed, as we will use many of them
-            self.$modal.on('hidden.bs.modal', function (e) {
-              self.$modal.remove();
-          });
-
-            self.$modal.modal();
-
-            return self.$modal;
+            return this._super.apply(this, arguments);
         },
 
         // Return the fields promise if we already issued a model
@@ -82,19 +91,19 @@ odoo.define('website_form_editor', function (require) {
         },
 
         // Choose a model modal
-        website_form_model_modal: function (previewMode, value, $li) {
+        website_form_model_modal: function (previewMode, widgetValue, params) {
             var self = this;
             this._rpc({
                 model: "ir.model",
                 method: "search_read",
                 args: [
-                    [['website_form_access', '=', true], ['website_form_key', '!=', false]],
+                    [['website_form_access', '=', true]],
                     ['id', 'model', 'name', 'website_form_label', 'website_form_key']
                 ],
             }).then(function (models) {
                 self.models = models;
                 // Models selection input
-                var model_selection = qweb.render("website_form.field_many2one", {
+                var modelSelection = qweb.render("website_form.field_many2one", {
                     field: {
                         name: 'model_selection',
                         string: 'Action',
@@ -110,7 +119,7 @@ odoo.define('website_form_editor', function (require) {
                 });
 
                 // Success page input
-                var success_page = qweb.render("website_form.field_char", {
+                var successPage = qweb.render("website_form.field_char", {
                     field: {
                         name: 'success_page',
                         string: 'Thank You Page',
@@ -118,49 +127,53 @@ odoo.define('website_form_editor', function (require) {
                     }
                 });
 
-                // Form parameters modal
-                self.build_modal(
-                    "Form Parameters",
-                    model_selection + success_page,
-                    function () {
-                        var success_page = self.$modal.find("[name='success_page']").val();
-                        self.init_form();
-                        self.$target.attr('data-success_page', success_page);
+                var save = function () {
+                    var successPage = this.$el.find("[name='success_page']").val();
+                    self.init_form();
+                    self.$target.attr('data-success_page', successPage);
 
-                        self.$modal.find('.o_form_parameter_custom').each(function () {
-                            var $field = $(this).find('.o_website_form_input');
-                            var value = $field.val();
-                            var fieldName = $field.attr('name');
-                            self.$target.find('.form-group:has("[name=' + fieldName + ']")').remove();
-                            if (value) {
-                                var $hiddenField = $(qweb.render('website_form.field_char', {
-                                    field: {
-                                        name: fieldName,
-                                        value: value,
-                                    }
-                                })).addClass('d-none');
-                                self.$target.find('.form-group:has(".o_website_form_send")').before($hiddenField);
-                            }
-                        });
-                    }
-                );
+                    this.$el.find('.o_form_parameter_custom').each(function () {
+                        var $field = $(this).find('.o_website_form_input');
+                        var value = $field.val();
+                        var fieldName = $field.attr('name');
+                        self.$target.find('.form-group:has("[name=' + fieldName + ']")').remove();
+                        if (value) {
+                            var $hiddenField = $(qweb.render('website_form.field_char', {
+                                field: {
+                                    name: fieldName,
+                                    value: value,
+                                }
+                            })).addClass('d-none');
+                            self.$target.find('.form-group:has(".o_website_form_send")').before($hiddenField);
+                        }
+                    });
+                };
 
-                wUtils.autocompleteWithPages(self, self.$modal.find("input[name='success_page']"));
-                self.originSuccessPage = self.$modal.find("input[name='success_page']").val();
-                self.originFormID = self.$modal.find("[name='model_selection']").val();
-                self._renderParameterFields();
-
-                self.$modal.find("[name='model_selection']").on('change', function () {
-                    self._renderParameterFields();
-                });
-
-                // On modal close, if there is no data-model, it means
-                // that the user refused to configure the form on the
-                // first modal, so we remove the snippet.
-                self.$modal.on('hidden.bs.modal', function (e) {
-                    if (!self.$target.attr('data-model_name')){
+                var cancel = function () {
+                    if (!self.$target.attr('data-model_name')) {
                         self.$target.remove();
                     }
+                };
+
+                var $content = $('<form role="form">' + modelSelection + successPage + '</form>');
+                var dialog = new FormEditorDialog(self, {
+                    title: 'Form Parameters',
+                    size: 'medium',
+                    $content: $content,
+                }).open();
+                dialog.on('closed', this, cancel);
+                dialog.on('save', this, ev => {
+                    ev.stopPropagation();
+                    save.call(dialog);
+                });
+
+                wUtils.autocompleteWithPages(self, $content.find("input[name='success_page']"));
+                self.originSuccessPage = $content.find("input[name='success_page']").val();
+                self.originFormID = $content.find("[name='model_selection']").val();
+                self._renderParameterFields($content);
+
+                $content.find("[name='model_selection']").on('change', function () {
+                    self._renderParameterFields($content);
                 });
             });
         },
@@ -173,11 +186,11 @@ odoo.define('website_form_editor', function (require) {
          * @private
          * @returns {Promise}
          */
-        _renderParameterFields: function () {
+        _renderParameterFields: function ($modal) {
             var self = this;
-            var $successPage = this.$modal.find("[name='success_page']");
-            this.$modal.find('.o_form_parameter_custom').remove();
-            var id = this.$modal.find("[name='model_selection']").val();
+            var $successPage = $modal.find("[name='success_page']");
+            $modal.find('.o_form_parameter_custom').remove();
+            var id = $modal.find("[name='model_selection']").val();
             this.activeForm = _.findWhere(this.models, {id: parseInt(id)});
             var formKey = this.activeForm.website_form_key;
             if (!formKey) {
@@ -203,7 +216,7 @@ odoo.define('website_form_editor', function (require) {
                         $field.find('label').attr('title', field.title);
                         // Set value
                         $field.find('.o_website_form_input').val(value);
-                        self.$modal.find('form').append($field);
+                        $modal.append($field);
                     }));
                 });
             }
@@ -211,7 +224,7 @@ odoo.define('website_form_editor', function (require) {
         },
 
         // Choose a field modal
-        website_form_field_modal: function (previewMode, value, $li) {
+        website_form_field_modal: function (previewMode, widgetValue, params) {
             var self = this;
 
             this.fields().then(function (fields) {
@@ -221,7 +234,7 @@ odoo.define('website_form_editor', function (require) {
                 var fields_in_form = _.map(self.$target.find('.col-form-label'), function (label) { return label.getAttribute('for'); });
                 var available_fields = _.filter(fields_array, function (field) { return !_.contains(fields_in_form, field.name); });
                 // Render the select input
-                var field_selection = qweb.render("website_form.field_many2one", {
+                var fieldSelection = qweb.render("website_form.field_many2one", {
                     field: {
                         name: 'field_selection',
                         string: 'Field',
@@ -229,27 +242,32 @@ odoo.define('website_form_editor', function (require) {
                     }
                 });
 
-                // Form parameters modal
-                self.build_modal(
-                    "Field Parameters",
-                    field_selection,
-                    function () {
-                        var selected_field_name = self.$modal.find("[name='field_selection']").val();
-                        var selected_field = fields[selected_field_name];
-                        self.append_field(selected_field);
-                    }
-                );
+                var save = function () {
+                    var selectedFieldName = this.$el.find("[name='field_selection']").val();
+                    var selectedField = fields[selectedFieldName];
+                    self.append_field(selectedField);
+                };
+
+                var dialog = new FormEditorDialog(self, {
+                    title: 'Field Parameters',
+                    size: 'medium',
+                    $content: '<form role="form">' + fieldSelection + '</form>',
+                }).open();
+                dialog.on('save', this, ev => {
+                    ev.stopPropagation();
+                    save.call(dialog);
+                });
             });
         },
 
         // Create a custom field
-        website_form_custom_field: function (previewMode, value, $li) {
-            var default_field_name = 'Custom ' + $li.text();
+        website_form_custom_field: function (previewMode, widgetValue, params) {
+            var default_field_name = 'Custom ' + this.el.querySelector(`[data-website_form_custom_field="${widgetValue}"]`).textContent; // TODO improve
             this.append_field({
                 name: default_field_name,
                 string: default_field_name,
                 custom: true,
-                type: value,
+                type: widgetValue,
                 // Default values for x2many fields
                 records: [
                     {
@@ -284,7 +302,7 @@ odoo.define('website_form_editor', function (require) {
         },
 
         // Re-render the field and replace the current one
-        // website_form_editor_field_reset: function(previewMode, value, $li) {
+        // website_form_editor_field_reset: function(previewMode, widgetValue, params) {
         //     var self = this;
         //     var target_field_name = this.$target.find('.col-form-label').attr('for');
         //     this.fields().then(function(fields){
@@ -296,6 +314,12 @@ odoo.define('website_form_editor', function (require) {
 
         append_field: function (field) {
             var self = this;
+            // Copy formatting classes of last row (field)
+            var $lastField = this.$target.find('.form-field.row:last');
+            field.formatInfo = {
+                labelClass: $lastField.find('> div:first').attr('class'),
+                contentClass: $lastField.find('> div:last').attr('class'),
+            };
             this.render_field(field).then(function (field){
                 self.$target.find(".form-group:has('.o_website_form_send')").before(field);
             });
@@ -346,32 +370,56 @@ odoo.define('website_form_editor', function (require) {
         init_form: function () {
             var self = this;
             var modelName = this.activeForm.model;
+            var currentModel = this.$target.attr('data-model_name');
             var formKey = this.activeForm.website_form_key;
-            if (modelName !== this.$target.attr('data-model_name')) {
-                this.$target.attr('data-model_name', modelName);
-                this.$target.find(".form-field:not(:has('.o_website_form_send')), .o_form_heading").remove();
+            if (!currentModel) {
+                // Directly change the parameters if model is being set for the first time
+                this.changeFormParameters(modelName, formKey);
+            } else if (modelName !== currentModel) {
+                var warningMessage = _t("Are you sure you want to change the parameters of your form? All the current fields will be discarded.");
+                new Dialog(this, {
+                    title: _t("Warning"),
+                    size: 'medium',
+                    $content: $('<div>', {text: warningMessage}),
+                    buttons: [{
+                        text: _t("Ok"),
+                        classes: 'btn-primary',
+                        click: function () {
+                            self.changeFormParameters(modelName, formKey);
+                        },
+                        close: true,
+                    }, {
+                        text: _t("Discard"),
+                        close: true,
+                    }],
+                }).open({shouldFocusButtons: true});
+            }
+        },
 
-                if (formKey) {
-                    var formInfo = FormEditorRegistry.get(formKey);
-                    ajax.loadXML(formInfo.defaultTemplatePath, qweb).then(function () {
-                        // Append form title
-                        $('<h1>', {
-                            class: 'o_form_heading',
-                            text: self.activeForm.website_form_label,
-                        }).prependTo(self.$target.find('.container'));
-                        self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
+        changeFormParameters: function (modelName, formKey) {
+            var self = this;
+            this.$target.attr('data-model_name', modelName);
+            this.$target.find(".form-field:not(:has('.o_website_form_send')), .o_form_heading").remove();
+            if (formKey) {
+                var formInfo = FormEditorRegistry.get(formKey);
+                ajax.loadXML(formInfo.defaultTemplatePath, qweb).then(function () {
+                    // Append form title
+                    $('<h1>', {
+                        class: 'o_form_heading',
+                        text: self.activeForm.website_form_label,
+                    }).prependTo(self.$target.find('.container'));
+                    self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
+                });
+            } else {
+                // Force fetch the fields of the new model
+                // and render all model required fields
+                this.fetch_model_fields().then(function (fields) {
+                    _.each(fields, function (field, field_name) {
+                        if (field.required) {
+                            self.append_field(field);
+                        }
                     });
-                } else {
-                    // Force fetch the fields of the new model
-                    // and render all model required fields
-                    this.fetch_model_fields().then(function (fields) {
-                        _.each(fields, function (field, field_name){
-                            if (field.required) {
-                                self.append_field(field);
-                            }
-                        });
-                    });
-                }
+                });
             }
         },
 
@@ -421,12 +469,39 @@ odoo.define('website_form_editor', function (require) {
         }
     });
 
+    // radio / checkboxes field option to display them horizontally or vertically
+    options.registry['website_form_editor_choice_field_display'] = options.Class.extend({
+        xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
+
+        /**
+         * @see this.selectClass for parameters
+         */
+        website_form_choice_field_display: function (previewMode, widgetValue, params) {
+            this.$target.toggleClass('o_website_form_flex_fw', widgetValue === 'vertical');
+            this.$target[0].dataset.display = widgetValue;
+        },
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        _computeWidgetState: function (methodName, params) {
+            if (methodName === 'website_form_choice_field_display') {
+                return this.$target.attr('data-display');
+            }
+            return this._super(...arguments);
+        },
+    });
+
     // Generic custom field options
     options.registry['website_form_editor_field'] = options.Class.extend({
         xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
 
         // Option to toggle inputs required attribute
-        website_form_field_require: function (previewMode, value, $li) {
+        website_form_field_require: function (previewMode, widgetValue, params) {
             this.$target.find('.o_website_form_input').each(function (index, input) {
                 input.required = !input.required;
             });
@@ -442,7 +517,7 @@ odoo.define('website_form_editor', function (require) {
                 var self = this;
                 var select = this.$target.find('select');
                 select.hide();
-                this.editable_select = $('<div id="editable_select" class="form-control o_website_form_input"/>');
+                this.editable_select = $('<div id="editable_select" class="form-control o_website_form_input" contenteditable="true"/>');
                 _.each(select.children(), function (option) {
                     self.editable_select.append(
                         $('<div id="' + $(option).attr('value') + '" class="o_website_form_select_item">' + $(option).text().trim() + '</div>')
@@ -450,6 +525,7 @@ odoo.define('website_form_editor', function (require) {
                 });
                 select.after(this.editable_select);
             }
+            return this._super.apply(this, arguments);
         },
 
         cleanForSave: function () {
@@ -462,6 +538,10 @@ odoo.define('website_form_editor', function (require) {
                     string: this.$target.find('.col-form-label').text().trim(),
                     required: self.$target.hasClass('o_website_form_required'),
                     custom: self.$target.hasClass('o_website_form_custom'),
+                    formatInfo: {
+                        labelClass: this.$target.find('> div:first').attr('class'),
+                        contentClass: this.$target.find('> div:last').attr('class'),
+                    },
                 };
 
                 // Build the new records list from the editable select field
@@ -489,6 +569,22 @@ odoo.define('website_form_editor', function (require) {
         }
     });
 
+    // allow breaking of form select items, to create new ones
+    Wysiwyg.include({
+        /**
+         * @override
+         */
+        _editorOptions: function () {
+            var options = this._super.apply(this, arguments);
+            var isUnbreakableNode = options.isUnbreakableNode;
+            options.isUnbreakableNode = function (node) {
+                var isSelItem = $(node).hasClass('o_website_form_select_item');
+                return isUnbreakableNode(node) && !isSelItem;
+            };
+            return options;
+        },
+    });
+
     // Superclass for options that need to disable a button from the snippet overlay
     var disable_overlay_button_option = options.Class.extend({
         xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
@@ -497,8 +593,8 @@ odoo.define('website_form_editor', function (require) {
         disable_button: function (button_name, message) {
             // TODO refactor in master
             var className = 'oe_snippet_' + button_name;
-            this.$overlay.on('click', '.' + className, this.prevent_button);
-            var $button = this.$overlay.find('.' + className);
+            this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.prevent_button);
+            var $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
             $button.attr('title', message).tooltip({delay: 0});
             $button.removeClass(className); // Disable the functionnality
         },
@@ -515,6 +611,7 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor_field_model'] = disable_overlay_button_option.extend({
         start: function () {
             this.disable_button('clone', 'You can\'t duplicate a model field.');
+            return this._super.apply(this, arguments);
         }
     });
 
@@ -522,6 +619,7 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor_field_required'] = disable_overlay_button_option.extend({
         start: function () {
             this.disable_button('remove', 'You can\'t remove a field that is required by the model itself.');
+            return this._super.apply(this, arguments);
         }
     });
 
@@ -529,6 +627,7 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor_field_x2many'] =disable_overlay_button_option.extend({
         start: function () {
             this.disable_button('clone', 'You can\'t duplicate an item which refers to an actual record.');
+            return this._super.apply(this, arguments);
         }
     });
 });

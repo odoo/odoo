@@ -144,10 +144,7 @@ var NameAndSignature = Widget.extend({
             self.resetSignature();
         }, 250));
 
-        return this._super.apply(this, arguments).then(function () {
-            // initialize the signature area
-            return self.resetSignature();
-        });
+        return this._super.apply(this, arguments);
     },
     /**
      * @override

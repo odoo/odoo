@@ -48,12 +48,13 @@ var BasicView = AbstractView.extend({
         this.controllerParams.archiveEnabled = 'active' in this.fields;
         this.controllerParams.hasButtons =
                 'action_buttons' in params ? params.action_buttons : true;
+        this.controllerParams.viewId = viewInfo.view_id;
 
         this.loadParams.fieldsInfo = this.fieldsInfo;
         this.loadParams.fields = this.fields;
         this.loadParams.limit = parseInt(this.arch.attrs.limit, 10) || params.limit;
-        this.loadParams.viewType = this.viewType;
         this.loadParams.parentID = params.parentID;
+        this.loadParams.viewType = this.viewType;
         this.recordID = params.recordID;
 
         this.model = params.model;
@@ -281,29 +282,28 @@ var BasicView = AbstractView.extend({
             });
         }
 
+        attrs.views = attrs.views || {};
+
+        // Keep compatibility with 'tree' syntax
+        attrs.mode = attrs.mode === 'tree' ? 'list' : attrs.mode;
+        if (!attrs.views.list && attrs.views.tree) {
+            attrs.views.list = attrs.views.tree;
+        }
+
         if (field.type === 'one2many' || field.type === 'many2many') {
             if (attrs.Widget.prototype.useSubview) {
-                if (!attrs.views) {
-                    attrs.views = {};
-                }
                 var mode = attrs.mode;
                 if (!mode) {
-                    if (attrs.views.tree && attrs.views.kanban) {
-                        mode = 'tree';
-                    } else if (!attrs.views.tree && attrs.views.kanban) {
+                    if (attrs.views.list && !attrs.views.kanban) {
+                        mode = 'list';
+                    } else if (!attrs.views.list && attrs.views.kanban) {
                         mode = 'kanban';
                     } else {
-                        mode = 'tree,kanban';
+                        mode = 'list,kanban';
                     }
                 }
                 if (mode.indexOf(',') !== -1) {
-                    mode = config.device.isMobile ? 'kanban' : 'tree';
-                }
-                if (mode === 'tree') {
-                    mode = 'list';
-                    if (!attrs.views.list && attrs.views.tree) {
-                        attrs.views.list = attrs.views.tree;
-                    }
+                    mode = config.device.isMobile ? 'kanban' : 'list';
                 }
                 attrs.mode = mode;
                 if (mode in attrs.views) {
@@ -359,7 +359,7 @@ var BasicView = AbstractView.extend({
     },
     /**
      * Processes a node of the arch (mainly nodes with tagname 'field'). Can
-     * be overriden to handle other tagnames.
+     * be overridden to handle other tagnames.
      *
      * @private
      * @param {Object} node

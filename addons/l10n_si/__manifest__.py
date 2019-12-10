@@ -5,7 +5,7 @@
 
 {
     "name": "Slovenian - Accounting",
-    "versiom": "1.1",
+    "version": "1.1",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",
     'category': 'Localization',
@@ -13,7 +13,6 @@
     "depends": [
         "account",
         "base_iban",
-        "account_cancel",
     ],
     "data": [
         "data/l10n_si_chart_data.xml",

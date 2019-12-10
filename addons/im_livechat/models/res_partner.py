@@ -10,7 +10,6 @@ class Partners(models.Model):
     """
     _inherit = 'res.partner'
 
-    @api.multi
     def name_get(self):
         if self.env.context.get('im_livechat_use_username'):
             # process the ones with livechat username

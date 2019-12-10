@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# pylint: disable=sql-injection
+
 import logging
 import psycopg2
 
 _schema = logging.getLogger('odoo.schema')
-
-_TABLE_KIND = {
-    'BASE TABLE': 'r',
-    'VIEW': 'v',
-    'FOREIGN TABLE': 'f',
-    'LOCAL TEMPORARY': 't',
-}
 
 _CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -40,11 +35,12 @@ def table_exists(cr, tablename):
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
-        ``'f'`` (foreign table), ``'t'`` (temporary table), or ``None``.
+        ``'f'`` (foreign table), ``'t'`` (temporary table),
+        ``'m'`` (materialized view), or ``None``.
     """
-    query = "SELECT table_type FROM information_schema.tables WHERE table_name=%s"
+    query = "SELECT relkind FROM pg_class WHERE relname = %s"
     cr.execute(query, (tablename,))
-    return _TABLE_KIND[cr.fetchone()[0]] if cr.rowcount else None
+    return cr.fetchone()[0] if cr.rowcount else None
 
 def create_model_table(cr, tablename, comment=None):
     """ Create the table for a model. """
@@ -74,7 +70,8 @@ def column_exists(cr, tablename, columnname):
 
 def create_column(cr, tablename, columnname, columntype, comment=None):
     """ Create a column with the given type. """
-    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {}'.format(tablename, columnname, columntype))
+    coldefault = (columntype.upper()=='BOOLEAN') and 'DEFAULT false' or ''
+    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {} {}'.format(tablename, columnname, columntype, coldefault))
     if comment:
         cr.execute('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname), (comment,))
     _schema.debug("Table %r: added column %r of type %s", tablename, columnname, columntype)
@@ -87,7 +84,7 @@ def rename_column(cr, tablename, columnname1, columnname2):
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
                        log_exceptions=False)
     except psycopg2.NotSupportedError:
@@ -105,7 +102,7 @@ def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
     query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute(query)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
@@ -134,7 +131,7 @@ def add_constraint(cr, tablename, constraintname, definition):
     query1 = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
     query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute(query1)
             cr.execute(query2, (definition,))
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
@@ -146,7 +143,7 @@ def add_constraint(cr, tablename, constraintname, definition):
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" DROP CONSTRAINT "{}"'.format(tablename, constraintname))
             _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
     except Exception:

@@ -100,6 +100,7 @@ QUnit.module('Web', {
             {optionId: 1, description: "First Option", groupId: 1},
             {optionId: 2, description: "Second Option", groupId: 1}
         ];
+        this.items[0].currentOptionIds = new Set();
         var dropdownMenu = await createDropdownMenu(this.items);
         testUtils.dom.click(dropdownMenu.$('button:first'));
         assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 4);
@@ -121,6 +122,7 @@ QUnit.module('Web', {
             {optionId: 1, description: "First Option"},
             {optionId: 2, description: "Second Option"}
         ];
+        this.items[0].currentOptionIds = new Set();
         var dropdownMenu = await createDropdownMenu(this.items);
         // open dropdown menu
         testUtils.dom.click(dropdownMenu.$('button:first'));
@@ -135,7 +137,7 @@ QUnit.module('Web', {
     });
 
     QUnit.test('click on an option should trigger the event "item_option_clicked" with appropriate data', async function (assert) {
-        assert.expect(16);
+        assert.expect(18);
 
         var self = this;
         var eventNumber = 0;
@@ -144,6 +146,7 @@ QUnit.module('Web', {
             {optionId: 1, description: "First Option"},
             {optionId: 2, description: "Second Option"}
         ];
+        this.items[0].currentOptionIds = new Set();
         var dropdownMenu = await createDropdownMenu(this.items, {
             intercepts: {
                 item_option_clicked: function (ev) {
@@ -152,16 +155,20 @@ QUnit.module('Web', {
                     if (eventNumber === 1) {
                         assert.strictEqual(ev.data.optionId, 1);
                         self.items[0].isActive = true;
-                        self.items[0].currentOptionId = 1;
+                        self.items[0].currentOptionIds.add(1);
                     }
                     if (eventNumber === 2) {
                         assert.strictEqual(ev.data.optionId, 2);
-                        self.items[0].currentOptionId = 2;
+                        self.items[0].currentOptionIds = new Set([1,2]);
                     }
                     if (eventNumber === 3) {
+                        assert.strictEqual(ev.data.optionId, 1);
+                        self.items[0].currentOptionIds = new Set([2]);
+                    }
+                    if (eventNumber === 4) {
                         assert.strictEqual(ev.data.optionId, 2);
                         self.items[0].isActive = false;
-                        self.items[0].currentOptionId = false;
+                        self.items[0].currentOptionIds.clear();
                     }
                     dropdownMenu.update(self.items);
                 },
@@ -180,8 +187,10 @@ QUnit.module('Web', {
         // click on second option
         await testUtils.dom.click($('.o_item_option > .dropdown-item').eq(1));
         assert.hasClass(dropdownMenu.$('.o_menu_item > .dropdown-item').first(), 'selected');
-        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option > .dropdown-item').eq(0), 'selected');
+        assert.hasClass(dropdownMenu.$('.o_item_option > .dropdown-item').eq(0), 'selected');
         assert.hasClass(dropdownMenu.$('.o_item_option > .dropdown-item').eq(1), 'selected');
+        // click again on first option
+        await testUtils.dom.click(dropdownMenu.$('.o_item_option > .dropdown-item').eq(0));
         // click again on second option
         await testUtils.dom.click($('.o_item_option > .dropdown-item').eq(1));
         assert.doesNotHaveClass(dropdownMenu.$('.o_menu_item > .dropdown-item').first(), 'selected');

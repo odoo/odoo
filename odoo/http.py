@@ -5,6 +5,7 @@
 import ast
 import collections
 import contextlib
+import copy
 import datetime
 import functools
 import hashlib
@@ -58,18 +59,35 @@ _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
 rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
-# 1 week cache for statics as advised by Google Page Speed
-STATIC_CACHE = 60 * 60 * 24 * 7
+# One week cache for static content (static files in apps, library files, ...)
+# Safe resources may use what google page speed recommends (1 year)
+# (attachments with unique hash in the URL, ...)
+STATIC_CACHE = 3600 * 24 * 7
+STATIC_CACHE_LONG = 3600 * 24 * 365
 
 # To remove when corrected in Babel
 babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+
+""" Debug mode is stored in session and should always be a string.
+    It can be activated with an URL query string `debug=<mode>` where
+    mode is either:
+    - 'tests' to load tests assets
+    - 'assets' to load assets non minified
+    - any other truthy value to enable simple debug mode (to show some
+      technical feature, to show complete traceback in frontend error..)
+    - any falsy value to disable debug mode
+
+    You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
+    Multiple debug modes can be activated simultaneously, separated with
+    a comma (eg: 'tests, assets').
+"""
+ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
 # Thread local global request object
 _request_stack = werkzeug.local.LocalStack()
-
 request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
@@ -83,16 +101,16 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
+
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (odoo.osv.orm.except_orm,
-                 odoo.exceptions.AccessError,
-                 odoo.exceptions.ValidationError,
-                 odoo.exceptions.MissingError,
+NO_POSTMORTEM = (odoo.exceptions.except_orm,
                  odoo.exceptions.AccessDenied,
                  odoo.exceptions.Warning,
                  odoo.exceptions.RedirectWarning)
+
+
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -143,37 +161,21 @@ def dispatch_rpc(service_name, method, params):
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
-def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+def local_redirect(path, query=None, keep_hash=False, code=303):
+    # FIXME: drop the `keep_hash` param, now useless
     url = path
     if not query:
         query = {}
-    if request and request.debug:
-        if forward_debug:
-            query['debug'] = ''
-        else:
-            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
-    if keep_hash:
-        return redirect_with_hash(url, code)
-    else:
-        return werkzeug.utils.redirect(url, code)
+    return werkzeug.utils.redirect(url, code)
 
 def redirect_with_hash(url, code=303):
-    # Most IE and Safari versions decided not to preserve location.hash upon
-    # redirect. And even if IE10 pretends to support it, it still fails
-    # inexplicably in case of multiple redirects (and we do have some).
-    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-    if request.httprequest.user_agent.browser in ('firefox',):
-        return werkzeug.utils.redirect(url, code)
-    # FIXME: decide whether urls should be bytes or text, apparently
-    # addons/website/controllers/main.py:91 calls this with a bytes url
-    # but addons/web/controllers/main.py:481 uses text... (blows up on login)
-    url = pycompat.to_text(url).strip()
-    if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
-        url = u'http://' + url
-    url = url.replace("'", "%27").replace("<", "%3C")
-    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+    # Section 7.1.2 of RFC 7231 requires preservation of URL fragment through redirects,
+    # so we don't need any special handling anymore. This function could be dropped in the future.
+    # seealso : http://www.rfc-editor.org/info/rfc7231
+    #           https://tools.ietf.org/html/rfc7231#section-7.1.2
+    return werkzeug.utils.redirect(url, code)
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
@@ -260,13 +262,6 @@ class WebRequest(object):
         return self._env
 
     @lazy_property
-    def lang(self):
-        context = dict(self.context)
-        self.session._fix_lang(context)
-        self.context = context
-        return context["lang"]
-
-    @lazy_property
     def session(self):
         """ :class:`OpenERPSession` holding the HTTP session data for the
         current http session
@@ -281,13 +276,15 @@ class WebRequest(object):
         _request_stack.pop()
 
         if self._cr:
-            if exc_type is None and not self._failed:
-                self._cr.commit()
-                if self.registry:
-                    self.registry.signal_changes()
-            elif self.registry:
-                self.registry.reset_changes()
-            self._cr.close()
+            try:
+                if exc_type is None and not self._failed:
+                    self._cr.commit()
+                    if self.registry:
+                        self.registry.signal_changes()
+                elif self.registry:
+                    self.registry.reset_changes()
+            finally:
+                self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None
@@ -304,13 +301,20 @@ class WebRequest(object):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
            be used as response."""
-        self._failed = exception # prevent tx commit
+        self._failed = exception  # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
-        # otherwise "no active exception to reraise"
-        raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
+
+        # WARNING: do not inline or it breaks: raise...from evaluates strictly
+        # LTR so would first remove traceback then copy lack of traceback
+        new_cause = Exception().with_traceback(exception.__traceback__)
+        # tries to provide good chained tracebacks, just re-raising exception
+        # generates a weird message as stacks just get concatenated, exceptions
+        # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
+        # callers to check & look at)
+        raise exception.with_traceback(None) from new_cause
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -327,14 +331,18 @@ class WebRequest(object):
         if self.endpoint.first_arg_is_req:
             args = (request,) + args
 
+        first_time = True
+
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
+            nonlocal first_time
             # The decorator can call us more than once if there is an database error. In this
             # case, the request cursor is unusable. Rollback transaction to create a new one.
-            if self._cr:
+            if self._cr and not first_time:
                 self._cr.rollback()
                 self.env.clear()
+            first_time = False
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -344,22 +352,6 @@ class WebRequest(object):
         if self.db:
             return checked_call(self.db, *args, **kwargs)
         return self.endpoint(*args, **kwargs)
-
-    @property
-    def debug(self):
-        """ Indicates whether the current request is in "debug" mode
-        """
-        debug = 'debug' in self.httprequest.args
-        if debug and self.httprequest.args.get('debug') == 'assets':
-            debug = 'assets'
-
-        # check if request from rpc in debug mode
-        if not debug:
-            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
-
-        if not debug and self.httprequest.referrer:
-            debug = 'debug' in urls.url_parse(self.httprequest.referrer).decode_query()
-        return debug
 
     @contextlib.contextmanager
     def registry_cr(self):
@@ -513,8 +505,21 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+
         @functools.wraps(f)
         def response_wrap(*args, **kw):
+            # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
+            params = inspect.signature(f).parameters.values()
+            is_kwargs = lambda p: p.kind == inspect.Parameter.VAR_KEYWORD
+            if not any(is_kwargs(p) for p in params):  # missing **kw
+                is_keyword_compatible = lambda p: p.kind in (
+                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                    inspect.Parameter.KEYWORD_ONLY)
+                fargs = {p.name for p in params if is_keyword_compatible(p)}
+                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in fargs]
+                if ignored:
+                    _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
+
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
@@ -529,7 +534,7 @@ def route(route=None, **kw):
                 response.set_default()
                 return response
 
-            _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+            _logger.warning("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
@@ -626,13 +631,18 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            if not isinstance(exception, (odoo.exceptions.Warning, SessionExpiredException,
-                                          odoo.exceptions.except_orm, werkzeug.exceptions.NotFound)):
-                _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, SessionExpiredException):
+                if exception.args and exception.args[0] == "bus.Bus not available in test mode":
+                    _logger.info(exception)
+                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
+                                          werkzeug.exceptions.NotFound)):
+                    _logger.warning(exception)
+                else:
+                    _logger.exception("Exception during JSON request handling.")
             error = {
-                    'code': 200,
-                    'message': "Odoo Server Error",
-                    'data': serialize_exception(exception)
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': serialize_exception(exception),
             }
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
@@ -682,6 +692,7 @@ class JsonRequest(WebRequest):
         except Exception as e:
             return self._handle_exception(e)
 
+
 def serialize_exception(e):
     tmp = {
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
@@ -707,6 +718,7 @@ def serialize_exception(e):
     elif isinstance(e, odoo.exceptions.except_orm):
         tmp["exception_type"] = "except_orm"
     return tmp
+
 
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.
@@ -763,7 +775,7 @@ class HttpRequest(WebRequest):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
             }
             return Response(status=200, headers=headers)
 
@@ -772,14 +784,14 @@ class HttpRequest(WebRequest):
             token = self.params.pop('csrf_token', None)
             if not self.validate_csrf(token):
                 if token is not None:
-                    _logger.warn("CSRF validation failed on path '%s'",
+                    _logger.warning("CSRF validation failed on path '%s'",
                                  request.httprequest.path)
                 else:
-                    _logger.warn("""No CSRF validation token provided for path '%s'
+                    _logger.warning("""No CSRF validation token provided for path '%s'
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/12.0/reference/http.html#csrf for
+https://www.odoo.com/documentation/13.0/reference/http.html#csrf for
 more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -870,12 +882,12 @@ class ControllerType(type):
                 parent_routing_type = getattr(parent[0], k).original_func.routing_type if parent else routing_type or 'http'
                 if routing_type is not None and routing_type is not parent_routing_type:
                     routing_type = parent_routing_type
-                    _logger.warn("Subclass re-defines <function %s.%s.%s> with different type than original."
+                    _logger.warning("Subclass re-defines <function %s.%s.%s> with different type than original."
                                     " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
                 v.original_func.routing_type = routing_type or parent_routing_type
 
-                spec = inspect.getargspec(v.original_func)
-                first_arg = spec.args[1] if len(spec.args) >= 2 else None
+                sign = inspect.signature(v.original_func)
+                first_arg = list(sign.parameters)[1] if len(sign.parameters) >= 2 else None
                 if first_arg in ["req", "request"]:
                     v._first_arg_is_req = True
 
@@ -909,9 +921,8 @@ class EndPoint(object):
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
-def routing_map(modules, nodb_only, converters=None):
-    routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
 
+def _generate_routing_rules(modules, nodb_only, converters=None):
     def get_subclasses(klass):
         def valid(c):
             return c.__module__.startswith('odoo.addons.') and c.__module__.split(".")[2] in modules
@@ -950,16 +961,8 @@ def routing_map(modules, nodb_only, converters=None):
                         assert routing['routes'], "Method %r has not route defined" % mv
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
-                            if routing.get("combine", False):
-                                # deprecated v7 declaration
-                                url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
-                                if url.endswith("/") and len(url) > 1:
-                                    url = url[: -1]
+                            yield (url, endpoint, routing)
 
-                            xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
-                            kw = {k: routing[k] for k in xtra_keys if k in routing}
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
-    return routing_map
 
 #----------------------------------------------------------
 # HTTP Sessions
@@ -1038,7 +1041,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def logout(self, keep_db=False):
         for k in list(self):
-            if not (keep_db and k == 'db'):
+            if not (keep_db and k == 'db') and k != 'debug':
                 del self[k]
         self._default_values()
         self.rotate = True
@@ -1049,6 +1052,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("session_token", None)
         self.setdefault("context", {})
+        self.setdefault("debug", '')
 
     def get_context(self):
         """
@@ -1242,13 +1246,12 @@ class Response(werkzeug.wrappers.Response):
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
+
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
-            referer = environ.get('HTTP_REFERER', '')
-            parsed = urls.url_parse(referer)
-            debug = parsed.query.count('debug') >= 1
-
-            if debug:
+            req = werkzeug.wrappers.Request(environ)
+            root.setup_session(req)
+            if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
                 new_headers = [('Cache-Control', 'no-cache')]
 
                 for k, v in headers:
@@ -1277,7 +1280,10 @@ class Root(object):
     @lazy_property
     def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        return routing_map([''] + odoo.conf.server_wide_modules, True)
+        routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
+        for url, endpoint, routing in odoo.http._generate_routing_rules([''] + odoo.conf.server_wide_modules, True):
+            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
+        return routing_map
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -1292,14 +1298,15 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
-        for addons_path in odoo.modules.module.ad_paths:
+        for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
-                        manifest_data = open(manifest_path, 'rb').read()
+                        with open(manifest_path, 'rb') as fd:
+                            manifest_data = fd.read()
                         manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue
@@ -1335,7 +1342,7 @@ class Root(object):
         # Check if session.db is legit
         if db:
             if db not in db_filter([db], httprequest=httprequest):
-                _logger.warn("Logged into database '%s', but dbfilter "
+                _logger.warning("Logged into database '%s', but dbfilter "
                              "rejects it; logging session out.", db)
                 httprequest.session.logout()
                 db = None
@@ -1410,7 +1417,7 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            
+
             current_thread = threading.current_thread()
             current_thread.url = httprequest.url
             current_thread.query_count = 0

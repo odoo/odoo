@@ -17,17 +17,19 @@ class AccountTax(models.Model):
 
     l10n_de_datev_code = fields.Char(size=2, help="2 digits code use by Datev")
 
-class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
 
-    def invoice_validate(self):
-        for invoice in self:
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def post(self):
+        # OVERRIDE to check the invoice lines taxes.
+        for invoice in self.filtered(lambda move: move.is_invoice()):
             for line in invoice.invoice_line_ids:
                 account_tax = line.account_id.tax_ids.ids
                 if account_tax and invoice.company_id.country_id.code == 'DE':
                     account_name = line.account_id.name
-                    for tax in line.invoice_line_tax_ids:
+                    for tax in line.tax_ids:
                         if tax.id not in account_tax:
                             raise UserError(_('Account %s does not authorize to have tax %s specified on the line. \
                                 Change the tax used in this invoice or remove all taxes from the account') % (account_name, tax.name))
-        return super(AccountInvoice, self).invoice_validate()
+        return super(AccountMove, self).post()

@@ -47,7 +47,6 @@ class SaleCouponProgram(models.Model):
     coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Generated Coupons", copy=False)
     coupon_count = fields.Integer(compute='_compute_coupon_count')
     order_count = fields.Integer(compute='_compute_order_count')
-    order_line_ids = fields.Many2many('sale.order.line', store=False, search='_search_order_line_ids')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     validity_duration = fields.Integer(default=1,
@@ -61,11 +60,7 @@ class SaleCouponProgram(models.Model):
             if self.search(domain):
                 raise ValidationError(_('The program code must be unique!'))
 
-    def _search_order_line_ids(self, operator, arg):
-        # just a hack to enable the invalidation of 'order_count'
-        return []
-
-    @api.depends('order_line_ids.product_id')
+    # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
         product_data = self.env['sale.order.line'].read_group([('product_id', 'in', self.mapped('discount_line_product_id').ids)], ['product_id'], ['product_id'])
         mapped_data = dict([(m['product_id'][0], m['product_id_count']) for m in product_data])
@@ -110,7 +105,7 @@ class SaleCouponProgram(models.Model):
         res = super(SaleCouponProgram, self).write(vals)
         reward_fields = [
             'reward_type', 'reward_product_id', 'discount_type', 'discount_percentage',
-            'discount_apply_on', 'discount_specific_product_id', 'discount_fixed_amount'
+            'discount_apply_on', 'discount_specific_product_ids', 'discount_fixed_amount'
         ]
         if any(field in reward_fields for field in vals):
             self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
@@ -136,7 +131,8 @@ class SaleCouponProgram(models.Model):
             'view_mode': 'tree,form',
             'res_model': 'sale.order',
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', orders.ids)]
+            'domain': [('id', 'in', orders.ids), ('state', 'not in', ('draft', 'sent', 'cancel'))],
+            'context': dict(self._context, create=False)
         }
 
     def _is_global_discount_program(self):
@@ -258,8 +254,8 @@ class SaleCouponProgram(models.Model):
             if program.reward_type == 'product' and \
                not order.order_line.filtered(lambda line: line.product_id == program.reward_product_id):
                 continue
-            elif program.reward_type == 'discount' and program.discount_apply_on == 'specific_product' and \
-               not order.order_line.filtered(lambda line: line.product_id == program.discount_specific_product_id):
+            elif program.reward_type == 'discount' and program.discount_apply_on == 'specific_products' and \
+               not order.order_line.filtered(lambda line: line.product_id in program.discount_specific_product_ids):
                 continue
             programs |= program
         return programs

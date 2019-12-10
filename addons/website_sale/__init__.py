@@ -9,7 +9,7 @@ from . import report
 
 def uninstall_hook(cr, registry):
     ''' Need to reenable the `product` pricelist multi-company rule that were
-        disabled to be 'overriden' for multi-website purpose
+        disabled to be 'overridden' for multi-website purpose
     '''
     env = api.Environment(cr, SUPERUSER_ID, {})
     pl_rule = env.ref('product.product_pricelist_comp_rule', raise_if_not_found=False)

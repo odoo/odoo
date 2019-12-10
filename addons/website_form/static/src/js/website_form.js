@@ -33,7 +33,7 @@ odoo.define('website_form.animation', function (require) {
             var l10n = _t.database.parameters;
             var datepickers_options = {
                 minDate: moment({ y: 1900 }),
-                maxDate: moment().add(200, "y"),
+                maxDate: moment({ y: 9999, M: 11, d: 31 }),
                 calendarWeeks: true,
                 icons : {
                     time: 'fa fa-clock-o',
@@ -57,7 +57,7 @@ odoo.define('website_form.animation', function (require) {
             // Because, using t-att- inside form make it non-editable
             var $values = $('[data-for=' + this.$target.attr('id') + ']');
             if ($values.length) {
-                var values = JSON.parse($values.data('values').replace(/'/g, '"'));
+                var values = JSON.parse($values.data('values').replace('False', '""').replace('None', '""').replace(/'/g, '"'));
                 var fields = _.pluck(this.$target.serializeArray(), 'name');
                 _.each(fields, function (field) {
                     if (_.has(values, field)) {
@@ -91,12 +91,12 @@ odoo.define('website_form.animation', function (require) {
 
             // Prepare form inputs
             this.form_fields = this.$target.serializeArray();
-            _.each(this.$target.find('input[type=file]'), function (input) {
+            $.each(this.$target.find('input[type=file]'), function (outer_index, input) {
                 $.each($(input).prop('files'), function (index, file) {
                     // Index field name as ajax won't accept arrays of files
                     // when aggregating multiple files into a single field value
                     self.form_fields.push({
-                        name: input.name + '[' + index + ']',
+                        name: input.name + '[' + outer_index + '][' + index + ']',
                         value: file
                     });
                 });

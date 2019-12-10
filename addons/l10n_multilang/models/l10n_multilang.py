@@ -12,7 +12,19 @@ _logger = logging.getLogger(__name__)
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    @api.multi
+    def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
+        res = super(AccountChartTemplate, self).load_for_current_company(sale_tax_rate, purchase_tax_rate)
+        # Copy chart of account translations when loading chart of account
+        for chart_template in self.filtered('spoken_languages'):
+            external_id = self.env['ir.model.data'].search([
+                ('model', '=', 'account.chart.template'),
+                ('res_id', '=', chart_template.id),
+            ], order='id', limit=1)
+            module = external_id and self.env.ref('base.module_' + external_id.module)
+            if module and module.state == 'installed':
+                chart_template.process_coa_translations()
+        return res
+
     def process_translations(self, langs, in_field, in_ids, out_ids):
         """
         This method copies translations values of templates into new Accounts/Taxes/Journals for languages selected
@@ -46,7 +58,6 @@ class AccountChartTemplate(models.Model):
                 counter += 1
         return True
 
-    @api.multi
     def process_coa_translations(self):
         installed_langs = dict(self.env['res.lang'].get_installed())
         company_obj = self.env['res.company']
@@ -72,17 +83,14 @@ class AccountChartTemplate(models.Model):
                         chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
         return True
 
-    @api.multi
     def _process_accounts_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.account')
         return self.process_translations(langs, field, in_ids, out_ids)
 
-    @api.multi
     def _process_taxes_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.tax')
         return self.process_translations(langs, field, in_ids, out_ids)
 
-    @api.multi
     def _process_fiscal_pos_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.fiscal.position')
         return self.process_translations(langs, field, in_ids, out_ids)
@@ -112,6 +120,9 @@ class AccountChartTemplate(models.Model):
             in_xml_ids = {xml_id.name: xml_id for xml_id in in_xml_ids}
 
             for name, xml_id in expected_in_xml_id_names.items():
+                # ignore nonconforming customized data
+                if name not in in_xml_ids:
+                    continue
                 in_records += self.env[model + '.template'].browse(in_xml_ids[name].res_id)
                 out_records += self.env[model].browse(xml_id.res_id)
 
@@ -121,10 +132,9 @@ class BaseLanguageInstall(models.TransientModel):
     """ Install Language"""
     _inherit = "base.language.install"
 
-    @api.multi
     def lang_install(self):
         self.ensure_one()
-        already_installed = self.env['res.lang'].search_count([('code', '=', self.lang)])
+        already_installed = self.lang in [code for code, _ in self.env['res.lang'].get_installed()]
         res = super(BaseLanguageInstall, self).lang_install()
         if already_installed:
             # update of translations instead of new installation

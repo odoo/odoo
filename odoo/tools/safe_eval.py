@@ -207,8 +207,7 @@ def test_expr(expr, allowed_codes, mode="eval"):
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
-        exc_info = sys.exc_info()
-        pycompat.reraise(ValueError, ValueError('"%s" while compiling\n%r' % (ustr(e), expr)), exc_info[2])
+        raise ValueError('"%s" while compiling\n%r' % (ustr(e), expr))
     assert_valid_codeobj(allowed_codes, code_obj, expr)
     return code_obj
 
@@ -368,8 +367,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except odoo.exceptions.MissingError:
         raise
     except Exception as e:
-        exc_info = sys.exc_info()
-        pycompat.reraise(ValueError, ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr)), exc_info[2])
+        raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
 def test_python_expr(expr, mode="eval"):
     try:
         test_expr(expr, _SAFE_OPCODES, mode=mode)

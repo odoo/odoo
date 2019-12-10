@@ -12,8 +12,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
+        'click': '_onClick',
     },
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._popoverRPC = null;
+    },
     /**
      * @override
      */
@@ -48,7 +56,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             if (!self.$el.is(':hover') || $('.mycart-popover:visible').length) {
                 return;
             }
-            $.get("/shop/cart", {
+            self._popoverRPC = $.get("/shop/cart", {
                 type: 'popover',
             }).then(function (data) {
                 self.$el.data("bs.popover").config.content = data;
@@ -57,7 +65,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
                     self.$el.trigger('mouseleave');
                 });
             });
-        }, 100);
+        }, 300);
     },
     /**
      * @private
@@ -73,6 +81,25 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
                self.$el.popover('hide');
             }
         }, 1000);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClick: function (ev) {
+        // When clicking on the cart link, prevent any popover to show up (by
+        // clearing the related setTimeout) and, if a popover rpc is ongoing,
+        // wait for it to be completed before going to the link's href. Indeed,
+        // going to that page may perform the same computation the popover rpc
+        // is already doing.
+        clearTimeout(timeout);
+        if (this._popoverRPC && this._popoverRPC.state() === 'pending') {
+            ev.preventDefault();
+            var href = ev.currentTarget.href;
+            this._popoverRPC.then(function () {
+                window.location.href = href;
+            });
+        }
     },
 });
 });
@@ -123,7 +150,8 @@ var config = require('web.config');
 var concurrency = require('web.concurrency');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
-require("website.content.zoomodoo");
+var wSaleUtils = require('website_sale.utils');
+require("web.zoomodoo");
 
 var qweb = core.qweb;
 
@@ -140,7 +168,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .show_coupon': '_onClickShowCoupon',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
@@ -148,7 +175,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'click .toggle_summary': '_onToggleSummary',
         'click #add_to_cart, #buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
-        // dirty fix: prevent options modal events to be triggered and bubbled
+        'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
     }),
 
@@ -162,23 +189,27 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+
+        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
+        delete this.events['change [data-attribute_exclusions]'];
     },
     /**
      * @override
      */
     start: function () {
+        var self = this;
         var def = this._super.apply(this, arguments);
+
+        this._applyHash();
 
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
         });
 
-        // This has to be triggered to compute the "out of stock" feature
+        // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
 
         this.$('select[name="country_id"]').change();
-
-        this.$('#checkbox_cgv').trigger('change');
 
         core.bus.on('resize', this, function () {
             if (config.device.size_class === config.device.SIZES.XL) {
@@ -187,6 +218,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         });
 
         this._startZoom();
+
+        window.addEventListener('hashchange', function (e) {
+            self._applyHash();
+            self.triggerVariantChange($(self.el));
+        });
 
         return def;
     },
@@ -200,7 +236,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             .data('combination');
 
         if (combination) {
-            return JSON.parse(combination);
+            return combination;
         }
         return VariantMixin.getSelectedVariantValues.apply(this, arguments);
     },
@@ -209,6 +245,48 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    _applyHash: function () {
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            var params = $.deparam(hash);
+            if (params['attr']) {
+                var attributeIds = params['attr'].split(',');
+                var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
+                _.each(attributeIds, function (id) {
+                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                    if ($toSelect.is('input[type="radio"]')) {
+                        $toSelect.prop('checked', true);
+                    } else if ($toSelect.is('option')) {
+                        $toSelect.prop('selected', true);
+                    }
+                });
+                this._changeColorAttribute();
+            }
+        }
+    },
+
+    /**
+     * Sets the url hash from the selected product options.
+     *
+     * @private
+     */
+    _setUrlHash: function ($parent) {
+        var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
+        var attributeIds = _.map($attributes, function (elem) {
+            return $(elem).data('value_id');
+        });
+        history.replaceState(undefined, undefined, '#attr=' + attributeIds.join(','));
+    },
+    /**
+     * Set the checked color active.
+     *
+     * @private
+     */
+    _changeColorAttribute: function () {
+        $('.css_attribute_color').removeClass("active")
+                                 .filter(':has(input:checked)')
+                                 .addClass("active");
+    },
     /**
      * @private
      */
@@ -236,20 +314,12 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 $input.trigger('change');
                 return;
             }
-            var $q = $(".my_cart_quantity");
-            if (data.cart_quantity) {
-                $q.parents('li:first').removeClass('d-none');
+            if (!data.cart_quantity) {
+                return window.location = '/shop/cart';
             }
-            else {
-                window.location = '/shop/cart';
-            }
-
-            $q.html(data.cart_quantity).hide().fadeIn(600);
+            wSaleUtils.updateCartNavBar(data);
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
-
-            $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-            $(".js_cart_summary").first().before(data['website_sale.short_cart_summary']).end().remove();
 
             if (data.warning) {
                 var cart_alert = $('.oe_cart').parent().find('#data_warning');
@@ -372,54 +442,22 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel) {
-        var $img;
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newCarousel, isCombinationPossible) {
         var $carousel = $productContainer.find('#o-carousel-product');
-
-        if (new_carousel) {
-            // When using the web editor, don't reload this or the images won't
-            // be able to be edited depending on if this is done loading before
-            // or after the editor is ready.
-            if (window.location.search.indexOf('enable_editor') === -1) {
-                var $new_carousel = $(new_carousel);
-                $carousel.after($new_carousel);
-                $carousel.remove();
-                $carousel = $new_carousel;
-                $carousel.carousel(0);
-                this._startZoom();
-                // fix issue with carousel height
-                this.trigger_up('widgets_start_request', {$target: $carousel});
-            }
+        // When using the web editor, don't reload this or the images won't
+        // be able to be edited depending on if this is done loading before
+        // or after the editor is ready.
+        if (window.location.search.indexOf('enable_editor') === -1) {
+            var $newCarousel = $(newCarousel);
+            $carousel.after($newCarousel);
+            $carousel.remove();
+            $carousel = $newCarousel;
+            $carousel.carousel(0);
+            this._startZoom();
+            // fix issue with carousel height
+            this.trigger_up('widgets_start_request', {$target: $carousel});
         }
-        else { // compatibility 12.0
-            var model = productId ? 'product.product' : 'product.template';
-            var modelId = productId || productTemplateId;
-            var imageSrc = '/web/image/{0}/{1}/image'
-                .replace("{0}", model)
-                .replace("{1}", modelId);
-
-            $img = $productContainer.find('img.js_variant_img');
-            $img.attr("src", imageSrc);
-            $img.parent().attr('data-oe-model', model).attr('data-oe-id', modelId)
-                .data('oe-model', model).data('oe-id', modelId);
-
-            var $thumbnail = $productContainer.find('img.js_variant_img_small');
-            if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/{0}/{1}/image/90x90"
-                    .replace('{0}', model)
-                    .replace('{1}', modelId));
-                $('.carousel').carousel(0);
-            }
-
-            // reset zooming constructs
-            $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
-            if ($img.data('zoomOdoo') !== undefined) {
-                $img.data('zoomOdoo').isReady = false;
-            }
-        }
-
-        $carousel.toggleClass('css_not_available',
-            $productContainer.find('.js_main_product').hasClass('css_not_available'));
+        $carousel.toggleClass('css_not_available', !isCombinationPossible);
     },
     /**
      * @private
@@ -606,15 +644,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @private
      * @param {Event} ev
      */
-    _onChangeColorAttribute: function (ev) { // highlight selected color
-        $('.css_attribute_color').removeClass("active")
-                                 .filter(':has(input:checked)')
-                                 .addClass("active");
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onClickShowCoupon: function (ev) {
         $(ev.currentTarget).hide();
         $('.coupon_form').removeClass('d-none');
@@ -654,20 +683,23 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
     },
     /**
-     * Dirty fix: prevent options modal events to be triggered and bubbled
-     * Also write the properties of the form elements in the DOM to prevent the
+     * Toggles the add to cart button depending on the possibility of the
+     * current combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        VariantMixin._toggleDisable.apply(this, arguments);
+        $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
+        $parent.find("#buy_now").toggleClass('disabled', !isCombinationPossible);
+    },
+    /**
+     * Write the properties of the form elements in the DOM to prevent the
      * current selection from being lost when activating the web editor.
      *
      * @override
      */
-    onChangeVariant: function (ev, data) {
-        var $originPath = ev.originalEvent && Array.isArray(ev.originalEvent.path) ? $(ev.originalEvent.path) : $();
-        var $container = data && data.$container ? data.$container : $();
-        if ($originPath.add($container).hasClass('oe_optional_products_modal')) {
-            ev.stopPropagation();
-            return;
-        }
-
+    onChangeVariant: function (ev) {
         var $component = $(ev.currentTarget).closest('.js_product');
         $component.find('input').each(function () {
             var $el = $(this);
@@ -677,6 +709,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             var $el = $(this);
             $el.attr('selected', $el.is(':selected'));
         });
+
+        this._setUrlHash($component);
 
         return VariantMixin.onChangeVariant.apply(this, arguments);
     },

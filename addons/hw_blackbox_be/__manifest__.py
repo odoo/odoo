@@ -3,7 +3,7 @@
 
 {
     'name': 'Blackbox Hardware Driver',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Belgian Fiscal Data Modules',
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
@@ -19,6 +19,6 @@ Belgian cash register. It allows the communication on with a certified Fiscal
 Data Module but will not modify the behaviour of the Point of Sale.
 """,
     'depends': ['hw_proxy'],
-    'external_dependencies': {'python': ['serial']},
+    'external_dependencies': {'python': ['pyserial']},
     'installable': False,
 }

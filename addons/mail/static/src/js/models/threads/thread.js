@@ -41,7 +41,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Updates the _detached state of the thread. Must be overriden to reflect
+     * Updates the _detached state of the thread. Must be overridden to reflect
      * the new state in the interface.
      */
     close: function () {
@@ -50,7 +50,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         this._warnUpdatedWindowState();
     },
     /**
-     * Updates the _detached state of the thread. Must be overriden to reflect
+     * Updates the _detached state of the thread. Must be overridden to reflect
      * the new state in the interface.
      *
      * @param {Object} [options={}]
@@ -86,7 +86,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         return Promise.resolve([]);
     },
     /**
-     * Updates the folded state of the thread. Must be overriden to reflect
+     * Updates the folded state of the thread. Must be overridden to reflect
      * the new state in the interface.
      *
      * @override
@@ -345,9 +345,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         body = this._generateEmojis(body);
         var messageData = {
             partner_ids: data.partner_ids,
-            channel_ids: _.map(data.channel_ids, function (channelID) {
-               return [4, channelID, false];
-            }),
+            channel_ids: data.channel_ids,
             body: body,
             attachment_ids: data.attachment_ids,
             canned_response_ids: data.canned_response_ids,

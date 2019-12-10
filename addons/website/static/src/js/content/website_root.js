@@ -4,7 +4,7 @@ odoo.define('website.root', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var publicRootData = require('web.public.root');
-require('website.content.zoomodoo');
+require("web.zoomodoo");
 
 var _t = core._t;
 
@@ -19,6 +19,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
+        seo_object_request: '_onSeoObjectRequest',
     }),
 
     /**
@@ -104,11 +105,41 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         var $target = $(ev.target);
         // retrieve the hash before the redirect
         var redirect = {
-            lang: $target.data('lang'),
+            lang: $target.data('url_code'),
             url: encodeURIComponent($target.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
             hash: encodeURIComponent(window.location.hash)
         };
         window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+    },
+    /**
+    /**
+     * Checks information about the page SEO object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSeoObjectRequest: function (ev) {
+        var res = this._unslugHtmlDataObject('seo-object');
+        ev.data.callback(res);
+    },
+    /**
+     * Returns a model/id object constructed from html data attribute.
+     *
+     * @private
+     * @param {string} dataAttr
+     * @returns {Object} an object with 2 keys: model and id, or null
+     * if not found
+     */
+    _unslugHtmlDataObject: function (dataAttr) {
+        var repr = $('html').data(dataAttr);
+        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
     },
     /**
      * @todo review
@@ -139,7 +170,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
                         + '<br/>'
                         + _.str.sprintf(
                             _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#return_label=Website&model=' + $data.data('object') + '&id=' + $data.data('id')
+                            '/web#model=' + $data.data('object') + '&id=' + $data.data('id')
                         ),
                 }),
             }).open();
@@ -150,21 +181,14 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
      * @param {Event} ev
      */
     _onWebsiteSwitch: function (ev) {
-        var websiteID = ev.currentTarget.getAttribute('website-id');
-
-        // need to force in each case, even if domain is set
-        // Website 1: localhost; Website 2: 0.0.0.0; website 3: -
-        // when you switch 3 <--> 1, you need to force the website
-
+        var websiteId = ev.currentTarget.getAttribute('website-id');
         var websiteDomain = ev.currentTarget.getAttribute('domain');
-        var url = $.param.querystring(window.location.href, {fw: websiteID});
+        var url = window.location.href;
         if (websiteDomain && window.location.hostname !== websiteDomain) {
-            // if domain unchanged, this line will do a nop while we need to refresh
-            // the page to load the new forced website.
-            url = new URL(url);
-            url.hostname = websiteDomain;
+            var path = window.location.pathname + window.location.search + window.location.hash;
+            url = websiteDomain + path;
         }
-        window.location.href = url;
+        window.location.href = $.param.querystring(url, {'fw': websiteId});
     },
     /**
      * @private

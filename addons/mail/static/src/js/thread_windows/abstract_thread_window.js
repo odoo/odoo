@@ -147,32 +147,10 @@ var AbstractThreadWindow = Widget.extend({
      * @returns {mail.model.Thread|undefined}
      */
     getThread: function () {
-        if (!this.hasThread) {
+        if (!this.hasThread()) {
             return undefined;
         }
         return this._thread;
-    },
-    /**
-    *Get out of office info
-    *
-    * @returns {string|undefined}
-    */
-    getOutOfOfficeInfo: function () {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread.getOutOfOfficeInfo();
-    },
-    /**
-     * Get out of office user text
-     *
-     * @returns {string|undefined}
-     */
-    getOutOfOfficeMessage: function () {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread.getOutOfOfficeMessage();
     },
     /**
      * Get the status of the thread, such as the im status of a DM chat
@@ -394,9 +372,8 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @private
      * @param {Object} messageData
-     * @param {Function} callback
      */
-    _postMessage: function (messageData, callback) {
+    _postMessage: function (messageData) {
         var self = this;
         if (!this.hasThread()) {
             return;
@@ -404,7 +381,6 @@ var AbstractThreadWindow = Widget.extend({
         this._thread.postMessage(messageData)
             .then(function () {
                 self._threadWidget.scrollToBottom();
-                callback();
             });
     },
     /**

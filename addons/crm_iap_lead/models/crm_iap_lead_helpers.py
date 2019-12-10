@@ -41,7 +41,7 @@ class CRMHelpers(models.Model):
             'user_id': user_id,
             'reveal_id': company_data['clearbit_id'],
             # Lead vals from data
-            'name': company_data['name'],
+            'name': company_data['name'] or company_data['domain'],
             'partner_name': company_data['legal_name'] or company_data['name'],
             'email_from': ",".join(company_data['email'] or []),
             'phone': company_data['phone'] or (company_data['phone_numbers'] and company_data['phone_numbers'][0]) or '',

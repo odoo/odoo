@@ -4,7 +4,7 @@
 {
     'name': 'Google Drive™ integration',
     'version': '0.2',
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'installable': True,
     'auto_install': False,
     'data': [

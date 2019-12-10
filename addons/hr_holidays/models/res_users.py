@@ -13,6 +13,8 @@ class User(models.Model):
     allocation_count = fields.Float(related='employee_id.allocation_count')
     leave_date_to = fields.Date(related='employee_id.leave_date_to')
     is_absent = fields.Boolean(related='employee_id.is_absent')
+    allocation_used_display = fields.Char(related='employee_id.allocation_used_display')
+    allocation_display = fields.Char(related='employee_id.allocation_display')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -27,6 +29,8 @@ class User(models.Model):
             'allocation_count',
             'leave_date_to',
             'is_absent',
+            'allocation_used_display',
+            'allocation_display',
         ]
         init_res = super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference

@@ -50,7 +50,6 @@ class AccountPayment(models.Model):
             if len(communication) > 60:
                 raise ValidationError(_("A check memo cannot exceed 60 characters."))
 
-    @api.multi
     def post(self):
         res = super(AccountPayment, self).post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
@@ -59,7 +58,6 @@ class AccountPayment(models.Model):
             payment.check_number = sequence.next_by_id()
         return res
 
-    @api.multi
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
@@ -83,7 +81,6 @@ class AccountPayment(models.Model):
                 'name': _('Print Pre-numbered Checks'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'print.prenumbered.checks',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {
@@ -95,14 +92,23 @@ class AccountPayment(models.Model):
             self.filtered(lambda r: r.state == 'draft').post()
             return self.do_print_checks()
 
-    @api.multi
     def unmark_sent(self):
         self.write({'state': 'posted'})
 
-    @api.multi
     def do_print_checks(self):
-        """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
-        raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))
+        check_layout = self[0].company_id.account_check_printing_layout
+        if check_layout == 'disabled':
+            raise UserError(_("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."))
+        report_action = self.env.ref(check_layout, False)
+        if not report_action:
+            raise UserError(_("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."))
+        self.write({'state': 'sent'})
+        return report_action.report_action(self)
+
+
+    def set_check_amount_in_words(self):
+        for payment in self:
+            payment.check_amount_in_words = payment.currency_id.amount_to_text(payment.amount) if payment.currency_id else ''
 
     #######################
     #CHECK PRINTING METHODS
@@ -145,7 +151,7 @@ class AccountPayment(models.Model):
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.date_due)
+        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.invoice_date_due)
         debits = invoices.filtered(lambda r: r.type == 'in_invoice')
         credits = invoices.filtered(lambda r: r.type == 'in_refund')
 
@@ -183,21 +189,21 @@ class AccountPayment(models.Model):
         # Find the account.partial.reconcile which are common to the invoice and the payment
         if invoice.type in ['in_invoice', 'out_refund']:
             invoice_sign = 1
-            invoice_payment_reconcile = invoice.move_id.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.move_line_ids)
+            invoice_payment_reconcile = invoice.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.move_line_ids)
         else:
             invoice_sign = -1
-            invoice_payment_reconcile = invoice.move_id.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.move_line_ids)
+            invoice_payment_reconcile = invoice.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.move_line_ids)
 
         if self.currency_id != self.journal_id.company_id.currency_id:
             amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount_currency')))
         else:
             amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount')))
 
-        amount_residual = invoice_sign * invoice.residual
+        amount_residual = invoice_sign * invoice.amount_residual
 
         return {
-            'due_date': format_date(self.env, invoice.date_due),
-            'number': invoice.reference and invoice.number + ' - ' + invoice.reference or invoice.number,
+            'due_date': format_date(self.env, invoice.invoice_date_due),
+            'number': invoice.ref and invoice.name + ' - ' + invoice.ref or invoice.name,
             'amount_total': formatLang(self.env, invoice_sign * invoice.amount_total, currency_obj=invoice.currency_id),
             'amount_residual': formatLang(self.env, amount_residual, currency_obj=invoice.currency_id) if amount_residual * 10**4 != 0 else '-',
             'amount_paid': formatLang(self.env, invoice_sign * amount_paid, currency_obj=invoice.currency_id),

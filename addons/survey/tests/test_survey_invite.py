@@ -11,7 +11,7 @@ from odoo.tests import Form
 from odoo.tests.common import users
 
 
-class TestSurveyInvite(common.SurveyCase):
+class TestSurveyInvite(common.TestSurveyCommon):
 
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()
@@ -32,12 +32,12 @@ class TestSurveyInvite(common.SurveyCase):
             # no questions
             self.env['survey.survey'].create({'title': 'Test survey', 'question_and_page_ids': [(0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1})]}),
             # closed
-            self.env['survey.survey'].sudo(self.survey_manager).create({
+            self.env['survey.survey'].with_user(self.survey_manager).create({
                 'title': 'S0',
                 'state': 'closed',
                 'question_and_page_ids': [
                     (0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1}),
-                    (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'free_text'})
+                    (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'text_box'})
                 ]
             })
         ]
@@ -143,7 +143,7 @@ class TestSurveyInvite(common.SurveyCase):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
+            set(['test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email]))
         self.assertEqual(answers.mapped('partner_id'), self.customer)
 
     @users('survey_manager')
@@ -164,7 +164,7 @@ class TestSurveyInvite(common.SurveyCase):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
+            set(['test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email]))
         self.assertEqual(answers.mapped('partner_id'), self.customer)
 
     @users('survey_manager')

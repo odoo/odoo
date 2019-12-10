@@ -60,7 +60,6 @@
             <field name="name">Floor Plans</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">restaurant.floor</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -109,7 +108,8 @@
                     <sheet>
                         <group>
                             <field name="name" />
-                            <field name="proxy_ip" />
+                            <field name="printer_type" widget="radio"/>
+                            <field name="proxy_ip" attrs="{'invisible': [('printer_type', '!=', 'iot')]}"/>
                             <field name="product_categories_ids" />
                         </group>
                     </sheet>
@@ -121,7 +121,6 @@
             <field name="name">Order Printers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">restaurant.printer</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

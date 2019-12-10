@@ -6,44 +6,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+
 from odoo.osv import expression
-
-
-class Employee(models.Model):
-    _inherit = "hr.employee"
-
-    medic_exam = fields.Date(string='Medical Examination Date', groups="hr.group_hr_user")
-    vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
-    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
-    contract_id = fields.Many2one('hr.contract', string='Current Contract', help='Current contract of the employee')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
-
-    def _compute_contracts_count(self):
-        # read_group as sudo, since contract count is displayed on form view
-        contract_data = self.env['hr.contract'].sudo().read_group([('employee_id', 'in', self.ids)], ['employee_id'], ['employee_id'])
-        result = dict((data['employee_id'][0], data['employee_id_count']) for data in contract_data)
-        for employee in self:
-            employee.contracts_count = result.get(employee.id, 0)
-
-    def _get_contracts(self, date_from, date_to, states=['open', 'pending']):
-        """
-        Returns the contracts of the employee between date_from and date_to
-        """
-        return self.env['hr.contract'].search([
-            '&', '&', '&',
-            ('employee_id', 'in', self.ids),
-            ('state', 'in', states),
-            ('date_start', '<=', date_to),
-            '|', ('date_end', '=', False), ('date_end', '>=', date_from)
-        ])
-
-    @api.model
-    def _get_all_contracts(self, date_from, date_to, states=['open', 'pending']):
-        """
-        Returns the contracts of all employees between date_from and date_to
-        """
-        return self.search([])._get_contracts(date_from, date_to, states=states)
-
 
 class Contract(models.Model):
     _name = 'hr.contract'
@@ -52,9 +16,9 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee')
-    department_id = fields.Many2one('hr.department', string="Department")
-    job_id = fields.Many2one('hr.job', string='Job Position')
+    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
+    job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
         help="Start date of the contract.")
     date_end = fields.Date('End Date',
@@ -63,31 +27,46 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company.resource_calendar_id.id)
-    wage = fields.Monetary('Wage', digits=(16, 2), required=True, tracking=True, help="Employee's monthly gross wage.")
+        default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
     state = fields.Selection([
         ('draft', 'New'),
-        ('incoming', 'Incoming'),
         ('open', 'Running'),
-        ('pending', 'To Renew'),
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
-    ], string='Status', group_expand='_expand_states',
+    ], string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    """
+        kanban_state:
+            * draft + green = "Incoming" state (will be set as Open once the contract has started)
+            * open + red = "Pending" state (will be set as Closed once the contract has ended)
+            * red = Shows a warning on the employees kanban view
+    """
+    kanban_state = fields.Selection([
+        ('normal', 'Grey'),
+        ('done', 'Green'),
+        ('blocked', 'Red')
+    ], string='Kanban State', default='normal', tracking=True, copy=False)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
-    reported_to_secretariat = fields.Boolean('Social Secretariat',
-        help='Green this button when the contract information has been transfered to the social secretariat.')
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.')
+    calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
+
+    @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
+    def _compute_calendar_mismatch(self):
+        for contract in self:
+            contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
+
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -95,15 +74,20 @@ class Contract(models.Model):
             self.job_id = self.employee_id.job_id
             self.department_id = self.employee_id.department_id
             self.resource_calendar_id = self.employee_id.resource_calendar_id
+            self.company_id = self.employee_id.company_id
 
-    @api.constrains('employee_id', 'state', 'date_start', 'date_end')
+    @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
-        """ Two contracts in state [incoming | pending | open | close] cannot overlap """
-        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel']):
+        """ Two contracts in state [incoming | open | close] cannot overlap """
+        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel'] or c.state == 'draft' and c.kanban_state == 'done'):
             domain = [
                 ('id', '!=', contract.id),
                 ('employee_id', '=', contract.employee_id.id),
-                ('state', 'in', ['incoming', 'pending', 'open', 'close']),
+                '|',
+                    ('state', 'in', ['open', 'close']),
+                    '&',
+                        ('state', '=', 'draft'),
+                        ('kanban_state', '=', 'done') # replaces incoming
             ]
 
             if not contract.date_end:
@@ -134,11 +118,11 @@ class Contract(models.Model):
             ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=60))),
             ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
         ]).write({
-            'state': 'pending'
+            'kanban_state': 'blocked'
         })
 
         self.search([
-            ('state', 'in', ('open', 'pending')),
+            ('state', '=', 'open'),
             '|',
             ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
             ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
@@ -146,22 +130,43 @@ class Contract(models.Model):
             'state': 'close'
         })
 
-        self.search([('state', '=', 'incoming'), ('date_start', '<=', fields.Date.to_string(date.today())),]).write({
+        self.search([('state', '=', 'draft'), ('kanban_state', '=', 'done'), ('date_start', '<=', fields.Date.to_string(date.today())),]).write({
             'state': 'open'
         })
         return True
 
-    @api.multi
-    def write(self, vals):
-        if vals.get('state') == 'open':
-            for contract in self:
-                contract.employee_id.contract_id = contract
-        return super(Contract, self).write(vals)
+    def _assign_open_contract(self):
+        for contract in self:
+            contract.employee_id.sudo().write({'contract_id': contract.id})
 
-    @api.multi
+    def write(self, vals):
+        res = super(Contract, self).write(vals)
+        if vals.get('state') == 'open':
+            self._assign_open_contract()
+
+        calendar = vals.get('resource_calendar_id')
+        if calendar:
+            self.filtered(lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done')).mapped('employee_id').write({'resource_calendar_id': calendar})
+
+        if 'state' in vals and 'kanban_state' not in vals:
+            self.write({'kanban_state': 'normal'})
+
+        return res
+
+    @api.model
+    def create(self, vals):
+        contracts = super(Contract, self).create(vals)
+        if vals.get('state') == 'open':
+            contracts._assign_open_contract()
+        open_contracts = contracts.filtered(lambda c: c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done')
+        # sync contract calendar -> calendar employee
+        for contract in open_contracts.filtered(lambda c: c.resource_calendar_id):
+            contract.employee_id.resource_calendar_id = contract.resource_calendar_id
+        return contracts
+
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'pending':
+        if 'state' in init_values and self.state == 'open' and 'kanban_state' in init_values and self.kanban_state == 'blocked':
             return self.env.ref('hr_contract.mt_contract_pending')
         elif 'state' in init_values and self.state == 'close':
             return self.env.ref('hr_contract.mt_contract_close')

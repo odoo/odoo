@@ -4,6 +4,7 @@
 from odoo import models, _
 from odoo.tools import html2plaintext
 
+
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
@@ -24,13 +25,15 @@ class MailChannel(models.Model):
                 '%s: %s\n' % (message.author_id.name or self.anonymous_name, message.body)
                 for message in self.channel_message_ids.sorted('id')
             )
+            utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
             lead = self.env['crm.lead'].create({
                 'name': html2plaintext(key[5:]),
                 'partner_id': channel_partners.partner_id.id,
                 'user_id': None,
                 'team_id': None,
                 'description': html2plaintext(description),
-                'referred': partner.name
+                'referred': partner.name,
+                'source_id': utm_source and utm_source.id,
             })
             lead._onchange_partner_id()
             msg = _('Created a new lead: <a href="#" data-oe-id="%s" data-oe-model="crm.lead">%s</a>') % (lead.id, lead.name)

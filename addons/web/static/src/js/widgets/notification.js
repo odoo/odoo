@@ -15,7 +15,9 @@ var Notification = Widget.extend({
     template: 'Notification',
     events: {
         'hidden.bs.toast': '_onClose',
-        'click .o_notification_buttons button': '_onClickButton'
+        'click .o_notification_buttons button': '_onClickButton',
+        'mouseenter': '_onMouseEnter',
+        'mouseleave': '_onMouseLeave',
     },
     _autoCloseDelay: 2500,
     _animation: true,
@@ -25,6 +27,7 @@ var Notification = Widget.extend({
      * @param {Widget} parent
      * @param {Object} params
      * @param {string} params.title
+     * @param {string} params.subtitle
      * @param {string} [params.message]
      * @param {string} [params.type='warning'] 'info', 'success', 'warning', 'danger' or ''
      * @param {boolean} [params.sticky=false] if true, the notification will
@@ -41,6 +44,7 @@ var Notification = Widget.extend({
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this.title = params.title;
+        this.subtitle = params.subtitle;
         this.message = params.message;
         this.buttons = params.buttons || [];
         this.sticky = !!this.buttons.length || !!params.sticky;
@@ -72,10 +76,15 @@ var Notification = Widget.extend({
     start: function () {
         this.$el.toast({
             animation: this._animation,
-            autohide: !this.sticky,
-            delay: this._autoCloseDelay,
+            autohide: false,
         });
         void this.$el[0].offsetWidth; // Force a paint refresh before showing the toast
+        if (!this.sticky) {
+            this.autohide = _.cancellableThrottleRemoveMeSoon(this.close, this._autoCloseDelay, {leading: false});
+            this.$el.on('shown.bs.toast', () => {
+                this.autohide();
+            });
+        }
         this.$el.toast('show');
         return this._super.apply(this, arguments);
     },
@@ -144,6 +153,22 @@ var Notification = Widget.extend({
             }
         }
         this.destroy();
+    },
+    /**
+     * @private
+     */
+    _onMouseEnter: function () {
+        if (!this.sticky) {
+            this.autohide.cancel();
+        }
+    },
+    /**
+     * @private
+     */
+    _onMouseLeave: function () {
+        if (!this.sticky) {
+            this.autohide();
+        }
     },
 });
 

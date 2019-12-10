@@ -18,8 +18,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_0')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -31,8 +29,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_0')],
             }),
         ]"/>
     </record>
@@ -236,8 +232,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_0')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -249,8 +243,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_0')],
             }),
         ]"/>
     </record>
@@ -273,7 +265,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_5')],
             }),
         ]"/>
@@ -286,7 +278,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_5')],
             }),
         ]"/>
@@ -310,7 +302,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_9')],
             }),
         ]"/>
@@ -323,7 +315,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_9')],
             }),
         ]"/>
@@ -347,7 +339,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_19')],
             }),
         ]"/>
@@ -360,7 +352,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_19')],
             }),
         ]"/>
@@ -383,7 +375,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -394,7 +386,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
             }),
         ]"/>
     </record>
@@ -417,7 +409,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_24')],
             }),
         ]"/>
@@ -430,7 +422,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
                 'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_24')],
             }),
         ]"/>
@@ -449,24 +441,22 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx1_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx1_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -484,36 +474,24 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx1_invrsa')],
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx1_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx1_invrsa')],
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx1_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
             }),
         ]"/>
     </record>
@@ -531,40 +509,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx2_invrsa'),
-                ref('account_tax_report_ro_baza_tva_tx2_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa'),
+                ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_tx2_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx2_invrsa')],
+                'account_id': ref('pcg_4426'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx2_invrsa'),
-                ref('account_tax_report_ro_baza_tva_tx2_invrsa')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_tx2_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa'),
+                ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx2_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
             }),
         ]"/>
     </record>
@@ -582,40 +560,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx3_invrsa'),
-                ref('account_tax_report_baza_tva_tx3_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa'),
+                ref('account_tax_report_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_tx3_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx3_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx3_invrsa'),
-                ref('account_tax_report_baza_tva_tx3_invrsa')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_tx3_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa'),
+                ref('account_tax_report_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx3_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
             }),
         ]"/>
     </record>
@@ -651,14 +629,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -694,14 +672,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -719,39 +697,39 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx4_invrsa'), ref('account_tax_report_ro_baza_tva_tx4_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa'), ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_tx4_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx4_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx4_invrsa'),
-                ref('account_tax_report_ro_baza_tva_tx4_invrsa')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_tx4_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa'),
+                ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx4_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
             }),
         ]"/>
     </record>
@@ -774,7 +752,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -786,7 +763,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -810,7 +786,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -823,7 +798,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -846,7 +820,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -858,7 +831,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -881,7 +853,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -893,7 +864,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
             }),
         ]"/>
     </record>
@@ -914,7 +884,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -925,7 +894,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -942,36 +910,24 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr1_bnr')],
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr1_bnuri')],
+                'minus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr_bnr')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr1_bnr')],
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr1_bnuri')],
+                'plus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr_bnr')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
             }),
         ]"/>
     </record>
@@ -988,39 +944,42 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr2_bnuri'),
-                ref('account_tax_report_baza_tva_intrcmtr2_bnr')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri'),
+                ref('account_tax_report_baza_tva_intrcmtr_bnr')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_intracmunitr2_bunri')],
+                'plus_report_line_ids': [ref('account_tax_report_tva_intracmunitr_bunri')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr2_bunri')],
+                'account_id': ref('pcg_4426'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr_bunri')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr2_bnuri'),
-                ref('account_tax_report_baza_tva_intrcmtr2_bnr')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri'),
+                ref('account_tax_report_baza_tva_intrcmtr_bnr')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr_bunri')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_intracmunitr2_bunri')],
+                'minus_report_line_ids': [ref('account_tax_report_tva_intracmunitr_bunri')],
             }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr2_bunri')],
-            }),
+
         ]"/>
     </record>
 
@@ -1036,40 +995,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr3_bnr'),
-                ref('account_tax_report_ro_baza_tva_intracmunitr3_bnuri')],
+                'plus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr_bnr'),
+                ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_intracmunitr3_bunri')],
+                'plus_report_line_ids': [ref('account_tax_report_tva_intracmunitr_bunri')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr3_bunri')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr_bunri')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr3_bnr'),
-                ref('account_tax_report_ro_baza_tva_intracmunitr3_bnuri')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_intracmunitr3_bunri')],
+                'minus_report_line_ids': [ref('account_tax_report_baza_tva_intrcmtr_bnr'),
+                ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr3_bunri')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr_bunri')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_tva_intracmunitr_bunri')],
             }),
         ]"/>
     </record>
@@ -1104,14 +1063,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -1121,7 +1080,7 @@
         <field name="sequence">61</field>
         <field name="name">TVA Intracomunitara Achizitii 20%</field>
         <field name="amount">20</field>
-        <field name="amount_type">group</field>
+        <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
@@ -1146,14 +1105,14 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-            }),
-            (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
             }),
         ]"/>
     </record>
@@ -1170,38 +1129,40 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr4_bnuri'),
-                ref('account_tax_report_baza_tva_intrcmtr4_bnr')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri'),
+                ref('account_tax_report_baza_tva_intrcmtr_bnr')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('account_tax_report_tva_intracmunitr4_bunri')],
+                'account_id': ref('pcg_4427'),
+                'plus_report_line_ids': [ref('account_tax_report_tva_intracmunitr_bunri')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr4_bunri')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr_bunri')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr4_bnuri'),
-                ref('account_tax_report_baza_tva_intrcmtr4_bnr')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('account_tax_report_tva_intracmunitr4_bunri')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_intracmunitr_bnuri'),
+                ref('account_tax_report_baza_tva_intrcmtr_bnr')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr4_bunri')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_intracmunitr_bunri')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_tva_intracmunitr_bunri')],
             }),
         ]"/>
     </record>

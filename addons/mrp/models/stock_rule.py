@@ -37,14 +37,14 @@ class StockRule(models.Model):
         for procurement, rule in procurements:
             bom = self._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
             if not bom:
-                msg = _('There is no Bill of Material found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
+                msg = _('There is no Bill of Material of type manufacture or kit found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
                 raise UserError(msg)
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
 
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            productions = self.env['mrp.production'].sudo().with_context(force_company=company_id).create(productions_values)
+            productions = self.env['mrp.production'].sudo().with_company(company_id).create(productions_values)
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             productions.action_confirm()
 
@@ -66,15 +66,14 @@ class StockRule(models.Model):
         fields += ['bom_line_id']
         return fields
 
-    @api.multi
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']
-        return self.env['mrp.bom'].with_context(
-            company_id=company_id.id, force_company=company_id.id
-        )._bom_find(product=product_id, picking_type=self.picking_type_id, bom_type='normal')  # TDE FIXME: context bullshit
+        return self.env['mrp.bom']._bom_find(
+            product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
+        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -83,10 +82,11 @@ class StockRule(models.Model):
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
-            'date_planned_start': fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values)),
-            'date_planned_finished': values['date_planned'],
+            'date_deadline': date_deadline,
+            'date_planned_finished': date_deadline,
+            'date_planned_start': fields.Datetime.from_string(date_deadline) - relativedelta(hours=1),
             'procurement_group_id': False,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,

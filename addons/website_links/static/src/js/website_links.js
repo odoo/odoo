@@ -77,10 +77,16 @@ var SelectBox = publicWidget.Widget.extend({
      */
     _createObject: function (name) {
         var self = this;
+        var args = {
+            name: name
+        };
+        if (this.obj === "utm.campaign"){
+            args.is_website = true;
+        }
         return this._rpc({
             model: this.obj,
             method: 'create',
-            args: [{name: name}],
+            args: [args],
         }).then(function (record) {
             self.$el.attr('value', record);
             self.objects.push({'id': record, 'text': name});

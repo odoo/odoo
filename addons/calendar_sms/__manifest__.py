@@ -9,6 +9,7 @@
     'version': '1.0',
     'depends': ['calendar', 'sms'],
     'data': [
+        'data/sms_data.xml',
         'views/calendar_views.xml',
     ],
     'application': False,

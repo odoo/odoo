@@ -7,7 +7,6 @@ from odoo import api, models
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    @api.multi
     def _post_add_create(self):
         """ Overrides behaviour when the attachment is created through the controller
         """

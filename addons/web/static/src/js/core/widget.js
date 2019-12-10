@@ -204,6 +204,9 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
         var self = this;
         this.setElement(target.$el || target);
         return this.willStart().then(function () {
+            if (self.__parentedDestroyed) {
+                return;
+            }
             return self.start();
         });
     },

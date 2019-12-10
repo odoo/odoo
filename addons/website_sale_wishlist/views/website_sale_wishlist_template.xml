@@ -5,7 +5,12 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/website_sale_wishlist/static/src/scss/website_sale_wishlist.scss"/>
             <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_wishlist.js"></script>
-            <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_tour_wishlist.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Website Sale Wishlist Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_wishlist/static/tests/tours/website_sale_wishlist.js"></script>
         </xpath>
     </template>
 
@@ -28,10 +33,10 @@
     </template>
 
     <template id="header" inherit_id="website.layout" name="Header Shop Wishlist Link">
-        <xpath expr="//header//ul[@id='top_menu']/li[@id='my_cart']" position="after">
+        <xpath expr="//header//ul[@id='top_menu']/li[contains(@t-attf-class, 'o_wsale_my_cart')]" position="after">
             <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active">
                 <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
-                <li id="my_wish" class="nav-item" t-att-style="not wishcount and 'display:none;'">
+                <li class="nav-item o_wsale_my_wish" t-att-style="not wishcount and 'display:none;'">
                     <a href="/shop/wishlist" class="nav-link">
                         <i class="fa fa-heart"/>
                         Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
@@ -57,12 +62,12 @@
                                 <t t-foreach="wishes" t-as="wish">
                                     <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
                                         <td class='td-img'>
-                                            <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)">
-                                                <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_medium" class="img img-fluid" style="margin:auto;" alt="Product image"/>
+                                            <a t-att-href="wish.product_id.website_url">
+                                                <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                             </a>
                                         </td>
                                         <td class='text-left'>
-                                            <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <strong><a t-att-href="wish.product_id.website_url"><t t-esc="wish.product_id.display_name" /></a></strong>
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>

@@ -12,7 +12,6 @@ odoo.define('web.ActionManager', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -421,9 +420,6 @@ var ActionManager = Widget.extend({
             console.error("Could not find client action " + action.tag, action);
             return Promise.reject();
         }
-        if (!(ClientAction.prototype instanceof AbstractAction)) {
-            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
-        }
         if (!(ClientAction.prototype instanceof Widget)) {
             // the client action might be a function, which is executed and
             // whose returned value might be another action to execute
@@ -432,6 +428,9 @@ var ActionManager = Widget.extend({
                 return this.doAction(next, options);
             }
             return Promise.resolve();
+        }
+        if (!(ClientAction.prototype instanceof AbstractAction)) {
+            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
         }
 
         var controllerID = _.uniqueId('controller_');
@@ -451,9 +450,6 @@ var ActionManager = Widget.extend({
         action.controllerID = controllerID;
         var prom = this._executeAction(action, options);
         prom.then(function () {
-            // AAB: this should be done automatically in AbstractAction, so that
-            // it can be overriden by actions that have specific stuff to push
-            // (e.g. Discuss, Views)
             self._pushState(controllerID, {});
         });
         return prom;
@@ -527,9 +523,6 @@ var ActionManager = Widget.extend({
      */
     _executeURLAction: function (action, options) {
         var url = action.url;
-        if (config.debug && url && url.length && url[0] === '/') {
-            url = $.param.querystring(url, {debug: config.debug});
-        }
 
         if (action.target === 'self') {
             framework.redirect(url);
@@ -629,6 +622,7 @@ var ActionManager = Widget.extend({
                 state.active_ids = action.context.active_ids.join(',');
             }
         }
+        state = _.extend({}, controller.widget.getState(), state);
         return state;
     },
     /**
@@ -648,7 +642,7 @@ var ActionManager = Widget.extend({
     },
     /**
      * Dispatches the given action to the corresponding handler to execute it,
-     * according to its type. This function can be overriden to extend the
+     * according to its type. This function can be overridden to extend the
      * range of supported action types.
      *
      * @private
@@ -719,6 +713,9 @@ var ActionManager = Widget.extend({
             action: this.getCurrentAction(),
             controller: controller,
         });
+
+        // close all dialogs when the current controller changes
+        core.bus.trigger('close_dialogs');
 
         // toggle the fullscreen mode for actions in target='fullscreen'
         this._toggleFullscreen();
@@ -926,7 +923,6 @@ var ActionManager = Widget.extend({
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: ev.data.res_model,
             views: [[false, 'form']],

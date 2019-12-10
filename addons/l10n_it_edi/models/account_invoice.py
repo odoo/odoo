@@ -21,9 +21,9 @@ _logger = logging.getLogger(__name__)
 
 DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-    _name = 'account.invoice'
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
 
     l10n_it_send_state = fields.Selection([
         ('new', 'New'),
@@ -39,7 +39,7 @@ class AccountInvoice(models.Model):
                         could not be delivered to the addressee') # ok we must do nothing
     ], default='to_send', copy=False)
 
-    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", size=15, readonly=True, states={'draft': [('readonly', False)]})
+    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
 
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
 
@@ -47,32 +47,31 @@ class AccountInvoice(models.Model):
 
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", copy=False)
 
-    @api.multi
-    def invoice_validate(self):
-        # Clean context from default_type to avoid making attachment
-        # with wrong values in subsequent operations
-        cleaned_ctx = dict(self.env.context)
-        cleaned_ctx.pop('default_type', None)
-        self = self.with_context(cleaned_ctx)
+    def post(self):
+        # OVERRIDE
+        super(AccountMove, self).post()
 
-        super(AccountInvoice, self).invoice_validate()
-        for invoice in self:
-            if invoice.company_id.country_id != self.env.ref('base.it'):
-                continue
-            if invoice.type == 'in_invoice' or invoice.type == 'in_refund':
-                invoice.l10n_it_send_state = "other"
-                continue
+        # Retrieve invoices to generate the xml.
+        invoices_to_export = self.filtered(lambda move: move.company_id.country_id == self.env.ref('base.it') and move.is_sale_document())
 
+        invoices_to_export.write({'l10n_it_send_state': 'other'})
+        invoices_to_send = self.env['account.move']
+        invoices_other = self.env['account.move']
+        for invoice in invoices_to_export:
             invoice._check_before_xml_exporting()
-
             invoice.invoice_generate_xml()
             if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
                 invoice.message_post(
                     body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
                 )
-                invoice.l10n_it_send_state = "other"
-                continue
-            invoice.l10n_it_send_state = "to_send"
+                invoices_other += invoice
+            else:
+                invoices_to_send += invoice
+
+        invoices_other.write({'l10n_it_send_state': 'other'})
+        invoices_to_send.write({'l10n_it_send_state': 'to_send'})
+
+        for invoice in invoices_to_send:
             invoice.send_pec_mail()
 
     def _check_before_xml_exporting(self):
@@ -95,7 +94,7 @@ class AccountInvoice(models.Model):
 
         # <1.2.1.8>
         if not seller.l10n_it_tax_system:
-            raise UserError("The seller's company must have a tax system.")
+            raise UserError(_("The seller's company must have a tax system."))
 
         # <1.2.2>
         if not seller.street and not seller.street2:
@@ -109,8 +108,11 @@ class AccountInvoice(models.Model):
         if not seller.country_id:
             raise UserError(_("%s must have a country.") % (seller.display_name))
 
+        if seller.l10n_it_has_tax_representative and not seller.l10n_it_tax_representative_partner_id.vat:
+            raise UserError(_("Tax representative partner %s of %s must have a tax number.") % (seller.l10n_it_tax_representative_partner_id.display_name, seller.display_name))
+
         # <1.4.1>
-        if not buyer.vat and not buyer.l10n_it_codice_fiscale:
+        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
             raise UserError(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).") % (buyer.display_name))
 
         # <1.4.2>
@@ -127,14 +129,13 @@ class AccountInvoice(models.Model):
 
         # <2.2.1>
         for invoice_line in self.invoice_line_ids:
-            if len(invoice_line.invoice_line_tax_ids) != 1:
+            if len(invoice_line.tax_ids) != 1:
                 raise UserError(_("You must select one and only one tax by line."))
 
-        for tax_line in self.tax_line_ids:
-            if not tax_line.tax_id.l10n_it_has_exoneration and tax_line.tax_id.amount == 0:
+        for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
+            if not tax_line.tax_line_id.l10n_it_has_exoneration and tax_line.tax_line_id.amount == 0:
                 raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration." % tax_line.name))
 
-    @api.multi
     def invoice_generate_xml(self):
         for invoice in self:
             if invoice.l10n_it_einvoice_id and invoice.l10n_it_send_state not in ['invalid', 'to_send']:
@@ -162,8 +163,7 @@ class AccountInvoice(models.Model):
                 'name': report_name,
                 'res_id': invoice.id,
                 'res_model': invoice._name,
-                'datas': base64.encodestring(data),
-                'datas_fname': report_name,
+                'datas': base64.encodebytes(data),
                 'description': description,
                 'type': 'binary',
                 })
@@ -232,7 +232,7 @@ class AccountInvoice(models.Model):
 
         pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.id)[0]
         pdf = base64.b64encode(pdf)
-        pdf_name = re.sub(r'\W+', '', self.number) + '.pdf'
+        pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
         # Create file content.
         template_values = {
@@ -254,7 +254,6 @@ class AccountInvoice(models.Model):
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export').render(template_values)
         return content
 
-    @api.multi
     def send_pec_mail(self):
         self.ensure_one()
         allowed_state = ['to_send', 'invalid']
@@ -274,11 +273,12 @@ class AccountInvoice(models.Model):
             'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.company.l10n_it_address_recipient_fatturapa),
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.l10n_it_address_send_fatturapa,
+            'reply_to': self.env.company.l10n_it_address_send_fatturapa,
             'mail_server_id': self.env.company.l10n_it_mail_pec_server_id.id,
             'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
         })
 
-        mail_fattura = self.env['mail.mail'].create({
+        mail_fattura = self.env['mail.mail'].sudo().with_context(wo_return_path=True).create({
             'mail_message_id': message.id,
             'email_to': self.env.company.l10n_it_address_recipient_fatturapa,
         })
@@ -294,34 +294,33 @@ class AccountInvoice(models.Model):
                 )
             self.l10n_it_send_state = 'invalid'
 
-    def _import_xml_invoice(self, content, attachment):
+    def _import_xml_invoice(self, tree):
         ''' Extract invoice values from the E-Invoice xml tree passed as parameter.
 
         :param content: The tree of the xml file.
         :return: A dictionary containing account.invoice values to create/update it.
         '''
 
-        try:
-            tree = etree.fromstring(content)
-        except:
-            _logger.info('Error during decoding XML file')
-            return self.env['account.invoice']
-
-        invoices = self.env['account.invoice']
+        invoices = self.env['account.move']
+        multi = False
 
         # possible to have multiple invoices in the case of an invoice batch, the batch itself is repeated for every invoice of the batch
         for body_tree in tree.xpath('//FatturaElettronicaBody', namespaces=tree.nsmap):
+            if multi:
+                # make sure all the iterations create a new invoice record (except the first which could have already created one)
+                self = self.env['account.move']
+            multi = True
 
             elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento', namespaces=tree.nsmap)
             if elements and elements[0].text and elements[0].text == 'TD01':
-                self_ctx = self.with_context(type='in_invoice')
+                self_ctx = self.with_context(default_type='in_invoice')
             elif elements and elements[0].text and elements[0].text == 'TD04':
-                self_ctx = self.with_context(type='in_refund')
+                self_ctx = self.with_context(default_type='in_refund')
             else:
                 _logger.info(_('Document type not managed: %s.') % (elements[0].text))
 
-            # type must be present in the context to get the right behavior of the _default_journal method (account.invoice).
-            # journal_id must be present in the context to get the right behavior of the _default_account method (account.invoice.line).
+            # type must be present in the context to get the right behavior of the _default_journal method (account.move).
+            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
 
             elements = tree.xpath('//CessionarioCommittente//IdCodice', namespaces=tree.nsmap)
             company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
@@ -338,31 +337,25 @@ class AccountInvoice(models.Model):
                 else:
                     _logger.info(_('Company not found. The company\'s user is set by default.'))
 
-            if not self.env.user._is_superuser():
+            if not self.env.is_superuser():
                 if self.env.company != company:
                     raise UserError(_("You can only import invoice concern your current company: %s") % self.env.company.display_name)
 
-            journal_id = self_ctx._default_journal().id
-            self_ctx = self_ctx.with_context(journal_id=journal_id)
-
+            # Refund type.
+            # TD01 == invoice
+            # TD02 == advance/down payment on invoice
+            # TD03 == advance/down payment on fee
+            # TD04 == credit note
+            # TD05 == debit note
+            # TD06 == fee
+            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento', namespaces=tree.nsmap)
+            if elements and elements[0].text and elements[0].text == 'TD01':
+                type = 'in_invoice'
+            elif elements and elements[0].text and elements[0].text == 'TD04':
+                type = 'in_refund'
             # self could be a single record (editing) or be empty (new).
-            with Form(self_ctx, view='account.invoice_supplier_form') as invoice_form:
+            with Form(self.with_context(default_type=type)) as invoice_form:
                 message_to_log = []
-
-                invoice_form.company_id = company
-
-                # Refund type.
-                # TD01 == invoice
-                # TD02 == advance/down payment on invoice
-                # TD03 == advance/down payment on fee
-                # TD04 == credit note
-                # TD05 == debit note
-                # TD06 == fee
-                elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento', namespaces=tree.nsmap)
-                if elements and elements[0].text and elements[0].text == 'TD01':
-                    invoice_form.type = 'in_invoice'
-                elif elements and elements[0].text and elements[0].text == 'TD04':
-                    invoice_form.type = 'in_refund'
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
                 elements = tree.xpath('//CedentePrestatore//IdCodice', namespaces=tree.nsmap)
@@ -384,11 +377,11 @@ class AccountInvoice(models.Model):
                 # Numbering attributed by the transmitter. <1.1.2>
                 elements = tree.xpath('//ProgressivoInvio', namespaces=tree.nsmap)
                 if elements:
-                    invoice_form.name = elements[0].text
+                    invoice_form.invoice_payment_ref = elements[0].text
 
                 elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero', namespaces=body_tree.nsmap)
                 if elements:
-                    invoice_form.reference = elements[0].text
+                    invoice_form.ref = elements[0].text
 
                 # Currency. <2.1.1.2>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa', namespaces=body_tree.nsmap)
@@ -403,7 +396,7 @@ class AccountInvoice(models.Model):
                 if elements:
                     date_str = elements[0].text
                     date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.date_invoice = date_obj.strftime(DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
+                    invoice_form.invoice_date = date_obj.strftime(DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
 
                 #  Dati Bollo. <2.1.1.6>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo', namespaces=body_tree.nsmap)
@@ -444,7 +437,7 @@ class AccountInvoice(models.Model):
                 # Comment. <2.1.1.11>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale', namespaces=body_tree.nsmap)
                 for element in elements:
-                    invoice_form.comment = '%s%s\n' % (invoice_form.comment or '', element.text)
+                    invoice_form.narration = '%s%s\n' % (invoice_form.narration or '', element.text)
 
                 # Informations relative to the purchase order, the contract, the agreement,
                 # the reception phase or invoices previously transmitted
@@ -468,7 +461,7 @@ class AccountInvoice(models.Model):
                 if elements:
                     date_str = elements[0].text
                     date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.date_due = fields.Date.to_string(date_obj)
+                    invoice_form.invoice_date_due = fields.Date.to_string(date_obj)
 
                 # Total amount. <2.4.2.6>
                 elements = body_tree.xpath('.//ImportoPagamento', namespaces=body_tree.nsmap)
@@ -490,7 +483,7 @@ class AccountInvoice(models.Model):
                     else:
                         bank = self.env['res.partner.bank'].search([('acc_number', '=', elements[0].text)])
                     if bank:
-                        invoice_form.partner_bank_id = bank
+                        invoice_form.invoice_partner_bank_id = bank
                     else:
                         message_to_log.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),
@@ -563,7 +556,7 @@ class AccountInvoice(models.Model):
                             # Taxes
                             tax_element = element.xpath('.//AliquotaIVA', namespaces=body_tree.nsmap)
                             natura_element = element.xpath('.//Natura', namespaces=body_tree.nsmap)
-                            invoice_line_form.invoice_line_tax_ids.clear()
+                            invoice_line_form.tax_ids.clear()
                             if tax_element and tax_element[0].text:
                                 percentage = float(tax_element[0].text)
                                 if natura_element and natura_element[0].text:
@@ -585,7 +578,7 @@ class AccountInvoice(models.Model):
                                     l10n_it_kind_exoneration = ''
 
                                 if tax:
-                                    invoice_line_form.invoice_line_tax_ids.add(tax)
+                                    invoice_line_form.tax_ids.add(tax)
                                 else:
                                     if l10n_it_kind_exoneration:
                                         message_to_log.append(_("Tax not found with percentage: %s and exoneration %s for the article: %s") % (
@@ -636,7 +629,7 @@ class AccountInvoice(models.Model):
                                         discount["name"] = _('EXTRA CHARGE: ') + invoice_line_form.name
                                     discount["amount"] = total_discount_amount
                                     discount["tax"] = []
-                                    for tax in invoice_line_form.invoice_line_tax_ids:
+                                    for tax in invoice_line_form.tax_ids:
                                         discount["tax"].append(tax)
                                     discount_list.append(discount)
                             invoice_line_form.discount = (1 - total_discount_percentage) * 100
@@ -644,7 +637,7 @@ class AccountInvoice(models.Model):
                 # Apply amount discount.
                 for discount in discount_list:
                     with invoice_form.invoice_line_ids.new() as invoice_line_form_discount:
-                        invoice_line_form_discount.invoice_line_tax_ids.clear()
+                        invoice_line_form_discount.tax_ids.clear()
                         invoice_line_form_discount.sequence = discount["seq"]
                         invoice_line_form_discount.name = discount["name"]
                         invoice_line_form_discount.price_unit = discount["amount"]
@@ -660,12 +653,12 @@ class AccountInvoice(models.Model):
                     attachment_64 = self.env['ir.attachment'].create({
                         'name': name_attachment,
                         'datas': attachment_64,
-                        'datas_fname': name_attachment,
                         'type': 'binary',
                     })
 
                     # default_res_id is had to context to avoid facturx to import his content
-                    new_invoice.with_context(default_res_id=new_invoice.id).message_post(
+                    # no_new_invoice to prevent from looping on the message_post that would create a new invoice without it
+                    new_invoice.with_context(no_new_invoice=True, default_res_id=new_invoice.id).message_post(
                         body=(_("Attachment from XML")),
                         attachment_ids=[attachment_64.id]
                     )
@@ -673,10 +666,6 @@ class AccountInvoice(models.Model):
             for message in message_to_log:
                 new_invoice.message_post(body=message)
 
-            if attachment:
-                new_invoice.l10n_it_einvoice_name = attachment.name
-                attachment.write({'res_model': 'account.invoice', 'res_id': new_invoice.id})
-                new_invoice.message_post(attachment_ids=[attachment.id])
             invoices += new_invoice
         return invoices
 
@@ -705,6 +694,20 @@ class AccountInvoice(models.Model):
                 if text:
                     output_str += "<li>%s: %s</li>" % (element.tag, text)
         return output_str + "</ul>"
+
+    @api.model
+    def _get_xml_decoders(self):
+        # Override
+        ubl_decoders = [('Italy', self._detect_italy_edi, self._import_xml_invoice)]
+        return super(AccountMove, self)._get_xml_decoders() + ubl_decoders
+
+    @api.model
+    def _detect_italy_edi(self, tree, file_name):
+        # Quick check the file name looks like the one of an Italian EDI XML.
+        flag = re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", file_name)
+        error = None
+
+        return {'flag': flag, 'error': error}
 
 class AccountTax(models.Model):
     _name = "account.tax"
@@ -738,22 +741,6 @@ class AccountTax(models.Model):
         for tax in self:
             if tax.l10n_it_has_exoneration:
                 if not tax.l10n_it_kind_exoneration or not tax.l10n_it_law_reference or tax.amount != 0:
-                    raise ValidationError("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0.")
+                    raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
                 if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
                     raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
-
-class ImportInvoiceImportWizard(models.TransientModel):
-    _name = 'account.invoice.import.wizard'
-    _inherit = 'account.invoice.import.wizard'
-
-    @api.multi
-    def _create_invoice_from_file(self, attachment):
-        if attachment.mimetype == 'application/xml' and re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", attachment.name):
-            if self.env['account.invoice'].search([('l10n_it_einvoice_name', '=', attachment.name)], limit=1):
-                # invoice already exist
-                raise UserError(_('E-invoice already exist: %s') % attachment.name)
-            self = self.with_context(default_journal_id= self.journal_id.id)
-            invoice = self.env['account.invoice']._import_xml_invoice(base64.decodestring(attachment.datas), attachment)
-        else:
-            invoice = super(ImportInvoiceImportWizard, self)._create_invoice_from_file(attachment)
-        return invoice

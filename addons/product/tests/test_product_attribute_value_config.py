@@ -2,113 +2,118 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
+from psycopg2 import IntegrityError
 
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
+from odoo.tools import mute_logger
 
 
-class TestProductAttributeValueSetup(TransactionCase):
-    def setUp(self):
-        super(TestProductAttributeValueSetup, self).setUp()
+class TestProductAttributeValueCommon(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestProductAttributeValueCommon, cls).setUpClass()
 
-        self.computer = self.env['product.template'].create({
+        cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',
             'price': 2000,
         })
 
-        self._add_ssd_attribute()
-        self._add_ram_attribute()
-        self._add_hdd_attribute()
+        cls._add_ssd_attribute()
+        cls._add_ram_attribute()
+        cls._add_hdd_attribute()
 
-        self.computer.create_variant_ids()
-
-        self.computer_case = self.env['product.template'].create({
+        cls.computer_case = cls.env['product.template'].create({
             'name': 'Super Computer Case'
         })
 
-        self._add_size_attribute()
+        cls._add_size_attribute()
 
-        self.computer_case.create_variant_ids()
-
-    def _add_ssd_attribute(self):
-        self.ssd_attribute = self.env['product.attribute'].create({'name': 'Memory', 'sequence': 1})
-        self.ssd_256 = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_ssd_attribute(cls):
+        cls.ssd_attribute = cls.env['product.attribute'].create({'name': 'Memory', 'sequence': 1})
+        cls.ssd_256 = cls.env['product.attribute.value'].create({
             'name': '256 GB',
-            'attribute_id': self.ssd_attribute.id,
+            'attribute_id': cls.ssd_attribute.id,
             'sequence': 1,
         })
-        self.ssd_512 = self.env['product.attribute.value'].create({
+        cls.ssd_512 = cls.env['product.attribute.value'].create({
             'name': '512 GB',
-            'attribute_id': self.ssd_attribute.id,
+            'attribute_id': cls.ssd_attribute.id,
             'sequence': 2,
         })
 
-        self._add_ssd_attribute_line()
+        cls._add_ssd_attribute_line()
 
-    def _add_ssd_attribute_line(self):
-        self.computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.ssd_attribute.id,
-            'value_ids': [(6, 0, [self.ssd_256.id, self.ssd_512.id])],
+    @classmethod
+    def _add_ssd_attribute_line(cls):
+        cls.computer_ssd_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.ssd_attribute.id,
+            'value_ids': [(6, 0, [cls.ssd_256.id, cls.ssd_512.id])],
         })
-        self.computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
-        self.computer_ssd_attribute_lines.product_template_value_ids[1].price_extra = 400
+        cls.computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
+        cls.computer_ssd_attribute_lines.product_template_value_ids[1].price_extra = 400
 
-    def _add_ram_attribute(self):
-        self.ram_attribute = self.env['product.attribute'].create({'name': 'RAM', 'sequence': 2})
-        self.ram_8 = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_ram_attribute(cls):
+        cls.ram_attribute = cls.env['product.attribute'].create({'name': 'RAM', 'sequence': 2})
+        cls.ram_8 = cls.env['product.attribute.value'].create({
             'name': '8 GB',
-            'attribute_id': self.ram_attribute.id,
+            'attribute_id': cls.ram_attribute.id,
             'sequence': 1,
         })
-        self.ram_16 = self.env['product.attribute.value'].create({
+        cls.ram_16 = cls.env['product.attribute.value'].create({
             'name': '16 GB',
-            'attribute_id': self.ram_attribute.id,
+            'attribute_id': cls.ram_attribute.id,
             'sequence': 2,
         })
-        self.ram_32 = self.env['product.attribute.value'].create({
+        cls.ram_32 = cls.env['product.attribute.value'].create({
             'name': '32 GB',
-            'attribute_id': self.ram_attribute.id,
+            'attribute_id': cls.ram_attribute.id,
             'sequence': 3,
         })
-        self.computer_ram_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.ram_attribute.id,
-            'value_ids': [(6, 0, [self.ram_8.id, self.ram_16.id, self.ram_32.id])],
+        cls.computer_ram_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.ram_attribute.id,
+            'value_ids': [(6, 0, [cls.ram_8.id, cls.ram_16.id, cls.ram_32.id])],
         })
-        self.computer_ram_attribute_lines.product_template_value_ids[0].price_extra = 20
-        self.computer_ram_attribute_lines.product_template_value_ids[1].price_extra = 40
-        self.computer_ram_attribute_lines.product_template_value_ids[2].price_extra = 80
+        cls.computer_ram_attribute_lines.product_template_value_ids[0].price_extra = 20
+        cls.computer_ram_attribute_lines.product_template_value_ids[1].price_extra = 40
+        cls.computer_ram_attribute_lines.product_template_value_ids[2].price_extra = 80
 
-    def _add_hdd_attribute(self):
-        self.hdd_attribute = self.env['product.attribute'].create({'name': 'HDD', 'sequence': 3})
-        self.hdd_1 = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_hdd_attribute(cls):
+        cls.hdd_attribute = cls.env['product.attribute'].create({'name': 'HDD', 'sequence': 3})
+        cls.hdd_1 = cls.env['product.attribute.value'].create({
             'name': '1 To',
-            'attribute_id': self.hdd_attribute.id,
+            'attribute_id': cls.hdd_attribute.id,
             'sequence': 1,
         })
-        self.hdd_2 = self.env['product.attribute.value'].create({
+        cls.hdd_2 = cls.env['product.attribute.value'].create({
             'name': '2 To',
-            'attribute_id': self.hdd_attribute.id,
+            'attribute_id': cls.hdd_attribute.id,
             'sequence': 2,
         })
-        self.hdd_4 = self.env['product.attribute.value'].create({
+        cls.hdd_4 = cls.env['product.attribute.value'].create({
             'name': '4 To',
-            'attribute_id': self.hdd_attribute.id,
+            'attribute_id': cls.hdd_attribute.id,
             'sequence': 3,
         })
 
-        self._add_hdd_attribute_line()
+        cls._add_hdd_attribute_line()
 
-    def _add_hdd_attribute_line(self):
-        self.computer_hdd_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.hdd_attribute.id,
-            'value_ids': [(6, 0, [self.hdd_1.id, self.hdd_2.id, self.hdd_4.id])],
+    @classmethod
+    def _add_hdd_attribute_line(cls):
+        cls.computer_hdd_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.hdd_attribute.id,
+            'value_ids': [(6, 0, [cls.hdd_1.id, cls.hdd_2.id, cls.hdd_4.id])],
         })
-        self.computer_hdd_attribute_lines.product_template_value_ids[0].price_extra = 2
-        self.computer_hdd_attribute_lines.product_template_value_ids[1].price_extra = 4
-        self.computer_hdd_attribute_lines.product_template_value_ids[2].price_extra = 8
+        cls.computer_hdd_attribute_lines.product_template_value_ids[0].price_extra = 2
+        cls.computer_hdd_attribute_lines.product_template_value_ids[1].price_extra = 4
+        cls.computer_hdd_attribute_lines.product_template_value_ids[2].price_extra = 8
 
     def _add_ram_exclude_for(self):
         self._get_product_value_id(self.computer_ram_attribute_lines, self.ram_16).update({
@@ -118,27 +123,28 @@ class TestProductAttributeValueSetup(TransactionCase):
             })]
         })
 
-    def _add_size_attribute(self):
-        self.size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
-        self.size_m = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_size_attribute(cls):
+        cls.size_attribute = cls.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        cls.size_m = cls.env['product.attribute.value'].create({
             'name': 'M',
-            'attribute_id': self.size_attribute.id,
+            'attribute_id': cls.size_attribute.id,
             'sequence': 1,
         })
-        self.size_l = self.env['product.attribute.value'].create({
+        cls.size_l = cls.env['product.attribute.value'].create({
             'name': 'L',
-            'attribute_id': self.size_attribute.id,
+            'attribute_id': cls.size_attribute.id,
             'sequence': 2,
         })
-        self.size_xl = self.env['product.attribute.value'].create({
+        cls.size_xl = cls.env['product.attribute.value'].create({
             'name': 'XL',
-            'attribute_id': self.size_attribute.id,
+            'attribute_id': cls.size_attribute.id,
             'sequence': 3,
         })
-        self.computer_case_size_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer_case.id,
-            'attribute_id': self.size_attribute.id,
-            'value_ids': [(6, 0, [self.size_m.id, self.size_l.id, self.size_xl.id])],
+        cls.computer_case_size_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer_case.id,
+            'attribute_id': cls.size_attribute.id,
+            'value_ids': [(6, 0, [cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
         })
 
     def _get_product_value_id(self, product_template_attribute_lines, product_attribute_value):
@@ -156,7 +162,7 @@ class TestProductAttributeValueSetup(TransactionCase):
         """
         if not model:
             model = self.computer
-        return model._get_valid_product_template_attribute_lines().filtered(
+        return model.valid_product_template_attribute_line_ids.filtered(
             lambda l: l.attribute_id == product_attribute_value.attribute_id
         ).product_template_value_ids.filtered(
             lambda v: v.product_attribute_value_id == product_attribute_value
@@ -172,7 +178,7 @@ class TestProductAttributeValueSetup(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
-class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
+class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
     def test_product_template_attribute_values_creation(self):
         self.assertEqual(len(self.computer_ssd_attribute_lines.product_template_value_ids), 2,
@@ -203,15 +209,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # under defined variant
         combination = computer_ssd_256 + computer_ram_8
         variant = self.computer._get_variant_for_combination(combination)
-        self.assertEqual(len(variant), 0)
-
-        # also test _has_valid_attributes (case ok):
-        valid_value_ids = self.computer.valid_product_attribute_value_wnva_ids
-        valid_attribute_ids = self.computer.valid_product_attribute_wnva_ids
-        self.assertTrue(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids))
-
-        # also test _has_valid_attributes (case not ok):
-        self.assertFalse(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids - self.hdd_1))
+        self.assertFalse(variant)
 
     def test_product_filtered_exclude_for(self):
         """
@@ -286,8 +284,6 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
             'value_ids': [(6, 0, [color_red.id, color_green.id])],
         })
 
-        mouse.create_variant_ids()
-
         mouse_color_red = self._get_product_template_attribute_value(color_red, mouse)
         mouse_color_green = self._get_product_template_attribute_value(color_green, mouse)
 
@@ -311,6 +307,21 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # CASE: deleted combination
         variant.unlink()
         self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
+
+        # CASE: if multiple variants exist for the same combination and at least
+        # one of them is not archived, the combination is possible
+        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
+        self.env['product.product'].create({
+            'product_tmpl_id': self.computer.id,
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+            'active': False,
+        })
+        self.env['product.product'].create({
+            'product_tmpl_id': self.computer.id,
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+            'active': True,
+        })
+        self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
     def test_get_first_possible_combination(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -469,23 +480,72 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
     def test_clear_caches(self):
         """The goal of this test is to make sure the cache is invalidated when
         it should be."""
-        attribute_values = self.ssd_256 + self.ram_8 + self.hdd_1
+        computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
+        computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
+        computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
+        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
 
-        # CASE: initial result of _get_variant_id_for_combination
-        variant_id = self.computer._get_variant_id_for_combination(attribute_values)
-        self.assertTrue(variant_id)
+        # CASE: initial result of _get_variant_for_combination
+        variant = self.computer._get_variant_for_combination(combination)
+        self.assertTrue(variant)
 
         # CASE: clear_caches in product.product unlink
-        self.env['product.product'].browse(variant_id).unlink()
-        self.assertFalse(self.computer._get_variant_id_for_combination(attribute_values))
+        variant.unlink()
+        self.assertFalse(self.computer._get_variant_for_combination(combination))
 
         # CASE: clear_caches in product.product create
         variant = self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'attribute_value_ids': [(6, 0, attribute_values.ids)],
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
         })
-        self.assertEqual(variant.id, self.computer._get_variant_id_for_combination(attribute_values))
+        self.assertEqual(variant, self.computer._get_variant_for_combination(combination))
 
         # CASE: clear_caches in product.product write
-        variant.attribute_value_ids = False
-        self.assertFalse(self.computer._get_variant_id_for_combination(attribute_values))
+        variant.product_template_attribute_value_ids = False
+        self.assertFalse(self.computer._get_variant_id_for_combination(combination))
+
+    def test_constraints(self):
+        """The goal of this test is to make sure constraints are correct."""
+        with self.assertRaises(UserError, msg="can't change variants creation mode of attribute used on product"):
+            self.ram_attribute.create_variant = 'no_variant'
+
+        with self.assertRaises(UserError, msg="can't delete attribute used on product"):
+            self.ram_attribute.unlink()
+
+        with self.assertRaises(UserError, msg="can't change the attribute of an value used on product"):
+            self.ram_32.attribute_id = self.hdd_attribute.id
+
+        with self.assertRaises(UserError, msg="can't delete value used on product"):
+            self.ram_32.unlink()
+
+        with self.assertRaises(ValidationError, msg="can't have attribute without value on product"):
+            self.env['product.template.attribute.line'].create({
+                'product_tmpl_id': self.computer_case.id,
+                'attribute_id': self.hdd_attribute.id,
+                'value_ids': [(6, 0, [])],
+            })
+
+        with self.assertRaises(ValidationError, msg="value attribute must match line attribute"):
+            self.env['product.template.attribute.line'].create({
+                'product_tmpl_id': self.computer_case.id,
+                'attribute_id': self.ram_attribute.id,
+                'value_ids': [(6, 0, [self.ssd_256.id])],
+            })
+
+        with self.assertRaises(UserError, msg="can't change the attribute of an attribute line"):
+            self.computer_ssd_attribute_lines.attribute_id = self.hdd_attribute.id
+
+        with self.assertRaises(UserError, msg="can't change the product of an attribute line"):
+            self.computer_ssd_attribute_lines.product_tmpl_id = self.computer_case.id
+
+        with self.assertRaises(UserError, msg="can't change the value of a product template attribute value"):
+            self.computer_ram_attribute_lines.product_template_value_ids[0].product_attribute_value_id = self.hdd_1
+
+        with self.assertRaises(UserError, msg="can't change the product of a product template attribute value"):
+            self.computer_ram_attribute_lines.product_template_value_ids[0].product_tmpl_id = self.computer_case.id
+
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError, msg="can't have two values with the same name for the same attribute"):
+            self.env['product.attribute.value'].create({
+                'name': '32 GB',
+                'attribute_id': self.ram_attribute.id,
+            })

@@ -5,7 +5,7 @@
         <field name="model">hr.recruitment.source</field>
         <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='create_alias']" position="before">
+            <xpath expr="//field[@name='email']" position="after">
                 <field name="url" widget="url"/>
             </xpath>
         </field>
@@ -17,10 +17,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button class="oe_stat_button" name="website_publish_button"
-                    type="object" icon="fa-globe">
-                    <field name="is_published" widget="website_button"/>
-                </button>
+                <field name="is_published" widget="website_redirect_button"/>
             </div>
         </field>
     </record>
@@ -31,7 +28,7 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>
@@ -46,16 +43,4 @@
             </field>
         </field>
     </record>
-
-    <record id="view_hr_applicant_form_inherit_website" model="ir.ui.view">
-        <field name="name">hr.applicant.form</field>
-        <field name="model">hr.applicant</field>
-        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='type_id']" position="after">
-                <field name="residence_country"/>
-            </xpath>            
-        </field>
-    </record>
-
 </odoo>

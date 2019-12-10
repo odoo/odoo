@@ -1,82 +1,83 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.common import AccountTestUsersCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestTax(AccountTestUsers):
+class TestTaxCommon(AccountTestUsersCommon):
 
-    def setUp(self):
-        super(TestTax, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestTaxCommon, cls).setUpClass()
 
-        self.fixed_tax = self.tax_model.create({
+        cls.fixed_tax = cls.tax_model.create({
             'name': "Fixed tax",
             'amount_type': 'fixed',
             'amount': 10,
             'sequence': 1,
         })
-        self.fixed_tax_bis = self.tax_model.create({
+        cls.fixed_tax_bis = cls.tax_model.create({
             'name': "Fixed tax bis",
             'amount_type': 'fixed',
             'amount': 15,
             'sequence': 2,
         })
-        self.percent_tax = self.tax_model.create({
+        cls.percent_tax = cls.tax_model.create({
             'name': "Percent tax",
             'amount_type': 'percent',
             'amount': 10,
             'sequence': 3,
         })
-        self.percent_tax_bis = self.tax_model.create({
+        cls.percent_tax_bis = cls.tax_model.create({
             'name': "Percent tax bis",
             'amount_type': 'percent',
             'amount': 10,
             'sequence': 4,
         })
-        self.division_tax = self.tax_model.create({
+        cls.division_tax = cls.tax_model.create({
             'name': "Division tax",
             'amount_type': 'division',
             'amount': 10,
             'sequence': 4,
         })
-        self.group_tax = self.tax_model.create({
+        cls.group_tax = cls.tax_model.create({
             'name': "Group tax",
             'amount_type': 'group',
             'amount': 0,
             'sequence': 5,
             'children_tax_ids': [
-                (4, self.fixed_tax.id, 0),
-                (4, self.percent_tax.id, 0)
+                (4, cls.fixed_tax.id, 0),
+                (4, cls.percent_tax.id, 0)
             ]
         })
-        self.group_tax_bis = self.tax_model.create({
+        cls.group_tax_bis = cls.tax_model.create({
             'name': "Group tax bis",
             'amount_type': 'group',
             'amount': 0,
             'sequence': 6,
             'children_tax_ids': [
-                (4, self.fixed_tax.id, 0),
-                (4, self.percent_tax.id, 0)
+                (4, cls.fixed_tax.id, 0),
+                (4, cls.percent_tax.id, 0)
             ]
         })
-        self.group_of_group_tax = self.tax_model.create({
+        cls.group_of_group_tax = cls.tax_model.create({
             'name': "Group of group tax",
             'amount_type': 'group',
             'amount': 0,
             'sequence': 7,
             'children_tax_ids': [
-                (4, self.group_tax.id, 0),
-                (4, self.group_tax_bis.id, 0)
+                (4, cls.group_tax.id, 0),
+                (4, cls.group_tax_bis.id, 0)
             ]
         })
-        self.tax_with_no_account = self.tax_model.create({
+        cls.tax_with_no_account = cls.tax_model.create({
             'name': "Tax with no account",
             'amount_type': 'fixed',
             'amount': 0,
             'sequence': 8,
         })
-        some_account = self.env['account.account'].search([], limit=1)
-        self.tax_with_account = self.tax_model.create({
+        some_account = cls.env['account.account'].search([], limit=1)
+        cls.tax_with_account = cls.tax_model.create({
             'name': "Tax with account",
             'amount_type': 'fixed',
             'amount': 0,
@@ -106,9 +107,9 @@ class TestTax(AccountTestUsers):
                 }),
             ],
         })
-        self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
-        self.bank_account = self.bank_journal.default_debit_account_id
-        self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
+        cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.account_manager.company_id.id)])[0]
+        cls.bank_account = cls.bank_journal.default_debit_account_id
+        cls.expense_account = cls.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
 
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
         self.assertAlmostEqual(res['total_included'], total_included)
@@ -116,6 +117,14 @@ class TestTax(AccountTestUsers):
         for i in range(0, len(taxes)):
             self.assertAlmostEqual(res['taxes'][i]['base'], taxes[i][0])
             self.assertAlmostEqual(res['taxes'][i]['amount'], taxes[i][1])
+
+
+@tagged('post_install', '-at_install')
+class TestTax(TestTaxCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestTax, cls).setUpClass()
 
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True
@@ -348,12 +357,32 @@ class TestTax(AccountTestUsers):
             'price_include': True,
             'include_base_amount': True,
             'sequence': 1,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
         })
         tax_2 = self.env['account.tax'].create({
             'name': 'test_advanced_taxes_computation_0_2',
             'amount_type': 'percent',
             'amount': 10,
             'sequence': 2,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
         })
         tax_3 = self.env['account.tax'].create({
             'name': 'test_advanced_taxes_computation_0_3',
@@ -361,12 +390,32 @@ class TestTax(AccountTestUsers):
             'amount': 10,
             'price_include': True,
             'sequence': 3,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
         })
         tax_4 = self.env['account.tax'].create({
             'name': 'test_advanced_taxes_computation_0_4',
             'amount_type': 'percent',
             'amount': 10,
             'sequence': 4,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
         })
         tax_5 = self.env['account.tax'].create({
             'name': 'test_advanced_taxes_computation_0_5',
@@ -374,21 +423,229 @@ class TestTax(AccountTestUsers):
             'amount': 10,
             'price_include': True,
             'sequence': 5,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
         })
         taxes = tax_1 + tax_2 + tax_3 + tax_4 + tax_5
-        res = taxes.compute_all(132.0)
+
+        # Test with positive amount.
         self._check_compute_all_results(
             154,     # 'total_included'
             100,     # 'total_excluded'
             [
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
-                (100.0, 10.0),    # |  1  |    10% |   t  |     t
-                (110.0, 11.0),    # |  2  |    10% |      |
-                (110.0, 11.0),    # |  3  |    10% |   t  |
-                (110.0, 11.0),    # |  4  |    10% |      |
-                (110.0, 11.0),    # |  5  |    10% |   t  |
+                (100.0, 5.0),     # |  1  |    10% |   t  |     t
+                (100.0, 5.0),     # |  1  |    10% |   t  |     t
+                (110.0, 5.5),     # |  2  |    10% |      |
+                (110.0, 5.5),     # |  2  |    10% |      |
+                (110.0, 5.5),     # |  3  |    10% |   t  |
+                (110.0, 5.5),     # |  3  |    10% |   t  |
+                (110.0, 5.5),     # |  4  |    10% |      |
+                (110.0, 5.5),     # |  4  |    10% |      |
+                (110.0, 5.5),     # |  5  |    10% |   t  |
+                (110.0, 5.5),     # |  5  |    10% |   t  |
                 # ---------------------------------------------------
             ],
-            res
+            taxes.compute_all(132.0)
+        )
+
+        # Test with negative amount.
+        self._check_compute_all_results(
+            -154,    # 'total_included'
+            -100,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (-100.0, -5.0),   # |  1  |    10% |   t  |     t
+                (-100.0, -5.0),   # |  1  |    10% |   t  |     t
+                (-110.0, -5.5),   # |  2  |    10% |      |
+                (-110.0, -5.5),   # |  2  |    10% |      |
+                (-110.0, -5.5),   # |  3  |    10% |   t  |
+                (-110.0, -5.5),   # |  3  |    10% |   t  |
+                (-110.0, -5.5),   # |  4  |    10% |      |
+                (-110.0, -5.5),   # |  4  |    10% |      |
+                (-110.0, -5.5),   # |  5  |    10% |   t  |
+                (-110.0, -5.5),   # |  5  |    10% |   t  |
+                # ---------------------------------------------------
+            ],
+            taxes.compute_all(-132.0)
+        )
+
+    def test_intracomm_taxes_computation_0(self):
+        ''' Test usage of intracomm taxes having e.g.+100%, -100% as repartition lines. '''
+        intracomm_tax = self.env['account.tax'].create({
+            'name': 'test_intracomm_taxes_computation_0_1',
+            'amount_type': 'percent',
+            'amount': 21,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        })
+
+        # Test with positive amount.
+        self._check_compute_all_results(
+            100,     # 'total_included'
+            100,     # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (100.0, 21.0),
+                (100.0, -21.0),
+                # ---------------
+            ],
+            intracomm_tax.compute_all(100.0)
+        )
+
+        # Test with negative amount.
+        self._check_compute_all_results(
+            -100,    # 'total_included'
+            -100,    # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (-100.0, -21.0),
+                (-100.0, 21.0),
+                # ---------------
+            ],
+            intracomm_tax.compute_all(-100.0)
+        )
+
+    def test_rounding_issues_0(self):
+        ''' Test taxes having a complex setup of repartition lines. '''
+        tax = self.env['account.tax'].create({
+            'name': 'test_rounding_issues_0',
+            'amount_type': 'percent',
+            'amount': 3,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+            ],
+        })
+
+        # Test with positive amount.
+        self._check_compute_all_results(
+            1.09,   # 'total_included'
+            1,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (1.0, 0.01),
+                (1.0, 0.01),
+                (1.0, 0.01),
+                (1.0, 0.02),
+                (1.0, 0.02),
+                (1.0, 0.02),
+                # ---------------
+            ],
+            tax.compute_all(1.0)
+        )
+
+        # Test with negative amount.
+        self._check_compute_all_results(
+            -1.09,  # 'total_included'
+            -1,     # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (-1.0, -0.01),
+                (-1.0, -0.01),
+                (-1.0, -0.01),
+                (-1.0, -0.02),
+                (-1.0, -0.02),
+                (-1.0, -0.02),
+                # ---------------
+            ],
+            tax.compute_all(-1.0)
+        )
+
+    def test_rounding_issues_1(self):
+        ''' Test taxes having a complex setup of repartition lines. '''
+        tax = self.env['account.tax'].create({
+            'name': 'test_advanced_taxes_repartition_lines_computation_1',
+            'amount_type': 'percent',
+            'amount': 3,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -50.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+            ],
+        })
+
+        # Test with positive amount.
+        self._check_compute_all_results(
+            1,      # 'total_included'
+            1,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (1.0, 0.02),
+                (1.0, -0.02),
+                (1.0, 0.01),
+                (1.0, 0.01),
+                (1.0, -0.01),
+                (1.0, -0.01),
+                # ---------------
+            ],
+            tax.compute_all(1.0)
+        )
+
+        # Test with negative amount.
+        self._check_compute_all_results(
+            -1,     # 'total_included'
+            -1,     # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (-1.0, -0.02),
+                (-1.0, 0.02),
+                (-1.0, -0.01),
+                (-1.0, -0.01),
+                (-1.0, 0.01),
+                (-1.0, 0.01),
+                # ---------------
+            ],
+            tax.compute_all(-1.0)
         )

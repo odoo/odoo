@@ -227,7 +227,9 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _onEditOppConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this._buttonExec($(ev.currentTarget), this._editOpportunity);
+        if ($(".edit_opp_form")[0].checkValidity()) {
+            this._buttonExec($(ev.currentTarget), this._editOpportunity);
+        }
     },
     /**
      * @private
@@ -262,7 +264,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
 
     _parse_date: function (value) {
         console.log(value);
-        var date = moment(value, time.getLangDateFormat(), true);
+        var date = moment(value, "YYYY-MM-DD", true);
         if (date.isValid()) {
             return time.date_to_str(date.toDate());
         }

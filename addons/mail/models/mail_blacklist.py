@@ -50,7 +50,6 @@ class MailBlackList(models.Model):
         results = super(MailBlackList, self).create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
 
-    @api.multi
     def write(self, values):
         if 'email' in values:
             values['email'] = tools.email_normalize(values['email'])
@@ -114,6 +113,8 @@ class MailBlackListMixin(models.AbstractModel):
     @api.model
     def _search_is_blacklisted(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
+        self.flush(['email_normalized'])
+        self.env['mail.blacklist'].flush(['email', 'active'])
         self._assert_primary_email()
         if operator != '=':
             if operator == '!=' and isinstance(value, bool):
@@ -151,10 +152,15 @@ class MailBlackListMixin(models.AbstractModel):
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist
 
-    @api.multi
-    def _message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the
         bounce counter of the record. """
-        super(MailBlackListMixin, self)._message_receive_bounce(email, partner, mail_id=mail_id)
+        super(MailBlackListMixin, self)._message_receive_bounce(email, partner)
         for record in self:
             record.message_bounce = record.message_bounce + 1
+
+    def _message_reset_bounce(self, email):
+        """ Override of mail.thread generic method. Purpose is to reset the
+        bounce counter of the record. """
+        super(MailBlackListMixin, self)._message_reset_bounce(email)
+        self.write({'message_bounce': 0})

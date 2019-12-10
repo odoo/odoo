@@ -14,26 +14,31 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def default_get(self, field_list):
         result = super(AccountAnalyticLine, self).default_get(field_list)
+        if 'encoding_uom_id' in field_list:
+            result['encoding_uom_id'] = self.env.company.timesheet_encode_uom_id.id
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
 
-    task_id = fields.Many2one('project.task', 'Task', index=True)
+    task_id = fields.Many2one(
+        'project.task', 'Task', index=True,
+        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]"
+    )
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
-    employee_id = fields.Many2one('hr.employee', "Employee")
+    employee_id = fields.Many2one('hr.employee', "Employee", check_company=True)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
+    encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+
+    def _compute_encoding_uom_id(self):
+        for analytic_line in self:
+            analytic_line.encoding_uom_id = self.env.company.timesheet_encode_uom_id
 
     @api.onchange('project_id')
     def onchange_project_id(self):
-        # force domain on task when project is set
-        if self.project_id:
-            if self.project_id != self.task_id.project_id:
-                # reset task when changing project
-                self.task_id = False
-            return {'domain': {
-                'task_id': [('project_id', '=', self.project_id.id)]
-            }}
+        if self.project_id and self.project_id != self.task_id.project_id:
+            # reset task when changing project
+            self.task_id = False
 
     @api.onchange('task_id')
     def _onchange_task_id(self):
@@ -56,23 +61,25 @@ class AccountAnalyticLine(models.Model):
     # ORM overrides
     # ----------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        # compute employee only for timesheet lines, makes no sense for other lines
-        if not values.get('employee_id') and values.get('project_id'):
-            if values.get('user_id'):
-                ts_user_id = values['user_id']
-            else:
-                ts_user_id = self._default_user()
-            values['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
+    @api.model_create_multi
+    def create(self, vals_list):
+        default_user_id = self._default_user()
+        user_ids = list(map(lambda x: x.get('user_id', default_user_id), filter(lambda x: not x.get('employee_id') and x.get('project_id'), vals_list)))
+        employees = self.env['hr.employee'].search([('user_id', 'in', user_ids)])
+        user_map = {employee.user_id.id: employee.id for employee in employees}
 
-        values = self._timesheet_preprocess(values)
-        result = super(AccountAnalyticLine, self).create(values)
-        if result.project_id:  # applied only for timesheet
-            result._timesheet_postprocess(values)
-        return result
+        for vals in vals_list:
+            # compute employee only for timesheet lines, makes no sense for other lines
+            if not vals.get('employee_id') and vals.get('project_id'):
+                vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
+            vals.update(self._timesheet_preprocess(vals))
 
-    @api.multi
+        lines = super(AccountAnalyticLine, self).create(vals_list)
+        for line, values in zip(lines, vals_list):
+            if line.project_id:  # applied only for timesheet
+                line._timesheet_postprocess(values)
+        return lines
+
     def write(self, values):
         values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).write(values)
@@ -101,6 +108,14 @@ class AccountAnalyticLine(models.Model):
     # ----------------------------------------------------
     # Business Methods
     # ----------------------------------------------------
+
+    def _timesheet_get_portal_domain(self):
+        return ['|', '&',
+                ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                '&',
+                ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])]
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
@@ -133,7 +148,6 @@ class AccountAnalyticLine(models.Model):
             vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
 
-    @api.multi
     def _timesheet_postprocess(self, values):
         """ Hook to update record one by one according to the values of a `write` or a `create`. """
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo() in `_timesheet_postprocess_values`override
@@ -143,13 +157,12 @@ class AccountAnalyticLine(models.Model):
                 timesheet.write(values_to_write[timesheet.id])
         return values
 
-    @api.multi
     def _timesheet_postprocess_values(self, values):
         """ Get the addionnal values to write on record
             :param dict values: values for the model's fields, as a dictionary::
                 {'field_name': field_value, ...}
             :return: a dictionary mapping each record id to its corresponding
-                dictionnary values to write (may be empty).
+                dictionary values to write (may be empty).
         """
         result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()

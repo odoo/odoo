@@ -291,7 +291,7 @@ class TestDurationExport(TestBasicExport):
     def setUp(self):
         super(TestDurationExport, self).setUp()
         # needs to have lang installed otherwise falls back on en_US
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
 
     def test_default_unit(self):
         converter = self.get_converter('float', 'duration')
@@ -332,7 +332,7 @@ class TestRelativeDatetime(TestBasicExport):
     def setUp(self):
         super(TestRelativeDatetime, self).setUp()
         # needs to have lang installed otherwise falls back on en_US
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
 
     def test_basic(self):
         converter = self.get_converter('datetime', 'relative')

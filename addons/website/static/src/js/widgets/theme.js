@@ -6,8 +6,9 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var websiteNavbarData = require('website.navbar');
+var ColorPaletteDialog = require('web_editor.ColorPalette').ColorPaletteDialog;
+const ColorpickerDialog = require('web.ColorpickerDialog');
 
 var _t = core._t;
 
@@ -114,6 +115,8 @@ var ThemeCustomizeDialog = Dialog.extend({
     events: {
         'change .o_theme_customize_option_input': '_onChange',
         'click .checked .o_theme_customize_option_input[type="radio"]': '_onChange',
+        'click .o_theme_customize_add_google_font': '_onAddGoogleFontClick',
+        'click .o_theme_customize_delete_google_font': '_onDeleteGoogleFontClick',
     },
 
     CUSTOM_BODY_IMAGE_XML_ID: 'option_custom_body_image',
@@ -129,6 +132,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         }, options));
 
         this.defaultTab = options.tab || 0;
+        this.fontVariables = [];
     },
     /**
      * @override
@@ -157,8 +161,15 @@ var ThemeCustomizeDialog = Dialog.extend({
         this.PX_BY_REM = parseFloat($(document.documentElement).css('font-size'));
 
         this.$modal.addClass('o_theme_customize_modal');
+        this.$modal.find('.modal-footer').append($('<a/>', {
+            href: '/web#action=website.theme_install_kanban_action',
+            text: _t("Choose another theme..."),
+        }));
 
         this.style = window.getComputedStyle(document.documentElement);
+        this.nbFonts = parseInt(this.style.getPropertyValue('--number-of-fonts'));
+        var googleFontsProperty = this.style.getPropertyValue('--google-fonts').trim();
+        this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
 
         var $tabs;
         var loadDef = this._loadViews().then(function (data) {
@@ -222,12 +233,12 @@ var ThemeCustomizeDialog = Dialog.extend({
         var def = new Promise(function (resolve, reject) {
             var $image = $('<img/>');
             var editor = new weWidgets.MediaDialog(self, {
+                mediaWidth: 1920,
                 onlyImages: true,
                 firstFilters: ['background'],
             }, $image[0]);
 
             editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
-                var src = $(media).attr('src');
                 self._rpc({
                     model: 'ir.model.data',
                     method: 'get_object_reference',
@@ -238,7 +249,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         method: 'save',
                         args: [
                             data[1],
-                            '#wrapwrap { background-image: url("' + src + '"); }',
+                            '#wrapwrap { background-image: url("' + media.src + '"); }',
                             '//style',
                         ],
                     });
@@ -325,17 +336,25 @@ var ThemeCustomizeDialog = Dialog.extend({
                         var xmlid = $item.data('xmlid');
 
                         var renderingOptions = _.extend({
-                            string: $item.attr('string') || data.names[xmlid.split(',')[0].trim()],
+                            string: $item.attr('string') || xmlid && data.names[xmlid.split(',')[0].trim()],
                             icon: $item.data('icon'),
                             font: $item.data('font'),
                         }, $item.data());
 
+                        var checked;
+                        if (widgetName === 'auto') {
+                            var propValue = self.style.getPropertyValue('--' + $item.data('variable')).trim();
+                            checked = (propValue === $item.attr('data-value'));
+                        } else {
+                            checked = (xmlid === undefined || xmlid && !_.difference(self._getXMLIDs($item), data.enabled).length);
+                        }
+
                         // Build the options template
                         $element = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
                             alone: alone,
-                            name: xmlid === undefined ? _.uniqueId('option-') : optionsName,
+                            name: xmlid === undefined && widgetName !== 'auto' ? _.uniqueId('option-') : optionsName,
                             id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
-                            checked: xmlid === undefined || xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
+                            checked: checked,
                             widget: widgetName,
                         }, renderingOptions)));
                         $element.find('input')
@@ -368,6 +387,35 @@ var ThemeCustomizeDialog = Dialog.extend({
                     case 'SELECTION':
                         $element = $(core.qweb.render('website.theme_customize_dropdown_option'));
                         _processItems($item.children(), $element.find('.o_theme_customize_selection'), true);
+                        break;
+
+                    case 'FONTSELECTION':
+                        var $options = $();
+                        var variable = $item.data('variable');
+                        self.fontVariables.push(variable);
+                        _.times(self.nbFonts, function (font) {
+                            $options = $options.add($('<opt/>', {
+                                'data-widget': 'auto',
+                                'data-variable': variable,
+                                'data-value': font + 1,
+                                'data-font': font + 1,
+                            }));
+                        });
+                        $element = $(core.qweb.render('website.theme_customize_dropdown_option'));
+                        var $selection = $element.find('.o_theme_customize_selection');
+                        _processItems($options, $selection, true);
+
+                        if (self.googleFonts.length) {
+                            var $googleFontItems = $selection.children().slice(-self.googleFonts.length);
+                            _.each($googleFontItems, function (el, index) {
+                                $(el).append(core.qweb.render('website.theme_customize_delete_font', {
+                                    'index': index,
+                                }));
+                            });
+                        }
+                        $selection.append($(core.qweb.render('website.theme_customize_add_google_font_option', {
+                            'variable': variable,
+                        })));
                         break;
 
                     default:
@@ -430,6 +478,24 @@ var ThemeCustomizeDialog = Dialog.extend({
     },
     /**
      * @private
+     * @param {object} [values]
+     *        When a new set of google fonts are saved, other variables
+     *        potentially have to be adapted.
+     */
+    _makeGoogleFontsCusto: function (values) {
+        values = values ? _.clone(values) : {};
+        if (this.googleFonts.length) {
+            values['google-fonts'] = "('" + this.googleFonts.join("', '") + "')";
+        } else {
+            values['google-fonts'] = 'null';
+        }
+        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values).then(function () {
+            window.location.hash = 'theme=true';
+            window.location.reload();
+        });
+    },
+    /**
+     * @private
      */
     _makeSCSSCusto: function (url, values) {
         return this._rpc({
@@ -450,13 +516,18 @@ var ThemeCustomizeDialog = Dialog.extend({
         var colorType = $color.data('colorType');
 
         return new Promise(function (resolve, reject) {
-            var colorpicker = new ColorpickerDialog(self, {
+            var colorpicker = new ColorPaletteDialog(self, {
+                resetButton: false,
                 defaultColor: $color.css('background-color'),
             });
             var chosenColor = undefined;
-            colorpicker.on('colorpicker:saved', self, function (ev) {
+            colorpicker.on('color_picked', self, function (ev) {
                 ev.stopPropagation();
-                chosenColor = ev.data.cssColor;
+                chosenColor = ev.data.color;
+                if (!ColorpickerDialog.isCSSColor(chosenColor)) {
+                    chosenColor = ColorpickerDialog.normalizeCSSColor(self.style.getPropertyValue('--' + chosenColor).trim());
+                }
+                colorpicker.close();
             });
             colorpicker.on('closed', self, function (ev) {
                 if (chosenColor === undefined) {
@@ -508,6 +579,16 @@ var ThemeCustomizeDialog = Dialog.extend({
             return self._quickEdit($(inputData));
         }));
 
+        // Handle auto changes
+        var $autoWidgetOptions = $options.has('.o_theme_customize_auto');
+        if ($autoWidgetOptions.length > 1) {
+            $autoWidgetOptions = $autoWidgetOptions.has('input:checked');
+        }
+        var $autosData = $autoWidgetOptions.find('.o_theme_customize_auto');
+        defs = defs.concat(_.map($autosData, function (autoData) {
+            return self._setAuto($(autoData));
+        }));
+
         return Promise.all(defs);
     },
     /**
@@ -519,7 +600,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var value = parseFloat(text) || '';
         var unit = text.match(/([^\s\d]+)$/)[1];
 
-        var def = new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var qEdit = new QuickEdit(self, value, unit);
             qEdit.on('QuickEdit:save', self, function (ev) {
                 ev.stopPropagation();
@@ -531,21 +612,62 @@ var ThemeCustomizeDialog = Dialog.extend({
                 }
 
                 var values = {};
-                values[$inputData.data('value')] = value;
+                values[$inputData.data('variable')] = value;
                 self._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
                     .then(resolve)
                     .guardedCatch(resolve);
             });
             qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
         });
+    },
+    /**
+     * @private
+     */
+    _setAuto: function ($autoData) {
+        var self = this;
+        var values = {};
+        var isChecked = $autoData.siblings('.o_theme_customize_option_input').prop('checked');
+        values[$autoData.data('variable')] = isChecked ? $autoData.data('value') : 'null';
 
-        return def;
+        return new Promise(function (resolve, reject) {
+            self._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
+                .then(resolve)
+                .guardedCatch(resolve);
+        });
     },
     /**
      * @private
      */
     _setActive: function () {
         var self = this;
+
+        // First enforce that all input groups have only one element checked as
+        // it is supposed to be (it might not be the case on initialization, for
+        // exemple if we had data-xmlid="A" and data-xmlid="A,B" and if A and B
+        // are active, the 2 related inputs would be checked).
+        var $radioXMLInputs = this.$inputs.filter('[type="radio"][data-xmlid]');
+        var optionNames = _.uniq(_.map($radioXMLInputs, function (option) {
+            return option.name;
+        }));
+        _.each(optionNames, function (optionName) {
+            var $inputs = $radioXMLInputs.filter('[name="' + optionName + '"]:checked');
+            if ($inputs.length > 1) {
+                $inputs.prop('checked', false);
+
+                var maxNbXMLIDs = -1;
+                var $maxInput = null;
+                _.each($inputs, function (input) {
+                    var $input = $(input);
+                    var xmlID = $input.data('xmlid');
+                    var nbXMLIDs = xmlID ? xmlID.split(',').length : 0;
+                    if (nbXMLIDs >= maxNbXMLIDs) {
+                        maxNbXMLIDs = nbXMLIDs;
+                        $maxInput = $input;
+                    }
+                });
+                $maxInput.prop('checked', true);
+            }
+        });
 
         // Look at all options to see if they are enabled or disabled
         var $enable = this.$inputs.filter(':checked');
@@ -592,7 +714,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
-        if (reload || config.debug === 'assets') {
+        if (reload || config.isDebug('assets')) {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
                 enable: (enable || []).join(','),
@@ -611,11 +733,17 @@ var ThemeCustomizeDialog = Dialog.extend({
             },
         }).then(function (bundles) {
             var $allLinks = $();
-            var defs = _.map(bundles, function (bundleContent, bundleName) {
-                var linkSelector = 'link[href*="' + bundleName + '"]';
-                var $links = $(linkSelector);
+            var defs = _.map(bundles, function (bundleURLs, bundleName) {
+                var $links = $('link[href*="' + bundleName + '"]');
                 $allLinks = $allLinks.add($links);
-                var $newLinks = $(bundleContent).filter(linkSelector);
+                var $newLinks = $();
+                _.each(bundleURLs, function (url) {
+                    $newLinks = $newLinks.add($('<link/>', {
+                        type: 'text/css',
+                        rel: 'stylesheet',
+                        href: url,
+                    }));
+                });
 
                 var linksLoaded = new Promise(function (resolve, reject) {
                     var nbLoaded = 0;
@@ -659,7 +787,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         });
         _.each(this.$('.o_theme_customize_input'), function (el) {
             var $el = $(el);
-            var value = self.style.getPropertyValue('--' + $el.data('value')).trim();
+            var value = self.style.getPropertyValue('--' + $el.data('variable')).trim();
 
             // Convert rem values to px values
             if (_.str.endsWith(value, 'rem')) {
@@ -686,7 +814,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             var $checked = $dropdown.find('label.checked');
             $checked.closest('.dropdown-item').addClass('active');
 
-            var classes = 'btn btn-light dropdown-toggle w-100 o_theme_customize_dropdown_btn';
+            var classes = 'btn btn-light dropdown-toggle w-100 o_text_overflow o_theme_customize_dropdown_btn';
             if ($checked.data('font-id')) {
                 classes += _.str.sprintf(' o_theme_customize_option_font_%s', $checked.data('font-id'));
             }
@@ -759,6 +887,73 @@ var ThemeCustomizeDialog = Dialog.extend({
             self._updateValues();
             self.$inputs.prop('disabled', false);
         });
+    },
+    /**
+     * @private
+     */
+    _onAddGoogleFontClick: function (ev) {
+        var self = this;
+        var variable = $(ev.currentTarget).data('variable');
+        new Dialog(this, {
+            title: _t("Add a Google Font"),
+            $content: $(core.qweb.render('website.dialog.addGoogleFont')),
+            buttons: [
+                {
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    click: function () {
+                        var $input = this.$('.o_input_google_font');
+                        var m = $input.val().match(/\bfamily=([\w+]+)/);
+                        if (!m) {
+                            $input.addClass('is-invalid');
+                            return;
+                        }
+                        var font = m[1].replace(/\+/g, ' ');
+                        self.googleFonts.push(font);
+                        var values = {};
+                        values[variable] = self.nbFonts + 1;
+                        return self._makeGoogleFontsCusto(values);
+                    },
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onDeleteGoogleFontClick: function (ev) {
+        var self = this;
+        ev.preventDefault();
+
+        var nbBaseFonts = this.nbFonts - this.googleFonts.length;
+
+        // Remove Google font
+        var googleFontIndex = $(ev.currentTarget).data('fontIndex');
+        this.googleFonts.splice(googleFontIndex, 1);
+
+        // Adapt font variable indexes to the removal
+        var values = {};
+        _.each(this.fontVariables, function (variable) {
+            var value = parseInt(self.style.getPropertyValue('--' + variable));
+            var googleFontValue = nbBaseFonts + 1 + googleFontIndex;
+            if (value === googleFontValue) {
+                // If an element is using the google font being removed, reset
+                // it to the first base font.
+                values[variable] = 1;
+            } else if (value > googleFontValue) {
+                // If an element is using a google font whose index is higher
+                // than the one of the font being removed, that index must be
+                // lowered by 1 so that the font is unchanged.
+                values[variable] = value - 1;
+            }
+        });
+
+        return this._makeGoogleFontsCusto(values);
     },
 });
 

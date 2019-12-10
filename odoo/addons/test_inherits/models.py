@@ -8,14 +8,24 @@ class Unit(models.Model):
     _name = 'test.unit'
     _description = 'Test Unit'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
     surname = fields.Char(compute='_compute_surname')
+    line_ids = fields.One2many('test.unit.line', 'unit_id')
+    readonly_name = fields.Char('Readonly Name', readonly=True)
 
-    @api.one
     @api.depends('name')
     def _compute_surname(self):
-        self.surname = self.name or ''
+        for unit in self:
+            unit.surname = unit.name or ''
+
+
+class UnitLine(models.Model):
+    _name = 'test.unit.line'
+    _description = 'Test Unit Line'
+
+    name = fields.Char('Name', required=True)
+    unit_id = fields.Many2one('test.unit', required=True)
 
 
 # We want to _inherits from the parent model and we add some fields

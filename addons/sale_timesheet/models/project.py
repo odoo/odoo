@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class Project(models.Model):
     _inherit = 'project.project'
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done'])]", copy=False,
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False,
         help="Sales order item to which the project is linked. If an employee timesheets on a task that does not have a "
         "sale order item defines, and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, "
         "the timesheet entry will be linked to the sales order item defined on the project.")
@@ -59,7 +59,6 @@ class Project(models.Model):
                 if project.sale_line_id and project.sale_line_id.is_expense:
                     raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
 
-    @api.multi
     def action_view_timesheet(self):
         self.ensure_one()
         if self.allow_timesheets:
@@ -71,7 +70,6 @@ class Project(models.Model):
             'res_model': 'account.analytic.line',
             'view_id': False,
             'view_mode': 'tree,form',
-            'view_type': 'form',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets
@@ -88,7 +86,6 @@ class Project(models.Model):
             }
         }
 
-    @api.multi
     def action_view_timesheet_plan(self):
         action = self.env.ref('sale_timesheet.project_timesheet_action_client_timesheet_plan').read()[0]
         action['params'] = {
@@ -97,11 +94,10 @@ class Project(models.Model):
         action['context'] = {
             'active_id': self.id,
             'active_ids': self.ids,
-            'search_default_display_name': self.name,
+            'search_default_name': self.name,
         }
         return action
 
-    @api.multi
     def action_make_billable(self):
         return {
             "name": _("Create Sales Order"),
@@ -116,8 +112,8 @@ class Project(models.Model):
         }
 
     @api.model
-    def _map_tasks_default_valeus(self, task):
-        defaults = super(Project, self)._map_tasks_default_valeus(task)
+    def _map_tasks_default_valeus(self, task, project):
+        defaults = super(Project, self)._map_tasks_default_valeus(task, project)
         defaults['sale_line_id'] = False
         return defaults
 
@@ -125,33 +121,13 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    @api.model
-    def _get_default_partner(self):
-        partner = False
-        if 'default_project_id' in self.env.context:  # partner from SO line is prior on one from project
-            project = self.env['project.project'].browse(self.env.context['default_project_id'])
-            partner = project.sale_line_id.order_partner_id
-        if not partner:
-            partner = super(ProjectTask, self)._get_default_partner()
-        return partner
-
-    @api.model
-    def _default_sale_line_id(self):
-        sale_line_id = False
-        if self._context.get('default_parent_id'):
-            parent_task = self.env['project.task'].browse(self._context['default_parent_id'])
-            sale_line_id = parent_task.sale_line_id.id
-        if not sale_line_id and self._context.get('default_project_id'):
-            project = self.env['project.project'].browse(self.env.context['default_project_id'])
-            if project.billable_type != 'no':
-                sale_line_id = project.sale_line_id.id
-        return sale_line_id
-
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', project_sale_order_id)]",
+        compute='_compute_sale_line', store=True, readonly=False,
         help="Sales order item to which the task is linked. If an employee timesheets on a this task, "
         "and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, the "
-        "timesheet entry will be linked to this sales order item.")
-    sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', compute_sudo=True, store=True, readonly=True, help="Sales order to which the task is linked.")
+        "timesheet entry will be linked to this sales order item.", copy=False)
+    project_sale_order_id = fields.Many2one('sale.order', string="project's sale order", related='project_id.sale_order_id')
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, readonly=False, help="Sales order to which the task is linked.")
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
         ('employee_rate', 'At Employee Rate'),
@@ -159,7 +135,6 @@ class ProjectTask(models.Model):
     ], string="Billable Type", compute='_compute_billable_type', compute_sudo=True, store=True)
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
 
-    @api.multi
     @api.depends('sale_line_id', 'project_id', 'billable_type')
     def _compute_sale_order_id(self):
         for task in self:
@@ -170,7 +145,6 @@ class ProjectTask(models.Model):
             elif task.billable_type == 'no':
                 task.sale_order_id = False
 
-    @api.multi
     @api.depends('project_id.billable_type', 'sale_line_id')
     def _compute_billable_type(self):
         for task in self:
@@ -184,41 +158,45 @@ class ProjectTask(models.Model):
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
         for task in self:
-            task.is_project_map_empty = not bool(task.project_id.sale_line_employee_ids)
+            task.is_project_map_empty = not bool(task.sudo().project_id.sale_line_employee_ids)
 
     @api.onchange('project_id')
     def _onchange_project(self):
-        result = super(ProjectTask, self)._onchange_project()
-        self.sale_line_id = self.project_id.sale_line_id
-        if not self.parent_id and not self.partner_id:
-            self.partner_id = self.sale_line_id.order_partner_id
+        super(ProjectTask, self)._onchange_project()
+        if self.project_id:
+            if self.project_id.billable_type == 'employee_rate':
+                if not self.partner_id:
+                    self.partner_id = self.project_id.sale_order_id.partner_id
+            elif self.project_id.billable_type == 'task_rate':
+                if not self.sale_line_id:
+                    self.sale_line_id = self.project_id.sale_line_id
+                if not self.partner_id:
+                    self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
-        result = result or {}
-        domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
-        if self.project_id.sale_order_id:
-            domain += [('order_id', '=', self.project_id.sale_order_id.id)]
-        result.setdefault('domain', {})['sale_line_id'] = domain
-        return result
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        result = super(ProjectTask, self)._onchange_partner_id()
-        result = result or {}
-        if self.sale_line_id.order_partner_id.commercial_partner_id != self.partner_id.commercial_partner_id:
-            self.sale_line_id = False
-        if self.partner_id:
-            result.setdefault('domain', {})['sale_line_id'] = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
-        return result
+    @api.depends('project_id.sale_line_id.order_partner_id')
+    def _compute_partner_id(self):
+        for task in self:
+            if not task.partner_id:
+                task.partner_id = task.project_id.sale_line_id.order_partner_id
+        super()._compute_partner_id()
 
-    @api.multi
+    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    def _compute_sale_line(self):
+        for task in self:
+            if not task.sale_line_id:
+                task.sale_line_id = task.parent_id.sale_line_id or task.project_id.sale_line_id
+            # check sale_line_id and customer are coherent
+            if task.sale_line_id.order_partner_id.commercial_partner_id != task.partner_id.commercial_partner_id:
+                task.sale_line_id = False
+
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
-        for task in self:
+        for task in self.sudo():
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
                     raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name)))
 
-    @api.multi
     def write(self, values):
         if values.get('project_id'):
             project_dest = self.env['project.project'].browse(values['project_id'])
@@ -226,35 +204,15 @@ class ProjectTask(models.Model):
                 values['sale_line_id'] = False
         return super(ProjectTask, self).write(values)
 
-    @api.multi
     def unlink(self):
         if any(task.sale_line_id for task in self):
             raise ValidationError(_('You have to unlink the task from the sale order item in order to delete it.'))
         return super(ProjectTask, self).unlink()
 
     # ---------------------------------------------------
-    # Subtasks
-    # ---------------------------------------------------
-
-    @api.model
-    def _subtask_implied_fields(self):
-        result = super(ProjectTask, self)._subtask_implied_fields()
-        return result + ['sale_line_id']
-
-    def _subtask_write_values(self, values):
-        result = super(ProjectTask, self)._subtask_write_values(values)
-        # changing the partner on a task will reset the sale line of its subtasks
-        if 'partner_id' in result:
-            result['sale_line_id'] = False
-        elif 'sale_line_id' in result:
-            result.pop('sale_line_id')
-        return result
-
-    # ---------------------------------------------------
     # Actions
     # ---------------------------------------------------
 
-    @api.multi
     def action_view_so(self):
         self.ensure_one()
         return {

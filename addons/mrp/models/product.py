@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class ProductTemplate(models.Model):
@@ -11,9 +11,12 @@ class ProductTemplate(models.Model):
 
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
-    bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
-    used_in_bom_count = fields.Integer('# of BoM Where is Used', compute='_compute_used_in_bom_count')
-    mrp_product_qty = fields.Float('Manufactured', compute='_compute_mrp_product_qty')
+    bom_count = fields.Integer('# Bill of Material',
+        compute='_compute_bom_count', compute_sudo=False)
+    used_in_bom_count = fields.Integer('# of BoM Where is Used',
+        compute='_compute_used_in_bom_count', compute_sudo=False)
+    mrp_product_qty = fields.Float('Manufactured',
+        compute='_compute_mrp_product_qty', compute_sudo=False)
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
@@ -22,24 +25,21 @@ class ProductTemplate(models.Model):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count([('product_tmpl_id', '=', product.id)])
 
-    @api.multi
     def _compute_used_in_bom_count(self):
         for template in self:
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
                 [('bom_line_ids.product_id', 'in', template.product_variant_ids.ids)])
 
-    @api.multi
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
         action['domain'] = [('bom_line_ids.product_id', 'in', self.product_variant_ids.ids)]
         return action
 
-    @api.one
     def _compute_mrp_product_qty(self):
-        self.mrp_product_qty = float_round(sum(self.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=self.uom_id.rounding)
+        for template in self:
+            template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
 
-    @api.multi
     def action_view_mos(self):
         action = self.env.ref('mrp.mrp_production_report').read()[0]
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
@@ -55,20 +55,32 @@ class ProductProduct(models.Model):
 
     variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')
-    bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
-    used_in_bom_count = fields.Integer('# BoM Where Used', compute='_compute_used_in_bom_count')
-    mrp_product_qty = fields.Float('Manufactured', compute='_compute_mrp_product_qty')
+    bom_count = fields.Integer('# Bill of Material',
+        compute='_compute_bom_count', compute_sudo=False)
+    used_in_bom_count = fields.Integer('# BoM Where Used',
+        compute='_compute_used_in_bom_count', compute_sudo=False)
+    mrp_product_qty = fields.Float('Manufactured',
+        compute='_compute_mrp_product_qty', compute_sudo=False)
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
-    @api.multi
     def _compute_used_in_bom_count(self):
         for product in self:
             product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
 
-    @api.multi
+    def get_components(self):
+        """ Return the components list ids in case of kit product.
+        Return the product itself otherwise"""
+        self.ensure_one()
+        bom_kit = self.env['mrp.bom']._bom_find(product=self, bom_type='phantom')
+        if bom_kit:
+            boms, bom_sub_lines = bom_kit.explode(self, 1)
+            return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.type == 'product']
+        else:
+            return super(ProductProduct, self).get_components()
+
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
@@ -82,6 +94,9 @@ class ProductProduct(models.Model):
         read_group_res = self.env['mrp.production'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         mapped_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in read_group_res])
         for product in self:
+            if not product.id:
+                product.mrp_product_qty = 0.0
+                continue
             product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
     def _compute_quantities(self):
@@ -90,7 +105,9 @@ class ProductProduct(models.Model):
          - 'qty_available'
          - 'incoming_qty'
          - 'outgoing_qty'
+         - 'free_qty'
          """
+        kits = self.env['product.product']
         for product in self:
             bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
             if bom_kit:
@@ -99,23 +116,30 @@ class ProductProduct(models.Model):
                 ratios_qty_available = []
                 ratios_incoming_qty = []
                 ratios_outgoing_qty = []
+                ratios_free_qty = []
                 for bom_line, bom_line_data in bom_sub_lines:
                     component = bom_line.product_id
+                    if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                        # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
+                        # to avoid a division by zero. The same logic is applied to non-storable products as those
+                        # products have 0 qty available.
+                        continue
                     uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                     qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
                     ratios_virtual_available.append(component.virtual_available / qty_per_kit)
                     ratios_qty_available.append(component.qty_available / qty_per_kit)
                     ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
                     ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
-                if bom_sub_lines:
+                    ratios_free_qty.append(component.free_qty / qty_per_kit)
+                if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
+                    kits |= product
                     product.virtual_available = min(ratios_virtual_available) // 1
                     product.qty_available = min(ratios_qty_available) // 1
                     product.incoming_qty = min(ratios_incoming_qty) // 1
                     product.outgoing_qty = min(ratios_incoming_qty) // 1
-            else:
-                super(ProductProduct, self)._compute_quantities()
+                    product.free_qty = min(ratios_free_qty) // 1
+        super(ProductProduct, self - kits)._compute_quantities()
 
-    @api.multi
     def action_view_bom(self):
         action = self.env.ref('mrp.product_open_bom').read()[0]
         template_ids = self.mapped('product_tmpl_id').ids
@@ -127,12 +151,7 @@ class ProductProduct(models.Model):
         action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action
 
-    @api.multi
     def action_view_mos(self):
-        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
-        action['context'] = {
-            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'},
-            'graph_measure': 'product_uom_qty',
-        }
         return action

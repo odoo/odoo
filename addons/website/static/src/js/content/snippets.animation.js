@@ -6,12 +6,15 @@ odoo.define('website.content.snippets.animation', function (require) {
  */
 
 var Class = require('web.Class');
+const ColorpickerDialog = require('web.ColorpickerDialog');
+var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
-var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
+var utils = require('web.utils');
 
 var qweb = core.qweb;
+const _t = core._t;
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -76,7 +79,7 @@ publicWidget.Widget.include({
         this.editableMode = this.options.editableMode || false;
         var extraEvents = this.editableMode ? this.edit_events : this.read_events;
         if (extraEvents) {
-            this.events = _.extend(this.events || {}, extraEvents);
+            this.events = _.extend({}, this.events || {}, extraEvents);
         }
     },
 });
@@ -429,18 +432,17 @@ registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
     disabledInEditableMode: false,
     edit_events: {
-        'slid.bs.carousel': '_onEditionSlide',
+        'content_changed': '_onContentChanged',
     },
 
     /**
      * @override
      */
     start: function () {
-        if (!this.editableMode) {
-            this.$('img').on('load.slider', this._onImageLoaded.bind(this));
-            this._computeHeights();
-        }
-        this.$target.carousel();
+        this.$('img').on('load.slider', () => this._computeHeights());
+        this._computeHeights();
+        // Initialize carousel and pause if in edit mode.
+        this.$target.carousel(this.editableMode ? 'pause' : undefined);
         return this._super.apply(this, arguments);
     },
     /**
@@ -466,6 +468,7 @@ registry.slider = publicWidget.Widget.extend({
     _computeHeights: function () {
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
+        $items.css('min-height', '');
         _.each($items, function (el) {
             var $item = $(el);
             var isActive = $item.hasClass('active');
@@ -476,9 +479,7 @@ registry.slider = publicWidget.Widget.extend({
             }
             $item.toggleClass('active', isActive);
         });
-        _.each($items, function (el) {
-            $(el).css('min-height', maxHeight);
-        });
+        $items.css('min-height', maxHeight);
     },
 
     //--------------------------------------------------------------------------
@@ -488,19 +489,14 @@ registry.slider = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onEditionSlide: function () {
-        this._computeHeights();
-    },
-    /**
-     * @private
-     */
-    _onImageLoaded: function () {
+    _onContentChanged: function (ev) {
         this._computeHeights();
     },
 });
 
 registry.parallax = Animation.extend({
     selector: '.parallax',
+    disabledInEditableMode: false,
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
@@ -553,11 +549,13 @@ registry.parallax = Animation.extend({
 
         // Reset offset if parallax effect will not be performed and leave
         this.$target.toggleClass('s_parallax_is_fixed', this.speed === 1);
-        if (this.speed === 0 || this.speed === 1) {
+        var noParallaxSpeed = (this.speed === 0 || this.speed === 1);
+        this.$target.toggleClass('s_parallax_no_overflow_hidden', noParallaxSpeed);
+        if (noParallaxSpeed) {
             this.$bg.css({
                 transform: '',
                 top: '',
-                bottom: ''
+                bottom: '',
             });
             return;
         }
@@ -680,6 +678,130 @@ registry.mediaVideo = publicWidget.Widget.extend({
     },
 });
 
+registry.backgroundVideo = publicWidget.Widget.extend({
+    selector: '.o_background_video',
+    xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        var proms = [this._super(...arguments)];
+
+        this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.iframeID = _.uniqueId('o_bg_video_iframe_');
+
+        this.isYoutubeVideo = this.videoSrc.indexOf('youtube') >= 0;
+        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+        if (this.isYoutubeVideo && this.isMobileEnv) {
+            this.videoSrc = this.videoSrc + "&enablejsapi=1";
+
+            if (!window.YT) {
+                proms.push(new Promise(resolve => {
+                    window.onYouTubeIframeAPIReady = () => resolve();
+                }));
+                $('<script/>', {
+                    src: 'https://www.youtube.com/iframe_api',
+                }).appendTo('head');
+            }
+        }
+
+        var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
+
+        var $dropdownMenu = this.$el.closest('.dropdown-menu');
+        if ($dropdownMenu.length) {
+            this.$dropdownParent = $dropdownMenu.parent();
+            this.$dropdownParent.on('shown.bs.dropdown.backgroundVideo', throttledUpdate);
+        }
+
+        $(window).on('resize.' + this.iframeID, throttledUpdate);
+
+        return Promise.all(proms).then(() => this._appendBgVideo());
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$dropdownParent) {
+            this.$dropdownParent.off('.backgroundVideo');
+        }
+
+        $(window).off('resize.' + this.iframeID);
+
+        if (this.$bgVideoContainer) {
+            this.$bgVideoContainer.remove();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adjusts iframe sizes and position so that it fills the container and so
+     * that it is centered in it.
+     *
+     * @private
+     */
+    _adjustIframe: function () {
+        this.$iframe.removeClass('show');
+
+        // Adjust the iframe
+        var wrapperWidth = this.$target.innerWidth();
+        var wrapperHeight = this.$target.innerHeight();
+        var relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
+        var style = {};
+        if (relativeRatio >= 1.0) {
+            style['width'] = '100%';
+            style['height'] = (relativeRatio * 100) + '%';
+            style['left'] = '0';
+            style['top'] = (-(relativeRatio - 1.0) / 2 * 100) + '%';
+        } else {
+            style['width'] = ((1 / relativeRatio) * 100) + '%';
+            style['height'] = '100%';
+            style['left'] = (-((1 / relativeRatio) - 1.0) / 2 * 100) + '%';
+            style['top'] = '0';
+        }
+        this.$iframe.css(style);
+
+        void this.$iframe[0].offsetWidth; // Force style addition
+        this.$iframe.addClass('show');
+    },
+    /**
+     * Append background video related elements to the target.
+     *
+     * @private
+     */
+    _appendBgVideo: function () {
+        var $oldContainer = this.$bgVideoContainer || this.$('> .o_bg_video_container');
+        this.$bgVideoContainer = $(qweb.render('website.background.video', {
+            videoSrc: this.videoSrc,
+            iframeID: this.iframeID,
+        }));
+        this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
+        this.$iframe.one('load', () => {
+            this.$bgVideoContainer.find('.o_bg_video_loading').remove();
+        });
+        this.$bgVideoContainer.prependTo(this.$target);
+        $oldContainer.remove();
+
+        this._adjustIframe();
+
+        // YouTube does not allow to auto-play video in mobile devices, so we
+        // have to play the video manually.
+        if (this.isMobileEnv && this.isYoutubeVideo) {
+            new window.YT.Player(this.iframeID, {
+                events: {
+                    onReady: ev => ev.target.playVideo(),
+                }
+            });
+        }
+    },
+});
+
 registry.ul = publicWidget.Widget.extend({
     selector: 'ul.o_ul_folded, ol.o_ul_folded',
     events: {
@@ -763,7 +885,7 @@ registry.gallery = publicWidget.Widget.extend({
             srcs: urls,
             index: idx,
             dim: dimensions,
-            interval: milliseconds,
+            interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
         $modal.modal({
@@ -860,6 +982,10 @@ registry.gallerySlider = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
 
+        if (!this.$indicator) {
+            return;
+        }
+
         this.$prev.prependTo(this.$indicator);
         this.$next.appendTo(this.$indicator);
         this.$carousel.off('.gallery_slider');
@@ -885,7 +1011,6 @@ registry.socialShare = publicWidget.Widget.extend({
         this.$('.oe_social_facebook').click($.proxy(this._renderSocial, this, 'facebook'));
         this.$('.oe_social_twitter').click($.proxy(this._renderSocial, this, 'twitter'));
         this.$('.oe_social_linkedin').click($.proxy(this._renderSocial, this, 'linkedin'));
-        this.$('.oe_social_google-plus').click($.proxy(this._renderSocial, this, 'google-plus'));
     },
     /**
      * @private
@@ -921,7 +1046,6 @@ registry.socialShare = publicWidget.Widget.extend({
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
-            'google-plus': 'https://plus.google.com/share?url=' + url,
         };
         if (!_.contains(_.keys(socialNetworks), social)) {
             return;
@@ -943,7 +1067,7 @@ registry.socialShare = publicWidget.Widget.extend({
      */
     _onMouseEnter: function () {
         var social = this.$el.data('social');
-        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin', 'google-plus'];
+        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin'];
         this.hashtags = this.$el.data('hashtags') || '';
 
         this._render();
@@ -1014,7 +1138,7 @@ registry.anchorSlide = publicWidget.Widget.extend({
             return;
         }
         var hash = this.$target[0].hash;
-        if (!/^#[\w-]+$/.test(hash)) {
+        if (!utils.isValidAnchor(hash)) {
             return;
         }
         var $anchor = $(hash);
@@ -1025,6 +1149,544 @@ registry.anchorSlide = publicWidget.Widget.extend({
         $('html, body').animate({
             scrollTop: $anchor.offset().top,
         }, 500);
+    },
+});
+
+registry.countdown = publicWidget.Widget.extend({
+    selector: '.s_countdown',
+    xmlDependencies: ['/website/static/src/xml/website.s_countdown.xml'],
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.$wrapper = this.$('.s_countdown_canvas_wrapper');
+        this.hereBeforeTimerEnds = false;
+        this.endAction = this.el.dataset.endAction;
+        this.endTime = parseInt(this.el.dataset.endTime);
+        this.size = parseInt(this.el.dataset.size);
+        this.display = this.el.dataset.display;
+
+        this.layout = this.el.dataset.layout;
+        this.layoutBackground = this.el.dataset.layoutBackground;
+        this.progressBarStyle = this.el.dataset.progressBarStyle;
+        this.progressBarWeight = this.el.dataset.progressBarWeight;
+
+        this.textColor = this._ensureCssColor(this.el.dataset.textColor);
+        this.layoutBackgroundColor = this._ensureCssColor(this.el.dataset.layoutBackgroundColor);
+        this.progressBarColor = this._ensureCssColor(this.el.dataset.progressBarColor);
+
+        this.onlyOneUnit = this.display === 'd';
+        this.width = parseInt(this.size);
+        if (this.layout === 'boxes') {
+            this.width /= 1.75;
+        }
+        this._initTimeDiff();
+
+        this._render();
+
+        this.setInterval = setInterval(this._render.bind(this), 1000);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.$('.s_countdown_end_redirect_message').remove();
+        this.$('canvas').remove();
+        this.$('.s_countdown_end_message').addClass('d-none');
+        this.$('.s_countdown_text_wrapper').remove();
+        this.$('.s_countdown_canvas_wrapper').removeClass('d-none');
+
+        clearInterval(this.setInterval);
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Ensures the color is an actual css color. In case of a color variable,
+     * the color will be mapped to hexa.
+     *
+     * @private
+     * @param {string} color
+     * @returns {string}
+     */
+    _ensureCssColor: function (color) {
+        if (ColorpickerDialog.isCSSColor(color)) {
+            return color;
+        }
+        const style = window.getComputedStyle(document.documentElement);
+        return style.getPropertyValue('--' + color).trim();
+    },
+    /**
+     * Gets the time difference in seconds between now and countdown due date.
+     *
+     * @private
+     */
+    _getDelta: function () {
+        const currentTimestamp = Date.now() / 1000;
+        return this.endTime - currentTimestamp;
+    },
+    /**
+     * Handles the action that should be executed once the countdown ends.
+     *
+     * @private
+     */
+    _handleEndCountdownAction: function () {
+        if (this.endAction === 'redirect') {
+            const redirectUrl = this.el.dataset.redirectUrl;
+            if (this.hereBeforeTimerEnds) {
+                // Wait a bit, if the landing page has the same publish date
+                setTimeout(() => window.location = redirectUrl, 500);
+            } else {
+                // Show (non editable) msg when user lands on already finished countdown
+                if (!this.$('.s_countdown_end_redirect_message').length) {
+                    this.$target.find('.container').append(
+                        $(qweb.render('website.s_countdown.end_redirect_message', {
+                            redirectUrl: redirectUrl,
+                        }))
+                    );
+                }
+            }
+        } else if (this.endAction === 'message') {
+            this.$('.s_countdown_end_message').removeClass('d-none');
+        }
+    },
+    /**
+     * Initializes the `diff` object. It will contains every visible time unit
+     * which will each contain its related canvas, total step, label..
+     *
+     * @private
+     */
+    _initTimeDiff: function () {
+        const delta = this._getDelta();
+        this.diff = [];
+        if (this._isUnitVisible('d') && !(this.onlyOneUnit && delta < 86400)) {
+            this.diff.push({
+                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                // There is no logical number of unit (total) on which day units
+                //  can be compared against, so we use an arbitrary number.
+                total: 15,
+                label: _t("Days"),
+                nbSeconds: 86400,
+            });
+        }
+        if (this._isUnitVisible('h') || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
+            this.diff.push({
+                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                total: 24,
+                label: _t("Hours"),
+                nbSeconds: 3600,
+            });
+        }
+        if (this._isUnitVisible('m') || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
+            this.diff.push({
+                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                total: 60,
+                label: _t("Minutes"),
+                nbSeconds: 60,
+            });
+        }
+        if (this._isUnitVisible('s') || (this.onlyOneUnit && delta < 60)) {
+            this.diff.push({
+                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                total: 60,
+                label: _t("Seconds"),
+                nbSeconds: 1,
+            });
+        }
+    },
+    /**
+     * Returns weither or not the countdown should be displayed for the given
+     * unit (days, sec..).
+     *
+     * @private
+     * @param {string} unit - either 'd', 'm', 'h', or 's'
+     * @returns {boolean}
+     */
+    _isUnitVisible: function (unit) {
+        return this.display.includes(unit);
+    },
+    /**
+     * Draws the whole countdown, including one countdown for each time unit.
+     *
+     * @private
+     */
+    _render: function () {
+        // If only one unit mode, restart widget on unit change to populate diff
+        if (this.onlyOneUnit && this._getDelta() < this.diff[0].nbSeconds) {
+            this.$('canvas').remove();
+            this._initTimeDiff();
+        }
+        this._updateTimeDiff();
+
+        const hideCountdown = this.isFinished && !this.editableMode && this.$el.hasClass('hide-countdown');
+        if (this.layout === 'text') {
+            this.$('canvas').addClass('d-none');
+            if (!this.$textWrapper) {
+                this.$textWrapper = $('<span/>').attr({
+                    class: 's_countdown_text_wrapper d-none',
+                });
+                this.$textWrapper.text(_t("Countdown ends in"));
+                this.$textWrapper.append($('<span/>').attr({
+                    class: 's_countdown_text ml-1',
+                }));
+                this.$textWrapper.appendTo(this.$wrapper);
+            }
+
+            this.$textWrapper.toggleClass('d-none', hideCountdown);
+
+            const countdownText = this.diff.map(e => e.nb + ' ' + e.label).join(', ');
+            this.$('.s_countdown_text').text(countdownText.toLowerCase());
+        } else {
+            for (const val of this.diff) {
+                const canvas = val.canvas;
+                const ctx = canvas.getContext("2d");
+                ctx.canvas.width = this.width;
+                ctx.canvas.height = this.size;
+                this._clearCanvas(ctx);
+
+                $(canvas).toggleClass('d-none', hideCountdown);
+                if (hideCountdown) {
+                    return;
+                }
+
+                // Draw canvas elements
+                if (this.layoutBackground !== 'none') {
+                    this._drawBgShape(ctx, this.layoutBackground === 'plain');
+                }
+                this._drawText(canvas, val.nb, val.label, this.layoutBackground === 'plain');
+                if (this.progressBarStyle === 'surrounded') {
+                    this._drawProgressBarBg(ctx, this.progressBarWeight === 'thin');
+                }
+                if (this.progressBarStyle !== 'none') {
+                    this._drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === 'thin');
+                }
+                $(canvas).toggleClass('mx-2', this.layout === 'boxes');
+            }
+        }
+
+        if (this.isFinished) {
+            clearInterval(this.setInterval);
+            if (!this.editableMode) {
+                this._handleEndCountdownAction();
+            }
+        }
+    },
+    /**
+     * Updates the remaining units into the `diff` object.
+     *
+     * @private
+     */
+    _updateTimeDiff: function () {
+        let delta = this._getDelta();
+        this.isFinished = delta < 0;
+        if (this.isFinished) {
+            for (const unitData of this.diff) {
+                  unitData.nb = 0;
+            }
+            return;
+        }
+
+        this.hereBeforeTimerEnds = true;
+        for (const unitData of this.diff) {
+              unitData.nb = Math.floor(delta / unitData.nbSeconds);
+              delta -= unitData.nb * unitData.nbSeconds;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Canvas drawing methods
+    //--------------------------------------------------------------------------
+
+    /**
+     * Erases the canvas.
+     *
+     * @private
+     * @param {RenderingContext} ctx - Context of the canvas
+     */
+    _clearCanvas: function (ctx) {
+        ctx.clearRect(0, 0, this.size, this.size);
+    },
+    /**
+     * Draws a text into the canvas.
+     *
+     * @private
+     * @param {HTMLCanvasElement} canvas
+     * @param {string} textNb - text to display in the center of the canvas, in big
+     * @param {string} textUnit - text to display bellow `textNb` in small
+     * @param {boolean} full - if true, the shape will be drawn up to the progressbar
+     */
+    _drawText: function (canvas, textNb, textUnit, full = false) {
+        const ctx = canvas.getContext("2d");
+        const nbSize = this.size / 4;
+        ctx.font = `${nbSize}px Arial`;
+        ctx.fillStyle = this.textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(textNb, canvas.width / 2, canvas.height / 2);
+
+        const unitSize = this.size / 12;
+        ctx.font = `${unitSize}px Arial`;
+        ctx.fillText(textUnit, canvas.width / 2, canvas.height / 2 + nbSize / 1.5, this.width);
+
+        if (this.layout === 'boxes' && this.layoutBackground !== 'none' && this.progressBarStyle === 'none') {
+            let barWidth = this.size / (this.progressBarWeight === 'thin' ? 31 : 10);
+            if (full) {
+                barWidth = 0;
+            }
+            ctx.beginPath();
+            ctx.moveTo(barWidth, this.size / 2);
+            ctx.lineTo(this.width - barWidth, this.size / 2);
+            ctx.stroke();
+        }
+    },
+    /**
+     * Draws a plain shape into the canvas.
+     *
+     * @private
+     * @param {RenderingContext} ctx - Context of the canvas
+     * @param {boolean} full - if true, the shape will be drawn up to the progressbar
+     */
+    _drawBgShape: function (ctx, full = false) {
+        ctx.fillStyle = this.layoutBackgroundColor;
+        ctx.beginPath();
+        if (this.layout === 'circle') {
+            let rayon = this.size / 2;
+            if (this.progressBarWeight === 'thin') {
+                rayon -= full ? this.size / 29 : this.size / 15;
+            } else {
+                rayon -= full ? 0 : this.size / 10;
+            }
+            ctx.arc(this.size / 2, this.size / 2, rayon, 0, Math.PI * 2);
+            ctx.fill();
+        } else if (this.layout === 'boxes') {
+            let barWidth = this.size / (this.progressBarWeight === 'thin' ? 31 : 10);
+            if (full) {
+                barWidth = 0;
+            }
+
+            ctx.fillStyle = this.layoutBackgroundColor;
+            ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
+            ctx.fill();
+
+            const gradient = ctx.createLinearGradient(0, this.width, 0, 0);
+            gradient.addColorStop(0, '#ffffff24');
+            gradient.addColorStop(1, this.layoutBackgroundColor);
+            ctx.fillStyle = gradient;
+            ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
+            ctx.fill();
+            $(ctx.canvas).css({'border-radius': '8px'});
+        }
+    },
+    /**
+     * Draws a progress bar around the countdown shape.
+     *
+     * @private
+     * @param {RenderingContext} ctx - Context of the canvas
+     * @param {string} nbUnit - how many unit should fill progress bar
+     * @param {string} totalUnit - number of unit to do a complete progress bar
+     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     */
+    _drawProgressBar: function (ctx, nbUnit, totalUnit, thinLine) {
+        ctx.strokeStyle = this.progressBarColor;
+        ctx.lineWidth = thinLine ? this.size / 35 : this.size / 10;
+        if (this.layout === 'circle') {
+            ctx.beginPath();
+            ctx.arc(this.size / 2, this.size / 2, this.size / 2 - this.size / 20, Math.PI / -2, (Math.PI * 2) * (nbUnit / totalUnit) + (Math.PI / -2));
+            ctx.stroke();
+        } else if (this.layout === 'boxes') {
+            ctx.lineWidth *= 2;
+            let pc = nbUnit / totalUnit * 100;
+
+            // Lines: Top(x1,y1,x2,y2) Right(x1,y1,x2,y2) Bottom(x1,y1,x2,y2) Left(x1,y1,x2,y2)
+            const linesCoordFuncs = [
+                (linePc) => [0 + ctx.lineWidth / 2, 0, (this.width - ctx.lineWidth / 2) * linePc / 25 + ctx.lineWidth / 2, 0],
+                (linePc) => [this.width, 0 + ctx.lineWidth / 2, this.width, (this.size - ctx.lineWidth / 2) * linePc / 25 + ctx.lineWidth / 2],
+                (linePc) => [this.width - ((this.width - ctx.lineWidth / 2) * linePc / 25) - ctx.lineWidth / 2, this.size, this.width - ctx.lineWidth / 2, this.size],
+                (linePc) => [0, this.size - ((this.size - ctx.lineWidth / 2) * linePc / 25) - ctx.lineWidth / 2, 0, this.size - ctx.lineWidth / 2],
+            ];
+            while (pc > 0 && linesCoordFuncs.length) {
+                const linePc = Math.min(pc, 25);
+                const lineCoord = (linesCoordFuncs.shift())(linePc);
+                ctx.beginPath();
+                ctx.moveTo(lineCoord[0], lineCoord[1]);
+                ctx.lineTo(lineCoord[2], lineCoord[3]);
+                ctx.stroke();
+                pc -= linePc;
+            }
+        }
+    },
+    /**
+     * Draws a full lighter background progressbar around the shape.
+     *
+     * @private
+     * @param {RenderingContext} ctx - Context of the canvas
+     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     */
+    _drawProgressBarBg: function (ctx, thinLine) {
+        ctx.strokeStyle = this.progressBarColor;
+        ctx.globalAlpha = 0.2;
+        ctx.lineWidth = thinLine ? this.size / 35 : this.size / 10;
+        if (this.layout === 'circle') {
+            ctx.beginPath();
+            ctx.arc(this.size / 2, this.size / 2, this.size / 2 - this.size / 20, 0, Math.PI * 2);
+            ctx.stroke();
+        } else if (this.layout === 'boxes') {
+            ctx.lineWidth *= 2;
+
+            // Lines: Top(x1,y1,x2,y2) Right(x1,y1,x2,y2) Bottom(x1,y1,x2,y2) Left(x1,y1,x2,y2)
+            const points = [
+                [0 + ctx.lineWidth / 2, 0, this.width, 0],
+                [this.width, 0 + ctx.lineWidth / 2, this.width, this.size],
+                [0, this.size, this.width - ctx.lineWidth / 2, this.size],
+                [0, 0, 0, this.size - ctx.lineWidth / 2],
+            ];
+            while (points.length) {
+                const point = points.shift();
+                ctx.beginPath();
+                ctx.moveTo(point[0], point[1]);
+                ctx.lineTo(point[2], point[3]);
+                ctx.stroke();
+            }
+        }
+        ctx.globalAlpha = 1;
+    },
+});
+
+registry.chart = publicWidget.Widget.extend({
+    selector: '.s_chart',
+    disabledInEditableMode: false,
+    jsLibs: [
+        '/web/static/lib/Chart/Chart.js',
+    ],
+
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Object} options The default value of the chartbar.
+     */
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
+        this.style = window.getComputedStyle(document.documentElement);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        // Convert Theme colors to css color
+        const data = JSON.parse(this.el.dataset.data);
+        data.datasets.forEach(el => {
+            if (Array.isArray(el.backgroundColor)) {
+                el.backgroundColor = el.backgroundColor.map(el => this._convertToCssColor(el));
+                el.borderColor = el.borderColor.map(el => this._convertToCssColor(el));
+            } else {
+                el.backgroundColor = this._convertToCssColor(el.backgroundColor);
+                el.borderColor = this._convertToCssColor(el.borderColor);
+            }
+            el.borderWidth = this.el.dataset.borderWidth;
+        });
+
+        // Make chart data
+        const chartData = {
+            type: this.el.dataset.type,
+            data: data,
+            options: {
+                legend: {
+                    display: this.el.dataset.legendPosition !== 'none',
+                    position: this.el.dataset.legendPosition,
+                },
+                tooltips: {
+                    enabled: this.el.dataset.tooltipDisplay === 'true',
+                },
+                title: {
+                    display: !!this.el.dataset.title,
+                    text: this.el.dataset.title,
+                },
+            },
+        };
+
+        // Add type specific options
+        if (this.el.dataset.type === 'radar') {
+            chartData.options.scale = {
+                ticks: {
+                    beginAtZero: true,
+                }
+            };
+        } else if (['pie', 'doughnut'].includes(this.el.dataset.type)) {
+            chartData.options.tooltips.callbacks = {
+                label: (tooltipItem, data) => {
+                    const label = data.datasets[tooltipItem.datasetIndex].label;
+                    const secondLabel = data.labels[tooltipItem.index];
+                    let final = label;
+                    if (label) {
+                        if (secondLabel) {
+                            final = label + ' - ' + secondLabel;
+                        }
+                    } else if (secondLabel) {
+                        final = secondLabel;
+                    }
+                    return final + ':' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                },
+            };
+        } else {
+            chartData.options.scales = {
+                xAxes: [{
+                    stacked: this.el.dataset.stacked === 'true',
+                    ticks: {
+                        beginAtZero: true
+                    },
+                }],
+                yAxes: [{
+                    stacked: this.el.dataset.stacked === 'true',
+                    ticks: {
+                        beginAtZero: true
+                    },
+                }],
+            };
+        }
+
+        // Disable animation in edit mode
+        if (this.editableMode) {
+            chartData.options.animation = {
+                duration: 0,
+            };
+        }
+
+        const canvas = this.el.querySelector('canvas');
+        this.chart = new window.Chart(canvas, chartData);
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     * Discard all library changes to reset the state of the Html.
+     */
+    destroy: function () {
+        if (this.chart) { // The widget can be destroyed before start has completed
+            this.chart.destroy();
+            this.el.querySelectorAll('.chartjs-size-monitor').forEach(el => el.remove());
+        }
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} color A css color or theme color string
+     * @returns {string} Css color
+     */
+    _convertToCssColor: function (color) {
+        if (!color) {
+            return 'transparent';
+        }
+        return this.style.getPropertyValue(`--${color}`).trim() || color;
     },
 });
 

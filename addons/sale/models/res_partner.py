@@ -22,14 +22,18 @@ class ResPartner(models.Model):
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )
+        partners = self.browse()
         for group in sale_order_groups:
             partner = self.browse(group['partner_id'][0])
             while partner:
                 if partner in self:
                     partner.sale_order_count += group['partner_id_count']
+                    partners |= partner
                 partner = partner.parent_id
+        (self - partners).sale_order_count = 0
 
     def can_edit_vat(self):
+        ''' Can't edit `vat` if there is (non draft) issued SO. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat

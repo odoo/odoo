@@ -65,31 +65,26 @@ class AccountAnalyticDefault(models.Model):
         return res
 
 
-class AccountInvoiceLine(models.Model):
-    _inherit = "account.invoice.line"
-
-    @api.onchange('product_id', 'account_id')
-    def _onchange_product_id_account_id(self):
-        rec = self.env['account.analytic.default'].account_get(product_id=self.product_id.id, partner_id=self.invoice_id.commercial_partner_id.id, account_id=self.account_id.id, user_id=self.env.uid, date=self.invoice_id.date_due, company_id=self.invoice_id.company_id.id)
-        self.account_analytic_id = rec.analytic_id.id
-        self.analytic_tag_ids = rec.analytic_tag_ids.ids
-
-    def _set_additional_fields(self):
-        if not self.account_analytic_id or not self.analytic_tag_ids:
-            rec = self.env['account.analytic.default'].account_get(product_id=self.product_id.id, partner_id=self.invoice_id.commercial_partner_id.id, account_id=self.account_id.id, user_id=self.env.uid, date=self.invoice_id.date_due, company_id=self.invoice_id.company_id.id)
-            if rec:
-                if not self.account_analytic_id:
-                    self.account_analytic_id = rec.analytic_id.id
-                if not self.analytic_tag_ids:
-                    self.analytic_tag_ids = rec.analytic_tag_ids.ids
-        super(AccountInvoiceLine, self)._set_additional_fields()
-
-
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = 'account.move.line'
 
-    @api.onchange('account_id', 'partner_id', 'product_id')
-    def _onchange_product_id_account_id_partner_id(self):
-        rec = self.env['account.analytic.default'].account_get(product_id=self.product_id.id, partner_id=self.partner_id.id, account_id=self.account_id.id, user_id=self.env.uid, date=self.move_id.date, company_id=self.company_id.id)
-        self.analytic_account_id = rec.analytic_id.id
-        self.analytic_tag_ids = rec.analytic_tag_ids.ids
+    # Overload of fields defined in account
+    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False)
+    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False)
+
+    @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
+    def _compute_analytic_account(self):
+        for record in self:
+            record.analytic_account_id = record.analytic_account_id or False
+            record.analytic_tag_ids = record.analytic_tag_ids or False
+            rec = self.env['account.analytic.default'].account_get(
+                product_id=record.product_id.id,
+                partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
+                account_id=record.account_id.id,
+                user_id=record.env.uid,
+                date=record.date_maturity,
+                company_id=record.move_id.company_id.id
+            )
+            if rec:
+                record.analytic_account_id = rec.analytic_id
+                record.analytic_tag_ids = rec.analytic_tag_ids

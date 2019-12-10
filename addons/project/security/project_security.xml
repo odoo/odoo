@@ -38,10 +38,7 @@
         <field name="name">Project: multi-company</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',
-                                        ('company_id', '=', False),
-                                        ('company_id', 'in', company_ids),
-                                    ]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="project_project_manager_rule">
@@ -67,10 +64,7 @@
         <field name="name">Project/Task: multi-company</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',
-                                        ('company_id', '=', False),
-                                        ('company_id', 'in', company_ids),
-                                    ]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">
@@ -100,7 +94,7 @@
         <field name="name">Task Analysis multi-company</field>
         <field name="model_id" ref="model_report_project_task_user"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
      <!-- Portal -->

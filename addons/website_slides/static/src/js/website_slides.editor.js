@@ -12,6 +12,9 @@ var _t = core._t;
 
 var ChannelCreateDialog = Dialog.extend({
     template: 'website.slide.channel.create',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/website_slides/static/src/xml/website_slides_channel.xml']
+    ),
     /**
      * @override
      * @param {Object} parent
@@ -90,9 +93,6 @@ WebsiteNewMenu.include({
     actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
         new_slide_channel: '_createNewSlideChannel',
     }),
-    xmlDependencies: WebsiteNewMenu.prototype.xmlDependencies.concat(
-        ['/website_slides/static/src/xml/website_slides_channel.xml']
-    ),
 
     //--------------------------------------------------------------------------
     // Actions

@@ -4,9 +4,6 @@
         <record id="sales_team.pos_sales_team" model="crm.team">
             <field name="active" eval="True"/>
         </record>
-        <record id="point_of_sale.pos_config_main" model="pos.config">
-            <field name="crm_team_id" ref="sales_team.pos_sales_team"/>
-        </record>
     </data>
 </odoo>
 

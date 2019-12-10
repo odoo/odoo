@@ -20,6 +20,7 @@ import unittest
 import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
+from odoo.tests.common import OdooSuite
 
 if os.name == 'posix':
     # Unix only for workers
@@ -210,7 +211,7 @@ class FSWatcherBase(object):
 class FSWatcherWatchdog(FSWatcherBase):
     def __init__(self):
         self.observer = Observer()
-        for path in odoo.modules.module.ad_paths:
+        for path in odoo.addons.__path__:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
 
@@ -236,7 +237,7 @@ class FSWatcherInotify(FSWatcherBase):
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
         paths_to_watch = []
-        for path in odoo.modules.module.ad_paths:
+        for path in odoo.addons.__path__:
             paths_to_watch.append(path)
             _logger.info('Watching addons folder %s', path)
         self.watcher = InotifyTrees(paths_to_watch, mask=INOTIFY_LISTEN_EVENTS, block_duration_s=.5)
@@ -329,7 +330,7 @@ class ThreadedServer(CommonServer):
                 os._exit(0)
             # interrupt run() to start shutdown
             raise KeyboardInterrupt()
-        elif sig == signal.SIGXCPU:
+        elif hasattr(signal, 'SIGXCPU') and sig == signal.SIGXCPU:
             sys.stderr.write("CPU time limit exceeded! Shutting down immediately\n")
             sys.stderr.flush()
             os._exit(0)
@@ -472,7 +473,6 @@ class ThreadedServer(CommonServer):
                     time.sleep(0.05)
 
         _logger.debug('--')
-        odoo.modules.registry.Registry.delete_all()
         logging.shutdown()
 
     def run(self, preload=None, stop=False):
@@ -507,6 +507,8 @@ class ThreadedServer(CommonServer):
                         # We wait there is no processing requests
                         # other than the ones exceeding the limits, up to 1 min,
                         # before asking for a reload.
+                        _logger.info('Dumping stacktrace of limit exceeding threads before reloading')
+                        dumpstacks(thread_idents=[thread.ident for thread in self.limits_reached_threads])
                         self.reload()
                         # `reload` increments `self.quit_signals_received`
                         # and the loop will end after this iteration,
@@ -554,9 +556,28 @@ class GeventServer(CommonServer):
     def start(self):
         import gevent
         try:
-            from gevent.pywsgi import WSGIServer
+            from gevent.pywsgi import WSGIServer, WSGIHandler
         except ImportError:
-            from gevent.wsgi import WSGIServer
+            from gevent.wsgi import WSGIServer, WSGIHandler
+
+        class ProxyHandler(WSGIHandler):
+            """ When logging requests, try to get the client address from
+            the environment so we get proxyfix's modifications (if any).
+
+            Derived from werzeug.serving.WSGIRequestHandler.log
+            / werzeug.serving.WSGIRequestHandler.address_string
+            """
+            def format_request(self):
+                old_address = self.client_address
+                if getattr(self, 'environ', None):
+                    self.client_address = self.environ['REMOTE_ADDR']
+                elif not self.client_address:
+                    self.client_address = '<local>'
+                # other cases are handled inside WSGIHandler
+                try:
+                    return super().format_request()
+                finally:
+                    self.client_address = old_address
 
         set_limit_memory_hard()
         if os.name == 'posix':
@@ -565,7 +586,12 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
-        self.httpd = WSGIServer((self.interface, self.port), self.app)
+        self.httpd = WSGIServer(
+            (self.interface, self.port), self.app,
+            log=logging.getLogger('longpolling'),
+            error_log=logging.getLogger('longpolling'),
+            handler_class=ProxyHandler,
+        )
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
             self.httpd.serve_forever()
@@ -633,7 +659,7 @@ class PreforkServer(CommonServer):
             self.queue.append(sig)
             self.pipe_ping(self.pipe)
         else:
-            _logger.warn("Dropping signal: %s", sig)
+            _logger.warning("Dropping signal: %s", sig)
 
     def worker_spawn(self, klass, workers_registry):
         self.generation += 1
@@ -685,7 +711,7 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
-                self.dumpstacks()
+                dumpstacks()
             elif sig == signal.SIGUSR1:
                 # log ormcache stats on kill -SIGUSR1
                 log_ormcache_stats()
@@ -857,6 +883,13 @@ class Worker(object):
     def signal_handler(self, sig, frame):
         self.alive = False
 
+    def signal_time_expired_handler(self, n, stack):
+        # TODO: print actual RUSAGE_SELF (since last check_limits) instead of
+        #       just repeating the config setting
+        _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
+        # We dont suicide in such case
+        raise Exception('CPU time limit exceeded.')
+
     def sleep(self):
         try:
             select.select([self.multi.socket, self.wakeup_fd_r], [], [], self.multi.beat)
@@ -883,15 +916,9 @@ class Worker(object):
 
         set_limit_memory_hard()
 
-    def set_limits(self):
-        # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
+        # update RLIMIT_CPU so limit_time_cpu applies per unit of work
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
-        def time_expired(n, stack):
-            _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
-            # We dont suicide in such case
-            raise Exception('CPU time limit exceeded.')
-        signal.signal(signal.SIGXCPU, time_expired)
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['limit_time_cpu'], hard))
 
@@ -912,11 +939,15 @@ class Worker(object):
             self.multi.socket.setblocking(0)
 
         signal.signal(signal.SIGINT, self.signal_handler)
-        signal.signal(signal.SIGTERM, signal.SIG_DFL)
-        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-        signal.set_wakeup_fd(self.wakeup_fd_w)
+        signal.signal(signal.SIGXCPU, self.signal_time_expired_handler)
 
-        self.set_limits()
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
+        signal.signal(signal.SIGHUP, signal.SIG_DFL)
+        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
+        signal.signal(signal.SIGTTIN, signal.SIG_DFL)
+        signal.signal(signal.SIGTTOU, signal.SIG_DFL)
+
+        signal.set_wakeup_fd(self.wakeup_fd_w)
 
     def stop(self):
         pass
@@ -938,14 +969,18 @@ class Worker(object):
             sys.exit(1)
 
     def _runloop(self):
+        signal.pthread_sigmask(signal.SIG_BLOCK, {
+            signal.SIGXCPU,
+            signal.SIGINT, signal.SIGQUIT, signal.SIGUSR1,
+        })
         try:
             while self.alive:
+                self.check_limits()
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 if not self.alive:
                     break
                 self.process_work()
-                self.check_limits()
         except:
             _logger.exception("Worker %s (%s) Exception occured, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)
@@ -1095,12 +1130,11 @@ def load_test_file_py(registry, test_file):
             for mod_mod in get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == mod_path:
-                    suite = unittest.TestSuite()
+                    suite = OdooSuite()
                     for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                         suite.addTest(t)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    stream = odoo.modules.module.TestStream()
-                    result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
+                    result = odoo.modules.module.OdooTestRunner().run(suite)
                     success = result.wasSuccessful()
                     if hasattr(registry._assertion_report,'report_result'):
                         registry._assertion_report.report_result(success)
@@ -1123,9 +1157,13 @@ def preload_registries(dbnames):
             # run test_file if provided
             if config['test_file']:
                 test_file = config['test_file']
-                _logger.info('loading test file %s', test_file)
-                with odoo.api.Environment.manage():
-                    if test_file.endswith('py'):
+                if not os.path.isfile(test_file):
+                    _logger.warning('test file %s cannot be found', test_file)
+                elif not test_file.endswith('py'):
+                    _logger.warning('test file %s is not a python file', test_file)
+                else:
+                    _logger.info('loading test file %s', test_file)
+                    with odoo.api.Environment.manage():
                         load_test_file_py(registry, test_file)
 
             # run post-install tests
@@ -1137,8 +1175,7 @@ def preload_registries(dbnames):
                 _logger.info("Starting post tests")
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = run_unit_tests(module_name, registry.db_name,
-                                                position='post_install')
+                        result = run_unit_tests(module_name, position='post_install')
                         registry._assertion_report.record_result(result)
                 _logger.info("All post-tested in %.2fs, %s queries",
                              time.time() - t0, odoo.sql_db.sql_counter - t0_sql)

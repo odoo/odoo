@@ -8,6 +8,7 @@ import importlib
 import io
 import logging
 import os
+import pkg_resources
 import shutil
 import tempfile
 import zipfile
@@ -33,7 +34,6 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 ACTION_DICT = {
-    'view_type': 'form',
     'view_mode': 'form',
     'res_model': 'base.module.upgrade',
     'target': 'new',
@@ -65,7 +65,7 @@ def assert_log_admin_access(method):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
         log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
             raise AccessDenied()
         _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
@@ -282,7 +282,7 @@ class Module(models.Model):
         ('GPL-3 or any later version', 'GPL-3 or later version'),
         ('AGPL-3', 'Affero GPL-3'),
         ('LGPL-3', 'LGPL Version 3'),
-        ('Other OSI approved licence', 'Other OSI Approved Licence'),
+        ('Other OSI approved licence', 'Other OSI Approved License'),
         ('OEEL-1', 'Odoo Enterprise Edition License v1.0'),
         ('OPL-1', 'Odoo Proprietary License v1.0'),
         ('Other proprietary', 'Other Proprietary')
@@ -294,12 +294,16 @@ class Module(models.Model):
     icon = fields.Char('Icon URL')
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
+    has_iap = fields.Boolean(compute='_compute_has_iap')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
     ]
 
-    @api.multi
+    def _compute_has_iap(self):
+        for module in self:
+            module.has_iap = 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
+
     def unlink(self):
         if not self:
             return True
@@ -310,15 +314,32 @@ class Module(models.Model):
         return super(Module, self).unlink()
 
     @staticmethod
+    def _check_python_external_dependency(pydep):
+        try:
+            pkg_resources.get_distribution(pydep)
+        except pkg_resources.DistributionNotFound as e:
+            try:
+                importlib.import_module(pydep)
+                _logger.warning("python external dependency %s should be replaced by it's PyPI package name", pydep)
+            except ImportError:
+                # backward compatibility attempt failed
+                _logger.warning("DistributionNotFound: %s", e)
+                raise Exception('Python library not installed: %s' % (pydep,))
+        except pkg_resources.VersionConflict as e:
+            _logger.warning("VersionConflict: %s", e)
+            raise Exception('Python library version conflict: %s' % (pydep,))
+        except Exception as e:
+            _logger.warning("get_distribution(%s) failed: %s", pydep, e)
+            raise Exception('Error finding python library %s' % (pydep,))
+
+
+    @staticmethod
     def _check_external_dependencies(terp):
         depends = terp.get('external_dependencies')
         if not depends:
             return
         for pydep in depends.get('python', []):
-            try:
-                importlib.import_module(pydep)
-            except ImportError:
-                raise ImportError('No module named %s' % (pydep,))
+            Module._check_python_external_dependency(pydep)
 
         for binary in depends.get('bin', []):
             try:
@@ -340,7 +361,6 @@ class Module(models.Model):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise UserError(msg % (module_name, e.args[0]))
 
-    @api.multi
     def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
@@ -372,7 +392,6 @@ class Module(models.Model):
         return demo
 
     @assert_log_admin_access
-    @api.multi
     def button_install(self):
         # domain to select auto-installable (but not yet installed) modules
         auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
@@ -430,7 +449,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Install'))
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_install(self):
         """ Installs the selected module(s) immediately and fully,
         returns the next res.config action to execute
@@ -450,13 +468,11 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_install)
 
     @assert_log_admin_access
-    @api.multi
     def button_install_cancel(self):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
 
     @assert_log_admin_access
-    @api.multi
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
         including the deletion of all database structures created by the module:
@@ -468,7 +484,6 @@ class Module(models.Model):
         self.with_context(prefetch_fields=False).write({'state': 'uninstalled', 'latest_version': False})
         return True
 
-    @api.multi
     def _remove_copied_views(self):
         """ Remove the copies of the views installed by the modules in `self`.
 
@@ -482,7 +497,6 @@ class Module(models.Model):
         orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
         orphans.unlink()
 
-    @api.multi
     @api.returns('self')
     def downstream_dependencies(self, known_deps=None,
                                 exclude_states=('uninstalled', 'uninstallable', 'to remove')):
@@ -507,7 +521,6 @@ class Module(models.Model):
             known_deps |= missing_mods.downstream_dependencies(known_deps, exclude_states)
         return known_deps
 
-    @api.multi
     @api.returns('self')
     def upstream_dependencies(self, known_deps=None,
                               exclude_states=('installed', 'uninstallable', 'to remove')):
@@ -549,7 +562,6 @@ class Module(models.Model):
             'url': '/web',
         }
 
-    @api.multi
     def _button_immediate_function(self, function):
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
@@ -581,7 +593,6 @@ class Module(models.Model):
         }
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_uninstall(self):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -591,7 +602,6 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_uninstall)
 
     @assert_log_admin_access
-    @api.multi
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
@@ -600,7 +610,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     @assert_log_admin_access
-    @api.multi
     def button_uninstall_wizard(self):
         """ Launch the wizard to uninstall the given module. """
         return {
@@ -612,13 +621,11 @@ class Module(models.Model):
             'context': {'default_module_id': self.id},
         }
 
-    @api.multi
     def button_uninstall_cancel(self):
         self.write({'state': 'installed'})
         return True
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_upgrade(self):
         """
         Upgrade the selected module(s) immediately and fully,
@@ -627,7 +634,6 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_upgrade)
 
     @assert_log_admin_access
-    @api.multi
     def button_upgrade(self):
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
@@ -658,7 +664,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     @assert_log_admin_access
-    @api.multi
     def button_upgrade_cancel(self):
         self.write({'state': 'installed'})
         return True
@@ -738,7 +743,6 @@ class Module(models.Model):
         return res
 
     @assert_log_admin_access
-    @api.multi
     def download(self, download=True):
         return []
 
@@ -874,11 +878,10 @@ class Module(models.Model):
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
 
-    @api.multi
-    def _update_translations(self, filter_lang=None):
+    def _update_translations(self, filter_lang=None, overwrite=False):
         if not filter_lang:
-            langs = self.env['res.lang'].search([('translatable', '=', True)])
-            filter_lang = [lang.code for lang in langs]
+            langs = self.env['res.lang'].get_installed()
+            filter_lang = [code for code, _ in langs]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
 
@@ -888,9 +891,8 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
+        self.env['ir.translation']._load_module_terms(mod_names, filter_lang, overwrite)
 
-    @api.multi
     def _check(self):
         for module in self:
             if not module.description_html:
@@ -919,7 +921,8 @@ class ModuleDependency(models.Model):
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the dependency, and its status
-    depend_id = fields.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
+    depend_id = fields.Many2one('ir.module.module', 'Dependency',
+                                compute='_compute_depend', search='_search_depend')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
     auto_install_required = fields.Boolean(
@@ -927,7 +930,6 @@ class ModuleDependency(models.Model):
         help="Whether this dependency blocks automatic installation "
              "of the dependent")
 
-    @api.multi
     @api.depends('name')
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
@@ -939,10 +941,15 @@ class ModuleDependency(models.Model):
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
-    @api.one
+    def _search_depend(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
     @api.depends('depend_id.state')
     def _compute_state(self):
-        self.state = self.depend_id.state or 'unknown'
+        for dependency in self:
+            dependency.state = dependency.depend_id.state or 'unknown'
 
 
 class ModuleExclusion(models.Model):
@@ -956,10 +963,10 @@ class ModuleExclusion(models.Model):
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the exclusion, and its status
-    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module', compute='_compute_exclusion')
+    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module',
+                                   compute='_compute_exclusion', search='_search_exclusion')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
-    @api.multi
     @api.depends('name')
     def _compute_exclusion(self):
         # retrieve all modules corresponding to the exclusion names
@@ -971,7 +978,12 @@ class ModuleExclusion(models.Model):
         for excl in self:
             excl.exclusion_id = name_mod.get(excl.name)
 
-    @api.one
+    def _search_exclusion(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
     @api.depends('exclusion_id.state')
     def _compute_state(self):
-        self.state = self.exclusion_id.state or 'unknown'
+        for exclusion in self:
+            exclusion.state = exclusion.exclusion_id.state or 'unknown'

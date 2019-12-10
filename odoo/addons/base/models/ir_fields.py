@@ -305,10 +305,13 @@ class IrFieldsConverter(models.AbstractModel):
         id = None
         warnings = []
         error_msg = ''
-        action = {'type': 'ir.actions.act_window', 'target': 'new',
-                  'view_mode': 'tree,form', 'view_type': 'form',
-                  'views': [(False, 'tree'), (False, 'form')],
-                  'help': _(u"See all possible values")}
+        action = {
+            'name': 'Possible Values',
+            'type': 'ir.actions.act_window', 'target': 'new',
+            'view_mode': 'tree,form',
+            'views': [(False, 'list'), (False, 'form')],
+            'context': {'create': False},
+            'help': _(u"See all possible values")}
         if subfield is None:
             action['res_model'] = field.comodel_name
         elif subfield in ('id', '.id'):
@@ -318,6 +321,8 @@ class IrFieldsConverter(models.AbstractModel):
         RelatedModel = self.env[field.comodel_name]
         if subfield == '.id':
             field_type = _(u"database id")
+            if isinstance(value, str) and not self._str_to_boolean(model, field, value)[0]:
+                return False, field_type, warnings
             try: tentative_id = int(value)
             except ValueError: tentative_id = value
             try:
@@ -332,6 +337,8 @@ class IrFieldsConverter(models.AbstractModel):
                     {'moreinfo': action})
         elif subfield == 'id':
             field_type = _(u"external id")
+            if not self._str_to_boolean(model, field, value)[0]:
+                return False, field_type, warnings
             if '.' in value:
                 xmlid = value
             else:
@@ -340,6 +347,8 @@ class IrFieldsConverter(models.AbstractModel):
             id = self.env['ir.model.data'].xmlid_to_res_id(xmlid, raise_if_not_found=False) or None
         elif subfield is None:
             field_type = _(u"name")
+            if value == '':
+                return False, field_type, warnings
             flush()
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
@@ -353,8 +362,8 @@ class IrFieldsConverter(models.AbstractModel):
                 if name_create_enabled_fields.get(field.name):
                     try:
                         id, _name = RelatedModel.name_create(name=value)
-                    except Exception as e:
-                        error_msg = repr(e)
+                    except (Exception, psycopg2.IntegrityError):
+                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.") % RelatedModel._description
         else:
             raise self._format_import_error(
                 Exception,
@@ -408,6 +417,10 @@ class IrFieldsConverter(models.AbstractModel):
         return id, w1 + w2
 
     @api.model
+    def _str_to_many2one_reference(self, model, field, value):
+        return self._str_to_integer(model, field, value)
+
+    @api.model
     def _str_to_many2many(self, model, field, value):
         [record] = value
 
@@ -449,14 +462,18 @@ class IrFieldsConverter(models.AbstractModel):
         for record in records:
             id = None
             refs = only_ref_fields(record)
-            # there are ref fields in the record
+            writable = convert(exclude_ref_fields(record), log)
             if refs:
                 subfield, w1 = self._referencing_subfield(refs)
                 warnings.extend(w1)
-                id, _, w2 = self.db_id_for(model, field, subfield, record[subfield])
-                warnings.extend(w2)
+                try:
+                    id, _, w2 = self.db_id_for(model, field, subfield, record[subfield])
+                    warnings.extend(w2)
+                except ValueError:
+                    if subfield != 'id':
+                        raise
+                    writable['id'] = record['id']
 
-            writable = convert(exclude_ref_fields(record), log)
             if id:
                 commands.append(LINK_TO(id))
                 commands.append(UPDATE(id, writable))
@@ -464,3 +481,37 @@ class IrFieldsConverter(models.AbstractModel):
                 commands.append(CREATE(writable))
 
         return commands, warnings
+
+class O2MIdMapper(models.AbstractModel):
+    """
+    Updates the base class to support setting xids directly in create by
+    providing an "id" key (otherwise stripped by create) during an import
+    (which should strip 'id' from the input data anyway)
+    """
+    _inherit = 'base'
+
+    # sadly _load_records_create is only called for the toplevel record so we
+    # can't hook into that
+    @api.model_create_multi
+    @api.returns('self', lambda value: value.id)
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+
+        import_module = self.env.context.get('_import_current_module')
+        if not import_module: # not an import -> bail
+            return recs
+        noupdate = self.env.context.get('noupdate', False)
+
+        xids = (v.get('id') for v in vals_list)
+        self.env['ir.model.data']._update_xmlids([
+            {
+                'xml_id': xid if '.' in xid else ('%s.%s' % (import_module, xid)),
+                'record': rec,
+                # note: this is not used when updating o2ms above...
+                'noupdate': noupdate,
+            }
+            for rec, xid in zip(recs, xids)
+            if xid and isinstance(xid, str)
+        ])
+
+        return recs

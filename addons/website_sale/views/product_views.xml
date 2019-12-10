@@ -7,19 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='consumable']" position="after">
                 <separator/>
-                <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+                <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
             </xpath>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="product_pricelist_view">
-        <field name="name">product.pricelist.website.form</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="arch" type="xml">
-            <field name="currency_id" position="before">
-                <field name="code"/>
-            </field>
         </field>
     </record>
 
@@ -29,7 +18,7 @@
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
@@ -41,7 +30,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
@@ -62,11 +51,10 @@
     <record id="product_template_action_website" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="view_id" ref="product_template_view_tree_website_sale"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
-        <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
+        <field name="context">{'search_default_published': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -99,12 +87,9 @@
             <xpath expr="//group[@name='description']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//button[@name='toggle_active']" position="before">
-                <button class="oe_stat_button" name="website_publish_button"
-                    type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
-                    <field name="is_published" widget="website_button"/>
-                </button>
-            </xpath>
+            <div name="button_box" position="inside">
+                <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('sale_ok','=',False)]}"/>
+            </div>
             <xpath expr="//page[@name='sales']" position="after">
                 <page name="shop" string="eCommerce" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <group name="shop">
@@ -113,7 +98,7 @@
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             <field name="website_sequence" groups="base.group_no_one"/>
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                            <field name="alternative_product_ids" widget="many2many_tags"/>
+                            <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id)]"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
                             <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                         </group>
@@ -146,7 +131,7 @@
         <field name="arch" type="xml">
             <form string="Website Public Categories">
                 <sheet>
-                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_left">
                         <group>
                             <field name="name"/>
@@ -175,7 +160,6 @@
         <field name="name">eCommerce Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.public.category</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
@@ -193,11 +177,14 @@
         <field name="inherit_id" ref="product.product_pricelist_view" />
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <field name='currency_id' position='after'>
-                <field name="selectable"/>
-                <field name="website_id" options="{'no_create': True}" />
-            </field>
-        </field>
+            <xpath expr="//group[@name='pricelist_availability']" position="after">
+                <group name="pricelist_website" string="Website">
+                    <field name="website_id" options="{'no_create': True}"/>
+                    <field name="selectable"/>
+                    <field name="code"/>
+                </group>
+            </xpath>
+          </field>
     </record>
 
     <record id="website_sale_pricelist_tree_view" model="ir.ui.view">
@@ -218,20 +205,18 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <form string="Product Images">
+                <field name="sequence" invisible="1"/>
                 <div class="row o_website_sale_image_modal">
                     <div class="col-md-6 col-xl-5">
                         <label for="name" string="Image Name"/>
                         <h2><field name="name" placeholder="Image Name"/></h2>
-                        <!-- Unfortunately for now we can't drag and drop kanban o2m, so we have to let the user input the sequence manually.  -->
-                        <label for="sequence" string="Sequence"/><br/>
-                        <field name="sequence"/><br/><br/>
                         <label for="video_url" string="Video URL"/><br/>
                         <field name="video_url"/><br/>
                     </div>
                     <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
                         <div class="row">
                             <div class="col">
-                                <field name="image_original" widget="image"/>
+                                <field name="image_1920" widget="image"/>
                             </div>
                             <div class="col" attrs="{'invisible': [('video_url', 'in', ['', False])]}">
                                 <div class="o_video_container p-2">
@@ -255,13 +240,13 @@
             <kanban string="Product Images" default_order="sequence">
                 <field name="id"/>
                 <field name="name"/>
-                <field name="image_original"/>
-                <field name="sequence"/>
+                <field name="image_1920"/>
+                <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">
                             <div class="o_squared_image">
-                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_original', record.id.value)" t-att-alt="record.name.value"/>
+                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.value)" t-att-alt="record.name.value"/>
                             </div>
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">
@@ -269,12 +254,12 @@
                                 </h4>
                             </div>
                             <!-- below 100 Kb: good -->
-                            <t t-if="record.image_original.raw_value.length &lt; 100*1000">
+                            <t t-if="record.image_1920.raw_value.length &lt; 100*1000">
                                 <t t-set="size_status" t-value="'badge-success'"/>
                                 <t t-set="message">Acceptable file size</t>
                             </t>
                             <!-- below 1000 Kb: decent -->
-                            <t t-elif="record.image_original.raw_value.length &lt; 1000*1000">
+                            <t t-elif="record.image_1920.raw_value.length &lt; 1000*1000">
                                 <t t-set="size_status" t-value="'badge-warning'" />
                                 <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
                             </t>
@@ -283,7 +268,7 @@
                                 <t t-set="size_status" t-value="'badge-danger'"/>
                                 <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
                             </t>
-                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_original.value" t-att-title="message"/>
+                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_1920.value" t-att-title="message"/>
                         </div>
                     </t>
                 </templates>

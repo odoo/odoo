@@ -165,21 +165,31 @@ class TestPage(common.TransactionCase):
     def test_cou_page_frontend(self):
         Page = self.env['website.page']
         View = self.env['ir.ui.view']
+        Website = self.env['website']
+
+        website2 = self.env['website'].create({
+            'name': 'My Second Website',
+            'domain': '',
+        })
 
         # currently the view unlink of website.page can't handle views with inherited views
         self.extension_view.unlink()
 
-        self.page_1.with_context(website_id=1).unlink()
+        website_id = 1
+        self.page_1.with_context(website_id=website_id).unlink()
 
         self.assertEqual(bool(self.base_view.exists()), False)
         self.assertEqual(bool(self.page_1.exists()), False)
         # Not COU but deleting a page will delete its menu (cascade)
         self.assertEqual(bool(self.page_1_menu.exists()), False)
 
-        self.assertEqual(Page.search([('url', '=', '/page_1')]).website_id.id, 2)
-        self.assertEqual(View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').id, 2)
+        pages = Page.search([('url', '=', '/page_1')])
+        self.assertEqual(len(pages), Website.search_count([]) - 1, "A specific page for every website should have been created, except for the one from where we deleted the generic one.")
+        self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
+        self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
 
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def test_unpublished_page(self):
         Page = self.env['website.page']
@@ -197,11 +207,11 @@ class Crawler(HttpCase):
         generic_page = Page.create({
             'view_id': base_view.id,
             'url': '/page_1',
-            'website_published': True,
+            'is_published': True,
         })
 
         specific_page = generic_page.copy({'website_id': self.env['website'].get_current_website().id})
-        specific_page.write({'website_published': False, 'arch': generic_page.arch.replace('I am a generic page', 'I am a specific page')})
+        specific_page.write({'is_published': False, 'arch': generic_page.arch.replace('I am a generic page', 'I am a specific page')})
 
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 and not the generic one as we unpublished the specific one")

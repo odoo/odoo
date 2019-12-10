@@ -12,6 +12,12 @@ class PayUlatamCommon(PaymentAcquirerCommon):
     def setUp(self):
         super(PayUlatamCommon, self).setUp()
         self.payulatam = self.env.ref('payment.payment_acquirer_payulatam')
+        self.payulatam.write({
+            'payulatam_account_id': 'dummy',
+            'payulatam_merchant_id': 'dummy',
+            'payulatam_api_key': 'dummy',
+            'state': 'test',
+        })
 
 
 @tagged('post_install', '-at_install', 'external', '-standard')
@@ -19,7 +25,7 @@ class PayUlatamForm(PayUlatamCommon):
 
     def test_10_payulatam_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        self.assertEqual(self.payulatam.environment, 'test', 'test without test environment')
+        self.assertEqual(self.payulatam.state, 'test', 'test without test environment')
         self.payulatam.write({
             'payulatam_merchant_id': 'dummy',
             'payulatam_account_id': 'dummy',
@@ -71,7 +77,7 @@ class PayUlatamForm(PayUlatamCommon):
             )
 
     def test_20_payulatam_form_management(self):
-        self.assertEqual(self.payulatam.environment, 'test', 'test without test environment')
+        self.assertEqual(self.payulatam.state, 'test', 'test without test environment')
 
         # typical data posted by payulatam after client has successfully paid
         payulatam_post_data = {

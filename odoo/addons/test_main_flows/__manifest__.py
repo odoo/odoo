@@ -10,7 +10,7 @@ It will install some main apps and will try to execute the most important action
 """,
     'depends': ['web_tour', 'crm', 'sale_timesheet', 'purchase_stock', 'mrp', 'account'],
     'data': [
-        'views/templates.xml',
+        'views/assets.xml',
     ],
     'installable': True,
     'post_init_hook': '_auto_install_enterprise_dependencies',

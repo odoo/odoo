@@ -60,6 +60,7 @@ var NotificationService = AbstractService.extend({
      * @param {function} [params.Notification] javascript class of a notification
      *   to instantiate by default use 'web.Notification'
      * @param {string} params.title notification title
+     * @param {string} params.subtitle notification subtitle
      * @param {string} params.message notification main message
      * @param {string} params.type 'notification' or 'warning'
      * @param {boolean} [params.sticky=false] if true, the notification will stay

@@ -20,19 +20,26 @@
         'mail',
         'resource',
         'web',
+        'mail_bot',
     ],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'wizard/hr_plan_wizard_views.xml',
         'wizard/hr_departure_wizard_views.xml',
+        'views/hr_job_views.xml',
+        'views/hr_plan_views.xml',
+        'views/hr_employee_category_views.xml',
+        'views/hr_employee_public_views.xml',
+        'report/hr_employee_badge.xml',
+        'views/hr_employee_views.xml',
+        'views/hr_department_views.xml',
         'views/hr_views.xml',
         'views/hr_templates.xml',
         'views/res_config_settings_views.xml',
         'views/mail_channel_views.xml',
         'views/res_users.xml',
         'data/hr_data.xml',
-        'report/hr_employee_badge.xml'
     ],
     'demo': [
         'data/hr_demo.xml'

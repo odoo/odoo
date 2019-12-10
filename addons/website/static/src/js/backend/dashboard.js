@@ -133,6 +133,12 @@ var Dashboard = AbstractAction.extend({
         }).open();
     },
 
+    on_go_to_website: function (ev) {
+        ev.preventDefault();
+        var website = _.findWhere(this.websites, {selected: true});
+        window.location.href = $.param.querystring(website.domain + '/', {'fw': website.id});
+    },
+
     on_save_ga_client_id: function(ga_client_id, ga_analytics_key) {
         var self = this;
         return this._rpc({
@@ -185,7 +191,7 @@ var Dashboard = AbstractAction.extend({
             };
         });
 
-        var ctx = document.getElementById(chart_id);
+        var ctx = this.$canvas[0];
         this.chart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -393,10 +399,14 @@ var Dashboard = AbstractAction.extend({
                 self.on_website_button($(ev.target).data('website-id'));
             });
         }
+
+        var $buttons = $(QWeb.render("website.GoToButtons"));
+        $buttons.on('click', this.on_go_to_website.bind(this));
+
         this.updateControlPanel({
             cp_content: {
                 $searchview: this.$searchview,
-                $buttons: QWeb.render("website.GoToButtons"),
+                $buttons: $buttons,
             },
         });
     },

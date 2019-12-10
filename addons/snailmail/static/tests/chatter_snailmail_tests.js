@@ -25,7 +25,7 @@ QUnit.module('Chatter', {
     before: function () {
         this.services = mailTestUtils.getMailServices();
         this.data = {
-            'account.invoice': {
+            'account.move': {
                 fields: {
                     display_name: { string: "Displayed name", type: "char" },
                     foo: {string: "Foo", type: "char", default: "My little Foo Value"},
@@ -88,7 +88,7 @@ QUnit.module('Chatter', {
                     author_id: ["1", "John Doe"],
                     body: 'Message Body',
                     date: "2018-12-11 12:34:00",
-                    model: 'account.invoice',
+                    model: 'account.move',
                     res_id: 1,
                     message_type: 'snailmail',
                 }],
@@ -113,7 +113,7 @@ QUnit.test('Sent', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -127,7 +127,7 @@ QUnit.test('Sent', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_sent'), 'mouseenter');
+    await testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_sent'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-check').length,
@@ -148,7 +148,7 @@ QUnit.test('Canceled', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -162,7 +162,7 @@ QUnit.test('Canceled', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_canceled'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_canceled'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-trash-o').length,
@@ -184,7 +184,7 @@ QUnit.test('Pending', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -198,7 +198,7 @@ QUnit.test('Pending', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_pending'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_pending'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-clock-o').length,
@@ -220,7 +220,7 @@ QUnit.test('No Price Available', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -241,7 +241,7 @@ QUnit.test('No Price Available', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_no_price_available'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_no_price_available'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
@@ -280,7 +280,7 @@ QUnit.test('Format Error', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -301,7 +301,7 @@ QUnit.test('Format Error', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_format_error'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_format_error'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
@@ -324,7 +324,7 @@ QUnit.test('Credit Error', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -350,7 +350,7 @@ QUnit.test('Credit Error', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_credit_error'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_credit_error'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
@@ -392,7 +392,7 @@ QUnit.test('Trial Error', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -418,7 +418,7 @@ QUnit.test('Trial Error', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_trial_error'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_trial_error'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
@@ -467,7 +467,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -487,7 +487,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
     assert.containsNone(form, '.o_thread_tooltip_snailmail',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_missing_required_fields'), 'mouseenter');
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_missing_required_fields'), 'mouseover');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
     assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,

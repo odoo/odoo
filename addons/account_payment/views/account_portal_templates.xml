@@ -7,8 +7,8 @@
             <td class="text-center">
                 <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
-                <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
-                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
+                <a t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
+                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
@@ -16,16 +16,16 @@
         <xpath expr="//t[@t-foreach='invoices']/tr/td[hasclass('tx_status')]" position="replace">
             <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
             <td class="tx_status text-center">
-                <t t-if="invoice.state == 'open' and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.acquirer_id.provider in ('transfer', 'manual')))">
+                <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.acquirer_id.provider in ('transfer', 'manual')))">
                     <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                 </t>
-                <t t-if="invoice.state == 'open' and last_tx.state == 'authorized'">
+                <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
                     <span class="badge badge-pill badge-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
                 </t>
-                <t t-if="invoice.state == 'open' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
+                <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
                   <span class="badge badge-pill badge-warning"><span class="d-none d-md-inline"> Pending</span></span>
                 </t>
-                <t t-if="invoice.state == 'paid' or last_tx.state == 'done'">
+                <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'paid' or last_tx.state == 'done'">
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
@@ -36,9 +36,9 @@
     </template>
 
     <template id="portal_invoice_payment" name="Invoice Payment">
-        <div class="row" t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
+        <div class="row" t-if="not tx_ids and invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and invoice.amount_total" id="portal_pay">
             <div class="modal fade" id="pay_with" role="dialog">
-                <div class="modal-dialog modal-content">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title">Pay with</h3>
@@ -48,7 +48,7 @@
                             <div t-if="pms or acquirers" id="payment_method" class="text-left col-md-13">
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
-                                    <t t-set="partner_id" t-value="request.env.user.partner_id.id"/>
+                                    <t t-set="partner_id" t-value="invoice.partner_id.id if request.env.user._is_public() else request.env.user.partner_id.id"/>
                                     <t t-set="success_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="error_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="access_token" t-value="access_token or ''"/>
@@ -71,14 +71,14 @@
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
             <div>
-                <a href="#" t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
+                <a href="#" t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
                     class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
-                <div t-if="tx_ids and not pending_manual_txs and invoice.state != 'paid'" class="alert alert-info py-1 mb-2" >
+                <div t-if="tx_ids and not pending_manual_txs and invoice.invoice_payment_state != 'paid'" class="alert alert-info py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Pending
                 </div>
-                <div t-if="invoice.state == 'paid'" class="alert alert-success py-1 mb-2" >
+                <div t-if="invoice.invoice_payment_state == 'paid'" class="alert alert-success py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Paid
                 </div>
             </div>
@@ -87,11 +87,11 @@
             <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.payment_confirmation_status">
                     <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
-                    <t t-set="reference" t-value="invoice.reference"/>
+                    <t t-set="reference" t-value="invoice.invoice_payment_ref"/>
                 </t>
             </div>
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
-            <div t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
+            <div t-if="not tx_ids and invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and invoice.amount_total" id="portal_pay">
                 <div t-if="pms or acquirers" id="payment_method">
                     <t t-call="account_payment.portal_invoice_payment"/>
                 </div>
@@ -132,12 +132,11 @@
             <t t-if="success == 'pay_invoice'">
                 <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
-                <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-                <div t-if="payment_tx_id.acquirer_id.post_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.reference">
-                    <b>Communication: </b><span t-esc='invoice.reference'/>
+                <div t-if="payment_tx_id.acquirer_id.pending_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.ref">
+                    <b>Communication: </b><span t-esc='invoice.ref'/>
                 </div>
             </t>
-            <t t-if="success == 'pay_invoice' and invoice.state == 'paid'">
+            <t t-if="success == 'pay_invoice' and invoice.invoice_payment_state == 'paid'">
                 Done, your online payment has been successfully processed. Thank you for your order.
             </t>
         </xpath>

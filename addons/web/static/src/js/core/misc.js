@@ -2,9 +2,9 @@ odoo.define('web.framework', function (require) {
 "use strict";
 
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
+var disableCrashManager = require('web.CrashManager').disable;
 
 var _t = core._t;
 
@@ -101,7 +101,7 @@ function unblockUI() {
  */
 function redirect (url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
-    crash_manager.disable();
+    disableCrashManager();
 
     var load = function() {
         var old = "" + window.location;
@@ -175,6 +175,17 @@ function logout() {
     return new Promise();
 }
 core.action_registry.add("logout", logout);
+
+/**
+ * @param {ActionManager} parent
+ * @param {Object} action
+ * @param {Object} action.params notification params
+ * @see ServiceMixin.displayNotification
+ */
+function displayNotification(parent, action) {
+    parent.displayNotification(action.params);
+}
+core.action_registry.add("display_notification", displayNotification);
 
 /**
  * Client action to refresh the session context (making sure

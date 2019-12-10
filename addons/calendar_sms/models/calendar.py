@@ -11,8 +11,8 @@ _logger = logging.getLogger(__name__)
 class CalendarEvent(models.Model):
     _inherit = 'calendar.event'
 
-    def _get_default_sms_recipients(self):
-        """ Method overriden from mail.thread (defined in the sms module).
+    def _sms_get_default_partners(self):
+        """ Method overridden from mail.thread (defined in the sms module).
             SMS text messages will be sent to attendees that haven't declined the event(s).
         """
         return self.mapped('attendee_ids').filtered(lambda att: att.state != 'declined').mapped('partner_id')
@@ -20,9 +20,12 @@ class CalendarEvent(models.Model):
     def _do_sms_reminder(self):
         """ Send an SMS text reminder to attendees that haven't declined the event """
         for event in self:
-            sms_msg = _("Event reminder: %s on %s.") % (event.name, event.start_datetime or event.start_date)
-            note_msg = _('SMS text message reminder sent !')
-            event.message_post_send_sms(sms_msg, note_msg=note_msg)
+            event._message_sms_with_template(
+                template_xmlid='calendar_sms.sms_template_data_calendar_reminder',
+                template_fallback=_("Event reminder: %s, %s.") % (event.name, event.display_time),
+                partner_ids=self._sms_get_default_partners().ids,
+                put_in_queue=False
+            )
 
 
 class CalendarAlarm(models.Model):
@@ -36,7 +39,7 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def get_next_mail(self):
-        """ Cron method, overriden here to send SMS reminders as well
+        """ Cron method, overridden here to send SMS reminders as well
         """
         result = super(AlarmManager, self).get_next_mail()
         now = fields.Datetime.to_string(fields.Datetime.now())
@@ -52,7 +55,7 @@ class AlarmManager(models.AbstractModel):
         }
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
-        events_data = self.get_next_potential_limit_alarm('sms', seconds=cron_interval)
+        events_data = self._get_next_potential_limit_alarm('sms', seconds=cron_interval)
 
         for event in self.env['calendar.event'].browse(events_data):
             max_delta = events_data[event.id]['max_duration']

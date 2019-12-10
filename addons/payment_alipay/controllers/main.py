@@ -40,7 +40,7 @@ class AlipayController(http.Controller):
             'partner': alipay.alipay_merchant_partner_id,
             'notify_id': post['notify_id']
         }
-        response = requests.post(alipay._get_alipay_urls(alipay.environment), val)
+        response = requests.post(alipay.alipay_get_form_action_url(), val)
         response.raise_for_status()
         _logger.info('Validate alipay Notification %s' % response.text)
         # After program is executed, the page must print “success” (without quote). If not, Alipay server would keep re-sending notification, until over 24 hour 22 minutes Generally, there are 8 notifications within 25 hours (Frequency: 2m,10m,15m,1h,2h,6h,15h)
@@ -49,14 +49,14 @@ class AlipayController(http.Controller):
             return 'success'
         return ""
 
-    @http.route('/payment/alipay/return', type='http', auth="none", methods=['GET', 'POST'])
+    @http.route('/payment/alipay/return', type='http', auth="public", methods=['GET', 'POST'])
     def alipay_return(self, **post):
         """ Alipay return """
         _logger.info('Beginning Alipay form_feedback with post data %s', pprint.pformat(post))
         self._alipay_validate_data(**post)
         return werkzeug.utils.redirect('/payment/process')
 
-    @http.route('/payment/alipay/notify', type='http', auth='none', methods=['POST'], csrf=False)
+    @http.route('/payment/alipay/notify', type='http', auth='public', methods=['POST'], csrf=False)
     def alipay_notify(self, **post):
         """ Alipay Notify """
         _logger.info('Beginning Alipay notification form_feedback with post data %s', pprint.pformat(post))

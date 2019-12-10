@@ -47,7 +47,15 @@ class StockQuant(SavepointCase):
             'type': 'product',
             'tracking': 'serial',
         })
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.stock_location = cls.env['stock.location'].create({
+            'name': 'stock_location',
+            'usage': 'internal',
+        })
+        cls.stock_subloc2 = cls.env['stock.location'].create({
+            'name': 'subloc2',
+            'usage': 'internal',
+            'location_id': cls.stock_location.id,
+        })
 
     def gather_relevant(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
@@ -136,6 +144,7 @@ class StockQuant(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.quant'].create({
             'product_id': self.product_lot.id,
@@ -163,7 +172,7 @@ class StockQuant(SavepointCase):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        self.env = self.env(user=self.env.ref('base.user_demo'))
+        self.env = self.env(user=self.demo_user)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 1.0)
 
     def test_increase_available_quantity_1(self):
@@ -191,8 +200,10 @@ class StockQuant(SavepointCase):
         the reserved quanntity for the same product.
         """
         quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
+        if not quant:
+            self.skipTest('Cannot test concurrent transactions without demo data.')
         product = quant.product_id
-        available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location)
+        available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True)
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
         with closing(self.registry.cursor()) as cr:
@@ -201,13 +212,13 @@ class StockQuant(SavepointCase):
             cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
             self.env['stock.quant']._update_available_quantity(product, self.stock_location, 1.0)
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location), available_quantity + 1)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True), available_quantity + 1)
         self.assertEqual(len(self.gather_relevant(product, self.stock_location, strict=True)), 2)
 
     def test_increase_available_quantity_4(self):
         """ Increase the available quantity when no quants are already in a location with a user without access right.
         """
-        self.env = self.env(user=self.env.ref('base.user_demo'))
+        self.env = self.env(user=self.demo_user)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
 
     def test_increase_available_quantity_5(self):
@@ -246,6 +257,7 @@ class StockQuant(SavepointCase):
         """ Setting a location's usage as "view" should be forbidden if it already
         contains quant.
         """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
         self.assertTrue(len(self.stock_location.quant_ids.ids) > 0)
         with self.assertRaises(UserError):
             self.stock_location.usage = 'view'
@@ -277,8 +289,10 @@ class StockQuant(SavepointCase):
         the reserved quanntity for the same product.
         """
         quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
+        if not quant:
+            self.skipTest('Cannot test concurrent transactions without demo data.')
         product = quant.product_id
-        available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location)
+        available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True)
 
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
@@ -286,7 +300,7 @@ class StockQuant(SavepointCase):
             cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quant.ids)
             self.env['stock.quant']._update_available_quantity(product, self.stock_location, -1.0)
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location), available_quantity - 1)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True), available_quantity - 1)
         self.assertEqual(len(self.gather_relevant(product, self.stock_location, strict=True)), 2)
 
     def test_decrease_available_quantity_4(self):
@@ -439,6 +453,7 @@ class StockQuant(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
         })
 
         # add one tracked, one untracked
@@ -485,9 +500,9 @@ class StockQuant(SavepointCase):
                 'quantity': 1.0,
             })
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).write({'quantity': 2.0})
+            quant.with_user(self.demo_user).write({'quantity': 2.0})
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).unlink()
+            quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
         with self.assertRaises(AccessError):
@@ -497,9 +512,9 @@ class StockQuant(SavepointCase):
                 'quantity': 1.0,
             })
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).write({'quantity': 2.0})
+            quant.with_user(self.demo_user).write({'quantity': 2.0})
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).unlink()
+            quant.with_user(self.demo_user).unlink()
 
     def test_in_date_1(self):
         """ Check that no incoming date is set when updating the quantity of an untracked quant.
@@ -525,6 +540,7 @@ class StockQuant(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
         })
         quantity, in_date = self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot1)
         self.assertEqual(quantity, 1)
@@ -537,10 +553,12 @@ class StockQuant(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.production.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
         })
         in_date_lot1 = datetime.now()
         in_date_lot2 = datetime.now() - timedelta(days=5)
@@ -561,10 +579,12 @@ class StockQuant(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.production.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
         })
         in_date_lot1 = datetime.now()
         in_date_lot2 = datetime.now() - timedelta(days=5)
@@ -579,8 +599,14 @@ class StockQuant(SavepointCase):
     def test_in_date_4b(self):
         """ Check for LIFO and max with/without in_date that it handles the LIFO NULLS LAST well
         """
-        stock_location1 = self.env.ref('stock.stock_location_components')
-        stock_location2 = self.env.ref('stock.stock_location_14')
+        stock_location1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': self.stock_location.id
+        })
+        stock_location2 = self.env['stock.location'].create({
+            'name': 'Shelf 2',
+            'location_id': self.stock_location.id
+        })
         lifo_strategy = self.env['product.removal'].search([('method', '=', 'lifo')])
         self.stock_location.removal_strategy_id = lifo_strategy
 
@@ -605,6 +631,7 @@ class StockQuant(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
         })
 
         from odoo.fields import Datetime

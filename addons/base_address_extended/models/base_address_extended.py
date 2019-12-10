@@ -42,7 +42,6 @@ class Partner(models.Model):
         Overwrite this function if you want to add your own fields."""
         return STREET_FIELDS
 
-    @api.multi
     def _set_street(self):
         """Updates the street field.
         Writes the `street` field on the partners when one of the sub-fields in STREET_FIELDS
@@ -121,7 +120,6 @@ class Partner(models.Model):
         return vals
 
 
-    @api.multi
     @api.depends('street')
     def _split_street(self):
         """Splits street value into sub-fields.
@@ -140,6 +138,8 @@ class Partner(models.Model):
             # assign the values to the fields
             for k, v in vals.items():
                 partner[k] = v
+            for k in set(street_fields) - set(vals):
+                partner[k] = None
 
     def write(self, vals):
         res = super(Partner, self).write(vals)
@@ -152,11 +152,11 @@ class Company(models.Model):
     _inherit = 'res.company'
 
     street_name = fields.Char('Street Name', compute='_compute_address',
-                              inverse='_inverse_street_name')
+                              inverse='_inverse_street')
     street_number = fields.Char('House Number', compute='_compute_address',
-                                inverse='_inverse_street_number')
+                                inverse='_inverse_street')
     street_number2 = fields.Char('Door Number', compute='_compute_address',
-                                 inverse='_inverse_street_number2')
+                                 inverse='_inverse_street')
 
     def _get_company_address_fields(self, partner):
         address_fields = super(Company, self)._get_company_address_fields(partner)
@@ -167,14 +167,10 @@ class Company(models.Model):
         })
         return address_fields
 
-    def _inverse_street_name(self):
+    def _inverse_street(self):
         for company in self:
-            company.partner_id.street_name = company.street_name
-
-    def _inverse_street_number(self):
-        for company in self:
-            company.partner_id.street_number = company.street_number
-
-    def _inverse_street_number2(self):
-        for company in self:
-            company.partner_id.street_number2 = company.street_number2
+            company.partner_id.write({
+                'street_name': company.street_name,
+                'street_number': company.street_number,
+                'street_number2': company.street_number2
+            })

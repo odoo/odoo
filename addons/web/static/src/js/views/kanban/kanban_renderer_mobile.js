@@ -5,7 +5,6 @@ odoo.define('web.KanbanRendererMobile', function (require) {
  * The purpose of this file is to improve the UX of grouped kanban views in
  * mobile. It includes the KanbanRenderer (in mobile only) to only display one
  * column full width, and enables the swipe to browse to the other columns.
- * Moreover, records in columns are lazy-loaded.
  */
 
 var config = require('web.config');
@@ -20,8 +19,12 @@ if (!config.device.isMobile) {
 }
 
 KanbanRenderer.include({
+    custom_events: _.extend({}, KanbanRenderer.prototype.custom_events || {}, {
+        quick_create_column_created: '_onColumnAdded',
+    }),
     events: _.extend({}, KanbanRenderer.prototype.events, {
         'click .o_kanban_mobile_tab': '_onMobileTabClicked',
+        'click .o_kanban_mobile_add_column': '_onMobileQuickCreateClicked',
     }),
     ANIMATE: true, // allows to disable animations for the tests
     /**
@@ -74,12 +77,18 @@ KanbanRenderer.include({
 
     /**
      * Displays the quick create record in the active column
+     * override to open quick create record in current active column
      *
+     * @override
      * @returns {Promise}
      */
     addQuickCreate: function () {
+        if(this._canCreateColumn() && !this.quickCreate.folded) {
+            this._onMobileQuickCreateClicked();
+        }
         return this.widgets[this.activeColumnIndex].addQuickCreate();
     },
+
     /**
      * Overrides to restore the left property and the scrollTop on the updated
      * column, and to enable the swipe handlers
@@ -87,22 +96,27 @@ KanbanRenderer.include({
      * @override
      */
     updateColumn: function (localID) {
-        var self = this;
         var index = _.findIndex(this.widgets, {db_id: localID});
         var $column = this.widgets[index].$el;
-        var left = $column.css('left');
         var scrollTop = $column.scrollTop();
-        return this._super.apply(this, arguments).then(function () {
-            $column = self.widgets[index].$el;
-            $column.css({left: left});
-            $column.scrollTop(scrollTop); // required when clicking on 'Load More'
-            self._enableSwipe();
-        });
+        return this._super.apply(this, arguments)
+            .then(() => this._layoutUpdate(false))
+            // required when clicking on 'Load More'
+            .then(() => $column.scrollTop(scrollTop));
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Check if we use the quick create on mobile
+     * @returns {boolean}
+     * @private
+     */
+    _canCreateColumn: function() {
+        return this.quickCreateEnabled && this.quickCreate && this.widgets.length;
+    },
 
     /**
      * Update the columns positions
@@ -112,24 +126,28 @@ KanbanRenderer.include({
      */
     _computeColumnPosition: function (animate) {
         if (this.widgets.length) {
-            var self = this;
-            var moveToIndex = this.activeColumnIndex;
-            var updateFunc = animate ? 'animate' : 'css';
-            _.each(this.widgets, function (column, index) {
-                var columnID = column.id || column.db_id;
-                var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
-                if (index === moveToIndex - 1) {
-                    $column[updateFunc]({left: '-100%'});
-                } else if (index === moveToIndex + 1) {
-                    $column[updateFunc]({left: '100%'});
-                } else if (index === moveToIndex) {
-                    $column[updateFunc]({left: '0%'});
-                } else if (index < moveToIndex) {
-                    $column.css({left: '-100%'});
-                } else if (index > moveToIndex) {
-                    $column.css({left: '100%'});
-                }
-            });
+            // check rtl to compute correct css value
+            const rtl = _t.database.parameters.direction === 'rtl';
+
+            // display all o_kanban_group
+            this.$('.o_kanban_group').show();
+
+            const $columnAfter = this._toNode(this.widgets.filter((widget, index) => index > this.activeColumnIndex));
+            const promiseAfter = this._updateColumnCss($columnAfter, rtl ? {right: '100%'} : {left: '100%'}, animate);
+
+            const $columnBefore = this._toNode(this.widgets.filter((widget, index) => index < this.activeColumnIndex));
+            const promiseBefore = this._updateColumnCss($columnBefore, rtl ? {right: '-100%'} : {left: '-100%'}, animate);
+
+            const $columnCurrent = this._toNode(this.widgets.filter((widget, index) => index === this.activeColumnIndex));
+            const promiseCurrent = this._updateColumnCss($columnCurrent, rtl ? {right: '0%'} : {left: '0%'}, animate);
+
+            promiseAfter
+                .then(promiseBefore)
+                .then(promiseCurrent)
+                .then(() => {
+                    $columnAfter.hide();
+                    $columnBefore.hide();
+                });
         }
     },
 
@@ -184,6 +202,7 @@ KanbanRenderer.include({
                 }
             }
             // Apply the scroll x on the tabs
+            // XXX in case of RTL, should we use scrollRight?
             this.$('.o_kanban_mobile_tabs').scrollLeft(scrollToLeft);
         }
     },
@@ -202,7 +221,7 @@ KanbanRenderer.include({
             }, 0);
             // Apply a space around between child if the parent length is higher then the sum of the child width
             var $tabs = this.$('.o_kanban_mobile_tabs');
-            $tabs.toggleClass('justify-content-around', $tabs.outerWidth() >= widthChilds);
+            $tabs.toggleClass('justify-content-between', $tabs.outerWidth() >= widthChilds);
         }
     },
 
@@ -213,16 +232,17 @@ KanbanRenderer.include({
      */
     _enableSwipe: function () {
         var self = this;
+        var step = _t.database.parameters.direction === 'rtl' ? -1 : 1;
         this.$el.swipe({
             excludedElements: ".o_kanban_mobile_tabs",
             swipeLeft: function () {
-                var moveToIndex = self.activeColumnIndex + 1;
+                var moveToIndex = self.activeColumnIndex + step;
                 if (moveToIndex < self.widgets.length) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
             },
             swipeRight: function () {
-                var moveToIndex = self.activeColumnIndex - 1;
+                var moveToIndex = self.activeColumnIndex - step;
                 if (moveToIndex > -1) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
@@ -264,31 +284,36 @@ KanbanRenderer.include({
      *   and displayed
      */
     _moveToGroup: function (moveToIndex, animate) {
-        var self = this;
         if (moveToIndex < 0 || moveToIndex >= this.widgets.length) {
             this._layoutUpdate(animate);
             return Promise.resolve();
         }
         this.activeColumnIndex = moveToIndex;
         var column = this.widgets[this.activeColumnIndex];
-        return new Promise(function (resolve) {
-            self.trigger_up('kanban_load_records', {
-                columnID: column.db_id,
-                onSuccess: function () {
-                    self._layoutUpdate(animate);
-                    resolve();
-                },
+        if (column.data.isOpen) {
+            this._layoutUpdate(animate);
+        } else {
+            // Unfold column and fetch records
+            this.trigger_up('column_toggle_fold', {
+                db_id: column.db_id,
+                onSuccess: () => this._layoutUpdate(animate)
             });
-        });
+        }
+        this._enableSwipe();
+        return Promise.resolve();
     },
-
+    /**
+     * override to avoid display of example background
+     */
+    _renderExampleBackground: function () {},
     /**
      * @override
      * @private
      */
     _renderGrouped: function (fragment) {
         var self = this;
-        this._super.apply(this, arguments);
+        var newFragment = document.createDocumentFragment();
+        this._super.apply(this, [newFragment]);
         this.defs.push(Promise.all(this.defs).then(function () {
             var data = [];
             _.each(self.state.data, function (group) {
@@ -300,8 +325,13 @@ KanbanRenderer.include({
                 }
             });
 
+            var kanbanColumnContainer = document.createElement('div');
+            kanbanColumnContainer.classList.add('o_kanban_columns_content');
+            kanbanColumnContainer.appendChild(newFragment);
+            fragment.appendChild(kanbanColumnContainer);
             $(qweb.render('KanbanView.MobileTabs', {
                 data: data,
+                quickCreateEnabled: self._canCreateColumn()
             })).prependTo(fragment);
         }));
     },
@@ -316,8 +346,45 @@ KanbanRenderer.include({
             if (self.state.groupedBy.length) {
                 // force first column for kanban view, because the groupedBy can be changed
                 return self._moveToGroup(0);
+            } else {
+                if(self._canCreateColumn()) {
+                    self._onMobileQuickCreateClicked();
+                }
+                return Promise.resolve();
             }
         });
+    },
+
+    /**
+     * Retrieve the Jquery node (.o_kanban_group) for a list of a given widgets
+     *
+     * @private
+     * @param widgets
+     * @returns {jQuery} the matching .o_kanban_group widgets
+     */
+    _toNode: function (widgets) {
+        const selectorCss = widgets
+            .map(widget => '.o_kanban_group[data-id="' + (widget.id || widget.db_id) + '"]')
+            .join(', ');
+        return this.$(selectorCss);
+    },
+
+    /**
+     * Update the given column to the updated positions
+     *
+     * @private
+     * @param $column The jquery column
+     * @param cssProperties Use to update column
+     * @param {boolean} [animate=false] set to true to animate
+     * @return {Promise}
+     */
+    _updateColumnCss: function ($column, cssProperties, animate) {
+        if (animate) {
+            return new Promise(resolve => $column.animate(cssProperties, 'fast', resolve));
+        } else {
+            $column.css(cssProperties);
+            return Promise.resolve();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -326,9 +393,29 @@ KanbanRenderer.include({
 
     /**
      * @private
+     */
+    _onColumnAdded: function () {
+        this._computeTabPosition();
+        if(this._canCreateColumn() && !this.quickCreate.folded) {
+            this.quickCreate.toggleFold();
+        }
+    },
+
+    /**
+     * @private
+     */
+    _onMobileQuickCreateClicked: function() {
+        this.$('.o_kanban_group').toggle();
+        this.quickCreate.toggleFold();
+    },
+    /**
+     * @private
      * @param {MouseEvent} event
      */
     _onMobileTabClicked: function (event) {
+        if(this._canCreateColumn() && !this.quickCreate.folded) {
+            this.quickCreate.toggleFold();
+        }
         this._moveToGroup($(event.currentTarget).index(), true);
     },
 });

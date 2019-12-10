@@ -37,7 +37,7 @@ class FetchmailServer(models.Model):
         ('pop', 'POP Server'),
         ('imap', 'IMAP Server'),
         ('local', 'Local Server'),
-    ], string='Server Type', index=True, required=True, default='pop', oldname='type')
+    ], string='Server Type', index=True, required=True, default='pop')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                      "If not enabled, incoming emails will be stripped of any attachments before being processed", default=True)
@@ -84,24 +84,20 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         self._update_cron()
         return res
 
-    @api.multi
     def write(self, values):
         res = super(FetchmailServer, self).write(values)
         self._update_cron()
         return res
 
-    @api.multi
     def unlink(self):
         res = super(FetchmailServer, self).unlink()
         self._update_cron()
         return res
 
-    @api.multi
     def set_draft(self):
         self.write({'state': 'draft'})
         return True
 
-    @api.multi
     def connect(self):
         self.ensure_one()
         if self.server_type == 'imap':
@@ -123,7 +119,6 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
-    @api.multi
     def button_confirm_login(self):
         for server in self:
             try:
@@ -149,7 +144,6 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         """ Method called by cron to fetch mails from servers """
         return self.search([('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])]).fetch_mail()
 
-    @api.multi
     def fetch_mail(self):
         """ WARNING: meant for cron usage only - will commit() after each email! """
         additionnal_context = {
@@ -159,7 +153,6 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         for server in self:
             _logger.info('start checking for new emails on %s server %s', server.server_type, server.name)
             additionnal_context['default_fetchmail_server_id'] = server.id
-            additionnal_context['server_type'] = server.server_type
             count, failed = 0, 0
             imap_server = None
             pop_server = None

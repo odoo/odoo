@@ -1,6 +1,7 @@
 odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
+var AbstractField = require('web.AbstractField');
 var fieldRegistry = require('web.field_registry');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
@@ -176,6 +177,20 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID;
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         // check archive/restore all actions in kanban header's config dropdown
@@ -219,6 +234,20 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID;
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         // check archive/restore all actions in kanban header's config dropdown
@@ -1008,7 +1037,7 @@ QUnit.module('Views', {
             keyCode: $.ui.keyCode.ENTER,
             which: $.ui.keyCode.ENTER,
         };
-        testUtils.fields.editAndTrigger(
+        await testUtils.fields.editAndTrigger(
             kanban.$('.o_kanban_quick_create').find('input[name=foo]'),
             'new partner',
             ['input', $.Event('keydown', enterEvent), $.Event('keydown', enterEvent)]
@@ -1161,7 +1190,7 @@ QUnit.module('Views', {
             which: $.ui.keyCode.ENTER,
         };
 
-        testUtils.fields.editAndTrigger(
+        await testUtils.fields.editAndTrigger(
             kanban.$('.o_kanban_quick_create').find('input[name=foo]'),
             'new partner',
             ['input', $.Event('keydown', enterEvent), $.Event('keydown', enterEvent)]
@@ -2351,6 +2380,7 @@ QUnit.module('Views', {
                     throw new Error("should not switch view");
                 },
             },
+            doNotDisableAHref: true,
         });
 
         var $record = kanban.$('.o_kanban_record:not(.o_kanban_ghost)');
@@ -2363,10 +2393,6 @@ QUnit.module('Views', {
         assert.ok(!!$testLink[0].href,
             "link inside kanban record should have non-empty href");
 
-        // Mocked views prevent accessing a link with href. This is intented
-        // most of the time, but not in this test which specifically needs to
-        // let the browser access a link with href.
-        kanban.$el.off('click', 'a');
         // Prevent the browser default behaviour when clicking on anything.
         // This includes clicking on a `<a>` with `href`, so that it does not
         // change the URL in the address bar.
@@ -2767,6 +2793,42 @@ QUnit.module('Views', {
                         "Should remain same records in first column(2 records)");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
                         "Should remain same records in 2nd column(2 record)");
+        kanban.destroy();
+    });
+
+    QUnit.test('completely prevent drag and drop if records_draggable set to false', async function (assert) {
+        assert.expect(6);
+
+        var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" records_draggable="false">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // testing initial state
+        assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2);
+        assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 2);
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
+
+        // attempt to drag&drop a record in another column
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group, {withTrailingClick: true});
+
+        // should not drag&drop record
+        assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2,
+            "First column should still contain 2 records");
+        assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 2,
+            "Second column should still contain 2 records");
+        assert.deepEqual(kanban.exportState().resIds, envIDs, "Records should not have moved");
+
         kanban.destroy();
     });
 
@@ -3355,14 +3417,16 @@ QUnit.module('Views', {
     QUnit.test('quick create column and examples', async function (assert) {
         assert.expect(12);
 
-        kanbanExamplesRegistry.add('test', [{
-            name: "A first example",
-            columns: ["Column 1", "Column 2", "Column 3"],
-            description: "Some description",
-        }, {
-            name: "A second example",
-            columns: ["Col 1", "Col 2"],
-        }]);
+        kanbanExamplesRegistry.add('test', {
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
 
         var kanban = await createView({
             View: KanbanView,
@@ -3413,6 +3477,78 @@ QUnit.module('Views', {
             "column titles should be correct");
         assert.strictEqual($secondPane.find('.o_kanban_examples_description').text().trim(),
             "", "there should be no description for the second example");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create column and examples background with ghostColumns titles', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        kanbanExamplesRegistry.add('test', {
+            ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban examples="test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_example_background',
+            "should have ExamplesBackground when no data");
+        assert.strictEqual(kanban.$('.o_kanban_examples_group h6').text(), 'Ghost 1Ghost 2Ghost 3Ghost 4',
+            "ghost title should be correct");
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+        assert.containsOnce(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should not have a link to see examples as there is no examples registered");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create column and examples background without ghostColumns titles', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_example_background',
+            "should have ExamplesBackground when no data");
+        assert.strictEqual(kanban.$('.o_kanban_examples_group h6').text(), 'Column 1Column 2Column 3Column 4',
+            "ghost title should be correct");
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+        assert.containsNone(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should not have a link to see examples as there is no examples registered");
 
         kanban.destroy();
     });
@@ -4493,6 +4629,60 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+    QUnit.test('subwidgets with on_attach_callback when changing record color', async function (assert) {
+        assert.expect(3);
+
+        var counter = 0;
+        var MyTestWidget = AbstractField.extend({
+            on_attach_callback: function () {
+                counter++;
+            },
+        });
+        fieldRegistry.add('test_widget', MyTestWidget);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'category',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="color"/>' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div color="color">' +
+                                    '<div class="o_dropdown_kanban dropdown">' +
+                                        '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                            '<span class="fa fa-bars fa-lg"/>' +
+                                        '</a>' +
+                                        '<ul class="dropdown-menu" role="menu">' +
+                                            '<li>' +
+                                                '<ul class="oe_kanban_colorpicker"/>' +
+                                            '</li>' +
+                                        '</ul>' +
+                                    '</div>' +
+                                '<field name="name" widget="test_widget"/>' +
+                                '</div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+        });
+
+        // counter should be 2 as there are 2 records
+        assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
+
+        // set a color to kanban record
+        var $firstRecord = kanban.$('.o_kanban_record:first()');
+        testUtils.kanban.toggleRecordDropdown($firstRecord);
+        await testUtils.dom.click($firstRecord.find('.oe_kanban_colorpicker a.oe_kanban_color_9'));
+
+        // first record has replaced its $el with a new one
+        $firstRecord = kanban.$('.o_kanban_record:first()');
+        assert.hasClass($firstRecord, 'oe_kanban_color_9');
+        assert.strictEqual(counter, 3, "on_attach_callback method should be called 3 times");
+
+        delete fieldRegistry.map.test_widget;
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars properly work', async function (assert) {
         assert.expect(2);
 
@@ -4519,6 +4709,78 @@ QUnit.module('Views', {
 
         assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side').last().text()), 36,
             "counter should display the sum of int_field values");
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars: "false" bar is clickable', async function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records.push({id: 5, bar: true, foo: false, product_id: 5, state: "ghi"});
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "4");
+        assert.containsN(kanban, '.o_kanban_counter_progress:last .progress-bar', 4);
+        assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
+            "should have false kanban color");
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'bg-muted-full');
+
+        await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
+
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "1");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars: "false" bar with sum_field', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records.push({id: 5, bar: true, foo: false, int_field: 15, product_id: 5, state: "ghi"});
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="foo"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "51");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
+
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "15");
+
         kanban.destroy();
     });
 
@@ -4673,6 +4935,20 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID;
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "36",
@@ -4716,6 +4992,20 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID;
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.deepEqual(kanban.exportState().resIds, [1, 2, 3, 4]);
@@ -5652,6 +5942,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('click on image field in kanban with oe_kanban_global_click', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div class="oe_kanban_global_click">' +
+                                '<field name="image" widget="image"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            mockRPC: function (route) {
+                if (route.startsWith('data:image')) {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                switch_view: function (event) {
+                    assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        await testUtils.dom.click(kanban.$('.o_field_image').first());
+
+        kanban.destroy();
+    });
 });
 
 });

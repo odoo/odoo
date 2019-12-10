@@ -4,7 +4,6 @@
     <record id="mail_activity_type_action_config_fleet" model="ir.actions.act_window">
         <field name="name">Activity Types</field>
         <field name="res_model">mail.activity.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'fleet.vehicle.log.contract')]</field>
         <field name="context">{'default_res_model': 'fleet.vehicle.log.contract'}</field>

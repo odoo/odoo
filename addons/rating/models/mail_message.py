@@ -7,10 +7,11 @@ from odoo import api, fields, models
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    rating_ids = fields.One2many('rating.rating', 'message_id', string='Related ratings')
-    rating_value = fields.Float("Rating Value", compute='_compute_rating_value', store=False, search='_search_rating_value')
+    rating_ids = fields.One2many('rating.rating', 'message_id', groups='base.group_user', string='Related ratings')
+    rating_value = fields.Float(
+        'Rating Value', compute='_compute_rating_value', compute_sudo=True,
+        store=False, search='_search_rating_value')
 
-    @api.multi
     @api.depends('rating_ids', 'rating_ids.rating')
     def _compute_rating_value(self):
         ratings = self.env['rating.rating'].search([('message_id', 'in', self.ids), ('consumed', '=', True)], order='create_date DESC')
@@ -18,6 +19,5 @@ class MailMessage(models.Model):
         for message in self:
             message.rating_value = mapping.get(message.id, 0.0)
 
-    @api.multi
     def _search_rating_value(self, operator, operand):
         return [('rating_ids.rating', operator, operand)]

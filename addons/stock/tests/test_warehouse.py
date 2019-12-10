@@ -2,9 +2,16 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
+from odoo.exceptions import AccessError
+from odoo.tools import mute_logger
 
 
 class TestWarehouse(TestStockCommon):
+
+    def setUp(self):
+        super(TestWarehouse, self).setUp()
+        self.partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+
     def test_inventory_product(self):
         self.product_1.type = 'product'
         product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -12,7 +19,7 @@ class TestWarehouse(TestStockCommon):
             'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
+        inventory = self.env['stock.inventory'].with_user(self.user_stock_manager).create({
             'name': 'Starting for product_1',
             'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
             'product_ids': [(4, self.product_1.id)],
@@ -45,11 +52,51 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
 
+    def test_inventory_wizard_as_manager(self):
+        """ Using the "Update Quantity" wizard as stock manager.
+        """
+        self.product_1.type = 'product'
+        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_manager)
+        inventory_wizard = InventoryWizard.create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'new_quantity': 50.0,
+        })
+        inventory_wizard.change_product_qty()
+        # Check quantity was updated
+        self.assertEqual(self.product_1.virtual_available, 50.0)
+        self.assertEqual(self.product_1.qty_available, 50.0)
+
+        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
+        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
+        self.assertEqual(len(quant), 2)
+
+    def test_inventory_wizard_as_user(self):
+        """ Using the "Update Quantity" wizard as stock user.
+        """
+        self.product_1.type = 'product'
+        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_user)
+        inventory_wizard = InventoryWizard.create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'new_quantity': 50.0,
+        })
+        # User has no right on quant, must raise an AccessError
+        with self.assertRaises(AccessError):
+            inventory_wizard.change_product_qty()
+        # Check quantity wasn't updated
+        self.assertEqual(self.product_1.virtual_available, 0.0)
+        self.assertEqual(self.product_1.qty_available, 0.0)
+
+        # Check associated quants: 0 quant expected
+        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
+        self.assertEqual(len(quant), 0)
+
     def test_basic_move(self):
-        product = self.product_3.sudo(self.user_stock_manager)
+        product = self.product_3.with_user(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': self.warehouse_1.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -110,7 +157,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -126,7 +173,7 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_lines.quantity_done = 1
-        picking_out.action_done()
+        picking_out._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quant), 1)
@@ -139,7 +186,7 @@ class TestWarehouse(TestStockCommon):
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
         return_pick.move_lines.quantity_done = 1
-        return_pick.action_done()
+        return_pick._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(sum(quant.mapped('quantity')), 0)
@@ -153,7 +200,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -169,7 +216,7 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_lines.quantity_done = 1
-        picking_out.action_done()
+        picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
@@ -238,7 +285,7 @@ class TestWarehouse(TestStockCommon):
         })
 
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -318,7 +365,7 @@ class TestWarehouse(TestStockCommon):
         # Create the move for the shop Namur. Should create a resupply from
         # distribution warehouse Namur.
         picking_out_namur = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_namur.lot_stock_id.id,
             'location_dest_id': customer_location.id,
@@ -342,17 +389,17 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
         picking_stock_transit.move_lines[0].quantity_done = 1.0
-        picking_stock_transit.action_done()
+        picking_stock_transit._action_done()
 
         picking_transit_shop_namur = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_namur.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_namur)
         picking_transit_shop_namur.action_assign()
         picking_transit_shop_namur.move_lines[0].quantity_done = 1.0
-        picking_transit_shop_namur.action_done()
+        picking_transit_shop_namur._action_done()
 
         picking_out_namur.action_assign()
         picking_out_namur.move_lines[0].quantity_done = 1.0
-        picking_out_namur.action_done()
+        picking_out_namur._action_done()
 
         # Check that the correct quantity has been provided to customer
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 1)
@@ -362,7 +409,7 @@ class TestWarehouse(TestStockCommon):
         # Create the move for the shop Wavre. Should create a resupply from
         # distribution warehouse Wavre.
         picking_out_wavre = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
             'location_dest_id': customer_location.id,
@@ -386,22 +433,46 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
         picking_stock_transit.move_lines[0].quantity_done = 1.0
-        picking_stock_transit.action_done()
+        picking_stock_transit._action_done()
 
         picking_transit_shop_wavre = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_wavre.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_wavre)
         picking_transit_shop_wavre.action_assign()
         picking_transit_shop_wavre.move_lines[0].quantity_done = 1.0
-        picking_transit_shop_wavre.action_done()
+        picking_transit_shop_wavre._action_done()
 
         picking_out_wavre.action_assign()
         picking_out_wavre.move_lines[0].quantity_done = 1.0
-        picking_out_wavre.action_done()
+        picking_out_wavre._action_done()
 
         # Check that the correct quantity has been provided to customer
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
+
+    def test_noleak(self):
+        # non-regression test to avoid company_id leaking to other warehouses (see blame)
+        partner = self.env['res.partner'].create({'name': 'Chicago partner'})
+        company = self.env['res.company'].create({
+            'name': 'My Company (Chicago)1',
+            'currency_id': self.ref('base.USD')
+        })
+        self.env['stock.warehouse'].create({
+            'name': 'Chicago Warehouse2',
+            'company_id': company.id,
+            'code': 'Chic2',
+            'partner_id': partner.id
+        })
+        wh = self.env["stock.warehouse"].search([])
+
+        assert len(set(wh.mapped("company_id.id"))) > 1
+
+        companies_before = wh.mapped(lambda w: (w.id, w.company_id))
+        # writing on any field should change the company of warehouses
+        wh.write({"name": "whatever"})
+        companies_after = wh.mapped(lambda w: (w.id, w.company_id))
+
+        self.assertEqual(companies_after, companies_before)
 
     def test_toggle_active_warehouse_1(self):
         """ Basic test that create a warehouse with classic configuration.

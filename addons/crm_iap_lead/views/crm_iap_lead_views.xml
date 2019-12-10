@@ -43,20 +43,20 @@
                         </div>
                     </span>
                     <group>
-                        <group string="Request">
+                        <group name="requests" string="Request">
                             <field name="lead_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="search_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="error" attrs="{'invisible': [('state', '!=', 'error')]}"/>
                         </group>
-                        <group string="Lead Information">
+                        <group name="lead_info" string="Lead Information">
                             <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="team_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="team_id" attrs="{'readonly': [('state', '!=', 'draft')]}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                             <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="tag_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
                     <group>
-                        <group string="Companies">
+                        <group name="companies" string="Companies">
                             <field name="filter_on_size" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
                             <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
@@ -68,9 +68,9 @@
                             </div>
                             <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
                             <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])], 'readonly': [('state', '!=', 'draft')]}" domain="[('country_id', 'in', country_ids)]" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="technology_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
                         </group>
-                        <group string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                        <group name="contacts" string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
                             <field name="contact_number" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('search_type', '=', 'people')]}"/>
                             <field name="contact_filter_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="preferred_role_id"
@@ -91,6 +91,7 @@
                                 <span attrs="{'invisible': [('search_type', '!=', 'people')]}">
                                     <field name="lead_contacts_credits"/>
                                     <br/>
+                                    <field name="lead_total_credits"/>
                                 </span>
                             </div>
                         </div>
@@ -123,7 +124,7 @@
                 <field name="team_id"/>
                 <field name="user_id"/>
                 <field name="tag_ids" widget="many2many_tags"/>
-                <field name="state"/>
+                <field name="state" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -156,7 +157,6 @@
         <field name="name">Lead Mining Requests</field>
         <field name="res_model">crm.iap.lead.mining.request</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_type">form</field>
     </record>
 
     <!-- This menu is display in CRM app when crm_iap_lead is installed-->

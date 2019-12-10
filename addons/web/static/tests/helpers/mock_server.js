@@ -85,7 +85,7 @@ var MockServer = Class.extend({
             throw new Error('Model ' + model + ' was not defined in mock server data');
         }
         var fields = $.extend(true, {}, this.data[model].fields);
-        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
+        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context || {});
         if (toolbar) {
             fvg.toolbar = toolbar;
         }
@@ -214,6 +214,17 @@ var MockServer = Class.extend({
 
         var inTreeView = (doc.tagName === 'tree');
 
+        // mock _postprocess_access_rights
+        const isBaseModel = !context.base_model_name || (model === context.base_model_name);
+        var views = ['kanban', 'tree', 'form', 'gantt', 'activity'];
+        if (isBaseModel && views.indexOf(doc.tagName) !== -1) {
+            for (let action of ['create', 'delete', 'edit', 'write']) {
+                if (!doc.getAttribute(action) && action in context && !context[action]) {
+                    doc.setAttribute(action, 'false');
+                }
+            }
+        }
+
         this._traverse(doc, function (node) {
             if (node.nodeType === Node.TEXT_NODE) {
                 return false;
@@ -315,10 +326,12 @@ var MockServer = Class.extend({
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
                 _.each(node.childNodes, function (children) {
-                    relModel = field.relation;
-                    relFields = $.extend(true, {}, self.data[relModel].fields);
-                    field.views[children.tagName] = self._fieldsViewGet(children, relModel,
-                        relFields, context);
+                    if (children.tagName) { // skip text nodes
+                        relModel = field.relation;
+                        relFields = $.extend(true, {}, self.data[relModel].fields);
+                        field.views[children.tagName] = self._fieldsViewGet(children, relModel,
+                            relFields, _.extend({}, context, {base_model_name: model}));
+                    }
                 });
             }
 
@@ -338,9 +351,9 @@ var MockServer = Class.extend({
             node._isProcessed = true;
             // postprocess simulation
             field.views.groupby = self._fieldsViewGet(node, relModel, relFields, context);
-            node.childNodes.forEach(function (child) {
-                node.removeChild(child);
-            });
+            while (node.firstChild) {
+                node.removeChild(node.firstChild);
+            }
         });
 
         var xmlSerializer = new XMLSerializer();
@@ -382,6 +395,24 @@ var MockServer = Class.extend({
         }
 
         if (domain.length) {
+            // 'child_of' operator isn't supported by domain.js, so we replace
+            // in by the 'in' operator (with the ids of children)
+            domain = domain.map(function (criterion) {
+                if (criterion[1] === 'child_of') {
+                    var oldLength = 0;
+                    var childIDs = [criterion[2]];
+                    while (childIDs.length > oldLength) {
+                        oldLength = childIDs.length;
+                        _.each(records, function (r) {
+                            if (childIDs.indexOf(r.parent_id) >= 0) {
+                                childIDs.push(r.id);
+                            }
+                        });
+                    }
+                    criterion = [criterion[0], 'in', childIDs];
+                }
+                return criterion;
+            });
             records = _.filter(records, function (record) {
                 var fieldValues = _.mapObject(record, function (value) {
                     return value instanceof Array ? value[0] : value;
@@ -644,7 +675,7 @@ var MockServer = Class.extend({
             var viewID = view_descr[0] || false;
             var viewType = view_descr[1];
             if (!viewID) {
-                var contextKey = viewType + '_view_ref';
+                var contextKey = (viewType === 'list' ? 'tree' : viewType) + '_view_ref';
                 if (contextKey in kwargs.context) {
                     viewID = kwargs.context[contextKey];
                 }
@@ -922,7 +953,7 @@ var MockServer = Class.extend({
                 if (fields[fieldName].type === 'date') {
                     value += formatValue(groupByField, record[fieldName]);
                 } else {
-                    value += record[groupByField];
+                    value += JSON.stringify(record[groupByField]);
                 }
             });
             return value;
@@ -956,7 +987,7 @@ var MockServer = Class.extend({
                     res[groupByField] = val;
                 }
 
-                if (field.type === 'date') {
+                if (field.type === 'date' && val) {
                     var aggregateFunction = groupByField.split(':')[1];
                     var startDate, endDate;
                     if (aggregateFunction === 'day') {
@@ -1123,7 +1154,7 @@ var MockServer = Class.extend({
     _mockSearchReadController: function (args) {
         var self = this;
         var records = this._getRecords(args.model, args.domain || []);
-        var fields = args.fields || _.keys(this.data[args.model].fields);
+        var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
         records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);

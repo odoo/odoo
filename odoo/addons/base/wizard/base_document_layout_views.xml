@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_base_document_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">base.document.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="company_id" invisible="1"/>
+                            <field name="external_report_layout_id" invisible="1" />
+                            <field name="custom_colors" invisible="1" />
+                            <field name="logo_primary_color" invisible="1" />
+                            <field name="logo_secondary_color" invisible="1" />
+                            <field name="report_layout_id" widget="radio" string="Layout" class="mb-4" />
+                            <field name="logo" widget="image" class="mb-4" />
+                            <label for="primary_color" string="Colors" />
+                            <div class="o_document_layout_colors">
+                                <field name="primary_color" widget="color" class="mb-4" />
+                                <field name="secondary_color" widget="color" class="mb-4" />
+                                <button class="btn btn-link" title="Reset to logo colors" attrs="{'invisible': [('custom_colors', '=', False)]}">
+                                    <label for="custom_colors" class="fa fa-refresh mb-4" string="" />
+                                </button>
+                            </div>
+                            <field name="font" widget="font" class="mb-4" />
+                            <field name="report_header" widget="char" placeholder="e.g. Global Business Solutions" />
+                            <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
+                            <field name="paperformat_id" />
+                        </group>
+                        <div class="o_document_layout_preview">
+                            <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
+                            <field name="preview" widget="html" class="o_document_layout_preview_html" />
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Save" class="btn-primary" type="object" name="document_layout_save"/>
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_base_document_layout_configurator" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Configure your document layout</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="res_model">base.document.layout</field>
+            <field name="view_id" ref="base.view_base_document_layout"/>
+        </record>
+
+    <!-- this template is used by the BaseDocumentLayout wizard to display a live preview of a dummy report -->
+    <template id="layout_preview" name="layout preview">
+        <!-- compute some layout specific variables -->
+        <t t-set="footer_color" t-value="'black'" />
+        <t t-set="table_border_color" t-value="'black'" />
+
+        <t t-if="company.report_layout_id.name == 'Background'"><t t-set="footer_color" t-value="company.secondary_color" /></t>
+        <t t-if="company.report_layout_id.name in ['Background', 'Clean']"><t t-set="table_border_color" t-value="company.secondary_color" /></t>
+        <t t-if="company.report_layout_id.name != 'Standard'"><t t-set="footer_border_color" t-value="company.secondary_color" /></t>
+
+        <div t-attf-class="page o_preview_layout o_preview_{{company.report_layout_id.name.lower()}}_layout" t-attf-style="font-family: {{company.font}};">
+            <div class="header">
+                <h2 t-attf-style="color: {{company.primary_color}}">Invoice INV/2019/0005</h2>
+                <div class="row o_layout_information">
+                    <div class="col-auto">
+                        <strong>
+                            <span t-attf-style="color: {{company.secondary_color}}">Invoice Date:</span>
+                        </strong>
+                        <p>02/05/2019</p>
+                    </div>
+                    <div class="col-auto">
+                        <strong>
+                            <span t-attf-style="color: {{company.secondary_color}}">Payment Terms:</span>
+                        </strong>
+                        <p>End of the month</p>
+                    </div>
+                    <div class="col-auto">
+                        <strong>
+                            <span t-attf-style="color: {{company.secondary_color}}">Source:</span>
+                        </strong>
+                        <p>SO022</p>
+                    </div>
+                </div>
+            </div>
+            <div class="article">
+                <table class="table table-sm" t-attf-style="border-color: {{table_border_color}}">
+                    <thead>
+                        <tr t-attf-style="color: {{company.secondary_color}}">
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>[SKU001] Server</td>
+                            <td>2.000</td>
+                            <td>190.00</td>
+                            <!-- fallback to white when browser does not support RRGGBBAA notation -->
+                            <td t-if="company.report_layout_id.name == 'Boxed'" class="o_price_total"
+                                t-attf-style="background-color: white;background-color: {{company.secondary_color}}19;">$ 380.00</td>
+                            <td t-else="" class="o_price_total">$ 380.00</td>
+                        </tr>
+                        <tr>
+                            <td>[SKU002] Computer</td>
+                            <td>1.000</td>
+                            <td>1250.00</td>
+                            <!-- fallback to white when browser does not support RRGGBBAA notation -->
+                            <td t-if="company.report_layout_id.name == 'Boxed'" class="o_price_total"
+                                t-attf-style="background-color: white;background-color: {{company.secondary_color}}19;">$ 1250.00</td>
+                            <td t-else="" class="o_price_total">$ 1250.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="clearfix">
+                    <div class="row">
+                        <div t-attf-class="col-5 ml-auto">
+                            <table class="table table-sm"  t-attf-style="border-color: {{table_border_color}}">
+                                <tr class="o_subtotal">
+                                    <td>
+                                        <strong t-if="company.report_layout_id.name == 'Clean'" t-attf-style="color: {{company.secondary_color}}">Subtotal</strong>
+                                        <strong t-else="" t-attf-style="color: {{company.primary_color}}">Subtotal</strong>
+                                    </td>
+                                    <td>
+                                        <span>$ 1630.00</span>
+                                    </td>
+                                </tr>
+                                <tr class="o_total">
+                                    <t t-if="company.report_layout_id.name == 'Boxed'">
+                                        <!-- fallback to primary color when browser does not support RRGGBBAA notation -->
+                                        <td t-attf-style="background-color: {{company.primary_color}};background-color: {{company.primary_color}}D0;">
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td t-attf-style="background-color: {{company.primary_color}};background-color: {{company.primary_color}}D0;">
+                                            <span>$ 1630.00</span>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td>
+                                            <strong t-if="company.report_layout_id.name == 'Clean'" t-attf-style="color: {{company.secondary_color}}">Total</strong>
+                                            <strong t-else="" t-attf-style="color: {{company.primary_color}}">Total</strong>
+                                        </td>
+                                        <td>
+                                            <span>$ 1630.00</span>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-attf-class="footer" t-attf-style="color: {{footer_color}}; border-color: {{footer_border_color}}">
+                <div class="text-center">
+                    <ul class="list-inline mb4">
+                        <li class="list-inline-item">+1 (650) 691-3277</li>
+                        <li class="list-inline-item">info@example.com</li>
+                        <li class="list-inline-item">example.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+    </data>
+</odoo>
+

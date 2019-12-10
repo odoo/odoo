@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- Create draft refund for invoice 3 -->
+    <record id="demo_refund_invoice_3" model="account.move.reversal">
+        <field name="reason">Mercadería defectuosa</field>
+        <field name="refund_method">refund</field>
+        <field name="move_id" ref="demo_invoice_3"/>
+    </record>
+
+        <function model="account.move.reversal" name="_onchange_move_id"
+           eval="[ref('demo_refund_invoice_3')]" context="{'active_ids': [ref('demo_invoice_3')], 'active_model': 'account.move'}"/>
+
+        <function model="account.move.reversal" name="reverse_moves"
+           eval="[ref('demo_refund_invoice_3')]" context="{'active_ids': [ref('demo_invoice_3')], 'active_model': 'account.move'}"/>
+
+    <!-- Create draft refund for invoice 4 -->
+    <record id="demo_refund_invoice_4" model="account.move.reversal">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_id" ref="demo_invoice_4"/>
+    </record>
+
+        <function model="account.move.reversal" name="_onchange_move_id"
+           eval="[ref('demo_refund_invoice_4')]" context="{'active_ids': [ref('demo_invoice_4')], 'active_model': 'account.move'}"/>
+
+        <function model="account.move.reversal" name="reverse_moves"
+           eval="[ref('demo_refund_invoice_4')]" context="{'active_ids': [ref('demo_invoice_4')], 'active_model': 'account.move'}"/>
+
+    <!-- Create cancel refund for expo invoice 16 (las nc/nd expo invoice no requiere parametro permiso existennte, por eso agregamos este ejemplo) -->
+    <record id="demo_refund_invoice_16" model="account.move.reversal">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_id" ref="demo_invoice_16"/>
+    </record>
+
+        <function model="account.move.reversal" name="_onchange_move_id"
+           eval="[ref('demo_refund_invoice_16')]" context="{'active_ids': [ref('demo_invoice_16')], 'active_model': 'account.move'}"/>
+
+        <function model="account.move.reversal" name="reverse_moves"
+           eval="[ref('demo_refund_invoice_16')]" context="{'active_ids': [ref('demo_invoice_16')], 'active_model': 'account.move'}"/>
+
+</odoo>

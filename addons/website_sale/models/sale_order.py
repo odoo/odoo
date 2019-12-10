@@ -29,18 +29,17 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
-    @api.one
+    @api.depends('order_line')
     def _compute_website_order_line(self):
-        self.website_order_line = self.order_line
+        for order in self:
+            order.website_order_line = order.order_line
 
-    @api.multi
-    @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
+    @api.depends('order_line.product_uom_qty', 'order_line.product_id')
     def _compute_cart_info(self):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
-    @api.multi
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
         for order in self:
@@ -70,7 +69,6 @@ class SaleOrder(models.Model):
             return abandoned_domain
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
-    @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         """Find the cart line matching the given parameters.
 
@@ -91,14 +89,8 @@ class SaleOrder(models.Model):
         else:
             domain += [('product_custom_attribute_value_ids', '=', False)]
 
-        lines = self.env['sale.order.line'].sudo().search(domain)
+        return self.env['sale.order.line'].sudo().search(domain)
 
-        if line_id:
-            return lines
-
-        return self.env['sale.order.line']
-
-    @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
@@ -109,7 +101,7 @@ class SaleOrder(models.Model):
             'date': order.date_order,
             'pricelist': order.pricelist_id.id,
         })
-        product = self.env['product.product'].with_context(product_context).browse(product_id)
+        product = self.env['product.product'].with_context(product_context).with_company(order.company_id.id).browse(product_id)
         discount = 0
 
         if order.pricelist_id.discount_policy == 'without_discount':
@@ -144,13 +136,15 @@ class SaleOrder(models.Model):
             'discount': discount,
         }
 
-    @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         product_context = dict(self.env.context)
         product_context.setdefault('lang', self.sudo().partner_id.lang)
         SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
+        # change lang to get correct name of attributes/values
+        product_with_context = self.env['product.product'].with_context(product_context)
+        product = product_with_context.browse(int(product_id))
 
         try:
             if add_qty:
@@ -172,9 +166,6 @@ class SaleOrder(models.Model):
 
         # Create line if no line with product_id can be located
         if not order_line:
-            # change lang to get correct name of attributes/values
-            product = self.env['product.product'].with_context(product_context).browse(int(product_id))
-
             if not product:
                 raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
@@ -200,8 +191,6 @@ class SaleOrder(models.Model):
             for ptav in combination.filtered(lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values):
                 no_variant_attribute_values.append({
                     'value': ptav.id,
-                    'attribute_name': ptav.attribute_id.name,
-                    'attribute_value_name': ptav.name,
                 })
 
             # save no_variant attributes values
@@ -212,29 +201,23 @@ class SaleOrder(models.Model):
 
             # add is_custom attribute values that were not received
             custom_values = kwargs.get('product_custom_attribute_values') or []
-            received_custom_values = product.env['product.attribute.value'].browse([int(ptav['attribute_value_id']) for ptav in custom_values])
+            received_custom_values = product.env['product.template.attribute.value'].browse([int(ptav['custom_product_template_attribute_value_id']) for ptav in custom_values])
 
-            for ptav in combination.filtered(lambda ptav: ptav.is_custom and ptav.product_attribute_value_id not in received_custom_values):
+            for ptav in combination.filtered(lambda ptav: ptav.is_custom and ptav not in received_custom_values):
                 custom_values.append({
-                    'attribute_value_id': ptav.product_attribute_value_id.id,
-                    'attribute_value_name': ptav.name,
+                    'custom_product_template_attribute_value_id': ptav.id,
                     'custom_value': '',
                 })
 
             # save is_custom attributes values
             if custom_values:
                 values['product_custom_attribute_value_ids'] = [(0, 0, {
-                    'attribute_value_id': custom_value['attribute_value_id'],
+                    'custom_product_template_attribute_value_id': custom_value['custom_product_template_attribute_value_id'],
                     'custom_value': custom_value['custom_value']
                 }) for custom_value in custom_values]
 
             # create the line
             order_line = SaleOrderLineSudo.create(values)
-            # Generate the description with everything. This is done after
-            # creating because the following related fields have to be set:
-            # - product_no_variant_attribute_value_ids
-            # - product_custom_attribute_value_ids
-            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
 
             try:
                 order_line._compute_tax_id()
@@ -252,11 +235,16 @@ class SaleOrder(models.Model):
 
         # Remove zero of negative lines
         if quantity <= 0:
+            linked_line = order_line.linked_line_id
             order_line.unlink()
+            if linked_line:
+                # update description of the parent
+                linked_product = product_with_context.browse(linked_line.product_id.id)
+                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
-            values = self.with_context(no_variant_attributes_price_extra=no_variant_attributes_price_extra)._website_product_id_change(self.id, product_id, qty=quantity)
+            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 order = self.sudo().browse(self.id)
                 product_context.update({
@@ -265,7 +253,8 @@ class SaleOrder(models.Model):
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
                 })
-                product = self.env['product.product'].with_context(product_context).browse(product_id)
+                product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
+                product = product_with_context.browse(product_id)
                 values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
                     order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
@@ -280,13 +269,17 @@ class SaleOrder(models.Model):
                 linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
                 order_line.write({
                     'linked_line_id': linked_line.id,
-                    'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
                 })
-                linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
+                linked_product = product_with_context.browse(linked_line.product_id.id)
+                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
+            # Generate the description with everything. This is done after
+            # creating because the following related fields have to be set:
+            # - product_no_variant_attribute_value_ids
+            # - product_custom_attribute_value_ids
+            # - linked_line_id
+            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
 
         option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
-        for option_line_id in option_lines:
-            self._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
 
         return {'line_id': order_line.id, 'quantity': quantity, 'option_ids': list(set(option_lines.ids))}
 
@@ -305,21 +298,15 @@ class SaleOrder(models.Model):
 
             return random.sample(accessory_products, len(accessory_products))
 
-    @api.multi
     def action_recovery_email_send(self):
         for order in self:
             order._portal_ensure_token()
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
-        try:
-            default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
-            default_template_id = default_template.id if default_template else False
-            template_id = (self.filtered('website_id') == self and
-                           self.mapped('website_id')[-1:1].cart_recovery_mail_template_id.id) or default_template_id
-        except:
-            template_id = False
+
+        template_id = self._get_cart_recovery_template().id
+
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'view_id': composer_form_view_id,
@@ -335,12 +322,31 @@ class SaleOrder(models.Model):
             },
         }
 
-    @api.multi
-    def get_base_url(self):
-        """When using multi-website, we want the user to be redirected to the
-        most appropriate website if possible."""
-        res = super(SaleOrder, self).get_base_url()
-        return self.website_id and self.website_id._get_http_domain() or res
+    def _get_cart_recovery_template(self):
+        """
+        Return the cart recovery template record for a set of orders.
+        If they all belong to the same website, we return the website-specific template;
+        otherwise we return the default template.
+        If the default is not found, the empty ['mail.template'] is returned.
+        """
+        websites = self.mapped('website_id')
+        template = websites.cart_recovery_mail_template_id if len(websites) == 1 else False
+        template = template or self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
+        return template or self.env['mail.template']
+
+    def _cart_recovery_email_send(self):
+        """Send the cart recovery email on the current recordset,
+        making sure that the portal token exists to avoid broken links, and marking the email as sent.
+        Similar method to action_recovery_email_send, made to be called in automated actions.
+        Contrary to the former, it will use the website-specific template for each order."""
+        sent_orders = self.env['sale.order']
+        for order in self:
+            template = order._get_cart_recovery_template()
+            if template:
+                order._portal_ensure_token()
+                template.send_mail(order.id)
+                sent_orders |= order
+        sent_orders.write({'cart_recovery_email_sent': True})
 
 
 class SaleOrderLine(models.Model):
@@ -351,7 +357,14 @@ class SaleOrderLine(models.Model):
     linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
-    @api.multi
+    def get_sale_order_line_multiline_description_sale(self, product):
+        description = super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+        if self.linked_line_id:
+            description += "\n" + _("Option for: %s") % self.linked_line_id.product_id.display_name
+        if self.option_line_ids:
+            description += "\n" + '\n'.join([_("Option: %s") % option_line.product_id.display_name for option_line in self.option_line_ids])
+        return description
+
     @api.depends('product_id.display_name')
     def _compute_name_short(self):
         """ Compute a short name for this sale order line, to be used on the website where we don't have much space.

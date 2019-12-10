@@ -21,7 +21,7 @@ class ResCompany(models.Model):
         ('paypal', 'PayPal'),
         ('stripe', 'Stripe'),
         ('other', 'Pay with another payment acquirer'),
-        ('manual', 'Wire Transfer'),
+        ('manual', 'Manual Payment'),
     ], string="Sale onboarding selected payment method")
 
     @api.model
@@ -86,12 +86,6 @@ class ResCompany(models.Model):
         }
         return action
 
-    @api.multi
-    def action_save_onboarding_quotation_layout(self):
-        """ Set the onboarding step as done """
-        if bool(self.logo) and self.logo != self._get_logo():
-            self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
-
     def get_and_update_sale_quotation_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
@@ -102,12 +96,5 @@ class ResCompany(models.Model):
             'sale_onboarding_sample_quotation_state',
         ]
         return self.get_and_update_onbarding_state('sale_quotation_onboarding_state', steps)
-
-    @api.model
-    def action_open_sale_onboarding_quotation_layout(self):
-        """ Onboarding step for the quotation layout. """
-        action = self.env.ref('sale.action_open_sale_onboarding_quotation_layout').read()[0]
-        action['res_id'] = self.env.company.id
-        return action
 
     _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]

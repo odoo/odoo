@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
+    </record>
+
     <record id="hr_contract_admin" model="hr.contract">
         <field name="name">Mitchell Admin Contract</field>
         <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
@@ -11,6 +15,7 @@
             eval="obj().env.ref('hr.employee_admin').department_id.id"/>
         <field eval="7540.0" name="wage"/>
         <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_al" model="hr.contract">
@@ -23,6 +28,7 @@
             eval="obj().env.ref('hr.employee_al').department_id.id"/>
         <field eval="4000.0" name="wage"/>
         <field name="state">open</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_mit" model="hr.contract">
@@ -35,6 +41,7 @@
             eval="obj().env.ref('hr.employee_mit').department_id.id"/>
         <field eval="4500.0" name="wage"/>
         <field name="state">open</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_stw" model="hr.contract">
@@ -48,6 +55,7 @@
             eval="obj().env.ref('hr.employee_stw').department_id.id"/>
         <field eval="4500.0" name="wage"/>
         <field name="state">open</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_qdp" model="hr.contract">
@@ -60,6 +68,7 @@
             eval="obj().env.ref('hr.employee_qdp').department_id.id"/>
         <field eval="3750.0" name="wage"/>
         <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_han" model="hr.contract">
@@ -72,6 +81,7 @@
             eval="obj().env.ref('hr.employee_han').department_id.id"/>
         <field eval="4600.0" name="wage"/>
         <field name="state">open</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_niv" model="hr.contract">
@@ -85,6 +95,7 @@
             eval="obj().env.ref('hr.employee_niv').department_id.id"/>
         <field eval="4000.0" name="wage"/>
         <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_jth" model="hr.contract">
@@ -98,6 +109,7 @@
             eval="obj().env.ref('hr.employee_jth').department_id.id"/>
         <field eval="4200.0" name="wage"/>
         <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_chs" model="hr.contract">
@@ -110,6 +122,7 @@
             eval="obj().env.ref('hr.employee_chs').department_id.id"/>
         <field eval="3750.0" name="wage"/>
         <field name="state">cancel</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_jve" model="hr.contract">
@@ -122,6 +135,7 @@
             eval="obj().env.ref('hr.employee_jve').department_id.id"/>
         <field eval="3950.0" name="wage"/>
         <field name="state">cancel</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_fme" model="hr.contract">
@@ -134,7 +148,8 @@
         <field name="department_id" model="hr.department"
             eval="obj().env.ref('hr.employee_fme').department_id.id"/>
         <field eval="3650.0" name="wage"/>
-        <field name="state">pending</field>
+        <field name="state">open</field>
+        <field name="kanban_state">blocked</field>
     </record>
 
     <record id="hr_contract_fpi" model="hr.contract">
@@ -148,6 +163,7 @@
             eval="obj().env.ref('hr.employee_fpi').department_id.id"/>
         <field eval="3750.0" name="wage"/>
         <field name="state">close</field>
+        <field name="kanban_state">normal</field>
     </record>
 
     <record id="hr_contract_vad" model="hr.contract">
@@ -161,6 +177,7 @@
             eval="obj().env.ref('hr.employee_vad').department_id.id"/>
         <field eval="3750.0" name="wage"/>
         <field name="state">close</field>
+        <field name="kanban_state">normal</field>
     </record>
 
 </odoo>

@@ -7,7 +7,15 @@ from odoo import api, models
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    @api.multi
+    def _sale_can_be_reinvoice(self):
+        """ determine if the generated analytic line should be reinvoiced or not.
+            For Expense flow, if the product has a 'reinvoice policy' and a Sales Order is set on the expense, then we will reinvoice the AAL
+        """
+        self.ensure_one()
+        if self.expense_id:  # expense flow is different from vendor bill reinvoice flow
+            return self.expense_id.product_id.expense_policy in ['sales_price', 'cost'] and self.expense_id.sale_order_id
+        return super(AccountMoveLine, self)._sale_can_be_reinvoice()
+
     def _sale_determine_order(self):
         """ For move lines created from expense, we override the normal behavior.
             Note: if no SO but an AA is given on the expense, we will determine anyway the SO from the AA, using the same
@@ -17,8 +25,7 @@ class AccountMoveLine(models.Model):
 
         mapping_from_expense = {}
         for move_line in self.filtered(lambda move_line: move_line.expense_id):
-            if move_line.expense_id.sale_order_id:
-                mapping_from_expense[move_line.id] = move_line.expense_id.sale_order_id or None
+            mapping_from_expense[move_line.id] = move_line.expense_id.sale_order_id or None
 
         mapping_from_invoice.update(mapping_from_expense)
         return mapping_from_invoice

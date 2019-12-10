@@ -8,7 +8,6 @@ odoo.define('web.ReportActionManager', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var framework = require('web.framework');
 var session = require('web.session');
 
@@ -52,10 +51,11 @@ ActionManager.include({
                 url: '/report/download',
                 data: {
                     data: JSON.stringify([url, type]),
+                    context: JSON.stringify(session.user_context),
                 },
                 success: resolve,
-                error: function () {
-                    crash_manager.rpc_error.apply(crash_manager, arguments);
+                error: (error) => {
+                    self.call('crash_manager', 'rpc_error', error);
                     reject();
                 },
                 complete: framework.unblockUI,

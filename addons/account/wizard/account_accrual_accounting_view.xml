@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_accrual_accounting_wizard_form_view" model="ir.ui.view">
+            <field name="name">account.accrual.accounting.wizard.form</field>
+            <field name="model">account.accrual.accounting.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="account_type" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="date" string="Recognize on"/>
+                            <field name="expense_accrual_account" string="Accrued Account"
+                                   attrs="{'invisible': [('account_type', '!=', 'expense')], 'required': [('account_type', '=', 'expense')]}"/>
+                            <field name="revenue_accrual_account" string="Accrued Account"
+                                   attrs="{'invisible': [('account_type', '!=', 'income')], 'required': [('account_type', '=', 'income')]}"/>
+                        </group>
+                        <group>
+                            <field name="percentage" string="Percent (%)"/>
+                            <field name="total_amount" string="Amount"/>
+                            <field name="journal_id"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Create Journal Entry" name="amend_entries" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_accrual_accounting_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Accrual Entry for the expense/revenue recognition</field>
+            <field name="res_model">account.accrual.accounting.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

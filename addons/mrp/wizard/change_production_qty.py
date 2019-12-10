@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_round
 
@@ -11,11 +10,11 @@ class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
     _description = 'Change Production Qty'
 
-    # TDE FIXME: add production_id field
-    mo_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)
+    mo_id = fields.Many2one('mrp.production', 'Manufacturing Order',
+        required=True, ondelete='cascade')
     product_qty = fields.Float(
         'Quantity To Produce',
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits='Product Unit of Measure', required=True)
 
     @api.model
     def default_get(self, fields):
@@ -36,11 +35,10 @@ class ChangeProductionQty(models.TransientModel):
         modification = {}
         for move in production.move_finished_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             qty = (qty - old_qty) * move.unit_factor
-            modification[move] = (move.product_uom_qty - qty, move.product_uom_qty)
-            move[0].write({'product_uom_qty': move.product_uom_qty - qty})
+            modification[move] = (move.product_uom_qty + qty, move.product_uom_qty)
+            move[0].write({'product_uom_qty': move.product_uom_qty + qty})
         return modification
 
-    @api.multi
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for wizard in self:
@@ -57,15 +55,26 @@ class ChangeProductionQty(models.TransientModel):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             documents = {}
             for line, line_data in lines:
-                move, old_qty, new_qty = production._update_raw_move(line, line_data)
+                if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
+                        line.product_id.type not in ['product', 'consu']:
+                    continue
+                move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
+                if move:
+                    move = move[0]
+                    old_qty = move.product_uom_qty
+                else:
+                    old_qty = 0
                 iterate_key = production._get_document_iterate_key(move)
                 if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP')
+                    document = self.env['stock.picking']._log_activity_get_documents({move: (line_data['qty'], old_qty)}, iterate_key, 'UP')
                     for key, value in document.items():
                         if documents.get(key):
                             documents[key] += [value]
                         else:
                             documents[key] = [value]
+
+                production._update_raw_move(line, line_data)
+
             production._log_manufacture_exception(documents)
             operation_bom_qty = {}
             for bom, bom_data in boms:
@@ -106,7 +115,7 @@ class ChangeProductionQty(models.TransientModel):
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if wo.state not in ('done', 'cancel'):
                     line_values = wo._update_workorder_lines()
-                    self._workorder_line_ids().create(line_values['to_create'])
+                    wo._workorder_line_ids().create(line_values['to_create'])
                     if line_values['to_delete']:
                         line_values['to_delete'].unlink()
                     for line, vals in line_values['to_update'].items():

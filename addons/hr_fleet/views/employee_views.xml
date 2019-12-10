@@ -12,12 +12,17 @@
                 attrs="{'invisible': [('employee_cars_count','=', 0)]}"
                 confirm="This report will contain only PDF files. If you want all documents, please go on vehicle page. Do you want to proceed?"/>
             </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <div name="button_box" position="inside">
                 <button name="action_open_employee_cars" type="object"
                         class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
                         attrs="{'invisible': [('employee_cars_count','=', 0)]}">
                     <field name="employee_cars_count" widget="statinfo" />
                 </button>
+            </div>
+            <xpath expr="//group[@name='identification_group']" position="after">
+                <group string="Fleet">
+                    <field name="mobility_card"/>
+                </group>
             </xpath>
         </field>
     </record>
@@ -36,7 +41,7 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_open_employee_cars" type="object"
-                        class="oe_stat_button" icon="fa-car"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
                         attrs="{'invisible': [('employee_cars_count','=', 0)]}">
                     <field name="employee_cars_count" widget="statinfo" />
                 </button>

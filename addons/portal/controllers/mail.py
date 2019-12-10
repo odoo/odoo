@@ -5,12 +5,13 @@ import werkzeug
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers.main import MailController
-from odoo.exceptions import AccessError
+from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.exceptions import AccessError, MissingError, UserError
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -24,7 +25,7 @@ def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
         raise Forbidden()
 
 
-def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True, **kw):
+def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=False, nosubscribe=True, **kw):
     """ Generic chatter function, allowing to write on *any* object that inherits mail.thread. We
         distinguish 2 cases:
             1/ If a token is specified, all logged in users will be able to write a message regardless
@@ -54,9 +55,9 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
 
     # check if user can post with special token/signed token. The "else" will try to post message with the
     # current user access rights (_mail_post_access use case).
-    if token or (kw.get('hash') and kw.get('pid')):
-        pid = int(kw['pid']) if kw.get('pid') else False
-        if _check_special_access(res_model, res_id, token=token, _hash=kw.get('hash'), pid=pid):
+    if token or (_hash and pid):
+        pid = int(pid) if pid else False
+        if _check_special_access(res_model, res_id, token=token, _hash=_hash, pid=pid):
             record = record.sudo()
         else:
             raise Forbidden()
@@ -74,32 +75,75 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
             if not author_id:
                 raise NotFound()
     # Signed Token Case: author_id is forced
-    elif kw.get('hash') and kw.get('pid'):
-        author_id = kw.get('pid')
+    elif _hash and pid:
+        author_id = pid
 
-    kw.pop('csrf_token', None)
-    kw.pop('attachment_ids', None)
-    kw.pop('hash', None)
-    kw.pop('pid', None)
-    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(
+    email_from = None
+    if author_id and 'email_from' not in kw:
+        partner = request.env['res.partner'].sudo().browse(author_id)
+        email_from = partner.email_formatted if partner.email else None
+
+    message_post_args = dict(
         body=message,
         message_type=kw.pop('message_type', "comment"),
-        subtype=kw.pop('subtype', "mt_comment"),
+        subtype_xmlid=kw.pop('subtype_xmlid', "mail.mt_comment"),
         author_id=author_id,
         **kw
     )
 
+    # This is necessary as mail.message checks the presence
+    # of the key to compute its default email from
+    if email_from:
+        message_post_args['email_from'] = email_from
+
+    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(**message_post_args)
+
 
 class PortalChatter(http.Controller):
 
+    def _portal_post_filter_params(self):
+        return ['token', 'hash', 'pid']
+
+    def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
+        if len(attachment_tokens) != len(attachment_ids):
+            raise UserError(_("An access token must be provided for each attachment."))
+        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
+            try:
+                CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
+            except (AccessError, MissingError):
+                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.") % attachment_id)
+
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
-    def portal_chatter_post(self, res_model, res_id, message, **kw):
-        url = request.httprequest.referrer
-        if message:
+    def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kw):
+        """Create a new `mail.message` with the given `message` and/or
+        `attachment_ids` and redirect the user to the newly created message.
+
+        The message will be associated to the record `res_id` of the model
+        `res_model`. The user must have access rights on this target document or
+        must provide valid identifiers through `kw`. See `_message_post_helper`.
+        """
+        url = redirect or (request.httprequest.referrer and request.httprequest.referrer + "#discussion") or '/my'
+
+        res_id = int(res_id)
+
+        attachment_ids = [int(attachment_id) for attachment_id in attachment_ids.split(',') if attachment_id]
+        attachment_tokens = [attachment_token for attachment_token in attachment_tokens.split(',') if attachment_token]
+        self._portal_post_check_attachments(attachment_ids, attachment_tokens)
+
+        if message or attachment_ids:
             # message is received in plaintext and saved in html
-            message = plaintext2html(message)
-            _message_post_helper(res_model, int(res_id), message, **kw)
-            url = url + "#discussion"
+            if message:
+                message = plaintext2html(message)
+            post_values = {
+                'res_model': res_model,
+                'res_id': res_id,
+                'message': message,
+                'send_after_commit': False,
+                'attachment_ids': attachment_ids,
+            }
+            post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
+            message = _message_post_helper(**post_values)
+
         return request.redirect(url)
 
     @http.route('/mail/chatter_init', type='json', auth='public', website=True)
@@ -114,6 +158,7 @@ class PortalChatter(http.Controller):
             'options': {
                 'message_count': message_data['message_count'],
                 'is_user_public': is_user_public,
+                'is_user_employee': request.env.user.has_group('base.group_user'),
                 'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
                 'display_composer': display_composer,
                 'partner_id': request.env.user.partner_id.id
@@ -126,9 +171,9 @@ class PortalChatter(http.Controller):
             domain = []
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
-        field_domain = request.env[res_model]._fields['website_message_ids'].domain
-        if callable(field_domain):
-            field_domain = field_domain(request.env[res_model])
+        model = request.env[res_model]
+        field = model._fields['website_message_ids']
+        field_domain = field.get_domain_list(model)
         domain = expression.AND([domain, field_domain, [('res_id', '=', res_id)]])
 
         # Check access
@@ -139,12 +184,18 @@ class PortalChatter(http.Controller):
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
-                domain = expression.AND([['&', '&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False), ('website_published', '=', True)], domain])
+                domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
         return {
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
+    def portal_message_update_is_internal(self, message_id, is_internal):
+        message = request.env['mail.message'].browse(int(message_id))
+        message.write({'is_internal': is_internal})
+        return message.is_internal
 
 
 class MailController(MailController):
@@ -168,8 +219,8 @@ class MailController(MailController):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
             try:
-                record_sudo.sudo(uid).check_access_rights('read')
-                record_sudo.sudo(uid).check_access_rule('read')
+                record_sudo.with_user(uid).check_access_rights('read')
+                record_sudo.with_user(uid).check_access_rule('read')
             except AccessError:
                 if record_sudo.access_token and access_token and consteq(record_sudo.access_token, access_token):
                     record_action = record_sudo.with_context(force_website=True).get_access_action()

@@ -25,6 +25,7 @@ var Gui = core.Class.extend({
         this.startup_screen = null;
         this.current_popup  = null;
         this.current_screen = null;
+        this.show_sync_errors = true;
 
         this.chrome.ready.then(function(){
             self.close_other_tabs();
@@ -165,6 +166,15 @@ var Gui = core.Class.extend({
         this.current_popup = this.popup_instances[name];
         return this.current_popup.show(options);
     },
+    show_sync_error_popup: function() {
+        if (this.show_sync_errors) {
+            this.show_popup('error-sync',{
+                'title':_t('Changes could not be saved'),
+                'body': _t('You must be connected to the internet to save your changes.\n\n' +
+                        'Orders that where not synced before will be synced next time you close an order while connected to the internet or when you close the session.'),
+            });
+        }
+    },
 
     // close the current popup.
     close_popup: function() {
@@ -193,7 +203,7 @@ var Gui = core.Class.extend({
         localStorage['message'] = '';
         localStorage['message'] = JSON.stringify({
             'message':'close_tabs',
-            'session': this.pos.pos_session.id,
+            'config': this.pos.config.id,
             'window_uid': now,
         });
 
@@ -210,7 +220,7 @@ var Gui = core.Class.extend({
 
                 var msg = JSON.parse(event.newValue);
                 if ( msg.message  === 'close_tabs' &&
-                     msg.session  ==  self.pos.pos_session.id &&
+                     msg.config  ==  self.pos.config.id &&
                      msg.window_uid != now) {
 
                     console.info('POS / Session opened in another window. EXITING POS');
@@ -267,16 +277,20 @@ var Gui = core.Class.extend({
                     self._close();
                 } else {
                     var reason = self.pos.get('failed') ?
-                                 'configuration errors' :
-                                 'internet connection issues';
+                                 _t('Some orders could not be submitted to '+
+                                     'the server due to configuration errors. '+
+                                     'You can exit the Point of Sale, but do '+
+                                     'not close the session before the issue '+
+                                     'has been resolved.') :
+                                 _t('Some orders could not be submitted to '+
+                                     'the server due to internet connection issues. '+
+                                     'You can exit the Point of Sale, but do '+
+                                     'not close the session before the issue '+
+                                     'has been resolved.');
 
                     self.show_popup('confirm', {
                         'title': _t('Offline Orders'),
-                        'body':  _t(['Some orders could not be submitted to',
-                                     'the server due to ' + reason + '.',
-                                     'You can exit the Point of Sale, but do',
-                                     'not close the session before the issue',
-                                     'has been resolved.'].join(' ')),
+                        'body':  reason,
                         'confirm': function() {
                             self._close();
                         },
@@ -293,8 +307,7 @@ var Gui = core.Class.extend({
         this.chrome.loading_message(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
-            var url = "/web#action=point_of_sale.action_client_pos_menu";
-            window.location = session.debug ? $.param.querystring(url, {debug: session.debug}) : url;
+            window.location = "/web#action=point_of_sale.action_client_pos_menu";
         });
     },
 
@@ -405,7 +418,7 @@ var Gui = core.Class.extend({
             }
         } else if (input === '-') {
             if (options.firstinput) {
-                newbuf = '-';
+                newbuf = '-0';
             } else if ( newbuf[0] === '-' ) {
                 newbuf = newbuf.substring(1,newbuf.length);
             } else {
@@ -419,6 +432,9 @@ var Gui = core.Class.extend({
             } else {
                 newbuf += input;
             }
+        }
+        if (newbuf === "-") {
+            newbuf = "";
         }
 
         // End of input buffer at 12 characters.

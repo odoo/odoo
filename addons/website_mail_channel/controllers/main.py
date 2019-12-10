@@ -38,7 +38,7 @@ class MailGroup(http.Controller):
             .date() # may be unnecessary?
             .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
 
-    @http.route("/groups", type='http', auth="public", website=True)
+    @http.route("/groups", type='http', auth="public", website=True, sitemap=True)
     def view(self, **post):
         groups = request.env['mail.channel'].search([('alias_id.alias_name', '!=', False)])
 
@@ -122,7 +122,7 @@ class MailGroup(http.Controller):
     @http.route([
         '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>''',
         '''/groups/<model('mail.channel'):group>/page/<int:page>'''
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
             raise werkzeug.exceptions.NotFound()
@@ -157,7 +157,7 @@ class MailGroup(http.Controller):
 
     @http.route([
         '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
             raise werkzeug.exceptions.NotFound()

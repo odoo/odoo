@@ -1,0 +1,467 @@
+/* Theme Variables
+ ------------------------------------------*/
+@border-color: #a9a9a9;
+@background-color: #f5f5f5;
+
+/* Frame Mode Layout
+ ------------------------------------------*/
+.note-editor {
+  border: 1px solid @border-color;
+  position: relative;
+  /* overflow: hidden; ODOO: removed for embedded editor */
+
+  /* dropzone */
+  @dropzone-color: lightskyblue;
+  @dropzone-active-color: darken(@dropzone-color, 30);
+  .note-dropzone {
+    position: absolute;
+    display: none;
+    z-index: 100;
+    color: @dropzone-color;
+    background-color: white;
+    opacity: 0.95;
+    pointer-event: none;
+
+    .note-dropzone-message {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    &.hover {
+      color: @dropzone-active-color;
+    }
+  }
+
+  &.dragover .note-dropzone {
+    display: table;
+  }
+
+  /* codeview mode */
+  &.codeview {
+    .note-editing-area {
+      .note-editable {
+        display: none;
+      }
+      .note-codable {
+        display: block;
+      }
+    }
+  }
+
+  /* fullscreen mode */
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1050; /* bs3 modal-backdrop: 1030, bs2: 1040 */
+    .note-editable {
+      background-color: white;
+    }
+    .note-resizebar {
+      display: none;
+    }
+  }
+
+  .note-editing-area {
+    position: relative;
+    overflow: hidden;
+
+    /* editable */
+    .note-editable {
+      background-color: #fff;
+      color: #000;
+      padding: 10px;
+      overflow: auto;
+      outline: none;
+
+      &[contenteditable=true]:empty:not(:focus):before {
+        content:attr(data-placeholder);
+      }
+      &[contenteditable="false"] {
+        background-color: #e5e5e5;
+      }
+    }
+
+    /* codeable */
+    .note-codable {
+      display: none;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      box-shadow: none;
+      font-family: Menlo, Monaco, monospace, sans-serif;
+      font-size: 14px;
+      color: #ccc;
+      background-color: #222;
+      resize: none;
+
+      /* override BS2 default style */
+      box-sizing: border-box;
+      border-radius: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  /* statusbar */
+  .note-statusbar {
+    background-color: @background-color;
+    .note-resizebar {
+      padding-top: 1px;
+      height: 8px;
+      width: 100%;
+      cursor: ns-resize;
+      .note-icon-bar {
+        width: 20px;
+        margin: 1px auto;
+        border-top: 1px solid @border-color;
+      }
+    }
+  }
+}
+
+/* Air Mode Layout
+------------------------------------------*/
+.note-air-editor {
+  outline: none;
+}
+
+/* Popover
+------------------------------------------*/
+.note-popover .popover {
+  max-width: none;
+  .popover-body {
+    a {
+      display: inline-block;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;    /* for FF */
+      vertical-align: middle; /* for FF */
+    }
+  }
+  & .arrow {
+    left: 20px;
+  }
+}
+
+/* Popover and Toolbar (Button container)
+------------------------------------------*/
+.note-popover .popover .popover-body, .panel-heading.note-toolbar {
+  margin: 0;
+  padding: 0 0 5px 5px;
+
+  &>.btn-group {
+    margin-top: 5px;
+    margin-left: 0;
+    margin-right: 5px;
+  }
+
+  .btn-group {
+    .note-table {
+      min-width: 0;
+      padding: 5px;
+      .note-dimension-picker {
+        font-size: 18px;
+        .note-dimension-picker-mousecatcher {
+          position: absolute !important;
+          z-index: 3;
+          width: 10em;
+          height: 10em;
+          cursor: pointer;
+        }
+        .note-dimension-picker-unhighlighted {
+          position: relative !important;
+          z-index: 1;
+          width: 5em;
+          height: 5em;
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIj4+Pjp6ekKlAqjAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKhmnaJzPAAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC') repeat;
+        }
+        .note-dimension-picker-highlighted {
+          position: absolute !important;
+          z-index: 2;
+          width: 1em;
+          height: 1em;
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIjd6vvD2f9LKLW+AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKwNDEVT0AAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC') repeat;
+        }
+      }
+    }
+  }
+
+  .note-style {
+    h1, h2, h3, h4, h5, h6, blockquote {
+      margin: 0;
+    }
+  }
+
+  .note-color {
+    .dropdown-toggle {
+      width: 20px;
+      padding-left: 5px;
+    }
+    .dropdown-menu {
+      min-width: 340px;
+      .btn-group {
+        margin: 0;
+        &:first-child {
+          margin: 0 5px;
+        }
+
+        .note-palette-title {
+          font-size: 12px;
+          margin: 2px 7px;
+          text-align: center;
+          border-bottom: 1px solid #eee;
+        }
+
+        .note-color-reset {
+          font-size: 11px;
+          margin: 3px;
+          padding: 0 3px;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+
+        .note-color-row {
+          height: 20px;
+        }
+
+        .note-color-reset:hover {
+          background: #eee;
+        }
+      }
+    }
+  }
+
+  .note-para {
+    .dropdown-menu {
+      min-width: 216px;
+      padding: 5px;
+      &>div:first-child {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  /* dropdown-menu for toolbar and popover */
+  .dropdown-menu {
+    min-width: 90px;
+
+    /* dropdown-menu right position */
+    /* http://forrst.com/posts/Bootstrap_right_positioned_dropdown-2KB */
+    &.right {
+      right: 0;
+      left: auto;
+      &::before { right: 9px; left: auto !important;  }
+      &::after { right: 10px; left: auto !important;  }
+    }
+    /* dropdown-menu for selectbox */
+    &.note-check {
+      li a i {
+        color: deepskyblue;
+        visibility: hidden;
+      }
+      li a.checked i {
+        visibility: visible;
+      }
+    }
+
+  }
+
+  .note-fontsize-10 {
+    font-size: 10px;
+  }
+
+  /* color palette for toolbar and popover */
+  .note-color-palette {
+    line-height: 1;
+    div {
+      .note-color-btn {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin: 0;
+        border: 1px solid #fff;
+      }
+      .note-color-btn:hover {
+        border: 1px solid #000;
+      }
+    }
+  }
+}
+
+/* Dialog
+------------------------------------------*/
+.note-dialog {
+  &>div {
+    display: none; /* BS2's hide pacth. */
+  }
+  .form-group { /* overwrite BS's form-horizontal minus margins */
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .note-modal-form {
+    margin: 0; /* overwrite BS2's form margin bottom */
+  }
+  .note-image-dialog {
+    .note-dropzone {
+      min-height: 100px;
+      font-size: 30px;
+      line-height: 4; /* vertical-align */
+      color: lightgray;
+      text-align: center;
+      border: 4px dashed lightgray;
+      margin-bottom: 10px;
+    }
+  }
+  .note-help-dialog {
+    @note-shortcut-hl: #dd0;
+    font-size: 12px;
+    color: #ccc;
+    background-color: #222 !important;
+    opacity: 0.9;
+    .modal-content {
+      background: transparent;
+      border: 1px solid white;
+      box-shadow: none;
+      border-radius: 5px;
+    }
+
+    /* BS2's background pacth. */
+    background: transparent;
+    border: none;
+
+    a {
+      font-size: 12px;
+      color: white;
+    }
+
+    .title {
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+      border-bottom: white 1px solid;
+    }
+
+    .modal-close {
+      font-size: 14px;
+      color: @note-shortcut-hl;
+      cursor: pointer;
+    }
+
+    .text-center {
+      margin: 10px 0 0;
+    }
+
+    .note-shortcut {
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      &-row {
+        margin-right: -5px;
+        margin-left: -5px;
+      }
+
+      &-col {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
+
+      &-title {
+        font-size: 13px;
+        font-weight: bold;
+        color: @note-shortcut-hl;
+      }
+
+      &-key {
+        font-family: "Courier New";
+        color: @note-shortcut-hl;
+        text-align: right;
+      }
+    }
+  }
+}
+
+/* Handle
+------------------------------------------*/
+.note-handle {
+  /* control selection */
+  .note-control-selection {
+    position: absolute;
+    display: none;
+    border: 1px solid black;
+    &>div { position: absolute; }
+
+    .note-control-selection-bg {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      opacity: 0.3;
+    }
+
+    .note-control-handle {
+      width: 7px;
+      height: 7px;
+      border: 1px solid black;
+    }
+
+    .note-control-holder {
+      .note-control-handle;
+    }
+
+    .note-control-sizing {
+      .note-control-handle;
+      background-color: white;
+    }
+
+    .note-control-nw {
+      top: -5px;
+      left: -5px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .note-control-ne {
+      top: -5px;
+      right: -5px;
+      border-bottom: none;
+      border-left: none;
+    }
+
+    .note-control-sw {
+      bottom: -5px;
+      left: -5px;
+      border-top: none;
+      border-right: none;
+    }
+
+    .note-control-se {
+      right: -5px;
+      bottom: -5px;
+      cursor: se-resize;
+    }
+
+    .note-control-se.note-control-holder {
+      cursor: default;
+      border-top: none;
+      border-left: none;
+    }
+
+    .note-control-selection-info {
+      right: 0;
+      bottom: 0;
+      padding: 5px;
+      margin: 5px;
+      color: white;
+      background-color: black;
+      font-size: 12px;
+      border-radius: 5px;
+      opacity: 0.7;
+    }
+  }
+}

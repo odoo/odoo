@@ -1,0 +1,45 @@
+<templates>
+    <div t-name="sale_stock.qtyAtDate">
+        <div t-att-class="!widget.data.display_qty_widget ? 'd-none' : ''">
+            <t t-if="widget.data.virtual_available_at_date &lt; widget.data.qty_to_deliver and !widget.data.is_mto">
+                <a tabindex="0" class="fa fa-info-circle text-danger"/>
+            </t>
+            <t t-else="">
+                <a tabindex="0" class="fa fa-info-circle text-primary"/>
+            </t>
+        </div>
+    </div>
+
+    <div t-name="sale_stock.QtyDetailPopOver">
+        <table>
+            <tbody>
+                <t t-if="!data.is_mto">
+                    <tr>
+                        <td><strong>Forecasted Stock</strong><br /><small>On <span t-esc="data.delivery_date"/></small></td>
+                        <td><t t-esc='data.virtual_available_at_date'/>
+                        <t t-esc='data.product_uom.data.display_name'/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Available</strong><br /><small>All planned operations included</small></td>
+                        <td><t t-esc='data.free_qty_today'/>
+                        <t t-esc='data.product_uom.data.display_name'/></td>
+                    </tr>
+                </t>
+                <t t-else="">
+                    <tr>
+                        <td><strong>Expected Delivery</strong></td>
+                        <td class="oe-right"><span t-esc="data.delivery_date"/></td>
+                    </tr>
+                    <tr>
+                        <p>This product is replenished on demand.</p>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+        <button t-if="!data.is_mto" class="text-left btn btn-link action_open_forecast"
+            type="button">
+            <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+            View Forecast
+        </button>
+    </div>
+</templates>

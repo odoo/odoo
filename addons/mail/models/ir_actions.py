@@ -29,7 +29,8 @@ class ServerActions(models.Model):
     # Next Activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', model_id)]")
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', model_id)]",
+        ondelete='restrict')
     activity_summary = fields.Char('Summary')
     activity_note = fields.Html('Note')
     activity_date_deadline_range = fields.Integer(string='Due Date In')
@@ -65,7 +66,7 @@ class ServerActions(models.Model):
     @api.constrains('state', 'model_id')
     def _check_activity_mixin(self):
         for action in self:
-            if action.state == 'next_activity' and not issubclass(self.pool[action.model_id.model], self.pool['mail.thread']):
+            if action.state == 'next_activity' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("A next activity can only be planned on models that use the chatter"))
 
     @api.model
@@ -99,7 +100,7 @@ class ServerActions(models.Model):
                 # Pick an arbitrary field; if it is marked to be recomputed,
                 # it means we are in an extraneous write triggered by the recompute.
                 # In this case, we should not create a new activity.
-                if records._recompute_check(field):
+                if records & self.env.records_to_compute(field):
                     return True
         return False
 

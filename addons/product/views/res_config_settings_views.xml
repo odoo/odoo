@@ -5,14 +5,10 @@
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@id='company_share_partner']" position="after">
-                    <field name="company_share_product" class="oe_inline"/>
-                    <label string="Common Product Catalog" class="o_light_label" for="company_share_product"/>
-                </xpath>
                 <xpath expr="//div[@id='multi_company']" position="before">
                     <h2>Products</h2>
                     <div class="row mt16 o_settings_container" id="product_general_settings">
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="weight_uom_setting">
                             <div class="o_setting_left_pane">
                             </div>
                             <div class="o_setting_right_pane">
@@ -27,7 +23,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="manage_volume_uom_setting">
                             <div class="o_setting_right_pane">
                                 <label for="product_volume_volume_in_cubic_feet"/>
                                 <div class="text-muted">

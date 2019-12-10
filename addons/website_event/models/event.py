@@ -2,6 +2,7 @@
 
 import pytz
 import werkzeug
+import json
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
@@ -22,9 +23,15 @@ class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin']
 
-    is_published = fields.Boolean(tracking=True)
+    website_published = fields.Boolean(tracking=True)
+
+    subtitle = fields.Char('Event Subtitle', translate=True)
 
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
+
+    cover_properties = fields.Text(
+        'Cover Properties',
+        default='{"background-image": "none", "background-color": "oe_blue", "opacity": "0.4", "resize_class": "cover_mid"}')
 
     website_menu = fields.Boolean('Dedicated Menu',
         help="Creates menus Introduction, Location and Register on the page "
@@ -38,8 +45,9 @@ class Event(models.Model):
             for event in self:
                 domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
                 event.is_participating = self.env['event.registration'].search_count(domain)
+        else:
+            self.is_participating = False
 
-    @api.multi
     @api.depends('name')
     def _compute_website_url(self):
         super(Event, self)._compute_website_url()
@@ -81,7 +89,6 @@ class Event(models.Model):
         res._toggle_create_website_menus(vals)
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(Event, self).write(vals)
         self._toggle_create_website_menus(vals)
@@ -100,21 +107,18 @@ class Event(models.Model):
         })
         return menu
 
-    @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
         self.ensure_one()
         if self.address_id:
             return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
         return None
 
-    @api.multi
     def google_map_link(self, zoom=8):
         self.ensure_one()
         if self.address_id:
             return self.sudo().address_id.google_map_link(zoom=zoom)
         return None
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'is_published' in init_values and self.is_published:
@@ -123,7 +127,6 @@ class Event(models.Model):
             return self.env.ref('website_event.mt_event_unpublished')
         return super(Event, self)._track_subtype(init_values)
 
-    @api.multi
     def action_open_badge_editor(self):
         """ open the event badge editor : redirect to the report page of event badge report """
         self.ensure_one()
@@ -133,7 +136,7 @@ class Event(models.Model):
             'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
         }
 
-    def _get_event_resource_urls(self, attendees):
+    def _get_event_resource_urls(self):
         url_date_start = self.date_begin.strftime('%Y%m%dT%H%M%SZ')
         url_date_stop = self.date_end.strftime('%Y%m%dT%H%M%SZ')
         params = {
@@ -151,8 +154,13 @@ class Event(models.Model):
 
     def _default_website_meta(self):
         res = super(Event, self)._default_website_meta()
+        event_cover_properties = json.loads(self.cover_properties)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = event_cover_properties.get('background-image', 'none')[4:-1]
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.date_begin
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
         res['default_twitter']['twitter:card'] = 'summary'
-        res['default_meta_description'] = self.date_begin
+        res['default_meta_description'] = self.subtitle
         return res
+
+    def get_backend_menu_id(self):
+        return self.env.ref('event.event_main_menu').id

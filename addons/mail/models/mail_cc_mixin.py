@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, tools
-from email.utils import formataddr
 
 
 class MailCCMixin(models.AbstractModel):
@@ -16,7 +15,7 @@ class MailCCMixin(models.AbstractModel):
         '''return a dict of sanitize_email:raw_email from a string of cc'''
         if not cc_string:
             return {}
-        return {tools.email_normalize(email): formataddr((name, tools.email_normalize(email))) 
+        return {tools.email_normalize(email): tools.formataddr((name, tools.email_normalize(email)))
             for (name, email) in tools.email_split_tuples(cc_string)}
 
     @api.model
@@ -29,7 +28,6 @@ class MailCCMixin(models.AbstractModel):
         cc_values.update(custom_values)
         return super(MailCCMixin, self).message_new(msg_dict, cc_values)
 
-    @api.multi
     def message_update(self, msg_dict, update_vals=None):
         '''Adds cc email to self.email_cc while trying to keep email as raw as possible but unique'''
         if update_vals is None:
@@ -43,7 +41,6 @@ class MailCCMixin(models.AbstractModel):
         cc_values.update(update_vals)
         return super(MailCCMixin, self).message_update(msg_dict, cc_values)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(MailCCMixin, self)._message_get_suggested_recipients()
         for record in self:

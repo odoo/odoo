@@ -14,7 +14,6 @@ class Users(models.Model):
         self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', user.groups_id.ids)])._action_add_members(user.partner_id)
         return user
 
-    @api.multi
     def write(self, vals):
         """ Trigger automatic subscription based on updated user groups """
         res = super(Users, self).write(vals)

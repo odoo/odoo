@@ -1,6 +1,7 @@
 odoo.define('website_sale_options.website_sale', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var OptionalProductsModal = require('sale_product_configurator.OptionalProductsModal');
@@ -43,11 +44,20 @@ publicWidget.registry.WebsiteSale.include({
      * @param {integer} quantity
      */
     _onOptionsUpdateQuantity: function (quantity) {
-        this.$form
-            .find('input[name="add_qty"]')
-            .first()
-            .val(quantity)
-            .trigger('change');
+        var $qtyInput = this.$form
+            .find('.js_main_product input[name="add_qty"]')
+            .first();
+
+        if ($qtyInput.length) {
+            $qtyInput.val(quantity).trigger('change');
+        } else {
+            // This handles the case when the "Select Quantity" customize show
+            // is disabled, and therefore the above selector does not find an
+            // element.
+            // To avoid duplicating all RPC, only trigger the variant change if
+            // it is not already done from the above trigger.
+            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.$el);
+        }
     },
 
     /**
@@ -58,26 +68,21 @@ publicWidget.registry.WebsiteSale.include({
      * @private
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
-    _onModalSubmit: function (goToShop){
-        var customValues = JSON.stringify(
+    _onModalSubmit: function (goToShop) {
+        var productAndOptions = JSON.stringify(
             this.optionalProductsModal.getSelectedProducts()
         );
 
-        this.$form.ajaxSubmit({
-            url:  '/shop/cart/update_option',
-            data: {
-                lang: this._getContext().lang,
-                custom_values: customValues
-            },
-            success: function (quantity) {
-                if (goToShop) {
-                    var path = window.location.pathname.replace(/shop([\/?].*)?$/, "shop/cart");
-                    window.location.pathname = path;
-                }
-                var $quantity = $(".my_cart_quantity");
-                $quantity.parent().parent().removeClass("d-none", !quantity);
-                $quantity.html(quantity).hide().fadeIn(600);
+        ajax.post('/shop/cart/update_option', {
+            product_and_options: productAndOptions
+        }).then(function (quantity) {
+            if (goToShop) {
+                var path = "/shop/cart";
+                window.location.pathname = path;
             }
+            var $quantity = $(".my_cart_quantity");
+            $quantity.parent().parent().removeClass('d-none');
+            $quantity.html(quantity).hide().fadeIn(600);
         });
     },
 });

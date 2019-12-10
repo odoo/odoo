@@ -8,6 +8,7 @@
     var viewUpdateCount = 0;
     var testedApps;
     var testedMenus;
+    var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party'];
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
@@ -44,8 +45,12 @@
         }
     }
 
+    function clickEverywhere(menu_id){
+        setTimeout(_clickEverywhere, 1000, menu_id);
+    }
+
     // Main function that starts orchestration of tests
-    function clickEverywhere(){
+    function _clickEverywhere(menu_id){
         console.log("Starting ClickEverywhere test");
         var startTime = performance.now();
         createWebClientHooks();
@@ -56,10 +61,18 @@
         var $listOfAppMenuItems;
         if (isEnterprise) {
             console.log("Odoo flavor: Enterprise");
-            $listOfAppMenuItems = $(".o_app, .o_menuitem");
+            if (menu_id !== undefined) {
+                $listOfAppMenuItems = $('a.o_app.o_menuitem[data-menu=' + menu_id + ']');
+            } else {
+                $listOfAppMenuItems = $('a.o_app.o_menuitem');
+            }
         } else {
             console.log("Odoo flavor: Community");
-            $listOfAppMenuItems = $('a.o_app');
+            if (menu_id !== undefined) {
+                $listOfAppMenuItems = $('a.o_app[data-menu-id=' + menu_id + ']');
+            } else {
+                $listOfAppMenuItems = $('a.o_app');
+            }
         }
         console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
 
@@ -122,6 +135,7 @@
         if (testedMenus.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Avoid infinite loop
         console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
         testedMenus.push(element.dataset.menuXmlid);
+        if (blackListedMenus.includes(element.dataset.menuXmlid)) return Promise.resolve(); // Skip black listed menus
         var startActionCount = clientActionCount;
         _click($(element));
         var isModal = false;
@@ -199,7 +213,7 @@
     function testFilters() {
         var filterProm = Promise.resolve();
         // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filters_menu > li:not(.o_add_custom_filter)');
-        var $filters = $('.o_filters_menu > .o_menu_item');
+        var $filters = $('.o_filters_menu > .o_menu_item:not(.d-none)');
         console.log("Testing " + $filters.length + " filters");
         var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
         filter_ids.forEach(function(filter_id){

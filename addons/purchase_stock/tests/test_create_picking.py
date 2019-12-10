@@ -10,9 +10,9 @@ class TestCreatePicking(common.TestProductCommon):
 
     def setUp(self):
         super(TestCreatePicking, self).setUp()
-        self.partner_id = self.env.ref('base.res_partner_1')
-        self.product_id_1 = self.env.ref('product.product_product_8')
-        self.product_id_2 = self.env.ref('product.product_product_11')
+        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
+        self.product_id_1 = self.env['product.product'].create({'name': 'Large Desk'})
+        self.product_id_2 = self.env['product.product'].create({'name': 'Conference Chair'})
         res_users_purchase_user = self.env.ref('purchase.group_purchase_user')
 
         Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
@@ -55,7 +55,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.picking = self.po.picking_ids[0]
         for ml in self.picking.move_line_ids:
             ml.qty_done = ml.product_uom_qty
-        self.picking.action_done()
+        self.picking._action_done()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [7.0], 'Purchase: all products should be received')
 
 
@@ -79,7 +79,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.env.company.write({'po_double_validation': 'two_step','po_double_validation_amount':2000.00})
 
         # Draft purchase order created
-        self.po = self.env['purchase.order'].sudo(self.user_purchase_user).create(self.po_vals)
+        self.po = self.env['purchase.order'].with_user(self.user_purchase_user).create(self.po_vals)
         self.assertTrue(self.po, 'Purchase: no purchase order created')
 
         # Purchase order confirm
@@ -197,13 +197,14 @@ class TestCreatePicking(common.TestProductCommon):
         # the move should be 12 units
         # note: move.product_qty = computed field, always in the uom of the quant
         #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
-        move1 = po.picking_ids.move_lines[0]
+        move1 = po.picking_ids.move_lines.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
         # edit the so line, sell 2 dozen, the move should now be 24 units
         po.order_line.product_qty = 2
+        move1 = po.picking_ids.move_lines.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 24)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
@@ -314,6 +315,68 @@ class TestCreatePicking(common.TestProductCommon):
 
         self.assertEqual(sum(customer_picking.move_lines.mapped('reserved_availability')), 100.0, 'The total quantity for the customer move should be available and reserved.')
 
+    def test_04_rounding(self):
+        """ We set the Unit(s) rounding to 1.0 and ensure buying 1.2 units in a PO is rounded to 1.0
+            at reception.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_unit.rounding = 1.0
+
+        # buy a dozen
+        po = self.env['purchase.order'].create(self.po_vals)
+
+        po.order_line.product_qty = 1.2
+        po.button_confirm()
+
+        # the move should be 1.0 units
+        move1 = po.picking_ids.move_lines[0]
+        self.assertEqual(move1.product_uom_qty, 1.0)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 1.0)
+
+        # edit the so line, buy 2.4 units, the move should now be 2.0 units
+        po.order_line.product_qty = 2.0
+        self.assertEqual(move1.product_uom_qty, 2.0)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 2.0)
+
+        # deliver everything
+        move1.quantity_done = 2.0
+        po.picking_ids.button_validate()
+
+        # check the delivered quantity
+        self.assertEqual(po.order_line.qty_received, 2.0)
+
+    def test_05_uom_rounding(self):
+        """ We set the Unit(s) and Dozen(s) rounding to 1.0 and ensure buying 1.3 dozens in a PO is
+            rounded to 1.0 at reception.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_unit.rounding = 1.0
+        uom_dozen.rounding = 1.0
+
+        # buy 1.3 dozen
+        po = self.env['purchase.order'].create(self.po_vals)
+
+        po.order_line.product_qty = 1.3
+        po.order_line.product_uom = uom_dozen.id
+        po.button_confirm()
+
+        # the move should be 16.0 units
+        move1 = po.picking_ids.move_lines[0]
+        self.assertEqual(move1.product_uom_qty, 16.0)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 16.0)
+
+        # force the propagation of the uom, buy 2.6 dozens, the move 2 should have 2 dozens
+        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+        po.order_line.product_qty = 2.6
+        move2 = po.picking_ids.move_lines.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        self.assertEqual(move2.product_uom_qty, 2)
+        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.product_qty, 24)
+
     def create_delivery_order(self, propagate_date, propagate_date_minimum_delta):
         stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
         customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
@@ -383,7 +446,7 @@ class TestCreatePicking(common.TestProductCommon):
         purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
 
         # Now check scheduled date of delivery order is changed or not.
-        self.assertEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
+        self.assertEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
             'Delivery order schedule date should be changed as we have set date propagate.')
 
     def test_06_no_propagate_date(self):
@@ -403,5 +466,5 @@ class TestCreatePicking(common.TestProductCommon):
         purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
 
         # Now check scheduled date of delivery order is changed or not.
-        self.assertNotEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
+        self.assertNotEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
             'Delivery order schedule date should not changed.')

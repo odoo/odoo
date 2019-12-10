@@ -8,28 +8,9 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <field name="signature" position="after">
-                    <field name="karma" string="Forum Karma"/>
-                </field>
-                <button name="toggle_active" position="before">
-                    <button class="oe_stat_button" name="open_website_url"
-                        type="object" icon="fa-globe">
-                        <field name="is_published" widget="website_button"/>
-                    </button>
-                </button>
-            </field>
-        </record>
-
-        <record id="res_users_view_form_preference" model="ir.ui.view">
-            <field name="name">res.users.form.preference.forum</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group[@name='preference_contact']" position="inside">
-                        <field name="karma" string="Forum Karma" readonly="1"/>
-                    </xpath>
-                </data>
+                <div name="button_box" position="inside">
+                    <field name="is_published" widget="website_redirect_button"/>
+                </div>
             </field>
         </record>
 

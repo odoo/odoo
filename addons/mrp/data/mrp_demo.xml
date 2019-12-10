@@ -13,15 +13,6 @@
 
         <!-- Resource: mrp.workcenter -->
 
-        <record id="mrp_workcenter_0" model="mrp.workcenter">
-            <field name="name">Assembly Station 1</field>
-            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
-            <field name="capacity">5</field>
-            <field name="time_start">10</field>
-            <field name="time_stop">8</field>
-            <field name="time_efficiency">87</field>
-        </record>
-
         <record id="mrp_workcenter_3" model="mrp.workcenter">
             <field name="name">Assembly Line 1</field>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
@@ -33,7 +24,7 @@
         </record>
 
         <record id="mrp_workcenter_2" model="mrp.workcenter">
-            <field name="name">Assemble Station 2</field>
+            <field name="name">Assembly Line 2</field>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
         </record>
 
@@ -62,7 +53,7 @@
 
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_0"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Manual Assembly</field>
             <field name="time_cycle">60</field>
             <field name="sequence">5</field>
@@ -71,7 +62,7 @@
 
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Long time assembly</field>
             <field name="time_cycle">180</field>
             <field name="sequence">15</field>
@@ -80,7 +71,7 @@
 
         <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Testing</field>
             <field name="time_cycle">60</field>
             <field name="sequence">10</field>
@@ -175,7 +166,7 @@
             <field name="description">Solid wood table.</field>
             <field name="default_code">FURN_9666</field>
             <field name="tracking">serial</field>
-            <field name="image" type="base64" file="mrp/static/img/table.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/table.png"/>
         </record>
         <record id="product_product_computer_desk_head" model="product.product">
             <field name="name">Table Top</field>
@@ -189,7 +180,7 @@
             <field name="description">Solid wood is a durable natural material.</field>
             <field name="default_code">FURN_8522</field>
             <field name="tracking">serial</field>
-            <field name="image" type="base64" file="mrp/static/img/table_top.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/table_top.png"/>
         </record>
         <record id="product_product_computer_desk_leg" model="product.product">
             <field name="name">Table Leg</field>
@@ -203,7 +194,7 @@
             <field name="description">18″ x 2½″ Square Leg</field>
             <field name="default_code">FURN_2333</field>
             <field name="tracking">lot</field>
-            <field name="image" type="base64" file="mrp/static/img/table_leg.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/table_leg.png"/>
         </record>
         <record id="product_product_computer_desk_bolt" model="product.product">
             <field name="name">Bolt</field>
@@ -216,7 +207,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Stainless steel screw full (dia - 5mm, Length - 10mm)</field>
             <field name="default_code">CONS_89957</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_computer_desk_bolt.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_computer_desk_bolt.png"/>
         </record>
         <record id="product_product_computer_desk_screw" model="product.product">
             <field name="name">Screw</field>
@@ -229,7 +220,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Stainless steel screw</field>
             <field name="default_code">CONS_25630</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_computer_desk_screw.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_computer_desk_screw.png"/>
         </record>
 
         <record id="product_product_wood_ply" model="product.product">
@@ -243,7 +234,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Layers that are stick together to assemble wood panels.</field>
             <field name="default_code">FURN_7111</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_wood_ply.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_wood_ply.png"/>
         </record>
         <record id="product_product_wood_wear" model="product.product">
             <field name="name">Wear Layer</field>
@@ -256,7 +247,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Top layer of a wood panel.</field>
             <field name="default_code">FURN_8111</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_wood_wear.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_wood_wear.png"/>
         </record>
         <record id="product_product_ply_veneer" model="product.product">
             <field name="name">Ply Veneer</field>
@@ -268,7 +259,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_9111</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_ply_veneer.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_ply_veneer.png"/>
         </record>
 
         <record id="product_product_wood_panel" model="product.product">
@@ -281,7 +272,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_7023</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_wood_panel.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_wood_panel.png"/>
         </record>
         <record id="product_product_plastic_laminate" model="product.product">
             <field name="name">Plastic Laminate</field>
@@ -293,7 +284,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_8621</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_plastic_laminate.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_plastic_laminate.png"/>
         </record>
 
         <record id="product_product_computer_desk_product_template" model="product.template">
@@ -423,7 +414,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Table kit</field>
             <field name="default_code">FURN_78236</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_table_kit.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_table_kit.png"/>
         </record>
 
          <record id="product_product_table_kit_product_template" model="product.template">
@@ -467,7 +458,7 @@
             <field name="description">Drawer on casters for great usability.</field>
             <field name="default_code">FURN_2100</field>
             <field name="barcode">601647855646</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_drawer_black.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_drawer_black.png"/>
         </record>
 
         <record id="product_product_drawer_case" model="product.product">
@@ -482,7 +473,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_5623</field>
             <field name="barcode">601647855647</field>
-            <field name="image" type="base64" file="mrp/static/img/product_product_drawer_case_black.png"/>
+            <field name="image_1920" type="base64" file="mrp/static/img/product_product_drawer_case_black.png"/>
         </record>
 
         <record id="product.product_product_27" model="product.product">
@@ -492,16 +483,19 @@
         <record id="lot_product_27_0" model="stock.production.lot">
             <field name="name">0000000000030</field>
             <field name="product_id" ref="product.product_product_27"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="lot_product_product_drawer_drawer_0" model="stock.production.lot">
             <field name="name">0000000010001</field>
             <field name="product_id" ref="product_product_drawer_drawer"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="lot_product_product_drawer_case_0" model="stock.production.lot">
             <field name="name">0000000020045</field>
             <field name="product_id" ref="product_product_drawer_case"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
 
@@ -644,21 +638,21 @@
         <!-- OEE -->
 
         <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="loss_id" ref="block_reason7"/>
             <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="loss_id" ref="block_reason0"/>
             <field name="date_start" eval="(datetime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="loss_id" ref="block_reason1"/>
             <field name="date_start" eval="(datetime.now() - timedelta(days=5, hours=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(days=5, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>

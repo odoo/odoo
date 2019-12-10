@@ -82,7 +82,7 @@
                         </t>
                         <div class="media mt-3">
                             <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
-                               t-field="partner.image_medium"
+                               t-field="partner.image_128"
                                t-options='{"widget": "image", "class": "mr-3"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
@@ -164,13 +164,9 @@
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
-            <a t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
-            </a>
+            <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
             <div class="media-body" style="min-height: 64px;">
-                <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.self"/>
-                </a>
+                <span t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
             </div>
         </div>
@@ -289,7 +285,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label hdd4" for="description">Description</label>
-                                <textarea row="3" name="description" class="form-control description"></textarea>
+                                <textarea rows="3" name="description" class="form-control description"></textarea>
                             </div>
                         </main>
                         <footer class="modal-footer">
@@ -440,7 +436,7 @@
                                     <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-form-label" for="customer_contacted">Do you have contacted the customer?</label>
+                                    <label class="col-form-label" for="customer_contacted">I have contacted the customer</label>
                                     <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_interested"/>
                                 </div>
                                 <div>
@@ -465,11 +461,11 @@
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
-                                    <label class="col-form-label" for="comment">Why aren't you interested by this lead?</label>
+                                    <label class="col-form-label" for="comment">Why aren't you interested in this lead?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-form-label" for="contacted_desinterested">Do you have contacted the customer?</label>
+                                    <label class="col-form-label" for="contacted_desinterested">I have contacted the customer</label>
                                     <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
                                 </div>
                                 <div class="form-group">
@@ -679,7 +675,7 @@
                                                         <label>Expected Closing:</label>
                                                         <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
                                                             <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
-                                                            <input  type="text" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
+                                                            <input type="date" min="1900-01-01" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
                                                             <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
@@ -699,13 +695,13 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_summary">Details Next Activity</label>
-                                                <textarea row="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
+                                                <textarea rows="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class="input-group date" id="next_activity_div" data-target-input="nearest">
                                                     <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
-                                                    <input type="text" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                    <input type="date" min="1900-01-01" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
                                                     <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>

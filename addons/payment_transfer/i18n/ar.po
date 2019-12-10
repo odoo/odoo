@@ -1,22 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_transfer
+# 	* payment_transfer
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2018
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# AMAAL RU <Fabu1410@yahoo.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
-# Yihya Hugirat <hugirat@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Yihya Hugirat <hugirat@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,19 +23,19 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:83
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr "تم ايجاد طلبات متعدده"
+msgstr "؛ تم العثور على طلبات متعددة"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:81
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr "لايوجد طلبات"
+msgstr "; لم يُعثر على طلبات"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:41
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid ""
 "<div>\n"
@@ -57,51 +55,26 @@ msgstr ""
 "</div>"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Account"
-msgstr "الحساب البنكي"
+msgstr "حساب بنكي"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Accounts"
 msgstr "الحسابات البنكية"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Manual Payment"
 msgstr ""
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "طريقة السداد الإلكتروني"
+msgstr "معالج السداد"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -109,32 +82,12 @@ msgid "Payment Transaction"
 msgstr "معاملة السداد"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "المستحق"
-
-#. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "المزود"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:79
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "received data for reference %s"
 msgstr "استلام البيانات للمرجع %s"

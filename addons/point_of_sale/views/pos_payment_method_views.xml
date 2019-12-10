@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form" model="ir.ui.view">
+        <field name="name">pos.payment.method.form</field>
+        <field name="model">pos.payment.method</field>
+        <field name="arch" type="xml">
+            <form string="Payment Methods">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" class="oe_inline"/></h1>
+                    </div>
+                    <group name="Payment methods">
+                        <group>
+                            <field name="hide_use_payment_terminal" invisible="1"/>
+                            <field name="receivable_account_id" groups="account.group_account_user" />
+                            <field name="is_cash_count" />
+                            <field name="cash_journal_id" attrs="{'invisible': [('is_cash_count', '=', False)], 'required': [('is_cash_count', '=', True)]}" />
+                            <field name="split_transactions" groups="base.group_no_one" />
+                            <field name="company_id" readonly="1" groups="base.group_multi_company" />
+                        </group>
+                        <group>
+                            <field name="use_payment_terminal" attrs="{'invisible': [('hide_use_payment_terminal', '=', True)]}" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_tree" model="ir.ui.view">
+        <field name="name">pos.payment.method.tree</field>
+        <field name="model">pos.payment.method</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Methods">
+                <field name="hide_use_payment_terminal" invisible="1"/>
+                <field name="name" />
+                <field name="receivable_account_id" groups="account.group_account_user"/>
+                <field name="is_cash_count" />
+                <field name="split_transactions" groups="base.group_no_one" />
+                <field name="use_payment_terminal" attrs="{'invisible': [('hide_use_payment_terminal', '=', True)]}" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_search" model="ir.ui.view">
+        <field name="name">pos.payment.search.view</field>
+        <field name="model">pos.payment.method</field>
+        <field name="arch" type="xml">
+            <search string="Payment Methods">
+                <field name="name"/>
+                <field name="receivable_account_id" groups="account.group_account_user" />
+                <group expand="1" string="Group By">
+                    <filter name="group_by_receivable_account" string="Account" domain="[]"  context="{'group_by':'receivable_account_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_payment_method_form" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.payment.method</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_by_account': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new payment method
+            </p>
+            <p>
+                Installing chart of accounts from the General Settings of
+                Invocing/Accounting app will create Bank and Cash payment
+                methods automatically.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_payment_method" parent="menu_point_config_product" action="action_pos_payment_method_form" sequence="3" groups="group_pos_manager,group_pos_user"/>
+
+    <record id="action_payment_methods_tree" model="ir.actions.act_window">
+        <field name="context">{}</field>
+        <field name="name">Payments Methods</field>
+        <field name="res_model">pos.payment.method</field>
+        <field name="view_id" ref="pos_payment_method_view_tree"/>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+</odoo>

@@ -14,12 +14,6 @@ var CropImageDialog = Dialog.extend({
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
         ['/web_editor/static/src/xml/wysiwyg.xml']
     ),
-    jsLibs: [
-        '/web_editor/static/lib/cropper/js/cropper.js',
-    ],
-    cssLibs: [
-        '/web_editor/static/lib/cropper/css/cropper.css',
-    ],
     events: _.extend({}, Dialog.prototype.events, {
         'click .o_crop_options [data-event]': '_onCropOptionClick',
     }),
@@ -116,8 +110,9 @@ var CropImageDialog = Dialog.extend({
                 }
             }
             this.$cropperImage.cropper({
-                viewMode: 1,
-                autoCropArea: 1,
+                viewMode: 2,
+                dragMode: 'move',
+                autoCropArea: 1.0,
                 aspectRatio: ratio,
                 data: _.pick(data, 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
             });

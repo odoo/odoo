@@ -1,3 +1,13 @@
+.o_mail_thread_loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_mail_thread_loading_icon {
+    margin-right: 5px;
+}
+
 .o_mail_thread, .o_mail_activity {
     .o_thread_show_more {
         text-align: center;
@@ -92,7 +102,9 @@
             }
 
             .o_thread_message_avatar {
-                max-width: $o-mail-thread-avatar-size;
+                width: $o-mail-thread-avatar-size;
+                height: $o-mail-thread-avatar-size;
+                object-fit: cover;
             }
             .o_thread_message_side_date {
                 display: none;
@@ -181,8 +193,9 @@
                 display: inline-block;
                 word-break: break-all;
             }
-            img {
+            :not(.o_image_box) > img {
                 max-width: 100%;
+                height: auto;
             }
 
             .o_mail_body_long {
@@ -229,6 +242,12 @@
         margin-bottom: 20px;
         font-weight: bold;
         font-size: 125%;
+
+        &.o_neutral_face_icon:before {
+            @extend %o-nocontent-init-image;
+            @include size(120px, 140px);
+            background: transparent url(/web/static/src/img/neutral_face.svg) no-repeat center;
+        }
     }
 
     .o_mail_no_content {

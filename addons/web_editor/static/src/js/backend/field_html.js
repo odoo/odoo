@@ -3,6 +3,7 @@ odoo.define('web_editor.field.html', function (require) {
 
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
+var config = require('web.config');
 var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var field_registry = require('web.field_registry');
@@ -13,6 +14,8 @@ var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 var assetsLoaded;
+
+var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -96,6 +99,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     commitChanges: function () {
         var self = this;
+        if (config.isDebug() && this.mode === 'edit') {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
@@ -167,7 +174,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
         return this.wysiwyg.attachTo(this.$target).then(function () {
-            self.$content = self.wysiwyg.$editor;
+            self.$content = self.wysiwyg.$editor.closest('body, odoo-wysiwyg-container');
             self._onLoadWysiwyg();
             self.isRendered = true;
         });
@@ -179,7 +186,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
-        return {
+        return Object.assign({}, this.nodeOptions, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
                 res_model: this.model,
@@ -190,25 +197,32 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
 
-            tabSize: 0,
-            keyMap: {
-                pc: {
-                    'TAB': null,
-                    'SHIFT+TAB': null,
-                },
-                mac: {
-                    'TAB': null,
-                    'SHIFT+TAB': null,
-                },
-            },
+            tabsize: 0,
+            height: 180,
             generateOptions: function (options) {
                 var para = _.find(options.toolbar, function (item) {
                     return item[0] === 'para';
                 });
-                para[1].splice(2, 0, 'checklist');
+                if (para && para[1] && para[1].indexOf('checklist') === -1) {
+                    para[1].splice(2, 0, 'checklist');
+                }
+                if (config.isDebug()) {
+                    options.codeview = true;
+                    var view = _.find(options.toolbar, function (item) {
+                        return item[0] === 'view';
+                    });
+                    if (view) {
+                        if (!view[1].includes('codeview')) {
+                            view[1].splice(-1, 0, 'codeview');
+                        }
+                    } else {
+                        options.toolbar.splice(-1, 0, ['view', ['codeview']]);
+                    }
+                }
+                options.prettifyHtml = false;
                 return options;
             },
-        };
+        });
     },
     /**
      * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
@@ -296,7 +310,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 resolver();
             };
 
-            this.$iframe.one('load', function onLoad() {
+            this.$iframe.on('load', function onLoad() {
                 var _avoidDoubleLoad = ++avoidDoubleLoad;
                 ajax.loadAsset(self.nodeOptions.cssReadonly).then(function (asset) {
                     if (_avoidDoubleLoad !== avoidDoubleLoad) {
@@ -348,7 +362,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (/%\send/.test(value)) { // is jinja
+        if (jinjaRegex.test(value)) { // is jinja
             return value;
         }
         try {
@@ -439,6 +453,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (ev.offsetX > 0) {
             return;
         }
+        ev.stopPropagation();
+        ev.preventDefault();
         var checked = $(ev.target).hasClass('o_checked');
         var checklistId = parseInt(($(ev.target).attr('id') || '0').replace(/^checklist-id-/, ''));
 
@@ -466,10 +482,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             'font-size': '15px',
             position: 'absolute',
             right: '+5px',
+            top: '+5px',
         });
-        var $toolbar = this.$content.find('.note-toolbar');
-        $toolbar.css('position', 'relative');
-        $toolbar.append($button);
+        this.$el.append($button);
     },
     /**
      * @private

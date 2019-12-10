@@ -17,11 +17,8 @@
         <field name="arch" type="xml">
             <form string="Quotation Template">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
+                    <div name="button_box" class="oe_button_box"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -30,10 +27,14 @@
                     </div>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                            <label for="number_of_days" string="Quotation expires after"/>
                            <div id="number_of_days">
                                <field name="number_of_days" class="oe_inline"/> days
                            </div>
+                        </group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <notebook name="main_book">
@@ -46,6 +47,7 @@
                                 -->
                                 <field name="sequence" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                     <group>
                                         <field name="product_id" attrs="{'required': [('display_type', '=', False)]}"/>
@@ -53,9 +55,9 @@
                                         <div>
                                             <field name="product_uom_qty" class="oe_inline"/>
                                         </div>
-                                        <field name="price_unit" invisible="1"/>
-                                        <label for="discount" groups="sale.group_discount_per_so_line"/>
-                                        <div groups="sale.group_discount_per_so_line">
+                                        <field name="price_unit"/>
+                                        <label for="discount" groups="product.group_discount_per_so_line"/>
+                                        <div groups="product.group_discount_per_so_line">
                                             <field name="discount" class="oe_inline"/> %%
                                         </div>
                                     </group>
@@ -84,13 +86,14 @@
                                 <field name="product_id"/>
                                 <field name="name" widget="section_and_note_text"/>
                                 <field name="product_uom_qty"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <field
                                     name="product_uom_id"
                                     groups="uom.group_uom"
                                     attrs="{'required': [('display_type', '=', False)]}"
                                 />
-                                <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                <field name="price_unit" invisible="1"/>
+                                <field name="discount" groups="product.group_discount_per_so_line"/>
+                                <field name="price_unit"/>
                             </tree>
                         </field>
                     </page>
@@ -100,9 +103,10 @@
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="quantity"/>
+                            <field name="product_uom_category_id" invisible="1"/>
                             <field name="uom_id" groups="uom.group_uom"/>
-                            <field name="price_unit" invisible="1"/>
-                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                            <field name="price_unit"/>
+                            <field name="discount" groups="product.group_discount_per_so_line"/>
                           </tree>
                         </field>
                     </page>
@@ -136,7 +140,6 @@
         <field name="name">Quotation Templates</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order.template</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

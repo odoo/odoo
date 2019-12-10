@@ -8,7 +8,7 @@
         <field name="nextcall" eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
         <field name="doall" eval="False"/>
         <field name="model_id" ref="model_account_move"/>
-        <field name="code">model._run_post_draft_to_post()</field>
+        <field name="code">model._autopost_draft_entries()</field>
         <field name="state">code</field>
     </record>
 </odoo>

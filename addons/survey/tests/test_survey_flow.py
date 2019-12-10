@@ -6,29 +6,21 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('functional')
-class TestSurveyFlow(common.SurveyCase, HttpCase):
+@tagged('-at_install', 'post_install', 'functional')
+class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
     def _format_submission_data(self, page, answer_data, additional_post_data):
         post_data = {}
         post_data['page_id'] = page.id
         for question_id, answer_vals in answer_data.items():
             question = page.question_ids.filtered(lambda q: q.id == question_id)
-            if question.question_type == 'multiple_choice':
-                values = answer_vals['value']
-                for value in values:
-                    key = "%s_%s_%s" % (page.survey_id.id, question.id, value)
-                    post_data[key] = value
-            else:
-                [value] = answer_vals['value']
-                key = "%s_%s" % (page.survey_id.id, question.id)
-                post_data[key] = value
+            post_data.update(self._prepare_post_data(question, answer_vals['value'], post_data))
         post_data.update(**additional_post_data)
         return post_data
 
     def test_flow_public(self):
         # Step: survey manager creates the survey
         # --------------------------------------------------
-        with self.sudo(self.survey_manager):
+        with self.with_user(self.survey_manager):
             survey = self.env['survey.survey'].create({
                 'title': 'Public Survey for Tarte Al Djotte',
                 'access_mode': 'public',
@@ -45,7 +37,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
                 'survey_id': survey.id,
             })
             page0_q0 = self._add_question(
-                page_0, 'What is your name', 'free_text',
+                page_0, 'What is your name', 'text_box',
                 comments_allowed=False,
                 constr_mandatory=True, constr_error_msg='Please enter your name', survey_id=survey.id)
             page0_q1 = self._add_question(
@@ -69,9 +61,9 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
 
         # fetch starting data to check only newly created data during this flow
         answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
-        answer_lines = self.env['survey.user_input_line'].search([('survey_id', '=', survey.id)])
+        answer_lines = self.env['survey.user_input.line'].search([('survey_id', '=', survey.id)])
         self.assertEqual(answers, self.env['survey.user_input'])
-        self.assertEqual(answer_lines, self.env['survey.user_input_line'])
+        self.assertEqual(answer_lines, self.env['survey.user_input.line'])
 
         # Step: customer takes the survey
         # --------------------------------------------------
@@ -83,7 +75,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
         # -> this should have generated a new answer with a token
         answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
         self.assertEqual(len(answers), 1)
-        answer_token = answers.token
+        answer_token = answers.access_token
         self.assertTrue(answer_token)
         self.assertAnswer(answers, 'new', self.env['survey.question'])
 
@@ -96,7 +88,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
         # Customer submit first page answers
         answer_data = {
             page0_q0.id: {'value': ['Alfred Poilvache']},
-            page0_q1.id: {'value': [44.0]},
+            page0_q1.id: {'value': ['44.0']},
         }
         post_data = self._format_submission_data(page_0, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
         r = self._access_submit(survey, answer_token, post_data)
@@ -114,7 +106,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
 
         # Customer submit second page answers
         answer_data = {
-            page1_q0.id: {'value': [page1_q0.labels_ids.ids[0], page1_q0.labels_ids.ids[1]]},
+            page1_q0.id: {'value': [page1_q0.suggested_answer_ids.ids[0], page1_q0.suggested_answer_ids.ids[1]]},
         }
         post_data = self._format_submission_data(page_1, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
         r = self._access_submit(survey, answer_token, post_data)

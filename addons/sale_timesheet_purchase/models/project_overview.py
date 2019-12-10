@@ -22,15 +22,15 @@ class Project(models.Model):
                         context={'create': False, 'edit': False, 'delete': False}
                     )
                 })
-            account_invoice_lines = self.env['account.invoice.line'].search([('account_analytic_id', 'in', accounts)])
-            account_invoices = account_invoice_lines.mapped('invoice_id')
+            account_invoice_lines = self.env['account.move.line'].search([('analytic_account_id', 'in', accounts)])
+            account_invoices = account_invoice_lines.mapped('move_id')
             if account_invoices:
                 stat_buttons.append({
                     'name': _('Vendor Bills'),
                     'count': len(account_invoices),
-                    'icon': 'fa pencil-square-o',
+                    'icon': 'fa fa-pencil-square-o',
                     'action': _to_action_data(
-                        action=self.env.ref('purchase.action_invoice_pending'),
+                        action=self.env.ref('account.action_move_in_invoice_type'),
                         domain=[('id', 'in', account_invoices.ids)],
                         context={'create': False, 'edit': False, 'delete': False}
                     )})

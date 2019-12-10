@@ -3,16 +3,19 @@
 
 import time
 
-from .common import TestPurchase
+from .common import PurchaseTestCommon
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.tests import Form
 
 
-class TestAveragePrice(TestPurchase):
+class TestAveragePrice(PurchaseTestCommon, StockAccountTestCommon):
 
     def test_00_average_price(self):
         """ Testcase for average price computation"""
 
-        self._load('account', 'test', 'account_minimal_test.xml')
-        self._load('stock_account', 'test', 'stock_valuation_account.xml')
+        res_partner_3 = self.env['res.partner'].create({
+            'name': 'Gemini Partner',
+        })
 
         # Set a product as using average price.
         product_cable_management_box = self.env['product.product'].create({
@@ -29,12 +32,12 @@ class TestAveragePrice(TestPurchase):
         })
         product_cable_management_box.categ_id.property_cost_method = 'average'
         product_cable_management_box.categ_id.property_valuation = 'real_time'
-        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.ref('purchase.o_expense')
-        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.ref('purchase.o_income')
+        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.o_expense
+        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.o_income
 
         # I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
         purchase_order_1 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': res_partner_3.id,
             'order_line': [(0, 0, {
                 'name': 'Average Ice Cream',
                 'product_id': product_cable_management_box.id,
@@ -53,7 +56,8 @@ class TestAveragePrice(TestPurchase):
 
         # Process the reception of purchase order 1
         picking = purchase_order_1.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check the average_price of the product (average icecream).
         self.assertEqual(product_cable_management_box.qty_available, 10.0, 'Wrong quantity in stock after first reception')
@@ -61,7 +65,7 @@ class TestAveragePrice(TestPurchase):
 
         # I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
         purchase_order_2 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': res_partner_3.id,
             'order_line': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
@@ -76,7 +80,8 @@ class TestAveragePrice(TestPurchase):
         purchase_order_2.button_confirm()
         # Process the reception of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        Form(self.env['stock.immediate.transfer'].with_context(res['context'])).save().process()
 
         # Check the standard price
         self.assertEqual(product_cable_management_box.standard_price, 75.0, 'After second reception, we should have an average price of 75.0 on the product')
@@ -97,7 +102,8 @@ class TestAveragePrice(TestPurchase):
 
         # Assign this outgoing shipment and process the delivery
         outgoing_shipment.action_assign()
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment.id)]}).process()
+        res = outgoing_shipment.button_validate()
+        Form(self.env['stock.immediate.transfer'].with_context(res['context'])).save().process()
 
         # Check the average price (60 * 10 + 30 * 80) / 40 = 75.0€ did not change
         self.assertEqual(product_cable_management_box.standard_price, 75.0, 'Average price should not have changed with outgoing picking!')
@@ -105,7 +111,7 @@ class TestAveragePrice(TestPurchase):
 
         # Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
         purchase_order_3 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': res_partner_3.id,
             'order_line': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
@@ -119,8 +125,10 @@ class TestAveragePrice(TestPurchase):
         # Confirm the first purchase order
         purchase_order_3.button_confirm()
         # Process the reception of purchase order 3 in grams
+
         picking = purchase_order_3.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check price is (75.0 * 20 + 200*0.5) / 20.5 = 78.04878€
         self.assertEqual(product_cable_management_box.qty_available, 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock')

@@ -15,6 +15,7 @@
                             <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
                             <field name="name"/>
                             <field name="email"/>
+                            <field name="mobile"/>
                             <field name="phone"/>
                         </tree>
                     </field>
@@ -30,7 +31,6 @@
             <field name="name">Event Registrations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">registration.editor</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_event_registration_editor_form"/>
             <field name="target">new</field>

@@ -184,17 +184,6 @@ var KanbanModel = BasicModel.extend({
         return this._super(params);
     },
     /**
-     * Opens a given group and loads its <limit> first records
-     *
-     * @param {string} groupID
-     * @returns {Promise}
-     */
-    loadColumnRecords: function (groupID) {
-        var dataPoint = this.localData[groupID];
-        dataPoint.isOpen = true;
-        return this.reload(groupID);
-    },
-    /**
      * Load more records in a group.
      *
      * @param {string} groupID localID of the group
@@ -236,7 +225,7 @@ var KanbanModel = BasicModel.extend({
 
         // Manually updates groups data. Note: this is done before the actual
         // save as it might need to perform a read group in some cases so those
-        // updated data might be overriden again.
+        // updated data might be overridden again.
         var record = self.localData[recordID];
         var resID = record.res_id;
         // Remove record from its current group

@@ -6,11 +6,10 @@
     'version': '1.0',
     'category': 'Localization',
     'description': """
-    This module is for all the Irish SMEs who would like to setup their accounting and county codes quickly. The module provides:
+    This module is for all the Irish SMEs who would like to setup their accounting quickly. The module provides:
 
     - a Chart of Accounts customised to Ireland
-    - VAT Rates and Structure
-    - IE Counties List (Make sure you don't already have any counties of Ireland in the system. Otherwise they will be duplicated)""",
+    - VAT Rates and Structure""",
 
     'author': 'Target Integration',
     'website': 'http://www.targetintegration.com',
@@ -20,7 +19,6 @@
         'data/account.account.template.csv',
         'data/account.chart.template.csv',
         'data/account_tax_data.xml',
-        'data/res.country.state.csv',
         'data/account_chart_template_configuration_data.xml',
     ],
 }

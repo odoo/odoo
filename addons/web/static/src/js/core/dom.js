@@ -108,16 +108,14 @@ var dom = {
             class: $textarea[0].className,
         });
 
-        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
         $fixedTextarea.css({
-            position: 'absolute',
             opacity: 0,
-            height: 10,
+            height: 0,
             borderTopWidth: 0,
             borderBottomWidth: 0,
             padding: 0,
-            top: -10000,
-        }).css(direction, -10000);
+            overflow: 'hidden',
+        });
         $fixedTextarea.data("auto_resize", true);
 
         // The following line is necessary to prevent the scrollbar to appear
@@ -540,7 +538,7 @@ var dom = {
             menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
             do {
                 menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
-            } while (!(maxWidth - menuItemsWidth >= -0.001));
+            } while (!(maxWidth - menuItemsWidth >= -0.001) && (nbItems > 0));
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');

@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop Sale Coupon">
+<template id="assets_tests" name="Website Sale Coupon Assets Tests" inherit_id="web.assets_tests">
     <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_sale_coupon/static/src/js/website_sale_coupon.test.js"></script>
+        <script type="text/javascript" src="/website_sale_coupon/static/tests/tours/website_sale_coupon.js"></script>
     </xpath>
 </template>
 <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines">
+    <xpath expr="//td[hasclass('td-img')]/span" position="replace">
+        <t t-if="line.is_reward_line and line.sudo().product_id.image_128">
+            <span>
+                <img t-att-src="image_data_uri(line.sudo().product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
+            </span>
+        </t>
+        <t t-else="">
+            <t>$0</t>
+        </t>
+    </xpath>
     <xpath expr="//td[hasclass('td-qty')]/div" position="attributes">
         <attribute name="t-att-style">line.is_reward_line and "display:none;"</attribute>
     </xpath>
@@ -22,6 +32,18 @@
     </xpath>
     <xpath expr="//del" position="attributes">
         <attribute name="t-if">not line.is_reward_line</attribute>
+    </xpath>
+</template>
+<template id="cart_popover" inherit_id="website_sale.cart_popover" name="Cart Popover">
+    <xpath expr="//div[hasclass('cart_line')]/div[1]/span" position="replace">
+        <t t-if="line.is_reward_line and line.sudo().product_id.image_128">
+            <span>
+                <img t-att-src="image_data_uri(line.sudo().product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
+            </span>
+        </t>
+        <t t-else="">
+            <t>$0</t>
+        </t>
     </xpath>
 </template>
 <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
@@ -72,6 +94,12 @@
                  }'/>
           </td>
         </tr>
+    </xpath>
+</template>
+
+<template id="reduction_coupon_code" inherit_id="website_sale.reduction_code">
+    <xpath expr="//t[@t-set='force_coupon']" position="replace">
+        <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available') or website_sale_order.promo_code or website_sale_order.generated_coupon_ids or website_sale_order.applied_coupon_ids or website_sale_order.get_promo_code_error(delete=False)"/>
     </xpath>
 </template>
 

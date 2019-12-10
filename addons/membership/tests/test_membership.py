@@ -2,9 +2,11 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
 
 from odoo.addons.membership.tests.common import TestMembershipCommon
 from odoo.tests import tagged
+from odoo import fields
 
 
 @tagged('post_install', '-at_install')
@@ -16,7 +18,7 @@ class TestMembership(TestMembershipCommon):
             'membership_date_to': datetime.date.today() + relativedelta(years=-1),
         })
 
-        self.partner_1.create_membership_invoice(product_id=self.membership_1.id, datas={'amount': 75.0})
+        self.partner_1.create_membership_invoice(self.membership_1, 75.0)
         self.assertEqual(
             self.partner_1.membership_state, 'old',
             'membership: outdated subscription should put member in old state')
@@ -27,10 +29,8 @@ class TestMembership(TestMembershipCommon):
             'membership: default membership status of partners should be None')
 
         # subscribes to a membership
-        self.partner_1.create_membership_invoice(product_id=self.membership_1.id, datas={'amount': 75.0})
+        invoice = self.partner_1.create_membership_invoice(self.membership_1, 75.0)
 
-        # checks for invoices
-        invoice = self.env['account.invoice'].search([('partner_id', '=', self.partner_1.id)], limit=1)
         self.assertEqual(
             invoice.state, 'draft',
             'membership: new subscription should create a draft invoice')
@@ -46,14 +46,22 @@ class TestMembership(TestMembershipCommon):
             'membership: new membership should be in waiting state')
 
         # the invoice is open -> customer goes to invoiced status
-        invoice.action_invoice_open()
+        invoice.post()
         self.assertEqual(
             self.partner_1.membership_state, 'invoiced',
             'membership: after opening the invoice, customer should be in invoiced status')
 
         # the invoice is paid -> customer goes to paid status
         bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
-        invoice.pay_and_reconcile(bank_journal, invoice.amount_total)
+        self.env['account.payment'].create({
+            'payment_method_id': self.env.ref("account.account_payment_method_manual_in").id,
+            'payment_type': 'inbound',
+            'invoice_ids': [(6, False, invoice.ids)],
+            'amount': 86.25,
+            'journal_id': bank_journal.id,
+            'partner_type': 'customer',
+        }).post()
+
         self.assertEqual(
             self.partner_1.membership_state, 'paid',
             'membership: after paying the invoice, customer should be in paid status')
@@ -73,12 +81,14 @@ class TestMembership(TestMembershipCommon):
             'membership: default membership status of partners should be None')
 
         # subscribes to a membership
-        self.partner_1.create_membership_invoice(product_id=self.membership_1.id, datas={'amount': 75.0})
+        invoice = self.partner_1.create_membership_invoice(self.membership_1, 75.0)
 
-        # checks for invoices
-        invoice = self.env['account.invoice'].search([('partner_id', '=', self.partner_1.id)], limit=1)
+        def patched_today(*args, **kwargs):
+            return fields.Date.to_date('2019-01-01')
 
-        # the invoice is canceled -> membership state of the customer goes to canceled
-        invoice.action_invoice_cancel()
+        with patch.object(fields.Date, 'today', patched_today):
+            invoice.button_cancel()
+
+        self.partner_1._compute_membership_state()
         self.assertEqual(invoice.state, 'cancel')
         self.assertEqual(self.partner_1.membership_state, 'canceled')

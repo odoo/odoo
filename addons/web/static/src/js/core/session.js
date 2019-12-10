@@ -3,9 +3,7 @@ odoo.define('web.Session', function (require) {
 
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
-var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
 
@@ -35,7 +33,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
-        this.debug = config.debug;
 
         // for historic reasons, the session requires a name to properly work
         // (see the methods get_cookie and set_cookie).  We should perhaps
@@ -66,17 +63,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Setup a session
      */
     session_bind: function (origin) {
-        var self = this;
         this.setup(origin);
         qweb.default_dict._s = this.origin;
         this.uid = null;
         this.username = null;
         this.user_context= {};
         this.db = null;
-        this.module_loaded = {};
-        _(this.module_list).each(function (mod) {
-            self.module_loaded[mod] = true;
-        });
         this.active_id = null;
         return this.session_init();
     },
@@ -215,9 +207,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return loaded.then(function () {
             return self.load_js(file_list);
         }).then(function () {
-            self.on_modules_loaded();
-            self.trigger('module_loaded');
-       });
+            self._configureLocale();
+        });
     },
     load_translations: function () {
         return _t.database.load_translations(this, this.module_list, this.user_context.lang, this.translationURL);
@@ -247,29 +238,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods=' + mods;
             return $.get(route).then(function (doc) {
                 if (!doc) { return; }
+                const owlTemplates = [];
+                for (let child of doc.querySelectorAll("templates > [owl]")) {
+                    child.removeAttribute('owl');
+                    owlTemplates.push(child.outerHTML);
+                    child.remove();
+                }
                 qweb.add_template(doc);
+                self.owlTemplates = `<templates> ${owlTemplates.join('\n')} </templates>`;
             });
         });
         return lock;
-    },
-    on_modules_loaded: function () {
-        var openerp = window.openerp;
-        for(var j=0; j<this.module_list.length; j++) {
-            var mod = this.module_list[j];
-            if(this.module_loaded[mod])
-                continue;
-            openerp[mod] = {};
-            // init module mod
-            var fct = openerp._openerp[mod];
-            if(typeof(fct) === "function") {
-                openerp._openerp[mod] = {};
-                for (var k in fct) {
-                    openerp._openerp[mod][k] = fct[k];
-                }
-                fct(openerp, openerp._openerp[mod]);
-            }
-            this.module_loaded[mod] = true;
-        }
     },
     get_currency: function (currency_id) {
         return this.currencies[currency_id];
@@ -305,9 +284,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         options = _.clone(options || {});
         options.headers = _.extend({}, options.headers);
-        if (odoo.debug) {
-            options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
-        }
 
         // we add here the user context for ALL queries, mainly to pass
         // the allowed_company_ids key
@@ -391,6 +367,23 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         utils.set_cookie('cids', hash.cids || String(main_company_id));
         $.bbq.pushState({'cids': hash.cids}, 0);
         location.reload();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets first day of week in current locale according to the user language.
+     *
+     * @private
+     */
+    _configureLocale: function () {
+        moment.updateLocale(moment.locale(), {
+            week: {
+                dow: (_t.database.parameters.week_start || 0) % 7,
+            },
+        });
     },
 
     //--------------------------------------------------------------------------

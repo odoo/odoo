@@ -5,7 +5,6 @@
         <field name="name">Sessions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.session</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_session_search" />
         <field name="context">{
@@ -18,7 +17,6 @@
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_order_search"/>
         <field name="context">{
@@ -30,7 +28,6 @@
     <record id="action_report_pos_order_all_filtered" model="ir.actions.act_window">
         <field name="name">Orders Analysis</field>
         <field name="res_model">report.pos.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="view_report_pos_order_search"/>
         <field name="context">{
@@ -46,8 +43,8 @@
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
             <kanban create="false" class="o_kanban_dashboard o_pos_kanban">
+                <field name="current_user_id" invisible="1" />
                 <field name="name"/>
-                <field name="session_ids"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
                 <field name="last_session_closing_date"/>
@@ -63,6 +60,12 @@
                                     <div class="o_primary">
                                         <t t-esc="record.name.value"/>
                                     </div>
+                                    <t t-if="record.pos_session_state.raw_value == 'new_session'">
+                                        <div class="badge badge-info o_kanban_inline_block">New session</div>
+                                    </t>
+                                    <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
+                                        <div class="badge badge-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
+                                    </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opening_control'">
                                         <div class="badge badge-info o_kanban_inline_block">Opening Control</div>
                                     </t>
@@ -85,7 +88,7 @@
                                     <div class="col-6 o_kanban_primary_left">
                                         <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object">Resume</button>
 
-                                        <button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
+                                        <button t-if="record.current_session_state.raw_value === 'new_session' || record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
 
                                         <button t-if="_.contains(['opened', 'closing_control'], record.current_session_state.raw_value)" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
 
@@ -112,6 +115,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div style="text-align:right;" t-if="record.current_user_id.value">
+                                    <img
+                                        class="oe_kanban_avatar o_image_24_cover"
+                                        t-att-src="kanban_image('res.users', 'image_128', record.current_user_id.raw_value)"
+                                        t-att-title="record.current_user_id.value"
+                                        t-att-alt="record.current_user_id.value"
+                                    />
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">

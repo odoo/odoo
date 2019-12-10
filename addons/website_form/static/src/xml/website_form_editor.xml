@@ -1,40 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <!-- Generic Modal Layout -->
-    <t t-name="website_form.modal">
-        <div role="dialog" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h4 class="modal-title"><t t-esc="modal_title"/></h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span>&amp;times;</span>
-                        </button>
-                    </header>
-                    <main class="modal-body">
-                        <form role="form">
-                            <t t-raw="modal_body"/>
-                        </form>
-                    </main>
-                    <footer class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="modal-save">Save</button>
-                    </footer>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <!-- Generic Field Layout -->
     <t t-name="website_form.field">
         <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
-            <div class="col-lg-3 col-md-4">
+            <div t-att-class="field.formatInfo and field.formatInfo.labelClass || 'col-lg-3 col-md-4'">
                 <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
                 </label>
             </div>
-            <div class="col-lg-7 col-md-8">
+            <div t-att-class="field.formatInfo and field.formatInfo.contentClass || 'col-lg-7 col-md-8'">
                 <t t-raw="0"/>
             </div>
         </div>
@@ -57,6 +32,18 @@
     <t t-name="website_form.field_text">
         <t t-call="website_form.field">
             <textarea
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
+    <!-- Email Field -->
+    <t t-name="website_form.field_email">
+        <t t-call="website_form.field">
+            <input
+                type="email"
                 class="form-control o_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required"
@@ -140,23 +127,25 @@
     <!-- Boolean Field -->
     <t t-name="website_form.field_boolean">
         <t t-call="website_form.field">
-            <input
-                type="checkbox"
-                value="Yes"
-                class="o_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required"
-            />
+            <div class="col-form-label">
+                <input
+                    type="checkbox"
+                    value="Yes"
+                    class="o_website_form_input"
+                    t-att-name="field.name"
+                    t-att-required="field.required"
+                />
+            </div>
         </t>
     </t>
 
     <!-- Selection Field -->
     <t t-name="website_form.field_selection">
         <t t-call="website_form.field">
-            <div class="o_website_form_flex">
+            <div class="o_website_form_flex" data-display="horizontal">
                 <t t-foreach="field.selection" t-as="option">
                     <div class="radio o_website_form_flex_item">
-                        <label>
+                        <label class="col-form-label">
                             <input
                                 type="radio"
                                 class="o_website_form_input"
@@ -205,7 +194,7 @@
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website_form.field">
-                <div class="o_website_form_flex">
+                <div class="o_website_form_flex" data-display="horizontal">
                     <t t-if="!field.records">
                         <input
                             class="o_website_form_input"
@@ -217,7 +206,7 @@
                     </t>
                     <t t-foreach="field.records" t-as="record">
                         <div class="checkbox o_website_form_flex_item">
-                            <label>
+                            <label class="col-form-label">
                                 <input
                                     type="checkbox"
                                     class="o_website_form_input"
@@ -254,4 +243,8 @@
         </t>
     </t>
 
+    <!-- Monetary Field -->
+    <t t-name="website_form.field_monetary">
+        <t t-call="website_form.field_float" />
+    </t>
 </templates>

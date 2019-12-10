@@ -1,7 +1,11 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 import re
+import werkzeug
+
+from odoo.tools import DotDict
 
 
 def get_video_embed_code(video_url):
@@ -49,3 +53,70 @@ def get_video_embed_code(video_url):
             # We directly use the provided URL as it is
             embedUrl = video_url
         return '<iframe class="embed-responsive-item" src="%s" allowFullScreen="true" frameborder="0"></iframe>' % embedUrl
+
+
+class MockObject(object):
+    _log_call = []
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__ = kwargs
+
+    def __call__(self, *args, **kwargs):
+        self._log_call.append((args, kwargs))
+        return self
+
+    def __getitem__(self, index):
+        return self
+
+
+def werkzeugRaiseNotFound(*args, **kwargs):
+    raise werkzeug.exceptions.NotFound()
+
+
+class MockRequest(object):
+    """ Class with context manager mocking odoo.http.request for tests """
+    def __init__(self, env, **kw):
+        app = MockObject(routing={
+            'type': 'http',
+            'website': True,
+            'multilang': kw.get('multilang', True),
+        })
+        app.get_db_router = app.bind = app.match = app
+        if not kw.get('routing', True):
+            app.match = werkzeugRaiseNotFound
+
+        lang = kw.get('lang')
+        if not lang:
+            lang_code = kw.get('context', {}).get('lang', env.context.get('lang', 'en_US'))
+            lang = env['res.lang']._lang_get(lang_code)
+
+        context = kw.get('context', {})
+        context.setdefault('lang', lang_code)
+
+        self.request = DotDict({
+            'context': context,
+            'db': None,
+            'env': env,
+            'httprequest': {
+                'path': '/hello/',
+                'app': app,
+                'cookies': kw.get('cookies', {}),
+            },
+            'lang': lang,
+            'redirect': werkzeug.utils.redirect,
+            'session': {
+                'geoip': {
+                    'country_code': kw.get('country_code'),
+                },
+                'debug': False,
+                'sale_order_id': kw.get('sale_order_id'),
+            },
+            'website': kw.get('website'),
+        })
+        odoo.http._request_stack.push(self.request)
+
+    def __enter__(self):
+        return self.request
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        odoo.http._request_stack.pop()

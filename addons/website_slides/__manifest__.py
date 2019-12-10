@@ -3,9 +3,9 @@
     'name': 'eLearning',
     'version': '2.0',
     'sequence': 145,
-    'summary': 'Create online Courses',
+    'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/page/slides',
-    'category': 'Website',
+    'category': 'Website/Website',
     'description': """
 Create Online Courses
 =====================
@@ -20,13 +20,17 @@ Featuring
  * Statistics
 """,
     'depends': [
+        'portal_rating',
         'website',
         'website_mail',
         'website_profile',
-        'website_rating'],
+    ],
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'views/rating_rating_views.xml',
+        'views/slide_question_views.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
@@ -40,7 +44,6 @@ Featuring
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
         'wizard/slide_channel_invite_views.xml',
-        'data/ir_data.xml',
         'data/gamification_data.xml',
         'data/mail_data.xml',
         'data/slide_data.xml',

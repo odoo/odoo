@@ -3,7 +3,6 @@
 from datetime import datetime, time
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -46,19 +45,22 @@ class PurchaseRequisition(models.Model):
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
-    name = fields.Char(string='Agreement Reference', required=True, copy=False, default='New', readonly=True)
+    name = fields.Char(string='Reference', required=True, copy=False, default='New', readonly=True)
     origin = fields.Char(string='Source Document')
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
-    vendor_id = fields.Many2one('res.partner', string="Vendor")
+    vendor_id = fields.Many2one('res.partner', string="Vendor", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     type_id = fields.Many2one('purchase.requisition.type', string="Agreement Type", required=True, default=_get_type_id)
     ordering_date = fields.Date(string="Ordering Date", tracking=True)
     date_end = fields.Datetime(string='Agreement Deadline', tracking=True)
     schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", tracking=True)
-    user_id = fields.Many2one('res.users', string='Purchase Representative', default= lambda self: self.env.user)
+    user_id = fields.Many2one(
+        'res.users', string='Purchase Representative',
+        default=lambda self: self.env.user, check_company=True)
     description = fields.Text()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
+    product_id = fields.Many2one('product.product', related='line_ids.product_id', string='Product', readonly=False)
     state = fields.Selection(PURCHASE_REQUISITION_STATES,
                               'Status', tracking=True, required=True,
                               copy=False, default='draft')
@@ -87,13 +89,11 @@ class PurchaseRequisition(models.Model):
             }
             return {'warning': warning}
 
-    @api.multi
     @api.depends('purchase_ids')
     def _compute_orders_number(self):
         for requisition in self:
             requisition.order_count = len(requisition.purchase_ids)
 
-    @api.multi
     def action_cancel(self):
         # try to set all associated quotations to cancel state
         for requisition in self:
@@ -104,7 +104,6 @@ class PurchaseRequisition(models.Model):
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
         self.write({'state': 'cancel'})
 
-    @api.multi
     def action_in_progress(self):
         self.ensure_one()
         if not all(obj.line_ids for obj in self):
@@ -126,7 +125,6 @@ class PurchaseRequisition(models.Model):
             else:
                 self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
-    @api.multi
     def action_open(self):
         self.write({'state': 'open'})
 
@@ -135,7 +133,6 @@ class PurchaseRequisition(models.Model):
         self.name = 'New'
         self.write({'state': 'draft'})
 
-    @api.multi
     def action_done(self):
         """
         Generate all purchase order based on selected lines, should only be called on one agreement at a time
@@ -177,8 +174,8 @@ class PurchaseRequisitionLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'))
-    price_unit = fields.Float(string='Unit Price', digits=dp.get_precision('Product Price'))
+    product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
+    price_unit = fields.Float(string='Unit Price', digits='Product Price')
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env.company)
@@ -201,11 +198,12 @@ class PurchaseRequisitionLine(models.Model):
                 raise UserError(_('You cannot confirm the blanket order without price.'))
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
-            if vals['price_unit'] <= 0.0:
+            if vals['price_unit'] <= 0.0 and any(
+                    requisition.state not in ['draft', 'cancel', 'done'] and
+                    requisition.is_quantity_copy == 'none' for requisition in self.mapped('requisition_id')):
                 raise UserError(_('You cannot confirm the blanket order without price.'))
             # If the price is updated, we have to update the related SupplierInfo
             self.supplier_info_ids.write({'price': vals['price_unit']})
@@ -226,11 +224,9 @@ class PurchaseRequisitionLine(models.Model):
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
                 'price': self.price_unit,
                 'currency_id': self.requisition_id.currency_id.id,
-                'purchase_requisition_id': purchase_requisition.id,
                 'purchase_requisition_line_id': self.id,
             })
 
-    @api.multi
     @api.depends('requisition_id.purchase_ids.state')
     def _compute_ordered_qty(self):
         for line in self:
@@ -251,7 +247,6 @@ class PurchaseRequisitionLine(models.Model):
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
-    @api.multi
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         self.ensure_one()
         requisition = self.requisition_id

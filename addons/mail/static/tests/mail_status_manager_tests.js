@@ -39,7 +39,7 @@ QUnit.test('simple set im_status', function (assert) {
 });
 
 QUnit.test('multi get_im_status', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
     var readCount = 0;
     var parent = testUtils.createParent({
         //data: this.data,
@@ -48,9 +48,8 @@ QUnit.test('multi get_im_status', async function (assert) {
             if (route === '/mail/init_messaging') {
                 return this._super.apply(this, arguments);
             }
-            if (args.method === 'read' && args.model === 'res.partner') {
-                assert.deepEqual(args.args[0], [2,3]);
-                assert.deepEqual(args.args[1], ['id', 'im_status']);
+            if (route === '/longpolling/im_status') {
+                assert.deepEqual(args.partner_ids, [2,3]);
                 readCount++;
                 return Promise.resolve([
                     {id: 2, im_status: 'away'},
@@ -85,7 +84,7 @@ QUnit.test('multi get_im_status', async function (assert) {
 });
 
 QUnit.test('update loop', async function (assert) {
-    assert.expect(12);
+    assert.expect(10);
     var readCount = 0;
     var parent = testUtils.createParent({
         services: this.services,
@@ -93,9 +92,8 @@ QUnit.test('update loop', async function (assert) {
             if (route === '/mail/init_messaging') {
                 return this._super.apply(this, arguments);
             }
-            if (args.method === 'read' && args.model === 'res.partner') {
-                assert.deepEqual(args.args[0], [1, 2]);
-                assert.deepEqual(args.args[1], ['id', 'im_status']);
+            if (route === '/longpolling/im_status') {
+                assert.deepEqual(args.partner_ids, [1, 2]);
                 readCount++;
                 return Promise.resolve([
                     {"id": 1, "im_status": "online"},

@@ -120,6 +120,53 @@ QUnit.test('messaging menu widget: menu with no records', async function (assert
     messagingMenu.destroy();
 });
 
+QUnit.test('messaging menu widget: messaging not ready', async function (assert) {
+    assert.expect(8);
+
+    const messagingReadyProm = testUtils.makeTestPromise();
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                const _super = this._super.bind(this, ...arguments); // limitation of class.js
+                assert.step('/mail/init_messaging:pending');
+                await messagingReadyProm;
+                assert.step('/mail/init_messaging:resolved');
+                return _super();
+            }
+            if (args.method === 'message_fetch') {
+                return [];
+            }
+            return this._super(...arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    assert.verifySteps(['/mail/init_messaging:pending']);
+    assert.ok(
+        messagingMenu.el,
+        "messaging menu should be rendered");
+    assert.strictEqual(
+        document.querySelector('.o_mail_systray_item'),
+        messagingMenu.el,
+        "should display messaging menu even when messaging is not ready");
+    assert.hasClass(
+        messagingMenu.$('.o_mail_messaging_menu_icon'),
+        'fa-spinner',
+        "Messaging menu icon should be a spinner when messaging menu is not ready");
+
+    messagingReadyProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['/mail/init_messaging:resolved']);
+    assert.doesNotHaveClass(
+        messagingMenu.$('.o_mail_messaging_menu_icon'),
+        'fa-spinner',
+        "Messaging menu icon should no longer be a spinner when messaging menu is ready");
+
+    messagingMenu.destroy();
+});
+
 QUnit.test('messaging menu widget: messaging menu with 1 record', async function (assert) {
     assert.expect(3);
     var messagingMenu = new MessagingMenu();
@@ -423,6 +470,88 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
     assert.strictEqual(lastMessagePreviewText,
         "Someone:Anewmessagecontent",
         "should display author name and inline body of newly received message");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('new message of type "notification" are not considered as unread messages', async function (assert) {
+    assert.expect(8);
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        data: this.data,
+        services: this.services,
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    // open messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should display a single channel preview");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_name')
+            .text()
+            .trim(),
+        "general",
+        "should display channel preview of 'general' channel");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_counter')
+            .text()
+            .trim(),
+        "",
+        "should have unread counter of 0 for 'general' channel (no unread messages)");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_last_message_preview')
+            .text()
+            .replace(/\s/g, ""),
+        "Me:test",
+        "should display author name and inline body of currently last message in the channel");
+    // close messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+
+    // simulate receiving a new message on the channel 'general' (id 1)
+    // of type 'notification'
+    const data = {
+        id: 100,
+        author_id: [42, "Someone"],
+        body: "<p>Left #general</p>",
+        channel_ids: [1],
+        message_type: 'notification',
+    };
+    const notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
+    // open messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should still display a single channel preview");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_name')
+            .text()
+            .trim(),
+        "general",
+        "should still display channel preview of 'general' channel");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_counter')
+            .text()
+            .trim(),
+        "",
+        "should still have unread counter of 0 for 'general' channel (no unread messages)");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_last_message_preview')
+            .text()
+            .replace(/\s/g, ""),
+        "Someone:Left#general",
+        "should display author name and inline body of notification message (last message of channel)");
 
     messagingMenu.destroy();
 });
@@ -916,6 +1045,63 @@ QUnit.test('messaging menu widget: expand on thread preview', async function (as
 
     await testUtils.dom.click($preview.find('.o_thread_window_expand'));
     assert.verifySteps(['open_document']);
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: click twice preview on slow message_fetch should open chat window once', async function (assert) {
+    // This test assumes that a condition for opening chat window is to
+    // successfully fetch messages beforehand.
+    assert.expect(1);
+
+    const self = this;
+    // Used to pause `message_fetch` after opening the messaging menu.
+    // This is necessary `message_fetch` on mailbox_inbox is required to
+    // display the previews.
+    let lockMessageFetch = false;
+    const messageFetchProm = testUtils.makeTestPromise();
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 1 },
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch' && lockMessageFetch) {
+                const _super = this._super.bind(this);
+                await messageFetchProm;
+                return _super(route, args);
+            }
+            if (args.method === 'channel_minimize') {
+                // called to detach thread in chat window
+                // simulate longpolling response with new chat window state
+                const channelInfo = {
+                    ...self.data['mail.channel'].records[0],
+                    is_minimized: true,
+                    state: 'open',
+                };
+                const notifications = [ [['myDB', 'res.partner'], channelInfo] ];
+                messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+            }
+            return this._super(...arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    // Opening chat window 1st time from messaging menu (pending from `messageFetchDef`)
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    lockMessageFetch = true;
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    // Click again on preview to open chat window
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    messageFetchProm.resolve();
+    await testUtils.nextTick();
+
+    assert.containsOnce(
+        $,
+        '.o_thread_window',
+        "should only display a single chat window");
 
     messagingMenu.destroy();
 });

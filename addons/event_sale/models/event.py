@@ -4,7 +4,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
-from odoo.addons import decimal_precision as dp
 from odoo.tools import float_is_zero
 
 
@@ -54,12 +53,13 @@ class Event(models.Model):
                 })
                 for ticket in self.event_type_id.event_ticket_ids]
 
-    @api.multi
     def _is_event_registrable(self):
-        self.ensure_one()
-        if not self.event_ticket_ids:
-            return True
-        return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
+        if super(Event, self)._is_event_registrable():
+            self.ensure_one()
+            return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
+        else:
+            return False
+
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'
@@ -71,15 +71,16 @@ class EventTicket(models.Model):
     name = fields.Char(string='Name', required=True, translate=True)
     event_type_id = fields.Many2one('event.type', string='Event Category', ondelete='cascade')
     event_id = fields.Many2one('event.event', string="Event", ondelete='cascade')
+    company_id = fields.Many2one('res.company', related='event_id.company_id')
     product_id = fields.Many2one('product.product', string='Product',
         required=True, domain=[("event_ok", "=", True)],
         default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
-    price = fields.Float(string='Price', digits=dp.get_precision('Product Price'))
+    price = fields.Float(string='Price', digits='Product Price')
     deadline = fields.Date(string="Sales End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
 
-    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits=dp.get_precision('Product Price'))
+    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
     price_reduce_taxinc = fields.Float(compute='_get_price_reduce_tax', string='Price Reduce Tax inc')
     # seats fields
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
@@ -92,16 +93,14 @@ class EventTicket(models.Model):
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seat Reservations', compute='_compute_seats', store=True)
     seats_used = fields.Integer(compute='_compute_seats', store=True)
 
-    @api.multi
     def _compute_is_expired(self):
         for record in self:
             if record.deadline:
-                current_date = fields.Date.context_today(record.with_context({'tz': record.event_id.date_tz}))
+                current_date = fields.Date.context_today(record.with_context(tz=record.event_id.date_tz))
                 record.is_expired = record.deadline < current_date
             else:
                 record.is_expired = False
 
-    @api.multi
     def _compute_price_reduce(self):
         for record in self:
             product = record.product_id
@@ -115,7 +114,6 @@ class EventTicket(models.Model):
             taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
             record.price_reduce_taxinc = taxes['total_included']
 
-    @api.multi
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
@@ -135,6 +133,7 @@ class EventTicket(models.Model):
                         WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY event_ticket_id, state
                     """
+            self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state'])
             self.env.cr.execute(query, (tuple(self.ids),))
             for event_ticket_id, state, num in self.env.cr.fetchall():
                 ticket = self.browse(event_ticket_id)
@@ -144,7 +143,6 @@ class EventTicket(models.Model):
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
 
-    @api.multi
     @api.constrains('registration_ids', 'seats_max')
     def _check_seats_limit(self):
         for record in self:
@@ -200,14 +198,12 @@ class EventRegistration(models.Model):
         if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
             self.event_ticket_id = None
 
-    @api.multi
     @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):
         for record in self:
             if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
                 raise ValidationError(_('No more available seats for this ticket'))
 
-    @api.multi
     def _check_auto_confirmation(self):
         res = super(EventRegistration, self)._check_auto_confirmation()
         if res:
@@ -243,11 +239,10 @@ class EventRegistration(models.Model):
             })
         return att_data
 
-    @api.multi
     def summary(self):
         res = super(EventRegistration, self).summary()
-        if self.event_ticket_id.product_id.image_medium:
-            res['image'] = '/web/image/product.product/%s/image_medium' % self.event_ticket_id.product_id.id
+        if self.event_ticket_id.product_id.image_128:
+            res['image'] = '/web/image/product.product/%s/image_128' % self.event_ticket_id.product_id.id
         information = res.setdefault('information', {})
         information.append((_('Name'), self.name))
         information.append((_('Ticket'), self.event_ticket_id.name or _('None')))

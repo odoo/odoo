@@ -1,13 +1,12 @@
-(function() {
+(function () {
 "use strict";
 
-odoo.__DEBUG__.didLogInfo.then(function() {
-
-    var modulesInfo = odoo.__DEBUG__.js_modules;
+odoo.__DEBUG__.didLogInfo.then(function () {
+    var modulesInfo = odoo.__DEBUG__.jsModules;
 
     QUnit.module('Odoo JS Modules');
 
-    QUnit.test('all modules are properly loaded', function(assert) {
+    QUnit.test('all modules are properly loaded', function (assert) {
         assert.expect(2);
 
         assert.deepEqual(modulesInfo.missing, [],
@@ -15,7 +14,5 @@ odoo.__DEBUG__.didLogInfo.then(function() {
         assert.deepEqual(modulesInfo.failed, [],
             "no js module should have failed");
     });
-
 });
-
 })();

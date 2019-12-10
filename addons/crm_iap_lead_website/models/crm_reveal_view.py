@@ -17,7 +17,6 @@ class CRMRevealView(models.Model):
     reveal_state = fields.Selection([('to_process', 'To Process'), ('not_found', 'Not Found')], default='to_process', string="State", index=True)
     create_date = fields.Datetime(index=True)
 
-    @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('crm_reveal_view_ip_rule_id',))
         if not self._cr.fetchone():

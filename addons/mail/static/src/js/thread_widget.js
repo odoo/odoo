@@ -55,6 +55,7 @@ var ThreadWidget = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
+        this.attachments = [];
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
@@ -68,6 +69,7 @@ var ThreadWidget = Widget.extend({
             displayEmailIcons: true,
             displayReplyIcons: false,
             loadMoreOnScroll: false,
+            hasMessageAttachmentDeletable: false,
         });
         // options when the thread is disabled
         this._disabledOptions = {
@@ -81,6 +83,7 @@ var ThreadWidget = Widget.extend({
             displayEmailIcons: false,
             displayReplyIcons: false,
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
+            hasMessageAttachmentDeletable: false,
         };
         this._selectedMessageID = null;
         this._currentThreadID = null;
@@ -216,6 +219,14 @@ var ThreadWidget = Widget.extend({
         if (thread.hasSeenFeature()) {
             this._renderMessageSeenPopover(thread, messages);
         }
+    },
+
+    /**
+     * Render thread widget when loading, i.e. when messaging is not yet ready.
+     * @see /mail/init_messaging
+     */
+    renderLoading: function () {
+        this.$el.html(QWeb.render('mail.widget.ThreadLoading'));
     },
 
     //--------------------------------------------------------------------------

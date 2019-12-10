@@ -135,11 +135,12 @@ var SearchableThread = Thread.extend({
      * @override
      * @private
      * @param {mail.model.Message} message
-     * @param {Object} options
+     * @param {Object} [options={}]
      * @param {Array} [options.domain=[]]
      * @param {boolean} [options.incrementUnread=false]
      */
     _addMessage: function (message, options) {
+        options = options || {};
         this._super.apply(this, arguments);
         var cache = this._getCache(options.domain || []);
         var index = _.sortedIndex(cache.messages, message, function (msg) {
@@ -148,7 +149,11 @@ var SearchableThread = Thread.extend({
         if (cache.messages[index] !== message) {
             cache.messages.splice(index, 0, message);
         }
-        if (!message.isMyselfAuthor() && options.incrementUnread) {
+        if (
+            !message.isMyselfAuthor() &&
+            options.incrementUnread &&
+            message.getType() !== 'notification'
+        ) {
             this._incrementUnreadCounter();
         }
     },

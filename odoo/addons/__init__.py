@@ -17,4 +17,9 @@ Importing them from here is deprecated.
 # make odoo.addons a namespace package, while keeping this __init__.py
 # present, for python 2 compatibility
 # https://packaging.python.org/guides/packaging-namespace-packages/
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+import pkgutil
+import os.path
+__path__ = [
+    os.path.abspath(path)
+    for path in pkgutil.extend_path(__path__, __name__)
+]

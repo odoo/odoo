@@ -4,7 +4,6 @@ from odoo.tests import common
 
 
 class TestStockCommon(common.SavepointCase):
-
     @classmethod
     def setUpClass(cls):
         super(TestStockCommon, cls).setUpClass()
@@ -22,8 +21,6 @@ class TestStockCommon(common.SavepointCase):
         cls.LotObj = cls.env['stock.production.lot']
 
         # Model Data
-        cls.partner_agrolite_id = cls.ModelDataObj.xmlid_to_res_id('base.res_partner_2')
-        cls.partner_delta_id = cls.ModelDataObj.xmlid_to_res_id('base.res_partner_4')
         cls.picking_type_in = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_in')
         cls.picking_type_out = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
         cls.supplier_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')

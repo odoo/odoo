@@ -4,19 +4,34 @@
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
-from odoo.addons import decimal_precision as dp
 
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
-    production_id = fields.Many2one('mrp.production', 'Production Order')
-    lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number')
+    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
+    production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
+    lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
     lot_produced_qty = fields.Float(
-        'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
+        'Quantity Finished Product', digits='Product Unit of Measure',
         help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
+
+    def create(self, values):
+        res = super(StockMoveLine, self).create(values)
+        for line in res:
+            # If the line is added in a done production, we need to map it
+            # manually to the produced move lines in order to see them in the
+            # traceability report
+            if line.move_id.raw_material_production_id and line.state == 'done':
+                mo = line.move_id.raw_material_production_id
+                if line.lot_produced_ids:
+                    produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in line.lot_produced_ids)
+                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                else:
+                    produced_move_lines = mo.move_finished_ids.move_line_ids
+                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+        return res
 
     def _get_similar_move_lines(self):
         lines = super(StockMoveLine, self)._get_similar_move_lines()
@@ -39,7 +54,6 @@ class StockMoveLine(models.Model):
                 return False
         return super(StockMoveLine, self)._reservation_is_updatable(quantity, reserved_quant)
 
-    @api.multi
     def write(self, vals):
         for move_line in self:
             if move_line.move_id.production_id and 'lot_id' in vals:
@@ -55,23 +69,23 @@ class StockMoveLine(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    created_production_id = fields.Many2one('mrp.production', 'Created Production Order')
+    created_production_id = fields.Many2one('mrp.production', 'Created Production Order', check_company=True)
     production_id = fields.Many2one(
-        'mrp.production', 'Production Order for finished products')
+        'mrp.production', 'Production Order for finished products', check_company=True)
     raw_material_production_id = fields.Many2one(
-        'mrp.production', 'Production Order for components')
+        'mrp.production', 'Production Order for components', check_company=True)
     unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Disassembly Order')
+        'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Consumed Disassembly Order')
+        'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation To Consume')  # TDE FIXME: naming
+        'mrp.routing.workcenter', 'Operation To Consume', check_company=True)  # TDE FIXME: naming
     workorder_id = fields.Many2one(
-        'mrp.workorder', 'Work Order To Consume')
+        'mrp.workorder', 'Work Order To Consume', check_company=True)
     # Quantities to process, in normalized UoMs
-    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
+    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', check_company=True)
     byproduct_id = fields.Many2one(
-        'mrp.bom.byproduct', 'By-products',
+        'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
     unit_factor = fields.Float('Unit Factor', default=1)
     is_done = fields.Boolean(
@@ -98,7 +112,11 @@ class StockMove(models.Model):
                     move.order_finished_lot_ids = finished_lots_ids
                     move.finished_lots_exist = True
                 else:
+                    move.order_finished_lot_ids = False
                     move.finished_lots_exist = False
+            else:
+                move.order_finished_lot_ids = False
+                move.finished_lots_exist = False
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):
@@ -135,12 +153,6 @@ class StockMove(models.Model):
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
                                                'workorder_id': move.workorder_id.id,})
         return res
-
-    def _action_cancel(self):
-        if any(move.quantity_done and (move.raw_material_production_id or move.production_id) for move in self):
-            raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
-             If you want to cancel this MO, please change the consumed quantities to 0.'))
-        return super(StockMove, self)._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.env['stock.move']
@@ -224,14 +236,24 @@ class StockMove(models.Model):
         return self.env['stock.move']
 
     def _get_upstream_documents_and_responsibles(self, visited):
-            if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
-                return [(self.created_production_id, self.created_production_id.user_id, visited)]
+            if self.production_id and self.production_id.state not in ('done', 'cancel'):
+                return [(self.production_id, self.production_id.user_id, visited)]
             else:
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
+    def _delay_alert_get_documents(self):
+        res = super(StockMove, self)._delay_alert_get_documents()
+        productions = self.mapped('raw_material_production_id')
+        return res + list(productions)
 
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
+
+    def _key_assign_picking(self):
+        keys = super(StockMove, self)._key_assign_picking()
+        return keys + (self.created_production_id,)
+
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.

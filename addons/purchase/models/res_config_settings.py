@@ -21,14 +21,12 @@ class ResConfigSettings(models.TransientModel):
         help="This default value is applied to any new product created. "
         "This can be changed in the product detail form.", default="receive")
     group_warning_purchase = fields.Boolean("Purchase Warnings", implied_group='purchase.group_warning_purchase')
-    group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
-        implied_group="purchase.group_manage_vendor_price")
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
+    module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
     po_lead = fields.Float(related='company_id.po_lead', readonly=False)
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
-        oldname='default_new_po_lead',
         config_parameter='purchase.use_po_lead',
         help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
 

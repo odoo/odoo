@@ -19,6 +19,7 @@ var utils = require('web.utils');
 var _t = core._t;
 
 ListRenderer.include({
+    RESIZE_DELAY: 200,
     custom_events: _.extend({}, ListRenderer.prototype.custom_events, {
         navigation_move: '_onNavigationMove',
     }),
@@ -38,10 +39,15 @@ ListRenderer.include({
      * @param {boolean} params.addCreateLineInGroups
      * @param {boolean} params.addTrashIcon
      * @param {boolean} params.isMany2Many
+     * @param {boolean} params.isMultiEditable
      */
     init: function (parent, state, params) {
         var self = this;
         this._super.apply(this, arguments);
+
+        this.editable = params.editable;
+        this.isMultiEditable = params.isMultiEditable;
+        this.columnWidths = false;
 
         // if addCreateLine (resp. addCreateLineInGroups) is true, the renderer
         // will add a 'Add a line' link at the bottom of the list view (resp.
@@ -95,17 +101,51 @@ ListRenderer.include({
 
         this.currentRow = null;
         this.currentFieldIndex = null;
-        this.allRecordsIds = null; // flat array of records ids used by navigation
+        this.isResizing = false;
+        this.eventListeners = [];
     },
     /**
      * @override
      * @returns {Promise}
      */
     start: function () {
-        if (this.editable) {
-            core.bus.on('click', this, this._onWindowClicked.bind(this));
-        }
+        core.bus.on('click', this, this._onWindowClicked.bind(this));
+        core.bus.on('resize', this, _.debounce(this._onResize.bind(this), this.RESIZE_DELAY));
+        core.bus.on('DOM_updated', this, () => this._freezeColumnWidths());
         return this._super();
+    },
+    /**
+     * Overriden to unbind all attached listeners
+     *
+     * @override
+     */
+    destroy: function () {
+        this.eventListeners.forEach(listener => {
+            const { type, el, callback, options } = listener;
+            el.removeEventListener(type, callback, options);
+        });
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * The list renderer needs to know if it is in the DOM, and to be notified
+     * when it is attached to the DOM to properly compute column widths.
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        this.isInDOM = true;
+        this._freezeColumnWidths();
+        this._super();
+    },
+    /**
+     * The list renderer needs to know if it is in the DOM to properly compute
+     * column widths.
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        this.isInDOM = false;
+        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -217,7 +257,10 @@ ListRenderer.include({
 
                 // store the selection range to restore it once the table will
                 // be re-rendered, and the current cell re-selected
-                var currentRowID, currentWidget, focusedElement, selectionRange;
+                var currentRowID;
+                var currentWidget;
+                var focusedElement;
+                var selectionRange;
                 if (self.currentRow !== null) {
                     currentRowID = self._getRecordID(self.currentRow);
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
@@ -263,8 +306,9 @@ ListRenderer.include({
     /**
      * Edit the first record in the list
      */
-    editFirstRecord: function () {
-        this._selectCell(this._getFirstDataRowIndex(), 0);
+    editFirstRecord: function (ev) {
+        const $borderRow = this._getBorderRow(ev.data.side || 'first');
+        this._selectCell($borderRow.prop('rowIndex') - 1, ev.data.cellIndex || 0);
     },
     /**
      * Edit a given record in the list
@@ -277,6 +321,17 @@ ListRenderer.include({
         this._selectCell(rowIndex, 0);
     },
     /**
+     * Gives focus to a specific cell, given its row and its related column.
+     *
+     * @param {string} recordId
+     * @param {Object} column
+     */
+    focusCell: function (recordId, column) {
+        var $row = this._getRow(recordId);
+        var cellIndex = this.columns.indexOf(column);
+        $row.find('.o_data_cell')[cellIndex].focus();
+    },
+    /**
      * Returns the recordID associated to the line which is currently in edition
      * or null if there is no line in edition.
      *
@@ -287,6 +342,27 @@ ListRenderer.include({
             return this._getRecordID(this.currentRow);
         }
         return null;
+    },
+    /**
+     * Returns whether the list is in multiple record edition from a given record.
+     *
+     * @private
+     * @param {string} recordId
+     * @returns {boolean}
+     */
+    isInMultipleRecordEdition: function (recordId) {
+        return this.isEditable() && this.isMultiEditable && this.selection.includes(recordId);
+    },
+    /**
+     * Returns whether the list can be edited.
+     * It's true when:
+     * - the list `editable` property is set,
+     * - or at least one record is selected (becomes partially editable)
+     *
+     * @returns {boolean}
+     */
+    isEditable: function () {
+        return this.editable || (this.isMultiEditable && this.selection.length);
     },
     /**
      * Removes the line associated to the given recordID (the index of the row
@@ -303,6 +379,7 @@ ListRenderer.include({
         }
         if ($row.prop('rowIndex') - 1 === this.currentRow) {
             this.currentRow = null;
+            this._enableRecordSelectors();
         }
 
         // destroy widgets first
@@ -343,18 +420,6 @@ ListRenderer.include({
         this.currentRow = editMode ? $row.prop('rowIndex') - 1 : null;
         var $tds = $row.children('.o_data_cell');
         var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
-
-        // When switching to edit mode, force the dimensions of all cells to
-        // their current value so that they won't change if their content
-        // changes, to prevent the view from flickering.
-        // We need to use getBoundingClientRect instead of outerWidth to
-        // prevent a rounding issue on Firefox.
-        if (editMode) {
-            $tds.each(function () {
-                var $td = $(this);
-                $td.css({width: $td[0].getBoundingClientRect().width});
-            });
-        }
 
         // Prepare options for cell rendering (this depends on the mode)
         var options = {
@@ -397,7 +462,11 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
-        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id);
+        if (editMode) {
+            this._disableRecordSelectors();
+        } else {
+            this._enableRecordSelectors();
+        }
 
         return Promise.all(defs).then(function () {
             // necessary to trigger resize on fieldtexts
@@ -418,38 +487,45 @@ ListRenderer.include({
      *   user refuses to discard its changes.
      */
     unselectRow: function () {
-        var self = this;
         // Protect against calling this method when no row is selected
         if (this.currentRow === null) {
             return Promise.resolve();
         }
         var recordID = this._getRecordID(this.currentRow);
         var recordWidgets = this.allFieldWidgets[recordID];
-        toggleWidgets(true);
-
-        var prom = new Promise(function (resolve, reject) {
-            self.trigger_up('save_line', {
-                recordID: recordID,
-                onSuccess: resolve,
-                onFailure: reject,
-            });
-        });
-        prom.guardedCatch(function() {
-            toggleWidgets(false);
-        });
-        return prom;
-
         function toggleWidgets(disabled) {
             _.each(recordWidgets, function (widget) {
                 var $el = widget.getFocusableElement();
                 $el.prop('disabled', disabled);
             });
         }
+
+        toggleWidgets(true);
+        return new Promise((resolve, reject) => {
+            this.trigger_up('save_line', {
+                recordID: recordID,
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        }).then(changedFields => {
+            this._enableRecordSelectors();
+            // If any field has changed and if the list is in multiple edition,
+            // we send a truthy boolean to _selectRow to tell it not to select
+            // the following record.
+            return changedFields && changedFields.length && this.isInMultipleRecordEdition(recordID);
+        }).guardedCatch(() => {
+            toggleWidgets(false);
+        });
     },
     /**
      * @override
      */
     updateState: function (state, params) {
+        // There are some cases where a record is added to an invisible list
+        // e.g. set a quotation template with optionnal products
+        if (params.keepWidths && this.$el.is(':visible')) {
+            this._storeColumnWidths();
+        }
         if (params.noRender) {
             // the state changed, but we won't do a re-rendering right now, so
             // remove computed modifiers data (as they are obsolete) to force
@@ -464,6 +540,72 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * Used to bind event listeners so that they can be unbound when the list
+     * is destroyed.
+     * There is no reverse method (list._removeEventListener) because there is
+     * no issue with removing an non-existing listener.
+     *
+     * @private
+     * @param {string} type event name
+     * @param {EventTarget} el event target
+     * @param {Function} callback callback function to attach
+     * @param {Object} options event listener options
+     */
+    _addEventListener: function (type, el, callback, options) {
+        el.addEventListener(type, callback, options);
+        this.eventListeners.push({ type, el, callback, options });
+    },
+    /**
+     * Handles the assignation of default widths for each column header.
+     * If the list is empty, an arbitrary absolute or relative width will be
+     * given to the header
+     *
+     * @see _getColumnWidth for detailed information about which width is
+     * given to a certain field type.
+     *
+     * @private
+     */
+    _computeDefaultWidths: function () {
+        const isListEmpty = !this._hasVisibleRecords(this.state);
+        const relativeWidths = [];
+        this.columns.forEach(column => {
+            const th = this._getColumnHeader(column);
+            if (th.offsetParent === null) {
+                relativeWidths.push(false);
+            } else {
+                const width = this._getColumnWidth(column);
+                if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
+                    if (isListEmpty) {
+                        th.style.width = width;
+                    } else {
+                        // If there are records, we force a min-width for fields with an absolute
+                        // width to ensure a correct rendering in edition
+                        th.style.minWidth = width;
+                    }
+                    relativeWidths.push(false);
+                } else { // relative width expressed as a weight (e.g. 1.5)
+                    relativeWidths.push(parseFloat(width, 10));
+                }
+            }
+        });
+
+        // Assignation of relative widths
+        if (isListEmpty) {
+            const totalWidth = this._getColumnsTotalWidth(relativeWidths);
+            for (let i in this.columns) {
+                if (relativeWidths[i]) {
+                    const th = this._getColumnHeader(this.columns[i]);
+                    th.style.width = (relativeWidths[i] / totalWidth * 100) + '%';
+                }
+            }
+            // Manualy assigns trash icon header width since it's not in the columns
+            const trashHeader = this.el.getElementsByClassName('o_list_record_remove_header')[0];
+            if (trashHeader) {
+                trashHeader.style.width = '32px';
+            }
+        }
+    },
+    /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
      * removing a useless row.
      *
@@ -477,63 +619,201 @@ ListRenderer.include({
         }
     },
     /**
-     * Returns the relative width according to the widget or the field type.
-     * @see _renderHeader
+     * When editing a row, we want to disable all record selectors.
      *
-     * @param {Object} column a `field` arch node
+     * @private
      */
-    _getColumnWidthFactor: function (column) {
-        if (column.attrs.width) {
-            // the width attribute has precedence on the width factor
-            return 0;
-        }
-        var fieldType = this.state.fields[column.attrs.name].type;
-        var widget = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
-        if ('widthFactor' in widget) {
-            return widget.widthFactor;
-        }
-        switch (fieldType) {
-            case 'binary': return 1;
-            case 'boolean': return 0.4;
-            case 'char': return 1;
-            case 'date': return 1;
-            case 'datetime': return 1.5;
-            case 'float': return 1;
-            case 'html': return 3;
-            case 'integer': return 0.8;
-            case 'many2many': return 2.2;
-            case 'many2one': return 1.5;
-            case 'monetary': return 1.2;
-            case 'one2many': return 2.2;
-            case 'reference': return 1.5;
-            case 'selection': return 1.5;
-            case 'text': return 3;
-            default: return 1;
-        }
+    _disableRecordSelectors: function () {
+        this.$('.o_list_record_selector input').attr('disabled', 'disabled');
     },
     /**
+     * @private
+     */
+    _enableRecordSelectors: function () {
+        this.$('.o_list_record_selector input').attr('disabled', false);
+    },
+    /**
+     * This function freezes the column widths and forces a fixed table-layout,
+     * once the browser has computed the optimal width of each column according
+     * to the displayed records. We want to freeze widths s.t. it doesn't
+     * flicker when we switch a row in edition.
      *
+     * We skip this when there is no record as we don't want to fix widths
+     * according to column's labels. In this case, we fallback on the 'weight'
+     * heuristic, which assigns to each column a fixed or relative width
+     * depending on the widget or field type.
+     *
+     * Note that the list must be in the DOM when this function is called.
+     *
+     * @private
+     */
+    _freezeColumnWidths: function () {
+        if (!this.columnWidths && this.el.offsetParent === null) {
+            // there is no record nor widths to restore or the list is not visible
+            // -> don't force column's widths w.r.t. their label
+            return;
+        }
+        const thElements = [...this.el.querySelectorAll('table thead th')];
+        if (!thElements.length) {
+            return;
+        }
+        const table = this.el.getElementsByTagName('table')[0];
+        let columnWidths = this.columnWidths;
+
+        if (!columnWidths) { // no column widths to restore
+            // Set table layout auto and remove inline style to make sure that css
+            // rules apply (e.g. fixed width of record selector)
+            table.style.tableLayout = 'auto';
+            thElements.forEach(th => {
+                th.style.width = null;
+                th.style.maxWidth = null;
+            });
+
+            // Resets the default widths computation now that the table is visible.
+            this._computeDefaultWidths();
+
+            // Squeeze the table by applying a max-width on largest columns to
+            // ensure that it doesn't overflow
+            columnWidths = this._squeezeTable();
+        }
+
+        thElements.forEach((th, index) => {
+            // Width already set by default relative width computation
+            if (!th.style.width) {
+                th.style.width = `${columnWidths[index]}px`;
+            }
+        });
+
+        // Set the table layout to fixed
+        table.style.tableLayout = 'fixed';
+    },
+    /**
+     * Returns the first or last editable row of the list
+     *
+     * @private
      * @returns {integer}
      */
-    _getFirstDataRowIndex: function () {
-        return this.$('.o_data_row:first').prop('rowIndex') - 1;
+    _getBorderRow: function (side) {
+        let $borderDataRow = this.$(`.o_data_row:${side}`);
+        if (!this._isRecordEditable($borderDataRow.data('id'))) {
+            $borderDataRow = this._getNearestEditableRow($borderDataRow, side === 'first');
+        }
+        return $borderDataRow;
     },
     /**
-     * Given a table row inside a group, returns the index of the first data
-     * row of the next group (if any).
+     * Compute the sum of the weights for each column, given an array containing
+     * all relative widths. param `$thead` is useful for studio, in order to
+     * show column hooks.
      *
-     * @param {jQuery} $row this row must be inside a group
-     * @returns {integer|null}
+     * @private
+     * @param {jQuery} $thead
+     * @param {number[]} relativeWidths
+     * @return {integer}
      */
-    _getNextGroupFirstRowIndex: function ($row) {
-        var $nextBody = $row.closest('tbody').next();
-        while ($nextBody.length && !$nextBody.find('.o_data_row').length) {
-            $nextBody = $nextBody.next();
+    _getColumnsTotalWidth(relativeWidths) {
+        return relativeWidths.reduce((acc, width) => acc + width, 0);
+    },
+    /**
+     * Returns the width of a column according the 'width' attribute set in the
+     * arch, the widget or the field type. A fixed width is harcoded for some
+     * field types (e.g. date and numeric fields). By default, the remaining
+     * space is evenly distributed between the other fields (with a factor '1').
+     *
+     * This is only used when there is no record in the list (i.e. when we can't
+     * let the browser compute the optimal width of each column).
+     *
+     * @see _renderHeader
+     * @private
+     * @param {Object} column an arch node
+     * @returns {string} either a weight factor (e.g. '1.5') or a css width
+     *   description (e.g. '120px')
+     */
+    _getColumnWidth: function (column) {
+        if (column.attrs.width) {
+            return column.attrs.width;
         }
-        if ($nextBody.find('.o_data_row').length) {
-            return $nextBody.find('.o_data_row:first').prop('rowIndex') - 1;
+        const fieldsInfo = this.state.fieldsInfo.list;
+        const name = column.attrs.name;
+        if (!fieldsInfo[name]) {
+            // Unnamed columns get default value
+            return '1';
         }
-        return null;
+        const widget = fieldsInfo[name].Widget.prototype;
+        if ('widthInList' in widget) {
+            return widget.widthInList;
+        }
+        const field = this.state.fields[name];
+        if (!field) {
+            // this is not a field. Probably a button or something of unknown
+            // width.
+            return '1';
+        }
+        const fixedWidths = {
+            boolean: '50px',
+            date: '92px',
+            datetime: '146px',
+            float: '92px',
+            integer: '74px',
+            monetary: '104px',
+        };
+        let type = field.type;
+        if (fieldsInfo[name].widget in fixedWidths) {
+            type = fieldsInfo[name].widget;
+        }
+        return fixedWidths[type] || '1';
+    },
+    /**
+     * Gets the th element corresponding to a given column.
+     *
+     * @private
+     * @param {Object} column
+     * @returns {HTMLElement}
+     */
+    _getColumnHeader: function (column) {
+        const { icon, name, string } = column.attrs;
+        if (name) {
+            return this.el.querySelector(`thead th[data-name="${name}"]`);
+        } else if (string) {
+            return this.el.querySelector(`thead th[data-string="${string}"]`);
+        } else if (icon) {
+            return this.el.querySelector(`thead th[data-icon="${icon}"]`);
+        }
+    },
+    /**
+     * Returns the nearest editable row starting from a given table row.
+     * If the list is grouped, jumps to the next unfolded group
+     *
+     * @private
+     * @param {jQuery} $row starting point
+     * @param {boolean} next whether the requested row should be the next or the previous one
+     * @return {jQuery|null}
+     */
+    _getNearestEditableRow: function ($row, next) {
+        const direction = next ? 'next' : 'prev';
+        let $nearestRow;
+        if (this.editable) {
+            $nearestRow = $row[direction]();
+            if (!$nearestRow.hasClass('o_data_row')) {
+                var $nextBody = $row.closest('tbody')[direction]();
+                while ($nextBody.length && !$nextBody.find('.o_data_row').length) {
+                    $nextBody = $nextBody[direction]();
+                }
+                $nearestRow = $nextBody.find(`.o_data_row:${next ? 'first' : 'last'}`);
+            }
+        } else {
+            // In readonly lists, look directly into selected records
+            const recordId = $row.data('id');
+            const rowSelectionIndex = this.selection.indexOf(recordId);
+            let nextRowIndex;
+            if (rowSelectionIndex < 0) {
+                nextRowIndex = next ? 0 : this.selection.length - 1;
+            } else {
+                nextRowIndex = rowSelectionIndex + (next ? 1 : -1);
+            }
+            // Index might be out of range, will then return an empty jQuery object
+            $nearestRow = this._getRow(this.selection[nextRowIndex]);
+        }
+        return $nearestRow;
     },
     /**
      * Returns the current number of columns.  The editable renderer may add a
@@ -574,7 +854,7 @@ ListRenderer.include({
      * @returns {string} record dataPoint id
      */
     _getRecordID: function (rowIndex) {
-        var $tr = this.$('table.o_list_view > tbody tr').eq(rowIndex);
+        var $tr = this.$('table.o_list_table > tbody tr').eq(rowIndex);
         return $tr.data('id');
     },
     /**
@@ -589,104 +869,131 @@ ListRenderer.include({
         return this.$('.o_data_row[data-id="' + recordId + '"]');
     },
     /**
-     * Move the cursor on the end of the previous line (or of the last line if
-     * we are on the first one).
+     * This function returns true iff records are visible in the list, i.e.
+     *   if the list is ungrouped: true iff the list isn't empty;
+     *   if the list is grouped: true iff there is at least one unfolded group
+     *     containing records.
      *
-     * @private
+     * @param {Object} list a datapoint
+     * @returns {boolean}
      */
-    _moveToPreviousLine: function () {
-        var self = this;
-        if (!this.allRecordsIds) {
-            // compute the flat array of all records ids only once
-            this.allRecordIds = [];
-            utils.traverse_records(this.state, function (data) {
-                self.allRecordIds.push(data.id);
-            });
+    _hasVisibleRecords: function (list) {
+        if (!list.groupedBy.length) {
+            return !!list.data.length;
+        } else {
+            var hasVisibleRecords = false;
+            for (var i = 0; i < list.data.length; i++) {
+                hasVisibleRecords = hasVisibleRecords || this._hasVisibleRecords(list.data[i]);
+            }
+            return hasVisibleRecords;
         }
-        var curRecordId = this._getRecordID(this.currentRow);
-        var curRecordIndex = this.allRecordIds.indexOf(curRecordId);
-        var prevRecordIndex = curRecordIndex === 0 ? this.allRecordIds.length - 1 : curRecordIndex - 1;
-        this.commitChanges(curRecordId).then(function () {
-            var $prevRow = self._getRow(self.allRecordIds[prevRecordIndex]);
-            var prevRowIndex = $prevRow.prop('rowIndex') - 1;
-            self._selectCell(prevRowIndex, self.columns.length - 1, {inc: -1});
-        });
     },
     /**
-     * Move the cursor on the beginning of the next line, if possible.
-     * If we are on the last line (of a group in the grouped case) and the list
-     * is editable="bottom", we create a new record, otherwise, we move the
-     * cursor to the first line (of the next group in the grouped case).
+     * Returns whether a recordID is currently editable.
+     *
+     * @param {string} recordID
+     * @returns {boolean}
+     */
+    _isRecordEditable: function (recordID) {
+        return this.editable || (this.isMultiEditable && this.selection.includes(recordID));
+    },
+    /**
+     * Moves to the next row in the list
      *
      * @private
+     * @params {Object} [options] see @_moveToSideLine
+     */
+    _moveToNextLine: function (options) {
+        this._moveToSideLine(true, options);
+    },
+    /**
+     * Moves to the previous row in the list
+     *
+     * @private
+     * @params {Object} [options] see @_moveToSideLine
+     */
+    _moveToPreviousLine: function (options) {
+        this._moveToSideLine(false, options);
+    },
+    /**
+     * Moves the focus to the nearest editable row before or after the current one.
+     * If we arrive at the end of the list (or of a group in the grouped case) and the list
+     * is editable="bottom", we create a new record, otherwise, we move the
+     * cursor to the first row (of the next group in the grouped case).
+     *
+     * @private
+     * @param {number} next whether to move to the next or previous row
      * @param {Object} [options]
      * @param {boolean} [options.forceCreate=false] typically set to true when
      *   navigating with ENTER ; in this case, if the next row is the 'Add a
-     *   line' row, always create a new record (never skip it, like TAB does
+     *   row' one, always create a new record (never skip it, like TAB does
      *   under some conditions)
      */
-    _moveToNextLine: function (options) {
-        var self = this;
+    _moveToSideLine: function (next, options) {
         options = options || {};
-        var recordID = this._getRecordID(this.currentRow);
-        var record = this._getRecord(recordID);
-
-        this.commitChanges(recordID).then(function () {
-            var fieldNames = self.canBeSaved(recordID);
-            if (fieldNames.length && (record.isDirty() || options.forceCreate)) {
-                // the current row is invalid, we only leave it if it is not dirty
-                // (we didn't make any change on this row, which is a new one) and
-                // we are navigating with TAB (forceCreate=false)
-                return;
+        const recordID = this._getRecordID(this.currentRow);
+        this.commitChanges(recordID).then(() => {
+            const record = this._getRecord(recordID);
+            const multiEdit = this.isInMultipleRecordEdition(recordID);
+            if (!multiEdit) {
+                const fieldNames = this.canBeSaved(recordID);
+                if (fieldNames.length && (record.isDirty() || options.forceCreate)) {
+                    // the current row is invalid, we only leave it if it is not dirty
+                    // (we didn't make any change on this row, which is a new one) and
+                    // we are navigating with TAB (forceCreate=false)
+                    return;
+                }
             }
-
             // compute the index of the next (record) row to select, if any
-            var nextRowIndex = null;
-            var groupId;
-            if (!self.isGrouped) {
+            const side = next ? 'first' : 'last';
+            const borderRowIndex = this._getBorderRow(side).prop('rowIndex') - 1;
+            const cellIndex = next ? 0 : this.allFieldWidgets[recordID].length - 1;
+            const cellOptions = { inc: next ? 1 : -1, force: true };
+            const $currentRow = this._getRow(recordID);
+            const $nextRow = this._getNearestEditableRow($currentRow, next);
+            let nextRowIndex = null;
+            let groupId;
+
+            if (!this.isGrouped) {
                 // ungrouped case
-                if (self.currentRow < self.state.data.length - 1) {
-                    nextRowIndex = self.currentRow + 1;
+                if ($nextRow.length) {
+                    nextRowIndex = $nextRow.prop('rowIndex') - 1;
+                } else if (!this.editable) {
+                    nextRowIndex = borderRowIndex;
                 } else if (!options.forceCreate && !record.isDirty()) {
-                    self.trigger_up('discard_changes', {
+                    this.trigger_up('discard_changes', {
                         recordID: recordID,
-                        onSuccess: function () {
-                            self.trigger_up('activate_next_widget');
-                        },
+                        onSuccess: this.trigger_up.bind(this, 'activate_next_widget', { side: side }),
                     });
                     return;
                 }
             } else {
                 // grouped case
-                var $currentRow = self._getRow(recordID);
-                var $nextRow = $currentRow.next();
-                if ($nextRow.hasClass('o_data_row')) {
-                    // the next row is a record row (in same group), select it
-                    nextRowIndex = self.currentRow + 1;
-                } else if ($nextRow.hasClass('o_add_record_row') && self.editable === "bottom") {
+                var $directNextRow = $currentRow.next();
+                if (next && this.editable === "bottom" && $directNextRow.hasClass('o_add_record_row')) {
                     // the next row is the 'Add a line' row (i.e. the current one is the last record
                     // row of the group)
                     if (options.forceCreate || record.isDirty()) {
                         // if we modified the current record, add a row to create a new record
-                        groupId = $nextRow.data('group-id');
+                        groupId = $directNextRow.data('group-id');
                     } else {
                         // if we didn't change anything to the current line (e.g. we pressed TAB on
                         // each cell without modifying/entering any data), we discard that line (if
                         // it was a new one) and move to the first record of the next group
-                        nextRowIndex = self._getNextGroupFirstRowIndex($currentRow);
-                        self.trigger_up('discard_changes', {
+                        nextRowIndex = ($nextRow.prop('rowIndex') - 1) || null;
+                        this.trigger_up('discard_changes', {
                             recordID: recordID,
-                            onSuccess: function () {
+                            onSuccess: () => {
                                 if (nextRowIndex !== null) {
                                     if (!record.res_id) {
                                         // the current record was a new one, so we decrement
                                         // nextRowIndex as that row has been removed meanwhile
                                         nextRowIndex--;
                                     }
-                                    self._selectCell(nextRowIndex, 0);
+                                    this._selectCell(nextRowIndex, cellIndex, cellOptions);
                                 } else {
                                     // we were in the last group, so go back to the top
-                                    self._selectCell(self._getFirstDataRowIndex(), 0, {});
+                                    this._selectCell(borderRowIndex, cellIndex, cellOptions);
                                 }
                             },
                         });
@@ -694,53 +1001,48 @@ ListRenderer.include({
                     }
                 } else {
                     // there is no 'Add a line' row (i.e. the create feature is disabled), or the
-                    // list is editable="top", we focus the first record of the next group if any
-                    nextRowIndex = self._getNextGroupFirstRowIndex($currentRow);
-                    if (nextRowIndex === null) {
-                        // we were on the last group, so we go back to the top of the list
-                        nextRowIndex = self._getFirstDataRowIndex();
-                    }
+                    // list is editable="top", we focus the first record of the next group if any,
+                    // or we go back to the top of the list
+                    nextRowIndex = $nextRow.length ?
+                        ($nextRow.prop('rowIndex') - 1) :
+                        borderRowIndex;
                 }
             }
 
             // if there is a (record) row to select, select it, otherwise, add a new record (in the
             // correct group, if the view is grouped)
             if (nextRowIndex !== null) {
-                self._selectCell(nextRowIndex, 0);
-            } else {
-                self.unselectRow().then(function () {
-                    // if for some reason (e.g. create feature is disabled) we can't add a new
-                    // record, select the first record row
-                    self.trigger_up('add_record', {
-                        groupId: groupId,
-                        onFail: self._selectCell.bind(self, self._getFirstDataRowIndex(), 0, {}),
-                    });
-                });
+                // cellOptions.force = true;
+                this._selectCell(nextRowIndex, cellIndex, cellOptions);
+            } else if (this.editable) {
+                // if for some reason (e.g. create feature is disabled) we can't add a new
+                // record, select the first record row
+                this.unselectRow().then(this.trigger_up.bind(this, 'add_record', {
+                    groupId: groupId,
+                    onFail: this._selectCell.bind(this, borderRowIndex, cellIndex, cellOptions),
+                }));
             }
         });
     },
     /**
-     * Overridden to set weights on columns for the fixed layout.
+     * Override to compute the (relative or absolute) width of each column.
      *
      * @override
      * @private
      */
     _processColumns: function () {
+        const oldColumns = this.columns;
         this._super.apply(this, arguments);
-
-        if (this.editable) {
-            var self = this;
-            this.columns.forEach(function (column) {
-                if (column.attrs.width_factor) {
-                    column.attrs.widthFactor = parseFloat(column.attrs.width_factor, 10);
-                } else {
-                    if (column.tag === 'field') {
-                        column.attrs.widthFactor = self._getColumnWidthFactor(column);
-                    } else {
-                        column.attrs.widthFactor = 1;
-                    }
+        // check if stored widths still apply
+        if (this.columnWidths && oldColumns && oldColumns.length === this.columns.length) {
+            for (let i = 0; i < oldColumns.length; i++) {
+                if (oldColumns[i] !== this.columns[i]) {
+                    this.columnWidths = false; // columns changed, so forget stored widths
+                    break;
                 }
-            });
+            }
+        } else {
+            this.columnWidths = false; // columns changed, so forget stored widths
         }
     },
     /**
@@ -795,6 +1097,11 @@ ListRenderer.include({
                 helper: 'clone',
                 handle: '.o_row_handle',
                 stop: function (event, ui) {
+                    // update currentID taking moved line into account
+                    if (self.currentRow !== null) {
+                        var currentID = self.state.data[self.currentRow].id;
+                        self.currentRow = self._getRow(currentID).index();
+                    }
                     self.unselectRow().then(function () {
                         self._moveRecord(ui.item.data('id'), ui.item.index());
                     });
@@ -804,6 +1111,17 @@ ListRenderer.include({
         return $body;
     },
     /**
+     * @override
+     * @private
+     */
+    _renderFooter: function () {
+        const $footer = this._super.apply(this, arguments);
+        if (this.addTrashIcon) {
+            $footer.find('tr').append($('<td>'));
+        }
+        return $footer;
+    },
+    /**
      * Override to optionally add a th in the header for the remove icon column.
      *
      * @override
@@ -811,25 +1129,28 @@ ListRenderer.include({
      */
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
-
-        if (this.editable) {
-            var totalWidth = this.columns.reduce(function (acc, column) {
-                return acc + column.attrs.widthFactor;
-            }, 0);
-            this.columns.forEach(function (column) {
-                var $cell = $thead.find('th[data-name=' + column.attrs.name + ']');
-                if (column.attrs.width) {
-                    $cell.css('width', column.attrs.width);
-                } else if (column.attrs.widthFactor) {
-                    $cell.css('width', (column.attrs.widthFactor / totalWidth * 100) + '%');
-                }
-            });
-        }
-
         if (this.addTrashIcon) {
             $thead.find('tr').append($('<th>', {class: 'o_list_record_remove_header'}));
         }
         return $thead;
+    },
+    /**
+     * Overriden to add a resize handle in editable list column headers.
+     * Only applies to headers containing text.
+     *
+     * @override
+     * @private
+     */
+    _renderHeaderCell: function () {
+        const $th = this._super.apply(this, arguments);
+        if ($th[0].innerHTML.length && this._hasVisibleRecords(this.state)) {
+            const resizeHandle = document.createElement('span');
+            resizeHandle.classList = 'o_resize';
+            resizeHandle.onclick = this._onClickResize.bind(this);
+            resizeHandle.onmousedown = this._onStartResize.bind(this);
+            $th.append(resizeHandle);
+        }
+        return $th;
     },
     /**
      * Editable rows are possibly extended with a trash icon on their right, to
@@ -845,8 +1166,8 @@ ListRenderer.include({
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
             var $icon = this.isMany2Many ?
-                            $('<button>', {class: 'fa fa-times', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
-                            $('<button>', {class: 'fa fa-trash-o', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
+                $('<button>', {'class': 'fa fa-times', 'name': 'unlink', 'aria-label': _t('Unlink row ') + (index + 1)}) :
+                $('<button>', {'class': 'fa fa-trash-o', 'name': 'delete', 'aria-label': _t('Delete row ') + (index + 1)});
             var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }
@@ -897,12 +1218,12 @@ ListRenderer.include({
      * @returns {Promise} this promise is resolved immediately
      */
     _renderView: function () {
-        var self = this;
         this.currentRow = null;
-        this.allRecordsIds = null;
-        return this._super.apply(this, arguments).then(function () {
-            if (self.editable) {
-                self.$('table').addClass('o_editable_list');
+        return this._super.apply(this, arguments).then(() => {
+            const table = this.el.getElementsByTagName('table')[0];
+            if (table) {
+                table.classList.toggle('o_empty_list', !this._hasVisibleRecords(this.state));
+                this._freezeColumnWidths();
             }
         });
     },
@@ -935,11 +1256,11 @@ ListRenderer.include({
             return Promise.resolve();
         }
         var wrap = options.wrap === undefined ? true : options.wrap;
+        var recordID = this._getRecordID(rowIndex);
 
         // Select the row then activate the widget in the correct cell
         var self = this;
         return this._selectRow(rowIndex).then(function () {
-            var recordID = self._getRecordID(rowIndex);
             var record = self._getRecord(recordID);
             if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return Promise.reject();
@@ -972,10 +1293,17 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             return Promise.resolve();
         }
+        if (!this.columnWidths) {
+            // we don't want the column widths to change when selecting rows
+            this._storeColumnWidths();
+        }
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
-        return this.unselectRow().then(function () {
+        return this.unselectRow().then(noSelectNext => {
+            if (noSelectNext) {
+                return Promise.resolve();
+            }
             if (!recordId) {
                 // The row to selected doesn't exist anymore (probably because
                 // an onchange triggered when unselecting the previous one
@@ -986,9 +1314,81 @@ ListRenderer.include({
             return new Promise(function (resolve) {
                 self.trigger_up('edit_line', {
                     recordId: recordId,
-                    onSuccess: resolve,
+                    onSuccess: function () {
+                        self._disableRecordSelectors();
+                        resolve();
+                    },
                 });
             });
+        });
+    },
+    /**
+     * Set a maximum width on the largest columns in the list in case the table
+     * is overflowing. The idea is to shrink largest columns first, but to
+     * ensure that they are still the largest at the end (maybe in equal measure
+     * with other columns).
+     *
+     * @private
+     * @returns {integer[]} width (in px) of each column s.t. the table doesn't
+     *   overflow
+     */
+    _squeezeTable: function () {
+        const table = this.el.getElementsByTagName('table')[0];
+        const thead = table.getElementsByTagName('thead')[0];
+        const thElements = [...thead.getElementsByTagName('th')];
+        const columnWidths = thElements.map(th => th.offsetWidth);
+        const getWidth = th => columnWidths[thElements.indexOf(th)] || 0;
+        const getTotalWidth = () => thElements.reduce((tot, th, i) => tot + columnWidths[i], 0);
+        const shrinkColumns = (columns, width) => {
+            let thresholdReached = false;
+            columns.forEach(th => {
+                const index = thElements.indexOf(th);
+                let maxWidth = columnWidths[index] - Math.ceil(width / columns.length);
+                if (maxWidth < 92) { // prevent the columns from shrinking under 92px (~ date field)
+                    maxWidth = 92;
+                    thresholdReached = true;
+                }
+                th.style.maxWidth = `${maxWidth}px`;
+                columnWidths[index] = maxWidth;
+            });
+            return thresholdReached;
+        };
+        // Sort columns, largest first
+        const sortedThs = [...thead.getElementsByTagName('th')]
+            .sort((a, b) => getWidth(b) - getWidth(a));
+        const allowedWidth = table.parentNode.offsetWidth;
+
+        let totalWidth = getTotalWidth();
+        let stop = false;
+        let index = 0;
+        while (totalWidth > allowedWidth && !stop) {
+            // Find the largest columns
+            index++;
+            const largests = sortedThs.slice(0, index);
+            while (getWidth(largests[0]) === getWidth(sortedThs[index])) {
+                largests.push(sortedThs[index]);
+                index++;
+            }
+
+            // Compute the number of px to remove from the largest columns
+            const nextLargest = sortedThs[index]; // largest column when omitting those in largests
+            const totalToRemove = totalWidth - allowedWidth;
+            const canRemove = (getWidth(largests[0]) - getWidth(nextLargest)) * largests.length;
+
+            // Shrink the largests columns
+            stop = shrinkColumns(largests, Math.min(totalToRemove, canRemove));
+
+            totalWidth = getTotalWidth();
+        }
+
+        return columnWidths;
+    },
+    /**
+     * @private
+     */
+    _storeColumnWidths: function () {
+        this.columnWidths = this.$('thead th').toArray().map(function (th) {
+            return $(th).outerWidth();
         });
     },
 
@@ -1009,7 +1409,10 @@ ListRenderer.include({
         ev.stopPropagation();
 
         var self = this;
-        var groupId = $(ev.target).data('group-id');
+        // This method can be called when selecting the parent of the link.
+        // We need to ensure that the link is the actual target
+        const target = ev.target.tagName !== 'A' ? ev.target.getElementsByTagName('A')[0] : ev.target;
+        const groupId = target.dataset.groupId;
         this.currentGroupId = groupId;
         this.unselectRow().then(function () {
             self.trigger_up('add_record', {
@@ -1047,17 +1450,27 @@ ListRenderer.include({
     _onCellClick: function (event) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!this.editable || $(event.target).prop('special_click')) {
-            return;
-        }
         var $td = $(event.currentTarget);
         var $tr = $td.parent();
         var rowIndex = $tr.prop('rowIndex') - 1;
-        var fieldIndex = Math.max($tr.find('.o_data_cell').not('.o_list_button').index($td), 0);
+        if (!this._isRecordEditable($tr.data('id')) || $(event.target).prop('special_click')) {
+            return;
+        }
+        var fieldIndex = Math.max($tr.find('.o_field_cell').index($td), 0);
         this._selectCell(rowIndex, fieldIndex, {event: event});
     },
     /**
-     * We need to manually unselect row, because noone else would do it
+     * We want to override any default mouse behaviour when clicking on the resize handles
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickResize: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+    },
+    /**
+     * We need to manually unselect row, because no one else would do it
      */
     _onEmptyRowClick: function () {
         this.unselectRow();
@@ -1079,15 +1492,17 @@ ListRenderer.include({
      * @override
      */
     _onKeyDown: function (ev) {
-        var $target = $(ev.currentTarget);
-        var $tr = $target.closest('tr');
+        const $target = $(ev.currentTarget);
+        const $tr = $target.closest('tr');
+        const recordEditable = this._isRecordEditable($tr.data('id'));
 
-        if (this.editable && ev.keyCode === $.ui.keyCode.ENTER && $tr.hasClass('o_selected_row')) {
+        if (recordEditable && ev.keyCode === $.ui.keyCode.ENTER && $tr.hasClass('o_selected_row')) {
             // enter on a textarea for example, let it bubble
             return;
         }
 
-        if (this.editable && ev.keyCode === $.ui.keyCode.ENTER && !$tr.hasClass('o_selected_row') && !$tr.hasClass('o_group_header')) {
+        if (recordEditable && ev.keyCode === $.ui.keyCode.ENTER &&
+            !$tr.hasClass('o_selected_row') && !$tr.hasClass('o_group_header')) {
             ev.stopPropagation();
             ev.preventDefault();
             if ($target.closest('td').hasClass('o_group_field_row_add')) {
@@ -1104,34 +1519,13 @@ ListRenderer.include({
      * @param {KeyDownEvent} e
      */
     _onKeyDownAddRecord: function (e) {
-        switch(e.keyCode) {
+        switch (e.keyCode) {
             case $.ui.keyCode.ENTER:
                 e.stopPropagation();
                 e.preventDefault();
                 this._onAddRecord(e);
                 break;
         }
-    },
-    /**
-     * It will returns the last visible widget that is editable
-     *
-     * @private
-     * @returns {Class} Widget returns last widget
-     */
-    _getLastWidget: function () {
-        var recordID = this._getRecordID(this.currentRow);
-        var recordWidgets = this.allFieldWidgets[recordID];
-        var lastWidget = _.chain(recordWidgets).filter(function (widget) {
-            var isLast =
-                widget.$el.is(':visible') &&
-                (
-                    widget.$('input').length > 0 || widget.tagName === 'input' ||
-                    widget.$('textarea').length > 0 || widget.tagName === 'textarea'
-                ) &&
-                !widget.$el.hasClass('o_readonly_modifier');
-            return isLast;
-        }).last().value();
-        return lastWidget;
     },
     /**
      * Handles the keyboard navigation according to events triggered by field
@@ -1150,6 +1544,10 @@ ListRenderer.include({
      */
     _onNavigationMove: function (ev) {
         var self = this;
+        // Don't stop the propagation when navigating up while not editing any row
+        if (this.currentRow === null && ev.data.direction === 'up') {
+            return;
+        }
         ev.stopPropagation(); // stop the event, the action is done by this renderer
         switch (ev.data.direction) {
             case 'previous':
@@ -1161,21 +1559,21 @@ ListRenderer.include({
                 }
                 break;
             case 'next':
-                var column = this.columns[this.currentFieldIndex];
-                var lastWidget = this._getLastWidget();
-                if (column.attrs.name === lastWidget.name) {
-                    this._moveToNextLine();
+                if (this.currentFieldIndex + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
+                        .guardedCatch(this._moveToNextLine.bind(this));
                 } else {
-                    if (this.currentFieldIndex + 1 < this.columns.length) {
-                        this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
-                            .guardedCatch(this._moveToNextLine.bind(this));
-                    } else {
-                        this._moveToNextLine();
-                    }
-                 }
+                    this._moveToNextLine();
+                }
                 break;
             case 'next_line':
-                this._moveToNextLine({forceCreate: true});
+                // If the list is readonly and the current is the only record editable, we unselect the line
+                if (!this.editable && this.selection.length === 1 &&
+                    this._getRecordID(this.currentRow) === ev.target.dataPointID) {
+                    this.unselectRow();
+                } else {
+                    this._moveToNextLine({ forceCreate: true });
+                }
                 break;
             case 'cancel':
                 // stop the original event (typically an ESCAPE keydown), to
@@ -1187,12 +1585,13 @@ ListRenderer.include({
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                     onSuccess: function () {
+                        self._enableRecordSelectors();
                         var recordId = self._getRecordID(rowIndex);
                         if (recordId) {
                             var correspondingRow = self._getRow(recordId);
                             correspondingRow.children().eq(cellIndex).focus();
                         } else if (self.currentGroupId) {
-                                self.$('a[data-group-id=' + self.currentGroupId + ']').focus();
+                            self.$('a[data-group-id="' + self.currentGroupId + '"]').focus();
                         } else {
                             self.$('.o_field_x2many_list_row_add a:first').focus(); // FIXME
                         }
@@ -1221,15 +1620,29 @@ ListRenderer.include({
         }
     },
     /**
+     * React to window resize events by recomputing the width of each column.
+     *
+     * @private
+     */
+    _onResize: function () {
+        this.columnWidths = false;
+        this._freezeColumnWidths();
+    },
+    /**
      * If the list view editable, just let the event bubble. We don't want to
      * open the record in this case anyway.
      *
      * @override
      * @private
      */
-    _onRowClicked: function () {
-        if (!this.editable) {
-            this._super.apply(this, arguments);
+    _onRowClicked: function (ev) {
+        if (!this._isRecordEditable(ev.currentTarget.dataset.id)) {
+            // If there is an edited record, tries to save it and do not open the clicked record
+            if (this.getEditableRecordID()) {
+                this.unselectRow();
+            } else {
+                this._super.apply(this, arguments);
+            }
         }
     },
     /**
@@ -1239,9 +1652,105 @@ ListRenderer.include({
      * @private
      */
     _onSortColumn: function () {
-        if (this.currentRow === null) {
+        if (this.currentRow === null && !this.isResizing) {
             this._super.apply(this, arguments);
         }
+    },
+    /**
+     * Handles the resize feature on the column headers
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onStartResize: function (ev) {
+        // Only triggered by left mouse button
+        if (ev.which !== 1) {
+            return;
+        }
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        this.isResizing = true;
+
+        const table = this.el.getElementsByTagName('table')[0];
+        const th = ev.target.closest('th');
+        table.style.width = `${table.offsetWidth}px`;
+        const thPosition = [...th.parentNode.children].indexOf(th);
+        const resizingColumnElements = [...table.getElementsByTagName('tr')]
+            .filter(tr => tr.children.length === th.parentNode.children.length)
+            .map(tr => tr.children[thPosition]);
+        const optionalDropdown = this.el.getElementsByClassName('o_optional_columns')[0];
+        const initialX = ev.pageX;
+        const initialWidth = th.offsetWidth;
+        const initialTableWidth = table.offsetWidth;
+        const initialDropdownX = optionalDropdown ? optionalDropdown.offsetLeft : null;
+        const resizeStoppingEvents = [
+            'keydown',
+            'mousedown',
+            'mouseup',
+        ];
+
+        // Apply classes to table and selected column
+        table.classList.add('o_resizing');
+        resizingColumnElements.forEach(el => el.classList.add('o_column_resizing'));
+
+        // Mousemove event : resize header
+        const resizeHeader = ev => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const delta = ev.pageX - initialX;
+            const newWidth = Math.max(10, initialWidth + delta);
+            const tableDelta = newWidth - initialWidth;
+            th.style.width = `${newWidth}px`;
+            table.style.width = `${initialTableWidth + tableDelta}px`;
+            if (optionalDropdown) {
+                optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
+            }
+        };
+        this._addEventListener('mousemove', window, resizeHeader);
+
+        // Mouse or keyboard events : stop resize
+        const stopResize = ev => {
+            // Ignores the initial 'left mouse button down' event in order
+            // to not instantly remove the listener
+            if (ev.type === 'mousedown' && ev.which === 1) {
+                return;
+            }
+            ev.preventDefault();
+            ev.stopPropagation();
+            // We need a small timeout to not trigger a click on column header
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                this.isResizing = false;
+            }, 100);
+            window.removeEventListener('mousemove', resizeHeader);
+            table.classList.remove('o_resizing');
+            resizingColumnElements.forEach(el => el.classList.remove('o_column_resizing'));
+            resizeStoppingEvents.forEach(stoppingEvent => {
+                window.removeEventListener(stoppingEvent, stopResize);
+            });
+
+            // we remove the focus to make sure that the there is no focus inside
+            // the tr.  If that is the case, there is some css to darken the whole
+            // thead, and it looks quite weird with the small css hover effect.
+            document.activeElement.blur();
+        };
+        // We have to listen to several events to properly stop the resizing function. Those are:
+        // - mousedown (e.g. pressing right click)
+        // - mouseup : logical flow of the resizing feature (drag & drop)
+        // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
+        resizeStoppingEvents.forEach(stoppingEvent => {
+            this._addEventListener(stoppingEvent, window, stopResize);
+        });
+    },
+    /**
+     * Unselect the row before adding the optional column to the listview
+     *
+     * @override
+     * @private
+     */
+    _onToggleOptionalColumnDropdown: function (ev) {
+        this.unselectRow().then(this._super.bind(this, ev));
     },
     /**
      * When a click happens outside the list view, or outside a currently
@@ -1257,6 +1766,11 @@ ListRenderer.include({
      * @param {MouseEvent} event
      */
     _onWindowClicked: function (event) {
+        // ignore clicks on readonly lists with no selected rows
+        if (!this.isEditable()) {
+            return;
+        }
+
         // ignore clicks if this renderer is not in the dom.
         if (!document.contains(this.el)) {
             return;

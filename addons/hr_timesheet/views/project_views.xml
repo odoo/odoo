@@ -4,7 +4,6 @@
         <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
             <field name="name">Activities</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="domain">[('project_id', '!=', False)]</field>
@@ -39,11 +38,35 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
-                </button>
-                <xpath expr="//group[@name='extra_settings']" position="inside">
-                    <field name="allow_timesheets"/>
+                </div>
+                <xpath expr="//div[@id='rating_settings']/.." position="before">
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_timesheets"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="allow_timesheets" string="Timesheets"/>
+                                <div class="text-muted">
+                                    Log time on tasks
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_task_form2_inherited_hr_timesheet">
+            <field name="name">project.task.form.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='legend_done']" position="after">
+                    <field name="analytic_account_active" invisible="1"/>
+                    <field name="allow_timesheets" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -51,13 +74,11 @@
         <record model="ir.ui.view" id="view_task_form2_inherited">
             <field name="name">project.task.form.inherited</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited_hr_timesheet" />
             <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <field name="analytic_account_active" invisible="1"/>
-                    <field name="allow_timesheets" invisible="1"/>
-                    <page string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <group>
                             <group>
                                 <field name="planned_hours" widget="float_time"/>
@@ -83,6 +104,7 @@
                             <field name="name"/>
                             <field name="unit_amount" widget="timesheet_uom"/>
                             <field name="project_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
                             <field name="date"/>
@@ -125,6 +147,7 @@
                                     <field name="name"/>
                                     <field name="unit_amount" string="Duration" widget="float_time"/>
                                     <field name="project_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </group>
                             </sheet>
                         </form>
@@ -149,12 +172,10 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" />
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" readonly="1"/>
-                    <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
-                </field>
-                <field name="stage_id" position="after">
-                    <field name="progress" widget="progressbar"/>
+                    <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" optional="show"/>
+                    <field name="effective_hours" widget="float_time" sum="Effective Hours" optional="show"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="show"/>
+                    <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </field>
             </field>
         </record>
@@ -199,19 +220,6 @@
                 </div>
              </field>
          </record>
-
-         <act_window id="project_task_action_view_timesheet"
-            name="Timesheet Entries"
-            binding_model="project.task"
-            binding_views="form"
-            res_model="account.analytic.line"
-            view_mode="tree"
-            view_id="hr_timesheet_line_tree"
-            context="{
-                'search_default_task_id': [active_id],
-                'default_task_id': active_id,
-            }"
-        />
 
     </data>
 </odoo>

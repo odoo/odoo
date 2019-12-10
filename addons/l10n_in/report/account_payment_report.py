@@ -31,7 +31,7 @@ class L10nInPaymentReport(models.AbstractModel):
     def _compute_l10n_in_tax(self, taxes, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """common method to compute gst tax amount base on tax group"""
         res = {'igst_amount': 0.0, 'sgst_amount': 0.0, 'cgst_amount': 0.0, 'cess_amount': 0.0}
-        AccountTag = self.env['account.account.tag']
+        AccountTaxRepartitionLine = self.env['account.tax.repartition.line']
         tax_report_line_igst = self.env.ref('l10n_in.tax_report_line_igst', False)
         tax_report_line_cgst = self.env.ref('l10n_in.tax_report_line_cgst', False)
         tax_report_line_sgst = self.env.ref('l10n_in.tax_report_line_sgst', False)
@@ -39,7 +39,7 @@ class L10nInPaymentReport(models.AbstractModel):
         filter_tax = taxes.filtered(lambda t: t.type_tax_use != 'none')
         tax_compute = filter_tax.compute_all(price_unit, currency=currency, quantity=quantity, product=product, partner=partner)
         for tax_data in tax_compute['taxes']:
-            tax_report_lines = AccountTag.browse(tax_data['tag_ids'][0][2]).mapped('tax_report_line_ids')
+            tax_report_lines = AccountTaxRepartitionLine.browse(tax_data['tax_repartition_line_id']).mapped('tag_ids.tax_report_line_ids')
             if tax_report_line_sgst in tax_report_lines:
                 res['sgst_amount'] += tax_data['amount']
             if tax_report_line_cgst in tax_report_lines:
@@ -64,7 +64,7 @@ class L10nInPaymentReport(models.AbstractModel):
             tax.id as l10n_in_tax_id,
             tax.amount AS tax_rate,
             am.partner_id,
-            am.amount AS payment_amount,
+            am.amount_total AS payment_amount,
             ap.journal_id,
             aml.currency_id,
             (CASE WHEN ps.l10n_in_tin IS NOT NULL
@@ -101,7 +101,6 @@ class L10nInPaymentReport(models.AbstractModel):
             AND tax.tax_group_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('igst_group','gst_group'))
             AND ac.internal_type IN ('receivable', 'payable') AND am.state = 'posted'"""
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s AS (
@@ -143,7 +142,7 @@ class AdvancesPaymentReport(models.Model):
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
             ) AS reconcile_amount,
-            (am.amount - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
+            (am.amount_total - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
             )) AS amount"""

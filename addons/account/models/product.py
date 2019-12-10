@@ -8,12 +8,12 @@ class ProductCategory(models.Model):
     _inherit = "product.category"
 
     property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
-        string="Income Account", oldname="property_account_income_categ",
-        domain=[('deprecated', '=', False)],
+        string="Income Account",
+        domain="['&', ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used when validating a customer invoice.")
     property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
-        string="Expense Account", oldname="property_account_expense_categ",
-        domain=[('deprecated', '=', False)],
+        string="Expense Account",
+        domain="['&', ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation.")
 
 #----------------------------------------------------------
@@ -27,58 +27,28 @@ class ProductTemplate(models.Model):
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
         domain=[('type_tax_use', '=', 'purchase')], default=lambda self: self.env.company.account_purchase_tax_id)
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
-        string="Income Account", oldname="property_account_income",
-        domain=[('deprecated', '=', False)],
+        string="Income Account",
+        domain="['&', ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="Keep this field empty to use the default value from the product category.")
     property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
-        string="Expense Account", oldname="property_account_expense",
-        domain=[('deprecated', '=', False)],
+        string="Expense Account",
+        domain="['&', ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="Keep this field empty to use the default value from the product category. If anglo-saxon accounting with automated valuation method is configured, the expense account on the product category will be used.")
 
-    @api.multi
     def _get_product_accounts(self):
         return {
             'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
             'expense': self.property_account_expense_id or self.categ_id.property_account_expense_categ_id
         }
 
-    @api.multi
     def _get_asset_accounts(self):
         res = {}
         res['stock_input'] = False
         res['stock_output'] = False
         return res
 
-    @api.multi
     def get_product_accounts(self, fiscal_pos=None):
         accounts = self._get_product_accounts()
         if not fiscal_pos:
             fiscal_pos = self.env['account.fiscal.position']
         return fiscal_pos.map_accounts(accounts)
-
-class ProductProduct(models.Model):
-    _inherit = "product.product"
-
-    @api.model
-    def _convert_prepared_anglosaxon_line(self, line, partner):
-        return {
-            'date_maturity': line.get('date_maturity', False),
-            'partner_id': partner,
-            'name': line['name'],
-            'debit': line['price'] > 0 and line['price'],
-            'credit': line['price'] < 0 and -line['price'],
-            'account_id': line['account_id'],
-            'analytic_line_ids': line.get('analytic_line_ids', []),
-            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
-            'currency_id': line.get('currency_id', False),
-            'quantity': line.get('quantity', 1.00),
-            'product_id': line.get('product_id', False),
-            'product_uom_id': line.get('uom_id', False),
-            'analytic_account_id': line.get('account_analytic_id', False),
-            'invoice_id': line.get('invoice_id', False),
-            'tax_ids': line.get('tax_ids', False),
-            'tax_line_id': line.get('tax_line_id', False),
-            'analytic_tag_ids': line.get('analytic_tag_ids', False),
-            'tax_repartition_line_id': line.get('tax_repartition_line_id'),
-            'tag_ids': line.get('tag_ids'),
-        }

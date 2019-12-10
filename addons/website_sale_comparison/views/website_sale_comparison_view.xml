@@ -5,9 +5,10 @@
         <field name="name">product.attribute.category.tree</field>
         <field name="model">product.attribute.category</field>
         <field name="arch" type="xml">
-            <tree string="Product Attribute Category" editable="top">
-                <field name="sequence"/>
+            <tree string="Product Attribute Category" editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="attribute_ids" widget="many2many_tags" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
@@ -17,7 +18,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.attribute.category</field>
         <field name="view_mode">tree</field>
-        <field name="view_type">form</field>
     </record>
 
     <menuitem action="product_attribute_category_action"

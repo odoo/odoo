@@ -15,7 +15,7 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="address_id" ref="base.partner_admin"/>
             <field name="address_home_id" ref="base.partner_admin"/>
-            <field name="image" eval="obj(ref('base.partner_admin')).image" model="res.partner"/>
+            <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
         </record>
 
         <record id="onboarding_setup_it_materials" model="hr.plan.activity.type">
@@ -97,6 +97,11 @@
             <field name="lang">${user.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
+        </record>
+
+        <record model="ir.config_parameter" id="hr_presence_control_login" forcecreate="False">
+            <field name="key">hr.hr_presence_control_login</field>
+            <field name="value">True</field>
         </record>
 
     </data>

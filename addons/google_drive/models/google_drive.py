@@ -22,7 +22,6 @@ class GoogleDrive(models.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
-    @api.multi
     def get_google_drive_url(self, res_id, template_id):
         self.ensure_one()
         self = self.sudo()
@@ -52,7 +51,7 @@ class GoogleDrive(models.Model):
     def get_access_token(self, scope=None):
         Config = self.env['ir.config_parameter'].sudo()
         google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
-        user_is_admin = self.env['res.users'].browse(self.env.user.id)._is_admin()
+        user_is_admin = self.env.is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
@@ -176,7 +175,7 @@ class GoogleDrive(models.Model):
         return config_values
 
     name = fields.Char('Template Name', required=True)
-    model_id = fields.Many2one('ir.model', 'Model', required=True)
+    model_id = fields.Many2one('ir.model', 'Model', required=True, ondelete='cascade')
     model = fields.Char('Related Model', related='model_id.model', readonly=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]")
     google_drive_template_url = fields.Char('Template URL', required=True)
@@ -191,7 +190,6 @@ class GoogleDrive(models.Model):
             return word.group(2)
         return None
 
-    @api.multi
     def _compute_ressource_id(self):
         result = {}
         for record in self:
@@ -202,7 +200,6 @@ class GoogleDrive(models.Model):
                 raise UserError(_("Please enter a valid Google Document URL."))
         return result
 
-    @api.multi
     def _compute_client_id(self):
         google_drive_client_id = self.env['ir.config_parameter'].sudo().get_param('google_drive_client_id')
         for record in self:

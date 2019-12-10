@@ -3,6 +3,8 @@
 
 import base64
 import io
+import os
+import mimetypes
 from werkzeug.utils import redirect
 
 from odoo import http
@@ -34,7 +36,7 @@ class WebsiteSaleDigital(CustomerPortal):
         if not 'sale_order' in response.qcontext:
             return response
         order = response.qcontext['sale_order']
-        invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
+        invoiced_lines = request.env['account.move.line'].sudo().search([('move_id', 'in', order.invoice_ids.ids), ('move_id.invoice_payment_state', '=', 'paid')])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
         if not order.amount_total:
             # in that case, we should add all download links to the products
@@ -47,7 +49,7 @@ class WebsiteSaleDigital(CustomerPortal):
             Attachment = request.env['ir.attachment']
             product_id = product.id
             template = product.product_tmpl_id
-            att = Attachment.search_read(
+            att = Attachment.sudo().search_read(
                 domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
@@ -71,7 +73,7 @@ class WebsiteSaleDigital(CustomerPortal):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
-            ["name", "datas", "file_type", "res_model", "res_id", "type", "url"]
+            ["name", "datas", "mimetype", "res_model", "res_id", "type", "url"]
         )
 
         if attachment:
@@ -82,7 +84,7 @@ class WebsiteSaleDigital(CustomerPortal):
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = request.env['account.invoice.line'].get_digital_purchases()
+        purchased_products = request.env['account.move.line'].get_digital_purchases()
 
         if res_model == 'product.product':
             if res_id not in purchased_products:
@@ -105,6 +107,11 @@ class WebsiteSaleDigital(CustomerPortal):
                 return request.not_found()
         elif attachment["datas"]:
             data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'], as_attachment=True)
+            # we follow what is done in ir_http's binary_content for the extension management
+            extension = os.path.splitext(attachment["name"] or '')[1]
+            extension = extension if extension else mimetypes.guess_extension(attachment["mimetype"] or '')
+            filename = attachment['name']
+            filename = filename if os.path.splitext(filename)[1] else filename + extension
+            return http.send_file(data, filename=filename, as_attachment=True)
         else:
             return request.not_found()

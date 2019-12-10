@@ -58,6 +58,7 @@ ActionManager.include({
      * @param {string} [state.view_type]
      */
     loadState: function (state) {
+        var _super = this._super.bind(this);
         var action;
         var options = {
             clear_breadcrumbs: true,
@@ -117,7 +118,7 @@ ActionManager.include({
         if (action) {
             return this.doAction(action, options);
         }
-        return this._super.apply(this, arguments);
+        return _super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -282,6 +283,7 @@ ActionManager.include({
             }
 
             var lazyViewDef;
+            var lazyControllerID;
             if (lazyView) {
                 // if the main view is lazy-loaded, its (lazy-loaded) controller is inserted
                 // into the controller stack (so that breadcrumbs can be correctly computed),
@@ -291,6 +293,7 @@ ActionManager.include({
                 // this controller being lazy-loaded, this call is actually sync
                 lazyViewDef = self._createViewController(action, lazyView.type, {}, {lazy: true})
                     .then(function (lazyLoadedController) {
+                        lazyControllerID = lazyLoadedController.jsID;
                         self.controllerStack.push(lazyLoadedController.jsID);
                     });
             }
@@ -309,7 +312,13 @@ ActionManager.include({
                     action.controllerID = controller.jsID;
                     return self._executeAction(action, options);
                 })
-                .guardedCatch(self._destroyWindowAction.bind(self, action));
+                .guardedCatch(function () {
+                    if (lazyControllerID) {
+                        var index = self.controllerStack.indexOf(lazyControllerID);
+                        self.controllerStack = self.controllerStack.slice(0, index);
+                    }
+                    self._destroyWindowAction(action);
+                });
         });
     },
     /**
@@ -358,8 +367,8 @@ ActionManager.include({
                     viewID: view[0],
                     Widget: View,
                 });
-            } else if (config.debug === 'assets') {
-                console.error("View type '" + viewType + "' is not present in the view registry.");
+            } else if (config.isDebug('assets')) {
+                console.log("View type '" + viewType + "' is not present in the view registry.");
             }
         });
         return views;
@@ -595,7 +604,10 @@ ActionManager.include({
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
-            def = Promise.resolve({type: 'ir.actions.act_window_close', infos: 'special'});
+            def = Promise.resolve({
+                type: 'ir.actions.act_window_close',
+                infos: { special: true },
+            });
         } else if (actionData.type === 'object') {
             // call a Python Object method, which may return an action to execute
             var args = recordID ? [[recordID]] : [env.resIDs];
@@ -676,6 +688,7 @@ ActionManager.include({
                 };
             }
             var options = {on_close: ev.data.on_closed};
+            action.flags = _.extend({}, action.flags, {searchPanelDefaultNoFilter: true});
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
     },
@@ -698,8 +711,10 @@ ActionManager.include({
             // only switch to the requested view if the controller that
             // triggered the request is the current controller
             var action = this.actions[currentController.actionID];
+            var currentControllerState = currentController.widget.exportState();
+            action.controllerState = _.extend({}, action.controllerState, currentControllerState);
             var options = {
-                controllerState: currentController.widget.exportState(),
+                controllerState: action.controllerState,
                 currentId: ev.data.res_id,
             };
             if (ev.data.mode) {

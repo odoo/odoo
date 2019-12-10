@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sales order validation and track the work hours.",
-        default='manual', oldname='track_service')
+        default='manual')
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
@@ -36,20 +36,17 @@ class ProductTemplate(models.Model):
              'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
 
-    @api.multi
     @api.depends('name')
     def _compute_visible_expense_policy(self):
         visibility = self.user_has_groups('analytic.group_analytic_accounting')
         for product_template in self:
             product_template.visible_expense_policy = visibility
 
-    @api.multi
     @api.depends('product_variant_ids.sales_count')
     def _compute_sales_count(self):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
 
-    @api.multi
     def action_view_sales(self):
         action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
@@ -62,53 +59,6 @@ class ProductTemplate(models.Model):
         }
         return action
 
-    @api.multi
-    def _create_product_variant(self, combination, log_warning=False):
-        """ Create if necessary and possible and return the product variant
-        matching the given combination for this template.
-
-        It is possible to create only if the template has dynamic attributes
-        and the combination itself is possible.
-
-        :param combination: the combination for which to get or create variant.
-            The combination must contain all necessary attributes, including
-            those of type no_variant. Indeed even though those attributes won't
-            be included in the variant if newly created, they are needed when
-            checking if the combination is possible.
-        :type combination: recordset of `product.template.attribute.value`
-
-        :param log_warning: whether a warning should be logged on fail
-        :type log_warning: bool
-
-        :return: the product variant matching the combination or none
-        :rtype: recordset of `product.product`
-        """
-        self.ensure_one()
-
-        Product = self.env['product.product']
-
-        product_variant = self._get_variant_for_combination(combination)
-        if product_variant:
-            return product_variant
-
-        if not self.has_dynamic_attributes():
-            if log_warning:
-                _logger.warning('The user #%s tried to create a variant for the non-dynamic product %s.' % (self.env.user.id, self.id))
-            return Product
-
-        if not self._is_combination_possible(combination):
-            if log_warning:
-                _logger.warning('The user #%s tried to create an invalid variant for the product %s.' % (self.env.user.id, self.id))
-            return Product
-
-        attribute_values = combination.mapped('product_attribute_value_id')._without_no_variant_attributes()
-
-        return Product.sudo().create({
-            'product_tmpl_id': self.id,
-            'attribute_value_ids': [(6, 0, attribute_values.ids)]
-        })
-
-    @api.multi
     def create_product_variant(self, product_template_attribute_value_ids):
         """ Create if necessary and possible and return the id of the product
         variant matching the given combination for this template.
@@ -159,8 +109,7 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()
         if self.env.context.get('sale_multi_pricelist_product_template'):
-            sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
-            if sale_pricelist_setting == 'percentage':
+            if self.user_has_groups('product.group_sale_pricelist'):
                 return [{
                     'label': _('Import Template for Products'),
                     'template': '/product/static/xls/product_template.xls'
@@ -170,7 +119,6 @@ class ProductTemplate(models.Model):
                 }]
         return res
 
-    @api.multi
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """ Return info about a given combination.
 
@@ -221,7 +169,7 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         # get the name before the change of context to benefit from prefetch
-        display_name = self.name
+        display_name = self.display_name
 
         display_image = True
         quantity = self.env.context.get('quantity', add_qty)
@@ -254,19 +202,21 @@ class ProductTemplate(models.Model):
             ]
             if no_variant_attributes_price_extra:
                 product = product.with_context(
-                    no_variant_attributes_price_extra=no_variant_attributes_price_extra
+                    no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
                 )
             list_price = product.price_compute('list_price')[product.id]
             price = product.price if pricelist else list_price
-            display_image = bool(product.image)
+            display_image = bool(product.image_1920)
+            display_name = product.display_name
         else:
             product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
             list_price = product_template.price_compute('list_price')[product_template.id]
             price = product_template.price if pricelist else list_price
+            display_image = bool(product_template.image_1920)
 
-        filtered_combination = combination._without_no_variant_attributes()
-        if filtered_combination:
-            display_name = '%s (%s)' % (display_name, ', '.join(filtered_combination.mapped('name')))
+            combination_name = combination._get_combination_name()
+            if combination_name:
+                display_name = "%s (%s)" % (display_name, combination_name)
 
         if pricelist and pricelist.currency_id != product_template.currency_id:
             list_price = product_template.currency_id._convert(
@@ -287,7 +237,6 @@ class ProductTemplate(models.Model):
             'has_discounted_price': has_discounted_price,
         }
 
-    @api.multi
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
         It's possible to add to cart (potentially after configuration) if
@@ -306,7 +255,6 @@ class ProductTemplate(models.Model):
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False
 
-    @api.multi
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a pricelist is given, fallback to the company of the
         pricelist if it is set, otherwise use the one from parent method."""

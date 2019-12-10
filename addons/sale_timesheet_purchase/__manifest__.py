@@ -13,5 +13,4 @@ Allows to access purchase orders from Project Overview
     'data': [],
     'demo': [],
     'auto_install': True,
-    'uninstall_hook': 'uninstall_hook',
 }

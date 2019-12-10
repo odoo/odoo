@@ -4,7 +4,7 @@
 {
     'name': 'Accounting - MRP',
     'version': '1.0',
-    'category': 'Manufacturing',
+    'category': 'Manufacturing/Manufacturing',
     'summary': 'Analytic accounting in Manufacturing',
     'description': """
 Analytic Accounting in MRP
@@ -21,7 +21,11 @@ If the automated inventory valuation is active, the necessary accounting entries
     'depends': ['mrp', 'stock_account'],
     "init_xml" : [],
     "demo_xml" : [],
-    "data": ["views/product_views.xml"],
+    "data": [
+        'security/ir.model.access.csv',
+        "views/product_views.xml",
+        "views/mrp_production_views.xml",
+    ],
     'installable': True,
     'auto_install': True,
 }

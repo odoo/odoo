@@ -3,7 +3,7 @@
 
 {
     'name': 'Blogs',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 140,
     'website': 'https://www.odoo.com/page/blog-engine',
     'summary': 'Publish blog posts, announces, news',
@@ -13,6 +13,8 @@
     'data': [
         'data/website_blog_data.xml',
         'views/website_blog_views.xml',
+        'views/website_blog_components.xml',
+        'views/website_blog_posts_loop.xml',
         'views/website_blog_templates.xml',
         'views/snippets.xml',
         'security/ir.model.access.csv',

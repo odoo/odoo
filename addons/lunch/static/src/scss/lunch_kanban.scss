@@ -20,6 +20,10 @@
         color: $o-brand-odoo;
     }
 
+    .o_flex_basis_0 {
+        flex-basis: 0;
+    }
+
     .o_lunch_widget {
         min-height: 90px;
         max-height: 33vh;
@@ -51,6 +55,13 @@
     }
 }
 
+.o_lunch_image {
+    img {
+        max-width: 128px;
+        max-height: 128px !important;
+    }
+}
+
 @include media-breakpoint-down(sm) {
     .o_lunch_kanban {
         details summary {
@@ -62,6 +73,14 @@
         }
         .o_lunch_widget {
             max-height: 100%
+        }
+    }
+}
+
+.o_lunch_wizard {
+    .col-10 {
+        .o_form_label {
+            font-weight: normal !important;
         }
     }
 }

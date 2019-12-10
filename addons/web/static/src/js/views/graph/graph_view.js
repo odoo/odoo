@@ -25,11 +25,11 @@ var GraphView = AbstractView.extend({
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
     ],
-    config: {
+    config: _.extend({}, AbstractView.prototype.config, {
         Model: GraphModel,
         Controller: Controller,
         Renderer: GraphRenderer,
-    },
+    }),
     viewType: 'graph',
     searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
 
@@ -48,6 +48,9 @@ var GraphView = AbstractView.extend({
 
         this.arch.children.forEach(function (field) {
             var fieldName = field.attrs.name;
+            if (fieldName === "id") {
+                return;
+            }
             var interval = field.attrs.interval;
             if (interval) {
                 fieldName = fieldName + ':' + interval;

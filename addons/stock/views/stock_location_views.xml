@@ -2,7 +2,7 @@
 <odoo>
     <act_window
         context="{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
-                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1}"
+                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}"
         id="act_product_location_open"
         name="Products"
         res_model="product.product"
@@ -19,36 +19,24 @@
                         <button string="Putaway Rules"
                                 class="oe_stat_button"
                                 icon="fa-random" name="%(location_open_putaway)d" type="action"
-                                groups="stock.group_stock_multi_locations"/>
+                                groups="stock.group_stock_multi_locations" context="{'default_company_id': company_id}"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
-                                icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
-                        <button string="Products"
-                                class="oe_stat_button"
-                                icon="fa-filter" name="%(act_product_location_open)d" type="action"
-                                context="{'location_id': active_id}"
-                                />
-                       <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
+                                icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
                     </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="location_id" class="oe_edit_only"/>
                     <h2><field name="location_id" options="{'no_create': True}"/></h2>
 
                     <group>
-                        <group string="Additional Information">
+                        <group string="Additional Information" name="additional_info">
+                            <field name="active" invisible="1"/>
                             <field name="usage"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
-                        </group>
-                        <group string="Localization" name="localization">
-                            <field name="posx"/>
-                            <field name="posy"/>
-                            <field name="posz"/>
-                            <field name="barcode"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
@@ -59,6 +47,53 @@
             </form>
         </field>
     </record>
+
+    <record id="view_location_qweb" model="ir.ui.view">
+        <field name="name">stock.location.qweb</field>
+        <field name="type">qweb</field>
+        <field name="model">stock.location</field>
+        <field name="arch" type="xml">
+            <div class="container-fluid o_stock_location_hierarchy">
+                <div class="row">
+                    <t t-if="data">
+                        <div class="col-12 py-3" t-foreach="data" t-as="location">
+                            <ul class="o_hierarchy_container mb-0">
+                                <t t-call="stock.stock_location_hierarchy"/>
+                            </ul>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="col py-4 text-center">
+                            <h1>No data available.</h1>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <template id="stock_location_hierarchy" name="Stock Location Hierarchy">
+        <li class="o_hierarchy_item">
+            <div t-attf-class="o_hierarchy_box #{location['usage'] == 'view' and 'disabled' or ''}">
+                <a href="#" type="action" t-att-data-res-id="location['id']" class="o_hierarchy_box_title text-truncate" t-att-title="location['name']">
+                    <t t-esc="location['name']"/>
+                </a>
+                <small class="o_hierarchy_box_subtitle text-truncate text-muted d-block" t-att-title="location['barcode']">
+                    <t t-esc="location['barcode']"/>
+                </small>
+                <div class="o_hierarchy_action">
+                    <a href="#" type="action" data-views='[[false, "form"]]' t-attf-data-context='{"default_location_id": #{location["id"]}}' class="o_hierarchy_add_child" title="Add a new child record">
+                        <i class="fa fa-plus-circle"/>
+                    </a>
+                </div>
+            </div>
+            <ul class="o_hierarchy_level" t-if="len(location['childs'])">
+                <t t-foreach="location['childs']" t-as="location">
+                    <t t-call="stock.stock_location_hierarchy"/>
+                </t>
+            </ul>
+        </li>
+    </template>
 
     <record id="stock_location_view_form_editable" model="ir.ui.view">
         <field name="name">stock.location.form.editable</field>
@@ -95,7 +130,7 @@
         <field name="arch" type="xml">
             <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false">
                 <field name="active" invisible="1"/>
-                <field name="display_name" string="Location"/>
+                <field name="complete_name" string="Location"/>
                 <field name="usage"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
@@ -118,7 +153,7 @@
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,qweb</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{'search_default_in_location':1}</field>
@@ -153,6 +188,7 @@
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="active" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -164,11 +200,7 @@
             <field name="arch" type="xml">
                 <form string="Route">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="stock.group_adv_location">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -176,6 +208,7 @@
                     <group>
                         <group>
                             <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
@@ -194,6 +227,7 @@
                         </group>
                         <group>
                             <field name="warehouse_selectable" string="Warehouses"/>
+                            <field name="warehouse_domain_ids" invisible="1"/>
                             <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
                                    attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
                         </group>
@@ -228,7 +262,6 @@
             <field name="name">Routes</field>
             <field name="res_model">stock.location.route</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="stock_location_route_tree" />
             <field name="help" type="html">

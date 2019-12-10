@@ -5,9 +5,8 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var ListController = require('web.ListController');
-var ListView = require('web.ListView');
 var view_registry = require('web.view_registry');
+var select_create_controllers_registry = require('web.select_create_controllers_registry');
 
 var _t = core._t;
 
@@ -156,11 +155,7 @@ var FormViewDialog = ViewDialog.extend({
 
                 var multi = options.disable_multiple_selection;
                 if (!multi && this.deletable) {
-                    options.buttons.push({
-                        text: _t("Remove"),
-                        classes: 'btn-secondary ' + oBtnRemove,
-                        click: this._remove.bind(this),
-                    });
+                    this._setRemoveButtonOption(options, oBtnRemove);
                 }
             }
         }
@@ -241,16 +236,20 @@ var FormViewDialog = ViewDialog.extend({
      * @override
      */
     _focusOnClose: function() {
-        this.trigger_up('form_dialog_discarded');
-        return true;
+        var isFocusSet = false;
+        this.trigger_up('form_dialog_discarded', {
+            callback: function (isFocused) {
+                isFocusSet = isFocused;
+            },
+        });
+        return isFocusSet;
     },
 
     /**
      * @private
      */
     _remove: function () {
-        this.on_remove();
-        this.close();
+        return Promise.resolve(this.on_remove());
     },
 
     /**
@@ -268,27 +267,25 @@ var FormViewDialog = ViewDialog.extend({
             // record might have been changed by the save (e.g. if this was a new record, it has an
             // id now), so don't re-use the copy obtained before the save
             var record = self.form_view.model.get(self.form_view.handle);
-            self.on_saved(record, !!changedFields.length);
+            return self.on_saved(record, !!changedFields.length);
         });
     },
-});
-
-var SelectCreateListController = ListController.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
 
     /**
-     * Override to select the clicked record instead of opening it
+     * Set the "remove" button into the options' buttons list
      *
-     * @override
      * @private
+     * @param {Object} options The options object to modify
+     * @param {string} btnClasses The classes for the remove button
      */
-    _onOpenRecord: function (ev) {
-        var selectedRecord = this.model.get(ev.data.id);
-        this.trigger_up('select_record', {
-            id: selectedRecord.res_id,
-            display_name: selectedRecord.data.display_name,
+    _setRemoveButtonOption(options, btnClasses) {
+        const self = this;
+        options.buttons.push({
+            text: _t("Remove"),
+            classes: 'btn-secondary ' + btnClasses,
+            click: function() {
+                self._remove().then(self.close.bind(self));
+            }
         });
     },
 });
@@ -323,7 +320,9 @@ var SelectCreateDialog = ViewDialog.extend({
         this._super.apply(this, arguments);
         _.defaults(this.options, { initial_view: 'search' });
         this.on_selected = this.options.on_selected || (function () {});
+        this.on_closed = this.options.on_closed || (function () {});
         this.initialIDs = this.options.initial_ids;
+        this.viewType = 'list';
     },
 
     open: function () {
@@ -332,12 +331,14 @@ var SelectCreateDialog = ViewDialog.extend({
         }
         var self = this;
         var _super = this._super.bind(this);
-        return this.loadViews(this.res_model, this.context, [[false, 'list'], [false, 'search']], {})
+        var viewRefID = this.viewType === 'kanban' ?
+            (this.options.kanban_view_ref && JSON.parse(this.options.kanban_view_ref) || false) : false;
+        return this.loadViews(this.res_model, this.context, [[viewRefID, this.viewType], [false, 'search']], {})
             .then(this.setup.bind(this))
             .then(function (fragment) {
                 self.opened().then(function () {
                     dom.append(self.$el, fragment, {
-                        callbacks: [{widget: self.listController}],
+                        callbacks: [{widget: self.viewController}],
                         in_DOM: true,
                     });
                     self.set_buttons(self.__buttons);
@@ -354,57 +355,50 @@ var SelectCreateDialog = ViewDialog.extend({
         if (this.initialIDs) {
             domain = domain.concat([['id', 'in', this.initialIDs]]);
         }
-        var listView = new ListView(fieldsViews.list, _.extend({
+        var ViewClass = view_registry.get(this.viewType);
+        var viewOptions = {};
+        var selectCreateController;
+        if (this.viewType === 'list') { // add listview specific options
+            _.extend(viewOptions, {
+                hasSelectors: !this.options.disable_multiple_selection,
+                readonly: true,
+
+            }, this.options.list_view_options);
+            selectCreateController = select_create_controllers_registry.SelectCreateListController;
+        }
+        if (this.viewType === 'kanban') {
+            _.extend(viewOptions, {
+                noDefaultGroupby: true,
+                selectionMode: this.options.selectionMode || false,
+            });
+            selectCreateController = select_create_controllers_registry.SelectCreateKanbanController;
+        }
+        var view = new ViewClass(fieldsViews[this.viewType], _.extend(viewOptions, {
             action: {
                 controlPanelFieldsView: fieldsViews.search,
+                help: _.str.sprintf("<p>%s</p>", _t("No records found!")),
             },
             action_buttons: false,
             dynamicFilters: this.options.dynamicFilters,
             context: this.context,
             domain: domain,
-            hasSelectors: !this.options.disable_multiple_selection,
             modelName: this.res_model,
-            readonly: true,
             withBreadcrumbs: false,
-        }, this.options.list_view_options));
-        listView.setController(SelectCreateListController);
-        return listView.getController(this).then(function (controller) {
-            self.listController = controller;
+            withSearchPanel: false,
+        }));
+        view.setController(selectCreateController);
+        return view.getController(this).then(function (controller) {
+            self.viewController = controller;
             // render the footer buttons
-            self.__buttons = [{
-                text: _t("Cancel"),
-                classes: 'btn-secondary o_form_button_cancel',
-                close: true,
-            }];
-            if (!self.options.no_create) {
-                self.__buttons.unshift({
-                    text: _t("Create"),
-                    classes: 'btn-primary',
-                    click: self.create_edit_record.bind(self)
-                });
-            }
-            if (!self.options.disable_multiple_selection) {
-                self.__buttons.unshift({
-                    text: _t("Select"),
-                    classes: 'btn-primary o_select_button',
-                    disabled: true,
-                    close: true,
-                    click: function () {
-                        var records = self.listController.getSelectedRecords();
-                        var values = _.map(records, function (record) {
-                            return {
-                                id: record.res_id,
-                                display_name: record.data.display_name,
-                            };
-                        });
-                        self.on_selected(values);
-                    },
-                });
-            }
-            return self.listController.appendTo(fragment);
+            self._prepareButtons();
+            return self.viewController.appendTo(fragment);
         }).then(function () {
             return fragment;
         });
+    },
+    close: function () {
+        this._super.apply(this, arguments);
+        this.on_closed();
     },
     create_edit_record: function () {
         var self = this;
@@ -424,8 +418,50 @@ var SelectCreateDialog = ViewDialog.extend({
      * @override
      */
     _focusOnClose: function() {
-        this.trigger_up('form_dialog_discarded');
-        return true;
+        var isFocusSet = false;
+        this.trigger_up('form_dialog_discarded', {
+            callback: function (isFocused) {
+                isFocusSet = isFocused;
+            },
+        });
+        return isFocusSet;
+    },
+    /**
+     * prepare buttons for dialog footer based on options
+     *
+     * @private
+     */
+    _prepareButtons: function () {
+        this.__buttons = [{
+            text: _t("Cancel"),
+            classes: 'btn-secondary o_form_button_cancel',
+            close: true,
+        }];
+        if (!this.options.no_create) {
+            this.__buttons.unshift({
+                text: _t("Create"),
+                classes: 'btn-primary',
+                click: this.create_edit_record.bind(this)
+            });
+        }
+        if (!this.options.disable_multiple_selection) {
+            this.__buttons.unshift({
+                text: _t("Select"),
+                classes: 'btn-primary o_select_button',
+                disabled: true,
+                close: true,
+                click: function () {
+                    var records = this.viewController.getSelectedRecords();
+                    var values = _.map(records, function (record) {
+                        return {
+                            id: record.res_id,
+                            display_name: record.data.display_name,
+                        };
+                    });
+                    this.on_selected(values);
+                },
+            });
+        }
     },
 });
 

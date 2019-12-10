@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name='res_config_invite_users'>
+        <p class="o_form_label">Invite New Users</p>
+        <div class="d-flex">
+            <input class="o_user_emails o_input mt8" type="text" placeholder="Enter e-mail address"/>
+            <button class="btn btn-primary o_web_settings_invite" data-loading-text="Inviting..."><strong>Invite</strong></button>
+        </div>
+
+        <t t-if="widget.pending_users.length">
+            <p class="o_form_label pt-3">Pending Invitations:</p>
+            <span t-foreach="widget.pending_users" t-as="pending">
+                <a href="#" class="badge badge-pill o_web_settings_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
+            </span>
+            <t t-if="widget.pending_users.length &lt; widget.pending_count">
+                <br/>
+                <a href="#" class="o_web_settings_more"><t t-esc="widget.pending_count - widget.pending_users.length"/> more </a>
+            </t>
+        </t>
+    </div>
+</templates>

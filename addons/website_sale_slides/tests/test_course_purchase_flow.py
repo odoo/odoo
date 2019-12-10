@@ -13,6 +13,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
             'list_price': 150,
             'type': 'service',
             'invoice_policy': 'order',
+            'is_published': True,
         })
 
         self.channel.write({
@@ -20,7 +21,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
             'product_id': course_product.id
         })
 
-        self.channel_2 = self.env['slide.channel'].sudo(self.user_publisher).create({
+        self.channel_2 = self.env['slide.channel'].with_user(self.user_publisher).create({
             'name': 'Test Channel',
             'enroll': 'payment',
             'product_id': course_product.id

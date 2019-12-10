@@ -77,8 +77,8 @@
             <t t-foreach="partner_stats.values()" t-as="partner_stat">
                 <div class="row mt8" t-if="partner_stat['total']" title="Top 5 partner ratings of last 15 days.">
                     <div class="col-md-1">
-                        <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-att-src="image_data_uri(partner_stat['rated_partner'].image)" alt="Rated partner"/>
-                        <img  t-if="not partner_stat['rated_partner'].image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
+                        <img t-if="partner_stat['rated_partner'].image_1024" class="o_top_partner_image" t-att-src="image_data_uri(partner_stat['rated_partner'].image_1024)" alt="Rated partner"/>
+                        <img  t-if="not partner_stat['rated_partner'].image_1024" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
                     <div class="col-md-4 o_smiley_no_padding_right">
                         <span class="ml8" t-esc="partner_stat['rated_partner'].name"/>
@@ -126,8 +126,8 @@
             <div t-attf-id="rating_#{rating.id}" class="container d-none">
                 <div class="row">
                     <div class="col-lg-2">
-                        <img t-if="rating.partner_id.image" class="o_top_partner_image" t-att-src="image_data_uri(rating.partner_id.image)" alt="Rated partner"/>
-                        <img  t-if="not rating.partner_id.image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
+                        <img t-if="rating.partner_id.image_1024" class="o_top_partner_image" t-att-src="image_data_uri(rating.partner_id.image_1024)" alt="Rated partner"/>
+                        <img  t-if="not rating.partner_id.image_1024" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
                     <div class="col-lg-10">
                         <div class="mt4">

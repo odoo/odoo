@@ -14,12 +14,12 @@ class HrOrgChartController(http.Controller):
             return None
         employee_id = int(employee_id)
 
-        if ('context' in kw and 'allowed_company_ids' in kw['context']):
-            cids = kw['context']['allowed_company_ids']
+        if 'allowed_company_ids' in request.env.context:
+            cids = request.env.context['allowed_company_ids']
         else:
             cids = [request.env.company.id]
 
-        Employee = request.env['hr.employee'].with_context(allowed_company_ids=cids)
+        Employee = request.env['hr.employee.public'].with_context(allowed_company_ids=cids)
         # check and raise
         if not Employee.check_access_rights('read', raise_exception=False):
             return None
@@ -35,22 +35,32 @@ class HrOrgChartController(http.Controller):
         return dict(
             id=employee.id,
             name=employee.name,
-            link='/mail/view?model=hr.employee&res_id=%s' % employee.id,
+            link='/mail/view?model=%s&res_id=%s' % ('hr.employee.public', employee.id,),
             job_id=job.id,
             job_name=job.name or '',
+            job_title=employee.job_title or '',
             direct_sub_count=len(employee.child_ids),
             indirect_sub_count=employee.child_all_count,
         )
+
+    @http.route('/hr/get_redirect_model', type='json', auth='user')
+    def get_redirect_model(self):
+        if request.env['hr.employee'].check_access_rights('read', raise_exception=False):
+            return 'hr.employee'
+        return 'hr.employee.public'
 
     @http.route('/hr/get_org_chart', type='json', auth='user')
     def get_org_chart(self, employee_id, **kw):
 
         employee = self._check_employee(employee_id, **kw)
         if not employee:  # to check
-            return {}
+            return {
+                'managers': [],
+                'children': [],
+            }
 
         # compute employee data for org chart
-        ancestors, current = request.env['hr.employee'], employee
+        ancestors, current = request.env['hr.employee.public'].sudo(), employee.sudo()
         while current.parent_id and len(ancestors) < self._managers_level+1:
             ancestors += current.parent_id
             current = current.parent_id
@@ -81,8 +91,10 @@ class HrOrgChartController(http.Controller):
             return {}
 
         if subordinates_type == 'direct':
-            return employee.child_ids.ids
+            res = employee.child_ids.ids
         elif subordinates_type == 'indirect':
-            return (employee.subordinate_ids - employee.child_ids).ids
+            res = (employee.subordinate_ids - employee.child_ids).ids
         else:
-            return employee.subordinate_ids.ids
+            res = employee.subordinate_ids.ids
+
+        return res

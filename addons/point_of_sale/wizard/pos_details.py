@@ -42,7 +42,6 @@ class PosDetails(models.TransientModel):
         if self.end_date and self.end_date < self.start_date:
             self.start_date = self.end_date
 
-    @api.multi
     def generate_report(self):
         if (not self.env.company.logo):
             raise UserError(_("You have to set a logo or a layout for your company."))

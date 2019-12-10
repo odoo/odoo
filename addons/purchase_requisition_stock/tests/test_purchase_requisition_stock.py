@@ -34,8 +34,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
 
         # Give access rights of Purchase Requisition User to open requisition
         # Set tender state to choose tendering line.
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_in_progress()
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_open()
+        self.requisition1.with_user(self.user_purchase_requisition_user).action_in_progress()
+        self.requisition1.with_user(self.user_purchase_requisition_user).action_open()
 
         # Vendor send one RFQ so I create a RfQ of that agreement.
         PurchaseOrder = self.env['purchase.order']
@@ -46,15 +46,14 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         self.assertEqual(len(self.po_requisition.order_line), 1, 'Purchase order should have one line')
 
     def test_02_purchase_requisition_stock(self):
-        """ Set a static supplier info and make a delivery order for a "to buy" product, check that the purchase order created is consistent. Create a blanket order for this product, create a new delivery order for this product and check that the create purchase order set its values according to the blanket order.
-        """
-
+        """Plays with the sequence of regular supplier infos and one created by blanket orders."""
         # Product creation
         unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
         route_buy = self.ref('purchase_stock.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
+        vendor2 = self.env['res.partner'].create({'name': 'BBB', 'email': 'from.test2@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
             'name': vendor1.id,
             'price': 50,
@@ -88,7 +87,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         self.assertEqual(purchase1.order_line.price_unit, 50, 'The price on the purchase order is not the supplierinfo one')
 
         # Blanket order creation
-        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 42})
+        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 50})
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
             'quantity_copy': 'none',
@@ -96,7 +95,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'type_id': requisition_type.id,
-            'vendor_id': vendor1.id,
+            'vendor_id': vendor2.id,
             'currency_id': self.env.ref("base.USD").id,
         })
         requisition_blanket.action_in_progress()
@@ -114,9 +113,32 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         move2._action_confirm()
 
+        # As the supplier.info linked to the blanket order has the same price, the first one is stille used.
+        self.assertEqual(purchase1.order_line.product_qty, 20)
+
+        # Update the sequence of the blanket order's supplier info.
+        supplier_info1.sequence = 2
+        requisition_blanket.line_ids.supplier_info_ids.sequence = 1
+        # In [13]: [(x.sequence, x.min_qty, x.price, x.name.name) for x in supplier_info1 + requisition_blanket.line_ids.supplier_info_ids]
+        # Out[13]: [(2, 0.0, 50.0, 'AAA'), (1, 0.0, 50.0, 'BBB')]
+
+        # Second stock move
+        move3 = self.env['stock.move'].create({
+            'name': '10 in',
+            'procure_method': 'make_to_order',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product_test.id,
+            'product_uom': unit,
+            'product_uom_qty': 10.0,
+            'price_unit': 10
+        })
+        move3._action_confirm()
+
         # Verifications
-        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor1.id), ('requisition_id', '=', requisition_blanket.id)])
-        self.assertEqual(purchase2.order_line.price_unit, 42, 'The price on the purchase order is not the blanquet order one')
+        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_id', '=', requisition_blanket.id)])
+        self.assertEqual(len(purchase2), 1)
+        self.assertEqual(purchase2.order_line.price_unit, 50, 'The price on the purchase order is not the blanquet order one')
 
     def test_03_purchase_requisition_stock(self):
         """ Two blanket orders on different 'make to order' products must generate

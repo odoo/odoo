@@ -6,7 +6,6 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
     def _action_confirm(self):
         res = super(SaleOrder, self)._action_confirm()
         for so in self:
@@ -14,7 +13,6 @@ class SaleOrder(models.Model):
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
         return res
 
-    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
@@ -35,7 +33,6 @@ class SaleOrderLine(models.Model):
         "an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
-    @api.multi
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
@@ -81,9 +78,11 @@ class SaleOrderLine(models.Model):
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
         company = self.event_id.company_id or self.env.company
-        currency = company.currency_id
+        currency = company.currency_id or self.env.company.currency_id
         self.price_unit = currency._convert(
-            self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())
+            self.event_ticket_id.price, self.order_id.currency_id,
+            self.order_id.company_id or self.env.user.company_id,
+            self.order_id.date_order or fields.Date.today())
 
         # we call this to force update the default name
         self.product_id_change()

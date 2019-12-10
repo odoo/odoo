@@ -16,7 +16,6 @@ var FieldChar = basic_fields.FieldChar;
  * "website" and "image" fields of records of this model).
  */
 var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
-    description: "",
     className: 'o_field_partner_autocomplete',
     debounceSuggestions: 400,
     resetOnAnyFieldChange: true,
@@ -115,7 +114,7 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
         var self = this;
         this._getCreateData(company).then(function (data) {
             if (data.logo) {
-                var logoField = self.model === 'res.partner' ? 'image' : 'logo';
+                var logoField = self.model === 'res.partner' ? 'image_1920' : 'logo';
                 data.company[logoField] = data.logo;
             }
 

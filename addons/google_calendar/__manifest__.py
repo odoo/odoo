@@ -4,12 +4,11 @@
 {
     'name': 'Google Calendar',
     'version': '1.0',
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'description': "",
     'depends': ['google_account', 'calendar'],
     'qweb': ['static/src/xml/*.xml'],
     'data': [
-        'data/google_calendar_data.xml',
         'data/google_calendar_data.xml',
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',

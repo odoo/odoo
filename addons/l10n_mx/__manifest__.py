@@ -31,7 +31,7 @@ With this module you will have:
 .. _SAT: http://www.sat.gob.mx/
     """,
     "depends": [
-        "account", "account_cancel"
+        "account",
     ],
     "data": [
         "data/account_tag_data.xml",
@@ -42,6 +42,9 @@ With this module you will have:
         "data/account_tax_data.xml",
         "data/fiscal_position_data.xml",
         "data/account_chart_template_data.xml",
+        "data/res_bank_data.xml",
+        "views/partner_view.xml",
+        "views/res_bank_view.xml",
         "views/res_config_settings_views.xml",
         "views/account_views.xml",
     ],

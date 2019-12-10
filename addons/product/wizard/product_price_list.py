@@ -16,7 +16,6 @@ class product_price_list(models.TransientModel):
     qty4 = fields.Integer('Quantity-4', default=0)
     qty5 = fields.Integer('Quantity-5', default=0)
 
-    @api.multi
     def print_report(self):
         """
         To get the date and print the report

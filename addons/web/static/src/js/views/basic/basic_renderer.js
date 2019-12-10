@@ -235,7 +235,7 @@ var BasicRenderer = AbstractRenderer.extend({
         $node.tooltip({
             title: function () {
                 return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
+                    debug: config.isDebug(),
                     widget: widget,
                 });
             }
@@ -353,7 +353,7 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
-     * This function is meant to be overriden in renderers. It takes a dataPoint
+     * This function is meant to be overridden in renderers. It takes a dataPoint
      * id (for a dataPoint of type record), and should return the corresponding
      * dataPoint.
      *
@@ -651,8 +651,8 @@ var BasicRenderer = AbstractRenderer.extend({
             // this.renderFieldWidget(...).addClass(...), the class is added on
             // the temporary div and not on the actual element that will be
             // rendered. As we do not return a promise and some callers cannot
-            // wait for this.defs, we copy those attributes to the final element.
-            widget.$el.attr($el.getAttributes());
+            // wait for this.defs, we copy those classnames to the final element.
+            widget.$el.addClass($el.attr('class'));
 
             $el.replaceWith(widget.$el);
             self._registerModifiers(node, record, widget, {

@@ -13,7 +13,7 @@ class LivechatController(http.Controller):
     # Note: the `cors` attribute on many routes is meant to allow the livechat
     # to be embedded in an external website.
 
-    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
+    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public')
     def livechat_lib(self, ext, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
         xmlid = 'im_livechat.external_lib'
@@ -87,23 +87,24 @@ class LivechatController(http.Controller):
         if request.session.uid:
             user_id = request.env.user.id
             country_id = request.env.user.country_id.id
-        # if geoip, add the country name to the anonymous name
-        elif request.session.geoip:
-            # get the country of the anonymous person, if any
-            country_code = request.session.geoip.get('country_code', "")
-            country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
-            if country:
-                anonymous_name, country_id = _("%s (%s)") % (anonymous_name, country.name), country.id
+        else:
+            # if geoip, add the country name to the anonymous name
+            if request.session.geoip:
+                # get the country of the anonymous person, if any
+                country_code = request.session.geoip.get('country_code', "")
+                country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
+                if country:
+                    anonymous_name = "%s (%s)" % (anonymous_name, country.name)
+                    country_id = country.id
 
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
+        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
         Channel = request.env['mail.channel']
-        Rating = request.env['rating.rating']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         if channel:
             # limit the creation : only ONE rating per session
@@ -111,6 +112,7 @@ class LivechatController(http.Controller):
                 'rating': rate,
                 'consumed': True,
                 'feedback': reason,
+                'is_internal': False,
             }
             if not channel.rating_ids:
                 res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
@@ -124,7 +126,7 @@ class LivechatController(http.Controller):
                 # if logged in user, set its partner on rating
                 values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
-                rating = Rating.sudo().create(values)
+                rating = request.env['rating.rating'].sudo().create(values)
             else:
                 rating = channel.rating_ids[0]
                 rating.write(values)
@@ -148,3 +150,11 @@ class LivechatController(http.Controller):
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing, is_website_user=True)
+
+    @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
+    def email_livechat_transcript(self, uuid, email):
+        channel = request.env['mail.channel'].sudo().search([
+            ('channel_type', '=', 'livechat'),
+            ('uuid', '=', uuid)], limit=1)
+        if channel:
+            channel._email_livechat_transcript(email)

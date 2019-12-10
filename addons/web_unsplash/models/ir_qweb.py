@@ -8,7 +8,9 @@ class Image(models.AbstractModel):
 
     @api.model
     def from_html(self, model, field, element):
-        url = element.find('img').get('src')
+        if element.find('.//img') is None:
+            return False
+        url = element.find('.//img').get('src')
         url_object = urls.url_parse(url)
 
         if url_object.path.startswith('/unsplash/'):

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.translate import html_translate
 
 
 class Menu(models.Model):
@@ -16,23 +17,46 @@ class Menu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
+    def _compute_field_is_mega_menu(self):
+        for menu in self:
+            menu.is_mega_menu = bool(menu.mega_menu_content)
+
+    def _set_field_is_mega_menu(self):
+        for menu in self:
+            if menu.is_mega_menu:
+                if not menu.mega_menu_content:
+                    default_content = self.env['ir.ui.view'].render_template('website.s_mega_menu_multi_menus')
+                    menu.mega_menu_content = default_content.decode()
+            else:
+                menu.mega_menu_content = False
+                menu.mega_menu_classes = False
+
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char('Url', default='')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    group_ids = fields.Many2many('res.groups', string='Visible Groups',
+                                 help="User need to be at least in one of these groups to see the menu")
+    is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
+    mega_menu_content = fields.Html(translate=html_translate, sanitize=False)
+    mega_menu_classes = fields.Char()
 
-    @api.multi
     def name_get(self):
+        if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
+            return super(Menu, self).name_get()
+
         res = []
         for menu in self:
-            website_suffix = '%s - %s' % (menu.name, menu.website_id.name)
-            res.append((menu.id, website_suffix if menu.website_id and self.env.user.has_group('website.group_multi_website') else menu.name))
+            menu_name = menu.name
+            if menu.website_id:
+                menu_name += ' [%s]' % menu.website_id.name
+            res.append((menu.id, menu_name))
         return res
 
     @api.model
@@ -67,7 +91,6 @@ class Menu(models.Model):
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
-    @api.multi
     def unlink(self):
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
@@ -77,12 +100,15 @@ class Menu(models.Model):
                                                                 ('id', '!=', menu.id)])
         return super(Menu, menus_to_remove).unlink()
 
-    @api.one
     def _compute_visible(self):
-        visible = True
-        if self.page_id and not self.page_id.sudo().is_visible and not self.user_has_groups('base.group_user'):
-            visible = False
-        self.is_visible = visible
+        for menu in self:
+            visible = True
+            if menu.page_id and not menu.user_has_groups('base.group_user') and \
+                (not menu.page_id.sudo().is_visible or
+                 (not menu.page_id.view_id.handle_visibility(do_raise=False) and
+                 menu.page_id.view_id.visibility != "password")):
+                visible = False
+            menu.is_visible = visible
 
     @api.model
     def clean_url(self):
@@ -103,25 +129,25 @@ class Menu(models.Model):
     @api.model
     def get_tree(self, website_id, menu_id=None):
         def make_tree(node):
-            page_id = node.page_id.id if node.page_id else None
-            is_homepage = page_id and self.env['website'].browse(website_id).homepage_id.id == page_id
-            menu_node = dict(
-                id=node.id,
-                name=node.name,
-                url=node.page_id.url if page_id else node.url,
-                new_window=node.new_window,
-                sequence=node.sequence,
-                parent_id=node.parent_id.id,
-                children=[],
-                is_homepage=is_homepage,
-            )
+            is_homepage = bool(node.page_id and self.env['website'].browse(website_id).homepage_id.id == node.page_id.id)
+            menu_node = {
+                'fields': {
+                    'id': node.id,
+                    'name': node.name,
+                    'url': node.page_id.url if node.page_id else node.url,
+                    'new_window': node.new_window,
+                    'is_mega_menu': node.is_mega_menu,
+                    'sequence': node.sequence,
+                    'parent_id': node.parent_id.id,
+                },
+                'children': [],
+                'is_homepage': is_homepage,
+            }
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        if menu_id:
-            menu = self.browse(menu_id)
-        else:
-            menu = self.env['website'].browse(website_id).menu_id
+
+        menu = menu_id and self.browse(menu_id) or self.env['website'].browse(website_id).menu_id
         return make_tree(menu)
 
     @api.model
@@ -149,7 +175,12 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
+                domain = self.env["website"].website_domain(website_id) + [
+                    "|",
+                    ("url", "=", menu["url"]),
+                    ("url", "=", "/" + menu["url"]),
+                ]
+                page = self.env["website.page"].search(domain, limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url

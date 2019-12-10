@@ -2,6 +2,9 @@
 
 .. queue:: backend/series
 
+.. _howto/base:
+.. _howto/module:
+
 =================
 Building a Module
 =================
@@ -53,11 +56,18 @@ Business objects
     Declared as Python classes, these resources are automatically persisted
     by Odoo based on their configuration
 
-Data files
-    XML or CSV files declaring metadata (views or reports), configuration
-    data (modules parameterization), demonstration data and more
+:ref:`Object views <reference/views>`
+    Definition of business objects UI display
 
-Web controllers
+:ref:`Data files <reference/data>`
+    XML or CSV files declaring the model metadata :
+
+    * :ref:`views <reference/views>` or :ref:`reports <reference/reports>`,
+    * configuration data (modules parametrization, :ref:`security rules <reference/security>`),
+    * demonstration data
+    * and more
+
+:ref:`Web controllers <reference/controllers>`
     Handle requests from web browsers
 
 Static web data
@@ -789,7 +799,6 @@ method should simply set the value of the field to compute on every record in
 
         name = fields.Char(compute='_compute_name')
 
-        @api.multi
         def _compute_name(self):
             for record in self:
                 record.name = str(random.randint(1, 1e6))

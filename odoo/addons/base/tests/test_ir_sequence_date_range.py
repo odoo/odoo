@@ -24,7 +24,7 @@ class TestIrSequenceDateRangeStandard(SingleTransactionCase):
         year = date.today().year - 1
         january = lambda d: date(year, 1, d)
 
-        seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})
+        seq16 = self.env['ir.sequence'].with_context(ir_sequence_date=january(16))
         n = seq16.next_by_code('test_sequence_date_range')
         self.assertEqual(n, '1')
         n = seq16.next_by_code('test_sequence_date_range')

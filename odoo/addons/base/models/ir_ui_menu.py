@@ -67,7 +67,7 @@ class IrUiMenu(models.Model):
         icon_image = False
         if icon_path:
             with tools.file_open(icon_path, 'rb') as icon_file:
-                icon_image = base64.encodestring(icon_file.read())
+                icon_image = base64.encodebytes(icon_file.read())
         return icon_image
 
     @api.constrains('parent_id')
@@ -115,14 +115,13 @@ class IrUiMenu(models.Model):
 
         return set(visible.ids)
 
-    @api.multi
     @api.returns('self')
     def _filter_visible_menus(self):
         """ Filter `self` to only keep the menu items that should be visible in
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids(request.debug if request else False)
+        visible_ids = self._visible_menu_ids(request.session.debug if request else False)
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
@@ -139,7 +138,6 @@ class IrUiMenu(models.Model):
                 menus = menus[:limit]
         return len(menus) if count else menus.ids
 
-    @api.multi
     def name_get(self):
         return [(menu.id, menu._get_full_name()) for menu in self]
 
@@ -151,7 +149,6 @@ class IrUiMenu(models.Model):
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).create(vals_list)
 
-    @api.multi
     def write(self, values):
         self.clear_caches()
         if 'web_icon' in values:
@@ -168,7 +165,6 @@ class IrUiMenu(models.Model):
         if web_icon and len(web_icon.split(',')) == 2:
             return self.read_image(web_icon)
 
-    @api.multi
     def unlink(self):
         # Detach children and promote them to top-level, because it would be unwise to
         # cascade-delete submenus blindly. We also can't use ondelete=set null because
@@ -181,7 +177,6 @@ class IrUiMenu(models.Model):
         self.clear_caches()
         return super(IrUiMenu, self).unlink()
 
-    @api.multi
     def copy(self, default=None):
         record = super(IrUiMenu, self).copy(default=default)
         match = NUMBER_PARENS.search(record.name)

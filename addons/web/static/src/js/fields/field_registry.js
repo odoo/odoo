@@ -24,6 +24,7 @@ registry
     .add('boolean', basic_fields.FieldBoolean)
     .add('date', basic_fields.FieldDate)
     .add('datetime', basic_fields.FieldDateTime)
+    .add('daterange', basic_fields.FieldDateRange)
     .add('domain', basic_fields.FieldDomain)
     .add('text', basic_fields.FieldText)
     .add('list.text', basic_fields.ListFieldText)
@@ -38,6 +39,7 @@ registry
     .add('CopyClipboardText', basic_fields.TextCopyClipboard)
     .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('image', basic_fields.FieldBinaryImage)
+    .add('kanban.image', basic_fields.KanbanFieldBinaryImage)
     .add('binary', basic_fields.FieldBinaryFile)
     .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)
@@ -49,7 +51,6 @@ registry
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
-    .add('boolean_button', basic_fields.FieldBooleanButton)
     .add('boolean_toggle', basic_fields.BooleanToggle)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
@@ -59,7 +60,8 @@ registry
     .add('progressbar', basic_fields.FieldProgressBar)
     .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
-    .add('ace', basic_fields.AceEditor);
+    .add('ace', basic_fields.AceEditor)
+    .add('color', basic_fields.FieldColor);
 
 // Relational fields
 registry
@@ -73,12 +75,14 @@ registry
     .add('many2many', relational_fields.FieldMany2Many)
     .add('many2many_binary', relational_fields.FieldMany2ManyBinaryMultiFiles)
     .add('many2many_tags', relational_fields.FieldMany2ManyTags)
+    .add('many2many_tags_avatar', relational_fields.FieldMany2ManyTagsAvatar)
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
     .add('kanban.many2many_tags', relational_fields.KanbanFieldMany2ManyTags)
     .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
-    .add('reference', relational_fields.FieldReference);
+    .add('reference', relational_fields.FieldReference)
+    .add('font', relational_fields.FieldSelectionFont);
 
 // Special fields
 registry

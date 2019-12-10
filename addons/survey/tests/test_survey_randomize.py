@@ -42,7 +42,7 @@ class TestSurveyRandomize(TransactionCase):
             'questions_selection': 'random'
         })
 
-        generated_questions = self.survey1._prepare_answer_questions()
+        generated_questions = self.survey1._prepare_user_input_predefined_questions()
 
         self.assertEqual(len(generated_questions.ids), 10, msg="Expected 10 unique questions")
         self.assertEqual(len(generated_questions.filtered(lambda question: question.page_id == page_1)), 3, msg="Expected 3 questions in page 1")

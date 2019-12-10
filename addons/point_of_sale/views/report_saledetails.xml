@@ -26,7 +26,7 @@
                     <td><t t-esc="internal_reference" /><t t-esc="line['product_name']" /></td>
                     <td>
                         <t t-esc="line['quantity']" />
-                        <t t-if='line["uom"] != "Unit(s)"'>
+                        <t t-if='line["uom"] != "Units"'>
                             <t t-esc='line["uom"]' /> 
                         </t>
                     </td>

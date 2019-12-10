@@ -2,12 +2,11 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Wysiwyg = require('web_editor.wysiwyg.root');
+var weDefaultOptions = require('web_editor.wysiwyg.default_options');
+var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
-var utils = require('web.utils');
 var qweb = core.qweb;
-var WebsiteProfile = require('website_profile.website_profile');
 
 var _t = core._t;
 
@@ -18,19 +17,15 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
         'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
-        'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
-        'change .o_forum_file_upload': '_onFileUploadChange',
-        'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
         'mouseenter .o_forum_user_info': '_onUserInfoMouseEnter',
         'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
         'mouseleave .o_forum_user_bio_expand': '_onUserBioExpandMouseLeave',
         'click .flag:not(.karma_required)': '_onFlagAlertClick',
         'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
-        'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
-        'click .favourite_question': '_onFavoriteQuestionClick',
+        'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
+        'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
-        'click .notification_close': '_onCloseNotificationClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
 
@@ -51,6 +46,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             escape(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
+
+        // Initialize forum's tooltips
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
+        this.$('[data-toggle="popover"]').popover({offset: 8});
 
         $('input.js_select2').select2({
             tags: true,
@@ -113,12 +112,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
         });
 
-        _.each($('textarea.load_editor'), function (textarea) {
+        _.each($('textarea.o_wysiwyg_loader'), function (textarea) {
             var $textarea = $(textarea);
-            var editorKarma = $textarea.data('karma') || 30; // default value for backward compatibility
-            if (!$textarea.val().match(/\S/)) {
-                $textarea.val('<p><br/></p>');
-            }
+            var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             var $form = $textarea.closest('form');
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
             var toolbar = [
@@ -133,9 +129,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             toolbar.push(['history', ['undo', 'redo']]);
 
             var options = {
-                height: 150,
+                height: 200,
+                minHeight: 80,
                 toolbar: toolbar,
                 styleWithSpan: false,
+                styleTags: _.without(weDefaultOptions.styleTags, 'h1', 'h2', 'h3'),
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
@@ -148,22 +146,22 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     MediaPlugin: false,
                 };
             }
-            var wysiwyg = new Wysiwyg(self, options);
-            wysiwyg.attachTo($textarea).then(function () {
+            wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button, .a-submit', function () {
-                    $form.find('textarea').data('wysiwyg').save();
+                $form.on('click', 'button .a-submit', () => {
+                    wysiwyg.save();
                 });
             });
         });
 
-        // Check all answer status to add text-success on answer if needed
-        _.each($('.accept_answer'), function (el) {
-            var $el = $(el);
-            if ($el.hasClass('oe_answer_true')) {
-                $el.addClass('text-success');
-            }
+        _.each(this.$('.o_wforum_bio_popover'), authorBox => {
+            $(authorBox).popover({
+                trigger: 'hover',
+                offset: 10,
+                animation: false,
+                html: true,
+            });
         });
 
         return this._super.apply(this, arguments);
@@ -186,20 +184,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         }
         ev.preventDefault();
         var msg = karma + ' ' + _t("karma is required to perform this action. ");
+        var title = _t("Karma Error");
         if (forum_id) {
             msg += '<a class="alert-link" href="/forum/' + forum_id + '/faq">' + _t("Read the guidelines to know how to gain karma.") + '</a>';
         }
         if (session.is_website_user) {
             msg = _t("Sorry you must be logged in to perform this action");
+            title = _t("Access Denied");
         }
-        var $warning = $('<div class="alert alert-danger alert-dismissible oe_forum_alert" id="karma_alert">' +
-            '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
-            msg + '</div>');
-        var $voteAlert = $('#karma_alert');
-        if ($voteAlert.length) {
-            $voteAlert.remove();
-        }
-        $karma.after($warning);
+        this.call('crash_manager', 'show_warning', {
+            message: msg,
+            title: title,
+        }, {
+            sticky: false,
+        });
     },
     /**
      * @private
@@ -214,41 +212,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onTagFollowBoxMouseLeave: function (ev) {
         $(ev.currentTarget).find('.o_forum_tag_follow_box').stop().fadeOut().css('display', 'none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onEditProfilePicClick: function (ev) {
-        ev.preventDefault();
-        $(ev.currentTarget).closest('form').find('.o_forum_file_upload').trigger('click');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onFileUploadChange: function (ev) {
-        if (!ev.currentTarget.files.length) {
-            return;
-        }
-        var $form = $(ev.currentTarget).closest('form');
-        utils.getDataURLFromFile(ev.currentTarget.files[0]).then(function (result) {
-            $form.find('.o_forum_avatar_img').attr('src', result);
-        });
-        $form.find('#forum_clear_image').remove();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onProfilePicClearClick: function (ev) {
-        var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_forum_avatar_img').attr('src', '/web/static/src/img/placeholder.png');
-        $form.append($('<input/>', {
-            name: 'clear_image',
-            id: 'forum_clear_image',
-            type: 'hidden',
-        }));
     },
     /**
      * @private
@@ -276,41 +239,27 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFlagAlertClick: function (ev) {
+        var self = this;
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
             route: $link.data('href') || ($link.attr('href') !== '#' && $link.attr('href')) || $link.closest('form').attr('action'),
         }).then(function (data) {
             if (data.error) {
-                var $warning;
+                var message;
                 if (data.error === 'anonymous_user') {
-                    $warning = $(
-                        '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("Sorry you must be logged to flag a post") +
-                        '</div>'
-                    );
+                    message = _t("Sorry you must be logged to flag a post");
                 } else if (data.error === 'post_already_flagged') {
-                    $warning = $(
-                        '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("This post is already flagged") +
-                            '<button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&times;</button>' +
-                        '</div>'
-                    );
+                    message = _t("This post is already flagged");
                 } else if (data.error === 'post_non_flaggable') {
-                    $warning = $(
-                        '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("This post can not be flagged") +
-                            '<button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&times;</button>' +
-                        '</div>'
-                    );
+                    message = _t("This post can not be flagged");
                 }
-                var $flagAlert = $link.parent().find('#flag_alert');
-                if ($flagAlert.length === 0) {
-                    $link.parent().append($warning);
-                }
+                self.call('crash_manager', 'show_warning', {
+                    message: message,
+                    title: _t("Access Denied"),
+                }, {
+                    sticky: false,
+                });
             } else if (data.success) {
                 var elem = $link;
                 if (data.success === 'post_flagged_moderator') {
@@ -332,40 +281,48 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onVotePostClick: function (ev) {
+        var self = this;
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
+        var $btn = $(ev.currentTarget);
         this._rpc({
-            route: $link.data('href'),
+            route: $btn.data('href'),
         }).then(function (data) {
             if (data.error) {
-                var $warning;
+                var message;
                 if (data.error === 'own_post') {
-                    $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="vote_alert">' +
-                        '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
-                        _t('Sorry, you cannot vote for your own posts') +
-                        '</div>');
+                    message = _t('Sorry, you cannot vote for your own posts');
                 } else if (data.error === 'anonymous_user') {
-                    $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="vote_alert">' +
-                        '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
-                        _t('Sorry you must be logged to vote') +
-                        '</div>');
+                    message = _t('Sorry you must be logged to vote');
                 }
-                var $voteAlert = $link.parent().find('#vote_alert');
-                if ($voteAlert.length === 0) {
-                    $link.parent().append($warning);
-                }
+                self.call('crash_manager', 'show_warning', {
+                    message: message,
+                    title: _t("Access Denied"),
+                }, {
+                    sticky: false,
+                });
             } else {
-                $link.parent().find('.vote_count').html(data.vote_count);
-                if (data.user_vote === 0) {
-                    $link.parent().find('.text-success').removeClass('text-success');
-                    $link.parent().find('.text-warning').removeClass('text-warning');
-                } else {
-                    if (data.user_vote === 1) {
-                        $link.addClass('text-success');
-                    } else {
-                        $link.addClass('text-warning');
-                    }
+                var $container = $btn.closest('.vote');
+                var $items = $container.children();
+                var $voteUp = $items.filter('.vote_up');
+                var $voteDown = $items.filter('.vote_down');
+                var $voteCount = $items.filter('.vote_count');
+                var userVote = parseInt(data['user_vote']);
+
+                $voteUp.prop('disabled', userVote === 1);
+                $voteDown.prop('disabled', userVote === -1);
+
+                $items.removeClass('text-success text-danger text-muted o_forum_vote_animate');
+                void $container[0].offsetWidth; // Force a refresh
+
+                if (userVote === 1) {
+                    $voteUp.addClass('text-success');
+                    $voteCount.addClass('text-success');
                 }
+                if (userVote === -1) {
+                    $voteDown.addClass('text-danger');
+                    $voteCount.addClass('text-danger');
+                }
+                $voteCount.html(data['vote_count']).addClass('o_forum_vote_animate');
             }
         });
     },
@@ -377,11 +334,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         $link.parents('.post_to_validate').hide();
-        $.get($link.attr('href')).then(function () {
+        $.get($link.attr('href')).then(() => {
             var left = $('.o_js_validation_queue:visible').length;
             var type = $('h2.o_page_header a.active').data('type');
             $('#count_post').text(left);
             $('#moderation_tools a[href*="/' + type + '_"]').find('strong').text(left);
+            if (!left) {
+                this.$('.o_caught_up_alert').removeClass('d-none');
+            }
         }, function () {
             $link.parents('.o_js_validation_queue > div').addClass('bg-danger text-white').css('background-color', '#FAA');
             $link.parents('.post_to_validate').show();
@@ -394,36 +354,35 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onAcceptAnswerClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
+        var target = $link.data('target');
+
         this._rpc({
             route: $link.data('href'),
-        }).then(function (data) {
+        }).then(data => {
             if (data.error) {
                 if (data.error === 'anonymous_user') {
-                    var $warning = $(
-                        '<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("Sorry, anonymous users cannot choose correct answer.") +
-                        '</div>'
-                    );
+                    var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                var $correctAnswerAlert = $link.parent().find('#correct_answer_alert');
-                if ($correctAnswerAlert.length === 0) {
-                    $link.parent().append($warning);
-                }
+                this.call('crash_manager', 'show_warning', {
+                    message: message,
+                    title: _t("Access Denied"),
+                }, {
+                    sticky: false,
+                });
             } else {
-                $link.toggleClass('oe_answer_true', !!data)
-                     .toggleClass('oe_answer_false', !data);
+                _.each(this.$('.forum_answer'), answer => {
+                    var $answer = $(answer);
+                    var isCorrect = $answer.is(target) ? data : false;
+                    var $toggler = $answer.find('.o_wforum_validate_toggler');
+                    var newHelper = isCorrect ? $toggler.data('helper-decline') : $toggler.data('helper-accept');
+
+                    $answer.toggleClass('o_wforum_answer_correct', isCorrect);
+                    $toggler.tooltip('dispose')
+                            .attr('data-original-title', newHelper)
+                            .tooltip({delay: 0});
+                });
             }
         });
-        this._onCheckAnswerStatus(ev);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCheckAnswerStatus: function (ev) {
-        var $link = $(ev.currentTarget);
-        $link.toggleClass('text-success', !$link.hasClass('oe_answer_true'));
     },
     /**
      * @private
@@ -435,7 +394,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this._rpc({
             route: $link.data('href'),
         }).then(function (data) {
-            $link.toggleClass('forum_favourite_question', !!data);
+            $link.toggleClass('o_wforum_gold fa-star', data)
+                 .toggleClass('fa-star-o text-muted', !data);
         });
     },
     /**
@@ -445,27 +405,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onDeleteCommentClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
+        var $container = $link.closest('.o_wforum_post_comments_container');
+
         this._rpc({
             route: $link.closest('form').attr('action'),
         }).then(function () {
-            $link.parents('.comment').first().remove();
+            $link.closest('.o_wforum_post_comment').remove();
+
+            var count = $container.find('.o_wforum_post_comment').length;
+            if (count) {
+                $container.find('.o_wforum_comments_count').text(count);
+            } else {
+                $container.find('.o_wforum_comments_count_header').remove();
+            }
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseNotificationClick: function (ev) {
-        if (!session.is_website_user) {
-            ev.preventDefault();
-            var $link = $(ev.currentTarget);
-            this._rpc({
-                route: '/forum/notification_read',
-                params: {
-                    notification_id: $link.attr('id'),
-                },
-            });
-        }
     },
     /**
      * @private

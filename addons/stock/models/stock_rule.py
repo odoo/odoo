@@ -21,6 +21,7 @@ class StockRule(models.Model):
     _name = 'stock.rule'
     _description = "Stock Rule"
     _order = "sequence, id"
+    _check_company_auto = True
 
     name = fields.Char(
         'Name', required=True, translate=True,
@@ -39,8 +40,8 @@ class StockRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company)
-    location_id = fields.Many2one('stock.location', 'Destination Location', required=True)
-    location_src_id = fields.Many2one('stock.location', 'Source Location')
+    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
+    location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
@@ -50,16 +51,19 @@ class StockRule(models.Model):
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
              "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True)
+        required=True, check_company=True)
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
-    partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
-        help="When ticked, if the move is splitted or cancelled, the next move will be too.")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
+    partner_address_id = fields.Many2one(
+        'res.partner', 'Partner Address',
+        check_company=True,
+        help="Address where goods should be delivered. Optional.")
+    propagate_cancel = fields.Boolean(
+        'Cancel Next Move', default=False,
+        help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
         help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
@@ -74,14 +78,21 @@ class StockRule(models.Model):
         help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated', default=1)
+    delay_alert = fields.Boolean(
+        'Alert if Delay',
+        help='Log an exception on the picking if this move has to be delayed (due to a change in the previous move scheduled date).',
+    )
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
         """ Modify locations to the default picking type's locations source and
         destination.
+        Enable the delay alert if the picking type is a delivery
         """
         self.location_src_id = self.picking_type_id.default_location_src_id.id
         self.location_id = self.picking_type_id.default_location_dest_id.id
+        if self.picking_type_id.code == 'outgoing':
+            self.delay_alert = True
 
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
@@ -128,12 +139,14 @@ class StockRule(models.Model):
         """ Generate dynamicaly a message that describe the rule purpose to the
         end user.
         """
-        for rule in self.filtered(lambda rule: rule.action):
+        action_rules = self.filtered(lambda rule: rule.action)
+        for rule in action_rules:
             message_dict = rule._get_message_dict()
             message = message_dict.get(rule.action) and message_dict[rule.action] or ""
             if rule.action == 'pull_push':
                 message = message_dict['pull'] + "<br/><br/>" + message_dict['push']
             rule.rule_message = message
+        (self - action_rules).rule_message = None
 
     def _run_push(self, move):
         """ Apply a push rule on a move.
@@ -156,22 +169,26 @@ class StockRule(models.Model):
                 move._push_apply()
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
-            new_move = move.copy(new_move_vals)
+            new_move = move.sudo().copy(new_move_vals)
             move.write({'move_dest_ids': [(4, new_move.id)]})
             new_move._action_confirm()
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
+        company_id = self.company_id.id
+        if not company_id:
+            company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
             'date_expected': new_date,
-            'company_id': self.company_id.id,
+            'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
+            'delay_alert': self.delay_alert
         }
         return new_move_vals
 
@@ -216,7 +233,7 @@ class StockRule(models.Model):
 
         for company_id, moves_values in moves_values_by_company.items():
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            moves = self.env['stock.move'].sudo().with_context(force_company=company_id).create(moves_values)
+            moves = self.env['stock.move'].sudo().with_company(company_id).create(moves_values)
             # Since action_confirm launch following procurement_group we should activate it.
             moves._action_confirm()
         return True
@@ -265,11 +282,12 @@ class StockRule(models.Model):
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_expected,
             'date_expected': date_expected,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
+            'delay_alert': self.delay_alert,
         }
         for field in self._get_custom_move_fields():
             if field in values:
@@ -280,18 +298,11 @@ class StockRule(models.Model):
         existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),
                                                               ('note', '=', note)])
         if not existing_activity:
-            # If the user deleted todo activity type.
-            try:
-                activity_type_id = self.env.ref('mail.mail_activity_data_todo').id
-            except:
-                activity_type_id = False
-            self.env['mail.activity'].create({
-                'activity_type_id': activity_type_id,
-                'note': note,
-                'user_id': product_id.responsible_id.id or SUPERUSER_ID,
-                'res_id': product_id.product_tmpl_id.id,
-                'res_model_id': self.env.ref('product.model_product_template').id,
-            })
+            product_id.product_tmpl_id.activity_schedule(
+                'mail.mail_activity_data_warning',
+                note=note,
+                user_id=product_id.responsible_id.id or SUPERUSER_ID,
+            )
 
 
 class ProcurementGroup(models.Model):
@@ -348,8 +359,8 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                errors.append(_('No procurement rule found in location "%s" for product "%s".\n Check routes configuration.') %
-                    (procurement.location_id.display_name, procurement.product_id.display_name))
+                errors.append(_('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %
+                    (procurement.product_id.display_name, procurement.location_id.display_name))
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))
@@ -400,9 +411,14 @@ class ProcurementGroup(models.Model):
         result = False
         location = location_id
         while (not result) and location:
-            result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), [('location_id', '=', location.id), ('action', '!=', 'push')])
+            domain = self._get_rule_domain(location, values)
+            result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), domain)
             location = location.location_id
         return result
+
+    @api.model
+    def _get_rule_domain(self, location, values):
+        return [('location_id', '=', location.id), ('action', '!=', 'push')]
 
     def _merge_domain(self, values, rule, group_id):
         return [
@@ -485,19 +501,13 @@ class ProcurementGroup(models.Model):
         return domain
 
     @api.model
-    def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=False):
+    def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=None):
         """ Create procurements based on orderpoints.
         :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing
             1000 orderpoints.
             This is appropriate for batch jobs only.
         """
-        if company_id and self.env.company.id != company_id:
-            # To ensure that the company_id is taken into account for
-            # all the processes triggered by this method
-            # i.e. If a PO is generated by the run of the procurements the
-            # sequence to use is the one for the specified company not the
-            # one of the user's company
-            self = self.with_context(company_id=company_id, force_company=company_id)
+        self = self.with_company(company_id)
         OrderPoint = self.env['stock.warehouse.orderpoint']
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(domain,

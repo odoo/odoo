@@ -43,7 +43,7 @@ class Image(models.AbstractModel):
             if max_width or max_height:
                 max_size = '%sx%s' % (max_width, max_height)
 
-        sha = hashlib.sha1(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
+        sha = hashlib.sha512(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[:7]
         max_size = '' if max_size is None else '/%s' % max_size
 
         if options.get('filename-field') and getattr(record, options['filename-field'], None):
@@ -52,6 +52,7 @@ class Image(models.AbstractModel):
             filename = options['filename']
         else:
             filename = record.display_name
+        filename = filename.replace('/', '-').replace('\\', '-')
 
         src = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, url_quote(filename), sha)
 
@@ -68,8 +69,13 @@ class Image(models.AbstractModel):
         elif options.get('zoom'):
             src_zoom = options['zoom']
 
+        itemprop = None
+        if options.get('itemprop'):
+            itemprop = options['itemprop']
+
         atts = OrderedDict()
         atts["src"] = src
+        atts["itemprop"] = itemprop
         atts["class"] = classes
         atts["style"] = options.get('style')
         atts["alt"] = alt

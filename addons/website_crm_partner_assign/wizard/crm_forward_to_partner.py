@@ -53,7 +53,6 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 res['assignation_lines'].append((0, 0, self._convert_to_assignation_line(lead, partner)))
         return res
 
-    @api.multi
     def action_forward(self):
         self.ensure_one()
         template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)

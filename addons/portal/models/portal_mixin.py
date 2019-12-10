@@ -21,7 +21,6 @@ class PortalMixin(models.AbstractModel):
         for mixin in self:
             mixin.access_warning = ''
 
-    @api.multi
     def _compute_access_url(self):
         for record in self:
             record.access_url = '#'
@@ -32,16 +31,6 @@ class PortalMixin(models.AbstractModel):
             # we use a `write` to force the cache clearing otherwise `return self.access_token` will return False
             self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
-
-    @api.multi
-    def get_base_url(self):
-        """Get the base URL for the current model.
-
-        Defined here to be overriden by website specific models.
-        The method has to be public because it is called from mail templates.
-        """
-        self.ensure_one()
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         """
@@ -71,7 +60,6 @@ class PortalMixin(models.AbstractModel):
 
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
-    @api.multi
     def _notify_get_groups(self):
         access_token = self._portal_ensure_token()
         customer = self['partner_id']
@@ -95,7 +83,6 @@ class PortalMixin(models.AbstractModel):
             new_group = []
         return new_group + groups
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the online document for
         portal users or if force_website=True in the context. """
@@ -109,7 +96,7 @@ class PortalMixin(models.AbstractModel):
             except exceptions.AccessError:
                 return super(PortalMixin, self).get_access_action(access_uid)
             user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
+            record = self.with_user(user)
         if user.share or self.env.context.get('force_website'):
             try:
                 record.check_access_rights('read')
@@ -140,7 +127,6 @@ class PortalMixin(models.AbstractModel):
                              'active_model': self.env.context['active_model']}
         return action
 
-    @api.multi
     def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):
         """
             Get a portal url for this model, including access_token.

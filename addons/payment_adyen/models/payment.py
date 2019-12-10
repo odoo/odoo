@@ -69,12 +69,11 @@ class AcquirerAdyen(models.Model):
             'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % ('live' if environment == 'prod' else environment),
         }
 
-    @api.multi
     def _adyen_generate_merchant_sig_sha256(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications., when using the SHA-256
         signature.
 
-        :param string inout: 'in' (odoo contacting ogone) or 'out' (adyen
+        :param string inout: 'in' (odoo contacting adyen) or 'out' (adyen
                              contacting odoo). In this last case only some
                              fields should be contained (see e-Commerce basic)
         :param dict values: transaction values
@@ -119,12 +118,11 @@ class AcquirerAdyen(models.Model):
 
         return signParams(raw_values_ordered)
 
-    @api.multi
     def _adyen_generate_merchant_sig(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications, when using the SHA-1
         signature (deprecated by Adyen).
 
-        :param string inout: 'in' (odoo contacting ogone) or 'out' (adyen
+        :param string inout: 'in' (odoo contacting adyen) or 'out' (adyen
                              contacting odoo). In this last case only some
                              fields should be contained (see e-Commerce basic)
         :param dict values: transaction values
@@ -148,9 +146,8 @@ class AcquirerAdyen(models.Model):
         key = self.adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, hashlib.sha1).digest())
 
-    @api.multi
     def adyen_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         # tmp
         import datetime
         from dateutil import relativedelta
@@ -170,7 +167,7 @@ class AcquirerAdyen(models.Model):
                 'sessionValidity': tmp_date.isoformat('T')[:19] + "Z",
                 'resURL': urls.url_join(base_url, AdyenController._return_url),
                 'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url', '') else False,
-                'shopperEmail': values.get('partner_email', ''),
+                'shopperEmail': values.get('partner_email') or values.get('billing_partner_email') or '',
             })
             values['merchantSig'] = self._adyen_generate_merchant_sig_sha256('in', values)
 
@@ -193,9 +190,10 @@ class AcquirerAdyen(models.Model):
 
         return values
 
-    @api.multi
     def adyen_get_form_action_url(self):
-        return self._get_adyen_urls(self.environment)['adyen_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_adyen_urls(environment)['adyen_form_url']
 
 
 class TxAdyen(models.Model):

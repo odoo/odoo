@@ -18,19 +18,18 @@ class CrmPartnerReportAssign(models.Model):
     date_review = fields.Date('Latest Partner Review')
     date_partnership = fields.Date('Partnership Date')
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
-    nbr_opportunities = fields.Integer('# of Opportunity', readonly=True, oldname='opp')
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
+    nbr_opportunities = fields.Integer('# of Opportunity', readonly=True)
     turnover = fields.Float('Turnover', readonly=True)
     date = fields.Date('Invoice Account Date', readonly=True)
 
     _depends = {
-        'account.invoice.report': ['date', 'partner_id', 'price_total', 'state', 'type'],
+        'account.invoice.report': ['invoice_date', 'partner_id', 'price_subtotal', 'state', 'type'],
         'crm.lead': ['partner_assigned_id'],
         'res.partner': ['activation', 'country_id', 'date_partnership', 'date_review',
                         'grade_id', 'parent_id', 'team_id', 'user_id'],
     }
 
-    @api.model_cr
     def init(self):
         """
             CRM Lead Report
@@ -50,8 +49,8 @@ class CrmPartnerReportAssign(models.Model):
                     p.user_id,
                     p.team_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS nbr_opportunities,
-                    i.price_total as turnover,
-                    i.date
+                    i.price_subtotal as turnover,
+                    i.invoice_date
                 FROM
                     res_partner p
                     left join account_invoice_report i

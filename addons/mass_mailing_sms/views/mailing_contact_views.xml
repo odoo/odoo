@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_contact_view_search" model="ir.ui.view">
+        <field name="name">mailing.contact.view.search.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_contact_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mobile"/>
+                <field name="phone_sanitized" invisible="1"/>
+            </xpath>
+            <xpath expr="//filter[@name='filter_not_optout']" position="after">
+                <separator/>
+                <filter string="Valid SMS Recipients"
+                    name="filter_valid_sms_recipient"
+                    domain="[('opt_out', '=', False), ('phone_blacklisted', '=', False), ('phone_sanitized', '!=', False)]"
+                    invisible="not context.get('default_list_ids')"/>
+                <separator/>
+                <filter string="Exclude Blacklisted Phone"
+                    name="filter_not_phone_bl"
+                    domain="[('phone_blacklisted', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_tree_sms" model="ir.ui.view">
+        <field name="name">mailing.contact.view.tree.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Contacts">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="company_name"/>
+                <field name="mobile"/>
+                <field name="phone_sanitized" invisible="1"/>
+                <field name="phone_blacklisted"/>
+                <field name="opt_out" invisible="'default_list_ids' not in context"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_form" model="ir.ui.view">
+        <field name="name">mailing.contact.view.form.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_contact_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='email_details']" position="after">
+                <label for="mobile" class="oe_inline"/>
+                <div class="o_row o_row_readonly" name="phone_details">
+                    <i class="fa fa-ban" style="color: red;" role="img" title="This number is blacklisted for SMS Marketing"
+                        aria-label="Phone Blacklisted" attrs="{'invisible': [('phone_blacklisted', '=', False)]}" groups="base.group_user"></i>
+                    <field name="mobile" widget="phone"/>
+                    <field name="phone_sanitized" invisible="1"/>
+                    <field name="phone_blacklisted" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.contact.view.kanban.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_contact_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="mobile"/>
+                <field name="phone_sanitized" invisible="1"/>
+            </xpath>
+            <xpath expr="//t[@t-esc='record.email.value']" position="after">
+                <t t-esc="record.mobile.value"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_action_sms" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">mailing.contact</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'mailing_sms': True, 'search_default_filter_not_phone_bl': 1, }</field>
+        <field name="view_id" ref="mailing_contact_view_tree_sms"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new contact
+            </p>
+        </field>
+    </record>
+
+    <!-- SMS Marketing / Contacts Lists / Contacts Lists -->
+    <record id="mass_mailing_sms.mailing_contact_menu_sms" model="ir.ui.menu">
+        <field name="action" ref="mailing_contact_action_sms"/>
+    </record>
+
+</odoo>

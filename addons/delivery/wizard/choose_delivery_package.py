@@ -22,9 +22,10 @@ class ChooseDeliveryPackage(models.TransientModel):
         return total_weight
 
     picking_id = fields.Many2one('stock.picking', 'Picking')
-    delivery_packaging_id = fields.Many2one('product.packaging', 'Delivery Packaging')
+    delivery_packaging_id = fields.Many2one('product.packaging', 'Delivery Packaging', check_company=True)
     shipping_weight = fields.Float('Shipping Weight', default=_default_shipping_weight)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    company_id = fields.Many2one(related='picking_id.company_id')
 
     @api.depends('delivery_packaging_id')
     def _compute_weight_uom_name(self):
@@ -42,10 +43,19 @@ class ChooseDeliveryPackage(models.TransientModel):
             return {'warning': warning_mess}
 
     def put_in_pack(self):
-        move_line_ids = self.picking_id.move_line_ids.filtered(lambda ml:
+        picking_move_lines = self.picking_id.move_line_ids
+        if not self.picking_id.picking_type_id.show_reserved:
+            picking_move_lines = self.picking_id.move_line_nosuggest_ids
+
+        move_line_ids = picking_move_lines.filtered(lambda ml:
             float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
             and not ml.result_package_id
         )
+        if not move_line_ids:
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                 precision_rounding=ml.product_uom_id.rounding) == 0)
+
         delivery_package = self.picking_id._put_in_pack(move_line_ids)
         # write shipping weight and product_packaging on 'stock_quant_package' if needed
         if self.delivery_packaging_id:

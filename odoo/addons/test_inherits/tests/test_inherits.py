@@ -28,6 +28,34 @@ class test_inherits(common.TransactionCase):
         pallet.write({'name': 'C'})
         self.assertEqual(pallet.name, 'C')
 
+    def test_write_4_one2many(self):
+        """ Check that we can write on an inherited one2many field. """
+        box = self.env.ref('test_inherits.box_a')
+        box.write({'line_ids': [(0, 0, {'name': 'Line 1'})]})
+        self.assertTrue(all(box.line_ids._ids))
+        self.assertEqual(box.line_ids.mapped('name'), ['Line 1'])
+        self.assertEqual(box.line_ids, box.unit_id.line_ids)
+        box.flush()
+        box.invalidate_cache(['line_ids'])
+        box.write({'line_ids': [(0, 0, {'name': 'Line 2'})]})
+        self.assertTrue(all(box.line_ids._ids))
+        self.assertEqual(box.line_ids.mapped('name'), ['Line 1', 'Line 2'])
+        self.assertEqual(box.line_ids, box.unit_id.line_ids)
+        box.flush()
+        box.invalidate_cache(['line_ids'])
+        box.write({'line_ids': [(1, box.line_ids[0].id, {'name': 'First line'})]})
+        self.assertTrue(all(box.line_ids._ids))
+        self.assertEqual(box.line_ids.mapped('name'), ['First line', 'Line 2'])
+        self.assertEqual(box.line_ids, box.unit_id.line_ids)
+
+    def test_write_5_field_readonly(self):
+        """ Check that we can write on an inherited readonly field. """
+        self.assertTrue(self.env['test.box']._fields['readonly_name'])
+        box = self.env.ref('test_inherits.box_a')
+        box.write({'readonly_name': "Superuser's box"})
+        self.assertEqual(box.readonly_name, "Superuser's box")
+        self.assertEqual(box.unit_id.readonly_name, "Superuser's box")
+
     def test_ir_model_data_inherits(self):
         """ Check the existence of the correct ir.model.data """
         IrModelData = self.env['ir.model.data']
@@ -72,3 +100,23 @@ class test_inherits(common.TransactionCase):
         unit5 = UnitModel.create({'val1': 7})
         with self.assertRaises(ValidationError):
             box.write({'another_unit_id': unit5.id, 'val1': 8, 'val2': 7})
+
+    def test_display_name(self):
+        """ Check the 'display_name' of an inherited translated 'name'. """
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        # concrete check
+        pallet_en = self.env['test.pallet'].create({'name': 'Bread'})
+        pallet_fr = pallet_en.with_context(lang='fr_FR')
+        pallet_fr.box_id.unit_id.name = 'Pain'
+        self.assertEqual(pallet_en.display_name, 'Bread')
+        self.assertEqual(pallet_fr.display_name, 'Pain')
+
+        # check model
+        Unit = type(self.env['test.unit'])
+        Box = type(self.env['test.box'])
+        Pallet = type(self.env['test.pallet'])
+        self.assertTrue(Unit.name.translate)
+        self.assertIn('lang', Unit.display_name.depends_context)
+        self.assertIn('lang', Box.display_name.depends_context)
+        self.assertIn('lang', Pallet.display_name.depends_context)

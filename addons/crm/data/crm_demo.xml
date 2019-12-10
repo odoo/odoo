@@ -10,5 +10,9 @@
             <field name="alias_user_id" ref="base.user_admin"/>
             <field name="company_id" eval="False"/>
         </record>
+
+        <record id="sales_team.crm_team_1" model="crm.team">
+            <field name="use_leads">True</field>
+        </record>
     </data>
 </odoo>

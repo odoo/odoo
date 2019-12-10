@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 from odoo.tools import float_is_zero
 
@@ -32,8 +34,7 @@ class MrpProduction(models.Model):
             if finished_move.product_id.cost_method in ('fifo', 'average'):
                 qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
                 extra_cost = self.extra_cost * qty_done
-                finished_move.price_unit = (sum([-m.value for m in consumed_moves]) + work_center_cost + extra_cost) / qty_done
-                finished_move.value = sum([-m.value for m in consumed_moves]) + work_center_cost + extra_cost
+                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves]) + work_center_cost + extra_cost) / qty_done
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):
@@ -47,6 +48,7 @@ class MrpProduction(models.Model):
             'account_id': account,
             'ref': wc.code,
             'unit_amount': hours,
+            'company_id': self.company_id.id,
         }
 
     def _costs_generate(self):
@@ -63,9 +65,18 @@ class MrpProduction(models.Model):
                 # able to produce orders
                 AccountAnalyticLine.create(vals)
 
-    @api.multi
     def button_mark_done(self):
         self.ensure_one()
         res = super(MrpProduction, self).button_mark_done()
         self._costs_generate()
         return res
+
+    def action_view_stock_valuation_layers(self):
+        self.ensure_one()
+        domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids + self.scrap_ids.move_id).stock_valuation_layer_ids.ids)]
+        action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+        context = literal_eval(action['context'])
+        context.update(self.env.context)
+        context['no_at_date'] = True
+        return dict(action, domain=domain, context=context)
+

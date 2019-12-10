@@ -24,9 +24,8 @@ class PosOrderReport(models.Model):
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)
     average_price = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    location_id = fields.Many2one('stock.location', string='Location', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    nbr_lines = fields.Integer(string='Sale Line Count', readonly=True, oldname='nbr')
+    nbr_lines = fields.Integer(string='Sale Line Count', readonly=True)
     product_qty = fields.Integer(string='Product Quantity', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal')
     delay_validation = fields.Integer(string='Delay Validation')
@@ -44,16 +43,15 @@ class PosOrderReport(models.Model):
                 COUNT(*) AS nbr_lines,
                 s.date_order AS date,
                 SUM(l.qty) AS product_qty,
-                SUM(l.qty * l.price_unit) AS price_sub_total,
-                SUM((l.qty * l.price_unit) * (100 - l.discount) / 100) AS price_total,
-                SUM((l.qty * l.price_unit) * (l.discount / 100)) AS total_discount,
-                (SUM(l.qty*l.price_unit)/SUM(l.qty * u.factor))::decimal AS average_price,
+                SUM(l.qty * l.price_unit / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS price_sub_total,
+                SUM((l.qty * l.price_unit) * (100 - l.discount) / 100 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS price_total,
+                SUM((l.qty * l.price_unit) * (l.discount / 100) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS total_discount,
+                (SUM(l.qty*l.price_unit / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END)/SUM(l.qty * u.factor))::decimal AS average_price,
                 SUM(cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') AS INT)) AS delay_validation,
                 s.id as order_id,
                 s.partner_id AS partner_id,
                 s.state AS state,
                 s.user_id AS user_id,
-                s.location_id AS location_id,
                 s.company_id AS company_id,
                 s.sale_journal AS journal_id,
                 l.product_id AS product_id,
@@ -63,13 +61,13 @@ class PosOrderReport(models.Model):
                 pt.pos_categ_id,
                 s.pricelist_id,
                 s.session_id,
-                s.invoice_id IS NOT NULL AS invoiced
+                s.account_move IS NOT NULL AS invoiced
         """
 
     def _from(self):
         return """
             FROM pos_order_line AS l
-                LEFT JOIN pos_order s ON (s.id=l.order_id)
+                INNER JOIN pos_order s ON (s.id=l.order_id)
                 LEFT JOIN product_product p ON (l.product_id=p.id)
                 LEFT JOIN product_template pt ON (p.product_tmpl_id=pt.id)
                 LEFT JOIN uom_uom u ON (u.id=pt.uom_id)
@@ -80,8 +78,8 @@ class PosOrderReport(models.Model):
         return """
             GROUP BY
                 s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
-                s.user_id, s.location_id, s.company_id, s.sale_journal,
-                s.pricelist_id, s.invoice_id, s.create_date, s.session_id,
+                s.user_id, s.company_id, s.sale_journal,
+                s.pricelist_id, s.account_move, s.create_date, s.session_id,
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
@@ -94,7 +92,6 @@ class PosOrderReport(models.Model):
                 SUM(l.qty * u.factor) != 0
         """
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""

@@ -22,23 +22,28 @@ class BaseLanguageImport(models.TransientModel):
     data = fields.Binary('File', required=True, attachment=False)
     filename = fields.Char('File Name', required=True)
     overwrite = fields.Boolean('Overwrite Existing Terms',
+                               default=True,
                                help="If you enable this option, existing translations (including custom ones) "
                                     "will be overwritten and replaced by those in this file")
 
-    @api.multi
     def import_lang(self):
         this = self[0]
-        this = this.with_context(overwrite=this.overwrite)
         with TemporaryFile('wb+') as buf:
             try:
-                buf.write(base64.decodestring(this.data))
+                buf.write(base64.decodebytes(this.data))
 
                 # now we determine the file format
                 buf.seek(0)
                 fileformat = os.path.splitext(this.filename)[-1][1:].lower()
 
-                tools.trans_load_data(this._cr, buf, fileformat, this.code,
-                                      lang_name=this.name, context=this._context)
+                Lang = self.env["res.lang"]
+                lang = Lang._activate_lang(self.code) or Lang._create_lang(
+                    self.code, lang_name=self.name
+                )
+
+                tools.trans_load_data(
+                    this._cr, buf, fileformat, this.code, overwrite=self.overwrite
+                )
             except Exception as e:
                 _logger.exception('File unsuccessfully imported, due to format mismatch.')
                 raise UserError(

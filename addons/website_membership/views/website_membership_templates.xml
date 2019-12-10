@@ -54,8 +54,8 @@
                                 <t t-set="partner" t-value="partners[partner_id]"/>
                                 <div class="media mt-3">
                                     <a t-attf-href="/members/#{slug(partner)}"
-                                       t-field="partner.image_small"
-                                       t-options='{"widget": "image", "class": "media-object mr-3"}'
+                                       t-field="partner.image_128"
+                                       t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover mr-3"}'
                                     ></a>
                                     <div class="media-body" style="min-height: 64px;">
                                         <a t-attf-href="/members/#{slug(partner)}">

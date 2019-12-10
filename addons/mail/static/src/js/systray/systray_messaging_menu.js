@@ -30,18 +30,14 @@ var MessagingMenu = Widget.extend({
     /**
      * @override
      */
-    willStart: function () {
-        return Promise.all([this._super.apply(this, arguments), this.call('mail_service', 'isReady')]);
-    },
-    /**
-     * @override
-     */
     start: function () {
         this._$filterButtons = this.$('.o_filter_button');
         this._$previews = this.$('.o_mail_systray_dropdown_items');
         this._filter = false;
+        this._isMessagingReady = this.call('mail_service', 'isReady');
         this._updateCounter();
         var mailBus = this.call('mail_service', 'getMailBus');
+        mailBus.on('messaging_ready', this, this._onMessagingReady);
         mailBus.on('update_needaction', this, this._updateCounter);
         mailBus.on('new_channel', this, this._updateCounter);
         mailBus.on('update_thread_unread_counter', this, this._updateCounter);
@@ -127,6 +123,34 @@ var MessagingMenu = Widget.extend({
         return this.$el.hasClass('show');
     },
     /**
+     * Process Preview Mark As Read
+     *
+     * @private
+     * @param {Element} $preview
+     */
+    _markAsRead: function ($preview) {
+        var previewID = $preview.data('preview-id');
+        if (previewID === 'mailbox_inbox') {
+            var messageIDs = [].concat($preview.data('message-ids'));
+            this.call('mail_service', 'markMessagesAsRead', messageIDs);
+        } else if (previewID === 'mail_failure') {
+            var documentModel = $preview.data('document-model');
+            var unreadCounter = $preview.data('unread-counter');
+            this.do_action('mail.mail_resend_cancel_action', {
+                additional_context: {
+                    default_model: documentModel,
+                    unread_counter: unreadCounter
+                }
+            });
+        } else {
+            // this is mark as read on a thread
+            var thread = this.call('mail_service', 'getThread', previewID);
+            if (thread) {
+                thread.markAsRead();
+            }
+        }
+    },
+    /**
      * Open discuss
      *
      * @private
@@ -207,6 +231,9 @@ var MessagingMenu = Widget.extend({
     _updatePreviews: function () {
         // Display spinner while waiting for conversations preview
         this._$previews.html(QWeb.render('Spinner'));
+        if (!this._isMessagingReady) {
+            return;
+        }
         this._getPreviews()
             .then(this._renderPreviews.bind(this));
     },
@@ -229,7 +256,11 @@ var MessagingMenu = Widget.extend({
      * @private
      */
     _updateCounter: function () {
+        if (!this._isMessagingReady) {
+            return;
+        }
         var counter = this._computeCounter();
+        this.$('.o_mail_messaging_menu_icon').removeClass('fa-spinner fa-spin');
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
         if (this._isShown()) {
@@ -315,28 +346,18 @@ var MessagingMenu = Widget.extend({
      */
     _onClickPreviewMarkAsRead: function (ev) {
         ev.stopPropagation();
-        var thread;
         var $preview = $(ev.currentTarget).closest('.o_mail_preview');
-        var previewID = $preview.data('preview-id');
-        if (previewID === 'mailbox_inbox') {
-            var messageIDs = [].concat($preview.data('message-ids'));
-            this.call('mail_service', 'markMessagesAsRead', messageIDs);
-        } else if (previewID === 'mail_failure') {
-            var documentModel = $preview.data('document-model');
-            var unreadCounter = $preview.data('unread-counter');
-            this.do_action('mail.mail_resend_cancel_action', {
-                additional_context: {
-                    default_model: documentModel,
-                    unread_counter: unreadCounter
-                }
-            });
-        } else {
-            // this is mark as read on a thread
-            thread = this.call('mail_service', 'getThread', previewID);
-            if (thread) {
-                thread.markAsRead();
-            }
+        this._markAsRead($preview);
+    },
+    /**
+     * @private
+     */
+    _onMessagingReady: function () {
+        if (this._isMessagingReady) {
+            return;
         }
+        this._isMessagingReady = true;
+        this._updateCounter();
     },
 });
 

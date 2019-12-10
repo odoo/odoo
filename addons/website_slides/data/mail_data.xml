@@ -9,16 +9,20 @@
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
-                        A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}
+                        There is something new in the course <strong>${object.channel_id.name}</strong> you are following:<br/><br/>
+                        <center><strong>${object.name}</strong></center>
+                        % if object.image_1024
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}">
-                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>
+                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
+                        % endif
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}"
-                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong>${object.name}</strong></a>
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
                         </div>
+                        Enjoy this exclusive content!
                     </p>
                 </div>
             </field>
@@ -31,19 +35,19 @@
             <field name="model_id" ref="model_slide_slide"/>
             <field name="subject">${user.name} shared a ${object.slide_type} with you!</field>
             <field name="email_from">${user.email_formatted | safe}</field>
-            <field name="email_to">${ctx['email']}</field>
+            <field name="email_to">${ctx.get('email', '')}</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
                         ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
-                            <a href="${object.website_url}">
-                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>
+                            <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}">
+                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
-                            <a href="${object.website_url}"
+                            <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong>${object.name}</strong></a>
                         </div>
                     </p>

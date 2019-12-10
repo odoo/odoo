@@ -15,10 +15,11 @@ publicWidget.registry.affixMenu = publicWidget.Widget.extend({
         var def = this._super.apply(this, arguments);
 
         var self = this;
-        this.$headerClone = this.$target.clone().addClass('o_header_affix affix').removeClass('o_affix_enabled');
+        this.$headerClone = this.$target.clone().addClass('o_header_affix affix').removeClass('o_affix_enabled').removeAttr('id');
         this.$headerClone.insertAfter(this.$target);
         this.$headers = this.$target.add(this.$headerClone);
         this.$dropdowns = this.$headers.find('.dropdown');
+        this.$dropdownMenus = this.$headers.find('.dropdown-menu');
         this.$navbarCollapses = this.$headers.find('.navbar-collapse');
 
         this._adaptDefaultOffset();
@@ -100,7 +101,7 @@ publicWidget.registry.affixMenu = publicWidget.Widget.extend({
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
 
         // Reset opened menus
-        this.$dropdowns.removeClass('show');
+        this.$dropdowns.add(this.$dropdownMenus).removeClass('show');
         this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
     },
 });

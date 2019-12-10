@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.test_tax import TestTax
+from odoo.addons.account.tests.test_tax import TestTaxCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestTaxPython(TestTax):
+class TestTaxPython(TestTaxCommon):
 
-    def setUp(self):
-        super(TestTaxPython, self).setUp()
-
-        self.python_tax = self.tax_model.create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestTaxPython, cls).setUpClass()
+        cls.python_tax = cls.tax_model.create({
             'name': 'Python TAx',
             'amount_type': 'code',
             'amount': 0.0,

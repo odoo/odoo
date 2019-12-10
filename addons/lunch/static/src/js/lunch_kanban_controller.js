@@ -6,6 +6,7 @@ odoo.define('lunch.LunchKanbanController', function (require) {
  * override of the KanbanController.
  */
 
+var session = require('web.session');
 var core = require('web.core');
 var KanbanController = require('web.KanbanController');
 var LunchKanbanWidget = require('lunch.LunchKanbanWidget');
@@ -32,6 +33,7 @@ var LunchKanbanController = KanbanController.extend({
         this.editMode = false;
         this.updated = false;
         this.widgetData = null;
+        this.context = session.user_context;
         return this._super.apply(this, arguments);
     },
     /**
@@ -55,6 +57,9 @@ var LunchKanbanController = KanbanController.extend({
     _fetchPaymentInfo: function () {
         return this._rpc({
             route: '/lunch/payment_message',
+            params: {
+                context: this.context,
+            },
         });
     },
     _fetchWidgetData: function () {
@@ -64,11 +69,24 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/infos',
             params: {
                 user_id: this.userId,
+                context: this.context,
             },
         }).then(function (data) {
             self.widgetData = data;
             return self.model._updateLocation(data.user_location[0]);
         });
+    },
+    /**
+     * Override to add the location domain (coming from the lunchKanbanWidget)
+     * to the searchDomain (coming from the controlPanel).
+     *
+     * @override
+     * @private
+     */
+    _getSearchDomain: function () {
+        var searchDomain = this._super.apply(this, arguments) || [];
+        var locationId = this.model.getCurrentLocationId();
+        return searchDomain.concat([['is_available_at', 'in', [locationId]]]);
     },
     /**
      * Renders and appends the lunch banner widget.
@@ -77,13 +95,14 @@ var LunchKanbanController = KanbanController.extend({
      */
     _renderLunchKanbanWidget: function () {
         var self = this;
-        if (this.widget) {
-            this.widget.destroy();
-        }
+        var oldWidget = this.widget;
         this.widgetData.wallet = parseFloat(this.widgetData.wallet).toFixed(2);
         this.widget = new LunchKanbanWidget(this, _.extend(this.widgetData, {edit: this.editMode}));
         return this.widget.appendTo(document.createDocumentFragment()).then(function () {
             self.$('.o_lunch_kanban').prepend(self.widget.$el);
+            if (oldWidget) {
+                oldWidget.destroy();
+            }
         });
     },
     _showPaymentDialog: function (title) {
@@ -107,18 +126,6 @@ var LunchKanbanController = KanbanController.extend({
     _update: function () {
         var def = this._fetchWidgetData().then(this._renderLunchKanbanWidget.bind(this));
         return Promise.all([def, this._super.apply(this, arguments)]);
-    },
-    /**
-     * Override to add the location domain (coming from the lunchKanbanWidget)
-     * to the searchDomain (coming from the controlPanel).
-     *
-     * @override
-     * @private
-     */
-    _updateSearchPanel: function () {
-        var locationId = this.model.getCurrentLocationId();
-        var domain = this.controlPanelDomain.concat([['is_available_at', 'in', [locationId]]]);
-        return this._searchPanel.update({searchDomain: domain});
     },
 
     //--------------------------------------------------------------------------
@@ -147,6 +154,7 @@ var LunchKanbanController = KanbanController.extend({
             params: {
                 user_id: this.userId,
                 location_id: ev.data.locationId,
+                context: this.context,
             },
         }).then(function () {
             self.model._updateLocation(ev.data.locationId).then(function () {
@@ -166,13 +174,26 @@ var LunchKanbanController = KanbanController.extend({
             },
         };
 
-        this.do_action({
-            res_model: 'lunch.order.temp',
+        // YTI TODO Maybe don't always pass the default_product_id
+        var action = {
+            res_model: 'lunch.order',
+            name: _t('Configure Your Order'),
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',
-            context: _.extend(ctx, {default_product_id: ev.data.productId, line_id: ev.data.lineId || false}),
-        }, options);
+            context: _.extend(ctx, {default_product_id: ev.data.productId}),
+        };
+
+        if (ev.data.lineId) {
+            action = _.extend(action, {
+                res_id: ev.data.lineId,
+                context: _.extend(action.context, {
+                    active_id: ev.data.lineId,
+                }),
+            });
+        }
+
+        this.do_action(action, options);
     },
     _onOrderNow: function (ev) {
         var self = this;
@@ -182,6 +203,7 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/pay',
             params: {
                 user_id: this.userId,
+                context: this.context,
             },
         }).then(function (isPaid) {
             if (isPaid) {
@@ -223,6 +245,7 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/trash',
             params: {
                 user_id: this.userId,
+                context: this.context,
             },
         }).then(function () {
             self.reload();

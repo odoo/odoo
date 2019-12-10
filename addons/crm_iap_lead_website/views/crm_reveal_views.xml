@@ -19,9 +19,6 @@
                                 <span class="o_stat_text"> Leads </span>
                             </div>
                         </button>
-                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
-                        </button>
                     </div>
                     <div class="oe_title mb8">
                         <label for="name" class="oe_edit_only"/>
@@ -33,6 +30,7 @@
                         <div class="col-md-6">
                             <group>
                                 <field name="lead_for" widget="radio"/>
+                                <field name="active"/>
                             </group>
                             <group string="Website Traffic Conditions">
                                 <field name="country_ids" widget="many2many_tags"/>
@@ -77,7 +75,7 @@
                         <group>
                             <field name="lead_type" groups="crm.group_use_lead"/>
                             <field name="suffix"/>
-                            <field name="team_id"/>
+                            <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                             <field name="user_id"/>
                         </group>
                         <group>
@@ -102,10 +100,23 @@
         </field>
     </record>
 
+    <record id="crm_reveal_rule_view_search" model="ir.ui.view">
+        <field name="name">crm.reveal.rule.view.search</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <search string="Search CRM Reveal Rule">
+                <field string="Rule" name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="crm_reveal_rule_action" model="ir.actions.act_window">
         <field name="name">Visits to Leads Rules</field>
         <field name="res_model">crm.reveal.rule</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="crm_reveal_rule_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a conversion rule

@@ -3,7 +3,6 @@
 
 from . import analytic
 from . import account_invoice
-from . import account_reconciliation_widget
 from . import account_move
 from . import product_product
 from . import product_template
@@ -14,3 +13,4 @@ from . import res_config_settings
 from . import sales_team
 from . import payment
 from . import uom_uom
+from . import utm

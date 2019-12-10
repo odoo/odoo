@@ -25,7 +25,7 @@ def location_name_search(self, name='', args=None, operator='ilike', limit=100):
     records += self.search(search_domain + args, limit=limit)
 
     # the field 'display_name' calls name_get() to get its value
-    return [(record.id, record.display_name) for record in records]
+    return models.lazy_name_get(records)
 
 
 class Country(models.Model):
@@ -83,13 +83,11 @@ class Country(models.Model):
                 vals['code'] = vals['code'].upper()
         return super(Country, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(vals)
 
-    @api.multi
     def get_address_fields(self):
         self.ensure_one()
         return re.findall(r'\((.+?)\)', self.address_format)
@@ -133,9 +131,8 @@ class CountryState(models.Model):
 
         first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
         state_ids = first_state_ids + [state_id for state_id in self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid) if not state_id in first_state_ids]
-        return self.browse(state_ids).name_get()
+        return models.lazy_name_get(self.browse(state_ids).with_user(name_get_uid))
 
-    @api.multi
     def name_get(self):
         result = []
         for record in self:

@@ -70,11 +70,10 @@ class ir_cron(models.Model):
         values['usage'] = 'ir_cron'
         return super(ir_cron, self).create(values)
 
-    @api.multi
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
-            self.sudo(user=cron.user_id.id).ir_actions_server_id.run()
+            self.with_user(cron.user_id).ir_actions_server_id.run()
         return True
 
     @api.model
@@ -151,6 +150,7 @@ class ir_cron(models.Model):
                     fields.Datetime.to_string(now.astimezone(pytz.UTC)),
                     job['id']
                 ))
+                cron.flush()
                 cron.invalidate_cache()
 
         finally:
@@ -228,6 +228,7 @@ class ir_cron(models.Model):
                     try:
                         registry = odoo.registry(db_name)
                         registry[cls._name]._process_job(job_cr, job, lock_cr)
+                        _logger.info('Job `%s` done.', job['cron_name'])
                     except Exception:
                         _logger.exception('Unexpected exception while processing cron job %r', job)
                     finally:
@@ -277,7 +278,6 @@ class ir_cron(models.Model):
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
 
-    @api.multi
     def _try_lock(self):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
            to make sure a following write() or unlink() will not block due
@@ -291,17 +291,14 @@ class ir_cron(models.Model):
                               "This cron task is currently being executed and may not be modified "
                               "Please try again in a few minutes"))
 
-    @api.multi
     def write(self, vals):
         self._try_lock()
         return super(ir_cron, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self._try_lock()
         return super(ir_cron, self).unlink()
 
-    @api.multi
     def try_write(self, values):
         try:
             with self._cr.savepoint():

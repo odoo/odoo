@@ -9,6 +9,7 @@ odoo.define('web.UserMenu', function (require) {
  * editing its preferences, accessing the documentation, logging out...
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var Dialog = require('web.Dialog');
@@ -39,13 +40,13 @@ var UserMenu = Widget.extend({
                 return Promise.resolve();
             }
             var topbar_name = session.name;
-            if (session.debug) {
+            if (config.isDebug()) {
                 topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
             }
             self.$('.oe_topbar_name').text(topbar_name);
             var avatar_src = session.url('/web/image', {
                 model:'res.users',
-                field: 'image_small',
+                field: 'image_128',
                 id: session.uid,
             });
             $avatar.attr('src', avatar_src);

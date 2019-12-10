@@ -6,8 +6,8 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='sale_order_dates']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box">
+            <xpath expr="//div[@id='ups']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="display_incoterms_setting">
                     <div class="o_setting_left_pane">
                         <field name="group_display_incoterm"/>
                     </div>
@@ -17,24 +17,8 @@
                             Display incoterms on orders &amp; invoices
                         </div>
                         <div class="content-group" attrs="{'invisible': [('group_display_incoterm','=',False)]}">
-                            <div class="mt16">
+                            <div class="mt8">
                                 <button name="%(account.action_incoterms_tree)d" icon="fa-arrow-right" type="action" string="Incoterms" class="btn-link"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6 o_setting_box" title="This allows to apply a special route on sales order lines (e.g. dropshipping, make-to-order) in case of unusual order scenario. To be available in sales orders, routes must have 'Sales Order Line' option checked in their setup form.">
-                    <div class="o_setting_left_pane">
-                        <field name="group_route_so_lines"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="group_route_so_lines"/>
-                        <div class="text-muted">
-                            Apply special routes from orders (e.g. dropshipping, MTO)
-                        </div>
-                        <div class="content-group" attrs="{'invisible': [('group_route_so_lines','=',False)]}">
-                            <div class="mt16">
-                                <button name="%(stock.action_routes_form)d" icon="fa-arrow-right" type="action" string="Routes for Sales Order Lines" class="btn-link" context="{'default_sale_selectable': 1}"/>
                             </div>
                         </div>
                     </div>
@@ -89,6 +73,9 @@
                     </div>
                 </div>
             </div>
+            <xpath expr="//h2[@id='schedule_info']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
             <div id="sale_security_lead" position="replace">
                 <div class="col-12 col-lg-6 o_setting_box" title="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.">
                     <div class="o_setting_left_pane">

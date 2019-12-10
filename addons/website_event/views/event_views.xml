@@ -31,17 +31,12 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <field name="organizer_id" position="before">
-                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
             </field>
-            <button name="toggle_active" position="before">
+            <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
-                <button name="website_publish_button"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-globe">
-                    <field name="is_published" widget="website_button"/>
-                </button>
-            </button>
+                <field name="is_published" widget="website_redirect_button"/>
+            </div>
             <label for="is_online" position="after">
                 <field name="website_menu"/>
                 <label for="website_menu" string="Website Menu"/>
@@ -66,7 +61,7 @@
         <field name="inherit_id" ref="event.view_event_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
             </field>
         </field>
     </record>

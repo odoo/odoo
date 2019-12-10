@@ -47,6 +47,8 @@ position.
         'data/fiscal_templates_data.xml',
         'data/account_chart_template_configure_data.xml',
         'data/res_company_data.xml',
+        'views/res_partner_view.xml',
+        'views/report_invoice.xml',
     ],
     'post_init_hook': 'load_translations',
 }

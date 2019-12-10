@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email.utils import formataddr
-
 import base64
 import re
 
-from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, tools
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 
 # main mako-like expression pattern
@@ -20,7 +19,6 @@ def _reopen(self, res_id, model, context=None):
     context = dict(context or {}, default_model=model)
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'view_type': 'form',
             'res_id': res_id,
             'res_model': self._name,
             'target': 'new',
@@ -49,11 +47,6 @@ class MailComposer(models.TransientModel):
             - comment: default mode, model and ID of a record the user comments
                 - default_model or active_model
                 - default_res_id or active_id
-            - reply: active_id of a message the user replies to
-                - default_parent_id or message_id or active_id: ID of the
-                    mail.message we reply to
-                - message.res_model or default_model
-                - message.res_id or default_res_id
             - mass_mail: model and IDs of records the user mass-mails
                 - active_ids: record IDs
                 - default_model or active_model
@@ -61,26 +54,21 @@ class MailComposer(models.TransientModel):
         result = super(MailComposer, self).default_get(fields)
 
         # author
-        if 'author_id' not in result:
-            result['author_id'] = self.env.user.partner_id.id
-            if 'email_from' not in result:
-                result['email_from'] = formataddr((self.env.user.name, self.env.user.email))
-        else:
-            if 'email_from' not in result:
-                author = self.env['res.partner'].browse(result['author_id'])
-                result['email_from'] = formataddr((author.name, author.email))
+        missing_author = 'author_id' in fields and 'author_id' not in result
+        missing_email_from = 'email_from' in fields and 'email_from' not in result
+        if missing_author or missing_email_from:
+            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_exception=False)
+            if missing_email_from:
+                result['email_from'] = email_from
+            if missing_author:
+                result['author_id'] = author_id
 
-        # v6.1 compatibility mode
-        result['composition_mode'] = result.get('composition_mode', self._context.get('mail.compose.message.mode', 'comment'))
+        result['composition_mode'] = result.get('composition_mode', 'comment')
         result['model'] = result.get('model', self._context.get('active_model'))
         result['res_id'] = result.get('res_id', self._context.get('active_id'))
-        result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
         if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
 
-        # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
-        if result['composition_mode'] == 'reply':
-            result['composition_mode'] = 'comment'
         vals = {}
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             vals['active_domain'] = '%s' % self._context.get('active_domain')
@@ -91,26 +79,9 @@ class MailComposer(models.TransientModel):
             if field in fields:
                 result[field] = vals[field]
 
-        # TDE HACK: as mailboxes used default_model='res.users' and default_res_id=uid
-        # (because of lack of an accessible pid), creating a message on its own
-        # profile may crash (res_users does not allow writing on it)
-        # Posting on its own profile works (res_users redirect to res_partner)
-        # but when creating the mail.message to create the mail.compose.message
-        # access rights issues may rise
-        # We therefore directly change the model and res_id
-        if result['model'] == 'res.users' and result['res_id'] == self._uid:
-            result['model'] = 'res.partner'
-            result['res_id'] = self.env.user.partner_id.id
-
         if fields is not None:
             [result.pop(field, None) for field in list(result) if field not in fields]
         return result
-
-    @api.model
-    def _get_composition_mode_selection(self):
-        return [('comment', 'Post on a document'),
-                ('mass_mail', 'Email Mass Mailing'),
-                ('mass_post', 'Post on Multiple Documents')]
 
     # content
     subject = fields.Char('Subject')
@@ -118,26 +89,36 @@ class MailComposer(models.TransientModel):
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index=True, ondelete='set null',
         help="Initial thread message.")
+    template_id = fields.Many2one(
+        'mail.template', 'Use template', index=True,
+        domain="[('model', '=', model)]")
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', 'Attachments')
+    layout = fields.Char('Layout', copy=False)  # xml id of layout
+    add_sign = fields.Boolean(default=True)
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    # related document
+    # composition
+    composition_mode = fields.Selection(selection=[
+        ('comment', 'Post on a document'),
+        ('mass_mail', 'Email Mass Mailing'),
+        ('mass_post', 'Post on Multiple Documents')], string='Composition mode', default='comment')
     model = fields.Char('Related Document Model', index=True)
     res_id = fields.Integer('Related Document ID', index=True)
     record_name = fields.Char('Message Record Name', help="Name get of the related document.")
+    use_active_domain = fields.Boolean('Use active domain')
+    active_domain = fields.Text('Active domain', readonly=True)
     # characteristics
     message_type = fields.Selection([
         ('comment', 'Comment'),
         ('notification', 'System notification')],
         'Type', required=True, default='comment',
         help="Message type: email for email message, notification for system "
-             "message, comment for other messages such as user replies",
-        oldname='type')
+             "message, comment for other messages such as user replies")
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null', index=True,
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
@@ -145,7 +126,6 @@ class MailComposer(models.TransientModel):
         'mail.activity.type', 'Mail Activity Type',
         index=True, ondelete='set null')
     # destination
-    composition_mode = fields.Selection(selection=_get_composition_mode_selection, string='Composition mode', default='comment')
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     no_auto_thread = fields.Boolean(
         'No threading for answers',
@@ -155,19 +135,11 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts')
-    use_active_domain = fields.Boolean('Use active domain')
-    active_domain = fields.Text('Active domain', readonly=True)
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
-    template_id = fields.Many2one(
-        'mail.template', 'Use template', index=True,
-        domain="[('model', '=', model)]")
-    # technical stuff
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
-    layout = fields.Char('Layout', copy=False)  # xml id of layout
-    add_sign = fields.Boolean(default=True)
 
     @api.model
     def get_record_data(self, values):
@@ -185,8 +157,6 @@ class MailComposer(models.TransientModel):
             if not values.get('res_id'):
                 result['res_id'] = parent.res_id
             partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
-            if self._context.get('is_private') and parent.author_id:  # check message is private then add author also in partner list.
-                partner_ids += [parent.author_id.id]
             result['partner_ids'] = partner_ids
         elif values.get('model') and values.get('res_id'):
             doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
@@ -200,18 +170,15 @@ class MailComposer(models.TransientModel):
 
         return result
 
-    #------------------------------------------------------
-    # Wizard validation and send
-    #------------------------------------------------------
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
     # action buttons call with positionnal arguments only, so we need an intermediary function
     # to ensure the context is passed correctly
-    @api.multi
     def action_send_mail(self):
         self.send_mail()
         return {'type': 'ir.actions.act_window_close', 'infos': 'mail_sent'}
 
-
-    @api.multi
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
@@ -235,12 +202,12 @@ class MailComposer(models.TransientModel):
                         new_attachment_ids.append(attachment.copy({'res_model': 'mail.compose.message', 'res_id': wizard.id}).id)
                     else:
                         new_attachment_ids.append(attachment.id)
+                new_attachment_ids.reverse()
                 wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
 
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
 
-            Mail = self.env['mail.mail']
             ActiveModel = self.env[wizard.model] if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread']
             if wizard.composition_mode == 'mass_post':
                 # do not send emails directly but use the queue instead
@@ -265,11 +232,15 @@ class MailComposer(models.TransientModel):
                 subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
             for res_ids in sliced_res_ids:
-                batch_mails = Mail
+                # mass mail mode: mail are sudo-ed, as when going through get_mail_values
+                # standard access rights on related records will be checked when browsing them
+                # to compute mail values. If people have access to the records they have rights
+                # to create lots of emails in sudo as it is consdiered as a technical model.
+                batch_mails_sudo = self.env['mail.mail'].sudo()
                 all_mail_values = wizard.get_mail_values(res_ids)
                 for res_id, mail_values in all_mail_values.items():
                     if wizard.composition_mode == 'mass_mail':
-                        batch_mails |= Mail.create(mail_values)
+                        batch_mails_sudo |= self.env['mail.mail'].sudo().create(mail_values)
                     else:
                         post_params = dict(
                             message_type=wizard.message_type,
@@ -283,14 +254,15 @@ class MailComposer(models.TransientModel):
                             if wizard.model:
                                 post_params['model'] = wizard.model
                                 post_params['res_id'] = res_id
-                            ActiveModel.message_notify(**post_params)
+                            if not ActiveModel.message_notify(**post_params):
+                                # if message_notify returns an empty record set, no recipients where found.
+                                raise UserError(_("No recipient found."))
                         else:
                             ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
-                    batch_mails.send(auto_commit=auto_commit)
+                    batch_mails_sudo.send(auto_commit=auto_commit)
 
-    @api.multi
     def get_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create mail_messages
         or mail_mails. """
@@ -363,6 +335,7 @@ class MailComposer(models.TransientModel):
                 for attach_id in mail_values.pop('attachment_ids'):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
+                attachment_ids.reverse()
                 mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
@@ -377,11 +350,10 @@ class MailComposer(models.TransientModel):
             results[res_id] = mail_values
         return results
 
-    #------------------------------------------------------
-    # Template methods
-    #------------------------------------------------------
+    # ------------------------------------------------------------
+    # TEMPLATES
+    # ------------------------------------------------------------
 
-    @api.multi
     @api.onchange('template_id')
     def onchange_template_id_wrapper(self):
         self.ensure_one()
@@ -389,7 +361,6 @@ class MailComposer(models.TransientModel):
         for fname, value in values.items():
             setattr(self, fname, value)
 
-    @api.multi
     def onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values
@@ -407,20 +378,25 @@ class MailComposer(models.TransientModel):
                 signature = self.env.user.signature
                 values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
-            values = self.generate_email_for_composer(template_id, [res_id])[res_id]
+            values = self.generate_email_for_composer(
+                template_id, [res_id],
+                ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'mail_server_id']
+            )[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
+            attachment_ids = []
             Attachment = self.env['ir.attachment']
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
                     'name': attach_fname,
                     'datas': attach_datas,
-                    'datas_fname': attach_fname,
                     'res_model': 'mail.compose.message',
                     'res_id': 0,
                     'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
-                values.setdefault('attachment_ids', list()).append(Attachment.create(data_attach).id)
+                attachment_ids.append(Attachment.create(data_attach).id)
+            if values.get('attachment_ids', []) or attachment_ids:
+                values['attachment_ids'] = [(6, 0, values.get('attachment_ids', []) + attachment_ids)]
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
@@ -429,14 +405,10 @@ class MailComposer(models.TransientModel):
             values['body'] = values.pop('body_html')
 
         # This onchange should return command instead of ids for x2many field.
-        # ORM handle the assignation of command list on new onchange (api.v8),
-        # this force the complete replacement of x2many field with
-        # command and is compatible with onchange api.v7
         values = self._convert_to_write(values)
 
         return {'value': values}
 
-    @api.multi
     def save_as_template(self):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
@@ -457,11 +429,10 @@ class MailComposer(models.TransientModel):
             record.onchange_template_id_wrapper()
             return _reopen(self, record.id, record.model, context=self._context)
 
-    #------------------------------------------------------
-    # Template rendering
-    #------------------------------------------------------
+    # ------------------------------------------------------------
+    # RENDERING
+    # ------------------------------------------------------------
 
-    @api.multi
     def render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
         by res_ids. This method is meant to be inherited by email_template that
@@ -510,16 +481,16 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self.generate_email_for_composer(
                 self.template_id.id, res_ids,
-                fields=['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
+                ['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
         else:
             template_values = {}
 
         for res_id in res_ids:
             if template_values.get(res_id):
                 # recipients are managed by the template
-                results[res_id].pop('partner_ids')
-                results[res_id].pop('email_to')
-                results[res_id].pop('email_cc')
+                results[res_id].pop('partner_ids', None)
+                results[res_id].pop('email_to', None)
+                results[res_id].pop('email_cc', None)
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:
@@ -530,7 +501,7 @@ class MailComposer(models.TransientModel):
         return multi_mode and template_values or template_values[res_ids[0]]
 
     @api.model
-    def generate_email_for_composer(self, template_id, res_ids, fields=None):
+    def generate_email_for_composer(self, template_id, res_ids, fields):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
         multi_mode = True
@@ -538,12 +509,10 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        if fields is None:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'mail_server_id']
         returned_fields = fields + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email(res_ids, fields=fields)
+        template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email(res_ids, fields)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
             res_id_values['body'] = res_id_values.pop('body_html', '')

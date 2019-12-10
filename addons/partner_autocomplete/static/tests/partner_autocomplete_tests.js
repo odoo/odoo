@@ -15,7 +15,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
 
         _.each(createData, function (val, key) {
             if (fields[key]) {
-                if (key === 'image') {
+                if (key === 'image_1920') {
                     if (val) val = 'data:image/png;base64,' + val;
                     assert.hasAttrValue(form.$(".o_field_image img"), "data-src", val, 'image value should have been updated to "' + val + '"');
                 } else {
@@ -81,7 +81,13 @@ odoo.define('partner_autocomplete.tests', function (require) {
                         return this._getOdooSuggestions(value);
                     },
                     do_notify: function (title, message, sticky, className) {
-                        return this.displayNotification(title, message, 'warning', true, 'o_partner_autocomplete_test_notify');
+                        return this.displayNotification({
+                            type: 'warning',
+                            title: title,
+                            message: message,
+                            sticky: sticky,
+                            className: 'o_partner_autocomplete_test_notify'
+                        });
                     },
                 });
             });
@@ -117,7 +123,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                         name: {string: "Name", type: "char", searchable: true},
                         parent_id: {string: "Company", type: "many2one", relation: "res.partner"},
                         website: {string: "Website", type: "char", searchable: true},
-                        image: {string: "Image", type: "binary", searchable: true},
+                        image_1920: {string: "Image", type: "binary", searchable: true},
                         email: {string: "Email", type: "char", searchable: true},
                         phone: {string: "Phone", type: "char", searchable: true},
                         street: {string: "Street", type: "char", searchable: true},
@@ -157,7 +163,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 '<field name="company_type"/>' +
                 '<field name="name" widget="field_partner_autocomplete"/>' +
                 '<field name="website"/>' +
-                '<field name="image" widget="image"/>' +
+                '<field name="image_1920" widget="image"/>' +
                 '</form>',
         }).then(function (form){
             // Set company type to Individual
@@ -192,7 +198,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 '<field name="company_type"/>' +
                 '<field name="name" widget="field_partner_autocomplete"/>' +
                 '<field name="website"/>' +
-                '<field name="image" widget="image"/>' +
+                '<field name="image_1920" widget="image"/>' +
                 '<field name="email"/>' +
                 '<field name="phone"/>' +
                 '<field name="street"/>' +
@@ -266,7 +272,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 '<field name="company_type"/>' +
                 '<field name="name" widget="field_partner_autocomplete"/>' +
                 '<field name="website"/>' +
-                '<field name="image" widget="image"/>' +
+                '<field name="image_1920" widget="image"/>' +
                 '<field name="email"/>' +
                 '<field name="phone"/>' +
                 '<field name="street"/>' +
@@ -354,11 +360,11 @@ odoo.define('partner_autocomplete.tests', function (require) {
                     '<field name="name"/>' +
                     '<field name="parent_id" widget="res_partner_many2one"/>' +
                 '</form>',
-        }).then(function (form) {
+        }).then(async function (form) {
             var $input = form.$('.o_field_many2one[name="parent_id"] input:visible');
             assert.strictEqual($input.length, 1, "there should be an <input/> for the Many2one");
 
-            testUtils.fields.editInput($input, 'odoo');
+            await testUtils.fields.editInput($input, 'odoo');
 
             concurrency.delay(0).then(function () {
                 var $dropdown = $input.autocomplete('widget');

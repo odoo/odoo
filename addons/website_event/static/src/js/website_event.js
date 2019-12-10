@@ -9,6 +9,13 @@ var _t = core._t;
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = Widget.extend({
+    events: {
+        'click .o_wevent_registration_btn': '_onRegistrationBtnClick',
+    },
+
+    /**
+     * @override
+     */
     start: function () {
         var self = this;
         var res = this._super.apply(this.arguments).then(function () {
@@ -21,6 +28,15 @@ var EventRegistrationForm = Widget.extend({
         });
         return res;
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
     on_click: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -54,6 +70,15 @@ var EventRegistrationForm = Widget.extend({
             });
         }
     },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRegistrationBtnClick: function (ev) {
+        var $btn = $(ev.currentTarget);
+        $btn.toggleClass('btn-primary text-left pl-0');
+        $btn.siblings().toggleClass('d-none');
+    },
 });
 
 publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend({
@@ -65,7 +90,7 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     start: function () {
         var def = this._super.apply(this, arguments);
         var instance = new EventRegistrationForm(this);
-        return Promise.all([def, instance.appendTo(this.$el)]);
+        return Promise.all([def, instance.attachTo(this.$el)]);
     },
 });
 

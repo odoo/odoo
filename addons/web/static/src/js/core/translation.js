@@ -13,7 +13,8 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
                         "time_format": '%H:%M:%S',
                         "grouping": [],
                         "decimal_point": ".",
-                        "thousands_sep": ","};
+                        "thousands_sep": ",",
+                        "code": "en_US"};
     },
     set_bundle: function(translation_bundle) {
         var self = this;

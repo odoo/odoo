@@ -2,11 +2,11 @@
 <odoo>
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
-    <xpath expr="//h2[@id='snippets_menu']" position="replace">
-        <t t-set="company_id" t-value="res_company"/>
-        <h2 id="snippets_menu">Select a template</h2>
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" disabled="disabled">Select a template</button>
     </xpath>
     <xpath expr="//div[@id='o_scroll']" position="replace">
+        <t t-set="company_id" t-value="res_company"/>
         <div id="o_scroll">
             <div id="email_designer_themes">
                 <div data-name="basic"
@@ -72,7 +72,6 @@
             </div>
         </div>
     </xpath>
-
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <t t-call="mass_mailing.snippet_options"/>
     </xpath>
@@ -767,6 +766,53 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</template>
+
+<!-- Snippet themes Options -->
+<template id="snippet_options">
+    <t t-call="web_editor.snippet_options"/>
+    <t t-raw="0"/>
+
+    <div data-js="mass_mailing_sizing_x"
+        data-selector="img, .mv, .col_mv, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-js="mass_mailing_table_item"
+        data-selector="td, th"
+        data-exclude=".o_mail_no_options"/>
+
+    <div data-js="table_row"
+        data-selector="tr:has(> .row), tr:has(> .col_mv)"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
+
+    <div data-js="table_column"
+        data-selector=".col>td, .col>th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col>td, .col>th"/>
+
+    <div data-js="table_column_mv"
+        data-selector=".col_mv, td, th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col_mv, td, th"/>
+
+    <div data-js="content"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+
+    <div data-js="sizing_y"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 </template>
 </odoo>

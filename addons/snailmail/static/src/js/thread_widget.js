@@ -137,7 +137,7 @@ ThreadWidget.include({
             var content = _.str.sprintf(_t(
                 '<p>The letter could not be sent due to insufficient credits on your IAP account.</p>' +
                 '<div class= "text-right">' +
-                '<a class="btn btn-link buy_credits" href=%s>' +
+                '<a class="btn btn-link buy_credits" href=%s target="_blank">' +
                 '<i class= "fa fa-arrow-right"/> Buy credits' +
                 '</a>' +
                 '</div>'

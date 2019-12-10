@@ -1,22 +1,19 @@
 <odoo>
     <template id="report_package_barcode_delivery" inherit_id="stock.report_package_barcode">
         <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
-            <div class="row o_package_weight" t-if="o.weight">
-                <div class="col-12" style="font-weight:bold;">Weight: <span t-field="o.weight"/></div>
-            </div>
-            <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
-                <div class="col-12" style="font-weight:bold;">Shipping Weight: <span t-field="o.shipping_weight"/></div>
+            <div t-if="o.shipping_weight" class="col-auto">
+                <strong>Shipping Weight:</strong>
+                <br/>
+                <span t-field="o.shipping_weight"/>
+                <span t-esc="env['product.template']._get_weight_uom_id_from_ir_config_parameter().display_name"/>
             </div>
         </xpath>
     </template>
 
     <template id="report_package_barcode_small_delivery" inherit_id="stock.report_package_barcode_small">
         <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
-            <div class="row o_package_weight" t-if="o.weight">
-                <div class="col-12" style="font-size:24px; font-weight:bold;">Weight: <span t-field="o.weight"/></div>
-            </div>
             <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
-                <div class="col-12" style="font-size:24px; font-weight:bold;">Shipping Weight: <span t-field="o.shipping_weight"/></div>
+                <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Weight: </span><span t-field="o.shipping_weight"/> <t t-esc="env['product.template']._get_weight_uom_id_from_ir_config_parameter().display_name"/></div>
             </div>
         </xpath>
     </template>

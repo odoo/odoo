@@ -20,12 +20,12 @@ class AccountCashRounding(models.Model):
     strategy = fields.Selection([('biggest_tax', 'Modify tax amount'), ('add_invoice_line', 'Add a rounding line')],
         string='Rounding Strategy', default='add_invoice_line', required=True,
         help='Specify which way will be used to round the invoice amount to the rounding precision')
-    account_id = fields.Many2one('account.account', string='Account')
+    profit_account_id = fields.Many2one('account.account', string='Profit Account')
+    loss_account_id = fields.Many2one('account.account', string='Loss Account')
     rounding_method = fields.Selection(string='Rounding Method', required=True,
         selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
 
-    @api.multi
     def round(self, amount):
         """Compute the rounding on the amount passed as parameter.
 
@@ -34,7 +34,6 @@ class AccountCashRounding(models.Model):
         """
         return float_round(amount, precision_rounding=self.rounding, rounding_method=self.rounding_method)
 
-    @api.multi
     def compute_difference(self, currency, amount):
         """Compute the difference between the base_amount and the amount after rounding.
         For example, base_amount=23.91, after rounding=24.00, the result will be 0.09.

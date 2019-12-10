@@ -30,6 +30,12 @@
         </div>
     </t>
 
+    <!-- Rendering of thread when messaging not yet ready -->
+    <div t-name="mail.widget.ThreadLoading" class="o_mail_thread_loading">
+        <i class="o_mail_thread_loading_icon fa fa-spinner fa-spin"/>
+        <span>Please wait...</span>
+    </div>
+
     <!--
         @param {mail.DocumentViewer} widget
     -->
@@ -53,7 +59,7 @@
                     </div>
                     <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}&amp;model=#{model}" alt="Viewer"/>
                     <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
-                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
+                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
                     <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
                     <video t-if="widget.activeAttachment.fileType == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}?model=#{model}" t-att-data-type="widget.activeAttachment.mimetype"/>
@@ -128,8 +134,12 @@
             <div>New messages appear here.</div>
         </t>
         <t t-if="thread.getID() === 'mailbox_starred'">
-            <div class="o_thread_title">No starred message</div>
+            <div class="o_thread_title">No starred messages</div>
             <div>You can mark any message as 'starred', and it shows up in this mailbox.</div>
+        </t>
+        <t t-if="thread.getID() === 'mailbox_history'">
+            <div class="o_thread_title o_neutral_face_icon">No history messages</div>
+            <div>Messages marked as read will appear in the history.</div>
         </t>
         <t t-if="thread.getID() === 'mailbox_moderation'">
             <div class="o_thread_title">You have no message to moderate</div>
@@ -250,6 +260,7 @@
         @param {boolean} [options.displayReplyIcons]
         @param {boolean} [options.displayStars]
         @param {boolean} [options.displaySubjectsOnMessages]
+        @param {boolean} options.hasMessageAttachmentDeletable
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
             message ID, the separator is placed just after this message.
         @param {integer} [options.selectedMessageID]
@@ -319,7 +330,7 @@
                         <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
-                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope-o'" t-att-data-message-id="message.getID()"/>
+                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope'" t-att-data-message-id="message.getID()"/>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
@@ -350,12 +361,16 @@
                     <t t-if="message.hasAttachments()">
                         <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
                             <t t-foreach="message.getImageAttachments()" t-as="attachment">
-                                <t t-call="mail.AttachmentPreview"/>
+                                <t t-call="mail.AttachmentPreview">
+                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
+                                </t>
                             </t>
                         </div>
                         <div t-if="message.hasNonImageAttachments()" class="o_attachments_list">
                             <t t-foreach="message.getNonImageAttachments()" t-as="attachment">
-                                <t t-call="mail.Attachment"/>
+                                <t t-call="mail.Attachment">
+                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
+                                </t>
                             </t>
                         </div>
                     </t>
@@ -522,6 +537,7 @@
         @param {integer} attachment.id
         @param {string} attachment.name
         @param {string} attachment.url
+        @param {boolean} [isDeletable=false]
     -->
     <t t-name="mail.AttachmentPreview">
         <div class="o_attachment" t-att-title="attachment.name">
@@ -529,7 +545,7 @@
                 <div class="o_image_box">
                     <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <span class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
                         <a class="o_attachment_download" t-att-href='attachment.url'>
                             <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
@@ -548,12 +564,15 @@
         @param {string} attachment.name
         @param {boolean} attachment.upload
         @param {string} attachment.url
+        @param {boolean} [editable=false] if set, it means the attachment is rendered in the composer.
+          Some changes are required in that case, such as "delete" button is not visible (pretty unlink is used instead).
+        @param {boolean} [isDeletable=false]
     -->
     <t t-name="mail.Attachment">
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
-                <span t-if="!editable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                <span t-if="!editable and isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 

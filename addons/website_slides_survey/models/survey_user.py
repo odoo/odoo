@@ -19,7 +19,6 @@ class SurveyUserInput(models.Model):
         records._check_for_failed_attempt()
         return records
 
-    @api.multi
     def write(self, vals):
         res = super(SurveyUserInput, self).write(vals)
         if 'state' in vals:
@@ -39,7 +38,7 @@ class SurveyUserInput(models.Model):
             user_inputs = self.search([
                 ('id', 'in', self.ids),
                 ('state', '=', 'done'),
-                ('quizz_passed', '=', False),
+                ('scoring_success', '=', False),
                 ('slide_partner_id', '!=', False)
             ])
 
@@ -62,4 +61,4 @@ class SurveyUserInput(models.Model):
                     removed_memberships_per_partner[user_input.partner_id] = removed_memberships
 
                 for partner_id, removed_memberships in removed_memberships_per_partner.items():
-                    removed_memberships._remove_membership(partner_id)
+                    removed_memberships._remove_membership(partner_id.ids)

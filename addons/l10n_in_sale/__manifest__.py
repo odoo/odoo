@@ -5,15 +5,17 @@
     'name': 'Indian - Sale Report(GST)',
     'version': '1.0',
     'description': """GST Sale Report""",
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'depends': [
         'l10n_in',
         'sale',
     ],
     'data': [
-        'data/product_demo.xml',
         'views/report_sale_order.xml',
         'views/sale_views.xml'
+    ],
+    'demo': [
+        'data/product_demo.xml',
     ],
     'installable': True,
     'application': False,

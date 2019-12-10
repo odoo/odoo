@@ -1,6 +1,6 @@
 {
     'name': 'eCommerce Delivery',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Add delivery costs to online sales',
     'version': '1.0',
     'description': """

@@ -52,9 +52,9 @@
     <p>
         This tool will help you perform an upgrade of the IoTBox's software over the internet.
         However the preferred method to upgrade the IoTBox is to flash the sd-card with
-        the <a href='http://nightly.odoo.com/trunk/posbox/'>latest image</a>. The upgrade
+        the <a href='http://nightly.odoo.com/master/posbox/iotbox/iotbox-latest.zip'>latest image</a>. The upgrade
         procedure is explained into to the
-        <a href='https://www.odoo.com/documentation/user/point_of_sale/posbox/index.html'>IoTBox manual</a>
+        <a href='https://www.odoo.com/documentation/user/13.0/iot.html'>IoTBox manual</a>
     </p>
     <p>
         To upgrade the IoTBox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the IoTBox during the upgrade.
@@ -63,7 +63,7 @@
         <div style="padding-bottom: 5px; font-weight: bold;">
             Latest patch:
         </div>
-        <pre style="margin: 0;padding: 15px 0;">{{ commit|safe }}</pre>
+        <pre style="margin: 0;padding: 15px 0; overflow: auto;">{{ commit|safe }}</pre>
     </div>
     <div class="text-center" style="margin: 15px auto;">
         <a class="btn" href='#' id='upgrade'>Upgrade</a>

@@ -13,6 +13,7 @@ class MrpWorkcenter(models.Model):
     _description = 'Work Center'
     _order = "sequence, id"
     _inherit = ['resource.mixin']
+    _check_company_auto = True
 
     # resource
     name = fields.Char('Work Center', related='resource_id.name', store=True, readonly=False)
@@ -24,8 +25,8 @@ class MrpWorkcenter(models.Model):
         'Description',
         help="Description of the Work Center.")
     capacity = fields.Float(
-        'Capacity', default=1.0, oldname='capacity_per_cycle',
-        help="Number of pieces that can be produced in parallel.")
+        'Capacity', default=1.0,
+        help="Number of pieces that can be produced in parallel. In case the work center has a capacity of 5 and you have to produce 10 units on your work order, the usual operation time will be multiplied by 2.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -48,12 +49,12 @@ class MrpWorkcenter(models.Model):
         ('done', 'In Progress')], 'Workcenter Status', compute="_compute_working_state", store=True)
     blocked_time = fields.Float(
         'Blocked Time', compute='_compute_blocked_time',
-        help='Blocked hour(s) over the last month', digits=(16, 2))
+        help='Blocked hours over the last month', digits=(16, 2))
     productive_time = fields.Float(
         'Productive Time', compute='_compute_productive_time',
-        help='Productive hour(s) over the last month', digits=(16, 2))
+        help='Productive hours over the last month', digits=(16, 2))
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
-    oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
+    oee_target = fields.Float(string='OEE Target', help="Overall Effective Efficiency Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
     workcenter_load = fields.Float('Work Center Load', compute='_compute_workorder_count')
     alternative_workcenter_ids = fields.Many2many(
@@ -61,7 +62,8 @@ class MrpWorkcenter(models.Model):
         'mrp_workcenter_alternative_rel',
         'workcenter_id',
         'alternative_workcenter_id',
-        string="Alternative Workcenters",
+        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        string="Alternative Workcenters", check_company=True,
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )
 
@@ -73,8 +75,8 @@ class MrpWorkcenter(models.Model):
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
         MrpWorkorder = self.env['mrp.workorder']
-        result = {wid: {} for wid in self.ids}
-        result_duration_expected = {wid: 0 for wid in self.ids}
+        result = {wid: {} for wid in self._ids}
+        result_duration_expected = {wid: 0 for wid in self._ids}
         #Count Late Workorder
         data = MrpWorkorder.read_group([('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'ready')), ('date_planned_start', '<', datetime.datetime.now().strftime('%Y-%m-%d'))], ['workcenter_id'], ['workcenter_id'])
         count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
@@ -95,7 +97,6 @@ class MrpWorkcenter(models.Model):
             workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
             workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
 
-    @api.multi
     @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
         for workcenter in self:
@@ -116,7 +117,6 @@ class MrpWorkcenter(models.Model):
                 # the workcenter is blocked
                 workcenter.working_state = 'blocked'
 
-    @api.multi
     def _compute_blocked_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently ??
         data = self.env['mrp.workcenter.productivity'].read_group([
@@ -129,7 +129,6 @@ class MrpWorkcenter(models.Model):
         for workcenter in self:
             workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
 
-    @api.multi
     def _compute_productive_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently
         data = self.env['mrp.workcenter.productivity'].read_group([
@@ -150,7 +149,6 @@ class MrpWorkcenter(models.Model):
             else:
                 order.oee = 0.0
 
-    @api.multi
     def _compute_performance(self):
         wo_data = self.env['mrp.workorder'].read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
@@ -164,13 +162,11 @@ class MrpWorkcenter(models.Model):
             else:
                 workcenter.performance = 0.0
 
-    @api.multi
     @api.constrains('capacity')
     def _check_capacity(self):
         if any(workcenter.capacity <= 0.0 for workcenter in self):
             raise exceptions.UserError(_('The capacity must be strictly positive.'))
 
-    @api.multi
     def unblock(self):
         self.ensure_one()
         if self.working_state != 'blocked':
@@ -179,14 +175,18 @@ class MrpWorkcenter(models.Model):
         times.write({'date_end': fields.Datetime.now()})
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # resource_type is 'human' by default. As we are not living in
         # /r/latestagecapitalism, workcenters are 'material'
-        return super(MrpWorkcenter, self.with_context({
-            'default_resource_type': 'material'})).create(vals)
+        records = super(MrpWorkcenter, self.with_context(default_resource_type='material')).create(vals_list)
+        return records
 
-    @api.multi
+    def write(self, vals):
+        if 'company_id' in vals:
+            self.resource_id.company_id = vals['company_id']
+        return super(MrpWorkcenter, self).write(vals)
+
     def action_work_order(self):
         action = self.env.ref('mrp.action_work_orders').read()[0]
         return action
@@ -220,7 +220,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
     _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
-    name = fields.Char('Reason', required=True)
+    name = fields.Char('Blocking Reason', required=True)
     sequence = fields.Integer('Sequence', default=1)
     manual = fields.Boolean('Is a Blocking Reason', default=True)
     loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
@@ -232,10 +232,28 @@ class MrpWorkcenterProductivity(models.Model):
     _description = "Workcenter Productivity Log"
     _order = "id desc"
     _rec_name = "loss_id"
+    _check_company_auto = True
+
+    def _get_default_company_id(self):
+        company_id = False
+        if self.env.context.get('default_company_id'):
+            company_id = self.env.context['default_company_id']
+        if not company_id and self.env.context.get('default_workorder_id'):
+            workorder = self.env['mrp.workorder'].browse(self.env.context['default_workorder_id'])
+            company_id = workorder.company_id
+        if not company_id and self.env.context.get('default_workcenter_id'):
+            workcenter = self.env['mrp.workcenter'].browse(self.env.context['default_workcenter_id'])
+            company_id = workcenter.company_id
+        if not company_id:
+            company_id = self.env.company
+        return company_id
 
     production_id = fields.Many2one('mrp.production', string='Manufacturing Order', related='workorder_id.production_id', readonly='True')
-    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True)
-    workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
+    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True, check_company=True)
+    company_id = fields.Many2one(
+        'res.company', required=True, index=True,
+        default=lambda self: self._get_default_company_id())
+    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     user_id = fields.Many2one(
         'res.users', "User",
         default=lambda self: self.env.uid)
@@ -264,7 +282,6 @@ class MrpWorkcenterProductivity(models.Model):
             else:
                 blocktime.duration = 0.0
 
-    @api.multi
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()

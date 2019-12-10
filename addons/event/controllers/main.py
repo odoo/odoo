@@ -10,8 +10,6 @@ class EventController(Controller):
 
     @route(['''/event/<model("event.event", "[('state', 'in', ('confirm', 'done'))]"):event>/ics'''], type='http', auth="public")
     def event_ics_file(self, event, **kwargs):
-        if not event or not event.registration_ids:
-            return request.not_found()
         files = event._get_ics_file()
         if not event.id in files:
             return NotFound()

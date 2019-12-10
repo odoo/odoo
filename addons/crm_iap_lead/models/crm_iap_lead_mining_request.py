@@ -51,7 +51,6 @@ class CRMLeadMiningRequest(models.Model):
     country_ids = fields.Many2many('res.country', string='Countries')
     state_ids = fields.Many2many('res.country.state', string='States')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
-    technology_ids = fields.Many2many('crm.iap.lead.technology', string='Technologies')
 
     # Contact Generation Filter
     contact_number = fields.Integer(string='Number of Contacts', default=1)
@@ -63,18 +62,17 @@ class CRMLeadMiningRequest(models.Model):
     # Fields for the blue tooltip
     lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
+    lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
 
     @api.onchange('lead_number', 'contact_number')
     def _compute_tooltip(self):
         for record in self:
-            total_credits = CREDIT_PER_COMPANY * record.lead_number
+            company_credits = CREDIT_PER_COMPANY * record.lead_number
             contact_credits = CREDIT_PER_CONTACT * record.contact_number
             total_contact_credits = contact_credits * record.lead_number
-            message_contact = _("""Up to %d additional credits will be consumed
-                                per company to identify its contacts (making a
-                                total of %d credits for this request).""")
-            record.lead_credits = _('%d credits will be consumed to find %d companies.') % (total_credits, record.lead_number)
-            record.lead_contacts_credits = message_contact % (contact_credits, total_contact_credits)
+            record.lead_contacts_credits = _("Up to %d additional credits will be consumed to identify %d contacts per company.") % (contact_credits*company_credits, record.contact_number)
+            record.lead_credits = _('%d credits will be consumed to find %d companies.') % (company_credits, record.lead_number)
+            record.lead_total_credits = _("This makes a total of %d credits for this request.") % (total_contact_credits + company_credits)
 
     @api.depends('lead_ids')
     def _compute_leads_count(self):
@@ -124,8 +122,8 @@ class CRMLeadMiningRequest(models.Model):
         if self.filter_on_size:
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
-        if self.technology_ids:
-            payload['technology_tags'] = self.technology_ids.mapped('tech_tag')
+        if self.industry_ids:
+            payload['industry_ids'] = self.industry_ids.mapped('reveal_id')
         if self.search_type == 'people':
             payload.update({'contact_number': self.contact_number,
                             'contact_filter_type': self.contact_filter_type})
@@ -159,7 +157,6 @@ class CRMLeadMiningRequest(models.Model):
             self._cr.commit()
             raise e
 
-    @api.multi
     def _create_leads_from_response(self, result):
         """ This method will get the response from the service and create the leads accordingly """
         self.ensure_one()
@@ -189,13 +186,11 @@ class CRMLeadMiningRequest(models.Model):
         sub_title = _('Generate new leads based on their country, industry, size, etc.')
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
-    @api.multi
     def action_draft(self):
         self.ensure_one()
         self.name = _('New')
         self.state = 'draft'
 
-    @api.multi
     def action_submit(self):
         self.ensure_one()
         if self.name == _('New'):
@@ -209,7 +204,6 @@ class CRMLeadMiningRequest(models.Model):
         elif self.lead_type == 'opportunity':
             return self.action_get_opportunity_action()
 
-    @api.multi
     def action_get_lead_action(self):
         self.ensure_one()
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
@@ -221,7 +215,6 @@ class CRMLeadMiningRequest(models.Model):
         </p>""")
         return action
 
-    @api.multi
     def action_get_opportunity_action(self):
         self.ensure_one()
         action = self.env.ref('crm.crm_lead_opportunities').read()[0]

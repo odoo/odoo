@@ -48,7 +48,7 @@ otherwise.
     a route address to be fetched and prepended to the view.
 
     If this attribute is set, the
-    :ref:`controller route url<reference/http/controllers>` will be fetched and
+    :ref:`controller route url<reference/controllers>` will be fetched and
     displayed above the view. The json response from the controller should
     contain an "html" key.
 
@@ -197,6 +197,10 @@ root can have the following attributes:
 
     .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
 
+``multi_edit``
+    editable or not editable list can activate the multi-edition feature by defining
+    the multi_edit=1
+
 ``default_order``
     overrides the ordering of the view, replacing the model's default order.
     The value is a comma-separated list of fields, postfixed by ``desc`` to
@@ -219,7 +223,7 @@ root can have the following attributes:
     (``font-style: italic``), or any `bootstrap contextual color
     <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-``create``, ``edit``, ``delete``, ``duplicate``, ``import``
+``create``, ``edit``, ``delete``, ``duplicate``, ``import``, ``export_xlsx``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
@@ -329,14 +333,37 @@ Possible children elements of the list view are:
         dynamic attributes based on record values. Only effects the current
         field, so e.g. ``invisible`` will hide the field but leave the same
         field of other records visible, it will not hide the column itself
-    ``width_factor`` (for ``editable``)
-        the column relative width (as the layout is fixed)
     ``width`` (for ``editable``)
-        the column width (as the layout is fixed)
+        when there is no data in the list, the width of a column can be forced
+        by setting this attribute. The value can be an absolute width (e.g.
+        '100px'), or a relative weight (e.g. '3', meaning that this column will
+        be 3 times larger than the others). Note that when there are records in
+        the list, we let the browser automatically adapt the column's widths
+        according to their content, and this attribute is thus ignored.
 
-    .. note:: if the list view is ``editable``, any field attribute from the
-              :ref:`form view <reference/views/form>` is also valid and will
-              be used when setting up the inline form view
+    .. note::
+
+        if the list view is ``editable``, any field attribute from the
+        :ref:`form view <reference/views/form>` is also valid and will
+        be used when setting up the inline form view.
+
+    .. note::
+
+        In case of list sub-views (One2many/Many2many display in a form view),
+        The attribute ``column_invisible`` can be useful to hide a column
+        depending on the parent object.
+
+        .. code-block:: xml
+
+           <field name="product_is_late" attrs="{'column_invisible': [('parent.has_late_products', '=', False)]}"/>
+
+    .. note:: When a list view is grouped, numeric fields are aggregated and
+              displayed for each group.  Also, if there are too many records in
+              a group, a pager will appear on the right of the group row. For
+              this reason, it is not a good practice to have a numeric field in
+              the last column, when the list view is in a situation where it can
+              be grouped (it is however fine for x2manys field in a form view:
+              they cannot be grouped).
 
 ``groupby``
   defines custom headers (with buttons) for the current view when grouping
@@ -346,7 +373,7 @@ Possible children elements of the list view are:
 
   ``name``
       the name of a many2one field (on the current model). Custom header will be
-      displayed when grouping the view on this field name (only for first level).
+      displayed when grouping the view on this field name.
 
   .. code-block:: xml
 
@@ -434,6 +461,8 @@ logic. They are used as elements or sets of elements in form views.
     an HTML accesskey_
   ``attrs``
     standard dynamic attributes based on record values
+
+  .. note:: Note that ``notebook`` should not be placed within ``group``
 
 ``group``
   used to define column layouts in forms. By default, groups define 2 columns
@@ -558,316 +587,13 @@ system. Available semantic components are:
   ``password``
     indicates that a :class:`~odoo.fields.Char` field stores a password and
     that its data shouldn't be displayed
+  ``kanban_view_ref``
+    for opening specific kanban view when selecting records from m2o/m2m in mobile
+    environment
 
 .. todo:: classes for forms
 
 .. todo:: widgets?
-
-Business Views guidelines
--------------------------
-
-.. sectionauthor:: Aline Preillon, Raphael Collet
-
-Business views are targeted at regular users, not advanced users.  Examples
-are: Opportunities, Products, Partners, Tasks, Projects, etc.
-
-.. image:: forms/oppreadonly.png
-   :class: img-responsive
-
-In general, a business view is composed of
-
-1. a status bar on top (with technical or business flow),
-2. a sheet in the middle (the form itself),
-3. a bottom part with History and Comments.
-
-Technically, the new form views are structured as follows in XML::
-
-    <form>
-        <header> ... content of the status bar  ... </header>
-        <sheet>  ... content of the sheet       ... </sheet>
-        <div class="oe_chatter"> ... content of the bottom part ... </div>
-    </form>
-
-The Status Bar
-''''''''''''''
-
-The purpose of the status bar is to show the status of the current record and
-the action buttons.
-
-.. image:: forms/status.png
-   :class: img-responsive
-
-The Buttons
-...........
-
-The order of buttons follows the business flow. For instance, in a sale order,
-the logical steps are:
-
-1. Send the quotation
-2. Confirm the quotation
-3. Create the final invoice
-4. Send the goods
-
-Highlighted buttons (in red by default) emphasize the logical next step, to
-help the user. It is usually the first active button. On the other hand,
-:guilabel:`cancel` buttons *must* remain grey (normal).  For instance, in
-Invoice the button :guilabel:`Refund` must never be red.
-
-Technically, buttons are highlighted by adding the class "oe_highlight"::
-
-    <button class="oe_highlight" name="..." type="..." states="..."/>
-
-The Status
-..........
-
-Uses the ``statusbar`` widget, and shows the current state in red. States
-common to all flows (for instance, a sale order begins as a quotation, then we
-send it, then it becomes a full sale order, and finally it is done) should be
-visible at all times but exceptions or states depending on particular sub-flow
-should only be visible when current.
-
-.. image:: forms/status1.png
-   :class: img-responsive
-
-.. image:: forms/status2.png
-   :class: img-responsive
-
-The states are shown following the order used in the field (the list in a
-selection field, etc). States that are always visible are specified with the
-attribute ``statusbar_visible``.
-
-::
-
-    <field name="state" widget="statusbar"
-        statusbar_visible="draft,sent,progress,invoiced,done" />
-
-The Sheet
-'''''''''
-
-All business views should look like a printed sheet:
-
-.. image:: forms/sheet.png
-   :class: img-responsive
-
-1. Elements inside a ``<form>`` or ``<page>`` do not define groups, elements
-   inside them are laid out according to normal HTML rules. They content can
-   be explicitly grouped using ``<group>`` or regular ``<div>`` elements.
-2. By default, the element ``<group>`` defines two columns inside, unless an
-   attribute ``col="n"`` is used.  The columns have the same width (1/n th of
-   the group's width). Use a ``<group>`` element to produce a column of fields.
-3. To give a title to a section, add a ``string`` attribute to a ``<group>`` element::
-
-     <group string="Time-sensitive operations">
-
-   this replaces the former use of ``<separator string="XXX"/>``.
-4. The ``<field>`` element does not produce a label, except as direct children
-   of a ``<group>`` element\ [#backwards-compatibility]_.  Use :samp:`<label
-   for="{field_name}>` to produce a label of a field.
-
-Sheet Headers
-.............
-
-Some sheets have headers with one or more fields, and the labels of those
-fields are only shown in edit mode.
-
-.. list-table::
-   :header-rows: 1
-
-   * - View mode
-     - Edit mode
-   * - .. image:: forms/header.png
-          :class: img-responsive
-     - .. image:: forms/header2.png
-          :class: img-responsive
-
-Use HTML text, ``<div>``, ``<h1>``, ``<h2>``… to produce nice headers, and
-``<label>`` with the class ``oe_edit_only`` to only display the field's label
-in edit mode. The class ``oe_inline`` will make fields inline (instead of
-blocks): content following the field will be displayed on the same line rather
-than on the line below it. The form above is produced by the following XML::
-
-    <label for="name" class="oe_edit_only"/>
-    <h1><field name="name"/></h1>
-
-    <label for="planned_revenue" class="oe_edit_only"/>
-    <h2>
-        <field name="planned_revenue" class="oe_inline"/>
-        <field name="company_currency" class="oe_inline oe_edit_only"/> at
-        <field name="probability" class="oe_inline"/> % success rate
-    </h2>
-
-Button Box
-..........
-
-Many relevant actions or links can be displayed in the form. For example, in
-Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" have
-an important place in the use of the CRM. Instead of placing them in the
-"More" menu, put them directly in the sheet as buttons (on the top) to make
-them more visible and more easily accessible.
-
-.. image:: forms/header3.png
-   :class: img-responsive
-
-Technically, the buttons are placed inside a ``<div>`` to group them as a
-block on the top of the sheet.
-
-::
-
-    <div class="oe_button_box" name="button_box">
-        <button string="Schedule/Log Call" name="..." type="action"/>
-        <button string="Schedule Meeting" name="action_makeMeeting" type="object"/>
-    </div>
-
-Groups and Titles
-.................
-
-A column of fields is now produced with a ``<group>`` element, with an
-optional title.
-
-.. image:: forms/screenshot-03.png
-   :class: img-responsive
-
-::
-
-    <group string="Payment Options">
-        <field name="writeoff_amount"/>
-        <field name="payment_option"/>
-    </group>
-
-It is recommended to have two columns of fields on the form. For this, simply
-put the ``<group>`` elements that contain the fields inside a top-level
-``<group>`` element.
-
-To make :ref:`view extension <reference/views/inheritance>` simpler, it is
-recommended to put a ``name`` attribute on ``<group>`` elements, so new fields
-can easily be added at the right place.
-
-Special Case: Subtotals
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Some classes are defined to render subtotals like in invoice forms:
-
-.. image:: forms/screenshot-00.png
-   :class: img-responsive
-
-::
-
-    <group class="oe_subtotal_footer">
-        <field name="amount_untaxed"/>
-        <field name="amount_tax"/>
-        <field name="amount_total" class="oe_subtotal_footer_separator"/>
-        <field name="residual" style="margin-top: 10px"/>
-    </group>
-
-Placeholders and Inline Fields
-..............................
-
-Sometimes field labels make the form too complex. One can omit field labels,
-and instead put a placeholder inside the field. The placeholder text is
-visible only when the field is empty. The placeholder should tell what to
-place inside the field, it *must not* be an example as they are often confused
-with filled data.
-
-One can also group fields together by rendering them "inline" inside an
-explicit block element like ``<div>``. This allows grouping semantically
-related fields as if they were a single (composite) fields.
-
-The following example, taken from the *Leads* form, shows both placeholders and
-inline fields (zip and city).
-
-.. list-table::
-   :header-rows: 1
-
-   * - Edit mode
-     - View mode
-   * - .. image:: forms/placeholder.png
-          :class: img-responsive
-     - .. image:: forms/screenshot-01.png
-          :class: img-responsive
-
-::
-
-    <group>
-        <label for="street" string="Address"/>
-        <div>
-            <field name="street" placeholder="Street..."/>
-            <field name="street2"/>
-            <div>
-                <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                <field name="city" class="oe_inline" placeholder="City"/>
-            </div>
-            <field name="state_id" placeholder="State"/>
-            <field name="country_id" placeholder="Country"/>
-        </div>
-    </group>
-
-Images
-......
-
-Images, like avatars, should be displayed on the right of the sheet.  The
-product form looks like:
-
-.. image:: forms/screenshot-02.png
-   :class: img-responsive
-
-The form above contains a <sheet> element that starts with:
-
-::
-
-    <field name="product_image" widget="image" class="oe_avatar oe_right"/>
-
-Tags
-....
-
-Most :class:`~odoo.fields.Many2many` fields, like categories, are better
-rendered as a list of tags. Use the widget ``many2many_tags`` for this:
-
-.. image:: forms/screenshot-04.png
-   :class: img-responsive
-
-::
-
-    <field name="category_id" widget="many2many_tags"/>
-
-Configuration forms guidelines
-------------------------------
-
-Examples of configuration forms: Stages, Leave Type, etc.  This concerns all
-menu items under Configuration of each application (like Sales/Configuration).
-
-.. image:: forms/nosheet.png
-   :class: img-responsive
-
-1. no header (because no state, no workflow, no button)
-2. no sheet
-
-Dialog forms guidelines
------------------------
-
-Example: "Schedule a Call" from an opportunity.
-
-.. image:: forms/wizard-popup.png
-   :class: img-responsive
-
-1. avoid separators (the title is already in the popup title bar, so another
-   separator is not relevant)
-2. avoid cancel buttons (user generally close the popup window to get the same
-   effect)
-3. action buttons must be highlighted (red)
-4. when there is a text area, use a placeholder instead of a label or a
-   separator
-5. like in regular form views, put buttons in the <header> element
-
-Configuration Wizards guidelines
---------------------------------
-
-Example: Settings / Configuration / Sales.
-
-1. always in line (no popup)
-2. no sheet
-3. keep the cancel button (users cannot close the window)
-4. the button "Apply" must be red
-
 
 .. _reference/views/graph:
 
@@ -1023,6 +749,8 @@ attributes:
   the list view)
 ``class``
   adds HTML classes to the root HTML element of the Kanban view
+``examples``
+  if set to a key in the `KanbanExamplesRegistry`_, examples on column setups will be available in the grouped kanban view. `Here <https://github.com/odoo/odoo/blob/99821fdcf89aa66ac9561a972c6823135ebf65c0/addons/project/static/src/js/project_task_kanban_examples.js#L27>`_ is an example of how to define those setups.
 ``group_create``
   whether the "Add a new column" bar is visible or not. Default: true.
 ``group_delete``
@@ -1036,6 +764,8 @@ attributes:
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
   grouped by many2one, selection, char or boolean fields, and disabled when not.
+``records_draggable``
+  whether it should be possible to drag records when kanban is grouped. Default: true.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 
@@ -1060,8 +790,8 @@ Possible children of the view element are:
     the progressbar
 
   ``colors`` (required)
-    JSON mapping the above field values to either "danger", "warning" or
-    "success" colors
+    JSON mapping the above field values to either "danger", "warning", "success"
+    or "muted" colors
 
   ``sum_field`` (optional)
     the name of the field whose column's records' values will be summed and
@@ -1095,6 +825,11 @@ Possible children of the view element are:
     self-explanatory
   ``read_only_mode``
     self-explanatory
+  ``selection_mode``
+    set to true when kanban view is opened in mobile environment from m2o/m2m field
+    for selecting records.
+
+    .. note:: clicking on m2o/m2m field in mobile environment opens kanban view
 
 
     .. rubric:: buttons and fields
@@ -1132,57 +867,6 @@ Possible children of the view element are:
        * kanban-specific CSS
        * kanban structures/widgets (vignette, details, ...)
 
-``searchpanel``
-  allows to display a search panel on the left of the kanban view.
-  This tool allows to quickly filter data on the basis of given fields. The fields
-  are specified as direct children of the ``searchpanel`` with tag name ``field``,
-  and the following attributes:
-
-  * ``name`` (mandatory) the name of the field to filter on
-
-  * ``select`` determines the behavior and display. Possible values are
-
-      ``one`` (default) at most one value can be selected. Supported field types are
-        many2one and selection.
-
-      ``multi`` several values can be selected (checkboxes). Supported field
-        types are many2one, many2many and selection.
-
-  * ``groups``: restricts to specific users
-
-  * ``string``: determines the label to display
-
-  * ``icon``: specifies which icon is used
-
-  * ``color``: determines the icon color
-
-  Additional optional attributes are available in the ``multi`` case:
-
-  * ``domain``: determines conditions that the comodel records have to satisfy.
-
-  A domain might be used to express a dependency on another field (with select="one")
-  of the search panel. Consider
-
-  .. code-block:: xml
-
-    <searchpanel>
-      <field name="department_id"/>
-      <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/>
-    <searchpanel/>
-
-  In the above example, the range of values for manager_id (manager names) available at screen
-  will depend on the value currently selected for the field ``department_id``.
-
-  * ``groupby``: field name of the comodel (only available for many2one and many2many fields). Values will be grouped by that field.
-
-  * ``disable_counters``: default is false. If set to true the counters won't be computed.
-
-    This feature has been implemented in case performances would be too bad.
-
-    Another way to solve performance issues is to properly override the
-    ``search_panel_select_multi_range`` method.
-
-
 If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>`.
 
 .. _reference/views/calendar:
@@ -1208,8 +892,6 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
     Displayed the display_name/avatar of the visible record in the sidebar
-``readonly_form_view_id``
-    view to open in readonly mode
 ``form_view_id``
     view to open when the user create or edit an event. Note that if this attribute
     is not set, the calendar view will fall back to the id of the form view in the
@@ -1318,7 +1000,7 @@ take the following attributes:
   name of the field that describes if the task has to be excluded
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
-``create``, ``edit``
+``create``, ``edit``, ``plan``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``. If ``create`` is enabled, a "+" button
     will be displayed while hovering each time slot to create a new record in
@@ -1358,6 +1040,7 @@ take the following attributes:
     ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
 
   * Scale ``year`` always snap to full day.
+
   Example of precision attribute: ``{"day": "hour:quarter", "week": "day:half", "month": "day"}``
 ``total_row``
   boolean to control whether the row containing the total count of records should
@@ -1392,49 +1075,33 @@ take the following attributes:
     meta-information. The ``getColor`` method to convert in a color integer is
     also available directly in the template context without using ``widget``.
 
-.. _reference/views/diagram:
+  ``on_create``
+  If specified when clicking the add button on the view, instead of opening a generic dialog, launch a client action.
+  this should hold the xmlid of the action (eg: ``on_create="%(my_module.my_wizard)d"``
 
-Diagram
-=======
+``form_view_id``
+  view to open when the user create or edit a record. Note that if this attribute
+  is not set, the gantt view will fall back to the id of the form view in the
+  current action, if any.
 
-The diagram view can be used to display directed graphs of records. The root
-element is ``<diagram>`` and takes no attributes.
+``thumbnails``
+  This allows to display a thumbnail next to groups name if the group is a relationnal field.
+  This expects a python dict which keys are the name of the field on the active model.
+  Values are the names of the field holding the thumbnail on the related model.
 
-Possible children of the diagram view are:
+  Example: tasks have a field user_id that reference res.users. The res.users model has a field image that holds the avatar,
+  then:
+.. code-block:: xml
 
-``node`` (required, 1)
-    Defines the nodes of the graph. Its attributes are:
+      <gantt
+        date_start="date_start"
+        date_stop="date_stop"
+        thumbnails="{'user_id': 'image_128'}"
+      >
+      </gantt>
 
-    ``object``
-      the node's Odoo model
-    ``shape``
-      conditional shape mapping similar to colors and fonts in :ref:`the list
-      view <reference/views/list>`. The only valid shape is ``rectangle`` (the
-      default shape is an ellipsis)
-    ``bgcolor``
-      same as ``shape``, but conditionally maps a background color for
-      nodes. The default background color is white, the only valid alternative
-      is ``grey``.
-``arrow`` (required, 1)
-    Defines the directed edges of the graph. Its attributes are:
 
-    ``object`` (required)
-      the edge's Odoo model
-    ``source`` (required)
-      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
-      the edge's source node record
-    ``destination`` (required)
-      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
-      the edge's destination node record
-    ``label``
-      Python list of attributes (as quoted strings). The corresponding
-      attributes's values will be concatenated and displayed as the edge's
-      label
-
-``label``
-    Explanatory note for the diagram, the ``string`` attribute defines the
-    note's content. Each ``label`` is output as a paragraph in the diagram
-    header, easily visible but without any special emphasis.
+will display the users avatars next to their names when grouped by user_id
 
 .. _reference/views/dashboard:
 
@@ -1829,7 +1496,9 @@ Possible children elements of the search view are:
         the name of a field of type ``date`` or ``datetime``.
         Using this attribute has the effect to create
         a set of filters available in a submenu
-        of the filters menu.
+        of the filters menu. The filters proposed are time dependent
+        but not dynamic in the sense that their domains are evaluated
+        at the time of the control panel instantiation.
 
         Example:
 
@@ -1838,28 +1507,24 @@ Possible children elements of the search view are:
           <filter name="filter_create_date" date="create_date" string="Creation Date"/>
 
         The example above allows to easily search for records with creation date field
-        values in one of the periods below.
+        values in one of the periods below (if the current month is August 2019).
 
         .. code-block:: text
 
           Create Date >
-            Today
-            This Week
-            This Month
-            This Quarter
-            This Year
+            August
+            July
+            June
+            Q4
+            Q3
+            Q2
+            Q1
           --------------
-            Yesterday
-            Last Week
-            Last Month
-            Last Quarter
-            Last Year
-          --------------
-            Last 7 Days
-            Last 30 Days
-            Last 365 Days
+            2019
+            2018
+            2017
 
-        Note that the generated domains are dynamic and can be saved as such (via the favorites menu).
+        Muti selection of options is allowed.
 
     ``default_period`` (optional)
         only makes sense for a filter with non empty ``date`` attribute.
@@ -1868,9 +1533,9 @@ Possible children elements of the search view are:
         'this_month' is used by default.
 
         To choose among the following options:
-        today, this_week, this_month, this_quarter, this_year,
-        yesterday, last_week, last_month,
-        last_quarter, last_year, last_7_days, last_30_days, last_365_days
+        today, this_week, this_month, last_month, antepenultimate_month,
+        fourth_quarter, third_quarter, second_quarter, first_quarter,
+        this_year, last_year, antepenultimate_year.
 
         Example:
 
@@ -1884,7 +1549,7 @@ Possible children elements of the search view are:
 
         The key ``group_by`` can be used to define a groupby available in the
         'Group By' menu.
-        The 'group_by' value can be a valid field name or a list of field names.
+        The 'group_by' value can be a valid field name.
 
         .. code-block:: xml
 
@@ -1945,6 +1610,62 @@ Possible children elements of the search view are:
 ``group``
     can be used to separate groups of filters, more readable than
     ``separator`` in complex search views
+``searchpanel``
+  allows to display a search panel on the left of any multi records view.
+  By default, the list and kanban views have the searchpanel enabled.
+  The search panel can be activated on other views with the attribute:
+
+  * ``view_types`` a comma separated list of view types on which to enable the search panel
+
+      default: 'tree,kanban'
+
+  This tool allows to quickly filter data on the basis of given fields. The fields
+  are specified as direct children of the ``searchpanel`` with tag name ``field``,
+  and the following attributes:
+
+  * ``name`` (mandatory) the name of the field to filter on
+
+  * ``select`` determines the behavior and display. Possible values are
+
+      ``one`` (default) at most one value can be selected. Supported field types are
+        many2one and selection.
+
+      ``multi`` several values can be selected (checkboxes). Supported field
+        types are many2one, many2many and selection.
+
+  * ``groups``: restricts to specific users
+
+  * ``string``: determines the label to display
+
+  * ``icon``: specifies which icon is used
+
+  * ``color``: determines the icon color
+
+  Additional optional attributes are available in the ``multi`` case:
+
+  * ``domain``: determines conditions that the comodel records have to satisfy.
+
+  A domain might be used to express a dependency on another field (with select="one")
+  of the search panel. Consider
+
+  .. code-block:: xml
+
+    <searchpanel>
+      <field name="department_id"/>
+      <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/>
+    <searchpanel/>
+
+  In the above example, the range of values for manager_id (manager names) available at screen
+  will depend on the value currently selected for the field ``department_id``.
+
+  * ``groupby``: field name of the comodel (only available for many2one and many2many fields). Values will be grouped by that field.
+
+  * ``disable_counters``: default is false. If set to true the counters won't be computed.
+
+    This feature has been implemented in case performances would be too bad.
+
+    Another way to solve performance issues is to properly override the
+    ``search_panel_select_multi_range`` method.
 
 .. _reference/views/search/defaults:
 
@@ -1953,7 +1674,7 @@ Search defaults
 
 Search fields and filters can be configured through the action's ``context``
 using :samp:`search_default_{name}` keys. For fields, the value should be the
-value to set in the field, for filters it's a boolean value. For instance,
+value to set in the field, for filters it's a boolean value or a number. For instance,
 assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 
 .. code-block:: python
@@ -1965,6 +1686,78 @@ assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 
 will automatically enable the ``bar`` filter and search the ``foo`` field for
 *acro*.
+
+A numeric value (between 1 and 99) can be used to describe the order of default groupbys.
+For instance if ``foo`` and ``bar`` refer to two groupbys
+
+.. code-block:: python
+
+  {
+    'search_default_foo': 2,
+    'search_default_bar': 1
+  }
+
+has the effect to activate first ``bar`` then ``foo``.
+
+.. _reference/views/map:
+
+Map
+===
+
+This view is able to display records on a map and the routes between them. The record are represented by pins. It also allows the visualization of fields from the model in a popup tied to the record's pin.
+
+.. note::
+
+    The model on which the view is applied should contains a res.partner many2one since the view relies on the res.partner's address and coordinates fields to localize the records.
+
+.. warning::
+
+   The Map view is only available in Odoo Enterprise
+
+.. _reference/views/map/api:
+
+Api
+---
+
+The view uses location data platforms' api to fetch the tiles (the map's background), do the geoforwarding (converting addresses to a set of coordinates) and fetch the routes.
+The view implements two api, the default one, openstreet map is able to fetch `tiles`_ and do `geoforwarding`_. This api does not require a token.
+As soon as a valid `MapBox`_ token is provided in the general settings the view switches to the Mapbox api. This api is faster and allows the computation of routes. The token are available by `signing up`_ to MapBox
+
+
+
+.. _reference/views/structural components:
+
+Structural components
+---------------------
+
+The view's root element is ``<map>`` multiple attributes are allowed
+
+``res_partner``
+    Contains the res.partner many2one. If not provided the view will resort to create an empty  map.
+``default_order``
+    If a field is provided the view will override the model's default order. The field must be apart of the model on which the view is applied not from res.partner
+``routing``
+    if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)
+``hide_name``
+    if ``true`` hide a name from the marker's popup (default: false)
+``hide_address``
+    if ``true`` hide a address from the marker's popup (default: false)
+
+The ``<map>`` element can contain multiple ``<field>`` elements. Each ``<field>`` element will be interpreted as a line in the marker's popup. The field's attributes are the following:
+
+``name``
+    The field to display.
+``string``
+    This string will be displayed before the field's content. It Can be used as a description.
+
+No attribute or element is mandatory but as stated above if no res.partner many2one is provided the view won't be able to locate records.
+
+For example here is a map:
+    .. code-block:: xml
+
+        <map res_partner="partner_id" default_order="date_begin" routing="true" hide_name="true">
+            <field name="partner_id" string="Customer Name"/>
+        </map>
 
 .. _reference/views/qweb:
 
@@ -2022,6 +1815,10 @@ The main additions of qweb-as-view to the basic qweb-as-template are:
                        should only contain xpath elements
                        <reference/views/inheritance>`
 
+.. _geoforwarding: https://nominatim.org/release-docs/develop/
+.. _tiles: https://wiki.openstreetmap.org/wiki/Tile_data_server
+.. _MapBox: https://docs.mapbox.com/api/
+.. _signing up: https://account.mapbox.com/auth/signup/
 .. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
 .. _CSS color unit: http://www.w3.org/TR/css3-color/#colorunits
 .. _floats: https://developer.mozilla.org/en-US/docs/Web/CSS/float
@@ -2029,3 +1826,4 @@ The main additions of qweb-as-view to the basic qweb-as-template are:
 .. _kanban board: http://en.wikipedia.org/wiki/Kanban_board
 .. _pivot table: http://en.wikipedia.org/wiki/Pivot_table
 .. _XPath: http://en.wikipedia.org/wiki/XPath
+.. _KanbanExamplesRegistry: https://github.com/odoo/odoo/blob/99821fdcf89aa66ac9561a972c6823135ebf65c0/addons/web/static/src/js/views/kanban/kanban_examples_registry.js

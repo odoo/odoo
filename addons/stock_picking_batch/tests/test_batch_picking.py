@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -8,7 +12,6 @@ class TestBatchPicking(TransactionCase):
         super(TestBatchPicking, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.partner_delta_id = self.env['ir.model.data'].xmlid_to_res_id('base.res_partner_4')
         self.picking_type_out = self.env['ir.model.data'].xmlid_to_res_id('stock.picking_type_out')
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
@@ -24,8 +27,8 @@ class TestBatchPicking(TransactionCase):
         self.picking_client_1 = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
+            'company_id': self.env.company.id,
         })
 
         self.env['stock.move'].create({
@@ -41,8 +44,8 @@ class TestBatchPicking(TransactionCase):
         self.picking_client_2 = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
+            'company_id': self.env.company.id,
         })
 
         self.env['stock.move'].create({
@@ -57,6 +60,7 @@ class TestBatchPicking(TransactionCase):
 
         self.batch = self.env['stock.picking.batch'].create({
             'name': 'Batch 1',
+            'company_id': self.env.company.id,
             'picking_ids': [(4, self.picking_client_1.id), (4, self.picking_client_2.id)]
         })
 
@@ -102,7 +106,7 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
+        immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
         immediate_transfer_wizard.process()
 
@@ -135,11 +139,11 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         back_order_wizard_dict = self.batch.done()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
+        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
-        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         back_order_wizard.process()
 
+        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_lines.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', self.picking_client_1.id)]), 'no back order created')
@@ -168,11 +172,11 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
+        immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
         back_order_wizard_dict = immediate_transfer_wizard.process()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
+        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 
@@ -205,11 +209,11 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
+        immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 1)
         back_order_wizard_dict = immediate_transfer_wizard.process()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
+        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 

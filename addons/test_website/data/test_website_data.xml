@@ -30,10 +30,47 @@
                 </t>
             </field>
         </record>
+        <record id="test_error_view" model="ir.ui.view">
+            <field name="name">Test Error View</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_error_view</field>
+            <field name="arch" type="xml">
+                <t name="Test Error View" t-name="test_website.test_error_view">
+                    <t t-call="website.layout">
+                    <div class="container">
+                        <h1>Test Error View</h1>
+                        <div class="row">
+                            <ul class="list-group http_error col-6">
+                                <li class="list-group-item list-group-item-primary"><h2>http Errors</h2></li>
+                                <li class="list-group-item"><a href="/test_user_error_http">http UserError (400)</a></li>
+                                <li class="list-group-item"><a href="/test_validation_error_http">http ValidationError (400)</a></li>
+                                <li class="list-group-item"><a href="/test_missing_error_http">http MissingError (400)</a></li>
+                                <li class="list-group-item"><a href="/test_access_error_http">http AccessError (403)</a></li>
+                                <li class="list-group-item"><a href="/test_access_denied_http">http AccessDenied (403)</a></li>
+                                <li class="list-group-item"><a href="/test_internal_error_http">http InternalServerError (500)</a></li>
+                                <li class="list-group-item"><a href="/test_not_found_http">http NotFound (404)</a></li>
+                            </ul>
+                            <ul class="list-group rpc_error col-6">
+                                <li class="list-group-item list-group-item-primary"><h2>rpc Warnings</h2></li>
+                                <li class="list-group-item"><a href="/test_user_error_json">rpc UserError</a></li>
+                                <li class="list-group-item"><a href="/test_validation_error_json">rpc ValidationError</a></li>
+                                <li class="list-group-item"><a href="/test_missing_error_json">rpc MissingError</a></li>
+                                <li class="list-group-item"><a href="/test_access_error_json">rpc AccessError</a></li>
+                                <li class="list-group-item"><a href="/test_access_denied_json">rpc AccessDenied</a></li>
+                                <li class="list-group-item list-group-item-primary"><h2>rpc Errors</h2></li>
+                                <li class="list-group-item"><a href="/test_internal_error_json">rpc InternalServerError</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </t>
+                </t>
+            </field>
+        </record>
         <record id="test_page" model="website.page">
-            <field name="website_published">True</field>
+            <field name="is_published">True</field>
             <field name="url">/test_page_view</field>
             <field name="view_id" ref="test_page_view"/>
+            <field name="website_indexed" eval="False"/>
         </record>
         <record id="test_view_to_be_t_called" model="ir.ui.view">
             <field name="name">Test View To Be t-called</field>

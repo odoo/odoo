@@ -6,7 +6,7 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='acquirer_config']" position="inside">
+                <xpath expr="//field[@name='qr_code']" position="after">
                     <field name="so_reference_type" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
                 </xpath>
             </field>

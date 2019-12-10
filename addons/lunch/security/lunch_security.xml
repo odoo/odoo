@@ -40,9 +40,50 @@
             <field name="groups" eval="[(4,ref('lunch.group_lunch_user'))]"/>
         </record>
 
+        <record id="lunch_order_rule_write" model="ir.rule">
+            <field name="name">lunch.order: Don't change confirmed order</field>
+            <field name="model_id" ref="lunch.model_lunch_order"/>
+            <field name="domain_force">[('state', '!=', 'confirmed'), ('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="lunch_order_rule_write_manager" model="ir.rule">
+            <field name="name">manager can do whatever</field>
+            <field name="model_id" ref="lunch.model_lunch_order"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4, ref('lunch.group_lunch_manager'))]"/>
+        </record>
+
     <data noupdate="1">
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('lunch.group_lunch_manager'))]"/>
+        </record>
+
+        <record id="ir_rule_lunch_supplier_multi_company" model="ir.rule">
+            <field name="name">Lunch supplier: Multi Company</field>
+            <field name="model_id" ref="model_lunch_supplier"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="ir_rule_lunch_product_multi_company" model="ir.rule">
+            <field name="name">Lunch product: Multi Company</field>
+            <field name="model_id" ref="model_lunch_product"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="ir_rule_lunch_location_multi_company" model="ir.rule">
+            <field name="name">Lunch location: Multi Company</field>
+            <field name="model_id" ref="model_lunch_location"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
         </record>
     </data>
 </odoo>

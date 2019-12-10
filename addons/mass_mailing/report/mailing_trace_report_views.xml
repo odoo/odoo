@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="mailing_trace_report_view_pivot" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.pivot</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Mass Mailing Statistics" disable_linking="True">
+                    <field name="campaign" type="row"/>
+                    <field name="sent" type="measure"/>
+                    <field name="delivered" type="measure"/>
+                    <field name="opened" type="measure"/>
+                    <field name="bounced" type="measure"/>
+                    <field name="replied" type="measure"/>
+                    <field name="clicked" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="mailing_trace_report_view_graph" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.graph</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <graph string="Mass Mailing Statistics">
+                    <field name="campaign"/>
+                    <field name="sent" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="mailing_trace_report_view_search" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.search</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <search string="Mass Mailing Statistics">
+                    <group expand="0" string="Extended Filters...">
+                        <field name="scheduled_date"/>
+                    </group>
+                    <group expand="1" string="Group By...">
+                        <filter string="Mass Mailing Campaign" name="mass_mailing_campaign"
+                            domain="[]" context="{'group_by':'campaign'}"/>
+                        <filter string="State" domain="[]" name="state"
+                            context="{'group_by':'state'}"/>
+                        <filter string="Sent By" domain="[]" name="sent_by"
+                            context="{'group_by':'email_from'}"/>
+                        <separator/>
+                        <filter string="Scheduled Period" name="scheduled_date"
+                            domain="[]" context="{'group_by':'scheduled_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions and Menuitems -->
+       <record id="mailing_trace_report_action_mail" model="ir.actions.act_window">
+           <field name="name">Mass Mailing Analysis</field>
+           <field name="res_model">mailing.trace.report</field>
+           <field name="domain">[('mailing_type', '=', 'mail')]</field>
+           <field name="view_mode">graph,pivot</field>
+           <field name="help" type="html"><p>Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</p></field>
+       </record>
+
+       <menuitem name="Reporting" id="menu_mass_mailing_report" sequence="99"
+            parent="mass_mailing_menu_root"
+            action="mailing_trace_report_action_mail"
+            groups="mass_mailing.group_mass_mailing_user"/>
+</odoo>

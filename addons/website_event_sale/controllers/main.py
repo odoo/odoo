@@ -46,7 +46,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             attendees = request.env['event.registration'].browse(list(attendee_ids)).sudo()
             # clean context and session, then redirect to the confirmation page
             request.website.sale_reset()
-            urls = event._get_event_resource_urls(list(attendee_ids))
+            urls = event._get_event_resource_urls()
             return request.render("website_event.registration_complete", {
                 'attendees': attendees,
                 'event': event,

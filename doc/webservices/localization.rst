@@ -138,7 +138,7 @@ Each ``account.account.template`` is able to create an ``account.account`` for e
 Some of the described fields above deserve a bit more explanation.
 
 The ``user_type_id`` field requires a value of type ``account.account.type``.
-Although some additional types could be created in a localization module, we encourage the usage of the existing types in the `account/data/data_account_type.xml <https://github.com/odoo/odoo/blob/12.0/addons/account/data/data_account_type.xml>`_ file.
+Although some additional types could be created in a localization module, we encourage the usage of the existing types in the `account/data/data_account_type.xml <https://github.com/odoo/odoo/blob/13.0/addons/account/data/data_account_type.xml>`_ file.
 The usage of these generic types ensures the generic reports working correctly in addition to those that you could create in your localization module.
 
 .. warning::
@@ -213,7 +213,6 @@ The only difference being that you must use the ``account.tax.template`` model.
 
         <!-- [Optional] Define the tax's type.
         'sale', 'purchase' or 'none' are the allowed values. 'sale' is the default value.
-        'adjustment' is also available to do some tax adjustments.
         Note: 'none' means a tax can't be used by itself, however it can still be used in a group. -->
         <field name="type_tax_use">...</field>
 

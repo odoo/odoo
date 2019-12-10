@@ -86,13 +86,15 @@ async function nextMicrotaskTick() {
 }
 
 /**
- * Returns a promise that is resolved in the next jobqueue tick so that the
- *  caller can wait on it in order to execute code in the next jobqueue tick.
+ * Returns a promise that will be resolved after the tick after the
+ * nextAnimationFrame
  *
- * @return {Promise} a promise that will be fulfilled in the next jobqueue tick
+ * This is usefull to guarantee that OWL has had the time to render
+ *
+ * @returns {Promise}
  */
 async function nextTick() {
-    return concurrency.delay(0);
+    return testUtilsDom.returnAfterNextAnimationFrame();
 }
 
 // Loading static files cannot be properly simulated when their real content is
@@ -102,7 +104,9 @@ async function nextTick() {
 // to load xml files that are normally lazy loaded by specific widgets).
 return Promise.all([
     session.is_bound,
-    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb)
+    ajax.loadXML('/web/static/src/xml/debug.xml', core.qweb),
+    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb),
+    ajax.loadXML('/web/static/src/xml/translation_dialog.xml', core.qweb),
 ]).then(function () {
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized
@@ -134,6 +138,7 @@ return Promise.all([
             clickFirst: testUtilsDom.clickFirst,
             clickLast: testUtilsDom.clickLast,
             triggerEvents: testUtilsDom.triggerEvents,
+            triggerEvent: testUtilsDom.triggerEvent,
         },
         form: {
             clickEdit: testUtilsForm.clickEdit,
@@ -164,7 +169,7 @@ return Promise.all([
             many2one: {
                 clickOpenDropdown: testUtilsFields.clickOpenM2ODropdown,
                 clickHighlightedItem: testUtilsFields.clickM2OHighlightedItem,
-				clickItem: testUtilsFields.clickM2OItem,
+                clickItem: testUtilsFields.clickM2OItem,
                 searchAndClickItem: testUtilsFields.searchAndClickM2OItem,
             },
             editInput: testUtilsFields.editInput,
@@ -178,6 +183,7 @@ return Promise.all([
             createFile: testUtilsFile.createFile,
             dragoverFile: testUtilsFile.dragoverFile,
             dropFile: testUtilsFile.dropFile,
+            dropFiles: testUtilsFile.dropFiles,
         },
 
         createActionManager: testUtilsCreate.createActionManager,
@@ -192,6 +198,8 @@ return Promise.all([
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
+        prepareTarget: testUtilsCreate.prepareTarget,
+        returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 
         // backward-compatibility
         addMockEnvironment: deprecated(testUtilsMock.addMockEnvironment, 'mock'),

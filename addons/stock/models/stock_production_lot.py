@@ -3,12 +3,14 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class ProductionLot(models.Model):
     _name = 'stock.production.lot'
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Lot/Serial'
+    _check_company_auto = True
 
     name = fields.Char(
         'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
@@ -16,7 +18,7 @@ class ProductionLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', '=', 'product')], required=True)
+        domain=lambda self: self._domain_product_id(), required=True, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True, readonly=False)
@@ -24,10 +26,25 @@ class ProductionLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
+    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
 
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
+        ('name_ref_uniq', 'unique (name, product_id, company_id)', 'The combination of serial number and product must be unique across a company !'),
     ]
+
+    def _domain_product_id(self):
+        domain = [
+            "('tracking', '!=', 'none')",
+            "('type', '=', 'product')",
+            "'|'",
+                "('company_id', '=', False)",
+                "('company_id', '=', company_id)"
+        ]
+        if self.env.context.get('default_product_tmpl_id'):
+            domain.insert(0,
+                ("('product_tmpl_id', '=', %s)" % self.env.context['default_product_tmpl_id'])
+            )
+        return '[' + ', '.join(domain) + ']'
 
     def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)
@@ -51,10 +68,13 @@ class ProductionLot(models.Model):
         self._check_create()
         return super(ProductionLot, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
+        if 'company_id' in vals:
+            for lot in self:
+                if lot.company_id.id != vals['company_id']:
+                    raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
-            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
+            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
                 raise UserError(_(
                     'You are not allowed to change the product linked to a serial or lot number ' +
@@ -63,14 +83,14 @@ class ProductionLot(models.Model):
                 ))
         return super(ProductionLot, self).write(vals)
 
-    @api.one
     def _product_qty(self):
-        # We only care for the quants in internal or transit locations.
-        quants = self.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
-        self.product_qty = sum(quants.mapped('quantity'))
+        for lot in self:
+            # We only care for the quants in internal or transit locations.
+            quants = lot.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
+            lot.product_qty = sum(quants.mapped('quantity'))
 
     def action_lot_open_quants(self):
-        self = self.with_context(search_default_lot_id=self.id)
+        self = self.with_context(search_default_lot_id=self.id, create=False)
         if self.user_has_groups('stock.group_stock_manager'):
             self = self.with_context(inventory_mode=True)
         return self.env['stock.quant']._get_quants_action()

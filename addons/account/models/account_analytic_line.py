@@ -9,7 +9,7 @@ class AccountAnalyticLine(models.Model):
     _description = 'Analytic Line'
     _order = 'date desc'
 
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.product', string='Product', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
                                          related='move_id.account_id', store=True, domain=[('deprecated', '=', False)],
                                          compute_sudo=True)
@@ -17,7 +17,6 @@ class AccountAnalyticLine(models.Model):
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
 
-    @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
         if not self.product_id:

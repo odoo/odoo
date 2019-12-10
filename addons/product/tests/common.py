@@ -64,8 +64,9 @@ class TestProductCommon(common.SavepointCase):
             'uom_po_id': cls.uom_unit.id})
 
         cls.prod_att_1 = cls.env['product.attribute'].create({'name': 'Color'})
-        cls.prod_attr1_v1 = cls.env['product.attribute.value'].create({'name': 'red', 'attribute_id': cls.prod_att_1.id})
-        cls.prod_attr1_v2 = cls.env['product.attribute.value'].create({'name': 'blue', 'attribute_id': cls.prod_att_1.id})
+        cls.prod_attr1_v1 = cls.env['product.attribute.value'].create({'name': 'red', 'attribute_id': cls.prod_att_1.id, 'sequence': 1})
+        cls.prod_attr1_v2 = cls.env['product.attribute.value'].create({'name': 'blue', 'attribute_id': cls.prod_att_1.id, 'sequence': 2})
+        cls.prod_attr1_v3 = cls.env['product.attribute.value'].create({'name': 'green', 'attribute_id': cls.prod_att_1.id, 'sequence': 3})
 
         cls.product_7_template = cls.env['product.template'].create({
             'name': 'Sofa',
@@ -73,20 +74,17 @@ class TestProductCommon(common.SavepointCase):
             'uom_po_id': cls.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': cls.prod_att_1.id,
-                'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id])]
+                'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id, cls.prod_attr1_v3.id])]
             })]
         })
-        cls.product_7 = Product.create({
-            'product_tmpl_id': cls.product_7_template.id,
-        })
-        cls.product_7_1 = Product.create({
-            'product_tmpl_id': cls.product_7_template.id,
-            'attribute_value_ids': [(6, 0, [cls.prod_attr1_v1.id])],
-        })
-        cls.product_7_2 = Product.create({
-            'product_tmpl_id': cls.product_7_template.id,
-            'attribute_value_ids': [(6, 0, [cls.prod_attr1_v2.id])],
-        })
+
+        cls.product_7_attr1_v1 = cls.product_7_template.attribute_line_ids[0].product_template_value_ids[0]
+        cls.product_7_attr1_v2 = cls.product_7_template.attribute_line_ids[0].product_template_value_ids[1]
+        cls.product_7_attr1_v3 = cls.product_7_template.attribute_line_ids[0].product_template_value_ids[2]
+
+        cls.product_7_1 = cls.product_7_template._get_variant_for_combination(cls.product_7_attr1_v1)
+        cls.product_7_2 = cls.product_7_template._get_variant_for_combination(cls.product_7_attr1_v2)
+        cls.product_7_3 = cls.product_7_template._get_variant_for_combination(cls.product_7_attr1_v3)
 
         cls.product_8 = Product.create({
             'name': 'House',

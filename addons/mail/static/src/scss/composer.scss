@@ -181,6 +181,9 @@
 
                 textarea {
                     padding-top: 0px !important;
+                    &:disabled {
+                        position: absolute;
+                    }
                 }
             }
             .o_composer_text_field {
@@ -227,6 +230,8 @@
             .o_mail_emoji_container {
                 @include o-position-absolute(auto, 0, 100%, 0);
                 border-bottom-width: 1px;
+                max-height: calc(100vh - 100%);
+                overflow-y: auto;
             }
         }
         .o_composer_input {
@@ -248,6 +253,9 @@
         }
         .o_composer_send .o_composer_button_send, .o_chatter_avatar {
             display: none !important;
+        }
+        .o_attachment {
+            width: 50%;
         }
     }
 
@@ -289,6 +297,10 @@
     display: flex;
     flex-flow: row wrap;
 }
+
+        .o_attachment_wrap {
+            padding-right: 0px;
+        }
 
 .o_attachments_previews {
     > .o_attachment {

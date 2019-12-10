@@ -17,12 +17,12 @@ Index: addons/openacademy/views/openacademy.xml
 ===================================================================
 --- addons.orig/openacademy/views/openacademy.xml
 +++ addons/openacademy/views/openacademy.xml
-@@ -166,11 +166,57 @@
+@@ -165,10 +165,56 @@
              </field>
          </record>
  
 +        <record model="ir.ui.view" id="view_openacad_session_kanban">
-+            <field name="name">openacad.session.kanban</field>
++            <field name="name">openacademy.session.kanban</field>
 +            <field name="model">openacademy.session</field>
 +            <field name="arch" type="xml">
 +                <kanban default_group_by="course_id">
@@ -70,7 +70,6 @@ Index: addons/openacademy/views/openacademy.xml
          <record model="ir.actions.act_window" id="session_list_action">
              <field name="name">Sessions</field>
              <field name="res_model">openacademy.session</field>
-             <field name="view_type">form</field>
 -            <field name="view_mode">tree,form,calendar,gantt,graph</field>
 +            <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
          </record>

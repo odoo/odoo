@@ -106,7 +106,9 @@
         <field name="name">resource.calendar.leaves.calendar</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
-            <calendar date_start="date_from" date_stop="date_to" string="Resource" color="resource_id">
+            <calendar date_start="date_from" date_stop="date_to" mode="month" string="Resource" color="resource_id" event_limit="5">
+                <field name="resource_id" avatar_field="image_128"/>
+                <field name="company_id"/>
                 <field name="name"/>
             </calendar>
         </field>
@@ -193,6 +195,8 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
             <tree string="Working Time" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="display_type" invisible="1"/>
                 <field name="name"/>
                 <field name="dayofweek"/>
                 <field name="day_period"/>
@@ -209,6 +213,7 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
             <form string="Working Time">
+                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="date_from"/>
@@ -221,6 +226,7 @@
                     </div>
                     <field name="day_period"/>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -245,7 +251,7 @@
                 <sheet string="Working Time">
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
-                                string="Time Off" icon="fa-calendar-times-o"
+                                string="Time Off" icon="fa-plane"
                                 class="oe_stat_button"
                                 groups="base.group_no_one"/>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
@@ -265,7 +271,14 @@
                     </group>
                     <notebook>
                         <page string="Working Hours" name="working_hours">
-                            <field name="attendance_ids"/>
+                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
+                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"/>
+                        <field name="two_weeks_calendar" invisible="1"/>
+
+                        <group attrs="{'invisible':[('two_weeks_calendar', '=', False)]}">
+                            <field name="two_weeks_explanation" nolabel="1"/>
+                        </group>
+                            <field name="attendance_ids" widget="section_one2many"/>
                         </page>
                         <page string="Global Time Off" name="global_leaves">
                             <field name="global_leave_ids">
@@ -296,7 +309,6 @@
     <record id="action_resource_calendar_form" model="ir.actions.act_window">
         <field name="name">Working Times</field>
         <field name="res_model">resource.calendar</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_resource_calendar_search"/>

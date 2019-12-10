@@ -22,7 +22,6 @@ class Company(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
 
-    @api.multi
     def copy(self, default=None):
         raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
@@ -43,20 +42,23 @@ class Company(models.Model):
         with tools.file_open(img_path, 'rb') as f:
             if original:
                 return base64.b64encode(f.read())
-            # Modify the source image to change the color of the 'O'.
+            # Modify the source image to add a colored bar on the bottom
             # This could seem overkill to modify the pixels 1 by 1, but
             # Pillow doesn't provide an easy way to do it, and this 
             # is acceptable for a 16x16 image.
             color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
             original = Image.open(f)
             new_image = Image.new('RGBA', original.size)
-            for y in range(original.size[1]):
-                for x in range(original.size[0]):
+            height = original.size[1]
+            width = original.size[0]
+            bar_size = 1
+            for y in range(height):
+                for x in range(width):
                     pixel = original.getpixel((x, y))
-                    if pixel[0] == 0 and pixel[1] == 0 and pixel[2] == 0:
-                        new_image.putpixel((x, y), (0, 0, 0, 0))
+                    if height - bar_size <= y + 1 <= height:
+                        new_image.putpixel((x, y), (color[0], color[1], color[2], 255))
                     else:
-                        new_image.putpixel((x, y), (color[0], color[1], color[2], pixel[3]))
+                        new_image.putpixel((x, y), (pixel[0], pixel[1], pixel[2], pixel[3]))
             stream = io.BytesIO()
             new_image.save(stream, format="ICO")
             return base64.b64encode(stream.getvalue())
@@ -68,7 +70,7 @@ class Company(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo", readonly=False)
+    logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
@@ -79,7 +81,10 @@ class Company(models.Model):
     street2 = fields.Char(compute='_compute_address', inverse='_inverse_street2')
     zip = fields.Char(compute='_compute_address', inverse='_inverse_zip')
     city = fields.Char(compute='_compute_address', inverse='_inverse_city')
-    state_id = fields.Many2one('res.country.state', compute='_compute_address', inverse='_inverse_state', string="Fed. State")
+    state_id = fields.Many2one(
+        'res.country.state', compute='_compute_address', inverse='_inverse_state',
+        string="Fed. State", domain="[('country_id', '=?', country_id)]"
+    )
     bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
@@ -92,14 +97,14 @@ class Company(models.Model):
     base_onboarding_company_state = fields.Selection([
         ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
     favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
-
-
+    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
+    primary_color = fields.Char()
+    secondary_color = fields.Char()
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
 
-    @api.model_cr
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
@@ -152,16 +157,16 @@ class Company(models.Model):
         for company in self:
             company.partner_id.country_id = company.country_id
 
-    @api.depends('partner_id', 'partner_id.image')
+    @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_process(company.partner_id.image, size=(180, 0))
+            company.logo_web = tools.image_process(company.partner_id.image_1920, size=(180, 0))
 
     @api.onchange('state_id')
     def _onchange_state(self):
-        self.country_id = self.state_id.country_id
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
-    @api.multi
     def on_change_country(self, country_id):
         # This function is called from account/models/chart_template.py, hence decorated with `multi`.
         self.ensure_one()
@@ -172,13 +177,9 @@ class Company(models.Model):
 
     @api.onchange('country_id')
     def _onchange_country_id_wrapper(self):
-        res = {'domain': {'state_id': []}}
-        if self.country_id:
-            res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
         values = self.on_change_country(self.country_id.id)['value']
         for fname, value in values.items():
             setattr(self, fname, value)
-        return res
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -217,8 +218,7 @@ class Company(models.Model):
         partner = self.env['res.partner'].create({
             'name': vals['name'],
             'is_company': True,
-            'image': vals.get('logo'),
-            'customer': False,
+            'image_1920': vals.get('logo'),
             'email': vals.get('email'),
             'phone': vals.get('phone'),
             'website': vals.get('website'),
@@ -229,7 +229,6 @@ class Company(models.Model):
         company = super(Company, self).create(vals)
         # The write is made on the user to set it automatically in the multi company group.
         self.env.user.write({'company_ids': [(4, company.id)]})
-        partner.write({'company_id': company.id})
 
         # Make sure that the selected currency is enabled
         if vals.get('currency_id'):
@@ -238,7 +237,6 @@ class Company(models.Model):
                 currency.write({'active': True})
         return company
 
-    @api.multi
     def write(self, values):
         self.clear_caches()
         # Make sure that the selected currency is enabled
@@ -254,25 +252,19 @@ class Company(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive companies.'))
 
-    @api.multi
     def open_company_edit_report(self):
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
 
-    @api.multi
-    def write_company_and_print_report(self, values):
-        res = self.write(values)
-
-        report_name = values.get('default_report_name')
-        active_ids = values.get('active_ids')
-        active_model = values.get('active_model')
+    def write_company_and_print_report(self):
+        context = self.env.context
+        report_name = context.get('default_report_name')
+        active_ids = context.get('active_ids')
+        active_model = context.get('active_model')
         if report_name and active_ids and active_model:
             docids = self.env[active_model].browse(active_ids)
             return (self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
-                        .with_context(values)
                         .report_action(docids))
-        else:
-            return res
 
     @api.model
     def action_open_base_onboarding_company(self):
@@ -304,7 +296,6 @@ class Company(models.Model):
             self[onboarding_state] = 'done'
         return old_values
 
-    @api.multi
     def action_save_onboarding_company_step(self):
         if bool(self.street):
             self.set_onboarding_step_done('base_onboarding_company_state')
@@ -317,3 +308,24 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    def update_scss(self):
+        """ update the company scss stylesheet """
+        scss_properties = []
+        if self.primary_color:
+            scss_properties.append('$o-company-primary-color:%s;' % self.primary_color)
+        if self.secondary_color:
+            scss_properties.append('$o-company-secondary-color:%s;' % self.secondary_color)
+        if self.font:
+            scss_properties.append('$o-company-font:%s;' % self.font)
+        scss_string = '\n'.join(scss_properties)
+
+        if not len(scss_string):
+            scss_string = ""
+
+        scss_data = base64.b64encode((scss_string).encode('utf-8'))
+
+        attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
+        attachment.write({'datas': scss_data})
+
+        return ''

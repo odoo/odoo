@@ -16,7 +16,9 @@
                 <span class="d-inline" aria-hidden="true">&amp;times;</span>
             </button>
         </div>
-        <div t-if="widget.message or widget.buttons.length" class="toast-body">
+        <div t-if="widget.message or widget.subtitle or widget.buttons.length" class="toast-body">
+            <strong t-if="widget.subtitle" t-raw="widget.subtitle"
+                 class="o_notification_subtitle"/>
             <div t-if="widget.message" t-raw="widget.message"
                  class="o_notification_content"/>
             <div t-if="widget.buttons.length" class="mt-2 o_notification_buttons">

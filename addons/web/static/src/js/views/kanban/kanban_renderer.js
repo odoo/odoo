@@ -3,6 +3,7 @@ odoo.define('web.KanbanRenderer', function (require) {
 
 var BasicRenderer = require('web.BasicRenderer');
 var ColumnQuickCreate = require('web.kanban_column_quick_create');
+var config = require('web.config');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
@@ -12,6 +13,7 @@ var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
 var qweb = core.qweb;
+var _t = core._t;
 
 function findInNode(node, predicate) {
     if (predicate(node)) {
@@ -82,7 +84,7 @@ function transformQwebTemplate(node, fields) {
 
 var KanbanRenderer = BasicRenderer.extend({
     className: 'o_kanban_view',
-    config: { // the KanbanRecord and KanbanColumn classes to use (may be overriden)
+    config: { // the KanbanRecord and KanbanColumn classes to use (may be overridden)
         KanbanColumn: KanbanColumn,
         KanbanRecord: KanbanRecord,
     },
@@ -107,7 +109,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
 
         this.widgets = [];
-        this.qweb = new QWeb(session.debug, {_s: session.origin}, false);
+        this.qweb = new QWeb(config.isDebug(), {_s: session.origin}, false);
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
@@ -169,17 +171,6 @@ var KanbanRenderer = BasicRenderer.extend({
     quickCreateToggleFold: function () {
         this.quickCreate.toggleFold();
         this._toggleNoContentHelper();
-    },
-    /**
-     * Allow the rendering to be triggered from outside. This is used for kanban
-     * views with a searchPanel, to synchronize updates (the view is updated
-     * with param 'noRender', so that it is not re-rendered before the
-     * searchPanel).
-     *
-     * @returns {$.Promise}
-     */
-    render: function () {
-        return this._render();
     },
     /**
      * Updates a given column with its new state.
@@ -271,14 +262,32 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Tries to give focus to the previous card, and returns true if successful
+     * 
      * @private
      * @param {DOMElement} currentColumn
+     * @returns {boolean}
      */
     _focusOnPreviousCard: function (currentCardElement) {
         var previousCard = currentCardElement.previousElementSibling;
         if (previousCard && previousCard.classList.contains("o_kanban_record")) { //previous element might be column title
             previousCard.focus();
+            return true;
         }
+    },
+    /**
+     * Returns the default columns for the kanban view example background.
+     * You can override this method to easily customize the column names.
+     *
+     * @private
+     */
+    _getGhostColumns: function () {
+        if (this.examples && this.examples.ghostColumns) {
+            return this.examples.ghostColumns;
+        }
+        return _.map(_.range(1, 5), function (num) {
+            return _.str.sprintf(_t("Column %s"), num);
+        });
     },
     /**
      * Render the Example Ghost Kanban card on the background
@@ -287,7 +296,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * @param {DocumentFragment} fragment
      */
     _renderExampleBackground: function (fragment) {
-        var $background = $(qweb.render('KanbanView.ExamplesBackground'));
+        var $background = $(qweb.render('KanbanView.ExamplesBackground', {ghostColumns: this._getGhostColumns()}));
         $background.appendTo(fragment);
     },
     /**
@@ -296,11 +305,16 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      * @param {DocumentFragment} fragment
      * @param {integer} nbDivs the number of divs to append
+     * @param {Object} [options]
+     * @param {string} [options.inlineStyle]
      */
-    _renderGhostDivs: function (fragment, nbDivs) {
+    _renderGhostDivs: function (fragment, nbDivs, options) {
         var ghostDefs = [];
         for (var $ghost, i = 0; i < nbDivs; i++) {
             $ghost = $('<div>').addClass('o_kanban_record o_kanban_ghost');
+            if (options && options.inlineStyle) {
+                $ghost.attr('style', options.inlineStyle);
+            }
             var def = $ghost.appendTo(fragment);
             ghostDefs.push(def);
         }
@@ -357,10 +371,9 @@ var KanbanRenderer = BasicRenderer.extend({
                 },
             });
 
-            // Enable column quickcreate
             if (this.createColumnEnabled) {
                 this.quickCreate = new ColumnQuickCreate(this, {
-                    examples: this.examples,
+                    examples: this.examples && this.examples.examples,
                 });
                 this.defs.push(this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet
@@ -381,8 +394,9 @@ var KanbanRenderer = BasicRenderer.extend({
     _renderUngrouped: function (fragment) {
         var self = this;
         var KanbanRecord = this.config.KanbanRecord;
+        var kanbanRecord;
         _.each(this.state.data, function (record) {
-            var kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
+            kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
             self.widgets.push(kanbanRecord);
             var def = kanbanRecord.appendTo(fragment);
             self.defs.push(def);
@@ -411,7 +425,11 @@ var KanbanRenderer = BasicRenderer.extend({
 
         // append ghost divs to ensure that all kanban records are left aligned
         var prom = Promise.all(self.defs).then(function () {
-            return self._renderGhostDivs(fragment, 6);
+            var options = {};
+            if (kanbanRecord) {
+                options.inlineStyle = kanbanRecord.$el.attr('style');
+            }
+            return self._renderGhostDivs(fragment, 6, options);
         });
         this.defs.push(prom);
     },
@@ -597,7 +615,10 @@ var KanbanRenderer = BasicRenderer.extend({
                 e.preventDefault();
                 break;
             case $.ui.keyCode.UP:
-                this._focusOnPreviousCard(e.currentTarget);
+                const previousFocused = this._focusOnPreviousCard(e.currentTarget);
+                if (!previousFocused) {
+                    this.trigger_up('navigation_move', { direction: 'up' });
+                }
                 e.stopPropagation();
                 e.preventDefault();
                 break;

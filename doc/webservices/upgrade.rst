@@ -55,7 +55,7 @@ The ``create`` method
 
     :param str contract: (required) your enterprise contract reference
     :param str email: (required) your email address
-    :param str target: (required) the Odoo version you want to upgrade to. Valid choices: 10.0, 11.0, 12.0
+    :param str target: (required) the Odoo version you want to upgrade to. Valid choices: 11.0, 12.0, 13.0
     :param str aim: (required) the purpose of your upgrade database request. Valid choices: test, production.
     :param str filename: (required) a purely informative name for you database dump file
     :param str timezone: (optional) the timezone used by your server. Only for Odoo source version < 6.1
@@ -96,9 +96,9 @@ See a sample output aside.
               "failures": [
                 {
                   "expected": [
-                    "10.0",
                     "11.0",
                     "12.0",
+                    "13.0",
                   ],
                   "message": "Invalid value \"5.0\"",
                   "reason": "TARGET:INVALID",
@@ -135,7 +135,7 @@ Sample script
 Here are 2 examples of database upgrade request creation using:
 
 * one in the python programming language using the requests library
-* one in the bash programming language using `curl <http://curl.haxx.se>`_ (tool
+* one in the bash programming language using `curl <https://curl.haxx.se>`_ (tool
   for transfering data using http) and `jq <https://stedolan.github.io/jq>`_ (JSON processor):
 
 .. rst-class:: setup doc-aside

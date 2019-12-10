@@ -19,9 +19,8 @@ class AccountAnalyticLine(models.Model):
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
-    timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
+    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
 
-    @api.multi
     @api.depends('so_line.product_id', 'project_id', 'task_id')
     def _compute_timesheet_invoice_type(self):
         for timesheet in self:
@@ -36,6 +35,8 @@ class AccountAnalyticLine(models.Model):
                     elif timesheet.so_line.product_id.invoice_policy == 'order':
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
+            else:
+                timesheet.timesheet_invoice_type = False
 
     @api.onchange('employee_id')
     def _onchange_task_id_employee_id(self):
@@ -54,14 +55,12 @@ class AccountAnalyticLine(models.Model):
                 if timesheet.so_line not in timesheet.project_id.mapped('sale_line_employee_ids.sale_line_id') | timesheet.task_id.sale_line_id | timesheet.project_id.sale_line_id:
                     raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
 
-    @api.multi
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
         self._check_can_write(values)
         result = super(AccountAnalyticLine, self).write(values)
         return result
 
-    @api.multi
     def _check_can_write(self, values):
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
             if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']]):
@@ -77,7 +76,6 @@ class AccountAnalyticLine(models.Model):
             values['so_line'] = self._timesheet_determine_sale_line(task, employee).id
         return values
 
-    @api.multi
     def _timesheet_postprocess_values(self, values):
         result = super(AccountAnalyticLine, self)._timesheet_postprocess_values(values)
         # (re)compute the sale line
@@ -107,3 +105,11 @@ class AccountAnalyticLine(models.Model):
             elif task.billable_type == 'task_rate':
                 return task.sale_line_id
         return self.env['sale.order.line']
+
+    def _timesheet_get_portal_domain(self):
+        """ Only the timesheets with a product invoiced on delivered quantity are concerned.
+            since in ordered quantity, the timesheet quantity is not invoiced,
+            thus there is no meaning of showing invoice with ordered quantity.
+        """
+        domain = super(AccountAnalyticLine, self)._timesheet_get_portal_domain()
+        return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable'])]])

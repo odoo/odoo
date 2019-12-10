@@ -20,6 +20,7 @@ from odoo import tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.osv import expression
 from odoo.tools.translate import _
+from odoo.tools.misc import get_lang
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError, ValidationError
 
@@ -154,13 +155,11 @@ class Attendee(models.Model):
                 values['common_name'] = values.get("common_name")
         return super(Attendee, self).create(vals_list)
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    @api.multi
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False, force_event_id=None):
         """ Send mail for event invitation to event attendees.
             :param template_xmlid: xml id of the email template to use to send the invitation
             :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
@@ -174,7 +173,7 @@ class Attendee(models.Model):
         invitation_template = self.env.ref(template_xmlid)
 
         # get ics file for all meetings
-        ics_files = self.mapped('event_id')._get_ics_file()
+        ics_files = force_event_id._get_ics_file() if force_event_id else self.mapped('event_id')._get_ics_file()
 
         # prepare rendering context for mail template
         colors = {
@@ -188,7 +187,8 @@ class Attendee(models.Model):
             'color': colors,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
-            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069')
+            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069'),
+            'force_event_id': force_event_id,
         })
         invitation_template = invitation_template.with_context(rendering_context)
 
@@ -197,7 +197,8 @@ class Attendee(models.Model):
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
-                ics_file = ics_files.get(attendee.event_id.id)
+                event_id = force_event_id.id if force_event_id else attendee.event_id.id
+                ics_file = ics_files.get(event_id)
 
                 email_values = {
                     'model': None,  # We don't want to have the mail in the tchatter while in queue!
@@ -207,37 +208,33 @@ class Attendee(models.Model):
                     email_values['attachment_ids'] = [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
-                                'datas_fname': 'invitation.ics',
                                 'datas': base64.b64encode(ics_file)})
                     ]
                 mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
         if force_send and mail_ids:
-            res = self.env['mail.mail'].browse(mail_ids).send()
+            res = self.env['mail.mail'].sudo().browse(mail_ids).send()
 
         return res
 
-    @api.multi
     def do_tentative(self):
         """ Makes event invitation as Tentative. """
         return self.write({'state': 'tentative'})
 
-    @api.multi
     def do_accept(self):
         """ Marks event invitation as Accepted. """
         result = self.write({'state': 'accepted'})
         for attendee in self:
             if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
         return result
 
-    @api.multi
     def do_decline(self):
         """ Marks event invitation as Declined. """
         res = self.write({'state': 'declined'})
         for attendee in self:
             if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
         return res
 
 
@@ -246,7 +243,7 @@ class AlarmManager(models.AbstractModel):
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 
-    def get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
+    def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
         result = {}
         delta_request = """
             SELECT
@@ -326,6 +323,12 @@ class AlarmManager(models.AbstractModel):
                 'rrule': rule
             }
 
+        # determine accessible events
+        events = self.env['calendar.event'].browse(result)
+        result = {
+            key: result[key]
+            for key in set(events._filter_access_rules('read').ids)
+        }
         return result
 
     def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
@@ -377,7 +380,7 @@ class AlarmManager(models.AbstractModel):
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
 
-        all_meetings = self.get_next_potential_limit_alarm('email', seconds=cron_interval)
+        all_meetings = self._get_next_potential_limit_alarm('email', seconds=cron_interval)
 
         for meeting in self.env['calendar.event'].browse(all_meetings):
             max_delta = all_meetings[meeting.id]['max_duration']
@@ -407,7 +410,7 @@ class AlarmManager(models.AbstractModel):
         if not partner:
             return []
 
-        all_meetings = self.get_next_potential_limit_alarm('notification', partner_id=partner.id)
+        all_meetings = self._get_next_potential_limit_alarm('notification', partner_id=partner.id)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
         for event_id in all_meetings:
             max_delta = all_meetings[event_id]['max_duration']
@@ -439,7 +442,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.alarm_type == 'email':
-            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True, force_event_id=meeting)
         return result
 
     def do_notif_reminder(self, alert):
@@ -453,6 +456,7 @@ class AlarmManager(models.AbstractModel):
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {
+                'alarm_id': alarm.id,
                 'event_id': meeting.id,
                 'title': meeting.name,
                 'message': message,
@@ -465,7 +469,7 @@ class AlarmManager(models.AbstractModel):
         notifications = []
         users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
         for user in users:
-            notif = self.sudo(user.id).get_next_notif()
+            notif = self.with_user(user).get_next_notif()
             notifications.append([(self._cr.dbname, 'calendar.alarm', user.partner_id.id), notif])
         if len(notifications) > 0:
             self.env['bus.bus'].sendmany(notifications)
@@ -487,10 +491,10 @@ class Alarm(models.Model):
             else:
                 alarm.duration_minutes = 0
 
-    _interval_selection = {'minutes': 'Minute(s)', 'hours': 'Hour(s)', 'days': 'Day(s)'}
+    _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}
 
     name = fields.Char('Name', translate=True, required=True)
-    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email', oldname='type')
+    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
@@ -514,13 +518,11 @@ class Alarm(models.Model):
         self._update_cron()
         return result
 
-    @api.multi
     def write(self, values):
         result = super(Alarm, self).write(values)
         self._update_cron()
         return result
 
-    @api.multi
     def unlink(self):
         result = super(Alarm, self).unlink()
         self._update_cron()
@@ -547,13 +549,13 @@ class Meeting(models.Model):
     """
 
     _name = 'calendar.event'
-    _description = "Event"
+    _description = "Calendar Event"
     _order = "id desc"
     _inherit = ["mail.thread"]
 
     @api.model
     def default_get(self, fields):
-        # super default_model='crm.lead' for easier use in adddons
+        # super default_model='crm.lead' for easier use in addons
         if self.env.context.get('default_res_model') and not self.env.context.get('default_res_model_id'):
             self = self.with_context(
                 default_res_model_id=self.env['ir.model'].sudo().search([
@@ -583,14 +585,12 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
-    @api.multi
     def _get_recurrent_dates_by_event(self):
         """ Get recurrent start and stop dates based on Rule string"""
         start_dates = self._get_recurrent_date_by_event(date_field='start')
         stop_dates = self._get_recurrent_date_by_event(date_field='stop')
         return list(zip(start_dates, stop_dates))
 
-    @api.multi
     def _get_recurrent_date_by_event(self, date_field='start'):
         """ Get recurrent dates based on Rule string and all event where recurrent_id is child
 
@@ -643,7 +643,6 @@ class Meeting(models.Model):
             return timezone.localize(d.replace(tzinfo=None), is_dst=True).astimezone(pytz.UTC)
         return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
-    @api.multi
     def _get_recurrency_end_date(self):
         """ Return the last date a recurring event happens, according to its end_type. """
         self.ensure_one()
@@ -673,7 +672,6 @@ class Meeting(models.Model):
             return computed_final_date or deadline
         return final_date
 
-    @api.multi
     def _find_my_attendee(self):
         """ Return the first attendee where the user connected has been invited
             from all the meeting_ids in parameters.
@@ -689,18 +687,8 @@ class Meeting(models.Model):
         """ get current date and time format, according to the context lang
             :return: a tuple with (format date, format time)
         """
-        lang = self._context.get("lang")
-        lang_params = {}
-        if lang:
-            record_lang = self.env['res.lang'].search([("code", "=", lang)], limit=1)
-            lang_params = {
-                'date_format': record_lang.date_format,
-                'time_format': record_lang.time_format
-            }
-
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
-        return (format_date, format_time)
+        lang = get_lang(self.env)
+        return (lang.date_format, lang.time_format)
 
     @api.model
     def _get_recurrent_fields(self):
@@ -732,7 +720,7 @@ class Meeting(models.Model):
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
-            duration = date + timedelta(hours=zduration)
+            duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
             display_time = _(u"%s at (%s To %s) (%s)") % (
                 date_str,
@@ -767,6 +755,11 @@ class Meeting(models.Model):
             for event in self:
                 if event.partner_ids.filtered(lambda s: s.id == partner_id):
                     event.is_highlighted = True
+                else:
+                    event.is_highlighted = False
+        else:
+            for event in self:
+                event.is_highlighted = False
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
@@ -786,7 +779,7 @@ class Meeting(models.Model):
     event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
-    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
+    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]})
     location = fields.Char('Location', states={'done': [('readonly', True)]}, tracking=True, help="Location of Event")
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
 
@@ -802,10 +795,10 @@ class Meeting(models.Model):
     # RECURRENCE FIELD
     rrule = fields.Char('Recurrent Rule', compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     rrule_type = fields.Selection([
-        ('daily', 'Day(s)'),
-        ('weekly', 'Week(s)'),
-        ('monthly', 'Month(s)'),
-        ('yearly', 'Year(s)')
+        ('daily', 'Days'),
+        ('weekly', 'Weeks'),
+        ('monthly', 'Months'),
+        ('yearly', 'Years')
     ], string='Recurrence', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
     recurrency = fields.Boolean('Recurrent', help="Recurrent Meeting")
     recurrent_id = fields.Integer('Recurrent ID')
@@ -826,7 +819,7 @@ class Meeting(models.Model):
     month_by = fields.Selection([
         ('date', 'Date of month'),
         ('day', 'Day of month')
-    ], string='Option', default='date', oldname='select1')
+    ], string='Option', default='date')
     day = fields.Integer('Date of month', default=1)
     week_list = fields.Selection([
         ('MO', 'Monday'),
@@ -855,25 +848,21 @@ class Meeting(models.Model):
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
     is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='Is the Event Highlighted')
 
-    @api.multi
     def _compute_attendee(self):
         for meeting in self:
             attendee = meeting._find_my_attendee()
             meeting.is_attendee = bool(attendee)
             meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
-    @api.multi
     def _compute_display_time(self):
         for meeting in self:
             meeting.display_time = self._get_display_time(meeting.start, meeting.stop, meeting.duration, meeting.allday)
 
-    @api.multi
     @api.depends('allday', 'start_date', 'start_datetime')
     def _compute_display_start(self):
         for meeting in self:
             meeting.display_start = meeting.start_date if meeting.allday else meeting.start_datetime
 
-    @api.multi
     @api.depends('allday', 'start', 'stop')
     def _compute_dates(self):
         """ Adapt the value of start_date(time)/stop_date(time) according to start/stop fields and allday. Also, compute
@@ -895,7 +884,6 @@ class Meeting(models.Model):
 
                 meeting.duration = self._get_duration(meeting.start, meeting.stop)
 
-    @api.multi
     def _inverse_dates(self):
         for meeting in self:
             if meeting.allday:
@@ -930,7 +918,6 @@ class Meeting(models.Model):
             else:
                 meeting.rrule = ''
 
-    @api.multi
     def _inverse_rrule(self):
         for meeting in self:
             if meeting.rrule:
@@ -962,7 +949,11 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
+            # Round the duration (in hours) to the minute to avoid weird situations where the event
+            # stops at 4:19:59, later displayed as 4:19.
+            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            if self.allday:
+                self.stop -= timedelta(seconds=1)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
@@ -978,7 +969,6 @@ class Meeting(models.Model):
     # Calendar Business, Reccurency, ...
     ####################################################
 
-    @api.multi
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each meeting
@@ -1039,7 +1029,6 @@ class Meeting(models.Model):
 
         return result
 
-    @api.multi
     def create_attendees(self):
         current_user = self.env.user
         result = {}
@@ -1054,6 +1043,9 @@ class Meeting(models.Model):
                     'event_id': meeting.id,
                 }
 
+                if self._context.get('google_internal_event_id', False):
+                    values['google_internal_event_id'] = self._context.get('google_internal_event_id')
+
                 # current user don't have to accept his own meeting
                 if partner == self.env.user.partner_id:
                     values['state'] = 'accepted'
@@ -1063,11 +1055,13 @@ class Meeting(models.Model):
                 meeting_attendees |= attendee
                 meeting_partners |= partner
 
-            if meeting_attendees:
+            if meeting_attendees and not self._context.get('detaching'):
                 to_notify = meeting_attendees.filtered(lambda a: a.email != current_user.email)
                 to_notify._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
 
+            if meeting_attendees:
                 meeting.write({'attendee_ids': [(4, meeting_attendee.id) for meeting_attendee in meeting_attendees]})
+
             if meeting_partners:
                 meeting.message_subscribe(partner_ids=meeting_partners.ids)
 
@@ -1090,7 +1084,6 @@ class Meeting(models.Model):
             }
         return result
 
-    @api.multi
     def get_search_fields(self, order_fields, r_date=None):
         sort_fields = {}
         for field in order_fields:
@@ -1108,7 +1101,6 @@ class Meeting(models.Model):
             sort_fields['sort_start'] = display_start.replace(' ', '').replace('-', '') if display_start else False
         return sort_fields
 
-    @api.multi
     def get_recurrent_ids(self, domain, order=None):
         """ Gives virtual event ids for recurring events. This method gives ids of dates
             that comes between start date and end date of calendar views
@@ -1235,7 +1227,6 @@ class Meeting(models.Model):
             ]
         return [r['id'] for r in sorted(result_data, key=key)]
 
-    @api.multi
     def _rrule_serialize(self):
         """ Compute rule string according to value type RECUR of iCalendar
             :return: string containing recurring rule (empty if no rule)
@@ -1346,7 +1337,6 @@ class Meeting(models.Model):
             data['end_type'] = 'end_date'
         return data
 
-    @api.multi
     def get_interval(self, interval, tz=None):
         """ Format and localize some dates to be used in email templates
             :param string interval: Among 'day', 'month', 'dayname' and 'time' indicating the desired formatting
@@ -1366,11 +1356,11 @@ class Meeting(models.Model):
 
         elif interval == 'month':
             # Localized month name and year
-            result = babel.dates.format_date(date=date, format='MMMM y', locale=self._context.get('lang') or 'en_US')
+            result = babel.dates.format_date(date=date, format='MMMM y', locale=get_lang(self.env).code)
 
         elif interval == 'dayname':
             # Localized day name
-            result = babel.dates.format_date(date=date, format='EEEE', locale=self._context.get('lang') or 'en_US')
+            result = babel.dates.format_date(date=date, format='EEEE', locale=get_lang(self.env).code)
 
         elif interval == 'time':
             # Localized time
@@ -1380,7 +1370,6 @@ class Meeting(models.Model):
 
         return result
 
-    @api.multi
     def get_display_time_tz(self, tz=False):
         """ get the display_time of the meeting, forcing the timezone. This method is called from email template, to not use sudo(). """
         self.ensure_one()
@@ -1388,7 +1377,6 @@ class Meeting(models.Model):
             self = self.with_context(tz=tz)
         return self._get_display_time(self.start, self.stop, self.duration, self.allday)
 
-    @api.multi
     def detach_recurring_event(self, values=None):
         """ Detach a virtual recurring event by duplicating the original and change reccurent values
             :param values : dict of value to override on the detached event
@@ -1415,9 +1403,8 @@ class Meeting(models.Model):
             # do not copy the id
             if data.get('id'):
                 del data['id']
-            return meeting_origin.copy(default=data)
+            return meeting_origin.with_context(detaching=True).copy(default=data)
 
-    @api.multi
     def action_detach_recurring_event(self):
         meeting = self.detach_recurring_event()
         return {
@@ -1429,13 +1416,11 @@ class Meeting(models.Model):
             'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
         }
 
-    @api.multi
     def action_open_calendar_event(self):
         if self.res_model and self.res_id:
             return self.env[self.res_model].browse(self.res_id).get_formview_action()
         return False
 
-    @api.multi
     def action_sendmail(self):
         email = self.env.user.email
         if email:
@@ -1447,7 +1432,6 @@ class Meeting(models.Model):
     # Messaging
     ####################################################
 
-    @api.multi
     def _get_message_unread(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
         real = self.browse(set(id_map.values()))
@@ -1459,7 +1443,6 @@ class Meeting(models.Model):
             event.message_unread_counter = rec.message_unread_counter
             event.message_unread = rec.message_unread
 
-    @api.multi
     def _get_message_needaction(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
         real = self.browse(set(id_map.values()))
@@ -1471,7 +1454,6 @@ class Meeting(models.Model):
             event.message_needaction_counter = rec.message_needaction_counter
             event.message_needaction = rec.message_needaction
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         thread_id = self.id
@@ -1483,17 +1465,14 @@ class Meeting(models.Model):
             self = self.with_context(context)
         return super(Meeting, self.browse(thread_id)).message_post(**kwargs)
 
-    @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         records = self.browse(get_real_ids(self.ids))
         return super(Meeting, records).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
 
-    @api.multi
     def _message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, customer_ids=None):
         records = self.browse(get_real_ids(self.ids))
         return super(Meeting, records)._message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, customer_ids=customer_ids)
 
-    @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
         records = self.browse(get_real_ids(self.ids))
         return super(Meeting, records).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
@@ -1502,7 +1481,6 @@ class Meeting(models.Model):
     # ORM Overrides
     ####################################################
 
-    @api.multi
     def get_metadata(self):
         real = self.browse({calendar_id2real_id(x) for x in self.ids})
         return super(Meeting, real).get_metadata()
@@ -1516,7 +1494,6 @@ class Meeting(models.Model):
                         arg[2][n] = calendar_id.split('-')[0]
         return super(Meeting, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    @api.multi
     def write(self, values):
         # FIXME: neverending recurring events
         if 'rrule' in values:
@@ -1635,11 +1612,31 @@ class Meeting(models.Model):
                 self.env['calendar.alarm_manager']._notify_next_alarm(meeting.partner_ids.ids)
         return meeting
 
-    @api.multi
-    def export_data(self, fields_to_export, raw_data=False):
+    def export_data(self, fields_to_export):
         """ Override to convert virtual ids to ids """
         records = self.browse(set(get_real_ids(self.ids)))
-        return super(Meeting, records).export_data(fields_to_export, raw_data)
+        return super(Meeting, records).export_data(fields_to_export)
+
+    def _read(self, fields):
+        select = [(x, calendar_id2real_id(x)) for x in self.ids]
+        result = super(Meeting, self.browse(real_id for calendar_id, real_id in select))._read(fields)
+        for calendar_id, real_id in select:
+            if real_id != calendar_id:
+                calendar = self.browse(calendar_id)
+                real = self.browse(real_id)
+                ls = calendar_id2real_id(calendar_id, with_date=True)
+                for field in fields:
+                    f = self._fields[field]
+                    if field in ('start', 'start_date', 'start_datetime'):
+                        value = ls[1]
+                    elif field in ('stop', 'stop_date', 'stop_datetime'):
+                        value = ls[2]
+                    elif field == 'display_time':
+                        value = self._get_display_time(ls[1], ls[2], real.duration, real.allday)
+                    else:
+                        value = self.env.cache.get(real, f)
+                    self.env.cache.set(calendar, f, value)
+        return result
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -1647,7 +1644,6 @@ class Meeting(models.Model):
             raise UserError(_('Group by date is not supported, use the calendar view instead.'))
         return super(Meeting, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if not fields:
             fields = list(self._fields)
@@ -1709,7 +1705,6 @@ class Meeting(models.Model):
                     del r[k]
         return result
 
-    @api.multi
     def unlink(self, can_be_deleted=True):
         # Get concerned attendees to notify them if there is an alarm on the unlinked events,
         # as it might have changed their next event notification
@@ -1779,7 +1774,6 @@ class Meeting(models.Model):
             return events[offset: offset + limit].ids
         return events.ids
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -1816,3 +1810,12 @@ class Meeting(models.Model):
             if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
                 rule_str += ';COUNT=100'
         return rule_str
+
+    def change_attendee_status(self, status):
+        attendee = self.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
+        if status == 'accepted':
+            return attendee.do_accept()
+        elif status == 'declined':
+            return attendee.do_decline()
+        else:
+            return attendee.do_tentative()

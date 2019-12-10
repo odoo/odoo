@@ -350,7 +350,7 @@ QUnit.module('Views', {
             'There should be two modals');
 
         var $second_modal = $modals.not($modal);
-        await testUtils.dom.click($second_modal.find('.o_list_view.table.table-sm.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]'));
+        await testUtils.dom.click($second_modal.find('.o_list_table.table.table-sm.table-striped.o_list_table_ungrouped .o_data_row input[type=checkbox]'));
 
         await testUtils.dom.click($second_modal.find('.o_select_button'));
 
@@ -411,8 +411,10 @@ QUnit.module('Views', {
                             'The correct _view_ref should have been sent to the server, first time');
                     }
                     if (ev.data.modelName === 'badassery') {
-                        assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_other_tree_view'},
-                            'The correct _view_ref should have been sent to the server for the subview');
+                        assert.deepEqual(evaluatedContext, {
+                            base_model_name: 'instrument',
+                            tree_view_ref: 'some_other_tree_view',
+                        }, 'The correct _view_ref should have been sent to the server for the subview');
                     }
                 },
             },
@@ -529,13 +531,12 @@ QUnit.module('Views', {
             },
         });
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="instrument"] .o_input'));
+        await testUtils.fields.many2one.clickOpenDropdown('instrument');
 
         assert.notOk($('.ui-autocomplete a:contains(Create and Edit)').length,
             'Create and edit not present in dropdown');
 
-        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
-            ['mouseenter', 'click']);
+        await testUtils.fields.many2one.clickItem('instrument', 'Search More...');
 
         var $modal = $('.modal-dialog.modal-lg');
 

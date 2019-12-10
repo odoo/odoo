@@ -16,7 +16,6 @@ class ResConfigSettings(models.TransientModel):
     available_threshold = fields.Float(string='Availability Threshold')
     website_warehouse_id = fields.Many2one('stock.warehouse', related='website_id.warehouse_id', domain="[('company_id', '=', website_company_id)]", readonly=False)
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         IrDefault = self.env['ir.default'].sudo()

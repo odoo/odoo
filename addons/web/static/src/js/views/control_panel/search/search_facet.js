@@ -10,6 +10,8 @@ var SearchFacet = Widget.extend({
     template: 'SearchView.SearchFacet',
     events: _.extend({}, Widget.prototype.events, {
         'click .o_facet_remove': '_onFacetRemove',
+        'compositionend': '_onCompositionend',
+        'compositionstart': '_onCompositionstart',
         'keydown': '_onKeydown',
     }),
     /**
@@ -26,6 +28,7 @@ var SearchFacet = Widget.extend({
         });
         this.separator = this._getSeparator();
         this.icon = this._getIcon();
+        this._isComposing = false;
     },
 
     //--------------------------------------------------------------------------
@@ -45,10 +48,33 @@ var SearchFacet = Widget.extend({
         }
         var description = filter.description;
         if (filter.hasOptions) {
-            var optionValue =_.findWhere(filter.options, {
-                optionId: filter.currentOptionId,
-            });
-            description += ': ' + optionValue.description;
+            if (filter.type === 'filter') {
+                const optionDescriptions = [];
+                const sortFunction = (o1, o2) =>
+                    filter.options.findIndex(o => o.optionId === o1) - filter.options.findIndex(o => o.optionId === o2);
+                const p = _.partition([...filter.currentOptionIds], optionId =>
+                    filter.options.find(o => o.optionId === optionId).groupId === 1);
+                const yearIds = p[1].sort(sortFunction);
+                const otherOptionIds = p[0].sort(sortFunction);
+                // the following case corresponds to years selected only
+                if (otherOptionIds.length === 0) {
+                    yearIds.forEach(yearId => {
+                        const d = filter.basicDomains[yearId];
+                        optionDescriptions.push(d.description);
+                    });
+                } else {
+                    otherOptionIds.forEach(optionId => {
+                        yearIds.forEach(yearId => {
+                            const d = filter.basicDomains[yearId + '__' + optionId];
+                            optionDescriptions.push(d.description);
+                        });
+                    });
+                }
+                description += ': ' + optionDescriptions.join('/');
+            } else {
+                description = description += ': ' +
+                                filter.options.find(o => o.optionId === filter.optionId).description;
+            }
         }
         if (filter.type === 'timeRange') {
             var timeRangeValue =_.findWhere(filter.timeRangeOptions, {
@@ -107,6 +133,20 @@ var SearchFacet = Widget.extend({
 
     /**
      * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionend: function (ev) {
+        this._isComposing = false;
+    },
+    /**
+     * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstart: function (ev) {
+        this._isComposing = true;
+    },
+    /**
+     * @private
      */
     _onFacetRemove: function () {
         this.trigger_up('facet_removed', {group: this.facet});
@@ -116,6 +156,9 @@ var SearchFacet = Widget.extend({
      * @param {KeyboardEvent} ev
      */
     _onKeydown: function (ev) {
+        if (this._isComposing) {
+            return;
+        }
         switch (ev.which) {
             case $.ui.keyCode.BACKSPACE:
                 this.trigger_up('facet_removed', {group: this.facet});

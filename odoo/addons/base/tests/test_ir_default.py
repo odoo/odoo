@@ -19,8 +19,8 @@ class TestIrDefault(TransactionCase):
 
         # create some default value for some model
         IrDefault1 = self.env['ir.default']
-        IrDefault2 = IrDefault1.sudo(user2)
-        IrDefault3 = IrDefault1.sudo(user3)
+        IrDefault2 = IrDefault1.with_user(user2)
+        IrDefault3 = IrDefault1.with_user(user3)
 
         # set a default value for all users
         IrDefault1.search([('field_id.model', '=', 'res.partner')]).unlink()

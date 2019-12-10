@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
     service_tracking = fields.Selection([
         ('no', 'Don\'t create task'),
         ('task_global_project', 'Create a task in an existing project'),
-        ('task_in_project', 'Create a task in sale order\'s project'),
+        ('task_in_project', 'Create a task in sales order\'s project'),
         ('project_only', 'Create a new project but no task'),
         ], string="Service Tracking", default="no",
         help="On Sales order confirmation, this product can generate a project and/or task. \
@@ -33,7 +33,6 @@ class ProductTemplate(models.Model):
         'project.project', 'Project Template', company_dependent=True, domain=[('billable_type', '=', 'no')], copy=True,
         help='Select a non billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
 
-    @api.multi
     def _compute_visible_expense_policy(self):
         super(ProductTemplate, self)._compute_visible_expense_policy()
 
@@ -92,10 +91,12 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         res = super(ProductTemplate, self)._onchange_type()
-        if self.type == 'service':
+        if self.type == 'service' and not self.invoice_policy:
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
-        elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
+        elif self.type == 'service' and self.invoice_policy == 'order':
+            self.service_policy = 'ordered_timesheet'
+        elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
         return res
 

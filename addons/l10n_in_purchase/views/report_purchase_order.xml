@@ -2,15 +2,30 @@
 <odoo>
 
     <template id="gst_report_purchaseorder_document_inherit" inherit_id="purchase.report_purchaseorder_document">
-        <xpath expr="//tr[@t-foreach='o.order_line']/td[1]" position="replace">
-
-            <td><span t-field="line.name"/><t t-if="line.product_id.l10n_in_hsn_code and o.company_id.country_id.code == 'IN'"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="line.product_id.l10n_in_hsn_code"/></h6></t></td>
+        <xpath expr="//t[@t-foreach='o.order_line']//td[@id='product']" position="replace">
+            <td>
+                <span t-field="line.name"/>
+                <t t-if="line.product_id.l10n_in_hsn_code and o.company_id.country_id.code == 'IN'">
+                    <h6>
+                        <strong class="ml16">HSN/SAC Code:</strong>
+                        <span t-field="line.product_id.l10n_in_hsn_code"/>
+                    </h6>
+                </t>
+            </td>
         </xpath>
     </template>
 
     <template id="gst_report_purchasequotation_document_inherit" inherit_id="purchase.report_purchasequotation_document">
-        <xpath expr="//tr[@t-foreach='o.order_line']/td[1]" position="replace">
-            <td><span t-field="order_line.name"/><t t-if="order_line.product_id.l10n_in_hsn_code and o.company_id.country_id.code == 'IN'"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="order_line.product_id.l10n_in_hsn_code"/></h6></t></td>
+        <xpath expr="//t[@t-foreach='o.order_line']//td[@id='product']" position="replace">
+            <td>
+                <span t-field="order_line.name"/>
+                <t t-if="order_line.product_id.l10n_in_hsn_code and o.company_id.country_id.code == 'IN'">
+                    <h6>
+                        <strong class="ml16">HSN/SAC Code:</strong>
+                        <span t-field="order_line.product_id.l10n_in_hsn_code"/>
+                    </h6>
+                </t>
+            </td>
         </xpath>
     </template>
 

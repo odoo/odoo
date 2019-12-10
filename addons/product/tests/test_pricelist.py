@@ -9,8 +9,8 @@ class TestPricelist(TransactionCase):
     def setUp(self):
         super(TestPricelist, self).setUp()
 
-        self.datacard = self.env.ref('product.product_delivery_02')
-        self.usb_adapter = self.env.ref('product.product_delivery_01')
+        self.datacard = self.env['product.product'].create({'name': 'Office Lamp'})
+        self.usb_adapter = self.env['product.product'].create({'name': 'Office Chair'})
         self.uom_ton = self.env.ref('uom.product_uom_ton')
         self.uom_unit_id = self.ref('uom.product_uom_unit')
         self.uom_dozen_id = self.ref('uom.product_uom_dozen')
@@ -73,7 +73,7 @@ class TestPricelist(TransactionCase):
         # make sure 'tonne' resolves down to 1 'kg'.
         self.uom_ton.write({'rounding': 0.001})
         # setup product stored in 'tonnes', with a discounted pricelist for qty > 3 tonnes
-        spam_id = self.usb_adapter.copy({
+        spam_id = self.env['product.product'].create({
             'name': '1 tonne of spam',
             'uom_id': self.uom_ton.id,
             'uom_po_id': self.uom_ton.id,

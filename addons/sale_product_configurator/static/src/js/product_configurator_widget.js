@@ -1,138 +1,126 @@
 odoo.define('sale_product_configurator.product_configurator', function (require) {
-var relationalFields = require('web.relational_fields');
-var FieldsRegistry = require('web.field_registry');
-var core = require('web.core');
-var _t = core._t;
+var ProductConfiguratorWidget = require('sale.product_configurator');
 
 /**
- * The product configurator widget is a simple FieldMany2One that adds the capability
- * to configure a product_template_id using the product configurator wizard.
+ * Extension of the ProductConfiguratorWidget to support product configuration.
+ * It opens when a configurable product_template is set.
+ * (multiple variants, or custom attributes)
  *
- * !!! It should only be used on a product_template_id field !!!
+ * The product customization information includes :
+ * - is_configurable_product
+ * - product_template_attribute_value_ids
+ *
  */
-var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
-    events: _.extend({}, relationalFields.FieldMany2One.prototype.events, {
-        'click .o_edit_product_configuration': '_onEditProductConfiguration'
-    }),
-
+ProductConfiguratorWidget.include({
     /**
-     * This method will check if the current product_template set on the SO line is configurable
-     * -> If so, we add a 'Edit Configuration' button next to the dropdown.
+     * Override of sale.product_configurator Hook
      *
      * @override
-     */
-    start: function () {
-        var prom = this._super.apply(this, arguments);
-
-        var $inputDropdown = this.$('.o_input_dropdown');
-
-        if (this.recordData.is_configurable_product &&
-            $inputDropdown.length !== 0 &&
-            this.$('.o_edit_product_configuration').length === 0) {
-            var $editConfigurationButton = $('<button>', {
-                type: 'button',
-                class: 'fa fa-pencil btn btn-secondary o_edit_product_configuration',
-                tabindex: '-1',
-                draggable: false,
-                'aria-label': _t('Edit Configuration'),
-                title: _t('Edit Configuration')
-            });
-
-            $inputDropdown.after($editConfigurationButton);
-        }
-        return prom;
+    */
+    _isConfigurableProduct: function () {
+        return this.recordData.is_configurable_product || this._super.apply(this, arguments);
     },
 
     /**
-     * This method is overridden to check to check if the product_template_id
-     * needs configuration or not:
+     * Set restoreProductTemplateId for further backtrack.
+     * Saves the optional products in the widget for future application
+     * post-line configuration.
      *
-     * - The product_template has only one "product.product" and is not dynamic
-     *   -> Set the product_id on the SO line
-     *   -> If the product has optional products, open the configurator in 'options' mode
+     * {OdooEvent ev}
+     *    {Array} ev.data.optionalProducts the various selected optional products
+     *     with their configuration
      *
-     * - The product_template is configurable
-     *   -> Open the product configurator wizard and initialize it with
-     *      the provided product_template_id and its current attribute values
      * @override
-     * @param {OdooEvent} event
-     *   {boolean} event.data.preventProductIdCheck prevent the product configurator widget
-     *     from looping forever when it needs to change the 'product_template_id'
-     *
      * @private
      */
-    _onFieldChanged: function (event) {
-        var self = this;
-        self.restoreProductTemplateId = self.recordData.product_template_id;
+    _onFieldChanged: function (ev) {
+        this.restoreProductTemplateId = this.recordData.product_template_id;
+        this.optionalProducts = (ev.data && ev.data.optionalProducts) || this.optionalProducts;
 
         this._super.apply(this, arguments);
-
-        var $inputDropdown = this.$('.o_input_dropdown');
-        if (event.data.changes.product_template_id
-            && $inputDropdown.length !== 0 &&
-            this.$('.o_edit_product_configuration').length !== 0){
-            this.$('.o_edit_product_configuration').remove();
-        }
-
-        if (!event.data.changes.product_template_id
-            || event.data.preventProductIdCheck){
-            return;
-        }
-
-        var productTemplateId = event.data.changes.product_template_id.id;
-        if (productTemplateId){
-            this._rpc({
-                model: 'product.template',
-                method: 'get_single_product_variant',
-                args: [
-                    productTemplateId
-                ]
-            }).then(function (result){
-                if (result){
-                    self.trigger_up('field_changed', {
-                        dataPointID: event.data.dataPointID,
-                        changes: {
-                            product_id: {id: result.product_id},
-                            product_custom_attribute_value_ids: {
-                                operation: 'DELETE_ALL'
-                            }
-                        },
-                        onSuccess: function () {
-                            if (result.has_optional_products) {
-                                self._openProductConfigurator({
-                                        configuratorMode: 'options',
-                                        default_pricelist_id: self._getPricelistId(),
-                                        default_product_template_id: productTemplateId
-                                    },
-                                    event.data.dataPointID
-                                );
-                            }
-                        }
-                    });
-
-                    self._onSimpleProductFound(result.product_id, event.data.dataPointID);
-                } else {
-                    self._openProductConfigurator({
-                            configuratorMode: 'add',
-                            default_pricelist_id: self._getPricelistId(),
-                            default_product_template_id: productTemplateId
-                        },
-                        event.data.dataPointID
-                    );
-                }
-            });
-        }
     },
 
     /**
-     * Hooking point for other modules
-     *
-     * @param {integer} productId
-     * @param {string} dataPointID
-     *
-     * @private
+    * This method is overridden to check if the product_template_id
+    * needs configuration or not:
+    *
+    * - The product_template has only one "product.product" and is not dynamic
+    *   -> Set the product_id on the SO line
+    *   -> If the product has optional products, open the configurator in 'options' mode
+    *
+    * - The product_template is configurable
+    *   -> Open the product configurator wizard and initialize it with
+    *      the provided product_template_id and its current attribute values
+    *
+    * @override
+    * @private
+    */
+    _onTemplateChange: function (productTemplateId, dataPointId) {
+        var self = this;
+
+        return this._rpc({
+            model: 'product.template',
+            method: 'get_single_product_variant',
+            args: [
+                productTemplateId
+            ]
+        }).then(function (result) {
+            if (result.product_id && !result.has_optional_products) {
+                self.trigger_up('field_changed', {
+                    dataPointID: dataPointId,
+                    changes: {
+                        product_id: {id: result.product_id},
+                        product_custom_attribute_value_ids: {
+                            operation: 'DELETE_ALL'
+                        }
+                    },
+                });
+            } else {
+                return self._openConfigurator(result, productTemplateId, dataPointId);
+            }
+            // always returns true for the moment because no other configurator exists.
+        });
+    },
+
+    /**
+     *  When line is configured, apply the options defined earlier.
+     *  @override
+     *  @private
      */
-    _onSimpleProductFound: function (productId, dataPointID) {},
+    _onLineConfigured: function () {
+        var self = this;
+        this._super.apply(this, arguments);
+        var parentList = self.getParent();
+        if (self.optionalProducts && self.optionalProducts.length !== 0) {
+            self.trigger_up('add_record', {
+                context: self._productsToRecords(self.optionalProducts),
+                forceEditable: 'bottom',
+                allowWarning: true,
+                onSuccess: function () {
+                    // Leave edit mode of one2many list.
+                    parentList.unselectRow();
+                }
+            });
+        } else if (!self._isConfigurableLine() && self._isConfigurableProduct()) {
+            // Leave edit mode of current line if line was configured
+            // only through the product configurator.
+            parentList.unselectRow();
+        }
+    },
+
+    _openConfigurator: function (result, productTemplateId, dataPointId) {
+        if (!result.mode || result.mode === 'configurator') {
+            this._openProductConfigurator({
+                    configuratorMode: result && result.has_optional_products ? 'options' : 'add',
+                    default_pricelist_id: this._getPricelistId(),
+                    default_product_template_id: productTemplateId
+                },
+                dataPointId
+            );
+            return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
+    },
 
     /**
      * Opens the product configurator to allow configuring the product template
@@ -150,26 +138,38 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      * the product_template is reset to its previous value if any.
      *
      * @param {Object} data various "default_" values
-     *  {string} data.configuratorMode 'add' or 'edit'.
+     *  {string} data.configuratorMode 'add' or 'edit' or 'options'.
      * @param {string} dataPointId
      *
      * @private
      */
     _openProductConfigurator: function (data, dataPointId) {
+        this.optionalProducts = undefined;
         var self = this;
         this.do_action('sale_product_configurator.sale_product_configurator_action', {
             additional_context: data,
             on_close: function (result) {
-                if (result && result !== 'special'){
+                if (result && !result.special) {
                     self._addProducts(result, dataPointId);
                 } else {
                     if (self.restoreProductTemplateId) {
+                        // if configurator opened in edit mode.
                         self.trigger_up('field_changed', {
                             dataPointID: dataPointId,
                             preventProductIdCheck: true,
                             changes: {
                                 product_template_id: self.restoreProductTemplateId.data
                             }
+                        });
+                    } else {
+                        // if configurator opened to create line:
+                        // destroy line if configurator closed during configuration process.
+                        self.trigger_up('field_changed', {
+                            dataPointID: dataPointId,
+                            changes: {
+                                product_template_id: false,
+                                product_id: false,
+                            },
                         });
                     }
                 }
@@ -186,6 +186,13 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      * @private
      */
     _onEditProductConfiguration: function () {
+        if (!this.recordData.is_configurable_product) {
+            // if line should be edited by another configurator
+            // or simply inline.
+            this._super.apply(this, arguments);
+            return;
+        }
+        // If line has been set up through the product_configurator:
         this._openProductConfigurator({
                 configuratorMode: 'edit',
                 default_product_template_id: this.recordData.product_template_id.data.id,
@@ -224,24 +231,11 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      * @private
      */
     _addProducts: function (result, dataPointId) {
-        var self = this;
         this.trigger_up('field_changed', {
             dataPointID: dataPointId,
             preventProductIdCheck: true,
-            changes: this._getMainProductChanges(result.mainProduct),
-            onSuccess: function () {
-                if (result.options) {
-                    var parentList = self.getParent();
-                    self.trigger_up('add_record', {
-                        context: self._productsToRecords(result.options),
-                        forceEditable: 'bottom',
-                        allowWarning: true,
-                        onSuccess: function (){
-                            parentList.unselectRow();
-                        }
-                    });
-                }
-            }
+            optionalProducts: result.options,
+            changes: this._getMainProductChanges(result.mainProduct)
         });
     },
 
@@ -281,7 +275,7 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
                 customValuesCommands.push({
                     operation: 'CREATE',
                     context: [{
-                        default_attribute_value_id: customValue.attribute_value_id,
+                        default_custom_product_template_attribute_value_id: customValue.custom_product_template_attribute_value_id,
                         default_custom_value: customValue.custom_value
                     }]
                 });
@@ -296,13 +290,13 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
         var noVariantAttributeValues = mainProduct.no_variant_attribute_values;
         var noVariantCommands = [{operation: 'DELETE_ALL'}];
         if (noVariantAttributeValues && noVariantAttributeValues.length !== 0) {
-            var res_ids = _.map(noVariantAttributeValues, function (noVariantValue) {
+            var resIds = _.map(noVariantAttributeValues, function (noVariantValue) {
                 return {id: parseInt(noVariantValue.value)};
             });
 
             noVariantCommands.push({
                 operation: 'ADD_M2M',
-                ids: res_ids
+                ids: resIds
             });
         }
 
@@ -334,7 +328,7 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      */
     _productsToRecords: function (products) {
         var records = [];
-        _.each(products, function (product){
+        _.each(products, function (product) {
             var record = {
                 default_product_id: product.product_id,
                 default_product_template_id: product.product_template_id,
@@ -342,92 +336,36 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
             };
 
             if (product.no_variant_attribute_values) {
-                var default_product_no_variant_attribute_values = [];
-                _.each(product.no_variant_attribute_values, function (attribute_value) {
-                        default_product_no_variant_attribute_values.push(
-                            [4, parseInt(attribute_value.value)]
+                var defaultProductNoVariantAttributeValues = [];
+                _.each(product.no_variant_attribute_values, function (attributeValue) {
+                        defaultProductNoVariantAttributeValues.push(
+                            [4, parseInt(attributeValue.value)]
                         );
                 });
                 record['default_product_no_variant_attribute_value_ids']
-                    = default_product_no_variant_attribute_values;
+                    = defaultProductNoVariantAttributeValues;
             }
 
             if (product.product_custom_attribute_values) {
-                var default_custom_attribute_values = [];
-                _.each(product.product_custom_attribute_values, function (attribute_value) {
-                    default_custom_attribute_values.push(
+                var defaultCustomAttributeValues = [];
+                _.each(product.product_custom_attribute_values, function (attributeValue) {
+                    defaultCustomAttributeValues.push(
                             [0, 0, {
-                                attribute_value_id: attribute_value.attribute_value_id,
-                                custom_value: attribute_value.custom_value
+                                custom_product_template_attribute_value_id: attributeValue.custom_product_template_attribute_value_id,
+                                custom_value: attributeValue.custom_value
                             }]
                         );
                 });
                 record['default_product_custom_attribute_value_ids']
-                    = default_custom_attribute_values;
+                    = defaultCustomAttributeValues;
             }
 
             records.push(record);
         });
 
         return records;
-    },
-
-    /**
-     * Will convert the values contained in the recordData parameter to
-     * a list of '4' operations that can be passed as a 'default_' parameter.
-     *
-     * @param {Object} recordData
-     *
-     * @private
-     */
-    _convertFromMany2Many: function (recordData) {
-        if (recordData) {
-            var convertedValues = [];
-            _.each(recordData.res_ids, function (res_id) {
-                convertedValues.push([4, parseInt(res_id)]);
-            });
-
-            return convertedValues;
-        }
-
-        return null;
-    },
-
-    /**
-     * Will convert the values contained in the recordData parameter to
-     * a list of '0' or '4' operations (based on wether the record is already persisted or not)
-     * that can be passed as a 'default_' parameter.
-     *
-     * @param {Object} recordData
-     *
-     * @private
-     */
-    _convertFromOne2Many: function (recordData) {
-        if (recordData) {
-            var convertedValues = [];
-            _.each(recordData.res_ids, function (res_id) {
-                if (isNaN(res_id)){
-                    _.each(recordData.data, function (record) {
-                        if (record.ref === res_id) {
-                            convertedValues.push([0, 0, {
-                                attribute_value_id: record.data.attribute_value_id.data.id,
-                                custom_value: record.data.custom_value
-                            }]);
-                        }
-                    });
-                } else {
-                    convertedValues.push([4, res_id]);
-                }
-            });
-
-            return convertedValues;
-        }
-
-        return null;
     }
 });
-
-FieldsRegistry.add('product_configurator', ProductConfiguratorWidget);
 
 return ProductConfiguratorWidget;
 

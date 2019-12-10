@@ -11,7 +11,6 @@ var _t = core._t;
 
 
 var MassMailingFieldHtml = FieldHtml.extend({
-    description: "",
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
     jsLibs: [
        '/mass_mailing/static/src/js/mass_mailing_snippets.js',
@@ -93,35 +92,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Add generateOptions options to change wysiwyg configuration:
-     * - Remove table menu in toolbar
-     * - Remove table popover
-     * - Add rules for isEditableNode, the TD must content a not TABLE node as
-     *   children to be editable.
-     *
-     * @override
-     */
-    _getWysiwygOptions: function () {
-        var options = this._super();
-        options.generateOptions = function (options) {
-            options.toolbar = _.filter(options.toolbar, function (item) {
-                return item[0] !== 'table';
-            });
-            delete options.popover.table;
-
-            var isEditableNode = options.isEditableNode;
-            options.isEditableNode = function (node) {
-                if (node.tagName === "TD" && !$(node).children('*:not(table):first').length) {
-                    return false;
-                }
-                return isEditableNode.call(this, node);
-            };
-
-            return options;
-        };
-        return options;
-    },
-    /**
      * Returns true if must force the user to choose a theme.
      *
      * @private
@@ -165,6 +135,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this.value = this.recordData[this.nodeOptions['inline-field']];
         return this._super.apply(this, arguments);
     },
 
@@ -293,12 +270,12 @@ var MassMailingFieldHtml = FieldHtml.extend({
         } else if ($old_layout.length) {
             $contents = ($old_layout.hasClass('oe_structure') ? $old_layout : $old_layout.find('.oe_structure').first()).contents();
         } else {
-            $contents = this.$content.find('.note-editable').contents();
+            $contents = this.$content.find('.o_editable').contents();
         }
 
         $newWrapperContent.append($contents);
         this._switchImages(themeParams, $newWrapperContent);
-        this.$content.find('.note-editable').empty().append($newLayout);
+        this.$content.find('.o_editable').empty().append($newLayout);
         $old_layout.remove();
 
         if (firstChoice) {
@@ -326,6 +303,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (this._isFromInline) {
             this._fromInline();
         }
+        if (this.snippetsLoaded) {
+            this._onSnippetsLoaded(this.snippetsLoaded);
+        }
         this._super();
     },
     /**
@@ -334,6 +314,10 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     _onSnippetsLoaded: function (ev) {
         var self = this;
+        if (!this.$content) {
+            this.snippetsLoaded = ev;
+            return;
+        }
         var $snippetsSideBar = ev.data;
         var $themes = $snippetsSideBar.find("#email_designer_themes").children();
         var $snippets = $snippetsSideBar.find(".oe_snippet");
@@ -341,7 +325,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         if (config.device.isMobile) {
             $snippetsSideBar.hide();
-            console.log(this.$content[0]);
             this.$content.attr('style', 'padding-left: 0px !important');
         }
 
@@ -496,11 +479,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
     },
     /**
      * @override
+     * @param {MouseEvent} ev
      */
-    _onTranslate: function () {
+    _onTranslate: function (ev) {
         this.trigger_up('translate', {
             fieldName: this.nodeOptions['inline-field'],
-            id: this.dataPointID
+            id: this.dataPointID,
+            isComingFromTranslationAlert: false,
         });
     },
 });

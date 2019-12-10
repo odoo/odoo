@@ -3,16 +3,19 @@
 
 from psycopg2 import IntegrityError
 
-from odoo.addons.test_mail.tests import common
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tools.misc import mute_logger
 
 
-class BaseFollowersTest(common.BaseFunctionalTest):
+class BaseFollowersTest(TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(BaseFollowersTest, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls._create_portal_user()
+        cls._create_channel_listener()
+
         Subtype = cls.env['mail.message.subtype']
         cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
         cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test'})
@@ -24,7 +27,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         cls.default_group_subtypes_portal = Subtype.search([('internal', '=', False), ('default', '=', True), '|', ('res_model', '=', 'mail.test.simple'), ('res_model', '=', False)])
 
     def test_field_message_is_follower(self):
-        test_record = self.test_record.sudo(self.user_employee)
+        test_record = self.test_record.with_user(self.user_employee)
         followed_before = test_record.search([('message_is_follower', '=', True)])
         self.assertFalse(test_record.message_is_follower)
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id])
@@ -33,7 +36,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(followed_before | test_record, followed_after)
 
     def test_field_followers(self):
-        test_record = self.test_record.sudo(self.user_employee)
+        test_record = self.test_record.with_user(self.user_employee)
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id], channel_ids=[self.channel_listen.id])
         followers = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
@@ -43,7 +46,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(test_record.message_channel_ids, self.channel_listen)
 
     def test_followers_subtypes_default(self):
-        test_record = self.test_record.sudo(self.user_employee)
+        test_record = self.test_record.with_user(self.user_employee)
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id])
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
@@ -54,19 +57,17 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(follower.subtype_ids, self.default_group_subtypes)
 
     def test_followers_subtypes_default_internal(self):
-        user_portal = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
-
-        test_record = self.test_record.sudo(self.user_employee)
-        test_record.message_subscribe(partner_ids=[user_portal.partner_id.id])
-        self.assertEqual(test_record.message_partner_ids, user_portal.partner_id)
+        test_record = self.test_record.with_user(self.user_employee)
+        test_record.message_subscribe(partner_ids=[self.partner_portal.id])
+        self.assertEqual(test_record.message_partner_ids, self.partner_portal)
         follower = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
             ('res_id', '=', test_record.id),
-            ('partner_id', '=', user_portal.partner_id.id)])
+            ('partner_id', '=', self.partner_portal.id)])
         self.assertEqual(follower.subtype_ids, self.default_group_subtypes_portal)
 
     def test_followers_subtypes_specified(self):
-        test_record = self.test_record.sudo(self.user_employee)
+        test_record = self.test_record.with_user(self.user_employee)
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
@@ -77,7 +78,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(follower.subtype_ids, self.mt_mg_nodef)
 
     def test_followers_multiple_subscription_force(self):
-        test_record = self.test_record.sudo(self.user_employee)
+        test_record = self.test_record.with_user(self.user_employee)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
@@ -90,7 +91,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_noforce(self):
-        test_record = self.test_record.sudo(self.user_employee)
+        test_record = self.test_record.with_user(self.user_employee)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
@@ -116,14 +117,13 @@ class BaseFollowersTest(common.BaseFunctionalTest):
             })
 
 
-class AdvancedFollowersTest(common.BaseFunctionalTest):
+class AdvancedFollowersTest(TestMailCommon):
     @classmethod
     def setUpClass(cls):
         super(AdvancedFollowersTest, cls).setUpClass()
+        cls._create_portal_user()
 
-        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
-
-        cls.test_track = cls.env['mail.test.track'].sudo(cls.user_employee).create({
+        cls.test_track = cls.env['mail.test.track'].with_user(cls.user_employee).create({
             'name': 'Test',
         })
 
@@ -150,22 +150,22 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
 
     def test_auto_subscribe_post(self):
         """ People posting a message are automatically added as followers """
-        self.test_track.sudo(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
+        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
 
     def test_auto_subscribe_post_email(self):
         """ People posting an email are automatically added as followers """
-        self.test_track.sudo(self.user_admin).message_post(body='Coucou hibou', message_type='email')
+        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='email')
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
 
     def test_auto_subscribe_not_on_notification(self):
         """ People posting an automatic notification are not subscribed """
-        self.test_track.sudo(self.user_admin).message_post(body='Coucou hibou', message_type='notification')
+        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='notification')
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
 
     def test_auto_subscribe_responsible(self):
         """ Responsibles are tracked and added as followers """
-        sub = self.env['mail.test.track'].sudo(self.user_employee).create({
+        sub = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Test',
             'user_id': self.user_admin.id,
         })
@@ -183,14 +183,14 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
         """
-        umbrella = self.env['mail.test'].with_context(common.BaseFunctionalTest._test_context).create({
+        umbrella = self.env['mail.test'].with_context(self._test_context).create({
             'name': 'Project-Like',
         })
 
-        umbrella.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
-        self.assertEqual(umbrella.message_partner_ids, self.user_portal.partner_id)
+        umbrella.message_subscribe(partner_ids=[self.partner_portal.id])
+        self.assertEqual(umbrella.message_partner_ids, self.partner_portal)
 
-        sub1 = self.env['mail.test.track'].sudo(self.user_employee).create({
+        sub1 = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Task-Like Test',
             'umbrella_id': umbrella.id,
         })
@@ -198,9 +198,9 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
 
-        self.assertEqual(sub1.message_partner_ids, self.user_portal.partner_id | self.user_employee.partner_id)
+        self.assertEqual(sub1.message_partner_ids, self.partner_portal | self.user_employee.partner_id)
         self.assertEqual(
-            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_portal.partner_id).subtype_ids,
+            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).subtype_ids,
             external_defaults | self.sub_umb1)
         self.assertEqual(
             sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id).subtype_ids,

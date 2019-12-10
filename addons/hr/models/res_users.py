@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 
 
@@ -10,21 +10,23 @@ class User(models.Model):
 
     # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
     employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee')
-    employee_id = fields.Many2one('hr.employee', string="Company employee", compute='_compute_company_employee', store=True)
+    employee_id = fields.Many2one('hr.employee', string="Company employee",
+        compute='_compute_company_employee', search='_search_company_employee', store=False)
 
     job_title = fields.Char(related='employee_id.job_title', readonly=False)
     work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
-    phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
+    employee_phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
-    parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
+    employee_parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
     is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
+    private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
     employee_bank_account_id = fields.Many2one(related='employee_id.bank_account_id', string="Employee's Bank Account Number", related_sudo=False, readonly=False)
@@ -44,23 +46,28 @@ class User(models.Model):
     visa_no = fields.Char(related='employee_id.visa_no', readonly=False, related_sudo=False)
     permit_no = fields.Char(related='employee_id.permit_no', readonly=False, related_sudo=False)
     visa_expire = fields.Date(related='employee_id.visa_expire', readonly=False, related_sudo=False)
-    google_drive_link = fields.Char(related='employee_id.google_drive_link', readonly=False, related_sudo=False)
     additional_note = fields.Text(related='employee_id.additional_note', readonly=False, related_sudo=False)
     barcode = fields.Char(related='employee_id.barcode', readonly=False, related_sudo=False)
     pin = fields.Char(related='employee_id.pin', readonly=False, related_sudo=False)
     certificate = fields.Selection(related='employee_id.certificate', readonly=False, related_sudo=False)
     study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
     study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
-    employee_warning = fields.Char("Missing employee warning", compute='_compute_employee_warning')
+    employee_count = fields.Integer(compute='_compute_employee_count')
+    hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
+    last_activity = fields.Date(related='employee_id.last_activity')
+    last_activity_time = fields.Char(related='employee_id.last_activity_time')
 
-    @api.depends('groups_id', 'employee_ids', 'active')
-    def _compute_employee_warning(self):
-        """ Fill warning only for active internal user (employee) not linked to hr.employee """
+    can_edit = fields.Boolean(compute='_compute_can_edit')
+
+    def _compute_can_edit(self):
+        can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
         for user in self:
-            if not user.employee_ids and not user.share and user.active:
-                user.employee_warning = _("Don't forget to create the linked employee.")
-            else:
-                user.employee_warning = False
+            user.can_edit = can_edit
+
+    @api.depends('employee_ids')
+    def _compute_employee_count(self):
+        for user in self.with_context(active_test=False):
+            user.employee_count = len(user.employee_ids)
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -72,7 +79,11 @@ class User(models.Model):
             'child_ids',
             'employee_id',
             'employee_ids',
-            'parent_id',
+            'employee_parent_id',
+            'hr_presence_state',
+            'last_activity',
+            'last_activity_time',
+            'can_edit',
         ]
 
         hr_writable_fields = [
@@ -92,18 +103,18 @@ class User(models.Model):
             'employee_bank_account_id',
             'employee_country_id',
             'gender',
-            'google_drive_link',
             'identification_id',
             'is_address_home_a_company',
             'job_title',
+            'private_email',
             'km_home_work',
             'marital',
             'mobile_phone',
             'notes',
-            'parent_id',
+            'employee_parent_id',
             'passport_id',
             'permit_no',
-            'phone',
+            'employee_phone',
             'pin',
             'place_of_birth',
             'spouse_birthdate',
@@ -134,14 +145,11 @@ class User(models.Model):
         # We make the front-end aware of those fields by sending all field definitions.
         # Note: limit the `sudo` to the only action of "editing own profile" action in order to
         # avoid breaking `groups` mecanism on res.users form view.
-        context_params = self._context.get('params', {})
-        if view_type == 'form' and context_params.get('id') == self.env.user.id and not self.env.user.share:
-            action_id = self.env['ir.model.data'].xmlid_to_res_id('hr.res_users_action_my', raise_if_not_found=False)
-            if action_id and context_params.get('action') == action_id:
-                self = self.sudo()
+        profile_view = self.env.ref("hr.res_users_view_form_profile")
+        if profile_view and view_id == profile_view.id:
+            self = self.with_user(SUPERUSER_ID)
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
-    @api.multi
     def write(self, vals):
         """
         Synchronize user and its related employee
@@ -161,12 +169,20 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image', 'tz'] if f in vals]:
+        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
             employee_values[fname] = vals[fname]
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')
-            self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
+            if 'image_1920' in vals:
+                without_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '=', False)])
+                with_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '!=', False)])
+                without_image.write(employee_values)
+                if not can_edit_self:
+                    employee_values.pop('image_1920')
+                with_image.write(employee_values)
+            else:
+                self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
         return result
 
     @api.model
@@ -175,20 +191,25 @@ class User(models.Model):
             return self.sudo().env.ref('hr.res_users_action_my').read()[0]
         return super(User, self).action_get()
 
-    @api.depends('company_id', 'employee_ids')
+    @api.depends('employee_ids')
+    @api.depends_context('company')
     def _compute_company_employee(self):
         for user in self:
-            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', user.company_id.id)], limit=1)
+            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
 
-    @api.multi
+    def _search_company_employee(self, operator, value):
+        employees = self.env['hr.employee'].search([
+            ('name', operator, value),
+            '|',
+            ('company_id', '=', self.env.company.id),
+            ('company_id', '=', False)
+        ], order='company_id ASC')
+        return [('id', 'in', employees.mapped('user_id').ids)]
+
     def action_create_employee(self):
         self.ensure_one()
-        form_view = self.env.ref('hr.view_employee_form')
-        return {
-            'name': _('Create Employee'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.employee',
-            'views': [(form_view.id, 'form')],
-            'target': 'new',
-            'context': {'default_user_id': self.id}
-        }
+        self.env['hr.employee'].create(dict(
+            user_id=self.id,
+            name=self.name,
+            **self.env['hr.employee']._sync_user(self)
+        ))

@@ -10,8 +10,8 @@
                 <field name="display_complete" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
                      attrs="{'invisible': [('display_complete', '=', False)]}">
-                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Locate" type="object"/>
-                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action"/>
+                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Location" type="object"/>
+                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -21,19 +21,18 @@
                 </div>
                 <group name="main_group">
                     <group>
-                        <field name="product_id"
-                               help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."
-                               attrs="{'readonly': [('id', '!=', False), ('product_id', '!=', False)]}"/>
+                        <field name="product_id" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <label for="product_qty" attrs="{'invisible': [('display_complete', '=', False)]}"/>
                         <div class="o_row" attrs="{'invisible': [('display_complete', '=', False)]}">
                             <field name="product_qty"/>
                             <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                         </div>
                         <field name="ref"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </group>
                 <notebook attrs="{'invisible': [('display_complete', '=', False)]}">
-                    <page string="Description">
+                    <page string="Description" name="description">
                         <field name="note"/>
                     </page>
                 </notebook>
@@ -51,11 +50,12 @@
         <field name="name">stock.production.lot.tree</field>
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
-            <tree string="Lots/Serial Numbers">
+            <tree string="Lots/Serial Numbers" multi_edit="1">
                 <field name="name"/>
-                <field name="ref"/>
-                <field name="product_id"/>
-                <field name="create_date"/>
+                <field name="ref" optional="show"/>
+                <field name="product_id" readonly="1"/>
+                <field name="create_date" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -64,10 +64,10 @@
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
             <search string="Product Lots Filter">
-                <field name="name" string="Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
+                <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
                 <field name="product_id"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
                 </group>
             </search>
         </field>
@@ -82,7 +82,7 @@
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
-        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True}</field>
+        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a lot/serial number

@@ -4,10 +4,9 @@
 import logging
 import re
 
-from email.utils import formataddr
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import formataddr
 
 _logger = logging.getLogger(__name__)
 
@@ -77,7 +76,6 @@ class SlideChannelInvite(models.TransientModel):
                 values['body'] = template.body_html
         return super(SlideChannelInvite, self).create(values)
 
-    @api.multi
     def action_invite(self):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """

@@ -26,7 +26,7 @@ var ProductConfiguratorFormController = FormController.extend({
      *
      * @override
      */
-    willStart: function (){
+    willStart: function () {
         var def = this._super.apply(this, arguments);
         if (this.initialState.data.product_template_id) {
             return this._configureProduct(
@@ -67,7 +67,7 @@ var ProductConfiguratorFormController = FormController.extend({
     * @override
     */
     _onButtonClicked: function (event) {
-        if (event.stopPropagation){
+        if (event.stopPropagation) {
             event.stopPropagation();
         }
         var attrs = event.data.attrs;
@@ -77,7 +77,7 @@ var ProductConfiguratorFormController = FormController.extend({
             if (!this.$el
                     .parents('.modal')
                     .find('.o_sale_product_configurator_add')
-                    .hasClass('disabled')){
+                    .hasClass('disabled')) {
                 this._handleAdd();
             }
         }
@@ -92,15 +92,15 @@ var ProductConfiguratorFormController = FormController.extend({
         this._super.apply(this, arguments);
 
         var self = this;
-        var product_id = event.data.changes.product_template_id.id;
+        var productId = event.data.changes.product_template_id.id;
 
         // check to prevent traceback when emptying the field
-        if (!product_id) {
+        if (!productId) {
             return;
         }
 
         this._configureProduct(event.data.changes.product_template_id.id)
-            .then(function (){
+            .then(function () {
                 self.renderer.renderConfigurator(self.renderer.configuratorHtml);
             });
     },
@@ -116,7 +116,7 @@ var ProductConfiguratorFormController = FormController.extend({
         return this._rpc({
             route: '/sale_product_configurator/configure',
             params: {
-                product_id: productTemplateId,
+                product_template_id: productTemplateId,
                 pricelist_id: this.renderer.pricelistId,
                 add_qty: data.quantity,
                 product_template_attribute_value_ids: this._getAttributeValueIds(
@@ -247,7 +247,7 @@ var ProductConfiguratorFormController = FormController.extend({
     _onModalClose: function () {
         if (this.renderer.state.context.configuratorMode === 'options'
             && this._wasConfirmed !== true) {
-            this._onAddRootProductOnly();
+              this.do_action({type: 'ir.actions.act_window_close'});
         }
     },
 
@@ -293,7 +293,7 @@ var ProductConfiguratorFormController = FormController.extend({
      * @param {Array} attributeValueIds
      */
     _getAttributeValueIds: function (attributeValueIds) {
-        if (!attributeValueIds || attributeValueIds.length === 0){
+        if (!attributeValueIds || attributeValueIds.length === 0) {
             return false;
         }
 

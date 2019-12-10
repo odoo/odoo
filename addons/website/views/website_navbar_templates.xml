@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Front-end/Back-end integration -->
-    <template id="user_navbar" inherit_id="website.layout">
+    <template id="user_navbar" inherit_id="website.layout" name="User Navbar">
         <xpath expr="//t[@t-set='html_data']" position="after">
             <t t-set="body_classname" t-value="(body_classname if body_classname else '') + (' o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else '')"/>
         </xpath>
@@ -13,7 +13,6 @@
                             <i class="fa fa-th-large"/> WEBSITE
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
                             <t t-as="menu" t-foreach="menu_data['children']">
                                 <a role="menuitem"
                                    t-attf-class="dropdown-item #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
@@ -21,7 +20,7 @@
                                    t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
                                    t-att-data-menu="menu['id']"
                                    t-att-data-menu-xmlid="menu.get('xmlid')"
-                                   t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                   t-att-href="'/web#menu_id=%s&amp;action=%s' % (menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
                                     <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')" role="img" aria-label="Menu" title="Menu"/>
                                     <span class="oe_menu_text">
                                         <t t-esc="menu['name']"/>
@@ -51,7 +50,7 @@
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" href="#" data-action="customize_theme" class="dropdown-item" id="theme_customize">Customize Theme</a>
                             <a role="menuitem" href="#" data-action="ace" class="dropdown-item" id="html_editor">HTML/CSS/JS Editor</a>
-                            <a role="menuitem" href="/web#action=website.action_website_add_features" class="dropdown-item" id="install_apps" context="{'search_default_web_features' : 1}">Add Features</a>
+                            <a role="menuitem" href="/web#action=website.action_website_add_features" class="dropdown-item" id="install_apps">Add Features</a>
                         </div>
                     </li>
                     <!-- Promote -->
@@ -160,12 +159,12 @@
                     <li t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#"><span class="fa fa-pencil mr-2"/>Edit</a>
                     </li>
-                    <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
+                    <li t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
                         <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
                             <span class="sr-only">Toggle Dropdown</span>
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
+                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{backend_menu_id}"
                                    class="dropdown-item" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
                         </div>
                     </li>

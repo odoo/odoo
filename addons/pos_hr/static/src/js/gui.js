@@ -56,7 +56,7 @@ gui.Gui.include({
                 self.show_popup('password',{
                     'title': _t('Password ?'),
                     confirm: function (pw) {
-                        if (pw !== password) {
+                        if (Sha1.hash(pw) !== password) {
                             self.show_popup('error', _t('Incorrect Password'));
                             reject();
                         } else {

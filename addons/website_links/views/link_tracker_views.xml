@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="link_tracker_view_tree" model="ir.ui.view">
+        <field name="name">link.tracker.view.tree.inherit.website.links</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_visit_page']" position="after">
+                <button name="action_visit_page_statistics" class="btn btn-secondary border" type="object" string="Statistics"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

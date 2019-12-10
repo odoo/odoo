@@ -5,10 +5,15 @@ var FormRenderer = require('web.FormRenderer');
 var VariantMixin = require('sale.VariantMixin');
 
 var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
+
+    events: _.extend({}, FormRenderer.prototype.events, VariantMixin.events, {
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
+    }),
+
     /**
      * @override
      */
-    init: function (){
+    init: function () {
         this._super.apply(this, arguments);
         this.pricelistId = this.state.context.default_pricelist_id || 0;
     },
@@ -74,6 +79,17 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
     },
 
     /**
+     * Toggles the add button depending on the possibility of the current
+     * combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        VariantMixin._toggleDisable.apply(this, arguments);
+        $parent.parents('.modal').find('.o_sale_product_configurator_add').toggleClass('disabled', !isCombinationPossible);
+    },
+
+    /**
      * Will fill the custom values input based on the provided initial configuration.
      *
      * @private
@@ -84,7 +100,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
         if (customValueIds) {
             _.each(customValueIds.data, function (customValue) {
                 if (customValue.data.custom_value) {
-                    var attributeValueId = customValue.data.attribute_value_id.data.id;
+                    var attributeValueId = customValue.data.custom_product_template_attribute_value_id.data.id;
                     var $input = self._findRelatedAttributeValueInput(attributeValueId);
                     $input
                         .closest('li[data-attribute_id]')

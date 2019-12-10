@@ -81,7 +81,7 @@ var Model = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 });
 
 /**
- * Only responsability of this component is to display the user interface, and
+ * Only responsibility of this component is to display the user interface, and
  * react to user changes.
  *
  * @class Renderer

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See ICENSE file for full copyright and licensing details.
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 
@@ -13,7 +12,7 @@ class ReturnPickingLine(models.TransientModel):
     _description = 'Return Picking Line'
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
-    quantity = fields.Float("Quantity", digits=dp.get_precision('Product Unit of Measure'), required=True)
+    quantity = fields.Float("Quantity", digits='Product Unit of Measure', required=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='move_id.product_uom', readonly=False)
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
@@ -39,17 +38,20 @@ class ReturnPicking(models.TransientModel):
     move_dest_exists = fields.Boolean('Chained Move Exists', readonly=True)
     original_location_id = fields.Many2one('stock.location')
     parent_location_id = fields.Many2one('stock.location')
+    company_id = fields.Many2one(related='picking_id.company_id')
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
-        domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
+        domain="['|', ('id', '=', original_location_id), '|', '&', ('return_location', '=', True), ('company_id', '=', False), '&', ('return_location', '=', True), ('company_id', '=', company_id)]")
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
         move_dest_exists = False
-        product_return_moves = []
+        product_return_moves = [(5,)]
         if self.picking_id and self.picking_id.state != 'done':
             raise UserError(_("You may only return Done pickings."))
         for move in self.picking_id.move_lines:
+            if move.state == 'cancel':
+                continue
             if move.scrapped:
                 continue
             if move.move_dest_ids:
@@ -161,7 +163,6 @@ class ReturnPicking(models.TransientModel):
         })
         return {
             'name': _('Returned Picking'),
-            'view_type': 'form',
             'view_mode': 'form,tree,calendar',
             'res_model': 'stock.picking',
             'res_id': new_picking_id,

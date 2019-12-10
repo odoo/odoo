@@ -15,13 +15,8 @@ description into a live application, able to interact with every model and
 records in the database.  It is even possible to use the web client to modify
 the interface of the web client.
 
-.. note:: An html version of all docstrings in Odoo is available at:
-
-    .. toctree::
-        :maxdepth: 2
-
-        javascript_api
-
+.. note:: An html version of all js docstrings in Odoo is available at:
+      :ref:`JS API <api/js>`
 
 Overview
 =========
@@ -1218,6 +1213,10 @@ The notification system in Odoo is designed with the following components:
   destroy notifications whenever a request is done (with a custom_event). Note
   that the web client is a service provider.
 
+- a client action *display_notification*: this allows to trigger the display
+  of a notification from python (e.g. in the method called when the user
+  clicked on a button of type object).
+
 - two helper functions in *ServiceMixin*: *do_notify* and *do_warn*
 
 
@@ -1265,6 +1264,21 @@ Here are two examples on how to use these methods:
 
     this.do_warn(_t("Error"), _t("Filter name is required."));
 
+Here an example in python:
+
+.. code-block:: python
+
+    # note that we call _(string) on the text to make sure it is properly translated.
+    def show_notification(self):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('Your signature request has been sent.'),
+                'sticky': False,
+            }
+        }
 
 Systray
 =======
@@ -1421,7 +1435,7 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
 .. raw:: html
 
     <svg width="550" height="173">
-        <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+        <!-- Created with Method Draw - https://github.com/duopixel/Method-Draw/ -->
         <path id="svg_1" d="m147.42498,79.79206c0.09944,-8.18859 -0.06363,-16.38812 0.81774,-24.5623c21.65679,2.68895 43.05815,7.08874 64.35,11.04543c1.14304,-4.01519 0.60504,-7.34585 1.59817,-11.05817c13.67878,7.81176 27.23421,15.73476 40.23409,24.03505c-12.47212,9.41539 -26.77809,17.592 -40.82272,25.96494c-0.4548,-3.89916 -0.90967,-7.79828 -1.36448,-11.69744c-20.69972,3.77225 -42.59036,7.6724 -63.42391,11.12096c-1.41678,-7.95741 -1.37514,-16.62327 -1.38888,-24.84846z" stroke-width="1.5" stroke="#000" fill="#fff"/>
         <rect id="svg_3" height="41" width="110" y="57.5" x="7" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#fff"/>
         <rect stroke="#000" id="svg_5" height="41" width="135" y="20.5" x="328" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="#fff"/>
@@ -1466,6 +1480,8 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
     The JS code for the views has been designed to be usable outside of the
     context of a view manager/action manager.  They could be used in a client action,
     or, they could be displayed in the public website (with some work on the assets).
+
+.. _reference/js/widgets:
 
 Field Widgets
 =============
@@ -1651,6 +1667,23 @@ order.
 
         <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
+- daterange (FieldDateRange)
+    This widget allow user to select start and end date into single picker.
+
+    - Supported field types: *date*, *datetime*
+
+    Options:
+
+    - related_start_date: apply on end date field to get start date value which
+      is used to display range in the picker.
+    - related_end_date: apply on start date field to get end date value which
+      is used to display range in the picker.
+    - picker_options: extra settings for picker.
+
+    .. code-block:: xml
+
+        <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'/>
+
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
     display a currency.  If there is a currency fields given in option, it will
@@ -1744,14 +1777,22 @@ order.
       option is useful to inform the web client that the default field name is
       not the name of the current field, but the name of another field.
 
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box (default value is `image/\*`)
+      (cf: ``accept`` attribute on <input type="file"/>)
+
     .. code-block:: xml
 
-        <field name="image" widget='image' options='{"preview_image":"image_medium"}'/>
+        <field name="image" widget='image' options='{"preview_image":"image_128"}'/>
 
 - binary (FieldBinaryFile)
     Generic widget to allow saving/downloading a binary file.
 
     - Supported field types: *binary*
+
+    Options:
+
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box
+      (cf: ``accept`` attribute on <input type="file"/>)
 
     Attribute:
 
@@ -1910,7 +1951,6 @@ order.
 
     Options:
 
-    - title: title of the bar, displayed on top of the bar options
     - editable: boolean if value is editable
     - current_value: get the current_value from the field that must be present in the view
     - max_value: get the max_value from the field that must be present in the view
@@ -1968,9 +2008,9 @@ order.
 Relational fields
 -----------------
 
-.. autoclass:: web.relational_fields.FieldSelection
+.. class:: web.relational_fields.FieldSelection
 
-    Supported field types: *selection*, *many2one*
+    Supported field types: *selection*
 
     .. attribute:: placeholder
 
@@ -2011,7 +2051,7 @@ Relational fields
 - many2one (FieldMany2One)
     Default widget for many2one fields.
 
-    - Supported field types: *selection, many2one*
+    - Supported field types: *many2one*
 
     Attributes:
 
@@ -2085,6 +2125,11 @@ Relational fields
 
     - Supported field types: *many2many*
 
+    Options:
+
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box
+      (cf: ``accept`` attribute on <input type="file"/>)
+
 - many2many_tags (FieldMany2ManyTags)
     Display many2many as a list of tags.
 
@@ -2098,6 +2143,12 @@ Relational fields
     .. code-block:: xml
 
         <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+
+    - no_edit_color: set to True to remove the possibility to change the color of the tags (default: False).
+
+    .. code-block:: xml
+
+        <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': True}"/>
 
 - form.many2many_tags (FormFieldMany2ManyTags)
     Specialization of many2many_tags widget for form views. It has some extra
@@ -2261,18 +2312,18 @@ do that, several steps should be done.
 For more information, look into the *control_panel.js* file.
 
 .. _.appendTo():
-    http://api.jquery.com/appendTo/
+    https://api.jquery.com/appendTo/
 
 .. _.prependTo():
-    http://api.jquery.com/prependTo/
+    https://api.jquery.com/prependTo/
 
 .. _.insertAfter():
-    http://api.jquery.com/insertAfter/
+    https://api.jquery.com/insertAfter/
 
 .. _.insertBefore():
-    http://api.jquery.com/insertBefore/
+    https://api.jquery.com/insertBefore/
 
 .. _event delegation:
-    http://api.jquery.com/delegate/
+    https://api.jquery.com/delegate/
 
 .. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker

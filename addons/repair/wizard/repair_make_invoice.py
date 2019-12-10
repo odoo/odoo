@@ -10,7 +10,6 @@ class MakeInvoice(models.TransientModel):
 
     group = fields.Boolean('Group by partner invoice address')
 
-    @api.multi
     def make_invoices(self):
         if not self._context.get('active_ids'):
             return {'type': 'ir.actions.act_window_close'}
@@ -26,11 +25,10 @@ class MakeInvoice(models.TransientModel):
         return {
             'domain': [('id', 'in', list(new_invoice.values()))],
             'name': 'Invoices',
-            'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
+            'res_model': 'account.move',
             'view_id': False,
-            'views': [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')],
+            'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (self.env.ref('account.view_move_form').id, 'form')],
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window'
         }

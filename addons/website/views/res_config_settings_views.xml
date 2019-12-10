@@ -26,9 +26,21 @@
                             </div>
                         </div>
                         <h2>Website <button name="action_website_create_new" type="object" string="New" class="ml-2 btn btn-link" icon="fa-plus" groups="!website.group_multi_website"/></h2>
-                        <div class="row mt16 o_settings_container" id="website_settings">
-                            <div class="col-12  o_setting_box" id="website_action_setting">
+                        <div class="row mt16 o_settings_container" id="website_settings_placeholder" attrs="{'invisible': [('website_id', '!=', False)]}">
+                            <div class="col-12 o_setting_box">
+                                <div class="text-muted" groups="website.group_multi_website">
+                                    Select a website to load its settings.
+                                </div>
+                                <div class="text-muted" groups="!website.group_multi_website">
+                                    There is no website available for this company. You could create a new one.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- !! Every fields inside this container should be website specific (related to website record) !! -->
+                        <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
+                            <div class="col-12 o_setting_box" id="website_action_setting" style="margin-left: 30px; margin-bottom: 16px;">
                                 <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fa-globe"/>
+                                <button name="install_theme_on_current_website" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
                                 <button name="%(website.action_website_add_features)d" type="action" string="Add features" class="ml-2 btn btn-secondary" icon="fa-plus"/>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="domain_setting">
@@ -41,7 +53,7 @@
                                     <div class="content-group">
                                         <div class="row mt16">
                                             <label class="col-lg-3 o_light_label" string="Name" for="website_name"/>
-                                            <field name="website_name" attrs="{'required': [('website_id', '!=', False)] }"/>
+                                            <field name="website_name" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
                                         <div class="row">
                                             <label class="col-lg-3 o_light_label" for="favicon" />
@@ -72,13 +84,13 @@
                                             <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"
                                                 attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
-                                        <field name="language_count" invisible="1"/>
-                                        <div class="mt8" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
+                                        <field name="website_language_count" invisible="1"/>
+                                        <div class="mt8" attrs="{'invisible':[('website_language_count', '&lt;', 2)]}">
                                             <label class="o_light_label mr8" string="Default" for="website_default_lang_id"/>
                                             <field name="website_default_lang_id" widget="selection" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="mt8">
                                         <button type="action" name="%(base.action_view_base_language_install)d" string="Install new language" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                 </div>
@@ -114,9 +126,19 @@
                                     <div class="mt8">
                                         <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
                                     </div>
-                                    <div class="content-group">
+                                    <div class="mt8 content-group">
                                         <button type="object" name="open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="website_logo_setting">
+                                <div class="o_setting_right_pane">
+                                    <label for="website_logo"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Display this logo on the website.
+                                    </div>
+                                    <field name="website_logo" widget="image" class="w-25 mt-2"/>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_analytics_setting">
@@ -137,11 +159,35 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/12.0/website/optimize/google_analytics.html"
+                                        <a href="https://www.odoo.com/documentation/user/13.0/website/optimize/google_analytics.html"
                                                 class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Tracking ID
                                         </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_console_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_google_search_console"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_google_search_console"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Monitor Google Search results data
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
+                                            <field name="google_search_console" placeholder="google1234567890123456.html"
+                                                attrs="{'required': [('has_google_search_console', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                    <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                        <small class='text-muted'>
+                                            <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +220,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" groups="website.group_multi_website">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="force_account_per_website_setting"
+                                groups="website.group_multi_website">
                                 <div class="o_setting_left_pane">
                                     <field name="specific_user_account"/>
                                 </div>
@@ -213,7 +261,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="social_media_settings">
                                 <div class="o_setting_left_pane">
                                     <field name="has_social_network"/>
                                 </div>
@@ -245,10 +293,6 @@
                                             <field name="social_youtube"/>
                                         </div>
                                         <div class="row">
-                                            <label for="social_googleplus" string="Google Plus" class="col-md-3 o_light_label"/>
-                                            <field name="social_googleplus"/>
-                                        </div>
-                                        <div class="row">
                                             <label for="social_instagram" string="Instagram" class="col-md-3 o_light_label"/>
                                             <field name="social_instagram"/>
                                         </div>
@@ -274,7 +318,7 @@
                                     <field name="group_multi_website"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Multi-Websites" for="group_multi_website"/>
+                                    <label string="Multi-Website" for="group_multi_website"/>
                                     <div class="text-muted">
                                         Manage multiple websites
                                     </div>
@@ -296,7 +340,7 @@
                                             <field name="google_maps_api_key" attrs="{'required': [('has_google_maps', '=', True)]}" />
                                         </div>
                                     </div>
-                                    <div attrs="{'invisible': [('has_google_maps', '=', False)]}">
+                                    <div class="mt8" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                         <a role="button" class="btn-link" target="_blank"
                                            href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
                                             <i class="fa fa-arrow-right"/>
@@ -357,13 +401,6 @@
             action="action_website_pages_list"
             parent="menu_website_global_configuration"
             sequence="30"
-            />
-
-        <menuitem name="Redirects"
-            id="menu_website_redirect_list"
-            action="action_website_redirect_list"
-            parent="menu_website_global_configuration"
-            sequence="40"
             />
 
         <menuitem name="Menus"

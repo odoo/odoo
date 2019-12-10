@@ -4,7 +4,7 @@
 {
     'name': 'Sales',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'sequence': 17,
     'summary': 'From quotations to invoices',
     'description': """

@@ -22,14 +22,12 @@ class Partner(models.Model):
     # override the field to track the visibility of user
     user_id = fields.Many2one(tracking=True)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
             partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
         return recipients
 
-    @api.multi
     def _message_get_default_recipients(self):
         return {r.id: {
             'partner_ids': [r.id],
@@ -41,6 +39,7 @@ class Partner(models.Model):
     def get_needaction_count(self):
         """ compute the number of needaction of the current user """
         if self.env.user.partner_id:
+            self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
             self.env.cr.execute("""
                 SELECT count(*) as needaction_count
                 FROM mail_message_res_partner_needaction_rel R
@@ -72,10 +71,11 @@ class Partner(models.Model):
         """ Return 'limit'-first partners' id, name and email such that the name or email matches a
             'search' string. Prioritize users, and then extend the research to all partners. """
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
+        search_dom = expression.AND([[('active', '=', True)], search_dom])
         fields = ['id', 'name', 'email']
 
         # Search users
-        domain = expression.AND([[('user_ids.id', '!=', False)], search_dom])
+        domain = expression.AND([[('user_ids.id', '!=', False), ('user_ids.active', '=', True)], search_dom])
         users = self.search_read(domain, fields, limit=limit)
 
         # Search partners if less than 'limit' users found

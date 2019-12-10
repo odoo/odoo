@@ -140,7 +140,7 @@ QUnit.module('GroupByMenu', {
                         assert.strictEqual(ev.data.hasOptions, true);
                         assert.deepEqual(ev.data.options, controlPanelViewParameters.INTERVAL_OPTIONS);
                         assert.strictEqual(ev.data.defaultOptionId, controlPanelViewParameters.DEFAULT_INTERVAL);
-                        assert.strictEqual(ev.data.currentOptionId, false);
+                        assert.strictEqual(ev.data.currentOptionIds.size, 0);
                         groupByMenu.update([{
                             description: 'Super Date',
                             fieldName: 'fieldName',
@@ -148,7 +148,7 @@ QUnit.module('GroupByMenu', {
                             isActive: true,
                             hasOptions: true,
                             options: controlPanelViewParameters.INTERVAL_OPTIONS,
-                            currentOptionId: controlPanelViewParameters.DEFAULT_INTERVAL,
+                            currentOptionIds: new Set([controlPanelViewParameters.DEFAULT_INTERVAL]),
                         }]);
                     },
                 },
@@ -173,6 +173,26 @@ QUnit.module('GroupByMenu', {
             'there should be five options available');
         assert.strictEqual(groupByMenu.$('.o_add_custom_group').length, 0,
             'there should be no more a Add Custome Group submenu');
+
+        groupByMenu.destroy();
+    });
+
+    QUnit.test('custom group by dropdown should not have ID field', async function (assert) {
+        assert.expect(2);
+
+        this.fields.id = {sortable: true, string: 'ID', type: 'integer'};
+
+        var groupByMenu = await createGroupByMenu([], this.fields);
+        // open groupBy menu
+        await testUtils.dom.click(groupByMenu.$('button:first'));
+        // open Add Custom Group submenu
+        await testUtils.dom.click(groupByMenu.$('.o_add_custom_group'))
+
+        assert.containsOnce(groupByMenu, '.o_group_selector option',
+            'groupby menu should have only one option');
+        // custom group by should not have 'ID' field
+        assert.containsNone(groupByMenu, '.o_group_selector option[value="id"]',
+            'id field should not be in custom group by');
 
         groupByMenu.destroy();
     });

@@ -22,10 +22,16 @@ class AlipayTest(PaymentAcquirerCommon):
                                                               ('active', '=', True),
                                                               ('active', '=', False)], limit=1)
         self.alipay = self.env.ref('payment.payment_acquirer_alipay')
+        self.alipay.write({
+            'alipay_merchant_partner_id': 'dummy',
+            'alipay_md5_signature_key': 'dummy',
+            'alipay_seller_email': 'dummy',
+            'state': 'test',
+        })
 
     def test_10_alipay_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        self.assertEqual(self.alipay.environment, 'test', 'test without test environment')
+        self.assertEqual(self.alipay.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -41,7 +47,7 @@ class AlipayTest(PaymentAcquirerCommon):
             'notify_url': urls.url_join(base_url, AlipayController._notify_url),
             'out_trade_no': 'SO12345-1',
             'partner': self.alipay.alipay_merchant_partner_id,
-            'return_url': urls.url_join(base_url, AlipayController._return_url) + '?' + urls.url_encode({'redirect_url': '/payment/process'}),
+            'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': 'test_ref0',
             'total_fee': '0.01',
         }
@@ -73,7 +79,7 @@ class AlipayTest(PaymentAcquirerCommon):
             self.assertEqual(form_input.get('value'), form_values[form_input.get('name')], 'alipay: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')]))
 
     def test_11_alipay_form_with_fees(self):
-        self.assertEqual(self.alipay.environment, 'test', 'test without test environment')
+        self.assertEqual(self.alipay.state, 'test', 'test without test environment')
 
         # update acquirer: compute fees
         self.alipay.write({
@@ -106,7 +112,7 @@ class AlipayTest(PaymentAcquirerCommon):
         self._test_20_alipay_form_management()
 
     def _test_20_alipay_form_management(self):
-        self.assertEqual(self.alipay.environment, 'test', 'test without test environment')
+        self.assertEqual(self.alipay.state, 'test', 'test without test environment')
 
         # typical data posted by alipay after client has successfully paid
         alipay_post_data = {
@@ -152,7 +158,7 @@ class AlipayTest(PaymentAcquirerCommon):
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
 
         # update tx
-        tx.write({'acquirer_reference': False})
+        tx.write({'state': 'draft', 'acquirer_reference': False})
 
         # update notification from alipay should not go through since it has already been set as 'done'
         if self.alipay.alipay_payment_method == 'standard_checkout':

@@ -48,6 +48,7 @@ class LunchSupplier(models.Model):
     city = fields.Char(related='partner_id.city', readonly=False)
     state_id = fields.Many2one("res.country.state", related='partner_id.state_id', readonly=False)
     country_id = fields.Many2one('res.country', related='partner_id.country_id', readonly=False)
+    company_id = fields.Many2one('res.company', related='partner_id.company_id', readonly=False)
 
     responsible_id = fields.Many2one('res.users', string="Responsible", domain=lambda self: [('groups_id', 'in', self.env.ref('lunch.group_lunch_manager').id)],
                                      default=lambda self: self.env.user,
@@ -93,7 +94,6 @@ class LunchSupplier(models.Model):
          'Automatic Email Sending Time should be between 0 and 12'),
     ]
 
-    @api.multi
     def name_get(self):
         res = []
         for supplier in self:
@@ -153,7 +153,7 @@ class LunchSupplier(models.Model):
         for supplier in self:
             now = now.astimezone(pytz.timezone(supplier.tz))
 
-            if supplier.recurrency_end_date and now.date() > supplier.recurrency_end_date:
+            if supplier.recurrency_end_date and now.date() >= supplier.recurrency_end_date:
                 supplier.available_today = False
             else:
                 fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[now.weekday()])

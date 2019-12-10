@@ -4,8 +4,8 @@ import base64
 import datetime
 import json
 import os
-import re
 import logging
+import pytz
 import requests
 import werkzeug.utils
 import werkzeug.wrappers
@@ -65,7 +65,7 @@ class QueryURL(object):
 
 class Website(Home):
 
-    @http.route('/', type='http', auth="public", website=True)
+    @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         homepage = request.website.homepage_id
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
@@ -77,7 +77,7 @@ class Website(Home):
         else:
             top_menu = request.website.menu_id
             first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
-            if first_menu and first_menu[0].url not in ('/', '') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
+            if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
                 return request.redirect(first_menu[0].url)
 
         raise request.not_found()
@@ -92,14 +92,14 @@ class Website(Home):
     # while portal users are redirected to the frontend by default
     # ------------------------------------------------------
 
-    @http.route(website=True, auth="public")
+    @http.route(website=True, auth="public", sitemap=False)
     def web_login(self, redirect=None, *args, **kw):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                redirect = '/my'
             return http.redirect_with_hash(redirect)
         return response
 
@@ -107,10 +107,14 @@ class Website(Home):
     # Business
     # ------------------------------------------------------
 
+    @http.route('/website/get_languages', type='json', auth="user", website=True)
+    def website_languages(self, **kwargs):
+        return [(lg.code, lg.url_code, lg.name) for lg in request.website.language_ids]
+
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
         if lang == 'default':
-            lang = request.website.default_lang_code
+            lang = request.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
         redirect.set_cookie('frontend_lang', lang)
@@ -125,7 +129,7 @@ class Website(Home):
     def robots(self, **kwargs):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
-    @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False)
+    @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
         current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
@@ -158,7 +162,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
+            locs = request.website.with_user(request.website.user_id).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -193,7 +197,7 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
-    @http.route('/website/info', type='http', auth="public", website=True)
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
     def website_info(self, **kwargs):
         try:
             request.website.get_template('website.website_info').name
@@ -201,10 +205,10 @@ class Website(Home):
             return request.env['ir.http']._handle_exception(e, 404)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
-        modules = Module.search([('state', '=', 'installed'), ('application', '=', False)])
+        l10n = Module.search([('state', '=', 'installed'), ('name', '=like', 'l10n_%')])
         values = {
             'apps': apps,
-            'modules': modules,
+            'l10n': l10n,
             'version': odoo.service.common.exp_version()
         }
         return request.render('website.website_info', values)
@@ -281,7 +285,7 @@ class Website(Home):
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
-        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+        return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
     @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
     def toggle_switchable_view(self, view_key):
@@ -325,6 +329,22 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
+    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
+    def google_console_search(self, key, **kwargs):
+        if not request.website.google_search_console:
+            logger.warning('Google Search Console not enable')
+            raise werkzeug.exceptions.NotFound()
+
+        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
+        if key != trusted:
+            if key.startswith(trusted):
+                request.website.sudo().google_search_console = "google%s.html" % key
+            else:
+                logger.warning('Google Search Console %s not recognize' % key)
+                raise werkzeug.exceptions.NotFound()
+
+        return request.make_response("google-site-verification: %s" % request.website.google_search_console)
+
     # ------------------------------------------------------
     # Themes
     # ------------------------------------------------------
@@ -354,9 +374,9 @@ class Website(Home):
         if get_bundle:
             context = dict(request.context)
             return {
-                'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
-                'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),
-                'website.assets_editor': request.env["ir.qweb"]._get_asset('website.assets_editor', options=context),
+                'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', options=context),
+                'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', options=context),
+                'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor', options=context),
             }
 
         return True
@@ -369,10 +389,6 @@ class Website(Home):
     @http.route(['/website/make_scss_custo'], type='json', auth='user', website=True)
     def make_scss_custo(self, url, values):
         """
-        Makes a scss customization of the given file. That file must
-        contain a scss map including a line comment containing the word 'hook',
-        to indicate the location where to write the new key,value pairs.
-
         Params:
             url (str):
                 the URL of the scss file to customize (supposed to be a variable
@@ -382,24 +398,11 @@ class Website(Home):
                 key,value mapping to integrate in the file's map (containing the
                 word hook). If a key is already in the file's map, its value is
                 overridden.
+
+        Returns:
+            boolean
         """
-        AssetsUtils = request.env['web_editor.assets']
-
-        custom_url = AssetsUtils.make_custom_asset_file_url(url, 'web.assets_common')
-        updatedFileContent = AssetsUtils.get_asset_content(custom_url) or AssetsUtils.get_asset_content(url)
-        updatedFileContent = updatedFileContent.decode('utf-8')
-        for name, value in values.items():
-            pattern = "'%s': %%s,\n" % name
-            regex = re.compile(pattern % ".+")
-            replacement = pattern % value
-            if regex.search(updatedFileContent):
-                updatedFileContent = re.sub(regex, replacement, updatedFileContent)
-            else:
-                updatedFileContent = re.sub(r'( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent)
-
-        # Bundle is 'assets_common' as this route is only meant to update
-        # variables scss files
-        AssetsUtils.save_asset(url, 'web.assets_common', updatedFileContent, 'scss')
+        request.env['web_editor.assets'].make_scss_customization(url, values)
         return True
 
     @http.route(['/website/multi_render'], type='json', auth="public", website=True)
@@ -409,6 +412,15 @@ class Website(Home):
         for id_or_xml_id in ids_or_xml_ids:
             res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
         return res
+
+    @http.route(['/website/update_visitor_timezone'], type='json', auth="public", website=True)
+    def update_visitor_timezone(self, timezone):
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+        if visitor_sudo:
+            if timezone in pytz.all_timezones:
+                visitor_sudo.write({'timezone': timezone})
+                return True
+        return False
 
     # ------------------------------------------------------
     # Server actions
@@ -471,3 +483,8 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
+    def favicon(self, **kw):
+        # when opening a pdf in chrome, chrome tries to open the default favicon url
+        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

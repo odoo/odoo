@@ -3,7 +3,7 @@
 
 {
     'name': 'PayuMoney Payment Acquirer',
-    'category': 'Payment Acquirer',
+    'category': 'Accounting/Payment',
     'summary': 'Payment Acquirer: PayuMoney Implementation',
     'description': """
     PayuMoney Payment Acquirer for India.

@@ -134,7 +134,7 @@
     </section>
 </template>
 
-<template id="s_three_columns" name="Three Columns">
+<template id="s_three_columns" name="Columns">
     <section class="s_three_columns bg-200 pt32 pb32">
         <div class="container">
             <div class="row d-flex align-items-stretch">
@@ -198,76 +198,78 @@
 </template>
 
 <template id="s_carousel" name="Carousel">
-    <div id="myCarousel" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"/>
-            <li data-target="#myCarousel" data-slide-to="1"/>
-            <li data-target="#myCarousel" data-slide-to="2"/>
-        </ol>
-        <!-- Content -->
-        <div class="carousel-inner">
-            <!-- #01 -->
-            <div class="carousel-item active oe_custom_bg oe_img_bg pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-7">
-                            <div class="s_title pb8" data-name="Title">
-                                <h2 class="s_title_default"><font style="font-size: 62px;">Slide Title</font></h2>
+    <section class="s_carousel_wrapper">
+        <div id="myCarousel" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"/>
+                <li data-target="#myCarousel" data-slide-to="1"/>
+                <li data-target="#myCarousel" data-slide-to="2"/>
+            </ol>
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active oe_custom_bg oe_img_bg pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-7">
+                                <div class="s_title pb8" data-name="Title">
+                                    <h2 class="s_title_default"><font style="font-size: 62px;">Slide Title</font></h2>
+                                </div>
+                                <p class="lead">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
+                                <div class="s_btn text-left pt16 pb16" data-name="Buttons">
+                                    <a href="/aboutus" class="btn btn-secondary flat">About us</a>
+                                    <a href="/contactus" class="btn btn-primary flat">Contact us</a>
+                                </div>
                             </div>
-                            <p class="lead">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
-                            <div class="s_btn text-left pt16 pb16" data-name="Buttons">
-                                <a href="/aboutus" class="btn btn-secondary flat">About us</a>
-                                <a href="/contactus" class="btn btn-primary flat">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_custom_bg oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40">
+                                <h2 style="font-size: 62px;">Clever Slogan</h2>
+                                <div class="s_hr pt8 pb32">
+                                    <hr class="s_hr_5px s_hr_dotted border-600 w-25 border-epsilon mx-auto text-center"/>
+                                </div>
+                                <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
+                                <div class="s_btn text-center pt16 pb16" data-name="Buttons">
+                                    <a href="/" class="btn btn-epsilon rounded-circle">Start your journey</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_custom_bg oe_img_bg pt128 pb128" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-6 offset-lg-6">
+                                <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
+                                <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
+                                <p class="mt24">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
+                                <t t-call="website.s_share">
+                                    <t t-set="_classes" t-value="'text-left pt16 pb16'"/>
+                                    <t t-set="_no_title" t-value="True"/>
+                                </t>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- #02 -->
-            <div class="carousel-item oe_custom_bg oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40">
-                            <h2 style="font-size: 62px;">Clever Slogan</h2>
-                            <div class="s_hr pt8 pb32">
-                                <hr class="s_hr_5px s_hr_dotted border-600 w-25 border-epsilon mx-auto text-center"/>
-                            </div>
-                            <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
-                            <div class="s_btn text-center pt16 pb16" data-name="Buttons">
-                                <a href="/" class="btn btn-epsilon rounded-circle">Start your journey</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- #03 -->
-            <div class="carousel-item oe_custom_bg oe_img_bg pt128 pb128" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-6 offset-lg-6">
-                            <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
-                            <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
-                            <p class="mt24">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
-                            <t t-call="website.s_share">
-                                <t t-set="_classes" t-value="'text-left pt16 pb16'"/>
-                                <t t-set="_no_title" t-value="True"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Controls -->
+            <a class="carousel-control-prev" href="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
-        <!-- Controls -->
-        <div class="carousel-control-prev" data-target="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
-            <span class="carousel-control-prev-icon"/>
-            <span class="sr-only">Previous</span>
-        </div>
-        <div class="carousel-control-next" data-target="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
-            <span class="carousel-control-next-icon"/>
-            <span class="sr-only">Next</span>
-        </div>
-    </div>
+    </section>
 </template>
 
 <template id="s_alert" name="Alert">
@@ -292,22 +294,19 @@
 </template>
 
 <template id="s_share" name="Share">
-    <div t-attf-class="s_share #{_classes or ''}">
+    <div t-attf-class="s_share #{_classes}">
         <h4 t-if="not _no_title" class="s_share_title">Share</h4>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
-            <i class="fa fa-1x fa-facebook rounded shadow-sm"/>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
-            <i class="fa fa-1x fa-twitter rounded shadow-sm"/>
+        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
-            <i class="fa fa-1x fa-linkedin rounded shadow-sm"/>
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
-            <i class="fa fa-1x fa-google-plus rounded shadow-sm"/>
-        </a>
-        <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email">
-            <i class="fa fa-1x fa-envelope rounded shadow-sm"/>
+        <a href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
+            <i t-attf-class="fa fa-1x fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
     </div>
 </template>
@@ -352,6 +351,19 @@
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
             <div class="alert alert-info css_editable_mode_display text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+        </div>
+    </section>
+</template>
+
+<template id="s_countdown" name="Countdown">
+    <section class="s_countdown"
+        data-display="dhms" data-end-action="nothing" data-size="175"
+        t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
+        data-layout="circle" data-layout-background="none"
+        data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
+        data-text-color="alpha" data-layout-background-color="400" data-progress-bar-color="alpha">
+        <div class="container">
+            <div class="s_countdown_canvas_wrapper text-center pt8 pb8"/>
         </div>
     </section>
 </template>
@@ -735,6 +747,24 @@
     </section>
 </template>
 
+<template id="s_chart" name="Chart">
+    <div class="s_chart" data-type="bar" data-legend-position="top" data-tooltip-display="true" data-stacked="false" data-border-width="2"
+            data-data="{
+                &quot;labels&quot;:[&quot;First&quot;,&quot;Second&quot;,&quot;Third&quot;,&quot;Fourth&quot;,&quot;Fifth&quot;],
+                &quot;datasets&quot;:[
+                    {
+                        &quot;label&quot;:&quot;One&quot;,
+                        &quot;data&quot;:[&quot;12&quot;,&quot;24&quot;,&quot;18&quot;,&quot;17&quot;,&quot;10&quot;],
+                        &quot;backgroundColor&quot;:&quot;alpha&quot;,
+                        &quot;borderColor&quot;:&quot;alpha&quot;
+                    }
+                ]
+            }">
+        <h2>A Chart Title</h2>
+        <canvas/>
+    </div>
+</template>
+
 <template id="s_parallax" name="Parallax">
     <section class="s_parallax parallax s_parallax_is_fixed bg-black-50 pt160 pb160" data-scroll-background-ratio="1">
         <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 75%;"/>
@@ -753,87 +783,160 @@
 </template>
 
 <template id="s_quotes_carousel" name="Quotes">
-    <div id="myQuoteCarousel" class="s_quotes_carousel s_carousel_default carousel slide" data-interval="10000">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
-            <li data-target="#myQuoteCarousel" data-slide-to="2"></li>
-        </ol>
-        <!-- Content -->
-        <div class="carousel-inner">
-            <!-- #01 -->
-            <div class="carousel-item active bg-200 pt80 pb80" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <blockquote class="carousel-content col-lg-6 bg-white offset-lg-3">
-                            <i class="fa fa-1x fa-quote-left rounded-0 bg-secondary s_quotes_carousel_icon"/>
-                            <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
-                            <footer>
-                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_3" alt=""/>
-                                <span>— Jane DOE, CEO of <b>MyCompany</b></span>
-                            </footer>
-                        </blockquote>
+    <section class="s_quotes_carousel_wrapper">
+        <div id="myQuoteCarousel" class="s_quotes_carousel s_carousel_default carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="2"></li>
+            </ol>
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active bg-200 pt80 pb80" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="carousel-content col-lg-6 bg-white offset-lg-3">
+                                <i class="fa fa-1x fa-quote-left rounded-0 bg-secondary s_quotes_carousel_icon"/>
+                                <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                <footer>
+                                    <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_3" alt=""/>
+                                    <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="col-lg-6 bg-white">
+                                <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                                <footer>
+                                    <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_4" alt=""/>
+                                    <span>— John DOE, CEO of <b>MyCompany</b></span>
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="col-lg-6 offset-lg-6 bg-white">
+                                <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                                <footer class="blockquote-footer">
+                                    <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_5" alt=""/>
+                                    <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                                </footer>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- #02 -->
-            <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <blockquote class="col-lg-6 bg-white">
-                            <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
-                            <footer>
-                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_4" alt=""/>
-                                <span>— John DOE, CEO of <b>MyCompany</b></span>
-                            </footer>
-                        </blockquote>
-                    </div>
-                </div>
+            <!-- Controls -->
+            <div class="carousel-control-prev" data-target="#myQuoteCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
             </div>
-            <!-- #03 -->
-            <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <blockquote class="col-lg-6 offset-lg-6 bg-white">
-                            <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
-                            <footer class="blockquote-footer">
-                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_5" alt=""/>
-                                <span>— Jane DOE, CEO of <b>MyCompany</b></span>
-                            </footer>
-                        </blockquote>
-                    </div>
-                </div>
+            <div class="carousel-control-next" data-target="#myQuoteCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
             </div>
         </div>
-        <!-- Controls -->
-        <div class="carousel-control-prev" data-target="#myQuoteCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
-            <span class="carousel-control-prev-icon"/>
-            <span class="sr-only">Previous</span>
+    </section>
+</template>
+
+<!-- Mega menu snippets -->
+
+<template id="s_mega_menu_multi_menus" name="Multi-Menus">
+    <section class="s_mega_menu_multi_menus py-4">
+        <div class="container">
+            <div class="row">
+                <t t-set="menu1_title">First Menu</t>
+                <t t-set="menu2_title">Second Menu</t>
+                <t t-set="menu3_title">Third Menu</t>
+                <t t-set="menu4_title">Last Menu</t>
+                <t t-foreach="[menu1_title, menu2_title, menu3_title, menu4_title]" t-as="menu_title">
+                    <div class="col-lg-3 py-2 text-center">
+                        <h4 t-esc="menu_title"/>
+                        <nav class="nav flex-column">
+                            <t t-foreach="3" t-as="i">
+                                <t t-set="text">Menu Item %s</t>
+                                <t t-set="text" t-value="text % (i + 1)"/>
+                                <a href="#" class="nav-link" data-name="Menu Item"
+                                   t-esc="text"/>
+                            </t>
+                        </nav>
+                    </div>
+                </t>
+            </div>
         </div>
-        <div class="carousel-control-next" data-target="#myQuoteCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
-            <span class="carousel-control-next-icon"/>
-            <span class="sr-only">Next</span>
+    </section>
+</template>
+
+<template id="s_mega_menu_menu_image_menu" name="Menu - Image - Menu">
+    <section class="s_mega_menu_menu_image_menu py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 py-2 text-center">
+                    <h4>Left Menu</h4>
+                    <nav class="nav flex-column">
+                        <t t-foreach="3" t-as="i">
+                            <t t-set="text">Menu Item %s</t>
+                            <t t-set="text" t-value="text % (i + 1)"/>
+                            <a href="#" class="nav-link" data-name="Menu Item"
+                                t-esc="text"/>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-lg-4 py-2 text-center">
+                    <img class="img-fluid" src="/web/image/website.s_mega_menu_menu_image_menu_default_image"/>
+                </div>
+                <div class="col-lg-4 py-2 text-center">
+                    <h4>Right Menu</h4>
+                    <nav class="nav flex-column">
+                        <t t-foreach="3" t-as="i">
+                            <t t-set="text">Menu Item %s</t>
+                            <t t-set="text" t-value="text % (i + 1)"/>
+                            <a href="#" class="nav-link" data-name="Menu Item"
+                                t-esc="text"/>
+                        </t>
+                    </nav>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
+            <div id="snippet_mega_menu" class="o_panel d-none">
+                <div class="o_panel_header">
+                    <i class="fa fa-puzzle-piece"/> Mega Menu
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_mega_menu_multi_menus" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.png"/>
+                    <t t-snippet="website.s_mega_menu_menu_image_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.png"/>
+                </div>
+            </div>
 
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
                     <i class="fa fa-th-large"/> Structure
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/snippets_thumbs/s_title.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.png"/>
                     <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.png"/>
                     <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_image.png"/>
                     <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_text.png"/>
+                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/snippets_thumbs/s_title.png"/>
                     <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.png"/>
                     <t t-snippet="website.s_picture" t-thumbnail="/website/static/src/img/snippets_thumbs/s_picture.png"/>
                     <t t-snippet="website.s_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_carousel.png"/>
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features.png"/>
@@ -843,7 +946,7 @@
 
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-diamond"/> Feature
+                    <i class="fa fa-diamond"/> Features
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_gallery.png"/>
@@ -854,12 +957,13 @@
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/snippets_thumbs/s_faq.png"/>
                     <t t-snippet="website.s_features_grid" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features_grid.png"/>
                     <t t-snippet="website.s_tabs" t-thumbnail="/website/static/src/img/snippets_thumbs/s_tabs.png"/>
+                    <t t-snippet="website.s_countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.png"/>
                 </div>
             </div>
 
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-magic icon-fix"/> Effect
+                    <i class="fa fa-magic icon-fix"/> Effects
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/snippets_thumbs/s_parallax.png"/>
@@ -879,9 +983,9 @@
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.png"/>
                     <t t-snippet="website.s_facebook_page" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.png"/>
                     <t t-snippet="website.s_rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.png"/>
+                    <t t-snippet="website.s_chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.png"/>
                 </div>
             </div>
-
         </div>
     </xpath>
 
@@ -892,14 +996,17 @@
 
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.png"/>
+        <t id="newsletter_block_snippet" t-install="mass_mailing" string="Newsletter Block" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_block.png"/>
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.png"/>
         <t t-install="website_form" string="Form Builder" t-thumbnail="/website/static/src/img/s_website_form.png"/>
         <t id="s_products_searchbar" t-install="website_sale" string="Products Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
+        <t id="s_products_recently_viewed" t-install="website_sale" string="Products Recently Viewed" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_recently_viewed.png"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_local_events.png"/>
         <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button_channel_subscribe.png"/>
-        <t t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
+        <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
         <t id="s_products_searchbar_input" t-install="website_sale" string="Products Search Input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
     </xpath>
 </template>
@@ -908,421 +1015,362 @@
     <t t-call="web_editor.snippet_options"/>
 
     <!-- COLOR | .s_three_columns | .s_comparisons -->
-    <div data-js="colorpicker"
-        data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
-        data-target=".card"
-        data-palette-title="Box Color">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+    <div data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
+         data-target=".card">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 
     <!-- COLOR | .s_hr -->
-    <div data-js="colorpicker"
-        data-selector=".s_hr"
-        data-target="hr"
-        data-color-prefix="border-"
-        data-palette-exclude="transparent_grayscale, common"
-        data-palette-title="Separator Color">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+    <div data-selector=".s_hr"
+         data-target="hr">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="border-color"
+            data-color-prefix="border-"
+            data-excluded="transparent_grayscale"/>
     </div>
 
     <!-- COLOR | .s_cards -->
-    <div data-js="colorpicker"
-        data-selector=".s_card, .accordion .card"
-        data-palette-title="Card Color">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+    <div data-selector=".s_card, .accordion .card">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 
     <!-- COLOR | .s_alert -->
-    <div data-js="colorpicker"
-        data-selector=".s_alert"
-        data-color-prefix="alert-"
-        data-palette-title="Box Color">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+    <div data-selector=".s_alert">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="alert-"/>
     </div>
-
 
     <!-- STYLES | .s_title -->
     <div data-selector=".s_title" data-target="[class*='s_title_']">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-font"/>Typography</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="s_title_boxed">Boxed</a>
-                <a href="#" class="dropdown-item" data-select-class="s_title_lines">Line-On-Sides</a>
-                <a href="#" class="dropdown-item" data-select-class="s_title_thin">Thin</a>
-                <a href="#" class="dropdown-item" data-select-class="s_title_transparent">Transparent</a>
-                <a href="#" class="dropdown-item" data-select-class="s_title_underlined">Underlined</a>
-                <a href="#" class="dropdown-item" data-select-class="s_title_small_caps">Small Caps</a>
-                <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" data-select-class="s_title_default">Default</a>
-            </div>
-        </div>
+        <we-select string="Typography">
+            <we-button data-select-class="s_title_boxed">Boxed</we-button>
+            <we-button data-select-class="s_title_lines">Line-On-Sides</we-button>
+            <we-button data-select-class="s_title_thin">Thin</we-button>
+            <we-button data-select-class="s_title_transparent">Transparent</we-button>
+            <we-button data-select-class="s_title_underlined">Underlined</we-button>
+            <we-button data-select-class="s_title_small_caps">Small Caps</we-button>
+            <we-divider/>
+            <we-button data-select-class="s_title_default">Default</we-button>
+        </we-select>
     </div>
 
     <!-- H-ALIGN | .s_btn -->
     <div data-selector=".s_btn, .s_share">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-align-left"/>Alignment</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="text-left">Left</a>
-                <a href="#" class="dropdown-item" data-select-class="text-center">Center</a>
-                <a href="#" class="dropdown-item" data-select-class="text-right">Right</a>
-            </div>
-        </div>
+        <we-select string="Alignment">
+            <we-button data-select-class="text-left">Left</we-button>
+            <we-button data-select-class="text-center">Center</we-button>
+            <we-button data-select-class="text-right">Right</we-button>
+        </we-select>
     </div>
 
     <div data-selector=".s_alert">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows"/>Size</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="s_alert_sm">Small</a>
-                <a href="#" class="dropdown-item" data-select-class="s_alert_md">Medium</a>
-                <a href="#" class="dropdown-item" data-select-class="s_alert_lg">Large</a>
-            </div>
-        </div>
+        <we-select string="Size">
+            <we-button data-select-class="s_alert_sm">Small</we-button>
+            <we-button data-select-class="s_alert_md">Medium</we-button>
+            <we-button data-select-class="s_alert_lg">Large</we-button>
+        </we-select>
     </div>
 
     <div data-selector=".s_alert, .s_card">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-h"/>Width</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="w-25">25%</a>
-                <a href="#" class="dropdown-item" data-select-class="w-50">50%</a>
-                <a href="#" class="dropdown-item" data-select-class="w-75">75%</a>
-                <a href="#" class="dropdown-item" data-select-class="w-100">100%</a>
-            </div>
-        </div>
+        <we-select string="Width">
+            <we-button data-select-class="w-25">25%</we-button>
+            <we-button data-select-class="w-50">50%</we-button>
+            <we-button data-select-class="w-75">75%</we-button>
+            <we-button data-select-class="w-100">100%</we-button>
+        </we-select>
     </div>
 
     <!-- STYLES | .s_rating -->
     <div data-selector=".s_rating > div">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item">Icon</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="s_rating_stars"><i class="fa fa-star"/>Stars</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_squares"><i class="fa fa-square"/>Squares</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_hearts"><i class="fa fa-heart"/>Hearts</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_bar"><i class="fa fa-tasks"/>Progress Bar</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item">Value</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="">0</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_1">1/5</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_2">2/5</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_3">3/5</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_4">4/5</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_5">5/5</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item">Size</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="s_rating_1x">Small</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_2x">Medium</a>
-                <a href="#" class="dropdown-item" data-select-class="s_rating_3x">Big</a>
-            </div>
-        </div>
+        <we-select string="Icon">
+            <we-button data-select-class="s_rating_stars"><i class="fa fa-fw fa-star"/> Stars</we-button>
+            <we-button data-select-class="s_rating_squares"><i class="fa fa-fw fa-square"/> Squares</we-button>
+            <we-button data-select-class="s_rating_hearts"><i class="fa fa-fw fa-heart"/> Hearts</we-button>
+            <we-button data-select-class="s_rating_bar"><i class="fa fa-fw fa-tasks"/> Progress Bar</we-button>
+        </we-select>
+        <we-select string="Value">
+            <we-button data-select-class="">0</we-button>
+            <we-button data-select-class="s_rating_1">1/5</we-button>
+            <we-button data-select-class="s_rating_2">2/5</we-button>
+            <we-button data-select-class="s_rating_3">3/5</we-button>
+            <we-button data-select-class="s_rating_4">4/5</we-button>
+            <we-button data-select-class="s_rating_5">5/5</we-button>
+        </we-select>
+        <we-select string="Size">
+            <we-button data-select-class="s_rating_1x">Small</we-button>
+            <we-button data-select-class="s_rating_2x">Medium</we-button>
+            <we-button data-select-class="s_rating_3x">Big</we-button>
+        </we-select>
     </div>
 
     <!-- STYLES | .s_hr -->
     <div data-selector=".s_hr" data-target="hr">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-minus"/>Thickness</a>
-            <div class="dropdown-menu" role="menu">
-                <t t-foreach="range(1,6)" t-as="s_hr_thickness">
-                    <a href="#" class="dropdown-item" t-attf-data-select-class="s_hr_{{s_hr_thickness}}px"><t t-esc="s_hr_thickness"/>px</a>
-                </t>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-pencil"/>Style</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="s_hr_solid">Solid</a>
-                <a href="#" class="dropdown-item" data-select-class="s_hr_dashed">Dashed</a>
-                <a href="#" class="dropdown-item" data-select-class="s_hr_dotted">Dotted</a>
-                <a href="#" class="dropdown-item" data-select-class="s_hr_double">Double</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-arrows-h"/>Width</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="w-25">25%</a>
-                <a href="#" class="dropdown-item" data-select-class="w-50">50%</a>
-                <a href="#" class="dropdown-item" data-select-class="w-75">75%</a>
-                <a href="#" class="dropdown-item" data-select-class="w-100">100%</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-align-left"/>Alignment</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="mr-auto">Left</a>
-                <a href="#" class="dropdown-item" data-select-class="mx-auto">Center</a>
-                <a href="#" class="dropdown-item" data-select-class="ml-auto">Right</a>
-            </div>
-        </div>
+        <we-select string="Thickness">
+            <t t-foreach="range(1,6)" t-as="s_hr_thickness">
+                <we-button t-attf-data-select-class="s_hr_{{s_hr_thickness}}px"><t t-esc="s_hr_thickness"/>px</we-button>
+            </t>
+        </we-select>
+        <we-select string="Style">
+            <we-button data-select-class="s_hr_solid">Solid</we-button>
+            <we-button data-select-class="s_hr_dashed">Dashed</we-button>
+            <we-button data-select-class="s_hr_dotted">Dotted</we-button>
+            <we-button data-select-class="s_hr_double">Double</we-button>
+        </we-select>
+        <we-select string="Width">
+            <we-button data-select-class="w-25">25%</we-button>
+            <we-button data-select-class="w-50">50%</we-button>
+            <we-button data-select-class="w-75">75%</we-button>
+            <we-button data-select-class="w-100">100%</we-button>
+        </we-select>
+        <we-select string="Alignment">
+            <we-button data-select-class="mr-auto">Left</we-button>
+            <we-button data-select-class="mx-auto">Center</we-button>
+            <we-button data-select-class="ml-auto">Right</we-button>
+        </we-select>
     </div>
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
-    <div data-js="carousel"
-        data-selector=":not(.o_gallery > .container) > .carousel">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clone"/>Transition</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="slide">Slide</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="carousel-fade slide">Fade</a>
-                <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-magic"/>Style</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_bordered">Bordered</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_boxed">Boxed</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_rounded">Rounded</a>
-                <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_default">Default</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Speed</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="1000">1s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="2000">2s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="3000">3s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="5000">5s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="10000">10s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
-            </div>
-        </div>
-        <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
-        <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
+    <div data-js="Carousel"
+        data-selector="section"
+        data-target="> .carousel">
+        <we-select string="Transition">
+            <we-button data-select-class="slide">Slide</we-button>
+            <we-button data-select-class="carousel-fade slide">Fade</we-button>
+            <we-divider/>
+            <we-button data-select-class="">None</we-button>
+        </we-select>
+        <we-select string="Style">
+            <we-button data-select-class="s_carousel_bordered">Bordered</we-button>
+            <we-button data-select-class="s_carousel_boxed">Boxed</we-button>
+            <we-button data-select-class="s_carousel_rounded">Rounded</we-button>
+            <we-divider/>
+            <we-button data-select-class="s_carousel_default">Default</we-button>
+        </we-select>
+        <we-input string="Speed" class="o_we_inline"
+                  data-select-data-attribute="0s" data-attribute-name="interval"
+                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+    </div>
+
+    <div data-js="CarouselItem"
+         data-selector=".carousel-item">
+        <we-button data-slide="left" data-no-preview="true" class="fa fa-fw fa-angle-left"/>
+        <we-button data-slide="right" data-no-preview="true" class="fa fa-fw fa-angle-right"/>
+        <we-button data-add-slide="true" data-no-preview="true" class="fa fa-fw fa-plus"/>
+        <we-button data-remove-slide="true" data-no-preview="true" class="fa fa-fw fa-minus"/>
     </div>
 
     <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
-        <a href="#" class="dropdown-item" data-add-tab="1" data-no-preview="true"><i class="fa fa-plus"/>Add Tab</a>
-        <a href="#" class="dropdown-item" data-remove-tab="1" data-no-preview="true"><i class="fa fa-minus"/>Remove Tab</a>
-    </div>
-
-    <!-- Parallax -->
-    <div data-js="parallax" data-selector=".parallax">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
-            <div class="dropdown-menu" role="menu" name="parallax-scroll">
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
-                <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
-                <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
-            </div>
-        </div>
+        <we-button data-add-tab="1" data-no-preview="true">Add Tab</we-button>
+        <we-button data-remove-tab="1" data-no-preview="true">Remove Tab</we-button>
     </div>
 
     <div data-js="gallery" data-selector=".o_gallery">
-        <a href="#" class="dropdown-item" data-add-images="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add images</a>
-        <a href="#" class="dropdown-item" data-remove-all-images="true" data-no-preview="true"><i class="fa fa-trash"/>Remove all images</a>
-        <div class="dropdown-divider"/>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-magic"/>Mode</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-mode="nomode">Float</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-mode="masonry">Masonry</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-mode="grid">Grid</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-mode="slideshow">Slideshow</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Slideshow speed</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="1000">1s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="2000">2s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="3000">3s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="5000">5s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="10000">10s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-th"/>Columns</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-columns="1">1</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-columns="2">2</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-columns="3">3</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-columns="4">4</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-columns="6">6</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-columns="12">12</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-h"/>Images spacing</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-none">None</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-small">Small</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-medium">Medium</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-big">Big</a>
-            </div>
-        </div>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-paint-brush"/>Styling</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-styling="">Square</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-styling="rounded">Rounded corners</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-styling="img-thumbnail">Thumbnails</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-styling="rounded-circle">Circle</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-styling="shadow">Shadows</a>
-            </div>
-        </div>
+        <we-button data-add-images="true" data-no-preview="true">Add images</we-button>
+        <we-button data-remove-all-images="true" data-no-preview="true">Remove all images</we-button>
+        <we-divider/>
+        <we-select string="Mode">
+            <we-button data-mode="nomode">Float</we-button>
+            <we-button data-mode="masonry">Masonry</we-button>
+            <we-button data-mode="grid">Grid</we-button>
+            <we-button data-mode="slideshow">Slideshow</we-button>
+        </we-select>
+        <we-select string="Slideshow speed">
+            <we-button data-interval="1000">1s</we-button>
+            <we-button data-interval="2000">2s</we-button>
+            <we-button data-interval="3000">3s</we-button>
+            <we-button data-interval="5000">5s</we-button>
+            <we-button data-interval="10000">10s</we-button>
+            <we-button data-interval="0">Disable autoplay</we-button>
+        </we-select>
+        <we-select string="Columns">
+            <we-button data-columns="1">1</we-button>
+            <we-button data-columns="2">2</we-button>
+            <we-button data-columns="3">3</we-button>
+            <we-button data-columns="4">4</we-button>
+            <we-button data-columns="6">6</we-button>
+            <we-button data-columns="12">12</we-button>
+        </we-select>
+        <we-select string="Images spacing" class="o_w_image_spacing_option">
+            <we-button data-select-class="o_spc-none">None</we-button>
+            <we-button data-select-class="o_spc-small">Small</we-button>
+            <we-button data-select-class="o_spc-medium">Medium</we-button>
+            <we-button data-select-class="o_spc-big">Big</we-button>
+        </we-select>
+        <we-select string="Styling">
+            <we-button data-styling="">Square</we-button>
+            <we-button data-styling="rounded">Rounded corners</we-button>
+            <we-button data-styling="img-thumbnail">Thumbnails</we-button>
+            <we-button data-styling="rounded-circle">Circle</we-button>
+            <we-button data-styling="shadow">Shadows</we-button>
+        </we-select>
     </div>
 
     <div data-js="gallery_img" data-selector=".o_gallery img">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-refresh"/>Re-order</a>
-            <div class="dropdown-menu" role="menu" data-no-preview="true">
-                <a href="#" class="dropdown-item" role="menuitem" data-position="first">Move to first</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-position="prev">Move to previous</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-position="next">Move to next</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-position="last">Move to last</a>
-            </div>
+        <div data-no-preview="true">
+            <we-title>Re-order</we-title>
+            <we-button data-position="first">Move to first</we-button>
+            <we-button data-position="prev">Move to previous</we-button>
+            <we-button data-position="next">Move to next</we-button>
+            <we-button data-position="last">Move to last</we-button>
         </div>
     </div>
 
     <!-- Facebook Page -->
     <div data-js="facebookPage" data-selector=".o_facebook_page">
-        <a href="#" class="dropdown-item" data-fb-page-options="true" data-no-preview="true"><i class="fa fa-facebook"/>Options</a>
+        <we-button data-fb-page-options="true" data-no-preview="true">Facebook Options</we-button>
     </div>
 
     <!-- Accordion -->
     <div data-js="collapse"
          data-selector='.accordion > .card'
-         data-drop-in='.accordion:has(> .card)'>
-    </div>
+         data-drop-in='.accordion:has(> .card)'/>
 
     <div data-js="layout_column"
         data-selector="section"
         data-target="> * > .row:not(.s_nb_column_fixed)">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-columns"/>Number of columns</a>
-            <div class="dropdown-menu" role="menu" data-no-preview="true">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-count="1">1</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-count="2">2</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-count="3">3</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-count="4">4</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-count="5">5</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-count="6">6</a>
-            </div>
-        </div>
+        <we-select string="Number of columns" data-no-preview="true">
+            <we-button data-select-count="1">1</we-button>
+            <we-button data-select-count="2">2</we-button>
+            <we-button data-select-count="3">3</we-button>
+            <we-button data-select-count="4">4</we-button>
+            <we-button data-select-count="5">5</we-button>
+            <we-button data-select-count="6">6</we-button>
+        </we-select>
+    </div>
+
+    <!-- Move snippets around -->
+    <div data-js="SnippetMove"
+         data-selector="section">
+        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
+    </div>
+    <div data-js="SnippetMove"
+         data-selector=".row:not(.s_col_no_resize) > div">
+        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
     </div>
 
     <!--  V-ALIGN -->
-    <div data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-v"/>Alignment</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" data-select-class="align-items-start">Top</a>
-                <a href="#" class="dropdown-item" data-select-class="align-items-center">Middle</a>
-                <a href="#" class="dropdown-item" data-select-class="align-items-end">Bottom</a>
-                <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" data-select-class="align-items-stretch">Equal height</a>
-            </div>
-        </div>
+    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+        <we-select string="Alignment">
+            <we-button data-select-class="align-items-start">Top</we-button>
+            <we-button data-select-class="align-items-center">Middle</we-button>
+            <we-button data-select-class="align-items-end">Bottom</we-button>
+            <we-divider/>
+            <we-button data-select-class="align-items-stretch">Equal height</we-button>
+        </we-select>
     </div>
 
     <!-- Background Image -->
-    <div data-js="background"
-        data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel"
-        data-exclude=".s_hr, .s_image_gallery">
-        <a tabindex="-1" href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/>Background Image</a>
+    <div data-js="background" string="Background"
+        data-selector="section, .parallax, .carousel-item"
+        data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item"/>
+
+    <!-- Background Image Size/Position -->
+    <div data-js="BackgroundPosition"
+        data-selector="section, .parallax, .carousel-item"
+        data-exclude=".o_gallery .carousel-item">
+        <we-row>
+            <we-select data-no-preview="true">
+                <we-button data-background-type="cover">Cover</we-button>
+                <we-button data-background-type="repeat-pattern">Repeat pattern</we-button>
+            </we-select>
+            <we-button class="fa fa-fw fa-arrows" title="Background Position"
+                       data-background-position-overlay="true" data-no-preview="true"/>
+        </we-row>
+        <we-multi data-css-property="background-size">
+            <we-input string="Width" data-select-style="auto" data-unit="px"/>
+            <we-input string="Height" data-select-style="auto" data-unit="px"/>
+        </we-multi>
     </div>
 
-    <!-- Background Image -->
-    <div data-js="background_position"
-        data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel">
-        <a tabindex="-1" href="#" class="dropdown-item background_position_li" data-background-position="true" data-no-preview="true"><i class="fa fa-arrows"/>Background Image Sizing</a>
+    <!-- Parallax -->
+    <div data-js="parallax" data-selector=".parallax">
+        <we-select string="Scroll Speed" data-attribute-name="scrollBackgroundRatio" data-attribute-default-value="0">
+            <we-button data-select-data-attribute="0">No-scroll</we-button>
+            <we-divider/>
+            <we-button data-select-data-attribute="1">Fixed</we-button>
+            <we-divider/>
+            <we-button data-select-data-attribute="0.6">Very Slow</we-button>
+            <we-button data-select-data-attribute="1.2">Slow</we-button>
+            <we-button data-select-data-attribute="1.6">Fast</we-button>
+            <we-button data-select-data-attribute="2">Very Fast</we-button>
+        </we-select>
     </div>
 
     <!-- Color | Section -->
     <div id="so_main_colorpicker"
-        data-js="colorpicker"
-        data-selector="section, :not(.o_gallery > .container) > .carousel"
-        data-exclude=".parallax">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+         data-selector="section, .carousel-item"
+         data-exclude=".parallax, .o_gallery .carousel-item">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 
     <!-- FILTER | .s_parallax -->
-    <div data-js="colorpicker"
-        data-selector=".parallax"
-        data-palette-exclude="common, theme"
-        data-palette-default="transparent_grayscale"
-        data-palette-title="Overlay Color">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Filter</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+    <div data-selector=".parallax">
+        <we-colorpicker string="Filter"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"
+            data-excluded="common, theme, custom"/>
     </div>
 
     <!-- Color | Columns -->
-    <div data-js="colorpicker"
-        data-selector="section .row > div"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+    <div data-selector="section .row > div"
+         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-magic"/>Styles</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="border">Border</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="rounded">Rounded</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="shadow">Shadow</a>
-            </div>
-        </div>
+        <we-row string="Border" class="o_we_inline">
+            <we-colorpicker data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
+            <we-input class="o_we_inline"
+                      data-select-style="0" data-css-property="border-width"
+                      data-unit="px" data-extra-class="border"/>
+        </we-row>
+        <we-input string="Rounded" class="o_we_inline"
+                  data-select-style="0" data-css-property="border-radius"
+                  data-unit="px" data-extra-class="rounded"/>
+        <we-checkbox string="Shadow" data-select-class="shadow"/>
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > div, :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
+        data-selector="section, .row > div, .parallax, .s_hr, .s_btn, .carousel-item"
+        data-exclude="section:has(> .carousel), .o_gallery .carousel-item"/>
 
     <div data-js="sizing_x"
         data-selector=".row > div"
         data-drop-near=".row > div"
-        data-exclude=".s_col_no_resize.row > div">
-    </div>
+        data-exclude=".s_col_no_resize.row > div"/>
 
     <div id="so_snippet_addition"
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+        data-selector="section, .parallax"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <div data-js="content"
-        data-selector="blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
-        data-drop-near="p, h1, h2, h3, blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
-        data-drop-in=".content">
-    </div>
+    <!-- Main content drop -->
+    <div id="so_content_addition"
+        data-selector="blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart"
+        data-drop-near="p, h1, h2, h3, blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_chart"
+        data-drop-in=".content, nav"/>
 
     <div data-js="ul"
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <a href="#" class="dropdown-item" data-toggle-class="o_ul_folded">Folded list</a>
+        <we-checkbox string="Folded list" data-select-class="o_ul_folded"/>
     </div>
 
     <div data-js="menu_data"
@@ -1337,25 +1385,179 @@
     <div data-js="topMenuTransparency"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <a tabindex="-1" href="#" class="dropdown-item" data-transparent="true" data-no-preview="true"><i class="fa fa-eye-slash"/>Transparent</a>
+        <we-checkbox string="Transparent" data-transparent="true" data-no-preview="true"/>
     </div>
 
     <div data-js="topMenuColor"
-        data-selector="[data-main-object^='website.page('] #wrapwrap > header"
-        data-palette-exclude="theme,common"
-        data-palette-default="transparent_grayscale"
-        data-palette-title="Top Menu Color"
-        data-no-check="true">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
-            <div class="dropdown-menu"/>
-        </div>
+         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+         data-no-check="true">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"
+            data-excluded="theme, common, custom"/>
     </div>
 
     <!-- Anchor Name -->
-    <div data-js="anchorName"
-        data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > div">
-        <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-open-anchor-dialog=""><i class="fa fa-anchor"/>Anchor Name</a>
+    <div data-js="anchor"
+        data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
+        data-exclude=".modal *">
+        <we-button class="fa fa-fw fa-link"
+                   title="Create a link to target this section"
+                   data-no-preview="true"/>
+    </div>
+
+    <!-- Mega Menu settings -->
+    <div data-selector=".o_mega_menu">
+        <we-select string="Size">
+            <we-button data-select-class="">Full-Width</we-button>
+            <we-button data-select-class="o_mega_menu_container_size">Narrow</we-button>
+        </we-select>
+    </div>
+
+    <div data-selector=".o_mega_menu .nav-link"
+         data-drop-in=".o_mega_menu nav"
+         data-drop-near=".o_mega_menu .nav-link"/>
+
+    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
+        <we-button data-change="true" data-no-preview="true">Change Cover</we-button>
+        <we-button data-clear="true" data-no-preview="true">Remove Cover</we-button>
+        <we-select string="Size">
+            <we-button data-cover-opt="size" data-select-class="o_record_has_cover cover_full">Full Screen</we-button>
+            <we-button data-cover-opt="size" class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">Half Screen</we-button>
+            <we-button data-cover-opt="size" data-select-class="o_record_has_cover cover_auto">Fit text</we-button>
+        </we-select>
+        <we-select string="Filter Intensity">
+            <we-button data-cover-opt="filters" data-filter-value="0.0">None</we-button>
+            <we-button data-cover-opt="filters" data-filter-value="0.2">Low</we-button>
+            <we-button data-cover-opt="filters" data-filter-value="0.4">Medium</we-button>
+            <we-button data-cover-opt="filters" data-filter-value="0.6">High</we-button>
+        </we-select>
+        <we-select string="Filter Color">
+            <we-button data-cover-opt="filters" data-filter-color="oe_black">Black</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="oe_none">White</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="bg-primary">Primary</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="bg-secondary">Secondary</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="oe_blue">Blue</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="oe_yellow">Yellow</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="oe_red">Red</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="oe_purple">Purple</we-button>
+            <we-button data-cover-opt="filters" data-filter-color="oe_green">Green</we-button>
+        </we-select>
+        <we-select string="Text Size">
+            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_hero">Hero</we-button>
+            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_huge">Huge</we-button>
+            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_big">Big</we-button>
+            <we-button data-cover-opt="text_size" data-select-class="">Regular</we-button>
+            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_small">Small</we-button>
+            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_tiny">Tiny</we-button>
+        </we-select>
+        <we-select string="Text Alignment">
+            <we-button data-cover-opt="text_align" data-select-class="">Left</we-button>
+            <we-button data-cover-opt="text_align" data-select-class="text-center">Centered</we-button>
+            <we-button data-cover-opt="text_align" data-select-class="text-right">Right</we-button>
+        </we-select>
+    </div>
+
+    <!-- Stretch section -->
+    <div data-js="SectionStretch"
+        data-selector="section"
+        data-target="> .container, > .container-fluid">
+        <we-checkbox string="Stretch" data-select-class="container|container-fluid" data-no-preview="true"/>
+    </div>
+
+    <!-- DISPLAY | .s_countdown -->
+    <div data-js="countdown" data-selector=".s_countdown">
+        <we-datetimepicker string="Due Date" data-select-data-attribute="" data-attribute-name="endTime"/>
+        <we-row>
+            <we-select string="What should happen at the end?" data-no-preview="true">
+                <we-button data-end-action="nothing">Nothing</we-button>
+                <we-button data-end-action="redirect">Redirect</we-button>
+                <we-button data-end-action="message">Show Message</we-button>
+            </we-select>
+            <we-button class="far fa-edit fa-fw align-self-end toggle-edit-message" title="Edit Message"/>
+        </we-row>
+        <we-checkbox string="Hide countdown at the end" data-select-class="hide-countdown"/>
+        <we-urlpicker string="URL" data-select-data-attribute="/my-awesome-page" data-attribute-name="redirectUrl"/>
+        <we-select string="Size" data-attribute-name="size">
+            <we-button data-select-data-attribute="80">Small</we-button>
+            <we-button data-select-data-attribute="120">Medium</we-button>
+            <we-button data-select-data-attribute="175">Large</we-button>
+        </we-select>
+        <we-select string="Display" data-attribute-name="display">
+            <we-button data-select-data-attribute="d">D</we-button>
+            <we-button data-select-data-attribute="dhm">D - H - M</we-button>
+            <we-button data-select-data-attribute="dhms">D - H - M - S</we-button>
+        </we-select>
+        <we-colorpicker string="Text Color" data-attribute-name="textColor" data-select-data-attribute=""/>
+        <we-select string="Layout">
+            <we-button data-layout="circle">Circle</we-button>
+            <we-button data-layout="boxes">Boxes</we-button>
+            <we-button data-layout="clean">Clean</we-button>
+            <we-button data-layout="text">Text Inline</we-button>
+        </we-select>
+        <we-select string="Layout Background" data-attribute-name="layoutBackground">
+            <we-button data-select-data-attribute="inner">Inner</we-button>
+            <we-button data-select-data-attribute="plain">Plain</we-button>
+            <we-button data-select-data-attribute="none">None</we-button>
+        </we-select>
+        <we-colorpicker string="Layout Background Color" data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
+        <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle">
+            <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
+            <we-button data-select-data-attribute="disappear">Disappearing</we-button>
+            <we-button data-select-data-attribute="none">None</we-button>
+        </we-select>
+        <we-select string="Progress Bar Weight" data-attribute-name="progressBarWeight">
+            <we-button data-select-data-attribute="thin">Thin</we-button>
+            <we-button data-select-data-attribute="thick">Thick</we-button>
+        </we-select>
+        <we-colorpicker string="Progress Bar Color" data-attribute-name="progressBarColor" data-select-data-attribute=""/>
+    </div>
+
+    <!-- Chart Inner -->
+    <div data-js="InnerChart" string="Chart"
+        data-selector=".s_chart">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+         <we-select string="Type" data-attribute-name="type" data-attribute-default-value="bar" data-no-preview="true">
+            <we-button data-select-data-attribute="bar">Bar Vertical</we-button>
+            <we-button data-select-data-attribute="horizontalBar">Bar Horizontal</we-button>
+            <we-button data-select-data-attribute="line">Line</we-button>
+            <we-button data-select-data-attribute="pie">Pie</we-button>
+            <we-button data-select-data-attribute="doughnut">Doughnut</we-button>
+            <we-button data-select-data-attribute="radar">Radar</we-button>
+        </we-select>
+        <we-checkbox string="Stacked" data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
+        <we-select string="Legend" data-attribute-name="legendPosition" data-attribute-default-value="top" data-no-preview="true">
+            <we-button data-select-data-attribute="none">None</we-button>
+            <we-button data-select-data-attribute="top">Top</we-button>
+            <we-button data-select-data-attribute="left">Left</we-button>
+            <we-button data-select-data-attribute="bottom">Bottom</we-button>
+            <we-button data-select-data-attribute="right">Right</we-button>
+        </we-select>
+        <we-checkbox string="Tooltip" data-select-data-attribute="false|true" data-attribute-name="tooltipDisplay" data-no-preview="true"/>
+        <we-matrix>
+            <table>
+                <tr>
+                    <th/>
+                    <th><we-button class="fa fa-fw fa-plus add_column"/></th>
+                </tr>
+                <tr>
+                    <th><we-button class="fa fa-fw fa-plus add_row"/></th>
+                </tr>
+            </table>
+        </we-matrix>
+        <we-colorpicker string="Background"
+            data-color-change=""
+            data-attribute-name="backgroundColor"
+            data-no-preview="true"/>
+        <we-colorpicker string="Border"
+            data-color-change=""
+            data-attribute-name="borderColor"
+            data-no-preview="true"/>
+        <we-input class="o_we_inline" string="Border Width" data-select-data-attribute="2px" data-attribute-name="borderWidth" data-unit="px"/>
     </div>
 </template>
 </odoo>

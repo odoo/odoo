@@ -27,26 +27,28 @@ class Page(models.Model):
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
+    arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
-    @api.one
     def _compute_homepage(self):
-        self.is_homepage = self == self.env['website'].get_current_website().homepage_id
+        for page in self:
+            page.is_homepage = page == self.env['website'].get_current_website().homepage_id
 
-    @api.one
     def _set_homepage(self):
-        website = self.env['website'].get_current_website()
-        if self.is_homepage:
-            if website.homepage_id != self:
-                website.write({'homepage_id': self.id})
-        else:
-            if website.homepage_id == self:
-                website.write({'homepage_id': None})
+        for page in self:
+            website = self.env['website'].get_current_website()
+            if page.is_homepage:
+                if website.homepage_id != page:
+                    website.write({'homepage_id': page.id})
+            else:
+                if website.homepage_id == page:
+                    website.write({'homepage_id': None})
 
-    @api.one
     def _compute_visible(self):
-        self.is_visible = self.website_published and (not self.date_publish or self.date_publish < fields.Datetime.now())
+        for page in self:
+            page.is_visible = page.website_published and (
+                not page.date_publish or page.date_publish < fields.Datetime.now()
+            )
 
-    @api.multi
     def _is_most_specific_page(self, page_to_test):
         '''This will test if page_to_test is the most specific page in self.'''
         pages_for_url = self.sorted(key=lambda p: not p.website_id).filtered(lambda page: page.url == page_to_test.url)
@@ -56,16 +58,19 @@ class Page(models.Model):
 
         return most_specific_page == page_to_test
 
-    @api.model
-    def get_page_info(self, id):
-        return self.browse(id).read(
-            ['id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish', 'menu_ids', 'is_homepage', 'website_id'],
-        )
-
-    @api.multi
     def get_view_identifier(self):
         """ Get identifier of this page view that may be used to render it """
         return self.view_id.id
+
+    def get_page_properties(self):
+        self.ensure_one()
+        res = self.read([
+            'id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish',
+            'menu_ids', 'is_homepage', 'website_id', 'visibility', 'visibility_password', 'visibility_group'
+        ])[0]
+        if not res['visibility_group']:
+            res['visibility_group'] = self.env.ref('base.group_user').name_get()[0]
+        return res
 
     @api.model
     def save_page_info(self, website_id, data):
@@ -116,12 +121,15 @@ class Page(models.Model):
             'website_indexed': data['website_indexed'],
             'date_publish': data['date_publish'] or None,
             'is_homepage': data['is_homepage'],
+            'visibility': data['visibility'],
+            'visibility_password': data['visibility'] == "password" and data['visibility_password'] or '',
+            'visibility_group': data['visibility'] == "restricted_group" and data['visibility_group'],
         }
         page.with_context(no_cow=True).write(w_vals)
 
         # Create redirect if needed
         if data['create_redirect']:
-            self.env['website.redirect'].create({
+            self.env['website.rewrite'].create({
                 'redirect_type': data['redirect_type'],
                 'url_from': original_url,
                 'url_to': url,
@@ -130,7 +138,6 @@ class Page(models.Model):
 
         return url
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default:
@@ -159,7 +166,6 @@ class Page(models.Model):
 
         return new_page.url + '?enable_editor=1'
 
-    @api.multi
     def unlink(self):
         # When a website_page is deleted, the ORM does not delete its
         # ir_ui_view. So we got to delete it ourself, but only if the
@@ -174,7 +180,6 @@ class Page(models.Model):
                 page.view_id.unlink()
         return super(Page, self).unlink()
 
-    @api.multi
     def write(self, vals):
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']

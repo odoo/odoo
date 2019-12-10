@@ -14,7 +14,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, misc
 
 class MercuryTransaction(models.Model):
     _name = 'pos_mercury.mercury_transaction'
-    _description = 'Point of Sale Mercury Transaction'
+    _description = 'Point of Sale Vantiv Transaction'
 
     def _get_pos_session(self):
         pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
@@ -25,20 +25,20 @@ class MercuryTransaction(models.Model):
 
         return pos_session
 
-    def _get_pos_mercury_config_id(self, config, journal_id):
-        journal = config.journal_ids.filtered(lambda r: r.id == journal_id)
+    def _get_pos_mercury_config_id(self, config, payment_method_id):
+        payment_method = config.current_session_id.payment_method_ids.filtered(lambda pm: pm.id == payment_method_id)
 
-        if journal and journal.pos_mercury_config_id:
-            return journal.pos_mercury_config_id
+        if payment_method and payment_method.pos_mercury_config_id:
+            return payment_method.pos_mercury_config_id
         else:
-            raise UserError(_("No Mercury configuration associated with the journal."))
+            raise UserError(_("No Vantiv configuration associated with the payment method."))
 
     def _setup_request(self, data):
         # todo: in master make the client include the pos.session id and use that
         pos_session = self._get_pos_session()
 
         config = pos_session.config_id
-        pos_mercury_config = self._get_pos_mercury_config_id(config, data['journal_id'])
+        pos_mercury_config = self._get_pos_mercury_config_id(config, data['payment_method_id'])
 
         data['operator_id'] = pos_session.user_id.login
         data['merchant_id'] = pos_mercury_config.sudo().merchant_id
@@ -112,7 +112,7 @@ class MercuryTransaction(models.Model):
         response = self._do_request('pos_mercury.mercury_return', data)
         return response
 
-    # One time (the ones we use) Mercury tokens are required to be
+    # One time (the ones we use) Vantiv tokens are required to be
     # deleted after 6 months
     @api.model
     def cleanup_old_tokens(self):

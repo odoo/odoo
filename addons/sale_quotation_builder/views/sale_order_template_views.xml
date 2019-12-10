@@ -7,9 +7,10 @@
         <field name="model">sale.order.template</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button string="Edit Template" type="object" name="open_template" class="oe_stat_button" icon="fa-pencil"/>
+            <xpath expr="//sheet" position='before'>
+                <header>
+                    <button name="open_template" class="oe_highlight" string="Design Template" type="object"/>
+                </header>
             </xpath>
 
             <xpath expr="//notebook[@name='description']" position="inside">

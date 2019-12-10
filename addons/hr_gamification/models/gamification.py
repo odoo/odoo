@@ -31,14 +31,12 @@ class GamificationBadge(models.Model):
                 ('employee_id', '!=', False)
             ])
 
-    @api.multi
     def get_granted_employees(self):
         employee_ids = self.mapped('owner_ids.employee_id').ids
         return {
             'type': 'ir.actions.act_window',
             'name': 'Granted Employees',
             'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
-            'res_model': 'hr.employee',
+            'res_model': 'hr.employee.public',
             'domain': [('id', 'in', employee_ids)]
         }

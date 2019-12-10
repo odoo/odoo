@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo.tests.common import HttpCase
+from odoo.tests.common import TransactionCase
 
 
-class AccountingTestTemplConsistency(HttpCase):
+class AccountingTestTemplConsistency(TransactionCase):
     '''Test the templates consistency between some objects like account.account when account.account.template.
     '''
 
@@ -34,7 +34,7 @@ class AccountingTestTemplConsistency(HttpCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
@@ -61,4 +61,13 @@ class AccountingTestTemplConsistency(HttpCase):
         '''Test fields consistency for ('account.reconcile.model', 'account.reconcile.model.template')
         '''
         self.check_fields_consistency('account.reconcile.model.template', 'account.reconcile.model', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'second_journal_id', 'second_analytic_account_id', 'analytic_tag_ids', 'second_analytic_tag_ids'])
+        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['company_id'])
+        # lines
+        self.check_fields_consistency('account.reconcile.model.line.template', 'account.reconcile.model.line', exceptions=['chart_template_id'])
+        self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'analytic_tag_ids', 'amount'])
+
+    def test_account_group_fields(self):
+        '''Test fields consistency for ('account.group', 'account.group.template')
+        '''
+        self.check_fields_consistency('account.group', 'account.group.template', exceptions=['company_id', 'parent_path'])
+        self.check_fields_consistency('account.group.template', 'account.group', exceptions=['chart_template_id'])

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import itertools
 
 from odoo import api, fields, models
@@ -25,8 +26,8 @@ class Followers(models.Model):
     # (see 'ir.model' inheritance).
     res_model = fields.Char(
         'Related Document Model Name', required=True, index=True)
-    res_id = fields.Integer(
-        'Related Document ID', index=True, help='Id of the followed resource')
+    res_id = fields.Many2oneReference(
+        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
     partner_id = fields.Many2one(
         'res.partner', string='Related Partner', ondelete='cascade', index=True)
     channel_id = fields.Many2one(
@@ -35,24 +36,23 @@ class Followers(models.Model):
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
 
-    #
-    # Modifying followers change access rights to individual documents. As the
-    # cache may contain accessible/inaccessible data, one has to refresh it.
-    #
-    @api.multi
-    def _invalidate_documents(self):
-        """ Invalidate the cache of the documents followed by ``self``. """
-        for record in self:
-            if record.res_id:
-                self.env[record.res_model].invalidate_cache(ids=[record.res_id])
+    def _invalidate_documents(self, vals_list=None):
+        """ Invalidate the cache of the documents followed by ``self``.
+
+        Modifying followers change access rights to individual documents. As the
+        cache may contain accessible/inaccessible data, one has to refresh it.
+        """
+        to_invalidate = defaultdict(list)
+        for record in (vals_list or [{'res_model': rec.res_model, 'res_id': rec.res_id} for rec in self]):
+            if record.get('res_id'):
+                to_invalidate[record.get('res_model')].append(record.get('res_id'))
 
     @api.model_create_multi
     def create(self, vals_list):
         res = super(Followers, self).create(vals_list)
-        res._invalidate_documents()
+        res._invalidate_documents(vals_list)
         return res
 
-    @api.multi
     def write(self, vals):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
@@ -61,7 +61,6 @@ class Followers(models.Model):
             self._invalidate_documents()
         return res
 
-    @api.multi
     def unlink(self):
         self._invalidate_documents()
         return super(Followers, self).unlink()
@@ -76,7 +75,7 @@ class Followers(models.Model):
     # Private tools methods to fetch followers data
     # --------------------------------------------------
 
-    def _get_recipient_data(self, records, subtype_id, pids=None, cids=None):
+    def _get_recipient_data(self, records, message_type, subtype_id, pids=None, cids=None):
         """ Private method allowing to fetch recipients data based on a subtype.
         Purpose of this method is to fetch all data necessary to notify recipients
         in a single query. It fetches data from
@@ -87,6 +86,7 @@ class Followers(models.Model):
          * channels if cids is given;
 
         :param records: fetch data from followers of records that follow subtype_id;
+        :param message_type: mail.message.message_type in order to allow custom behavior depending on it (SMS for example);
         :param subtype_id: mail.message.subtype to check against followers;
         :param pids: additional set of partner IDs from which to fetch recipient data;
         :param cids: additional set of channel IDs from which to fetch recipient data;
@@ -99,6 +99,12 @@ class Followers(models.Model):
           notification status of partner or channel (email or inbox),
           user groups of partner (void as irrelevant if channel ID),
         """
+        self.env['mail.followers'].flush(['partner_id', 'channel_id', 'subtype_ids'])
+        self.env['mail.message.subtype'].flush(['internal'])
+        self.env['res.users'].flush(['notification_type', 'active', 'partner_id', 'groups_id'])
+        self.env['res.partner'].flush(['active', 'partner_share'])
+        self.env['res.groups'].flush(['users'])
+        self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
             query = """
 WITH sub_followers AS (
@@ -235,16 +241,17 @@ GROUP BY fol.id%s""" % (
         :param check_existing: see ``_add_followers``;
         :param existing_policy: see ``_add_followers``;
         """
-        sudo_self = self.sudo()
+        sudo_self = self.sudo().with_context(default_partner_id=False, default_channel_id=False)
         if not partner_subtypes and not channel_subtypes:  # no subtypes -> default computation, no force, skip existing
             new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids)
         else:
             new, upd = self._add_followers(res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes, check_existing=check_existing, existing_policy=existing_policy)
-        sudo_self.create([
-            dict(values, res_id=res_id)
-            for res_id, values_list in new.items()
-            for values in values_list
-        ])
+        if new:
+            sudo_self.create([
+                dict(values, res_id=res_id)
+                for res_id, values_list in new.items()
+                for values in values_list
+            ])
         for fol_id, values in upd.items():
             sudo_self.browse(fol_id).write(values)
 

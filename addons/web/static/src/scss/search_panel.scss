@@ -1,0 +1,103 @@
+// ------- View with SearchPanel -------
+$o-searchpanel-active-bg: rgba(108, 193, 237, 0.3);
+$o-searchpanel-p: $o-horizontal-padding;
+$o-searchpanel-p-small: $o-horizontal-padding*0.5;
+$o-searchpanel-p-tiny: $o-searchpanel-p-small*0.5;
+
+$o-searchpanel-category-default-color: $o-brand-primary;
+$o-searchpanel-filter-default-color: #D59244;
+
+.o_controller_with_searchpanel {
+    display: flex;
+    align-items: flex-start;
+
+    .o_renderer_with_searchpanel {
+        flex: 1 1 100%;
+        overflow: auto; // make the renderer and search panel scroll individually
+        max-height: 100%;
+    }
+    .o_search_panel {
+        flex: 0 0 220px;
+        overflow: auto;
+        height: 100%;
+        padding: $o-searchpanel-p-small $o-searchpanel-p-small $o-searchpanel-p*2 $o-searchpanel-p;
+        border-right: 1px solid $gray-300;
+        background-color: white;
+
+        .o_search_panel_category .o_search_panel_section_icon {
+            color: $o-brand-odoo;
+        }
+        .o_search_panel_filter .o_search_panel_section_icon {
+            color: $o-searchpanel-filter-default-color;
+        }
+
+        .o_search_panel_label {
+            display: flex;
+            cursor: pointer;
+            user-select: none;
+
+            .o_toggle_fold {
+                margin-left: auto;
+                padding: 3px;
+            }
+        }
+        .o_search_panel_section_header {
+            padding: $o-searchpanel-p-small 0;
+        }
+        .list-group-item {
+            padding: 0 0 $o-searchpanel-p-small 0;
+
+            .list-group-item {
+                padding: 0 0 0 $custom-control-gutter;
+                margin-bottom: $o-searchpanel-p-tiny*0.5;
+                &:first-child {
+                    margin-top: $o-searchpanel-p-tiny*0.5;
+                }
+            }
+            span.o_search_panel_label_title {
+                color: $headings-color;
+                @include o-text-overflow;
+            }
+            header.active {
+                background-color: $o-searchpanel-active-bg;
+            }
+        }
+        .o_search_panel_category_value {
+            cursor: pointer;
+            header {
+                margin-top: -4px;
+                margin-bottom: -4px;
+                padding: 4px 7px;
+
+                .o_toggle_fold {
+                    padding-left: 11px;
+                }
+            }
+            .o_search_panel_category_value {
+                position: relative;
+                padding-left: $o-searchpanel-p;
+                padding-bottom: $o-searchpanel-p-tiny;
+                margin-bottom: 0;
+
+                &:before, &:after {
+                    @include o-position-absolute(0, $left: $o-searchpanel-p-tiny);
+                    @include size(1px, 100%);
+                    background: $gray-500;
+                    content: '';
+                }
+                &:after {
+                    top: 10px;
+                    @include size(8px, 1px);
+                }
+                &:last-child {
+                    &:before {
+                        height: 11px;
+                    }
+                    &:after {
+                        top: 11px;
+                    }
+                }
+            }
+        }
+    }
+}

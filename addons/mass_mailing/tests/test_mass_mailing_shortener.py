@@ -23,38 +23,31 @@ class TestMassMailingShortener(common.TransactionCase):
         def _get_title_from_url(u):
             return "Hello"
 
-        def _compute_favicon():
-            # 1px to avoid real request
-            return 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=='
-
-        patcher = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._compute_favicon', wraps=_compute_favicon)
-        patcher2 = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
+        patcher = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
         patcher.start()
-        patcher2.start()
         self.addCleanup(patcher.stop)
-        self.addCleanup(patcher2.stop)
 
     def test_00_test_mass_mailing_shortener(self):
-        mailing_list_A = self.env['mail.mass_mailing.list'].create({
+        mailing_list_A = self.env['mailing.list'].create({
             'name': 'A',
         })
-        self.env['mail.mass_mailing.contact'].create({
+        self.env['mailing.contact'].create({
             'name': 'User 1', 'email': 'user1@example.com', 'list_ids': [(4, mailing_list_A.id)]
         })
-        self.env['mail.mass_mailing.contact'].create({
+        self.env['mailing.contact'].create({
             'name': 'User 2', 'email': 'user2@example.com', 'list_ids': [(4, mailing_list_A.id)]
         })
-        self.env['mail.mass_mailing.contact'].create({
+        self.env['mailing.contact'].create({
             'name': 'User 3', 'email': 'user3@example.com', 'list_ids': [(4, mailing_list_A.id)]
         })
 
-        mass_mailing = self.env['mail.mass_mailing'].create({
+        mass_mailing = self.env['mailing.mailing'].create({
             "reply_to_mode": "email",
             "reply_to": "Administrator <admin@yourcompany.example.com>",
-            "mailing_model_id": self.env.ref('mass_mailing.model_mail_mass_mailing_list').id,
+            "mailing_model_id": self.env.ref('mass_mailing.model_mailing_list').id,
             "mailing_domain": "[('list_ids', 'in', [%d])]" % mailing_list_A.id,
             "contact_list_ids": [[6, False, [mailing_list_A.id]]],
-            "mass_mailing_campaign_id": False,
+            "campaign_id": False,
             "name": "sdf",
             "subject": "test_00_test_mass_mailing_shortener",
             "body_html": """
@@ -72,13 +65,13 @@ Email: <a id="url4" href="mailto:test@odoo.com">test@odoo.com</h1>
             "keep_archives": True,
         })
 
-        mass_mailing.put_in_queue()
+        mass_mailing.action_put_in_queue()
         mass_mailing._process_mass_mailing_queue()
 
-        sent_mails = self.env['mail.mail'].search([('mailing_id', '=', mass_mailing.id)])
+        sent_mails = self.env['mail.mail'].sudo().search([('mailing_id', '=', mass_mailing.id)])
         sent_messages = sent_mails.mapped('mail_message_id')
 
-        self.assertEqual(mailing_list_A.contact_nbr, len(sent_messages),
+        self.assertEqual(len(mailing_list_A.contact_ids), len(sent_messages),
                          'Some message has not been sent')
 
         xbody = etree.fromstring(sent_messages[0].body)

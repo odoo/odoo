@@ -17,6 +17,7 @@ class Location(models.Model):
     _parent_store = True
     _order = 'complete_name'
     _rec_name = 'complete_name'
+    _check_company_auto = True
 
     @api.model
     def default_get(self, fields):
@@ -45,7 +46,7 @@ class Location(models.Model):
              "\n* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products"
              "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
-        'stock.location', 'Parent Location', index=True, ondelete='cascade',
+        'stock.location', 'Parent Location', index=True, ondelete='cascade', check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
     comment = fields.Text('Additional Information')
@@ -61,19 +62,18 @@ class Location(models.Model):
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
     removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
-    barcode = fields.Char('Barcode', copy=False, oldname='loc_barcode')
+    barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
-    @api.one
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
-        """ Forms complete name of location from parent location to child location. """
-        if self.location_id.complete_name:
-            self.complete_name = '%s/%s' % (self.location_id.complete_name, self.name)
-        else:
-            self.complete_name = self.name
+        for location in self:
+            if location.location_id and location.usage != 'view':
+                location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
+            else:
+                location.complete_name = location.name
 
     @api.onchange('usage')
     def _onchange_usage(self):
@@ -81,11 +81,14 @@ class Location(models.Model):
             self.scrap_location = False
 
     def write(self, values):
+        if 'company_id' in values:
+            for location in self:
+                if location.company_id.id != values['company_id']:
+                    raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
         if 'usage' in values or 'scrap_location' in values:
-
             modified_locations = self.filtered(
                 lambda l: any(l[f] != values[f] if f in values else False
                               for f in {'usage', 'scrap_location'}))
@@ -115,22 +118,8 @@ class Location(models.Model):
                     raise UserError(_('You still have some product in locations %s') %
                         (','.join(children_quants.mapped('location_id.name'))))
                 else:
-                    super(Location, children_location - self).with_context({'do_not_check_quant': True}).write(values)
-
+                    super(Location, children_location - self).with_context(do_not_check_quant=True).write(values)
         return super(Location, self).write(values)
-
-    def name_get(self):
-        ret_list = []
-        for location in self:
-            orig_location = location
-            name = location.name
-            while location.location_id and location.usage != 'view':
-                location = location.location_id
-                if not name:
-                    raise UserError(_('You have to set a name for this location.'))
-                name = location.name + "/" + name
-            ret_list.append((orig_location.id, name))
-        return ret_list
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -141,7 +130,7 @@ class Location(models.Model):
         else:
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(location_ids).name_get()
+        return models.lazy_name_get(self.browse(location_ids).with_user(name_get_uid))
 
     def _get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
@@ -149,14 +138,14 @@ class Location(models.Model):
         putaway_location = self.env['stock.location']
         while current_location and not putaway_location:
             # Looking for a putaway about the product.
-            putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
+            putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.product_id == product)
             if putaway_rules:
                 putaway_location = putaway_rules[0].location_out_id
             # If not product putaway found, we're looking with category so.
             else:
                 categ = product.categ_id
                 while categ:
-                    putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
+                    putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
                     if putaway_rules:
                         putaway_location = putaway_rules[0].location_out_id
                         break
@@ -174,11 +163,38 @@ class Location(models.Model):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
+    def _qweb_prepare_qcontext(self, view_id, domain):
+        values = super()._qweb_prepare_qcontext(view_id, domain)
+        result = self.search_read(domain, ['name', 'location_id', 'usage', 'barcode'])
+        roots = []
+
+        locations = {location['id']: dict(location, **{'childs': []}) for location in result}
+
+        for location in locations.values():
+            parent_location_id = location['location_id']
+            if parent_location_id and parent_location_id[0] in locations:
+                locations[parent_location_id[0]]['childs'].append(location)
+            else:
+                roots.append(location)
+
+        values['data'] = roots
+        return values
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        result = super().fields_view_get(view_id, view_type, toolbar, submenu)
+
+        view_location_qweb = self.env.ref('stock.view_location_qweb', raise_if_not_found=False)
+        if result['type'] == 'qweb' and view_location_qweb and result['view_id'] == view_location_qweb.id:
+            result['arch'] = '<qweb js_class="stock_location_hierarchy_qweb"/>'
+        return result
+
 
 class Route(models.Model):
     _name = 'stock.location.route'
     _description = "Inventory Routes"
     _order = 'sequence'
+    _check_company_auto = True
 
     name = fields.Char('Route', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
@@ -193,14 +209,30 @@ class Route(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
         help='Leave this field empty if this route is shared between all companies')
-    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products', copy=False)
+    product_ids = fields.Many2many(
+        'product.template', 'stock_route_product', 'route_id', 'product_id',
+        'Products', copy=False, check_company=True)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
-    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses', copy=False)
+    warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
+    warehouse_ids = fields.Many2many(
+        'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
+        'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
+
+    @api.depends('company_id')
+    def _compute_warehouses(self):
+        for loc in self:
+            domain = [('company_id', '=', loc.company_id.id)] if loc.company_id else []
+            loc.warehouse_domain_ids = self.env['stock.warehouse'].search(domain)
+
+    @api.onchange('company_id')
+    def _onchange_company(self):
+        if self.company_id:
+            self.warehouse_ids = self.warehouse_ids.filtered(lambda w: w.company_id == self.company_id)
 
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):
         if not self.warehouse_selectable:
-            self.warehouse_ids = []
+            self.warehouse_ids = [(5, 0, 0)]
 
     def toggle_active(self):
         for route in self:
@@ -210,7 +242,6 @@ class Route(models.Model):
     def view_product_ids(self):
         return {
             'name': _('Products'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.template',
             'type': 'ir.actions.act_window',
@@ -220,7 +251,6 @@ class Route(models.Model):
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.category',
             'type': 'ir.actions.act_window',

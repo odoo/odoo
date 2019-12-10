@@ -39,7 +39,7 @@ class Alias(models.Model):
                                       # hack to only allow selecting mail_thread models (we might
                                       # (have a few false positives, though)
                                       domain="[('field_id.name', '=', 'message_ids')]")
-    alias_user_id = fields.Many2one('res.users', 'Owner', defaults=lambda self: self.env.user,
+    alias_user_id = fields.Many2one('res.users', 'Owner', default=lambda self: self.env.user,
                                     help="The owner of records created upon receiving emails on this alias. "
                                          "If this field is not set the system will attempt to find the right owner "
                                          "based on the sender (From) address, or will use the Administrator account "
@@ -73,19 +73,18 @@ class Alias(models.Model):
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
     ]
 
-    @api.multi
     def _get_alias_domain(self):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
 
-    @api.one
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
-        try:
-            dict(safe_eval(self.alias_defaults))
-        except Exception:
-            raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+        for alias in self:
+            try:
+                dict(safe_eval(alias.alias_defaults))
+            except Exception:
+                raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
     @api.model
     def create(self, vals):
@@ -107,14 +106,12 @@ class Alias(models.Model):
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         """"give a unique alias name if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
         return super(Alias, self).write(vals)
 
-    @api.multi
     def name_get(self):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".
@@ -154,24 +151,20 @@ class Alias(models.Model):
         name = re.sub(r'[^\w+.]+', '-', name)
         return self._find_unique(name, alias_ids=alias_ids)
 
-    @api.multi
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_model_id.model,
             'res_id': self.alias_force_thread_id,
             'type': 'ir.actions.act_window',
         }
 
-    @api.multi
     def open_parent_document(self):
         if not self.alias_parent_model_id or not self.alias_parent_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_parent_model_id.model,
             'res_id': self.alias_parent_thread_id,
@@ -214,7 +207,6 @@ class AliasMixin(models.AbstractModel):
         record.alias_id.sudo().write(record.get_alias_values())
         return record
 
-    @api.multi
     def unlink(self):
         """ Delete the given records, and cascade-delete their corresponding alias. """
         aliases = self.mapped('alias_id')
@@ -222,7 +214,6 @@ class AliasMixin(models.AbstractModel):
         aliases.unlink()
         return res
 
-    @api.model_cr_context
     def _init_column(self, name):
         """ Create aliases for existing rows. """
         super(AliasMixin, self)._init_column(name)
@@ -249,7 +240,7 @@ class AliasMixin(models.AbstractModel):
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
             alias = alias_model.create(record.get_alias_values())
-            record.with_context({'mail_notrack': True}).alias_id = alias
+            record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
 

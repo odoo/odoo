@@ -20,7 +20,7 @@ odoo.define('web.ListModel', function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Overriden to add `groupData` when performing get on list datapoints.
+         * overridden to add `groupData` when performing get on list datapoints.
          *
          * @override
          * @see _readGroupExtraFields
@@ -37,32 +37,41 @@ odoo.define('web.ListModel', function (require) {
          * For a list of records, performs a write with all changes and fetches
          * all data.
          *
+         * @param {string} listDatapointId id of the parent list
          * @param {string} referenceRecordId the record datapoint used to
          *  generate the changes to apply to recordIds
          * @param {string[]} recordIds a list of record datapoint ids
+         * @param {string} fieldName the field to write
          */
-        saveRecords: function (referenceRecordId, recordIds) {
+        saveRecords: function (listDatapointId, referenceRecordId, recordIds, fieldName) {
             var self = this;
             var referenceRecord = this.localData[referenceRecordId];
-            var list = this.localData[referenceRecord.parentID];
-            var changes = this._generateChanges(referenceRecord, {});
+            var list = this.localData[listDatapointId];
+            // generate all record values to ensure that we'll write something
+            // (e.g. 2 records selected, edit a many2one in the first one, but
+            // reset same value, we still want to save this value on the other
+            // record)
+            var allChanges = this._generateChanges(referenceRecord, {changesOnly: false});
+            var changes = _.pick(allChanges, fieldName);
             var records = recordIds.map(function (recordId) {
                 return self.localData[recordId];
             });
             var model = records[0].model;
             var recordResIds = _.pluck(records, 'res_id');
             var fieldNames = records[0].getFieldNames();
+            var context = records[0].getContext();
 
             return this._rpc({
                 model: model,
                 method: 'write',
                 args: [recordResIds, changes],
-                context: records[0].getContext(),
+                context: context,
             }).then(function () {
                 return self._rpc({
                     model: model,
                     method: 'read',
                     args: [recordResIds, fieldNames],
+                    context: context,
                 });
             }).then(function (results) {
                 results.forEach(function (data) {
@@ -94,14 +103,7 @@ odoo.define('web.ListModel', function (require) {
             options = options || {};
             options.fetchRecordsWithGroups = true;
             return this._super(list, options).then(function (result) {
-                var prom;
-                if (!list.parentID) {
-                    // groupbys buttons are only displayed on the first level of
-                    // groupby so no need to fetch the extra fields for inner
-                    // groups
-                    prom = self._readGroupExtraFields(list);
-                }
-                return Promise.resolve(prom).then(_.constant(result));
+                return self._readGroupExtraFields(list).then(_.constant(result));
             });
         },
         /**

@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 
 
-class TestStreetFields(TransactionCase):
+class TestStreetFields(SavepointCase):
 
-    def setUp(self):
-        super(TestStreetFields, self).setUp()
-        self.Partner = self.env['res.partner']
-        self.env.ref('base.be').write({'street_format': '%(street_name)s, %(street_number)s/%(street_number2)s'})
-        self.env.ref('base.us').write({'street_format': '%(street_number)s/%(street_number2)s %(street_name)s'})
-        self.env.ref('base.ch').write({'street_format': 'header %(street_name)s, %(street_number)s - %(street_number2)s trailer'})
-        self.env.ref('base.mx').write({'street_format': '%(street_name)s %(street_number)s/%(street_number2)s'})
+    @classmethod
+    def setUpClass(cls):
+        super(TestStreetFields, cls).setUpClass()
+        cls.Partner = cls.env['res.partner']
+        cls.env.ref('base.be').write({'street_format': '%(street_name)s, %(street_number)s/%(street_number2)s'})
+        cls.env.ref('base.us').write({'street_format': '%(street_number)s/%(street_number2)s %(street_name)s'})
+        cls.env.ref('base.ch').write({'street_format': 'header %(street_name)s, %(street_number)s - %(street_number2)s trailer'})
+        cls.env.ref('base.mx').write({'street_format': '%(street_name)s %(street_number)s/%(street_number2)s'})
 
     def create_and_assert(self, partner_name, country_id, street, street_name, street_number, street_number2):
         partner = self.Partner.create({'name': partner_name + '-1', 'street': street, 'country_id': country_id})

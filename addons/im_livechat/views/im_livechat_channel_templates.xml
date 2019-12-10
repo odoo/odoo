@@ -8,7 +8,10 @@
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_view.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_controller.js"></script>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_history.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_form.scss"/>
             </xpath>
         </template>
 
@@ -133,6 +136,7 @@
             <script type="text/javascript" src="/web/static/src/js/core/collections.js"/>
             <script type="text/javascript" src="/web/static/src/js/core/translation.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/src/js/ajax_external.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/time.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/service_mixins.js"></script>
@@ -189,7 +193,7 @@
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
-                document.addEventListener("DOMContentLoaded", function(event) {
+                window.addEventListener('load', function () {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
                         var Session = require('web.Session');
@@ -207,7 +211,7 @@
                             "<t t-esc="info['server_url']"/>",
                             <t t-raw="json.dumps(info.get('options', {}))"/>
                         );
-                        button.appendTo($('body'));
+                        button.appendTo(document.body);
                         window.livechat_button = button;
             </t>
                     });

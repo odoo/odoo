@@ -37,7 +37,6 @@
         <record id="mail_moderation_action" model="ir.actions.act_window">
             <field name="name">Moderation</field>
             <field name="res_model">mail.moderation</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="mail_moderation_view_search"/>
             <field name="context">{'search_default_status_ban': 1}</field>
@@ -47,6 +46,7 @@
         <menuitem name="Channel Moderation"
             id="mail_moderation_menu"
             parent="base.menu_email"
+            sequence="22"
             action="mail_moderation_action"/>
     </data>
 </odoo>

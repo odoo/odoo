@@ -4,47 +4,26 @@ odoo.define('pos_restaurant.multiprint', function (require) {
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
-var mixins = require('web.mixins');
-var Session = require('web.Session');
+var Printer = require('point_of_sale.Printer').Printer;
 
 var QWeb = core.qweb;
 
-var Printer = core.Class.extend(mixins.PropertiesMixin,{
-    init: function(parent,options){
-        mixins.PropertiesMixin.init.call(this);
-        this.setParent(parent);
-        options = options || {};
-        var url = options.url || 'http://localhost:8069';
-        this.connection = new Session(undefined,url, { use_cors: true});
-        this.host       = url;
-        this.receipt_queue = [];
-    },
-    print: function(receipt){
-        var self = this;
-        if(receipt){
-            this.receipt_queue.push(receipt);
+models.PosModel = models.PosModel.extend({
+    create_printer: function (config) {
+        var url = config.proxy_ip || '';
+        if(url.indexOf('//') < 0) {
+            url = window.location.protocol + '//' + url;
         }
-        function send_printing_job(){
-            if(self.receipt_queue.length > 0){
-                var r = self.receipt_queue.shift();
-                var options = {shadow: true, timeout: 5000};
-                self.connection.rpc('/hw_proxy/print_xml_receipt', {receipt: r}, options)
-                    .then(function(){
-                        send_printing_job();
-                    },function(error, event){
-                        self.receipt_queue.unshift(r);
-                        console.log('There was an error while trying to print the order:');
-                        console.log(error);
-                    });
-            }
+        if(url.indexOf(':', url.indexOf('//') + 2) < 0 && window.location.protocol !== 'https:') {
+            url = url + ':8069';
         }
-        send_printing_job();
+        return new Printer(url, this);
     },
 });
 
 models.load_models({
     model: 'restaurant.printer',
-    fields: ['name','proxy_ip','product_categories_ids'],
+    fields: ['name','proxy_ip','product_categories_ids', 'printer_type'],
     domain: null,
     loaded: function(self,printers){
         var active_printers = {};
@@ -58,14 +37,7 @@ models.load_models({
 
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
-                var url = printers[i].proxy_ip || '';
-                if(url.indexOf('//') < 0){
-                    url = 'http://'+url;
-                }
-                if(url.indexOf(':',url.indexOf('//')+2) < 0){
-                    url = url+':8069';
-                }
-                var printer = new Printer(self,{url:url});
+                var printer = self.create_printer(printers[i]);
                 printer.config = printers[i];
                 self.printers.push(printer);
 
@@ -91,17 +63,17 @@ models.Orderline = models.Orderline.extend({
             // mp dirty is true if this orderline has changed
             // since the last kitchen print
             // it's left undefined if the orderline does not
-            // need to be printed to a printer. 
+            // need to be printed to a printer.
 
             this.mp_dirty = this.printable() || undefined;
-        } 
+        }
         if (!this.mp_skip) {
             // mp_skip is true if the cashier want this orderline
             // not to be sent to the kitchen
             this.mp_skip  = false;
         }
     },
-    // can this orderline be potentially printed ? 
+    // can this orderline be potentially printed ?
     printable: function() {
         return this.pos.db.is_product_in_category(this.pos.printers_categories, this.get_product().id);
     },
@@ -122,8 +94,8 @@ models.Orderline = models.Orderline.extend({
         }
         _super_orderline.set_quantity.apply(this,arguments);
     },
-    can_be_merged_with: function(orderline) { 
-        return (!this.mp_skip) && 
+    can_be_merged_with: function(orderline) {
+        return (!this.mp_skip) &&
                (!orderline.mp_skip) &&
                _super_orderline.can_be_merged_with.apply(this,arguments);
     },
@@ -264,7 +236,7 @@ models.Order = models.Order.extend({
                     'name':     this.pos.db.get_product_by_id(old.product_id).display_name,
                     'name_wrapped': old.product_name_wrapped,
                     'note':     old.note,
-                    'qty':      old.qty, 
+                    'qty':      old.qty,
                 });
             }
         }
@@ -277,7 +249,7 @@ models.Order = models.Order.extend({
 
             var _add = [];
             var _rem = [];
-            
+
             for(var i = 0; i < add.length; i++){
                 if(self.pos.db.is_product_in_category(categories,add[i].id)){
                     _add.push(add[i]);
@@ -310,7 +282,7 @@ models.Order = models.Order.extend({
                 'minutes': minutes,
             },
         };
-        
+
     },
     printChanges: function(){
         var printers = this.pos.printers;
@@ -318,7 +290,7 @@ models.Order = models.Order.extend({
             var changes = this.computeChanges(printers[i].config.product_categories_ids);
             if ( changes['new'].length > 0 || changes['cancelled'].length > 0){
                 var receipt = QWeb.render('OrderChangeReceipt',{changes:changes, widget:this});
-                printers[i].print(receipt);
+                printers[i].print_receipt(receipt);
             }
         }
     },
@@ -386,7 +358,6 @@ screens.OrderWidget.include({
 });
 
 return {
-    Printer: Printer,
     SubmitOrderButton: SubmitOrderButton,
 }
 

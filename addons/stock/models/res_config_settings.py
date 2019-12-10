@@ -26,8 +26,13 @@ class ResConfigSettings(models.TransientModel):
         implied_group='stock.group_adv_location',
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).")
     group_warning_stock = fields.Boolean("Warnings for Stock", implied_group='stock.group_warning_stock')
-    module_stock_picking_batch = fields.Boolean("Batch Pickings", oldname="module_stock_picking_wave")
+    group_stock_sign_delivery = fields.Boolean("Signature", implied_group='stock.group_stock_sign_delivery')
+    module_stock_picking_batch = fields.Boolean("Batch Pickings")
     module_stock_barcode = fields.Boolean("Barcode Scanner")
+    stock_move_email_validation = fields.Boolean(related='company_id.stock_move_email_validation', readonly=False)
+    stock_mail_confirmation_template_id = fields.Many2one(related='company_id.stock_mail_confirmation_template_id', readonly=False)
+    module_stock_sms = fields.Boolean("SMS Confirmation")
+    module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_dhl = fields.Boolean("DHL USA")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
@@ -59,7 +64,6 @@ class ResConfigSettings(models.TransientModel):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
             self.group_stock_multi_locations = True
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
 
@@ -86,6 +90,9 @@ class ResConfigSettings(models.TransientModel):
         res = super(ResConfigSettings, self).execute()
         self.ensure_one()
         if self.group_stock_multi_locations or self.group_stock_production_lot or self.group_stock_tracking_lot:
-            picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([('show_operations', '=', False)])
+            picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
+                ('code', '!=', 'incoming'),
+                ('show_operations', '=', False)
+            ])
             picking_types.write({'show_operations': True})
         return res

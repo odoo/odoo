@@ -12,6 +12,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
 var Pager = require('web.Pager');
+var TranslationDialog = require('web.TranslationDialog');
 
 var _t = core._t;
 
@@ -21,6 +22,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         reload: '_onReload',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
+        load_optional_fields: '_onLoadOptionalFields',
+        save_optional_fields: '_onSaveOptionalFields',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
     }),
@@ -43,6 +46,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called
         this.savingDef = Promise.resolve();
+        this.viewId = params.viewId;
     },
     /**
      * @override
@@ -122,7 +126,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
-     * Method that will be overriden by the views with the ability to have selected ids
+     * Method that will be overridden by the views with the ability to have selected ids
      *
      * @returns {Array}
      */
@@ -298,7 +302,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 },
                 on_success: resolve,
                 on_fail: function () {
-                    self.update({}, {reload: false}).then(reject).guardedCatch(reject);
+                    self.update({}, { reload: false }).then(reject).guardedCatch(reject);
                 },
                 on_closed: reload,
             });
@@ -327,6 +331,23 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
 
         var state = this.model.get(this.handle);
         return this.renderer.confirmChange(state, id, fields, e);
+    },
+    /**
+     * Ask the user to confirm he wants to save the record
+     * @private
+     */
+    _confirmSaveNewRecord: function () {
+        var self = this;
+        var def = new Promise(function (resolve, reject) {
+            var message = _t("You need to save this new record before editing the translation. Do you want to proceed?");
+            var dialog = Dialog.confirm(self, message, {
+                title: _t("Warning"),
+                confirm_callback: resolve.bind(self, true),
+                cancel_callback: reject,
+            });
+            dialog.on('closed', self, reject);
+        });
+        return def;
     },
     /**
      * Delete records (and ask for confirmation if necessary)
@@ -374,17 +395,22 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *        the new record to be in edit mode too, but the view manager calls
      *        this function as the URL changes...) @todo get rid of this when
      *        the webclient/action_manager's hashchange mechanism is improved.
+     * @param {boolean} [options.noAbandon=false]
      * @returns {Promise}
      */
     _discardChanges: function (recordID, options) {
         var self = this;
         recordID = recordID || this.handle;
+        options = options || {};
         return this.canBeDiscarded(recordID)
             .then(function (needDiscard) {
-                if (options && options.readonlyIfRealDiscard && !needDiscard) {
+                if (options.readonlyIfRealDiscard && !needDiscard) {
                     return;
                 }
                 self.model.discardChanges(recordID);
+                if (options.noAbandon) {
+                    return;
+                }
                 if (self.model.canBeAbandoned(recordID)) {
                     self._abandonRecord(recordID);
                     return;
@@ -415,6 +441,49 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             currentId: env.currentId,
             resIds: env.ids,
         });
+    },
+    /**
+     * Compute the optional fields local storage key using the given parts.
+     *
+     * @param {Object} keyParts
+     * @param {string} keyParts.viewType view type
+     * @param {string} [keyParts.relationalField] name of the field with subview
+     * @param {integer} [keyParts.subViewId] subview id
+     * @param {string} [keyParts.subViewType] type of the subview
+     * @param {Object} keyParts.fields fields
+     * @param {string} keyParts.fields.name field name
+     * @param {string} keyParts.fields.type field type
+     * @returns {string} local storage key for optional fields in this view
+     * @private
+     */
+    _getOptionalFieldsLocalStorageKey: function (keyParts) {
+        keyParts.model = this.modelName;
+        keyParts.viewType = this.viewType;
+        keyParts.viewId = this.viewId;
+
+        var parts = [
+            'model',
+            'viewType',
+            'viewId',
+            'relationalField',
+            'subViewType',
+            'subViewId',
+        ];
+
+        var viewIdentifier = parts.reduce(function (identifier, partName) {
+            if (partName in keyParts) {
+                return identifier + ',' + keyParts[partName];
+            }
+            return identifier;
+        }, 'optional_fields');
+
+        viewIdentifier =
+            keyParts.fields.sort(this._nameSortComparer)
+                           .reduce(function (identifier, field) {
+                                return identifier + ',' + field.name;
+                            }, viewIdentifier);
+
+        return viewIdentifier;
     },
     /**
      * Return the params (current_min, limit and size) to pass to the pager,
@@ -454,6 +523,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     _isPagerVisible: function () {
         return true;
+    },
+    /**
+     *  Sort function used to sort the fields by names, to compute the optional fields keys
+     *
+     *  @param {Object} left
+     *  @param {Object} right
+     *  @private
+      */
+    _nameSortComparer: function(left, right) {
+        return left.name < right.name ? -1 : 1;
     },
     /**
      * Helper function to display a warning that some fields have an invalid
@@ -626,21 +705,25 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *   re-render (reload the whole form by default)
      * @param {string[]} [ev.data.fieldNames] list of the record's fields to
      *   reload
+     * @param {Function} [ev.data.onSuccess] callback executed after reload is resolved
+     * @param {Function} [ev.data.onFailure] callback executed when reload is rejected
      */
     _onReload: function (ev) {
         ev.stopPropagation(); // prevent other controllers from handling this request
         var data = ev && ev.data || {};
         var handle = data.db_id;
+        var prom;
         if (handle) {
             // reload the relational field given its db_id
-            this.model.reload(handle).then(this._confirmSave.bind(this, handle));
+            prom = this.model.reload(handle).then(this._confirmSave.bind(this, handle));
         } else {
             // no db_id given, so reload the main record
-            this.reload({
+            prom = this.reload({
                 fieldNames: data.fieldNames,
                 keepChanges: data.keepChanges || false,
             });
         }
+        prom.then(ev.data.onSuccess).guardedCatch(ev.data.onFailure);
     },
     /**
      * Resequence records in the given order.
@@ -674,6 +757,39 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
+     * Load the optional columns settings in local storage for this view
+     *
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.keyParts see _getLocalStorageKey
+     * @param {function} ev.data.callback function to call with the result
+     * @private
+     */
+    _onLoadOptionalFields: function (ev) {
+        var res = this.call(
+            'local_storage',
+            'getItem',
+            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts)
+        );
+        ev.data.callback(res);
+    },
+    /**
+     * Save the optional columns settings in local storage for this view
+     *
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.keyParts see _getLocalStorageKey
+     * @param {Array<string>} ev.data.optionalColumnsEnabled list of optional
+     *   field names that have been enabled
+     * @private
+     */
+    _onSaveOptionalFields: function (ev) {
+        this.call(
+            'local_storage',
+            'setItem',
+            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts),
+            ev.data.optionalColumnsEnabled
+        );
+    },
+    /**
      * @private
      * @param {OdooEvent} ev
      */
@@ -698,28 +814,37 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {OdooEvent} ev
      */
-    _onTranslate: function (ev) {
+    _onTranslate: async function (ev) {
         ev.stopPropagation();
-        var self = this;
-        var record = this.model.get(ev.data.id, {raw: true});
-        this._rpc({
+
+        if (this.model.isNew(ev.data.id)) {
+            await this._confirmSaveNewRecord();
+            var updatedFields = await this.saveRecord(ev.data.id, { stayInEdit: true });
+            await this._confirmChange(ev.data.id, updatedFields, ev);
+        }
+        var record = this.model.get(ev.data.id, { raw: true });
+        var res_id = record.res_id || record.res_ids[0];
+        var result = await this._rpc({
             route: '/web/dataset/call_button',
             params: {
                 model: 'ir.translation',
                 method: 'translate_fields',
-                args: [record.model, record.res_id, ev.data.fieldName],
-                kwargs: {context: record.getContext()},
+                args: [record.model, res_id, ev.data.fieldName],
+                kwargs: { context: record.getContext() },
             }
-        }).then(function (result) {
-            self.do_action(result, {
-                on_reverse_breadcrumb: function () {
-                    if (!_.isEmpty(self.renderer.alertFields)) {
-                        self.renderer.displayTranslationAlert();
-                    }
-                    return false;
-                },
-            });
         });
+
+        this.translationDialog = new TranslationDialog(this, {
+            domain: result.domain,
+            searchName: result.context.search_default_name,
+            fieldName: record.fieldsInfo[record.viewType][ev.data.fieldName].name,
+            userLanguageValue: ev.target.value || '',
+            dataPointID: record.id,
+            isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
+            isText: result.context.translation_type === 'text',
+            showSrc: result.context.translation_show_src,
+        });
+        return this.translationDialog.open();
     },
 });
 

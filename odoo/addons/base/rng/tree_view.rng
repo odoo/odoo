@@ -27,6 +27,8 @@
             <rng:optional><rng:attribute name="create"/></rng:optional>
             <rng:optional><rng:attribute name="delete"/></rng:optional>
             <rng:optional><rng:attribute name="edit"/></rng:optional>
+            <rng:optional><rng:attribute name="multi_edit"/></rng:optional>
+            <rng:optional><rng:attribute name="export_xlsx"/></rng:optional>
             <rng:optional><rng:attribute name="duplicate"/></rng:optional>
             <rng:optional><rng:attribute name="import"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional> <!-- deprecated, has no effect anymore -->
@@ -61,14 +63,7 @@
                     </rng:choice>
                 </rng:attribute>
             </rng:optional>
-            <rng:optional>
-                <rng:attribute name="expand">
-                    <rng:choice>
-                        <rng:value>1</rng:value>
-                        <rng:value>0</rng:value>
-                    </rng:choice>
-                </rng:attribute>
-            </rng:optional>
+            <rng:optional><rng:attribute name="expand"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="control"/>

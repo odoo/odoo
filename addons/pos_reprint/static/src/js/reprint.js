@@ -23,6 +23,7 @@ var ReprintReceiptScreenWidget = screens.ReceiptScreenWidget.extend({
         this.gui.show_screen('products');
     },
     get_receipt_render_env: function() {
+        this.pos.last_receipt_render_env.receipt.reprint = true;
         return this.pos.last_receipt_render_env;
     },
 });
@@ -46,7 +47,7 @@ screens.define_action_button({
     'name': 'reprint',
     'widget': ReprintButton,
     'condition': function(){
-        return this.pos.config.iface_print_via_proxy;
+        return this.pos.config.module_pos_reprint;
     },
 });
 

@@ -34,7 +34,7 @@
             <field name="reward_realtime">True</field>
             <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
-            <field name="category">forum</field>
+            <field name="challenge_category">forum</field>
         </record>
         <record model="gamification.challenge.line" id="line_configure_profile">
             <field name="definition_id" eval="ref('definition_configure_profile')"/>
@@ -70,7 +70,7 @@
             <field name="reward_realtime">True</field>
             <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
-            <field name="category">forum</field>
+            <field name="challenge_category">forum</field>
         </record>
         <record model="gamification.challenge.line" id="line_commentator">
             <field name="definition_id" eval="ref('definition_commentator')"/>
@@ -105,7 +105,7 @@
             <field name="reward_realtime">True</field>
             <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
-            <field name="category">forum</field>
+            <field name="challenge_category">forum</field>
         </record>
         <record model="gamification.challenge.line" id="line_pundit">
             <field name="definition_id" eval="ref('definition_pundit')" />
@@ -129,7 +129,7 @@
             <field name="reward_realtime">True</field>
             <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
-            <field name="category">forum</field>
+            <field name="challenge_category">forum</field>
         </record>
         <record model="gamification.challenge.line" id="line_chief_commentator">
             <field name="definition_id" eval="ref('definition_commentator')"/>
@@ -164,7 +164,7 @@
             <field name="reward_realtime">True</field>
             <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
-            <field name="category">forum</field>
+            <field name="challenge_category">forum</field>
         </record>
         <record model="gamification.challenge.line" id="line_taxonomist">
             <field name="definition_id" eval="ref('definition_taxonomist')" />

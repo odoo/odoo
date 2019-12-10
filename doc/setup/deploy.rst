@@ -273,12 +273,6 @@ just about any SSL termination proxy, but requires the following setup:
 * Your SSL termination proxy should also automatically redirect non-secure
   connections to the secure port
 
-.. warning::
-
-  In case you are using the Point of Sale module in combination with a `POSBox`_,
-  you must disable the HTTPS configuration for the route ``/pos/web`` to avoid
-  mixed-content errors.
-
 Configuration sample
 --------------------
 
@@ -598,14 +592,17 @@ Supported Browsers
 
 Odoo is supported by multiple browsers for each of its versions. No
 distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. The list
-of the supported browsers is the following:
+up-to-date. Odoo is supported on the current browser version. We support
+the following browsers:
 
-- IE11,
-- Mozilla Firefox,
-- Google Chrome,
-- Safari,
+- Mozilla Firefox
+- Google Chrome
+- Safari
 - Microsoft Edge
+
+.. note::
+
+    Since Odoo 13.0, ES6 is supported.  Therefore, IE support is dropped.
 
 
 .. [#different-machines]
@@ -624,16 +621,16 @@ of the supported browsers is the following:
     environment than over the internet.
 
 .. _regular expression: https://docs.python.org/3/library/re.html
-.. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
+.. _ARP spoofing: https://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
-    http://nginx.com/resources/admin-guide/nginx-ssl-termination/
+    https://nginx.com/resources/admin-guide/nginx-ssl-termination/
 .. _Nginx proxying example:
-    http://nginx.com/resources/admin-guide/reverse-proxy/
+    https://nginx.com/resources/admin-guide/reverse-proxy/
 .. _socat: http://www.dest-unreach.org/socat/
 .. _PostgreSQL connection settings:
 .. _listen to network interfaces:
-    http://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
+    https://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
 .. _use an SSH tunnel:
-    http://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
-.. _WSGI: http://wsgi.readthedocs.org/
+    https://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
+.. _WSGI: https://wsgi.readthedocs.org/
 .. _POSBox: https://www.odoo.com/page/point-of-sale-hardware#part_2

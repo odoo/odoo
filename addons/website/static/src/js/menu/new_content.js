@@ -285,7 +285,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         $p.text(_.str.sprintf(self.newContentText.failed, name));
                     });
                 }
-            },{
+            }, {
                 text: _t("Cancel"),
                 close: true,
             }];
@@ -294,7 +294,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         new Dialog(this, {
             title: title,
             size: 'medium',
-            $content: $('<p/>', {text: content}),
+            $content: $('<div/>', {text: content}),
             buttons: buttons
         }).open();
     },

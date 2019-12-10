@@ -28,15 +28,8 @@
         <record id="purchase_open_picking" model="ir.actions.act_window">
             <field name="name">Receptions</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('purchase_id', '=', active_id)]</field>
         </record>
 
-    <!-- Inventory control -->
-    <menuitem
-        id="menu_action_picking_tree_in_move"
-        action="stock.action_receipt_picking_move"
-        parent="purchase.menu_purchase_control"
-        sequence="11"/>
 </odoo>

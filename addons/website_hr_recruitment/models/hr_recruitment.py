@@ -12,7 +12,6 @@ class RecruitmentSource(models.Model):
 
     url = fields.Char(compute='_compute_url', string='Url Parameters')
 
-    @api.one
     @api.depends('source_id', 'source_id.name', 'job_id')
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -29,8 +28,6 @@ class RecruitmentSource(models.Model):
 class Applicant(models.Model):
 
     _inherit = 'hr.applicant'
-
-    residence_country = fields.Char(string="Residence Country")
 
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:
@@ -49,13 +46,11 @@ class Job(models.Model):
 
     website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, default=_get_default_website_description, prefetch=False)
 
-    @api.multi
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
             job.website_url = "/jobs/detail/%s" % job.id
 
-    @api.multi
     def set_open(self):
         self.write({'website_published': False})
         return super(Job, self).set_open()

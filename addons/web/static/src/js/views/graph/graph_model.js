@@ -219,7 +219,7 @@ return AbstractModel.extend({
     /**
      * Since read_group is insane and returns its result on different keys
      * depending of some input, we have to normalize the result.
-     * Each group comming from the read_group produces a dataPoint
+     * Each group coming from the read_group produces a dataPoint
      *
      * @todo This is not good for race conditions.  The processing should get
      *  the object this.chart in argument, or an array or something. We want to
@@ -247,7 +247,7 @@ return AbstractModel.extend({
                 // when a many2one field is used as a measure AND as a grouped
                 // field, bad things happen.  The server will only return the
                 // grouped value and will not aggregate it.  Since there is a
-                // nameclash, we are then in the situation where this value is
+                // name clash, we are then in the situation where this value is
                 // an array.  Fortunately, if we group by a field, then we can
                 // say for certain that the group contains exactly one distinct
                 // value for that field.

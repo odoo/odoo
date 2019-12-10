@@ -33,7 +33,7 @@
             </div>
             <div class="row mt8" t-foreach="groups" t-as="group">
                 <div class="col-lg-3">
-                    <img t-att-src="website.image_url(group, 'image_small')" class="float-left" alt="Group"/>
+                    <img t-att-src="website.image_url(group, 'image_128')" class="o_image_64_cover float-left" alt="Group"/>
                     <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
                     <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
                         <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
@@ -199,7 +199,7 @@
                         </h4>
                     </div>
                     <div class="media">
-                        <img class="rounded mt0 o_mg_avatar"
+                        <img class="rounded mt0 o_image_40_cover"
                             t-att-src="website.image_url(message, 'author_avatar')"  alt="Avatar"/>
                         <div class="media-body">
                             <h4 t-esc="message.description"/>
@@ -260,7 +260,7 @@
     <div>
         <ul class="list-unstyled">
             <li t-foreach="messages" t-as="thread" class="media mt-3">
-                <img class="rounded mt-0 o_mg_avatar" alt="Avatar"
+                <img class="rounded mt-0 o_image_40_cover" alt="Avatar"
                     t-att-src="website.image_url(thread, 'author_avatar')"/>
                 <div class="media-body">
                     <h4>

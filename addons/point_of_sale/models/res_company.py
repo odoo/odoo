@@ -6,6 +6,12 @@ from odoo.exceptions import ValidationError
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    point_of_sale_update_stock_quantities = fields.Selection([
+            ('closing', 'At the session closing (advised)'),
+            ('real', 'In real time'),
+            ], default='closing', string="Update quantities in stock",
+            help="At the session closing: A picking is created for the entire session when it's closed\n In real time: Each order sent to the server create its own picking")
+
     @api.constrains('period_lock_date', 'fiscalyear_lock_date')
     def validate_period_lock_date(self):
         """ This constrains makes it impossible to change the period lock date if

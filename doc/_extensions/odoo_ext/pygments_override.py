@@ -118,9 +118,9 @@ class OdooStyle(Style):
         Generic.Traceback:         "",
     }
 
-import imp
+import types
 import sys
 modname = 'pygments.styles.odoo'
-m = imp.new_module(modname)
+m = types.ModuleType(modname)
 m.OdooStyle = OdooStyle
 sys.modules[modname] = m

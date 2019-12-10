@@ -3,21 +3,16 @@
 
 import base64
 import binascii
+
 from PIL import Image, ImageDraw, PngImagePlugin
 
 from odoo import tools
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 
 class TestImage(TransactionCase):
-    """Tests for the different image tools helpers.
-
-    The following helpers are not tested here because they are wrappers for the
-    other methods or they are tested elsewhere (eg. on TestWebsiteSaleImage):
-    - image_get_resized_images
-    - image_resize_images
-    - is_image_size_above
-    """
+    """Tests for the different image tools helpers."""
     def setUp(self):
         super(TestImage, self).setUp()
         self.bg_color = (135, 90, 123)
@@ -61,10 +56,10 @@ class TestImage(TransactionCase):
         self.assertEqual(type(image), PngImagePlugin.PngImageFile, "base64 as string, correct format")
         self.assertEqual(image.size, (1, 1), "base64 as string, correct size")
 
-        with self.assertRaises(binascii.Error, msg="wrong base64: binascii.Error: Incorrect padding"):
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             image = tools.base64_to_image(b'oazdazpodazdpok')
 
-        with self.assertRaises(OSError, msg="wrong base64: OSError: cannot identify image file"):
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             image = tools.base64_to_image(b'oazdazpodazdpokd')
 
     def test_01_image_to_base64(self):
@@ -73,19 +68,50 @@ class TestImage(TransactionCase):
         image_base64 = tools.image_to_base64(image, 'PNG')
         self.assertEqual(image_base64, self.base64_1x1_png)
 
+    def test_02_image_fix_orientation(self):
+        """Test that the orientation of images is correct."""
+
+        # Colors that can be distinguished among themselves even with jpeg loss.
+        blue = (0, 0, 255)
+        yellow = (255, 255, 0)
+        green = (0, 255, 0)
+        pink = (255, 0, 255)
+        # Image large enough so jpeg loss is not a huge factor in the corners.
+        size = 50
+        expected = (blue, yellow, green, pink)
+
+        # They are all supposed to be same image: (blue, yellow, green, pink) in
+        # that order, but each encoded with a different orientation.
+        self._orientation_test(1, (blue, yellow, green, pink), size, expected)  # top/left
+        self._orientation_test(2, (yellow, blue, pink, green), size, expected)  # top/right
+        self._orientation_test(3, (pink, green, yellow, blue), size, expected)  # bottom/right
+        self._orientation_test(4, (green, pink, blue, yellow), size, expected)  # bottom/left
+        self._orientation_test(5, (blue, green, yellow, pink), size, expected)  # left/top
+        self._orientation_test(6, (yellow, pink, blue, green), size, expected)  # right/top
+        self._orientation_test(7, (pink, yellow, green, blue), size, expected)  # right/bottom
+        self._orientation_test(8, (green, blue, pink, yellow), size, expected)  # left/bottom
+
     def test_10_image_process_base64_source(self):
         """Test the base64_source parameter of image_process."""
+        wrong_base64 = b'oazdazpodazdpok'
+
         self.assertFalse(tools.image_process(False), "return False if base64_source is falsy")
         self.assertEqual(tools.image_process(self.base64_svg), self.base64_svg, "return base64_source if format is SVG")
 
-        with self.assertRaises(binascii.Error, msg="wrong base64: binascii.Error: Incorrect padding"):
-            tools.image_process(b'oazdazpodazdpok')
+        # in the following tests, pass `quality` to force the processing
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
+            tools.image_process(wrong_base64, quality=95)
 
-        with self.assertRaises(OSError, msg="wrong base64: OSError: cannot identify image file"):
-            tools.image_process(b'oazdazpodazdpokd')
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
+            tools.image_process(b'oazdazpodazdpokd', quality=95)
 
-        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg))
+        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, quality=95))
         self.assertEqual(image.size, (1920, 1080), "OK return the image")
+
+        # test that nothing happens if no operation has been requested
+        # (otherwise those would raise because of wrong base64)
+        self.assertEqual(tools.image_process(wrong_base64), wrong_base64)
+        self.assertEqual(tools.image_process(wrong_base64, size=False), wrong_base64)
 
     def test_11_image_process_size(self):
         """Test the size parameter of image_process."""
@@ -174,8 +200,8 @@ class TestImage(TransactionCase):
         count = 0
         for test in tests:
             count = count + 1
-            # process the image
-            image = tools.base64_to_image(tools.image_process(test[0], size=test[1], crop=test[2]))
+            # process the image, pass quality to make sure the result is palette
+            image = tools.base64_to_image(tools.image_process(test[0], size=test[1], crop=test[2], quality=95))
             # verify size
             self.assertEqual(image.size, test[3], "%s - correct size" % test[5])
 
@@ -207,7 +233,7 @@ class TestImage(TransactionCase):
 
         # CASE: color random, color has changed
         image = tools.base64_to_image(tools.image_process(base64_rgba, colorize=True))
-        self.assertEqual(image.mode, 'P')
+        self.assertEqual(image.mode, 'RGB')
         self.assertNotEqual(image.getpixel((0, 0)), (0, 0, 0))
 
     def test_16_image_process_format(self):
@@ -226,10 +252,41 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_rgba, output_format='jpeg'))
         self.assertEqual(image.format, 'JPEG', "change format PNG with RGBA to JPEG")
 
+        # pass quality to force the image to be processed
         self.base64_image_1080_1920_tiff = tools.image_to_base64(Image.new('RGB', (108, 192)), 'TIFF')
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_tiff))
+        image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_tiff, quality=95))
         self.assertEqual(image.format, 'JPEG', "unsupported format to JPEG")
 
     def test_20_image_data_uri(self):
         """Test that image_data_uri is working as expected."""
         self.assertEqual(tools.image_data_uri(self.base64_1x1_png), 'data:image/png;base64,' + self.base64_1x1_png.decode('ascii'))
+
+    def _assertAlmostEqualSequence(self, rgb1, rgb2, delta=10):
+        self.assertEqual(len(rgb1), len(rgb2))
+        for index, t in enumerate(zip(rgb1, rgb2)):
+            self.assertAlmostEqual(t[0], t[1], delta=delta, msg="%s vs %s at %d" % (rgb1, rgb2, index))
+
+    def _get_exif_colored_square_b64(self, orientation, colors, size):
+        image = Image.new('RGB', (size, size), color=self.bg_color)
+        draw = ImageDraw.Draw(image)
+        # Paint the colors on the 4 corners, to be able to test which colors
+        # move on which corners.
+        draw.rectangle(xy=[(0, 0), (size // 2, size // 2)], fill=colors[0])        # top/left
+        draw.rectangle(xy=[(size // 2, 0), (size, size // 2)], fill=colors[1])     # top/right
+        draw.rectangle(xy=[(0, size // 2), (size // 2, size)], fill=colors[2])     # bottom/left
+        draw.rectangle(xy=[(size // 2, size // 2), (size, size)], fill=colors[3])  # bottom/right
+        # Set the proper exif tag based on orientation params.
+        exif = b'Exif\x00\x00II*\x00\x08\x00\x00\x00\x01\x00\x12\x01\x03\x00\x01\x00\x00\x00' + bytes([orientation]) + b'\x00\x00\x00\x00\x00\x00\x00'
+        # The image image is saved with the exif tag.
+        return tools.image_to_base64(image, 'JPEG', exif=exif)
+
+    def _orientation_test(self, orientation, colors, size, expected):
+        # Generate the test image based on orientation and order of colors.
+        b64_image = self._get_exif_colored_square_b64(orientation, colors, size)
+        # The image is read again now that it has orientation added.
+        fixed_image = tools.image_fix_orientation(tools.base64_to_image(b64_image))
+        # Ensure colors are in the right order (blue, yellow, green, pink).
+        self._assertAlmostEqualSequence(fixed_image.getpixel((0, 0)), expected[0])                # top/left
+        self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, 0)), expected[1])         # top/right
+        self._assertAlmostEqualSequence(fixed_image.getpixel((0, size - 1)), expected[2])         # bottom/left
+        self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, size - 1)), expected[3])  # bottom/right

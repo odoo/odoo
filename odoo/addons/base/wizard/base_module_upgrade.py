@@ -42,7 +42,6 @@ class BaseModuleUpgrade(models.TransientModel):
 
         return res
 
-    @api.multi
     def upgrade_module_cancel(self):
         Module = self.env['ir.module.module']
         to_install = Module.search([('state', 'in', ['to upgrade', 'to remove'])])
@@ -51,7 +50,6 @@ class BaseModuleUpgrade(models.TransientModel):
         to_uninstall.write({'state': 'uninstalled'})
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def upgrade_module(self):
         Module = self.env['ir.module.module']
 
@@ -77,7 +75,6 @@ class BaseModuleUpgrade(models.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def config(self):
         # pylint: disable=next-method-called
         return self.env['res.config'].next()

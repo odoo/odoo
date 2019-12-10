@@ -21,7 +21,7 @@ Message.include({
         return this._rpc({
             model: 'mail.message',
             method: 'cancel_letter',
-            args: [[this.getID()], []],
+            args: [[this.getID()]],
         }).then(function () {
             self.setSnailmailStatus('canceled');
             self.setSnailmailError(false);
@@ -51,7 +51,7 @@ Message.include({
         return this._rpc({
             model: 'mail.message',
             method: 'send_letter',
-            args: [[this.getID()], []],
+            args: [[this.getID()]],
         });
     },
     /**

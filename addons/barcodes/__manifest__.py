@@ -1,8 +1,8 @@
 {
     'name': 'Barcode',
     'version': '2.0',
-    'category': 'Extra Tools',
-    'summary': 'Barcodes Scanning and Parsing',
+    'category': 'Tools',
+    'summary': 'Scan and Parse Barcodes',
     'depends': ['web'],
     'data': [
         'data/barcodes_data.xml',

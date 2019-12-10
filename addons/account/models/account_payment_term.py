@@ -2,7 +2,6 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons import decimal_precision as dp
 
 from dateutil.relativedelta import relativedelta
 
@@ -32,16 +31,15 @@ class AccountPaymentTerm(models.Model):
             if len(lines) > 1:
                 raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
-    @api.multi
-    def compute(self, value, date_ref=False):
+    def compute(self, value, date_ref=False, currency=None):
         self.ensure_one()
         date_ref = date_ref or fields.Date.today()
         amount = value
         sign = value < 0 and -1 or 1
         result = []
-        if self.env.context.get('currency_id'):
+        if not currency and self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
-        else:
+        elif not currency:
             currency = self.env.company.currency_id
         for line in self.line_ids:
             if line.value == 'fixed':
@@ -50,19 +48,18 @@ class AccountPaymentTerm(models.Model):
                 amt = currency.round(value * (line.value_amount / 100.0))
             elif line.value == 'balance':
                 amt = currency.round(amount)
-            if amt:
-                next_date = fields.Date.from_string(date_ref)
-                if line.option == 'day_after_invoice_date':
-                    next_date += relativedelta(days=line.days)
-                    if line.day_of_the_month > 0:
-                        months_delta = (line.day_of_the_month < next_date.day) and 1 or 0
-                        next_date += relativedelta(day=line.day_of_the_month, months=months_delta)
-                elif line.option == 'day_following_month':
-                    next_date += relativedelta(day=line.days, months=1)
-                elif line.option == 'day_current_month':
-                    next_date += relativedelta(day=line.days, months=0)
-                result.append((fields.Date.to_string(next_date), amt))
-                amount -= amt
+            next_date = fields.Date.from_string(date_ref)
+            if line.option == 'day_after_invoice_date':
+                next_date += relativedelta(days=line.days)
+                if line.day_of_the_month > 0:
+                    months_delta = (line.day_of_the_month < next_date.day) and 1 or 0
+                    next_date += relativedelta(day=line.day_of_the_month, months=months_delta)
+            elif line.option == 'day_following_month':
+                next_date += relativedelta(day=line.days, months=1)
+            elif line.option == 'day_current_month':
+                next_date += relativedelta(day=line.days, months=0)
+            result.append((fields.Date.to_string(next_date), amt))
+            amount -= amt
         amount = sum(amt for _, amt in result)
         dist = currency.round(value - amount)
         if dist:
@@ -70,10 +67,9 @@ class AccountPaymentTerm(models.Model):
             result.append((last_date, dist))
         return result
 
-    @api.multi
     def unlink(self):
         for terms in self:
-            if self.env['account.invoice'].search([('payment_term_id', 'in', terms.ids)]):
+            if self.env['account.move'].search([('invoice_payment_term_id', 'in', terms.ids)]):
                 raise UserError(_('You can not delete payment terms as other records still reference it. However, you can archive it.'))
             property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in terms])])
             property_recs.unlink()
@@ -91,11 +87,11 @@ class AccountPaymentTermLine(models.Model):
             ('fixed', 'Fixed Amount')
         ], string='Type', required=True, default='balance',
         help="Select here the kind of valuation related to this payment terms line.")
-    value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Terms'), help="For percent enter a ratio between 0-100.")
+    value_amount = fields.Float(string='Value', digits='Payment Terms', help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
     day_of_the_month = fields.Integer(string='Day of the month', help="Day of the month on which the invoice must come to its term. If zero or negative, this value will be ignored, and no specific day will be set. If greater than the last day of a month, this number will instead select the last day of this month.")
     option = fields.Selection([
-            ('day_after_invoice_date', "day(s) after the invoice date"),
+            ('day_after_invoice_date', "days after the invoice date"),
             ('day_following_month', "of the following month"),
             ('day_current_month', "of the current month"),
         ],
@@ -114,7 +110,7 @@ class AccountPaymentTermLine(models.Model):
     def _check_days(self):
         for term_line in self:
             if term_line.option in ('day_following_month', 'day_current_month') and term_line.days <= 0:
-                raise ValidationError(_("The day of the month used for this term must be stricly positive."))
+                raise ValidationError(_("The day of the month used for this term must be strictly positive."))
             elif term_line.days < 0:
                 raise ValidationError(_("The number of days used for a payment term cannot be negative."))
 

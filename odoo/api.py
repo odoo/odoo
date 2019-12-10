@@ -1,46 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-""" This module provides the elements for managing two different API styles,
-    namely the "traditional" and "record" styles.
+"""The Odoo API module defines Odoo Environments and method decorators.
 
-    In the "traditional" style, parameters like the database cursor, user id,
-    context dictionary and record ids (usually denoted as ``cr``, ``uid``,
-    ``context``, ``ids``) are passed explicitly to all methods. In the "record"
-    style, those parameters are hidden into model instances, which gives it a
-    more object-oriented feel.
-
-    For instance, the statements::
-
-        model = self.pool.get(MODEL)
-        ids = model.search(cr, uid, DOMAIN, context=context)
-        for rec in model.browse(cr, uid, ids, context=context):
-            print rec.name
-        model.write(cr, uid, ids, VALUES, context=context)
-
-    may also be written as::
-
-        env = Environment(cr, uid, context) # cr, uid, context wrapped in env
-        model = env[MODEL]                  # retrieve an instance of MODEL
-        recs = model.search(DOMAIN)         # search returns a recordset
-        for rec in recs:                    # iterate over the records
-            print rec.name
-        recs.write(VALUES)                  # update all records in recs
-
-    Methods written in the "traditional" style are automatically decorated,
-    following some heuristics based on parameter names.
+.. todo:: Document this module
 """
 
 __all__ = [
     'Environment',
-    'Meta', 'guess', 'noguess',
-    'model', 'multi', 'one',
-    'model_cr', 'model_cr_context',
-    'cr', 'cr_context',
-    'cr_uid', 'cr_uid_context',
-    'cr_uid_id', 'cr_uid_id_context',
-    'cr_uid_ids', 'cr_uid_ids_context',
-    'cr_uid_records', 'cr_uid_records_context',
+    'Meta',
+    'model',
     'constrains', 'depends', 'onchange', 'returns',
     'call_kw',
 ]
@@ -48,14 +17,17 @@ __all__ = [
 import logging
 from collections import defaultdict, Mapping
 from contextlib import contextmanager
-from inspect import currentframe, getargspec
+from copy import deepcopy
+from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
 from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty, StackMap
+import odoo
+from .tools.translate import _
+from odoo.tools import frozendict, classproperty, lazy_property, StackMap
 from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
@@ -69,11 +41,7 @@ _logger = logging.getLogger(__name__)
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
-#  - method._orig: original method
 #
-
-WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_constrains',
-                 '_depends', '_onchange', '_returns', 'clear_cache')
 
 INHERITED_ATTRS = ('_returns',)
 
@@ -82,6 +50,7 @@ class Params(object):
     def __init__(self, args, kwargs):
         self.args = args
         self.kwargs = kwargs
+
     def __str__(self):
         params = []
         for arg in self.args:
@@ -105,13 +74,6 @@ class Meta(type):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
-
-                # guess calling convention if none is given
-                if not hasattr(value, '_api'):
-                    try:
-                        value = guess(value)
-                    except TypeError:
-                        pass
 
                 if (getattr(value, '_api', None) or '').startswith('cr'):
                     _logger.warning("Deprecated method %s.%s in module %s", name, key, attrs.get('__module__'))
@@ -137,25 +99,26 @@ def propagate(method1, method2):
 
 
 def constrains(*args):
-    """ Decorates a constraint checker. Each argument must be a field name
-    used in the check::
+    """Decorate a constraint checker.
 
-        @api.one
+    Each argument must be a field name used in the check::
+
         @api.constrains('name', 'description')
         def _check_description(self):
-            if self.name == self.description:
-                raise ValidationError("Fields name and description must be different")
+            for record in self:
+                if record.name == record.description:
+                    raise ValidationError("Fields name and description must be different")
 
     Invoked on the records on which one of the named fields has been modified.
 
-    Should raise :class:`~odoo.exceptions.ValidationError` if the
+    Should raise :exc:`~odoo.exceptions.ValidationError` if the
     validation failed.
 
     .. warning::
 
         ``@constrains`` only supports simple field names, dotted names
         (fields of relational fields e.g. ``partner_id.customer``) are not
-        supported and will be ignored
+        supported and will be ignored.
 
         ``@constrains`` will be triggered only if the declared fields in the
         decorated method are included in the ``create`` or ``write`` call.
@@ -169,32 +132,50 @@ def constrains(*args):
 
 
 def onchange(*args):
-    """ Return a decorator to decorate an onchange method for given fields.
-        Each argument must be a field name::
+    """Return a decorator to decorate an onchange method for given fields.
 
-            @api.onchange('partner_id')
-            def _onchange_partner(self):
-                self.message = "Dear %s" % (self.partner_id.name or "")
+    In the form views where the field appears, the method will be called
+    when one of the given fields is modified. The method is invoked on a
+    pseudo-record that contains the values present in the form. Field
+    assignments on that record are automatically sent back to the client.
 
-        In the form views where the field appears, the method will be called
-        when one of the given fields is modified. The method is invoked on a
-        pseudo-record that contains the values present in the form. Field
-        assignments on that record are automatically sent back to the client.
+    Each argument must be a field name::
 
-        The method may return a dictionary for changing field domains and pop up
-        a warning message, like in the old API::
+        @api.onchange('partner_id')
+        def _onchange_partner(self):
+            self.message = "Dear %s" % (self.partner_id.name or "")
 
-            return {
-                'domain': {'other_id': [('partner_id', '=', partner_id)]},
-                'warning': {'title': "Warning", 'message': "What is this?"},
-            }
+    .. code-block:: python
 
+        return {
+            'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
+        }
 
-        .. warning::
+    If the type is set to notification, the warning will be displayed in a notification.
+    Otherwise it will be displayed in a dialog as default.
 
-            ``@onchange`` only supports simple field names, dotted names
-            (fields of relational fields e.g. ``partner_id.tz``) are not
-            supported and will be ignored
+    .. warning::
+
+        ``@onchange`` only supports simple field names, dotted names
+        (fields of relational fields e.g. ``partner_id.tz``) are not
+        supported and will be ignored
+
+    .. danger::
+
+        Since ``@onchange`` returns a recordset of pseudo-records,
+        calling any one of the CRUD methods
+        (:meth:`create`, :meth:`read`, :meth:`write`, :meth:`unlink`)
+        on the aforementioned recordset is undefined behaviour,
+        as they potentially do not exist in the database yet.
+
+        Instead, simply set the record's field like shown in the example
+        above or call the :meth:`update` method.
+
+    .. warning::
+
+        It is not possible for a ``one2many`` or ``many2many`` field to modify
+        itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
+
     """
     return attrsetter('_onchange', args)
 
@@ -206,13 +187,13 @@ def depends(*args):
 
             pname = fields.Char(compute='_compute_pname')
 
-            @api.one
             @api.depends('partner_id.name', 'partner_id.is_company')
             def _compute_pname(self):
-                if self.partner_id.is_company:
-                    self.pname = (self.partner_id.name or "").upper()
-                else:
-                    self.pname = self.partner_id.name
+                for record in self:
+                    if record.partner_id.is_company:
+                        record.pname = (record.partner_id.name or "").upper()
+                    else:
+                        record.pname = record.partner_id.name
 
         One may also pass a single function as argument. In that case, the
         dependencies are given by calling the function with the field's model.
@@ -222,6 +203,32 @@ def depends(*args):
     elif any('id' in arg.split('.') for arg in args):
         raise NotImplementedError("Compute method cannot depend on field 'id'.")
     return attrsetter('_depends', args)
+
+
+def depends_context(*args):
+    """ Return a decorator that specifies the context dependencies of a
+    non-stored "compute" method.  Each argument is a key in the context's
+    dictionary::
+
+        price = fields.Float(compute='_compute_product_price')
+
+        @api.depends_context('pricelist')
+        def _compute_product_price(self):
+            for product in self:
+                if product.env.context.get('pricelist'):
+                    pricelist = self.env['product.pricelist'].browse(product.env.context['pricelist'])
+                else:
+                    pricelist = self.env['product.pricelist'].get_default_pricelist()
+                product.price = pricelist.get_products_price(product).get(product.id, 0.0)
+
+    All dependencies must be hashable.  The following keys have special
+    support:
+
+    * `company` (value in context or current company id),
+    * `uid` (current user id and superuser flag),
+    * `active_test` (value in env.context or value in field.context).
+    """
+    return attrsetter('_depends_context', args)
 
 
 def returns(model, downgrade=None, upgrade=None):
@@ -267,25 +274,12 @@ def downgrade(method, value, self, args, kwargs):
     if not spec:
         return value
     _, convert, _ = spec
-    if convert and len(getargspec(convert).args) > 1:
+    if convert and len(signature(convert).parameters) > 1:
         return convert(self, value, *args, **kwargs)
     elif convert:
         return convert(value)
     else:
         return value.ids
-
-
-def aggregate(method, value, self):
-    """ Aggregate record-style ``value`` for a method decorated with ``@one``. """
-    spec = getattr(method, '_returns', None)
-    if spec:
-        # value is a list of instances, concatenate them
-        model, _, _ = spec
-        if model == 'self':
-            return sum(value, self.browse())
-        elif model:
-            return sum(value, self.env[model])
-    return value
 
 
 def split_context(method, args, kwargs):
@@ -315,105 +309,6 @@ def model(method):
     if method.__name__ == 'create':
         return model_create_single(method)
     method._api = 'model'
-    return method
-
-
-def multi(method):
-    """ Decorate a record-style method where ``self`` is a recordset. The method
-        typically defines an operation on records. Such a method::
-
-            @api.multi
-            def method(self, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, ids, args, context=context)
-    """
-    method._api = 'multi'
-    return method
-
-
-def one(method):
-    """ Decorate a record-style method where ``self`` is expected to be a
-        singleton instance. The decorated method automatically loops on records,
-        and makes a list with the results. In case the method is decorated with
-        :func:`returns`, it concatenates the resulting instances. Such a
-        method::
-
-            @api.one
-            def method(self, args):
-                return self.name
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            names = recs.method(args)
-
-            names = model.method(cr, uid, ids, args, context=context)
-
-        .. deprecated:: 9.0
-
-            :func:`~.one` often makes the code less clear and behaves in ways
-            developers and readers may not expect.
-
-            It is strongly recommended to use :func:`~.multi` and either
-            iterate on the ``self`` recordset or ensure that the recordset
-            is a single record with :meth:`~odoo.models.Model.ensure_one`.
-    """
-    def loop(method, self, *args, **kwargs):
-        result = [method(rec, *args, **kwargs) for rec in self]
-        return aggregate(method, result, self)
-
-    wrapper = decorator(loop, method)
-    wrapper._api = 'one'
-    return wrapper
-
-
-def model_cr(method):
-    """ Decorate a record-style method where ``self`` is a recordset, but its
-        contents is not relevant, only the model is. Such a method::
-
-            @api.model_cr
-            def method(self, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, args)
-
-        Notice that no ``uid``, ``ids``, ``context`` are passed to the method in
-        the traditional style.
-    """
-    method._api = 'model_cr'
-    return method
-
-
-def model_cr_context(method):
-    """ Decorate a record-style method where ``self`` is a recordset, but its
-        contents is not relevant, only the model is. Such a method::
-
-            @api.model_cr_context
-            def method(self, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, args, context=context)
-
-        Notice that no ``uid``, ``ids`` are passed to the method in the
-        traditional style.
-    """
-    method._api = 'model_cr_context'
     return method
 
 
@@ -461,252 +356,6 @@ def model_create_multi(method):
     return wrapper
 
 
-def cr(method):
-    """ Decorate a traditional-style method that takes ``cr`` as a parameter.
-        Such a method may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, args)
-    """
-    method._api = 'cr'
-    return method
-
-
-def cr_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``context`` as parameters. """
-    method._api = 'cr_context'
-    return method
-
-
-def cr_uid(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid`` as parameters. """
-    method._api = 'cr_uid'
-    return method
-
-
-def cr_uid_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``context`` as
-        parameters. Such a method may be called in both record and traditional
-        styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, args, context=context)
-    """
-    method._api = 'cr_uid_context'
-    return method
-
-
-def cr_uid_id(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id`` as
-        parameters. Such a method may be called in both record and traditional
-        styles. In the record style, the method automatically loops on records.
-    """
-    method._api = 'cr_uid_id'
-    return method
-
-
-def cr_uid_id_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id``,
-        ``context`` as parameters. Such a method::
-
-            @api.cr_uid_id
-            def method(self, cr, uid, id, args, context=None):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # rec = model.browse(cr, uid, id, context)
-            rec.method(args)
-
-            model.method(cr, uid, id, args, context=context)
-    """
-    method._api = 'cr_uid_id_context'
-    return method
-
-
-def cr_uid_ids(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids`` as
-        parameters. Such a method may be called in both record and traditional
-        styles.
-    """
-    method._api = 'cr_uid_ids'
-    return method
-
-
-def cr_uid_ids_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids``,
-        ``context`` as parameters. Such a method::
-
-            @api.cr_uid_ids_context
-            def method(self, cr, uid, ids, args, context=None):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, ids, args, context=context)
-
-        It is generally not necessary, see :func:`guess`.
-    """
-    method._api = 'cr_uid_ids_context'
-    return method
-
-
-def cr_uid_records(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
-        recordset of model ``self`` as parameters. Such a method::
-
-            @api.cr_uid_records
-            def method(self, cr, uid, records, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # records = model.browse(cr, uid, ids, context)
-            records.method(args)
-
-            model.method(cr, uid, records, args)
-    """
-    method._api = 'cr_uid_records'
-    return method
-
-
-def cr_uid_records_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
-        recordset of model ``self``, ``context`` as parameters. Such a method::
-
-            @api.cr_uid_records_context
-            def method(self, cr, uid, records, args, context=None):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # records = model.browse(cr, uid, ids, context)
-            records.method(args)
-
-            model.method(cr, uid, records, args, context=context)
-    """
-    method._api = 'cr_uid_records_context'
-    return method
-
-
-def v7(method_v7):
-    """ Decorate a method that supports the old-style api only. A new-style api
-        may be provided by redefining a method with the same name and decorated
-        with :func:`~.v8`::
-
-            @api.v7
-            def foo(self, cr, uid, ids, context=None):
-                ...
-
-            @api.v8
-            def foo(self):
-                ...
-
-        Special care must be taken if one method calls the other one, because
-        the method may be overridden! In that case, one should call the method
-        from the current class (say ``MyClass``), for instance::
-
-            @api.v7
-            def foo(self, cr, uid, ids, context=None):
-                # Beware: records.foo() may call an overriding of foo()
-                records = self.browse(cr, uid, ids, context)
-                return MyClass.foo(records)
-
-        Note that the wrapper method uses the docstring of the first method.
-    """
-    # retrieve method_v8 from the caller's frame
-    frame = currentframe().f_back
-    return frame.f_locals.get(method_v7.__name__, method_v7)
-
-
-def v8(method_v8):
-    """ Decorate a method that supports the new-style api only. An old-style api
-        may be provided by redefining a method with the same name and decorated
-        with :func:`~.v7`::
-
-            @api.v8
-            def foo(self):
-                ...
-
-            @api.v7
-            def foo(self, cr, uid, ids, context=None):
-                ...
-
-        Note that the wrapper method uses the docstring of the first method.
-    """
-    if method_v8.__name__ == 'read':
-        return multi(method_v8)
-    method_v8._api = 'v8'
-    return method_v8
-
-
-def noguess(method):
-    """ Decorate a method to prevent any effect from :func:`guess`. """
-    method._api = None
-    return method
-
-
-def guess(method):
-    """ Decorate ``method`` to make it callable in both traditional and record
-        styles. This decorator is applied automatically by the model's
-        metaclass, and has no effect on already-decorated methods.
-
-        The API style is determined by heuristics on the parameter names: ``cr``
-        or ``cursor`` for the cursor, ``uid`` or ``user`` for the user id,
-        ``id`` or ``ids`` for a list of record ids, and ``context`` for the
-        context dictionary. If a traditional API is recognized, one of the
-        decorators :func:`cr`, :func:`cr_context`, :func:`cr_uid`,
-        :func:`cr_uid_context`, :func:`cr_uid_id`, :func:`cr_uid_id_context`,
-        :func:`cr_uid_ids`, :func:`cr_uid_ids_context` is applied on the method.
-
-        Method calls are considered traditional style when their first parameter
-        is a database cursor.
-    """
-    if hasattr(method, '_api'):
-        return method
-
-    # introspection on argument names to determine api style
-    args, vname, kwname, defaults = getargspec(method)
-    names = tuple(args) + (None,) * 4
-
-    if names[0] == 'self':
-        if names[1] in ('cr', 'cursor'):
-            if names[2] in ('uid', 'user'):
-                if names[3] == 'ids':
-                    if 'context' in names or kwname:
-                        return cr_uid_ids_context(method)
-                    else:
-                        return cr_uid_ids(method)
-                elif names[3] == 'id' or names[3] == 'res_id':
-                    if 'context' in names or kwname:
-                        return cr_uid_id_context(method)
-                    else:
-                        return cr_uid_id(method)
-                elif 'context' in names or kwname:
-                    return cr_uid_context(method)
-                else:
-                    return cr_uid(method)
-            elif 'context' in names:
-                return cr_context(method)
-            else:
-                return cr(method)
-
-    # no wrapping by default
-    return noguess(method)
-
-
-def expected(decorator, func):
-    """ Decorate ``func`` with ``decorator`` if ``func`` is not wrapped yet. """
-    return decorator(func) if not hasattr(func, '_api') else func
-
-
 def _call_kw_model(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {})
@@ -738,11 +387,13 @@ def call_kw(model, name, args, kwargs):
     method = getattr(type(model), name)
     api = getattr(method, '_api', None)
     if api == 'model':
-        return _call_kw_model(method, model, args, kwargs)
+        result = _call_kw_model(method, model, args, kwargs)
     elif api == 'model_create':
-        return _call_kw_model_create(method, model, args, kwargs)
+        result = _call_kw_model_create(method, model, args, kwargs)
     else:
-        return _call_kw_multi(method, model, args, kwargs)
+        result = _call_kw_multi(method, model, args, kwargs)
+    model.flush()
+    return result
 
 
 class Environment(Mapping):
@@ -750,7 +401,8 @@ class Environment(Mapping):
 
         - :attr:`cr`, the current database cursor;
         - :attr:`uid`, the current user id;
-        - :attr:`context`, the current context dictionary.
+        - :attr:`context`, the current context dictionary;
+        - :attr:`su`, whether in superuser mode.
 
         It provides access to the registry by implementing a mapping from model
         names to new api models. It also holds a cache for records, and a data
@@ -760,7 +412,7 @@ class Environment(Mapping):
 
     @classproperty
     def envs(cls):
-        return cls._local.environments
+        return getattr(cls._local, 'environments', ())
 
     @classmethod
     @contextmanager
@@ -782,9 +434,11 @@ class Environment(Mapping):
         """
         cls._local.environments = Environments()
 
-    def __new__(cls, cr, uid, context):
+    def __new__(cls, cr, uid, context, su=False):
+        if uid == SUPERUSER_ID:
+            su = True
         assert context is not None
-        args = (cr, uid, context)
+        args = (cr, uid, context, su)
 
         # if env already exists, return it
         env, envs = None, cls.envs
@@ -794,12 +448,11 @@ class Environment(Mapping):
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
+        args = (cr, uid, frozendict(context), su)
+        self.cr, self.uid, self.context, self.su = self.args = args
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
-        self._cache_key = (cr, uid)
-        self._protected = StackMap()                # {field: ids, ...}
-        self.dirty = defaultdict(set)               # {record: set(field_name), ...}
+        self._protected = envs.protected        # proxy to shared data structure
         self.all = envs
         envs.add(self)
         return self
@@ -833,102 +486,165 @@ class Environment(Mapping):
     def __hash__(self):
         return object.__hash__(self)
 
-    def __call__(self, cr=None, user=None, context=None):
+    def __call__(self, cr=None, user=None, context=None, su=None):
         """ Return an environment based on ``self`` with modified parameters.
 
             :param cr: optional database cursor to change the current cursor
             :param user: optional user/user id to change the current user
             :param context: optional context dictionary to change the current context
+            :param su: optional boolean to change the superuser mode
+            :type context: dict
+            :type user: int or :class:`~odoo.addons.base.models.res_users`
+            :type su: bool
         """
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
-        return Environment(cr, uid, context)
+        su = (user is None and self.su) if su is None else su
+        return Environment(cr, uid, context, su)
 
     def ref(self, xml_id, raise_if_not_found=True):
-        """ return the record corresponding to the given ``xml_id`` """
+        """Return the record corresponding to the given ``xml_id``."""
         return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
 
-    @property
+    def is_superuser(self):
+        """ Return whether the environment is in superuser mode. """
+        return self.su
+
+    def is_admin(self):
+        """ Return whether the current user has group "Access Rights", or is in
+            superuser mode. """
+        return self.su or self.user._is_admin()
+
+    def is_system(self):
+        """ Return whether the current user has group "Settings", or is in
+            superuser mode. """
+        return self.su or self.user._is_system()
+
+    @lazy_property
     def user(self):
-        """ return the current user (as an instance) """
-        return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
+        """Return the current user (as an instance).
 
-    @property
+        :rtype: :class:`~odoo.addons.base.models.res_users`"""
+        return self(su=True)['res.users'].browse(self.uid)
+
+    @lazy_property
     def company(self):
-        """ return the company in which the user is logged in (as an instance) """
-        try:
-            company_id = int(self.context.get('allowed_company_ids')[0])
-            if company_id in self.user.company_ids.ids:
-                return self['res.company'].browse(company_id)
-            return self.user.company_id
-        except Exception:
-            return self.user.company_id
+        """Return the current company (as an instance).
 
-    @property
+        If not specified in the context (`allowed_company_ids`),
+        fallback on current user main company.
+
+        :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
+        :return: current company (default=`self.user.company_id`)
+        :rtype: res.company
+
+        .. warning::
+
+            No sanity checks applied in sudo mode !
+            When in sudo mode, a user can access any company,
+            even if not in his allowed companies.
+
+            This allows to trigger inter-company modifications,
+            even if the current user doesn't have access to
+            the targeted company.
+        """
+        company_ids = self.context.get('allowed_company_ids', [])
+        if company_ids:
+            if not self.su:
+                user_company_ids = self.user.company_ids.ids
+                if any(cid not in user_company_ids for cid in company_ids):
+                    raise AccessError(_("Access to unauthorized or invalid companies."))
+            return self['res.company'].browse(company_ids[0])
+        return self.user.company_id
+
+    @lazy_property
     def companies(self):
-        """ return a recordset of the enabled companies by the user """
-        try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
-            allowed_company_ids = self.context.get('allowed_company_ids')
-            # Prevent the user to enable companies for which he doesn't have any access
-            users_company_ids = self.user.company_ids.ids
-            allowed_company_ids = [company_id for company_id in allowed_company_ids if company_id in users_company_ids]
-        except Exception:
-            # By setting the default companies to all user companies instead of the main one
-            # we save a lot of potential trouble in all "out of context" calls, such as
-            # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
-            # have access to these other companies. The risk of exposing foreign records
-            # (wrt to the context) is low because all normal RPCs will have a proper
-            # allowed_company_ids.
-            # Examples:
-            #   - when printing a report for several records from several companies
-            #   - when accessing to a record from the notification email template
-            #   - when loading an binary image on a template
-            allowed_company_ids = self.user.company_ids.ids
-        return self['res.company'].browse(allowed_company_ids)
+        """Return a recordset of the enabled companies by the user.
+
+        If not specified in the context(`allowed_company_ids`),
+        fallback on current user companies.
+
+        :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
+        :return: current companies (default=`self.user.company_ids`)
+        :rtype: res.company
+
+        .. warning::
+
+            No sanity checks applied in sudo mode !
+            When in sudo mode, a user can access any company,
+            even if not in his allowed companies.
+
+            This allows to trigger inter-company modifications,
+            even if the current user doesn't have access to
+            the targeted company.
+        """
+        company_ids = self.context.get('allowed_company_ids', [])
+        if company_ids:
+            if not self.su:
+                user_company_ids = self.user.company_ids.ids
+                if any(cid not in user_company_ids for cid in company_ids):
+                    raise AccessError(_("Access to unauthorized or invalid companies."))
+            return self['res.company'].browse(company_ids)
+        # By setting the default companies to all user companies instead of the main one
+        # we save a lot of potential trouble in all "out of context" calls, such as
+        # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
+        # have access to these other companies. The risk of exposing foreign records
+        # (wrt to the context) is low because all normal RPCs will have a proper
+        # allowed_company_ids.
+        # Examples:
+        #   - when printing a report for several records from several companies
+        #   - when accessing to a record from the notification email template
+        #   - when loading an binary image on a template
+        return self.user.company_ids
 
     @property
     def lang(self):
-        """ return the current language code """
-        return self.context.get('lang')
+        """Return the current language code.
 
-    @contextmanager
-    def do_in_draft(self):
-        """ Context-switch to draft mode, where all field updates are done in
-            cache only.
+        :rtype: str
         """
-        if self.all.in_draft:
-            yield
-        else:
-            try:
-                self.all.in_draft = True
-                yield
-            finally:
-                self.all.in_draft = False
-                self.dirty.clear()
-
-    @property
-    def in_draft(self):
-        """ Return whether we are in draft mode. """
-        return self.all.in_draft
+        return self.context.get('lang')
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
         self.cache.invalidate()
-        self.all.todo.clear()
+        self.all.tocompute.clear()
+        self.all.towrite.clear()
 
     @contextmanager
     def clear_upon_failure(self):
         """ Context manager that clears the environments (caches and fields to
             recompute) upon exception.
         """
+        tocompute = {
+            field: set(ids)
+            for field, ids in self.all.tocompute.items()
+        }
+        towrite = {
+            model: {
+                record_id: dict(values)
+                for record_id, values in id_values.items()
+            }
+            for model, id_values in self.all.towrite.items()
+        }
         try:
             yield
         except Exception:
             self.clear()
+            self.all.tocompute.update(tocompute)
+            for model, id_values in towrite.items():
+                for record_id, values in id_values.items():
+                    self.all.towrite[model][record_id].update(values)
             raise
+
+    def is_protected(self, field, record):
+        """ Return whether `record` is protected against invalidation or
+            recomputation for `field`.
+        """
+        return record.id in self._protected.get(field, ())
 
     def protected(self, field):
         """ Return the recordset for which ``field`` should not be invalidated or recomputed. """
@@ -953,79 +669,56 @@ class Environment(Mapping):
         finally:
             protected.popmap()
 
-    def field_todo(self, field):
-        """ Return a recordset with all records to recompute for ``field``. """
-        ids = {rid for recs in self.all.todo.get(field, ()) for rid in recs.ids}
+    def fields_to_compute(self):
+        """ Return a view on the field to compute. """
+        return self.all.tocompute.keys()
+
+    def records_to_compute(self, field):
+        """ Return the records to compute for ``field``. """
+        ids = self.all.tocompute.get(field, ())
         return self[field.model_name].browse(ids)
 
-    def check_todo(self, field, record):
-        """ Check whether ``field`` must be recomputed on ``record``, and if so,
-            return the corresponding recordset to recompute.
-        """
-        for recs in self.all.todo.get(field, []):
-            if recs & record:
-                return recs
+    def is_to_compute(self, field, record):
+        """ Return whether ``field`` must be computed on ``record``. """
+        return record.id in self.all.tocompute.get(field, ())
 
-    def add_todo(self, field, records):
-        """ Mark ``field`` to be recomputed on ``records``. """
-        recs_list = self.all.todo.setdefault(field, [])
-        for i, recs in enumerate(recs_list):
-            if recs.env == records.env:
-                # only add records if not already in the recordset, much much
-                # cheaper in case recs is big and records is a singleton
-                # already present
-                if not records <= recs:
-                    recs_list[i] |= records
-                break
-        else:
-            recs_list.append(records)
+    def not_to_compute(self, field, records):
+        """ Return the subset of ``records`` for which ``field`` must not be computed. """
+        ids = self.all.tocompute.get(field, ())
+        return records.browse(id_ for id_ in records._ids if id_ not in ids)
 
-    def remove_todo(self, field, records):
-        """ Mark ``field`` as recomputed on ``records``. """
-        recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
-        recs_list = [r for r in recs_list if r]
-        if recs_list:
-            self.all.todo[field] = recs_list
+    def add_to_compute(self, field, records):
+        """ Mark ``field`` to be computed on ``records``. """
+        if not records:
+            return records
+        self.all.tocompute[field].update(records._ids)
 
-    def has_todo(self):
-        """ Return whether some fields must be recomputed. """
-        return bool(self.all.todo)
-
-    def get_todo(self):
-        """ Return a pair ``(field, records)`` to recompute.
-            The field is such that none of its dependencies must be recomputed.
-        """
-        field = min(self.all.todo, key=self.registry.field_sequence)
-        return field, self.all.todo[field][0]
-
-    @property
-    def recompute(self):
-        return self.all.recompute
+    def remove_to_compute(self, field, records):
+        """ Mark ``field`` as computed on ``records``. """
+        if not records:
+            return
+        ids = self.all.tocompute.get(field, None)
+        if ids is None:
+            return
+        ids.difference_update(records._ids)
+        if not ids:
+            del self.all.tocompute[field]
 
     @contextmanager
     def norecompute(self):
-        tmp = self.all.recompute
-        self.all.recompute = False
-        try:
-            yield
-        finally:
-            self.all.recompute = tmp
-
-    def cache_key(self, field):
-        """ Return the key to store the value of ``field`` in cache, the full
-            cache key being ``(key, field, record.id)``.
-        """
-        return self if field.context_dependent else self._cache_key
+        """ Delay recomputations (deprecated: this is not the default behavior). """
+        yield
 
 
 class Environments(object):
     """ A common object for all environments in a request. """
     def __init__(self):
-        self.envs = WeakSet()           # weak set of environments
-        self.cache = Cache()            # cache for all records
-        self.todo = {}                  # recomputations {field: [records]}
-        self.in_draft = False           # flag for draft
-        self.recompute = True
+        self.envs = WeakSet()                   # weak set of environments
+        self.cache = Cache()                    # cache for all records
+        self.protected = StackMap()             # fields to protect {field: ids, ...}
+        self.tocompute = defaultdict(set)       # recomputations {field: ids}
+        # updates {model: {id: {field: value}}}
+        self.towrite = defaultdict(lambda: defaultdict(dict))
 
     def add(self, env):
         """ Add the environment ``env``. """
@@ -1036,117 +729,114 @@ class Environments(object):
         return iter(self.envs)
 
 
+# sentinel value for optional parameters
+NOTHING = object()
+
+
 class Cache(object):
     """ Implementation of the cache of records. """
     def __init__(self):
-        # {key: {field: {record_id: value}}}
-        self._data = defaultdict(lambda: defaultdict(dict))
+        # {field: {record_id: value}}
+        self._data = defaultdict(dict)
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
-        key = record.env.cache_key(field)
-        return record.id in self._data[key].get(field, ())
+        if field.depends_context:
+            key = field.cache_key(record.env)
+            return key in self._data.get(field, {}).get(record.id, {})
+        return record.id in self._data.get(field, ())
 
-    def get(self, record, field):
+    def get(self, record, field, default=NOTHING):
         """ Return the value of ``field`` for ``record``. """
-        key = record.env.cache_key(field)
         try:
-            value = self._data[key][field][record._ids[0]]
+            value = self._data[field][record._ids[0]]
+            if field.depends_context:
+                value = value[field.cache_key(record.env)]
+            return value
         except KeyError:
-            raise CacheMiss(record, field)
-
-        return value.get() if isinstance(value, SpecialValue) else value
+            if default is NOTHING:
+                raise CacheMiss(record, field)
+            return default
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
-        key = record.env.cache_key(field)
-        self._data[key][field][record._ids[0]] = value
+        if field.depends_context:
+            key = field.cache_key(record.env)
+            self._data[field].setdefault(record._ids[0], {})[key] = value
+        else:
+            self._data[field][record._ids[0]] = value
 
     def update(self, records, field, values):
         """ Set the values of ``field`` for several ``records``. """
-        key = records.env.cache_key(field)
-        self._data[key][field].update(zip(records._ids, values))
+        if field.depends_context:
+            key = field.cache_key(records.env)
+            field_cache = self._data[field]
+            for record_id, value in zip(records._ids, values):
+                field_cache.setdefault(record_id, {})[key] = value
+        else:
+            self._data[field].update(zip(records._ids, values))
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
-        key = record.env.cache_key(field)
-        del self._data[key][field][record.id]
+        try:
+            del self._data[field][record.id]
+        except KeyError:
+            pass
 
-    def contains_value(self, record, field):
-        """ Return whether ``record`` has a regular value for ``field``. """
-        key = record.env.cache_key(field)
-        value = self._data[key][field].get(record.id, SpecialValue(None))
-        return not isinstance(value, SpecialValue)
-
-    def get_value(self, record, field, default=None):
-        """ Return the regular value of ``field`` for ``record``. """
-        key = record.env.cache_key(field)
-        value = self._data[key][field].get(record.id, SpecialValue(None))
-        return default if isinstance(value, SpecialValue) else value
-
-    def get_values(self, records, field, default=None):
-        """ Return the regular values of ``field`` for ``records``. """
-        key = records.env.cache_key(field)
-        field_cache = self._data[key][field]
+    def get_values(self, records, field):
+        """ Return the cached values of ``field`` for ``records``. """
+        field_cache = self._data[field]
+        key = field.cache_key(records.env) if field.depends_context else None
         for record_id in records._ids:
-            value = field_cache.get(record_id, SpecialValue(None))
-            yield default if isinstance(value, SpecialValue) else value
+            try:
+                if key is not None:
+                    yield field_cache[record_id][key]
+                else:
+                    yield field_cache[record_id]
+            except KeyError:
+                pass
 
-    def get_special(self, record, field, default=None):
-        """ Return the special value of ``field`` for ``record``. """
-        key = record.env.cache_key(field)
-        value = self._data[key][field].get(record.id)
-        return value.get if isinstance(value, SpecialValue) else default
-
-    def set_special(self, record, field, getter):
-        """ Set the value of ``field`` for ``record`` to return ``getter()``. """
-        key = record.env.cache_key(field)
-        self._data[key][field][record.id] = SpecialValue(getter)
-
-    def set_failed(self, records, fields, exception):
-        """ Mark ``fields`` on ``records`` with the given exception. """
-        def getter():
-            raise exception
-        for field in fields:
-            for record in records:
-                self.set_special(record, field, getter)
+    def get_records_different_from(self, records, field, value):
+        """ Return the subset of ``records`` that has not ``value`` for ``field``. """
+        field_cache = self._data[field]
+        key = field.cache_key(records.env) if field.depends_context else None
+        ids = []
+        for record_id in records._ids:
+            try:
+                if key is not None:
+                    val = field_cache[record_id][key]
+                else:
+                    val = field_cache[record_id]
+            except KeyError:
+                ids.append(record_id)
+            else:
+                if val != value:
+                    ids.append(record_id)
+        return records.browse(ids)
 
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
-            key = record.env.cache_key(field)
-            if name != 'id' and record.id in self._data[key].get(field, ()):
-                yield field
+            if name == 'id':
+                continue
+            values = self._data.get(field, {})
+            if record.id not in values:
+                continue
+            if field.depends_context and field.cache_key(record.env) not in values[record.id]:
+                continue
+            yield field
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        key = model.env.cache_key(field)
-        ids = list(self._data[key][field])
+        ids = list(self._data[field])
         return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
-        key = records.env.cache_key(field)
-        field_cache = self._data[key][field]
+        field_cache = self._data[field]
         for record_id in records._ids:
             if record_id not in field_cache:
                 yield record_id
-
-    def copy(self, records, env):
-        """ Copy the cache of ``records`` to ``env``. """
-        src, dst = records.env, env
-        for src_key, dst_key in [(src, dst), (src._cache_key, dst._cache_key)]:
-            if src_key == dst_key:
-                break
-            src_cache = self._data[src_key]
-            dst_cache = self._data[dst_key]
-            for field, src_field_cache in src_cache.items():
-                dst_field_cache = dst_cache[field]
-                for record_id, value in src_field_cache.items():
-                    if not isinstance(value, SpecialValue):
-                        # But not if it's a SpecialValue, which often is an access error
-                        # because the other environment (eg. sudo()) is well expected to have access.
-                        dst_field_cache[record_id] = value
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """
@@ -1155,25 +845,25 @@ class Cache(object):
         elif spec:
             for field, ids in spec:
                 if ids is None:
-                    for data in self._data.values():
-                        data.pop(field, None)
+                    self._data.pop(field, None)
                 else:
-                    for data in self._data.values():
-                        field_cache = data.get(field)
-                        if field_cache:
-                            for id in ids:
-                                field_cache.pop(id, None)
+                    field_cache = self._data.get(field)
+                    if field_cache:
+                        for id in ids:
+                            field_cache.pop(id, None)
 
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
+        # flush fields to be recomputed before evaluating the cache
+        env['res.partner'].recompute()
+
         # make a full copy of the cache, and invalidate it
         dump = defaultdict(dict)
-        for key in [env, env._cache_key]:
-            key_cache = self._data[key]
-            for field, field_cache in key_cache.items():
-                for record_id, value in field_cache.items():
-                    if record_id:
-                        dump[field][record_id] = value
+        key_cache = self._data
+        for field, field_cache in key_cache.items():
+            for record_id, value in field_cache.items():
+                if record_id:
+                    dump[field][record_id] = value
 
         self.invalidate()
 
@@ -1184,25 +874,26 @@ class Cache(object):
             for record in records:
                 try:
                     cached = field_dump[record.id]
-                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
-                    value = field.convert_to_record(cached, record)
-                    fetched = record[field.name]
-                    if fetched != value:
-                        info = {'cached': value, 'fetched': fetched}
-                        invalids.append((record, field, info))
+                    if field.depends_context:
+                        for context_keys, value in cached.items():
+                            context = dict(zip(field.depends_context, context_keys))
+                            value = field.convert_to_record(value, record)
+                            fetched = record.with_context(context)[field.name]
+                            if fetched != value:
+                                info = {'cached': value, 'fetched': fetched}
+                                invalids.append((record, field, info))
+                    else:
+                        cached = field_dump[record.id]
+                        fetched = record[field.name]
+                        value = field.convert_to_record(cached, record)
+                        if fetched != value:
+                            info = {'cached': value, 'fetched': fetched}
+                            invalids.append((record, field, info))
                 except (AccessError, MissingError):
                     pass
 
         if invalids:
             raise UserError('Invalid cache for fields\n' + pformat(invalids))
-
-
-class SpecialValue(object):
-    """ Wrapper for a function to get the cached value of a field. """
-    __slots__ = ['get']
-
-    def __init__(self, getter):
-        self.get = getter
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

@@ -6,16 +6,17 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import AccessError
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-class TestHrLeaveType(TestHrHolidaysBase):
+class TestHrLeaveType(TestHrHolidaysCommon):
 
     def test_time_type(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'allocation_type': 'no',
+            'validity_start': False,
         })
 
         leave_1 = self.env['hr.leave'].create({
@@ -36,7 +37,7 @@ class TestHrLeaveType(TestHrHolidaysBase):
     def test_type_creation_right(self):
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
         with self.assertRaises(AccessError):
-            self.env['hr.leave.type'].sudo(self.user_hruser_id).create({
+            self.env['hr.leave.type'].with_user(self.user_hruser_id).create({
                 'name': 'UserCheats',
                 'allocation_type': 'no',
             })

@@ -1,7 +1,7 @@
 // Retrive the tab's height by summ its properties
 $owprofile-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
 
-// Overal page bg-color: Blend it 'over' the color choosen by the user
+// Overal page bg-color: Blend it 'over' the color chosen by the user
 // ($body-bg), rather than force it replacing the variable's value.
 $owprofile-color-bg: mix($body-bg, #efeff4);
 
@@ -62,7 +62,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             }
 
             &.active {
-                color: $headings-color;
+                color: color-yiq($owprofile-color-bg);
                 background: $owprofile-color-bg;
                 border-color: $owprofile-color-bg;
             }
@@ -133,14 +133,41 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 .o_wprofile_all_users_nav {
     border-width: 1px 0;
 
-    &, .o_wprofile_course_nav_search {
+    &, .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
         background-color: rgba(white, 0.05);
         border-color: rgba(white, 0.1);
         border-style: solid;
     }
 
-    .o_wprofile_course_nav_search {
+    .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
         border-width: 0 1px;
+    }
+
+    .o_wprofile_all_users_nav_btn {
+        @include media-breakpoint-up(md) {
+            @include o-hover-text-color(white, $gray-800);
+            margin-top: -1px;
+            border-radius: 0;
+            min-height: 35px;
+
+            &:hover {
+                background-color: white;
+            }
+        }
+    }
+
+    .o_wprofile_all_users_nav_btn_container {
+        @include media-breakpoint-down(sm) {
+            ~ .o_wprofile_user_profile_sub_nav_mobile_col {
+                padding-left: 0;
+            }
+
+            .o_wprofile_all_users_nav_btn {
+                @include o-hover-text-color(white, white);
+                border-radius: $btn-border-radius;
+                background-color: rgba(black, 0.25);
+            }
+        }
     }
 
     .breadcrumb-item.active a, .breadcrumb-item a:hover {
@@ -199,6 +226,10 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             box-shadow: 0 0 0 0;
         }
     }
+}
+
+.wprofile_badge_img {
+    height: 2.5em;
 }
 
 

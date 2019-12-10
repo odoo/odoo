@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_links
+# 	* website_links
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# v2exerer <9010446@qq.com>, 2018
-# 苏州远鼎 <tiexinliu@126.com>, 2018
-# Liping Wang <lynn.config@gmail.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# 苏州远鼎 <tiexinliu@126.com>, 2019
+# Liping Wang <lynn.config@gmail.com>, 2019
+# 湘子 南 <1360857908@qq.com>, 2019
+# bf2549c5415a9287249cba2b8a5823c7, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: bf2549c5415a9287249cba2b8a5823c7, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,21 +28,21 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " clicks"
 msgstr "点击"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " countries"
 msgstr "国家"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "# of clicks"
 msgstr "# 点击"
@@ -101,14 +102,22 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:37
+#: code:addons/website_links/static/src/js/website_links.js:0
+#, python-format
+msgid "Copied"
+msgstr "复制"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Copy"
 msgstr "复制"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
@@ -116,7 +125,7 @@ msgstr "编辑代码"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:356
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Generating link..."
 msgstr "生成链接..."
@@ -128,7 +137,7 @@ msgstr "获取跟踪链接"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Icon"
 msgstr "图标"
@@ -144,10 +153,11 @@ msgid "Last Week"
 msgstr "上周"
 
 #. module: website_links
+#: model:ir.model,name:website_links.model_link_tracker
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "链接跟踪"
+msgstr "统计"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -199,24 +209,41 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
+#: model_terms:ir.ui.view,arch_db:website_links.link_tracker_view_tree
 msgid "Statistics"
 msgstr "统计信息"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:38
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Stats"
 msgstr "统计数据"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:229
-#: code:addons/website_links/static/src/js/website_links_charts.js:230
-#: code:addons/website_links/static/src/js/website_links_charts.js:231
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#, python-format
+msgid "The code cannot be left empty"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
-msgstr "没有显示的数据"
+msgstr "没有数据显示"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#, python-format
+msgid "This code is already taken"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -232,21 +259,27 @@ msgstr "网址"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:225
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Unable to get recent links"
 msgstr "无法获取最近链接"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "Undefined"
 msgstr "未定义的"
 
 #. module: website_links
+#: code:addons/website_links/models/link_tracker.py:0
+#, python-format
+msgid "Visit Webpage Statistics"
+msgstr ""
+
+#. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:248
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "You don't have any recent links."
 msgstr "你没有任何最近的链接。"
@@ -258,7 +291,7 @@ msgstr "你跟踪的链接"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:23
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "cancel"
@@ -266,7 +299,7 @@ msgstr "取消"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:8
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "clicks"
 msgstr "点击"
@@ -278,21 +311,21 @@ msgstr "复制"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:266
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "例如：快讯、社交网络、..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:263
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr "例如：六月促销，冬季通讯，..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:269
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr "例如：搜索引擎，网站页面，..."
@@ -304,7 +337,7 @@ msgstr "例如：https://www.odoo.com/page/contactus"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:22
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "ok"
@@ -312,7 +345,7 @@ msgstr "确定"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:22
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "or"

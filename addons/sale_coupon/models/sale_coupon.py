@@ -46,6 +46,7 @@ class SaleCoupon(models.Model):
     ]
 
     def _compute_expiration_date(self):
+        self.expiration_date = 0
         for coupon in self.filtered(lambda x: x.program_id.validity_duration > 0):
             coupon.expiration_date = (coupon.create_date + relativedelta(days=coupon.program_id.validity_duration)).date()
 
@@ -80,7 +81,6 @@ class SaleCoupon(models.Model):
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
 
-    @api.multi
     def action_coupon_sent(self):
         """ Open a window to compose an email, with the edi invoice template
             message loaded by default
@@ -99,7 +99,6 @@ class SaleCoupon(models.Model):
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'views': [(compose_form.id, 'form')],

@@ -23,7 +23,6 @@ class SeoMetadata(models.AbstractModel):
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
 
-    @api.multi
     def _compute_is_seo_optimized(self):
         for record in self:
             record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
@@ -43,9 +42,9 @@ class SeoMetadata(models.AbstractModel):
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
         if request.website.social_default_image:
-            img = '/web/image/website/%s/social_default_image' % request.website.id
+            img = request.website.image_url(request.website, 'social_default_image')
         else:
-            img = '/web/image/res.company/%s/logo' % company.id
+            img = request.website.image_url(company, 'logo')
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
@@ -71,7 +70,7 @@ class SeoMetadata(models.AbstractModel):
     def get_website_meta(self):
         """ This method will return final meta information. It will replace
             default values with user's custom value (if user modified it from
-            the seo popup of fronted)
+            the seo popup of frontend)
 
             This method is not meant for overridden. To customize meta values
             override `_default_website_meta` method instead of this method. This
@@ -103,9 +102,13 @@ class WebsiteMultiMixin(models.AbstractModel):
     _name = 'website.multi.mixin'
     _description = 'Multi Website Mixin'
 
-    website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
+    website_id = fields.Many2one(
+        "website",
+        string="Website",
+        ondelete="restrict",
+        help="Restrict publishing to this website.",
+    )
 
-    @api.multi
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
@@ -121,23 +124,19 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is published', copy=False)
-    can_publish = fields.Boolean('Can publish', compute='_compute_can_publish')
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published())
+    can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
-    @api.multi
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'
 
-    @api.multi
+    def _default_is_published(self):
+        return False
+
     def website_publish_button(self):
         self.ensure_one()
-        if self.env.user.has_group('website.group_website_publisher') and self.website_url != '#':
-            # Force website to land on record's website to publish/unpublish it
-            if 'website_id' in self and self.env.user.has_group('website.group_multi_website'):
-                self.website_id._force()
-            return self.open_website_url()
         return self.write({'website_published': not self.website_published})
 
     def open_website_url(self):
@@ -150,16 +149,16 @@ class WebsitePublishedMixin(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         records = super(WebsitePublishedMixin, self).create(vals_list)
-
-        is_publish_modified = any('website_published' in values for values in vals_list)
+        is_publish_modified = any(
+            [set(v.keys()) & {'is_published', 'website_published'} for v in vals_list]
+        )
         if is_publish_modified and not all(record.can_publish for record in records):
             raise AccessError(self._get_can_publish_error_message())
 
         return records
 
-    @api.multi
     def write(self, values):
-        if 'website_published' in values and not all(record.can_publish for record in self):
+        if 'is_published' in values and not all(record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
         return super(WebsitePublishedMixin, self).write(values)
@@ -167,7 +166,6 @@ class WebsitePublishedMixin(models.AbstractModel):
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
 
-    @api.multi
     def _compute_can_publish(self):
         """ This method can be overridden if you need more complex rights management than just 'website_publisher'
         The publish widget will be hidden and the user won't be able to change the 'website_published' value
@@ -193,8 +191,8 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
                                        search='_search_website_published',
                                        related=False, readonly=False)
 
-    @api.multi
     @api.depends('is_published', 'website_id')
+    @api.depends_context('website_id')
     def _compute_website_published(self):
         current_website_id = self._context.get('website_id')
         for record in self:
@@ -203,7 +201,6 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             else:
                 record.website_published = record.is_published
 
-    @api.multi
     def _inverse_website_published(self):
         for record in self:
             record.is_published = record.website_published

@@ -20,7 +20,6 @@ class Attachment(models.Model):
                     args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
         return super(Attachment, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.multi
     def write(self, vals):
         """ When posting an attachment (new or not), convert the virtual ids in real ids. """
         if isinstance(vals.get('res_id'), str):

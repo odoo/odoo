@@ -4,6 +4,7 @@
 from odoo import api, fields, models
 from odoo.tools.translate import _, html_translate
 from odoo.addons.http_routing.models.ir_http import slug
+from datetime import timedelta
 
 
 class TrackTag(models.Model):
@@ -11,9 +12,9 @@ class TrackTag(models.Model):
     _description = 'Event Track Tag'
     _order = 'name'
 
-    name = fields.Char('Tag')
+    name = fields.Char('Tag Name', required=True)
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', help="Note that colorless tags won't be available on the website.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -24,7 +25,7 @@ class TrackLocation(models.Model):
     _name = "event.track.location"
     _description = 'Event Track Location'
 
-    name = fields.Char('Room')
+    name = fields.Char('Location', required=True)
 
 
 class TrackStage(models.Model):
@@ -58,11 +59,12 @@ class Track(models.Model):
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
+    company_id = fields.Many2one('res.company', related='event_id.company_id')
     partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char('Speaker Name')
-    partner_email = fields.Char('Speaker Email')
-    partner_phone = fields.Char('Speaker Phone')
-    partner_biography = fields.Html('Speaker Biography')
+    partner_name = fields.Char('Name')
+    partner_email = fields.Char('Email')
+    partner_phone = fields.Char('Phone')
+    partner_biography = fields.Html('Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
@@ -78,9 +80,10 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(translate=html_translate, sanitize_attributes=False)
     date = fields.Datetime('Track Date')
-    duration = fields.Float('Duration', default=1.5)
+    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
+    duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color Index')
@@ -88,9 +91,8 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_medium', store=True, readonly=False)
+    image = fields.Image("Image", related='partner_id.image_128', store=True, readonly=False)
 
-    @api.multi
     @api.depends('name')
     def _compute_website_url(self):
         super(Track, self)._compute_website_url()
@@ -106,6 +108,15 @@ class Track(models.Model):
             self.partner_phone = self.partner_id.phone
             self.partner_biography = self.partner_id.website_description
 
+    @api.depends('date', 'duration')
+    def _compute_end_date(self):
+        for track in self:
+            if track.date:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date_end = track.date + delta
+            else:
+                track.date_end = False
+
     @api.model
     def create(self, vals):
         track = super(Track, self).create(vals)
@@ -119,7 +130,6 @@ class Track(models.Model):
 
         return track
 
-    @api.multi
     def write(self, vals):
         if 'stage_id' in vals and 'kanban_state' not in vals:
             vals['kanban_state'] = 'normal'
@@ -133,7 +143,6 @@ class Track(models.Model):
         """ Always display all stages """
         return stages.search([], order=order)
 
-    @api.multi
     def _track_template(self, changes):
         res = super(Track, self)._track_template(changes)
         track = self[0]
@@ -146,7 +155,6 @@ class Track(models.Model):
             })
         return res
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state' in init_values and self.kanban_state == 'blocked':
@@ -155,11 +163,10 @@ class Track(models.Model):
             return self.env.ref('website_event_track.mt_track_ready')
         return super(Track, self)._track_subtype(init_values)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Track, self)._message_get_suggested_recipients()
         for track in self:
-            if track.partner_email != track.partner_id.email:
+            if track.partner_email and track.partner_email != track.partner_id.email:
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
@@ -177,12 +184,10 @@ class Track(models.Model):
                 ]).write({'partner_id': new_partner.id})
         return super(Track, self)._message_post_after_hook(message, msg_vals)
 
-    @api.multi
     def open_track_speakers_list(self):
         return {
             'name': _('Speakers'),
             'domain': [('id', 'in', self.mapped('partner_id').ids)],
-            'view_type': 'form',
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
             'view_id': False,
@@ -209,4 +214,4 @@ class Sponsor(models.Model):
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
     sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, readonly=False)
+    image_128 = fields.Image(string="Logo", related='partner_id.image_128', store=True, readonly=False)

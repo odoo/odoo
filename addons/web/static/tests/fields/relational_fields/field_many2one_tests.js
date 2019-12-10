@@ -2,7 +2,6 @@ odoo.define('web.field_many_to_one_tests', function (require) {
 "use strict";
 
 var BasicModel = require('web.BasicModel');
-var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var relationalFields = require('web.relational_fields');
@@ -326,7 +325,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('many2ones in form views with show_adress', async function (assert) {
+        QUnit.test('many2ones in form views with show_address', async function (assert) {
             assert.expect(4);
             var form = await createView({
                 View: FormView,
@@ -338,7 +337,7 @@ QUnit.module('fields', {}, function () {
                     '<field ' +
                     'name="trululu" ' +
                     'string="custom label" ' +
-                    'context="{\'search_default_customer\':1, \'show_address\': 1}" ' +
+                    'context="{\'show_address\': 1}" ' +
                     'options="{\'always_reload\': True}"' +
                     '/>' +
                     '</group>' +
@@ -557,13 +556,88 @@ QUnit.module('fields', {}, function () {
 
             // save the modal and make sure an onchange is triggered
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
-            assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'onchange', 'read']);
+            assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'read', 'onchange']);
 
             // save the main record, and check that no extra rpcs are done (record
             // is not dirty, only a related record was modified)
             await testUtils.form.clickSave(form);
             assert.verifySteps([]);
             form.destroy();
+        });
+
+        QUnit.test("many2one doesn't trigger field_change when being emptied", async function (assert) {
+            assert.expect(2);
+
+            const list = await createView({
+                arch: `
+                    <tree multi_edit="1">
+                        <field name="trululu"/>
+                    </tree>`,
+                data: this.data,
+                model: 'partner',
+                View: ListView,
+            });
+
+            // Select two records
+            await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+            await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+            await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+
+            const $input = list.$('.o_field_widget[name=trululu] input');
+
+            await testUtils.fields.editInput($input, "");
+            await testUtils.dom.triggerEvents($input, ['keyup']);
+
+            assert.containsNone(document.body, '.modal',
+                "No save should be triggered when removing value");
+
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            await testUtils.fields.many2one.clickHighlightedItem('trululu');
+
+            assert.containsOnce(document.body, '.modal',
+                "Saving should be triggered when selecting a value");
+            await testUtils.dom.click($('.modal .btn-primary'));
+
+            list.destroy();
+        });
+
+        QUnit.test("focus tracking on a many2one in a list", async function (assert) {
+            assert.expect(4);
+
+            const list = await createView({
+                arch: '<tree editable="top"><field name="trululu"/></tree>',
+                archs: {
+                    'partner,false,form': '<form string="Partners"><field name="foo"/></form>',
+                },
+                data: this.data,
+                model: 'partner',
+                View: ListView,
+            });
+
+            // Select two records
+            await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+            await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+            await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+
+            const input = list.$('.o_data_row:first() .o_data_cell:first() input')[0];
+
+            assert.strictEqual(document.activeElement, input, "Input should be focused when activated");
+
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            await testUtils.fields.many2one.clickItem('trululu', 'Create');
+
+            // At this point, if the focus is correctly registered by the m2o, there
+            // should be only one modal (the "Create" one) and none for saving changes.
+            assert.containsOnce(document.body, '.modal', "There should be only one modal");
+
+            await testUtils.dom.click($('.modal .btn:not(.btn-primary)'));
+
+            assert.strictEqual(document.activeElement, input, "Input should be focused after dialog closes");
+            assert.strictEqual(input.value, "", "Input should be empty after discard");
+
+            list.destroy();
         });
 
         QUnit.test('many2one fields with option "no_open"', async function (assert) {
@@ -711,6 +785,41 @@ QUnit.module('fields', {}, function () {
 
             assert.hasAttrValue(form.$('a.o_form_uri'), 'href', "#",
                 "href should have #");
+
+            form.destroy();
+        });
+
+        QUnit.test('many2one with co-model whose name field is a many2one', async function (assert) {
+            assert.expect(4);
+
+            this.data.product.fields.name = {
+                string: 'User Name',
+                type: 'many2one',
+                relation: 'user',
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="product_id"/></form>',
+                archs: {
+                    'product,false,form': '<form><field name="name"/></form>',
+                },
+            });
+
+            // click on 'Create and Edit' in m2o dropdown
+            await testUtils.fields.many2one.clickOpenDropdown('product_id');
+            await testUtils.fields.many2one.clickItem('product_id', 'Create and Edit');
+            assert.containsOnce(document.body, '.modal .o_form_view');
+
+            // quick create 'new value'
+            await testUtils.fields.many2one.searchAndClickItem('name', {search: 'new value'});
+            assert.strictEqual($('.modal .o_field_many2one input').val(), 'new value');
+
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary')); // save in modal
+            assert.containsNone(document.body, '.modal .o_form_view');
+            assert.strictEqual(form.$('.o_field_many2one input').val(), 'new value');
 
             form.destroy();
         });
@@ -1676,9 +1785,7 @@ QUnit.module('fields', {}, function () {
                     obj.turtles,
                     [
                         [4, 2, false],
-                        [1, 2, { turtle_foo: 'blip' }],
                         [4, 3, false],
-                        [1, 3, { turtle_foo: 'kawa' }]
                     ],
                     "should have properly created the x2many command list");
             };
@@ -1702,14 +1809,9 @@ QUnit.module('fields', {}, function () {
                         return Promise.resolve({ turtles: [[6, 0, [2, 3]]] });
                     }
                     if (args.method === 'create') {
-                        // it would be even better if we did not send the current
-                        // unchanged state with the command 1, but this seems more
-                        // difficult.
                         assert.deepEqual(args.args[0].turtles, [
                             [4, 2, false],
-                            [1, 2, { turtle_foo: 'blip' }],
                             [4, 3, false],
-                            [1, 3, { turtle_foo: 'kawa' }]
                         ], 'should send proper commands to create method');
                     }
                     return this._super.apply(this, arguments);
@@ -1722,7 +1824,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: call button in sub view', async function (assert) {
-            assert.expect(6);
+            assert.expect(11);
 
             this.data.partner.records[0].p = [2];
             var form = await createView({
@@ -1753,6 +1855,7 @@ QUnit.module('fields', {}, function () {
                             'should call with correct currentID in env');
                         assert.deepEqual(event.data.env.resIDs, [37],
                             'should call with correct resIDs in env');
+                        assert.step(event.data.action_data.name);
                     },
                 },
                 archs: {
@@ -1770,8 +1873,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('td.o_data_cell:first'));
             await testUtils.dom.click(form.$('.o_external_button'));
             await testUtils.dom.click($('button:contains("Just do it !")'));
+            assert.verifySteps(['action']);
             await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
+            assert.verifySteps([]); // the second button is disabled, it can't be clicked
 
+            await testUtils.dom.click($('.modal .btn-secondary:contains(Discard)'));
+            await testUtils.dom.click(form.$('.o_external_button'));
+            await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
+            assert.verifySteps(['object']);
             form.destroy();
         });
 
@@ -2047,9 +2156,9 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_many2one input').focus();
+            await testUtils.dom.triggerEvent(form.$('.o_field_many2one input'),'focus');
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-            'new partner', ['keyup', 'focusout']);
+            'new partner', ['keyup', 'blur']);
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
 
             form.destroy();

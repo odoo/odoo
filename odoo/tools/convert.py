@@ -32,15 +32,7 @@ from .safe_eval import safe_eval as s_eval
 safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
 class ParseError(Exception):
-    def __init__(self, msg, text, filename, lineno):
-        self.msg = msg
-        self.text = text
-        self.filename = filename
-        self.lineno = lineno
-
-    def __str__(self):
-        return '"%s" while parsing %s:%s, near\n%s' \
-            % (self.msg, self.filename, self.lineno, self.text)
+    ...
 
 class RecordDictWrapper(dict):
     """
@@ -182,15 +174,18 @@ def _eval_xml(self, node, env):
                 return tuple(res)
             return res
     elif node.tag == "function":
-        model = env[node.get('model')]
+        model_str = node.get('model')
+        model = env[model_str]
         method_name = node.get('name')
         # determine arguments
         args = []
         kwargs = {}
         a_eval = node.get('eval')
+
         if a_eval:
-            self.idref['ref'] = self.id_get
-            args = list(safe_eval(a_eval, self.idref))
+            idref2 = _get_idref(self, env, model_str, self.idref)
+            args = safe_eval(a_eval, idref2)
+            args = list(safe_eval(a_eval, idref2))
         for child in node:
             if child.tag == 'value' and child.get('name'):
                 kwargs[child.get('name')] = _eval_xml(self, child, env)
@@ -339,7 +334,6 @@ form: module.record_id""" % (xml_id,)
         domain = rec.get('domain') or '[]'
         res_model = rec.get('res_model')
         binding_model = rec.get('binding_model')
-        view_type = rec.get('view_type') or 'form'
         view_mode = rec.get('view_mode') or 'tree,form'
         usage = rec.get('usage')
         limit = rec.get('limit')
@@ -368,7 +362,6 @@ form: module.record_id""" % (xml_id,)
             'domain': domain,
             'res_model': res_model,
             'src_model': binding_model,
-            'view_type': view_type,
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
@@ -395,7 +388,6 @@ form: module.record_id""" % (xml_id,)
             'domain': domain,
             'context': context,
             'res_model': res_model,
-            'view_type': view_type,
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
@@ -493,7 +485,8 @@ form: module.record_id""" % (xml_id,)
         if self.xml_filename and rec_id:
             model = model.with_context(
                 install_module=self.module,
-                install_filename=self.xml_filename
+                install_filename=self.xml_filename,
+                install_xmlid=rec_id,
             )
 
         self._test_xml_id(rec_id)
@@ -563,11 +556,14 @@ form: module.record_id""" % (xml_id,)
             else:
                 f_val = _eval_xml(self, field, env)
                 if f_name in model._fields:
-                    if model._fields[f_name].type == 'integer':
+                    field_type = model._fields[f_name].type
+                    if field_type == 'many2one':
+                        f_val = int(f_val) if f_val else False
+                    elif field_type == 'integer':
                         f_val = int(f_val)
-                    elif model._fields[f_name].type in ['float', 'monetary']:
+                    elif field_type in ('float', 'monetary'):
                         f_val = float(f_val)
-                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, str):
+                    elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
@@ -613,6 +609,8 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(name, name='name'))
         record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
+        if 'track' in el.attrib:
+            record.append(Field(el.get('track'), name='track'))
         if 'priority' in el.attrib:
             record.append(Field(el.get('priority'), name='priority'))
         if 'inherit_id' in el.attrib:
@@ -668,6 +666,14 @@ form: module.record_id""" % (xml_id,)
             self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
             try:
                 f(rec)
+            except ParseError:
+                raise
+            except Exception as e:
+                raise ParseError('while parsing %s:%s, near\n%s' % (
+                    rec.getroottree().docinfo.URL,
+                    rec.sourceline,
+                    etree.tostring(rec, encoding='unicode').rstrip()
+                ))
             finally:
                 self._noupdate.pop()
                 self.envs.pop()
@@ -704,18 +710,7 @@ form: module.record_id""" % (xml_id,)
 
     def parse(self, de):
         assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
-        try:
-            self._tag_root(de)
-        except Exception as e:
-            exc_info = sys.exc_info()
-            pycompat.reraise(
-                ParseError,
-                ParseError(
-                    ustr(e),
-                    etree.tostring(de, encoding='unicode').rstrip(),
-                    de.getroottree().docinfo.URL, de.sourceline),
-                exc_info[2]
-            )
+        self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
@@ -784,10 +779,10 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         _logger.exception("The XML file '%s' does not fit the required schema !", xmlfile.name)
         if jingtrang:
             p = subprocess.run(['pyjing', schema, xmlfile.name], stdout=subprocess.PIPE)
-            _logger.warn(p.stdout.decode())
+            _logger.warning(p.stdout.decode())
         else:
             for e in relaxng.error_log:
-                _logger.warn(e)
+                _logger.warning(e)
             _logger.info("Install 'jingtrang' for more precise and useful validation messages.")
         raise
 

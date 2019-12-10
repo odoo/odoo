@@ -8,11 +8,15 @@
 # odoo must be a namespace package for odoo.addons to become one too
 # https://packaging.python.org/guides/packaging-namespace-packages/
 #----------------------------------------------------------
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+import pkgutil
+import os.path
+__path__ = [
+    os.path.abspath(path)
+    for path in pkgutil.extend_path(__path__, __name__)
+]
 
-# As of version 12.0, python 2 is no longer supported, ensure py version is >= 3.5
 import sys
-assert sys.version_info > (3, 5), "Python 2 detected, Odoo requires Python >= 3.5 to run."
+assert sys.version_info > (3, 6), "Outdated python version detected, Odoo requires Python >= 3.6 to run."
 
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
@@ -63,6 +67,25 @@ if hasattr(time, 'tzset'):
     time.tzset()
 
 #----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+import PyPDF2
+
+try:
+    import zlib
+
+    def _decompress(data):
+        zobj = zlib.decompressobj()
+        return zobj.decompress(data)
+
+    PyPDF2.filters.decompress = _decompress
+except ImportError:
+    pass # no fix required
+
+#----------------------------------------------------------
 # Shortcuts
 #----------------------------------------------------------
 # The hard-coded super-user id (a.k.a. administrator, or root user).
@@ -100,7 +123,7 @@ from . import tools
 from . import models
 from . import fields
 from . import api
-from odoo.tools.translate import _
+from odoo.tools.translate import _, _lt
 
 #----------------------------------------------------------
 # Other imports, which may require stuff from above

@@ -6,7 +6,9 @@ var mailTestUtils = require('mail.testUtils');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
+var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
+var concurrency = require('web.concurrency');
 
 var createView = testUtils.createView;
 
@@ -59,6 +61,15 @@ QUnit.module('Chatter', {
                         relation: 'mail.activity',
                         relation_field: 'res_id',
                     },
+                    activity_exception_decoration: {
+                        string: 'Decoration',
+                        type: 'selection',
+                        selection: [['warning', 'Alert'], ['danger', 'Error']],
+                    },
+                    activity_exception_icon: {
+                        string: 'icon',
+                        type: 'char',
+                    },
                     activity_state: {
                         string: 'State',
                         type: 'selection',
@@ -108,11 +119,14 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['default', 'Other'], ['upload_file', 'Upload File']],
                     },
+                    decoration_type: { string: "Decoration Type", type: "selection", selection: [['warning', 'Alert'], ['danger', 'Error']]},
+                    icon: {string: 'icon', type:"char"},
                 },
                 records: [
                     { id: 1, name: "Type 1" },
                     { id: 2, name: "Type 2" },
                     { id: 3, name: "Type 3", category: 'upload_file' },
+                    { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning"}
                 ],
             },
             'mail.message': {
@@ -170,15 +184,14 @@ QUnit.module('Chatter', {
                     url:{type:'char', string:'url'},
                     type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
                     mimetype:{type:'char', string:"mimetype"},
-                    datas_fname:{type:'char', string:"filename"},
                 },
                 records:[
-                    {id:1, name:"name1", type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
+                    {id:1, type:'url', mimetype:'image/png', name:'filename.jpg',
                      res_id: 7, res_model: 'partner'},
-                    {id:2, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
-                     datas_fname:"file2.txt", res_id: 7, res_model: 'partner'},
-                    {id:3, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
-                     datas_fname:"file2.txt", res_id: 5, res_model: 'partner'},
+                    {id:2, type:'binary', mimetype:"application/x-msdos-program",
+                     name:"file2.txt", res_id: 7, res_model: 'partner'},
+                    {id:3, type:'binary', mimetype:"application/x-msdos-program",
+                     name:"file3.txt", res_id: 5, res_model: 'partner'},
                 ],
             },
         };
@@ -188,6 +201,49 @@ QUnit.module('Chatter', {
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
     }
+});
+
+QUnit.test('messaging becomes ready', async function (assert) {
+    assert.expect(2);
+
+    const initMessagingProm = testUtils.makeTestPromise();
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
+        async mockRPC(route, args) {
+            const _super = this._super.bind(this, route, args); // limitation on class.js with async/await
+            if (route === '/mail/init_messaging') {
+                await initMessagingProm;
+            }
+            return _super();
+        },
+        res_id: 2,
+    });
+    await testUtils.nextTick();
+    assert.containsOnce(
+        form,
+        '.o_mail_thread_loading',
+        "thread should be loading when messaging is not yet ready");
+
+    // simulate messaging becoming ready
+    initMessagingProm.resolve();
+    await testUtils.nextTick();
+    assert.containsNone(
+        form,
+        '.o_mail_thread_loading',
+        "thread should no longer be loading when messaging becomes ready");
+
+    form.destroy();
 });
 
 QUnit.test('basic rendering', async function (assert) {
@@ -239,6 +295,59 @@ QUnit.test('basic rendering', async function (assert) {
     await testUtils.form.clickEdit(form);
     assert.strictEqual(count, 0, "should have done no read_followers rpc as there are no followers");
     assert.strictEqual(unwanted_read_count, 0, "followers should only be fetched with read_followers route");
+    form.destroy();
+});
+
+QUnit.test('basic rendering: message_attachment_count can be in view standalone', async function (assert) {
+    assert.expect(1);
+
+    var form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<group>' +
+                        '<field name="message_attachment_count" string="I\'m here"/>' +
+                    '</group>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 2,
+    });
+
+    assert.strictEqual(form.$('.o_form_label').text(), "I'm here",
+        "The field message_attachment_count must be present according to the view's specs");
+
+    form.destroy();
+});
+
+QUnit.test('basic rendering: message_attachment_count can be in view with chatter', async function (assert) {
+    assert.expect(1);
+
+    var form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<group>' +
+                        '<field name="message_attachment_count" string="I\'m here"/>' +
+                    '</group>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+    });
+
+    assert.strictEqual(form.$('.o_form_label').text(), "I'm here",
+        "The field message_attachment_count must be present according to the view's specs");
+
     form.destroy();
 });
 
@@ -321,10 +430,9 @@ QUnit.test('Activity Done by uploading a file', async function (assert) {
 
             $(window).trigger(fileuploadID, [{
                 id:3,
-                name:"name2",
                 type:'binary',
                 mimetype:"application/x-msdos-program",
-                datas_fname:"file2.txt",
+                name:"file2.txt",
                 res_id: 5,
                 res_model: 'partner'
             }]);
@@ -438,12 +546,12 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
     assert.hasAttrValue($resIdInput, 'value', '7');
     assert.hasAttrValue($resIdInput, 'type', 'hidden');
 
-    assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
+    assert.strictEqual(form.$('.o_attachment_title').text(), 'filename.jpg',
         "the image name should be correct");
     // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
     // asserts both at the same time.
-    assert.strictEqual(form.$('a[title = "Download name2"]').text().trim(), 'name2txt',
-        "the attachment name should be correct");
+    assert.strictEqual(form.$('a[title = "Download file2.txt"]').text().trim(), 'file2.txttxt',
+        "the attachment name and the extension display should be correct");
     assert.ok(form.$('.o_attachment_image').css('background-image').indexOf('/web/image/1/160x160/?crop=true') >= 0,
         "the attachment image URL should be correct");
     assert.hasAttrValue(form.$('.o_attachment_download').eq(0), 'href', '/web/content/1?download=true',
@@ -452,6 +560,39 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
         "the download URL of name2 must be correct");
     await testUtils.dom.click($button);
     assert.containsNone(form, '.o_mail_chatter_attachments')
+    form.destroy();
+});
+
+QUnit.test('attachmentBox: deletable attachments', async function (assert) {
+    assert.expect(1);
+    this.data.partner.records.push({
+        id: 7,
+        display_name: "attachment_test",
+    });
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    '<field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    '<field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
+        res_id: 7,
+    });
+    await testUtils.dom.click(form.$('.o_chatter_button_attachment'));
+    assert.containsN(
+        form,
+        '.o_attachment_delete_cross',
+        2,
+        "Attachments should be deletable inside attachment box");
+
     form.destroy();
 });
 
@@ -608,10 +749,12 @@ QUnit.test('kanban activity widget with no activity', async function (assert) {
 });
 
 QUnit.test('kanban activity widget with an activity', async function (assert) {
-    assert.expect(12);
+    assert.expect(14);
 
-    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_ids = [1, 2];
     this.data.partner.records[0].activity_state = 'today';
+    this.data.partner.records[0].activity_exception_decoration = 'warning';
+    this.data.partner.records[0].activity_exception_icon = 'fa-warning';
     this.data['mail.activity'].records = [{
         id: 1,
         display_name: "An activity",
@@ -621,6 +764,15 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
         user_id: 2,
         create_uid: 2,
         activity_type_id: 1,
+    },{
+        id: 2,
+        display_name: "An exception activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 4,
     }];
     var rpcCount = 0;
     var kanban = await createView({
@@ -639,6 +791,7 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
                 var current_ids = this.data.partner.records[0].activity_ids;
                 var done_ids = args.args[0];
                 this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
+                this.data.partner.records[0].activity_exception_decoration = false;
                 this.data.partner.records[0].activity_state = false;
                 return Promise.resolve();
             }
@@ -652,13 +805,15 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
         "activity widget should have been rendered correctly");
     assert.strictEqual(rpcCount, 1, '1 RPC (search_read) should have been done');
 
+    // Check exception activity icon fa-warning
+    assert.hasClass($record.find('.o_activity_btn span'), "fa-warning", "should display correct exception activity icon");
     // click on the activity button
     await testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 2, 'a read should have been done to fetch the activity details');
-    assert.strictEqual($record.find('.o_activity_title').length, 1, "should have an activity scheduled");
+    assert.strictEqual($record.find('.o_activity_title').length, 2, "should have two activity scheduled");
     var label = $record.find('.o_activity_log .o_activity_color_today');
     assert.strictEqual(label.find('strong').text(), "Today", "should display the correct label");
-    assert.strictEqual(label.find('.badge-warning').text(), "1", "should display the correct count");
+    assert.strictEqual(label.find('.badge-warning').text(), "2", "should display the correct count");
 
     // click on the activity button to close the dropdown
     await testUtils.dom.click($record.find('.o_activity_btn'));
@@ -668,11 +823,19 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
     await testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 3, 'should have reloaded the activities');
 
+    // mark exception activity as done
+    await testUtils.dom.click($record.find('.o_mark_as_done:eq(1)'));
+    await testUtils.dom.click($record.find('.o_activity_popover_done'));
+    $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
+
+    // check activity icon replaced with fa-clock
+    assert.hasClass($record.find('.o_activity_btn span'), "fa-clock-o", "should display correct activity icon");
+
     // mark activity as done
     await testUtils.dom.click($record.find('.o_mark_as_done'));
     await testUtils.dom.click($record.find('.o_activity_popover_done'));
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
-    assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
+    assert.strictEqual(rpcCount, 8, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
     assert.strictEqual($record.find('.o_mail_activity.show').length, 1,
@@ -740,6 +903,60 @@ QUnit.test('kanban activity widget popover test', async function (assert) {
     kanban.destroy();
 });
 
+QUnit.test('list activity exception widget with activity', async function (assert) {
+    assert.expect(3);
+
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records.push({
+        id: 3,
+        message_attachment_count: 3,
+        display_name: "second partner",
+        foo: "Tommy",
+        message_follower_ids: [],
+        message_ids: [],
+        activity_ids: [2],
+        activity_exception_decoration: 'warning',
+        activity_exception_icon: 'fa-warning',
+    });
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 1,
+    },{
+        id: 2,
+        display_name: "An exception activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 4,
+    }];
+
+    var list = await createView({
+        View: ListView,
+        model: 'partner',
+        data: this.data,
+        arch: '<tree>' +
+                '<field name="foo"/>'+
+                '<field name="activity_exception_decoration" widget="activity_exception"/> ' +
+            '</tree>',
+    });
+
+    assert.containsN(list, '.o_data_row', 2, "should have two records");
+    assert.doesNotHaveClass(list.$('.o_data_row:eq(0) .o_activity_exception_cell div'), 'fa-warning',
+        "there is no any exception activity on record");
+    assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-warning',
+        "there is an exception on a record");
+
+    list.destroy();
+});
+
 QUnit.test('chatter: post, receive and star messages', async function (assert) {
     assert.expect(26);
 
@@ -791,8 +1008,8 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
                     body: args.kwargs.body,
                     date: "2016-12-20 10:35:40",
                     id: messageID,
-                    is_note: args.kwargs.subtype === 'mail.mt_note',
-                    is_discussion: args.kwargs.subtype === 'mail.mt_comment',
+                    is_note: args.kwargs.subtype_xmlid === 'mail.mt_note',
+                    is_discussion: args.kwargs.subtype_xmlid === 'mail.mt_comment',
                     is_notification: false,
                     is_starred: false,
                     model: 'partner',
@@ -1036,6 +1253,8 @@ QUnit.test('chatter: receive notif when document is open', async function (asser
     assert.strictEqual(thread.getUnreadCounter(), 1,
         "document thread should now have one unread message");
 
+    // do not destroy form too early. wait rendering to avoid race condition in service call.
+    await testUtils.nextTick();
     form.destroy();
 });
 
@@ -1090,6 +1309,71 @@ QUnit.test('chatter: access document with some notifs', async function (assert) 
     form.destroy();
 });
 
+QUnit.test('chatter: new message notification from document', async function (assert) {
+    // when receiving new messages from a document that is open, it should
+    // not mark the messages are read
+    assert.expect(4);
+
+    var form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {
+            partner_id: 3,
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'set_message_done') {
+                throw new Error("should not mark message as read");
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    var thread = form.call('mail_service', 'getDocumentThread', 'partner', 2);
+    assert.strictEqual(
+        thread.getUnreadCounter(),
+        0,
+        "document thread should have no unread messages initially");
+    assert.containsNone(
+        form,
+        '.o_thread_message',
+        "should have no message in the chatter");
+
+    // Simulate received needaction`` message on this document
+    var message = {
+        author_id: [1, "Me"],
+        body: '<p>test</p>',
+        channel_ids: [],
+        id: 2,
+        model: 'partner',
+        needaction_partner_ids: [3],
+        res_id: 2,
+    };
+    const notifications = [ [['myDB', 'ir.needaction'], message] ];
+    form.call('bus_service', 'trigger', 'notification', notifications);
+    await testUtils.nextTick();
+    assert.strictEqual(
+        thread.getUnreadCounter(),
+        1,
+        "document thread should have one unread message (not marked as read)");
+    assert.containsOnce(
+        form,
+        '.o_thread_message',
+        "should have one message in the chatter");
+
+    form.destroy();
+});
+
 QUnit.test('chatter: post a message and switch in edit mode', async function (assert) {
     assert.expect(5);
 
@@ -1119,8 +1403,8 @@ QUnit.test('chatter: post a message and switch in edit mode', async function (as
                     body: args.kwargs.body,
                     date: "2016-12-20 10:35:40",
                     id: 42,
-                    is_note: args.kwargs.subtype === 'mail.mt_note',
-                    is_discussion: args.kwargs.subtype === 'mail.mt_comment',
+                    is_note: args.kwargs.subtype_xmlid === 'mail.mt_note',
+                    is_discussion: args.kwargs.subtype_xmlid === 'mail.mt_comment',
                     is_starred: false,
                     model: 'partner',
                     res_id: 2,
@@ -1374,12 +1658,12 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     form.destroy();
 });
 
-QUnit.test('chatter: discard changes on opening full-composer', async function (assert) {
+QUnit.test('chatter: discard changes on opening full-composer and open missing partner info popup', async function (assert) {
     // When we open the full-composer, any following operations by the user
     // will reload the record (even closing the full-composer). Therefore,
     // we should warn the user when we open the full-composer if the record
     // is dirty (= has some unsaved changes).
-    assert.expect(2);
+    assert.expect(3);
 
     var form = await createView({
         View: FormView,
@@ -1396,11 +1680,24 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
                         ' \'post_refresh\': \'always\'}"/>' +
                 '</div>' +
             '</form>',
+        archs: {
+            'res.partner,false,form':
+                '<form string="partners">' +
+                '<field name="name"/>' +
+                '</form>',
+        },
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
             if (route === "/mail/get_suggested_recipients") {
-                return Promise.resolve({2: []});
+                return Promise.resolve({2: [[
+                        false,
+                        'pikapika@pikachu.com',
+                        ''
+                    ]]});
+            }
+            if (route === "/mail/get_partner_info") {
+                return Promise.resolve([{full_name: "pikapika@pikachu.com", partner_id: false}]);
             }
             return this._super(route, args);
         },
@@ -1421,6 +1718,8 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
     assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
+    await testUtils.dom.click($modal.find('.modal-footer .btn.btn-primary'));
+    assert.strictEqual($modal.length, 1, "should have a modal opened");
 
     form.destroy();
 });
@@ -1790,6 +2089,74 @@ QUnit.test('form activity widget: schedule next activity', async function (asser
     form.destroy();
 });
 
+QUnit.test('form activity widget: do not close activity popover on click', async function (assert) {
+    assert.expect(3);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>`,
+        res_id: 2,
+        mockRPC(route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                return Promise.resolve();
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            do_action(ev) {
+                ev.data.options.on_close();
+            },
+        },
+    });
+
+    //Schedule next activity
+    await testUtils.dom.click(form.$('.o_mail_activity .o_mark_as_done[data-activity-id=1]'));
+
+    for (let i = 0; i < 2; i++) {
+        // click twice in feedback area
+        await testUtils.dom.click(form.$('.o_mail_activity_feedback.popover textarea'));
+        const $popover = form.$('.o_mail_activity_feedback.popover');
+        const $PopoverInDom = form.$(`#${$popover.attr('id')}`);
+        assert.isVisible(
+            $PopoverInDom,
+            "the feedback popover should still be visible on click");
+    }
+    await concurrency.delay(250); // wait for popover transition
+    const $popover = form.$('.o_mail_activity_feedback.popover');
+    if (!$popover) {
+        throw new Error("popover should be in DOM");
+    }
+    const $PopoverInDom = form.$(`#${$popover.attr('id')}`);
+    assert.isVisible(
+        $PopoverInDom,
+        "the feedback popover should still be visible on click");
+
+    form.destroy();
+});
+
 
 QUnit.test('form activity widget: edit next activity', async function (assert) {
     assert.expect(3);
@@ -1835,7 +2202,6 @@ QUnit.test('form activity widget: edit next activity', async function (assert) {
                     target: "new",
                     type: "ir.actions.act_window",
                     view_mode: "form",
-                    view_type: "form",
                     views: [
                       [
                         false,
@@ -2082,7 +2448,7 @@ QUnit.test('form activity widget: mark as done and remove', async function (asse
 });
 
 QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (assert) {
-    assert.expect(24);
+    assert.expect(14);
 
     var resID = 2;
     var partnerID = 2;
@@ -2174,25 +2540,80 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
     assert.containsOnce(form, '.o_followers_list .o_partner',
         "there should be one follower in the follower dropdown");
 
-    // edit the subtypes
-    assert.containsN(form, '.o_subtypes_list .o_subtype', 3,
-        'subtype list should contain 3 subtypes');
-    assert.containsN(form, '.o_subtypes_list .o_subtype_checkbox:checked', 2,
-        'two subtypes should be checked by default');
-    await testUtils.dom.click(form.$('.o_subtypes_list .dropdown-toggle'));
-    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should be opened');
-    await testUtils.dom.click(form.$('.o_subtypes_list .o_subtype input[data-id=2]'));
-    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should remain opened');
-    assert.ok(!form.$('.o_subtypes_list .o_subtype_checkbox[data-id=2]:checked').length,
-        'second subtype should now be unchecked');
-
     // click to unfollow
     await testUtils.dom.click(form.$('.o_followers_follow_button'));
-    assert.ok($('.modal').length, 'a confirm modal should be opened');
-    await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
     assert.ok(form.$('.o_followers_follow_button.o_followers_notfollow').length,
         'should display the "Follow" button');
+
+    form.destroy();
+});
+
+QUnit.test('followers widget: follow/unfollow confirmation dialog', async function (assert) {
+    assert.expect(5);
+
+    this.data.partner.records[0].message_follower_ids = [1, 2];
+    var resID = 2;
+    var partnerID = 2;
+    var followers = [{
+        id: 1,
+        is_uid: true,
+        name: "Admin",
+        email: "admin@example.com",
+        res_id: resID,
+        res_model: 'res.partner',
+    }, {
+        id: 2,
+        is_uid: true,
+        name: "Demo",
+        email: "demo@example.com",
+        res_id: 3,
+        res_model: 'res.partner',
+    }];
+
+    var form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                '</div>' +
+            '</form>',
+        res_id: resID,
+
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_kw/partner/message_unsubscribe') {
+                this.data.partner.records[0].message_follower_ids.shift();
+                followers.shift();
+                return Promise.resolve(true);
+            }
+            if (route === '/mail/read_followers') {
+                return Promise.resolve({
+                    followers: followers,
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        session: {partner_id: partnerID},
+    });
+
+    assert.strictEqual(form.$('.o_followers_count').text(), "2", 'should have 2 followers');
+    // click to unfollow current user
+    await testUtils.dom.click(form.$('.o_followers_follow_button'));
+    assert.containsNone($, '.modal', 'a confirm modal should not be opened');
+    assert.strictEqual(form.$('.o_followers_count').text(), "1", 'should have 1 follower');
+
+    await testUtils.dom.click(form.$('.o_followers_title_box [data-toggle="dropdown"]'));
+    // remove demo user from followers
+    await testUtils.dom.click(form.$('.o_remove_follower'));
+    assert.containsOnce($, '.modal', 'a confirm modal should be opened');
+    await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+    assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
 
     form.destroy();
 });
@@ -2454,6 +2875,40 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', async funct
     form.destroy();
 });
 
+QUnit.test('test open attachment option', async function (assert) {
+    assert.expect(5);
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        res_id: 2,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread" options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
+    });
+    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should be open by default")
+    await testUtils.form.clickEdit(form);
+    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should still be open")
+    await testUtils.fields.editInput(form.$('.o_field_char'), 'Coucou Petite Perruche');
+    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should still be open")
+
+    // Close the attachment box with the button
+    await testUtils.dom.click(form.$('.o_chatter_button_attachment'))
+    assert.containsNone(form, '.o_mail_chatter_attachments', "Attachment box should be closed")
+    await testUtils.form.clickSave(form);
+    assert.containsNone(form, '.o_mail_chatter_attachments', "Attachment box should still be closed")
+
+    form.destroy();
+});
+
 QUnit.test('chatter: new messages on document without any "display_name"', async function (assert) {
     assert.expect(5);
 
@@ -2606,8 +3061,8 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
                     body: args.kwargs.body,
                     date: "2016-12-20 10:35:40",
                     id: messageID,
-                    is_note: args.kwargs.subtype === 'mail.mt_note',
-                    is_discussion: args.kwargs.subtype === 'mail.mt_comment',
+                    is_note: args.kwargs.subtype_xmlid === 'mail.mt_note',
+                    is_discussion: args.kwargs.subtype_xmlid === 'mail.mt_comment',
                     is_notification: false,
                     is_starred: false,
                     model: 'partner',
@@ -2638,7 +3093,7 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a single follower (widget counter)");
     assert.containsOnce(form, '.o_followers_list > div.o_partner',
         "should have a single follower (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text(), "Admin",
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text().trim(), "Admin",
         "should have 'Admin' as follower");
 
     // open composer
@@ -2665,10 +3120,10 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a two followers (widget counter)");
     assert.containsN(form, '.o_followers_list > div.o_partner', 2,
         "should have two followers (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text().trim(),
         "Admin",
         "should have 'Admin' as follower");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text().trim(),
         "Demo User",
         "should have 'Demo User' as follower");
 
@@ -2791,6 +3246,82 @@ QUnit.test('chatter: mention prefetched partners (followers & employees)', async
         "should display correct 4th mention suggestion");
 
     //cleanup
+    form.destroy();
+});
+
+QUnit.test('chatter: display suggested partners only once', async function (assert) {
+    assert.expect(3);
+
+    let isMessageSent = false;
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread" options="{'display_log_button': True}"/>
+                </div>
+            </form>`,
+        res_id: 2,
+        async mockRPC(route, args) {
+            if (route === '/mail/read_followers') {
+                return {
+                    followers: [],
+                    subtypes: [],
+                };
+            }
+            if (route === '/mail/get_suggested_recipients') {
+                if (isMessageSent) {
+                    return {
+                        2: [],
+                    };
+                }
+                return {
+                    2: [[2, "Jack <jack@example.com>", "Partner Profile"]],
+                };
+            }
+            if (args.method === 'message_post') {
+                isMessageSent = true;
+                return 57923;
+            }
+            if (args.method === 'message_format') {
+                return [{
+                    author_id: ["42", "Me"],
+                    model: 'partner',
+                }];
+            }
+            return this._super(route, args);
+        },
+        session: {},
+    });
+
+    await testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    const $input = form.$('.oe_chatter .o_composer_text_field:first()');
+    assert.containsOnce(
+        form,
+        'div.o_composer_suggested_partners input',
+        "should show one suggested recipient");
+    assert.strictEqual(
+        form.$('div.o_composer_suggested_partners label').text().replace(/\s+/g, ''),
+        "Jack(jack@example.com)",
+        "should have the correct label");
+
+    $input.val("BBQ and beers tonight! Are you in?");
+    await testUtils.dom.click(form.$('.o_composer_button_send'));
+    // Open composer for new message
+    await testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.containsNone(
+        form,
+        'div.o_composer_suggested_partners input',
+        "should no longer show the suggested recipient");
+
     form.destroy();
 });
 

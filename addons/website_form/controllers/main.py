@@ -8,7 +8,7 @@ import pytz
 from datetime import datetime
 from psycopg2 import IntegrityError
 
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
@@ -101,6 +101,7 @@ class WebsiteForm(http.Controller):
         'integer': integer,
         'float': floating,
         'binary': binary,
+        'monetary': floating,
     }
 
 
@@ -122,12 +123,14 @@ class WebsiteForm(http.Controller):
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
-                field_name = field_name.rsplit('[', 1)[0]
+                field_name = field_name.split('[', 1)[0]
 
                 # If it's an actual binary field, convert the input file
                 # If it's not, we'll use attachments instead
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
                     data['record'][field_name] = base64.b64encode(field_value.read())
+                    if authorized_fields[field_name]['manual']:
+                        data['record'][field_name + "_filename"] = field_value.filename
                 else:
                     field_value.field_name = field_name
                     data['attachments'].append(field_value)
@@ -212,8 +215,7 @@ class WebsiteForm(http.Controller):
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
                 'name': file.filename,
-                'datas': base64.encodestring(file.read()),
-                'datas_fname': file.filename,
+                'datas': base64.encodebytes(file.read()),
                 'res_model': model_name,
                 'res_id': record.id,
             }
@@ -235,7 +237,7 @@ class WebsiteForm(http.Controller):
                     'res_id': id_record,
                     'attachment_ids': [(6, 0, orphan_attachment_ids)],
                 }
-                mail_id = request.env['mail.message'].sudo().create(values)
+                mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
         else:
             # If the model is mail.mail then we have no other choice but to
             # attach the custom binary field files on the attachment_ids field.

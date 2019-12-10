@@ -1,45 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="cash_box_in_form">
-            <field name="name">cash_box_in</field>
-            <field name="model">cash.box.in</field>
-            <field name="arch" type="xml">
-                <form string="Put Money In">
-                    <separator string="Fill in this form if you put money in the cash register:" colspan="4" />
-                    <group>
-                        <field name="name" class="oe_inline"/>
-                        <field name="amount" class="oe_inline"/>
-                    </group>
-                    <footer>
-                        <button name="run" string="Put Money In" type="object" class="btn-primary"/>
-                        <button special="cancel" string="Cancel" class="btn-secondary"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <act_window
-            name="Put Money In"
-            res_model="cash.box.in"
-            binding_model="account.bank.statement"
-            view_mode="form"
-            target="new"
-            id="action_cash_box_in" />
-
         <record model="ir.ui.view" id="cash_box_out_form">
             <field name="name">cash_box_out</field>
             <field name="model">cash.box.out</field>
             <field name="arch" type="xml">
-                <form string="Take Money Out">
-                    <separator string="Describe why you take money from the cash register:"/>
+                <form string="Take Money In/Out">
+                    <separator string="Describe why you put/take money from the cash register:"/>
                     <group>
                         <field name="name" class="oe_inline"/>
                         <field name="amount" class="oe_inline"/>
                     </group>
 
                     <footer>
-                        <button name="run" string="Take Money Out" type="object" class="btn-primary"/>
+                        <button name="run" string="Take Money In/Out" type="object" class="btn-primary"/>
                         <button class="btn-secondary" special="cancel" string="Cancel" />
                     </footer>
                 </form>
@@ -47,9 +21,8 @@
         </record>
 
         <act_window
-            name="Take Money Out"
+            name="Take Money In/Out"
             res_model="cash.box.out"
-            binding_model="account.bank.statement"
             view_mode="form"
             target="new"
             id="action_cash_box_out" />

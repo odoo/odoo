@@ -17,6 +17,7 @@ class Job(models.Model):
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Address where employees are working")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
@@ -71,7 +72,6 @@ class Job(models.Model):
             job.document_ids = result[job.id]
             job.documents_count = len(job.document_ids)
 
-    @api.multi
     def _compute_application_count(self):
         read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
@@ -82,17 +82,14 @@ class Job(models.Model):
         self.ensure_one()
         return self.env['hr.recruitment.stage'].search([
             '|',
-            ('job_id', '=', False),
-            ('job_id', '=', self.id)], order='sequence asc', limit=1)
+            ('job_ids', '=', False),
+            ('job_ids', '=', self.id)], order='sequence asc', limit=1)
 
     def _compute_new_application_count(self):
-        first_stages = {job.id: job._get_first_stage().id for job in self}
-        mapped_data = dict.fromkeys(self.ids, 0)
-        for applicant in self.mapped('application_ids'):
-            if applicant.stage_id.id == first_stages.get(applicant.job_id.id): 
-                mapped_data[applicant.job_id.id] += 1
         for job in self:
-            job.new_application_count = mapped_data.get(job.id)
+            job.new_application_count = self.env["hr.applicant"].search_count(
+                [("job_id", "=", job.id), ("stage_id", "=", job._get_first_stage().id)]
+            )
 
     def get_alias_model_name(self, vals):
         return 'hr.applicant'
@@ -111,11 +108,9 @@ class Job(models.Model):
         vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
         return super(Job, self).create(vals)
 
-    @api.multi
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
 
-    @api.multi
     def action_get_attachment_tree_view(self):
         action = self.env.ref('base.action_attachment').read()[0]
         action['context'] = {
@@ -126,11 +121,9 @@ class Job(models.Model):
         action['domain'] = ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids').ids)]
         return action
 
-    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def edit_dialog(self):
         form_view = self.env.ref('hr.view_hr_job_form')
         return {

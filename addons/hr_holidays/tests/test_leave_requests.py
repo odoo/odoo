@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
@@ -8,9 +8,9 @@ from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
-class TestLeaveRequests(TestHrHolidaysBase):
+class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, holiday_status, ml, lt, rl, vrl):
             self.assertEqual(holiday_status.max_leaves, ml,
@@ -26,22 +26,24 @@ class TestLeaveRequests(TestHrHolidaysBase):
         super(TestLeaveRequests, self).setUp()
 
         # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
-        LeaveType = self.env['hr.leave.type'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
+        LeaveType = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True)
 
         self.holidays_type_1 = LeaveType.create({
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_type_2 = LeaveType.create({
             'name': 'Limited',
-            'allocation_type': 'fixed',
-            'validation_type': 'hr',
+            'allocation_type': 'fixed_allocation',
+            'leave_validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_type_3 = LeaveType.create({
             'name': 'TimeNotLimited',
             'allocation_type': 'no',
-            'validation_type': 'manager',
+            'leave_validation_type': 'manager',
             'validity_start': fields.Datetime.from_string('2017-01-01 00:00:00'),
             'validity_stop': fields.Datetime.from_string('2017-06-01 00:00:00'),
         })
@@ -64,7 +66,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_overlapping_requests(self):
         """  Employee cannot create a new leave request at the same time, avoid interlapping  """
-        self.env['hr.leave'].sudo(self.user_employee_id).create({
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_1.id,
@@ -74,7 +76,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
         })
 
         with self.assertRaises(ValidationError):
-            self.env['hr.leave'].sudo(self.user_employee_id).create({
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Hol21',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_type_1.id,
@@ -88,7 +90,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
         """  Employee creates a leave request in a limited category but has not enough days left  """
 
         with self.assertRaises(ValidationError):
-            self.env['hr.leave'].sudo(self.user_employee_id).create({
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_type_2.id,
@@ -100,7 +102,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_limited_type_days_left(self):
         """  Employee creates a leave request in a limited category and has enough days left  """
-        aloc1_user_group = self.env['hr.leave.allocation'].sudo(self.user_hruser_id).create({
+        aloc1_user_group = self.env['hr.leave.allocation'].with_user(self.user_hruser_id).create({
             'name': 'Days for limited category',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_2.id,
@@ -108,10 +110,10 @@ class TestLeaveRequests(TestHrHolidaysBase):
         })
         aloc1_user_group.action_approve()
 
-        holiday_status = self.holidays_type_2.sudo(self.user_employee_id)
+        holiday_status = self.holidays_type_2.with_user(self.user_employee_id)
         self._check_holidays_status(holiday_status, 2.0, 0.0, 2.0, 2.0)
 
-        hol = self.env['hr.leave'].sudo(self.user_employee_id).create({
+        hol = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_2.id,
@@ -123,14 +125,15 @@ class TestLeaveRequests(TestHrHolidaysBase):
         holiday_status.invalidate_cache()
         self._check_holidays_status(holiday_status, 2.0, 0.0, 2.0, 0.0)
 
-        hol.sudo(self.user_hrmanager_id).action_approve()
+        hol.with_user(self.user_hrmanager_id).action_approve()
 
+        holiday_status.invalidate_cache(['max_leaves'])
         self._check_holidays_status(holiday_status, 2.0, 2.0, 0.0, 0.0)
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_accrual_validity_time_valid(self):
         """  Employee ask leave during a valid validity time """
-        self.env['hr.leave'].sudo(self.user_employee_id).create({
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Valid time period',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_3.id,
@@ -143,7 +146,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
     def test_accrual_validity_time_not_valid(self):
         """  Employee ask leav during a not valid validity time """
         with self.assertRaises(ValidationError):
-            self.env['hr.leave'].sudo(self.user_employee_id).create({
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Sick Time Off',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_type_3.id,
@@ -157,10 +160,10 @@ class TestLeaveRequests(TestHrHolidaysBase):
         """ Create a department leave """
         self.employee_hrmanager.write({'department_id': self.hr_dept.id})
         self.assertFalse(self.env['hr.leave'].search([('employee_id', 'in', self.hr_dept.member_ids.ids)]))
-        leave_form = Form(self.env['hr.leave'].sudo(self.user_hrmanager), view='hr_holidays.hr_leave_view_form_manager')
-        leave_form.holiday_status_id = self.holidays_type_1
+        leave_form = Form(self.env['hr.leave'].with_user(self.user_hrmanager), view='hr_holidays.hr_leave_view_form_manager')
         leave_form.holiday_type = 'department'
         leave_form.department_id = self.hr_dept
+        leave_form.holiday_status_id = self.holidays_type_1
         leave = leave_form.save()
         leave.action_approve()
         member_ids = self.hr_dept.member_ids.ids
@@ -170,6 +173,80 @@ class TestLeaveRequests(TestHrHolidaysBase):
     def test_allocation_request(self):
         """ Create an allocation request """
         # employee should be set to current user
-        allocation_form = Form(self.env['hr.leave.allocation'].sudo(self.user_employee))
-        allocation_form.holiday_status_id = self.holidays_type_1
+        allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
+        allocation_form.name = 'New Allocation Request'
+        allocation_form.holiday_status_id = self.holidays_type_2
         allocation = allocation_form.save()
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_employee_is_absent(self):
+        """ Only the concerned employee should be considered absent """
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Hol11',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': (fields.Datetime.now() - relativedelta(days=1)),
+            'date_to': fields.Datetime.now() + relativedelta(days=1),
+            'number_of_days': 2,
+        })
+        (self.employee_emp | self.employee_hrmanager).mapped('is_absent')  # compute in batch
+        self.assertTrue(self.employee_emp.is_absent, "He should be considered absent")
+        self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_employee_leave_request(self):
+        """ Create a leave request for an employee in another timezone """
+        self.employee_emp.tz = 'NZ'  # GMT+12
+        leave = self.env['hr.leave'].new({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'request_date_from': date(2019, 5, 6),
+            'request_date_to': date(2019, 5, 6),
+            'request_hour_from': '8',  # 8:00 AM in the employee's timezone
+            'request_hour_to': '17',  # 5:00 PM in the employee's timezone
+        })
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_company_leave_request(self):
+        """ Create a leave request for a company in another timezone """
+        company = self.env['res.company'].create({'name': "Hergé"})
+        company.resource_calendar_id.tz = 'NZ'  # GMT+12
+        leave = self.env['hr.leave'].new({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'holiday_type': 'company',
+            'mode_company_id': company.id,
+            'request_date_from': date(2019, 5, 6),
+            'request_date_to': date(2019, 5, 6),
+            'request_hour_from': '8',  # 8:00 AM in the company's timezone
+            'request_hour_to': '17',  # 5:00 PM in the company's timezone
+        })
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_department_leave_request(self):
+        """ Create a leave request for a department in another timezone """
+        company = self.env['res.company'].create({'name': "Hergé"})
+        company.resource_calendar_id.tz = 'NZ'  # GMT+12
+        department = self.env['hr.department'].create({'name': "Museum", 'company_id': company.id})
+        leave = self.env['hr.leave'].new({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'holiday_type': 'department',
+            'department_id': department.id,
+            'request_date_from': date(2019, 5, 6),
+            'request_date_to': date(2019, 5, 6),
+            'request_hour_from': '8',  # 8:00 AM in the department's timezone
+            'request_hour_to': '17',  # 5:00 PM in the department's timezone
+        })
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")

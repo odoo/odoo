@@ -28,32 +28,39 @@
                 <attribute name="data-selector" add=".s_website_form" separator=","/>
             </xpath>
             <xpath expr="//div" position="after">
-              <!-- Form -->
-              <div data-js="website_form_editor" data-selector=".s_website_form">
-                  <a href="#" class="dropdown-item" data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</a>
-                  <a href="#" class="dropdown-item" data-website_form_field_modal="" data-no-preview="true">Add an existing field</a>
-                  <div class="dropdown-submenu">
-                      <a href="#" class="dropdown-item">Add a custom field</a>
-                      <div class="dropdown-menu" role="menu" data-no-preview="true">
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="char">Text</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="text">Long Text</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="integer">Number</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="float">Decimal Number</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="boolean">Checkbox</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="selection">Radio Buttons</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="many2one">Selection</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="one2many">Multiple Checkboxes</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="date">Date</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="datetime">Date &amp; Time</a>
-                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="binary">File Upload</a>
-                      </div>
-                  </div>
-              </div>
+                <!-- Form -->
+                <div data-js="website_form_editor" data-selector=".s_website_form">
+                    <we-button data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</we-button>
+                    <we-button data-website_form_field_modal="" data-no-preview="true">Add an existing field</we-button>
+                    <we-select string="Add a custom field" data-no-preview="true">
+                        <we-button data-website_form_custom_field="char">Text</we-button>
+                        <we-button data-website_form_custom_field="text">Long Text</we-button>
+                        <we-button data-website_form_custom_field="email">Email</we-button>
+                        <we-button data-website_form_custom_field="integer">Number</we-button>
+                        <we-button data-website_form_custom_field="float">Decimal Number</we-button>
+                        <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
+                        <we-button data-website_form_custom_field="selection">Radio Buttons</we-button>
+                        <we-button data-website_form_custom_field="many2one">Selection</we-button>
+                        <we-button data-website_form_custom_field="one2many">Multiple Checkboxes</we-button>
+                        <we-button data-website_form_custom_field="date">Date</we-button>
+                        <we-button data-website_form_custom_field="datetime">Date &amp; Time</we-button>
+                        <we-button data-website_form_custom_field="binary">File Upload</we-button>
+                    </we-select>
+                </div>
 
               <!-- Field -->
               <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">
-                    <a href="#" class="dropdown-item" data-toggle-class="o_website_form_field_hidden" data-no-preview="true">Hidden</a>
+                    <we-checkbox string="Hidden" data-no-preview="true"
+                                 data-select-class="o_website_form_field_hidden"/>
               </div>
+
+              <!-- Add an option to display radio buttons / checkboxes horizontally or vertically -->
+              <div data-js='website_form_editor_choice_field_display' data-selector=".o_website_form_flex">
+                    <we-select string="Display" data-no-preview="true">
+                        <we-button data-website_form_choice_field_display="horizontal">Horizontal</we-button>
+                        <we-button data-website_form_choice_field_display="vertical">Vertical</we-button>
+                    </we-select>
+               </div>
 
               <!-- Add move, duplicate and remove controllers to checkboxes and radio buttons -->
               <div data-selector=".o_website_form_flex_item" data-drop-near=".o_website_form_flex_item"/>
@@ -63,7 +70,9 @@
 
               <!-- Required option for fields that are not required fields of the model -->
               <div data-js='website_form_editor_field' data-selector=".form-field:not(.o_website_form_required)">
-                    <a href="#" class="dropdown-item" data-website_form_field_require="" data-toggle-class="o_website_form_required_custom" data-no-preview="true">Required</a>
+                  <we-checkbox string="Required" data-no-preview="true"
+                               data-website_form_field_require=""
+                               data-select-class="o_website_form_required_custom"/>
               </div>
 
               <!-- Remove the duplicate options of model fields -->

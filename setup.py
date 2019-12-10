@@ -37,6 +37,7 @@ setup(
         'ofxparse',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'polib',
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycopg2 >= 2.2',
         'pydot',
@@ -56,7 +57,7 @@ setup(
         'xlsxwriter',
         'xlwt',
     ],
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     extras_require={
         'ldap': ['pyldap'],
         'SSL': ['pyopenssl'],

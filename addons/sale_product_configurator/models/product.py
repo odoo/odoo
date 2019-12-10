@@ -12,9 +12,7 @@ class ProductTemplate(models.Model):
         string='Optional Products', help="Optional Products are suggested "
         "whenever the customer hits *Add to Cart* (cross-sell strategy, "
         "e.g. for computers: warranty, software, etc.).")
-    has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
 
-    @api.multi
     @api.depends('attribute_line_ids.value_ids.is_custom', 'attribute_line_ids.attribute_id.create_variant')
     def _compute_has_configurable_attributes(self):
         """ A product is considered configurable if:
@@ -33,17 +31,12 @@ class ProductTemplate(models.Model):
         - is configurable (see has_configurable_attributes)
         - has optional products """
         self.ensure_one()
-
-        if self.product_variant_count == 1 and not self.has_configurable_attributes:
+        res = super(ProductTemplate, self).get_single_product_variant()
+        if res.get('product_id', False):
             has_optional_products = False
             for optional_product in self.product_variant_id.optional_product_ids:
                 if optional_product.has_dynamic_attributes() or optional_product._get_possible_variants(self.product_variant_id.product_template_attribute_value_ids):
                     has_optional_products = True
                     break
-
-            return {
-                'product_id': self.product_variant_id.id,
-                'has_optional_products': has_optional_products
-            }
-
-        return None
+            res.update({'has_optional_products': has_optional_products})
+        return res

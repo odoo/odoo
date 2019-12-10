@@ -85,7 +85,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_7777</field>
-            <field name="image" type="base64" file="product/static/img/product_chair.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_chair.png"/>
         </record>
 
         <record id="product_delivery_02" model="product.product">
@@ -98,7 +98,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_8888</field>
-            <field name="image" type="base64" file="product/static/img/product_lamp.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_lamp.png"/>
         </record>
 
         <record id="product_order_01" model="product.product">
@@ -111,7 +111,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_9999</field>
-            <field name="image" type="base64" file="product/static/img/product_product_43-image.jpg"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_43-image.jpg"/>
         </record>
 
         <record id="product_product_3" model="product.product">
@@ -125,14 +125,14 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Desk combination, black-brown: chair + desk + drawer.</field>
             <field name="default_code">FURN_7800</field>
-            <field name="image" type="base64" file="product/static/img/product_product_3-image.jpg"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_3-image.jpg"/>
         </record>
 
         <!-- Variants -->
 
         <record id="product_attribute_1" model="product.attribute">
             <field name="name">Legs</field>
-            <field name="sequence">1</field>
+            <field name="sequence">10</field>
         </record>
         <record id="product_attribute_value_1" model="product.attribute.value">
             <field name="name">Steel</field>
@@ -147,7 +147,7 @@
 
         <record id="product_attribute_2" model="product.attribute">
             <field name="name">Color</field>
-            <field name="sequence">2</field>
+            <field name="sequence">20</field>
         </record>
         <record id="product_attribute_value_3" model="product.attribute.value">
             <field name="name">White</field>
@@ -162,6 +162,7 @@
 
         <record id="product_attribute_3" model="product.attribute">
             <field name="name">Duration</field>
+            <field name="sequence">30</field>
         </record>
         <record id="product_attribute_value_5" model="product.attribute.value">
             <field name="name">1 year</field>
@@ -173,7 +174,7 @@
         </record>
 
         <record id="product_product_4_product_template" model="product.template">
-            <field name="name">Customizable Desk</field>
+            <field name="name">Customizable Desk (CONFIG)</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">500.0</field>
             <field name="list_price">750.0</field>
@@ -183,52 +184,88 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">160x80cm, with large legs.</field>
         </record>
+
+        <!-- the product template attribute lines have to be defined before creating the variants -->
+        <record id="product_4_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="attribute_id" ref="product_attribute_1"/>
+            <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
+        </record>
+        <record id="product_4_attribute_2_product_template_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
+        </record>
+
+        <!--
+        Handle automatically created product.template.attribute.value.
+        Meaning that the combination between the "customizable desk" and the attribute value "black" will be materialized
+        into a "product.template.attribute.value" with the ref "product.product_4_attribute_1_value_1".
+        This will allow setting fields like "price_extra" and "exclude_for"
+         -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_4_attribute_1_value_1',
+                'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_4_attribute_1_value_2',
+                'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[1],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_4_attribute_2_value_1',
+                'record': obj().env.ref('product.product_4_attribute_2_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_4_attribute_2_value_2',
+                'record': obj().env.ref('product.product_4_attribute_2_product_template_attribute_line').product_template_value_ids[1],
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_product_4',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_1') + obj().env.ref('product.product_4_attribute_2_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4b',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_1') + obj().env.ref('product.product_4_attribute_2_value_2')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4c',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4d',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_2')),
+                'noupdate': True,
+            },]"/>
+        </function>
+
         <record id="product_product_4" model="product.product">
             <field name="default_code">FURN_0096</field>
             <field name="standard_price">500.0</field>
             <field name="weight">0.01</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="image" type="base64" file="product/static/img/table02.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/table02.png"/>
         </record>
         <record id="product_product_4b" model="product.product">
             <field name="default_code">FURN_0097</field>
             <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="standard_price">500.0</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_4')])]"/>
-            <field name="image" type="base64" file="product/static/img/table04.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/table04.png"/>
         </record>
         <record id="product_product_4c" model="product.product">
             <field name="default_code">FURN_0098</field>
             <field name="weight">0.01</field>
             <field name="standard_price">500.0</field>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_3')])]"/>
-            <field name="image" type="base64" file="product/static/img/table03.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/table03.png"/>
         </record>
         <record id="product_product_4d" model="product.product">
             <field name="default_code">DESK0004</field>
             <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="standard_price">500.0</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_4')])]"/>
-            <field name="image" type="base64" file="product/static/img/table01.png"/>
-        </record>
-
-        <record id="product_template_attribute_line_1" model="product.template.attribute.line">
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_id" ref="product_attribute_1"/>
-            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
-        </record>
-        <record id="product_template_attribute_line_2" model="product.template.attribute.line">
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
-        </record>
-
-        <record id="product_product_4_product_template" model="product.template">
-            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_template_attribute_line_1'), ref('product.product_template_attribute_line_2')])]"/>
+            <field name="image_1920" type="base64" file="product/static/img/table01.png"/>
         </record>
 
         <record id="product_product_5" model="product.product">
@@ -241,7 +278,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM06</field>
-            <field name="image" type="base64" file="product/static/img/product_product_5-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_5-image.png"/>
         </record>
 
         <record id="product_product_6" model="product.product">
@@ -255,7 +292,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM07</field>
             <field name='weight'>0.330</field>
-            <field name="image" type="base64" file="product/static/img/product_product_6-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_6-image.png"/>
         </record>
 
         <record id="product_product_7" model="product.product">
@@ -268,7 +305,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM08</field>
-            <field name="image" type="base64" file="product/static/img/product_product_7-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_7-image.png"/>
         </record>
 
         <record id="product_product_8" model="product.product">
@@ -282,7 +319,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM09</field>
             <field name='weight'>9.54</field>
-            <field name="image" type="base64" file="product/static/img/product_product_8-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_8-image.png"/>
         </record>
 
         <record id="product_product_9" model="product.product">
@@ -295,7 +332,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM10</field>
-            <field name="image" type="base64" file="product/static/img/product_product_9-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_9-image.png"/>
         </record>
 
         <record id="product_product_10" model="product.product">
@@ -308,63 +345,65 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM11</field>
-            <field name="image" type="base64" file="product/static/img/product_product_10-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_10-image.png"/>
         </record>
 
-        <record id="product_product_11" model="product.product">
-            <field name="name">Conference Chair</field>
+        <record id="product_product_11_product_template" model="product.template">
+            <field name="name">Conference Chair (CONFIG)</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">14</field>
             <field name="list_price">16.50</field>
             <field name="type">consu</field>
-            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
-            <field name="default_code">E-COM12</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
-            <field name="image" type="base64" file="product/static/img/product_product_11-image.png"/>
-        </record>
-        <record id="product_product_11b" model="product.product">
-            <field name="name">Conference Chair</field>
-            <field name="default_code">E-COM13</field>
-            <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_11-image.png"/>
         </record>
 
-        <record id="product_template_attribute_line_4" model="product.template.attribute.line">
+        <!-- the product template attribute lines have to be defined before creating the variants -->
+        <record id="product_11_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
 
-        <record id="product_product_11_product_template" model="product.template">
-            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_template_attribute_line_4')])]"/>
-        </record>
-
-        <!--
-        Handle automatically created product.template.attribute.value.
-        Meaning that the combination between the "customizable desk" and the attribute value "black" will be materialized
-        into a "product.template.attribute.value" with the ref "product.product_template_attribute_value_1".
-        This will allow setting fields like "price_extra" and "exclude_for"
-         -->
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[{
-                'xml_id': 'product.product_template_attribute_value_1',
-                'record': obj().env.ref('product.product_template_attribute_line_1').product_template_value_ids[1],
+                'xml_id': 'product.product_11_attribute_1_value_1',
+                'record': obj().env.ref('product.product_11_attribute_1_product_template_attribute_line').product_template_value_ids[0],
                 'noupdate': True,
             }, {
-                'xml_id': 'product.product_template_attribute_value_2',
-                'record': obj().env.ref('product.product_template_attribute_line_4').product_template_value_ids[1],
+                'xml_id': 'product.product_11_attribute_1_value_2',
+                'record': obj().env.ref('product.product_11_attribute_1_product_template_attribute_line').product_template_value_ids[1],
                 'noupdate': True,
             }]"/>
         </function>
 
-        <record id="product_template_attribute_value_1" model="product.template.attribute.value">
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_product_11',
+                'record': obj().env.ref('product.product_product_11_product_template')._get_variant_for_combination(obj().env.ref('product.product_11_attribute_1_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_11b',
+                'record': obj().env.ref('product.product_product_11_product_template')._get_variant_for_combination(obj().env.ref('product.product_11_attribute_1_value_2')),
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <record id="product_product_11" model="product.product">
+            <field name="default_code">E-COM12</field>
+            <field name="weight">0.01</field>
+        </record>
+        <record id="product_product_11b" model="product.product">
+            <field name="default_code">E-COM13</field>
+            <field name="weight">0.01</field>
+        </record>
+
+        <record id="product.product_4_attribute_1_value_2" model="product.template.attribute.value">
             <field name="price_extra">50.40</field>
         </record>
 
-        <record id="product_template_attribute_value_2" model="product.template.attribute.value">
+        <record id="product.product_11_attribute_1_value_2" model="product.template.attribute.value">
             <field name="price_extra">6.40</field>
         </record>
 
@@ -380,7 +419,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_0269</field>
-            <field name="image" type="base64" file="product/static/img/product_product_12-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_12-image.png"/>
         </record>
 
         <record id="product_product_13" model="product.product">
@@ -393,7 +432,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_1118</field>
-            <field name="image" type="base64" file="product/static/img/product_product_13-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_13-image.png"/>
         </record>
 
         <record id="product_product_16" model="product.product">
@@ -406,7 +445,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_8900</field>
-            <field name="image" type="base64" file="product/static/img/product_product_16-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_16-image.png"/>
         </record>
 
         <record id="product_product_20" model="product.product">
@@ -419,7 +458,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_9001</field>
-            <field name="image" type="base64" file="product/static/img/product_product_20-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_20-image.png"/>
         </record>
         <record id="product_product_22" model="product.product">
             <field name="name">Desk Stand with Screen</field>
@@ -431,7 +470,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_7888</field>
-            <field name="image" type="base64" file="product/static/img/product_product_22-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_22-image.png"/>
         </record>
 
         <record id="product_product_24" model="product.product">
@@ -444,7 +483,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_0789</field>
-            <field name="image" type="base64" file="product/static/img/product_product_24-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_24-image.png"/>
         </record>
 
         <record id="product_product_25" model="product.product">
@@ -457,7 +496,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_6666</field>
-            <field name="image" type="base64" file="product/static/img/product_product_25-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
         </record>
 
         <record id="product_product_27" model="product.product">
@@ -471,7 +510,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Drawer with two routing possiblities.</field>
             <field name="default_code">FURN_8855</field>
-            <field name="image" type="base64" file="product/static/img/product_product_27-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_27-image.png"/>
         </record>
 
         <record id="consu_delivery_03" model="product.product">
@@ -485,7 +524,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Four person modern office workstation</field>
             <field name="default_code">FURN_8220</field>
-            <field name="image" type="base64" file="product/static/img/product_product_d03-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_d03-image.png"/>
         </record>
 
         <record id="consu_delivery_02" model="product.product">
@@ -499,7 +538,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Conference room table</field>
             <field name="default_code">FURN_6741</field>
-            <field name="image" type="base64" file="product/static/img/product_product_46-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_46-image.png"/>
         </record>
 
         <record id="consu_delivery_01" model="product.product">
@@ -513,7 +552,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Three Seater Sofa with Lounger in Steel Grey Colour</field>
             <field name="default_code">FURN_8999</field>
-            <field name="image" type="base64" file="product/static/img/product_product_d01-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_d01-image.png"/>
         </record>
 
         <!--

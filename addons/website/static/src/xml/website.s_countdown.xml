@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.s_countdown.end_redirect_message">
+        <p class="text-center s_countdown_end_redirect_message">Time's up! You can now visit <a class="s_countdown_end_redirect_url" t-attf-href="#{redirectUrl}">this page</a>.</p>
+    </t>
+    <t t-name="website.s_countdown.end_message">
+        <div class="s_countdown_end_message d-none">
+            <div class="text-center alert alert-info css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
+                The following message will become visible <strong>only</strong> once the countdown ends.
+            </div>
+            <div class="oe_structure">
+                <section class="s_picture bg-200">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 pt16">
+                                <h2 class="text-center">Happy Odoo Anniversary!</h2>
+                                <p class="text-center">As promised, we will offer 4 free tickets to our next summit.<br/>Visit our facebook page to know if you are one of the lucky winners.<br/>Hopefully, we will meet you soon.</p>
+                            </div>
+                            <div class="col-lg-8 offset-lg-2">
+                                <figure class="figure">
+                                    <img src="/web/image/website.library_image_18" class="figure-img img-fluid rounded img-thumbnail padding-large" alt="Countdown is over - Firework"/>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

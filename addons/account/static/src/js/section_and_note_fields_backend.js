@@ -38,6 +38,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                 }
                 $cell.attr('colspan', nbrColumns);
             } else {
+                $cell.removeClass('o_invisible_modifier');
                 return $cell.addClass('o_hidden');
             }
         }
@@ -67,7 +68,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
     _renderView: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.$('> table').addClass('o_section_and_note_list_view');
+            self.$('.o_list_table').addClass('o_section_and_note_list_view');
         });
     }
 });
@@ -76,7 +77,6 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
 // to be sure this custom code will only impact selected fields having the widget
 // and not applied to any other existing ListRenderer.
 var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
-    description: "",
     /**
      * We want to use our custom renderer for the list.
      *
@@ -102,4 +102,5 @@ var SectionAndNoteFieldText = function (parent, name, record, options) {
 fieldRegistry.add('section_and_note_one2many', SectionAndNoteFieldOne2Many);
 fieldRegistry.add('section_and_note_text', SectionAndNoteFieldText);
 
+return SectionAndNoteListRenderer;
 });

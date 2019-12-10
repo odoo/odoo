@@ -5,11 +5,12 @@ import datetime
 from datetime import datetime, timedelta, time
 
 from odoo import fields
-from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
+import re
 
 
-class TestCalendar(TransactionCase):
+class TestCalendar(SavepointCaseWithUserDemo):
 
     def setUp(self):
         super(TestCalendar, self).setUp()
@@ -135,12 +136,14 @@ class TestCalendar(TransactionCase):
             (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
             "Sanity check"
         )
+        partner_1 = self.env['res.partner'].create({'name': 'A First Partner'})
+        partner_2 = self.env['res.partner'].create({'name': 'A Second Partner'})
         values = {
             'allday': False,
             'name': u'wheee',
             'attendee_ids': [
-                (0, 0, {'state': u'needsAction', 'partner_id': 8, 'email': u'bob@example.com'}),
-                (0, 0, {'state': u'needsAction', 'partner_id': 10, 'email': u'ed@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': partner_1.id, 'email': u'bob@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': partner_2.id, 'email': u'ed@example.com'}),
             ],
             'recurrency': True,
             'privacy': u'public',
@@ -149,7 +152,7 @@ class TestCalendar(TransactionCase):
             'start': '2017-07-10 15:30:00',
             'location': u"XXX",
             'duration': 0.5,
-            'partner_ids': [(4, 10), (4, 8)],
+            'partner_ids': [(4, partner_1.id), (4, partner_2.id)],
             'description': u"A thing"
         }
 
@@ -158,7 +161,7 @@ class TestCalendar(TransactionCase):
             (str(m.start_datetime), str(m.stop_datetime)),
             ('2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
         )
-        self.assertEquals(
+        self.assertEqual(
             (str(records.start_datetime), str(records.stop_datetime)),
             (u'2017-07-10 15:30:00', u'2017-07-10 16:00:00'),
         )
@@ -224,11 +227,11 @@ class TestCalendar(TransactionCase):
             'name': 'Test',
         })
         now = datetime.now()
-        test_user = self.env.ref('base.user_demo')
+        test_user = self.user_demo
         test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
 
         # create using default_* keys
-        test_event = self.env['calendar.event'].sudo(test_user).with_context(
+        test_event = self.env['calendar.event'].with_user(test_user).with_context(
             default_res_model=test_record._name,
             default_res_id=test_record.id,
         ).create({
@@ -263,7 +266,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(self.env['calendar.event'], self.env['calendar.event'].search([('name', '=', test_name)]))
 
         # create using active_model keys
-        test_event = self.env['calendar.event'].sudo(self.env.ref('base.user_demo')).with_context(
+        test_event = self.env['calendar.event'].with_user(self.user_demo).with_context(
             active_model=test_record._name,
             active_id=test_record.id,
         ).create({
@@ -325,7 +328,7 @@ class TestCalendar(TransactionCase):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
+            'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -358,7 +361,7 @@ class TestCalendar(TransactionCase):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
+            'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -384,3 +387,60 @@ class TestCalendar(TransactionCase):
         })
 
         self.assertEqual(str(activity_id.date_deadline), '2018-10-16')
+
+    def test_event_creation_mail(self):
+        """
+        Check that mail are sent to the attendees on event creation
+        Check that mail are sent to the added attendees on event edit
+        Check that mail are NOT sent to the attendees when detaching a recurring event
+        """
+
+        def _test_one_mail_per_attendee(self, m, partners):
+            # check that every attendee receive a (single) mail for the event
+            for partner in partners:
+                mail = self.env['mail.mail'].sudo().search([
+                    ('recipient_ids', 'in', partner.id),
+                    ('subject', 'like', m.name),
+                    ])
+                self.assertEqual(len(mail), 1)
+
+        partners = [
+           self.env['res.partner'].create({'name':'testuser0','email': u'bob@example.com'}),
+           self.env['res.partner'].create({'name':'testuser1','email': u'alice@example.com'}),
+           ]
+        partner_ids = [(6, False, [p.id for p in partners]),]
+        now = fields.Datetime.now()
+        m = self.CalendarEvent.create({
+            'name': "mailTest1",
+            'allday': False,
+            'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=5',
+            'duration': 0.5,
+            'partner_ids': partner_ids,
+            'start': fields.Datetime.to_string(now + timedelta(days=10)),
+            'stop': fields.Datetime.to_string(now + timedelta(days=15)),
+            })
+
+        # every partner should have 1 mail sent
+        _test_one_mail_per_attendee(self, m, partners)
+
+        # adding more partners to the event
+        partners.extend([
+            self.env['res.partner'].create({'name':'testuser2','email': u'marc@example.com'}),
+            self.env['res.partner'].create({'name':'testuser3','email': u'carl@example.com'}),
+            self.env['res.partner'].create({'name':'testuser4','email': u'alain@example.com'}),
+            ])
+        partner_ids = [(6, False, [p.id for p in partners]),]
+        m.write({'partner_ids': partner_ids})
+
+        # more email should be sent
+        _test_one_mail_per_attendee(self, m, partners)
+
+        # calculate virtualid to detach one event
+        virtid = str(m.id) + '-' + ''.join(re.split('[\D]', fields.Datetime.to_string(now + timedelta(days=12))))
+
+        # detaching a virtual event in the chain
+        self.env['calendar.event'].browse(virtid).detach_recurring_event(values={'active':False})
+
+        # since the detach actually create an event in the backend
+        # we check that no mail notifications are sent to the attendees
+        _test_one_mail_per_attendee(self, m, partners)

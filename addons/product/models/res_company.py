@@ -13,21 +13,19 @@ class ResCompany(models.Model):
         ProductPricelist = self.env['product.pricelist']
         pricelist = ProductPricelist.search([('currency_id', '=', new_company.currency_id.id), ('company_id', '=', False)], limit=1)
         if not pricelist:
+            params = {'currency': new_company.currency_id.name}
             pricelist = ProductPricelist.create({
-                'name': new_company.name,
+                'name': _("Default %(currency)s pricelist") %  params,
                 'currency_id': new_company.currency_id.id,
             })
-        field = self.env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
-        product_property = self.env['ir.property'].create({
-            'name': 'property_product_pricelist',
-            'value_reference': 'product.pricelist,%s' % pricelist.id,
-            'fields_id': field.id
-        })
-        # multi-company security rules prevents access
-        product_property.sudo().write({'company_id': new_company.id})
+        self.env['ir.property'].sudo().set_default(
+            'property_product_pricelist',
+            'res.partner',
+            pricelist,
+            new_company,
+        )
         return new_company
 
-    @api.multi
     def write(self, values):
         # When we modify the currency of the company, we reflect the change on the list0 pricelist, if
         # that pricelist is not used by another company. Otherwise, we create a new pricelist for the
@@ -39,7 +37,7 @@ class ResCompany(models.Model):
             nb_companies = self.search_count([])
             for company in self:
                 existing_pricelist = ProductPricelist.search(
-                    [('company_id', 'in', (False, company.id)), 
+                    [('company_id', 'in', (False, company.id)),
                      ('currency_id', '=', currency_id)])
                 if existing_pricelist:
                     continue
@@ -51,20 +49,15 @@ class ResCompany(models.Model):
                 if currency_match and company_match:
                     main_pricelist.write({'currency_id': currency_id})
                 else:
-                    params = {
-                        'currency': self.env['res.currency'].browse(currency_id).name,
-                        'company': company.name
-                    }
+                    params = {'currency': self.env['res.currency'].browse(currency_id).name}
                     pricelist = ProductPricelist.create({
-                        'name': _("Default %(currency)s pricelist for %(company)s") %  params,
+                        'name': _("Default %(currency)s pricelist") %  params,
                         'currency_id': currency_id,
-                        'company_id': company.id,
                     })
-                    field = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_product_pricelist')])
-                    self.env['ir.property'].create({
-                        'name': 'property_product_pricelist',
-                        'company_id': company.id,
-                        'value_reference': 'product.pricelist,%s' % pricelist.id,
-                        'fields_id': field.id
-                    })
+                    self.env['ir.property'].sudo().set_default(
+                        'property_product_pricelist',
+                        'res.partner',
+                        pricelist,
+                        company,
+                    )
         return super(ResCompany, self).write(values)

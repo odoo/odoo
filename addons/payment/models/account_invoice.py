@@ -5,9 +5,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-    
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
     transaction_ids = fields.Many2many('payment.transaction', 'account_invoice_transaction_rel', 'invoice_id', 'transaction_id',
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
@@ -18,12 +18,10 @@ class AccountInvoice(models.Model):
         for trans in self:
             trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
 
-    @api.multi
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.transaction_ids.get_last_transaction()
 
-    @api.multi
     def _create_payment_transaction(self, vals):
         '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
         current invoices fields (e.g. the partner or the currency).
@@ -75,7 +73,7 @@ class AccountInvoice(models.Model):
             vals['acquirer_id'] = acquirer.id
 
         vals.update({
-            'amount': sum(self.mapped('residual')),
+            'amount': sum(self.mapped('amount_residual')),
             'currency_id': currency.id,
             'partner_id': partner.id,
             'invoice_ids': [(6, 0, self.ids)],
@@ -89,10 +87,8 @@ class AccountInvoice(models.Model):
 
         return transaction
 
-    @api.multi
     def payment_action_capture(self):
         self.authorized_transaction_ids.s2s_capture_transaction()
 
-    @api.multi
     def payment_action_void(self):
         self.authorized_transaction_ids.s2s_void_transaction()

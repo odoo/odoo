@@ -12,9 +12,12 @@
         'website_forum'
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'views/forum_views.xml',
         'views/slide_channel_views.xml',
-        'views/website_slides_templates.xml',
+        'views/website_slides_menu_views.xml',
         'views/assets.xml',
+        'views/website_slides_templates.xml',
         'views/website_slides_forum_templates.xml'
     ],
     'demo': [

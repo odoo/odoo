@@ -12,7 +12,7 @@
                 <form string="Procurement group">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="%(do_view_pickings)d" string="Pickings" type="action" class="oe_stat_button" icon="fa-truck"/>
+                            <button name="%(do_view_pickings)d" string="Transfers" type="action" class="oe_stat_button" icon="fa-truck"/>
                         </div>
                         <group>
                             <field name="name"/>
@@ -49,6 +49,7 @@
                     <field name="location_src_id" options="{'no_create': True}"/>
                     <field name="location_id" options="{'no_create': True}"/>
                     <field name="route_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -59,17 +60,14 @@
             <field name="arch" type="xml">
                 <form string="Rules">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
                         </div>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="action"/>
                                 <field name="picking_type_id"/>
                                 <field name="location_src_id" options="{'no_create': True}" attrs="{'required': [('action', 'in', ['pull', 'push', 'pull_push'])]}"/>
@@ -96,18 +94,19 @@
                             <group name="propagation_group" string="Propagation" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one">
                                 <field name="group_propagation_option"/>
                                 <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
-                                <field name="propagate"/>
+                                <field name="propagate_cancel"/>
                                 <field name="propagate_warehouse_id"/>
                             </group>
                             <group string="Options" attrs="{'invisible': [('action', 'not in', ['pull', 'push', 'pull_push'])]}">
                                 <field name="partner_address_id" attrs="{'invisible': [('action', '=', 'push')]}"/>
                                 <field name="delay"/>
                             </group>
-                            <group name="scheduling_group" string="Scheduling" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one">
+                            <group name="scheduling_group" string="Scheduling" attrs="{'invisible': [('action', '=', 'push')]}">
+                                <field name="delay_alert"/>
                                 <field name="propagate_date"/>
                                 <label for="propagate_date_minimum_delta" attrs="{'invisible': [('propagate_date', '=', False)]}"/>
                                 <div attrs="{'invisible': [('propagate_date', '=', False)]}">
-                                    <field name="propagate_date_minimum_delta" class="oe_inline"/> day(s)
+                                    <field name="propagate_date_minimum_delta" class="oe_inline"/> days
                                 </div>
                             </group>
                         </group>
@@ -135,7 +134,6 @@
             <field name="name">Rules</field>
             <field name="res_model">stock.rule</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 

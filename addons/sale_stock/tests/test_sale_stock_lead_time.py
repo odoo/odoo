@@ -9,12 +9,12 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 
 class TestSaleStockLeadTime(TestStockCommon):
 
-    def setUp(self):
-        super(TestSaleStockLeadTime, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleStockLeadTime, cls).setUpClass()
 
         # Update the product_1 with type and Customer Lead Time
-        self.product_1.write({'type': 'product',
-                              'sale_delay': 5.0})
+        cls.product_1.write({'type': 'product', 'sale_delay': 5.0})
 
     def test_00_product_company_level_delays(self):
         """ In order to check schedule date, set product's Customer Lead Time
@@ -178,9 +178,9 @@ class TestSaleStockLeadTime(TestStockCommon):
         pick.write({'scheduled_date': pick_min_date + timedelta(days=5)})
 
         # Now check scheduled_date of pack and out are changed or not based on propagate is true on rules?
-        self.assertEquals(pack.scheduled_date, (pack_min_date + timedelta(days=5)),
+        self.assertEqual(pack.scheduled_date, (pack_min_date + timedelta(days=5)),
             'Schedule date of pack should be changed based on delay.')
-        self.assertEquals(out.scheduled_date, (out_min_date + timedelta(days=5)),
+        self.assertEqual(out.scheduled_date, (out_min_date + timedelta(days=5)),
             'Schedule date of out should be changed based on delay.')
 
     def test_03_no_propagate_date(self):
@@ -256,5 +256,5 @@ class TestSaleStockLeadTime(TestStockCommon):
         pick.write({'scheduled_date': pick_min_date + timedelta(days=5)})
 
         # Now check scheduled_date of pack and out are changed or not based on propagate is false on rules?
-        self.assertEquals(pack.scheduled_date, pack_min_date, 'Schedule date of pack should not be changed.')
-        self.assertEquals(out.scheduled_date, out_min_date, 'Schedule date of out should not be changed.')
+        self.assertEqual(pack.scheduled_date, pack_min_date, 'Schedule date of pack should not be changed.')
+        self.assertEqual(out.scheduled_date, out_min_date, 'Schedule date of out should not be changed.')

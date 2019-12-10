@@ -19,6 +19,7 @@ var session = require('web.session');
 
 var DebouncedField = basic_fields.DebouncedField;
 
+
 //------------------------------------------------------------------------------
 // Private functions
 //------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ function _observe(widget) {
  * and optionally triggers an rpc with the src url as route on a widget.
  * This method is critical and must be fastest (=> no jQuery, no underscore)
  *
- * @param {DOM Node} el
+ * @param {HTMLElement} el
  * @param {[Widget]} widget the widget on which the rpc should be performed
  */
 function removeSrcAttribute(el, widget) {
@@ -161,7 +162,7 @@ function addMockEnvironment(widget, params) {
     var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
     initialSession = _.extend({}, session);
     session.getTZOffset = function () {
-        return 0; // by default, but may be overriden in specific tests
+        return 0; // by default, but may be overridden in specific tests
     };
     if ('session' in params) {
         _.extend(session, params.session);
@@ -173,7 +174,7 @@ function addMockEnvironment(widget, params) {
             _.extend(config.device, params.config.device);
         }
         if ('debug' in params.config) {
-            config.debug = params.config.debug;
+            odoo.debug = params.config.debug;
         }
     }
     if ('translateParameters' in params) {
@@ -446,7 +447,13 @@ function patchDate(year, month, day, hours, minutes, seconds) {
         }
 
         // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
+        // exception: 'now' uses fake date as reference
+        Date.now = function () {
+            var date = new NativeDate();
+            var time = date.getTime();
+            time -= timeInterval;
+            return time;
+        };
         Date.UTC = NativeDate.UTC;
         Date.prototype = NativeDate.prototype;
         Date.prototype.constructor = Date;
@@ -562,7 +569,6 @@ function patchSetTimeout() {
         window.setTimeout = original;
     };
 }
-
 
 return {
     addMockEnvironment: addMockEnvironment,

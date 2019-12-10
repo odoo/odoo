@@ -50,6 +50,7 @@ var ControlPanelRenderer = Renderer.extend({
         this.$subMenus = null;
         this.action = params.action;
         this.displaySearchMenu = true;
+        this.isMobile = config.device.isMobile;
         this.menusSetup = false;
         this.searchMenuTypes = params.searchMenuTypes || [];
         this.subMenus = {};
@@ -184,7 +185,7 @@ var ControlPanelRenderer = Renderer.extend({
      * @private
      */
     _focusSearchInput: function () {
-        if (this.withSearchBar && !config.device.isMobile) {
+        if (this.withSearchBar && !config.device.isMobileDevice) {
             // in mobile mode, we would rather not focus manually the
             // input, because it opens up the integrated keyboard, which is
             // not what you expect when you just selected a filter.
@@ -292,9 +293,7 @@ var ControlPanelRenderer = Renderer.extend({
             context: this.context,
             facets: this.state.facets,
             fields: this.state.fields,
-            filters: this.state.filters,
             filterFields: this.state.filterFields,
-            groupBys: this.state.groupBys,
         });
         return this.searchBar.appendTo(this.$('.o_searchview')).then(function () {
             if (oldSearchBar) {

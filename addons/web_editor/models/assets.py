@@ -173,11 +173,10 @@ class Assets(models.AbstractModel):
             # If not, create a new attachment to copy the original scss/js file
             # content, with its modifications
             new_attach = {
-                'name': custom_url,
+                'name': url.split("/")[-1],
                 'type': "binary",
                 'mimetype': (file_type == 'js' and 'text/javascript' or 'text/scss'),
                 'datas': datas,
-                'datas_fname': url.split("/")[-1],
                 'url': custom_url,
             }
             new_attach.update(self._save_asset_attachment_hook())

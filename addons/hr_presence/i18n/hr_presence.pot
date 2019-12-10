@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hr_presence
+# 	* hr_presence
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
-"PO-Revision-Date: 2019-03-20 13:49+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"PO-Revision-Date: 2019-09-13 11:27+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,14 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_control_email_amount
-#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_email_amount
-msgid "# emails to send"
-msgstr ""
-
-#. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
-msgid "<?xml version=\"1.0\"?>\n"
+msgid ""
+"<?xml version=\"1.0\"?>\n"
 "<div>\n"
 "                    Dear ${object.name},<br/><br/>\n"
 "                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.<br/>\n"
@@ -35,70 +30,15 @@ msgid "<?xml version=\"1.0\"?>\n"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
-msgid "<span class=\"o_stat_text\">\n"
-"                            Last Activity\n"
-"                        </span>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
-msgid "<span class=\"o_stat_text\">Connected</span>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
-msgid "<span> sent emails</span>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
-msgid "<span>At least </span>"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
-msgid "<span>IP List (comma separated):</span>"
-msgstr ""
-
-#. module: hr_presence
-#: selection:hr.employee,hr_presence_state:0
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
 msgid "Absent"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_ip
-msgid "According to the IP address"
-msgstr ""
-
-#. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_email
-msgid "According to the amount of sent emails"
-msgstr ""
-
-#. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_login
-msgid "According to the system login (User status on chat)"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
-msgid "Available"
+#: model:ir.model,name:hr_presence.model_hr_employee_base
+msgid "Basic Employee"
 msgstr ""
 
 #. module: hr_presence
@@ -107,7 +47,7 @@ msgid "Companies"
 msgstr ""
 
 #. module: hr_presence
-#: code:addons/hr_presence/models/hr_employee.py:167
+#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -118,23 +58,15 @@ msgid "Compute presence and open presence view"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model,name:hr_presence.model_res_config_settings
-msgid "Config Settings"
-msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
-msgid "Control presence of employees"
-msgstr ""
-
-#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model,name:hr_presence.model_hr_employee
-msgid "Employee"
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
+msgid "Email Sent"
 msgstr ""
 
 #. module: hr_presence
@@ -143,14 +75,16 @@ msgid "Employee Presence"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Employee's Name"
+#: model:sms.template,name:hr_presence.sms_template_data_hr_presence
+msgid "Employee: Presence Reminder"
 msgstr ""
 
 #. module: hr_presence
-#: code:addons/hr_presence/models/hr_employee.py:131
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
-msgid "Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
+msgid ""
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
@@ -161,8 +95,10 @@ msgid "Hr Presence Last Compute Date"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state
-msgid "Hr Presence State"
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
+msgid "Hr Presence State Display"
 msgstr ""
 
 #. module: hr_presence
@@ -171,13 +107,22 @@ msgid "IP Address"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__last_activity
-msgid "Last Activity"
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
+msgid "Ip Connected"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
-msgid "Not available"
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Mail"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
+msgid "Manually Set Present"
 msgstr ""
 
 #. module: hr_presence
@@ -186,29 +131,43 @@ msgid "Presence"
 msgstr ""
 
 #. module: hr_presence
-#: selection:hr.employee,hr_presence_state:0
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_reports
-msgid "Reports"
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "SMS"
 msgstr ""
 
 #. module: hr_presence
-#: code:addons/hr_presence/models/hr_employee.py:152
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as present"
+msgstr ""
+
+#. module: hr_presence
+#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
 msgstr ""
 
 #. module: hr_presence
-#: code:addons/hr_presence/models/hr_employee.py:130
+#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
-msgid "There is no professional phone for this employee."
+msgid "There is no professional mobile for this employee."
 msgstr ""
 
 #. module: hr_presence
-#: selection:hr.employee,hr_presence_state:0
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__to_define
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__to_define
 msgid "To Define"
 msgstr ""
 
@@ -223,16 +182,9 @@ msgid "Users Log"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_control_ip_list
-#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_ip_list
-msgid "Valid IP addresses"
-msgstr ""
-
-#. module: hr_presence
-#: code:addons/hr_presence/models/hr_employee.py:112
-#: code:addons/hr_presence/models/hr_employee.py:128
-#: code:addons/hr_presence/models/hr_employee.py:150
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
-

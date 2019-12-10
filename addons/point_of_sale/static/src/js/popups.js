@@ -98,6 +98,21 @@ var ErrorPopupWidget = PopupWidget.extend({
 gui.define_popup({name:'error', widget: ErrorPopupWidget});
 
 
+var SyncErrorPopupWidget = ErrorPopupWidget.extend({
+    template:'SyncErrorPopupWidget',
+    show: function(opts) {
+        var self = this;
+        this._super(opts);
+
+        this.$('.stop_showing_sync_errors').off('click').click(function(){
+            self.gui.show_sync_errors = false;
+            self.click_confirm();
+        });
+    }
+});
+gui.define_popup({name:'error-sync', widget: SyncErrorPopupWidget});
+
+
 var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
     template:'ErrorTracebackPopupWidget',
     show: function(opts) {

@@ -59,7 +59,7 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div>
                                     <strong><span><field name="analytic_id"/></span></strong>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
                                 </div>
                                 <div t-if="record.date_start.value"><i class="fa fa-calendar"></i> From <field name="date_start"/> <t t-if="record.date_stop.value">to <field name="date_stop"/></t></div>
                                 <div t-if="record.product_id.value"><strong>Product</strong> <field name="product_id"/> </div>
@@ -96,7 +96,6 @@
         <record id="action_analytic_default_list" model="ir.actions.act_window">
             <field name="name">Analytic Defaults</field>
             <field name="res_model">account.analytic.default</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_analytic_default_form_search"/>
             <field name="context">{"search_default_current":1}</field>

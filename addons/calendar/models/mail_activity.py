@@ -15,7 +15,6 @@ class MailActivity(models.Model):
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", ondelete='cascade')
 
-    @api.multi
     def action_create_calendar_event(self):
         self.ensure_one()
         action = self.env.ref('calendar.action_calendar_event').read()[0]
