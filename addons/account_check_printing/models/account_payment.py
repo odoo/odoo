@@ -72,10 +72,19 @@ class AccountPayment(models.Model):
         if not self[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
-            last_printed_check = self.search([
+            def _check_int(payment):
+                number = payment.check_number
+                try:
+                    return int(number)
+                except Exception as e:
+                    return 0
+
+            printed_checks = self.search([
                 ('journal_id', '=', self[0].journal_id.id),
-                ('check_number', '!=', "0")], order="check_number desc", limit=1)
-            next_check_number = last_printed_check and int(last_printed_check.check_number) + 1 or 1
+                ('check_number', '!=', False),
+                ]).sorted(key=_check_int, reverse=True)
+
+            next_check_number = printed_checks and _check_int(printed_checks[0]) + 1 or 1
 
             return {
                 'name': _('Print Pre-numbered Checks'),
