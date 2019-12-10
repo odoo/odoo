@@ -222,6 +222,7 @@ class MrpProduction(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
+    consumption = fields.Selection(related='bom_id.consumption', store=True)
 
     @api.depends('move_raw_ids.date_expected', 'move_finished_ids.date_expected')
     def _compute_dates_planned(self):
@@ -505,6 +506,11 @@ class MrpProduction(models.Model):
         self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
+
+    def copy(self, default=None):
+        res = super().copy(default)
+        res.move_raw_ids = res.move_raw_ids.filtered(lambda move: move.bom_line_id)
+        return res
 
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)

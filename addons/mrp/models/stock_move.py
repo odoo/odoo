@@ -154,6 +154,8 @@ class StockMove(models.Model):
             procurement_requests = []
             for move in self:
                 mo = move.raw_material_production_id
+                if mo:
+                    move.unit_factor = (move.product_uom_qty - move.quantity_done) / mo.product_qty
                 qty_diff = float_compare(move.product_uom_qty, old_quantities[move], precision_rounding=move.product_uom.rounding)
                 if mo and mo.state == 'confirmed' and qty_diff != 0:
                     new_qty = move.product_uom_qty - old_quantities[move]
@@ -169,6 +171,14 @@ class StockMove(models.Model):
                         origin, move.company_id, values
                     ))
             self.env['procurement.group'].run(procurement_requests)
+        return res
+
+    @api.model
+    def create(self, values):
+        res = super().create(values)
+        # Compute the unit factor for newly created raw moves
+        if res.raw_material_production_id and not res.bom_line_id:
+            res.unit_factor = res.product_uom_qty / res.raw_material_production_id.product_qty
         return res
 
     def _action_assign(self):
