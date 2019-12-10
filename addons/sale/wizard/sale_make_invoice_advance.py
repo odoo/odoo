@@ -90,6 +90,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'currency_id': order.pricelist_id.currency_id.id,
             'invoice_payment_ref': order.client_order_ref,
             'invoice_payment_term_id': order.payment_term_id.id,
+            'invoice_partner_bank_id': order.company_id.partner_id.bank_ids[:1],
             'team_id': order.team_id.id,
             'campaign_id': order.campaign_id.id,
             'medium_id': order.medium_id.id,
