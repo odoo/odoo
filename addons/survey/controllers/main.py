@@ -302,10 +302,11 @@ class Survey(http.Controller):
         # Survey Validation
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
-            return {
-                'error': access_data['validity_code'],
-            }
+            return {'error': access_data['validity_code']}
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        if answer_sudo.state == 'done':
+            return {'error': "survey_done"}
 
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),
