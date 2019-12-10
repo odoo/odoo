@@ -20,11 +20,6 @@ QUnit.module('ActivityMenu', {
                     today_count: { type: "integer"},
                     overdue_count: { type: "integer"},
                     total_count: { type: "integer"},
-                    actions: [{
-                        icon: { type: "char" },
-                        name: { type: "char" },
-                        action_xmlid: { type: "char" },
-                    }],
                 },
                 records: [{
                         name: "Contact",
@@ -52,10 +47,6 @@ QUnit.module('ActivityMenu', {
                         today_count: 1,
                         overdue_count: 1,
                         total_count: 3,
-                        actions : [{
-                            icon: "fa-clock-o",
-                            name: "summary",
-                        }],
                     },
                     {
                         name: "Note",
@@ -65,11 +56,6 @@ QUnit.module('ActivityMenu', {
                         today_count: 1,
                         overdue_count: 1,
                         total_count: 3,
-                        actions: [{
-                            icon: "fa-clock-o",
-                            name: "summary",
-                            action_xmlid: "mail.mail_activity_type_view_tree",
-                        }],
                     }],
                 },
             };
@@ -104,9 +90,12 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     var activityMenu = new ActivityMenu();
     testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
-        mockRPC: function (route, args) {
+        async mockRPC(route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.data['mail.activity.menu']['records']);
+            }
+            if (args.method === 'xmlid_to_res_id') {
+                return Promise.resolve([]);
             }
             return this._super(route, args);
         },
@@ -155,67 +144,6 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     };
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     await testUtils.dom.click(activityMenu.$(".o_mail_systray_dropdown_items > div[data-model_name='Issue']"));
-
-    activityMenu.destroy();
-});
-
-QUnit.test('activity menu widget: activity view icon', async function (assert) {
-    assert.expect(12);
-    var self = this;
-    var activityMenu = new ActivityMenu();
-    testUtils.mock.addMockEnvironment(activityMenu, {
-        services: this.services,
-        session: this.session,
-        mockRPC: function (route, args) {
-            if (args.method === 'systray_get_activities') {
-                return Promise.resolve(self.data['mail.activity.menu'].records);
-            }
-            return this._super(route, args);
-        },
-    });
-    await activityMenu.appendTo($('#qunit-fixture'));
-    await testUtils.nextTick();
-    assert.containsN(activityMenu, '.o_mail_activity_action', 2,
-                       "widget should have 2 activity view icons");
-
-    var $first = activityMenu.$('.o_mail_activity_action').eq(0);
-    var $second = activityMenu.$('.o_mail_activity_action').eq(1);
-    assert.strictEqual($first.data('model_name'), "Issue",
-                       "first activity action should link to 'Issue'");
-    assert.hasClass($first,'fa-clock-o', "should display the activity action icon");
-
-    assert.strictEqual($second.data('model_name'), "Note",
-                       "Second activity action should link to 'Note'");
-    assert.hasClass($second,'fa-clock-o', "should display the activity action icon");
-
-    testUtils.mock.intercept(activityMenu, 'do_action', function (ev) {
-        if (ev.data.action.name) {
-            assert.ok(ev.data.action.domain, "should define a domain on the action");
-            assert.deepEqual(ev.data.action.domain, [["activity_ids.user_id", "=", 10]],
-                "should set domain to user's activity only")
-            assert.step('do_action:' + ev.data.action.name);
-        } else {
-            assert.step('do_action:' + ev.data.action);
-        }
-    }, true);
-
-    // click on the "Issue" activity icon
-    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    assert.hasClass(activityMenu.$('.dropdown-menu'), 'show',
-        "dropdown should be expanded");
-
-    await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Issue']"));
-    assert.doesNotHaveClass(activityMenu.$('.dropdown-menu'), 'show',
-        "dropdown should be collapsed");
-
-    // click on the "Note" activity icon
-    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Note']"));
-
-    assert.verifySteps([
-        'do_action:Issue',
-        'do_action:mail.mail_activity_type_view_tree'
-    ]);
 
     activityMenu.destroy();
 });

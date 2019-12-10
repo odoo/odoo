@@ -218,4 +218,16 @@
         </field>
     </record>
 
+    <record id="mail_activity_mixin_view_calendar" model="ir.ui.view">
+        <field name="name">mail.activity.mixin.view.calendar</field>
+        <field name="model">mail.activity.mixin</field>
+        <field name="arch" type="xml">
+            <calendar string="Systray Activity" date_start="activity_date_deadline" color="activity_type_id">
+                <field name="activity_user_id" avatar_field="image_128"/>
+                <field name="activity_date_deadline"/>
+                <field name="activity_summary"/>
+            </calendar>
+        </field>
+    </record>
+
 </odoo>

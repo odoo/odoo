@@ -15,7 +15,6 @@ var ActivityMenu = Widget.extend({
     name: 'activity_menu',
     template:'mail.systray.ActivityMenu',
     events: {
-        'click .o_mail_activity_action': '_onActivityActionClick',
         'click .o_mail_preview': '_onActivityFilterClick',
         'show.bs.dropdown': '_onActivityMenuShow',
     },
@@ -97,42 +96,11 @@ var ActivityMenu = Widget.extend({
     //------------------------------------------------------------
 
     /**
-     * Redirect to specific action given its xml id or to the activity
-     * view of the current model if no xml id is provided
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onActivityActionClick: function (ev) {
-        ev.stopPropagation();
-        this.$('.dropdown-toggle').dropdown('toggle');
-        var targetAction = $(ev.currentTarget);
-        var actionXmlid = targetAction.data('action_xmlid');
-        if (actionXmlid) {
-            this.do_action(actionXmlid);
-        } else {
-            var domain = [['activity_ids.user_id', '=', session.uid]]
-            if (targetAction.data('domain')) {
-                domain = domain.concat(targetAction.data('domain'))
-            }
-            
-            this.do_action({
-                type: 'ir.actions.act_window',
-                name: targetAction.data('model_name'),
-                views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
-                view_mode: 'activity',
-                res_model: targetAction.data('res_model'),
-                domain: domain,
-            });
-        }
-    },
-
-    /**
      * Redirect to particular model view
      * @private
      * @param {MouseEvent} event
      */
-    _onActivityFilterClick: function (event) {
+    async _onActivityFilterClick(event) {
         // fetch the data from the button otherwise fetch the ones from the parent (.o_mail_preview).
         var data = _.extend({}, $(event.currentTarget).data(), $(event.target).data());
         var context = {};
@@ -150,15 +118,19 @@ var ActivityMenu = Widget.extend({
         if (data.domain) {
             domain = domain.concat(data.domain)
         }
-        
+
+        const viewId = await this._rpc({
+            model: 'ir.model.data',
+            method: 'xmlid_to_res_id',
+            args: ["mail.mail_activity_mixin_view_calendar"],
+        });
         this.do_action({
             type: 'ir.actions.act_window',
             name: data.model_name,
-            res_model:  data.res_model,
-            views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-            search_view_id: [false],
+            res_model: data.res_model,
+            views: [[false, 'kanban'], [viewId, 'calendar'], [false,'activity'], [false,'list'], [false, 'form']],
             domain: domain,
-            context:context,
+            context: context,
         });
     },
     /**
