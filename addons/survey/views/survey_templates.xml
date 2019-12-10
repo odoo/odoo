@@ -75,6 +75,7 @@
             <t t-foreach='page.question_ids' t-as='question'>
                 <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
+            <t t-call="survey.survey_progression"/>
 
             <div class="text-center mt16 mb256">
                 <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
@@ -88,6 +89,7 @@
         <t t-if="survey.questions_layout == 'page_per_question'">
             <input type="hidden" name="question_id" t-att-value="question.id" />
             <t t-call="survey.question_container"/>
+            <t t-call="survey.survey_progression"/>
 
             <div class="text-center mt16 mb256">
                 <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
@@ -316,6 +318,43 @@
         <div t-if='question.comments_allowed'>
             <span t-field="question.comments_message"/>
             <textarea type="text" class="form-control" t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+        </div>
+    </template>
+
+    <template id="survey_progression" name="Survey: Progression">
+        <div class="float-right">
+            <t t-if="survey.questions_layout == 'page_per_question'">
+                <t t-set="ids" t-value="survey.question_ids.ids"/>
+                <t t-set="id" t-value="question.id"/>
+                <t t-set="answered" t-value="'answered'"/>
+            </t>
+            <t t-else="">
+                <t t-set="ids" t-value="survey.page_ids.ids"/>
+                <t t-set="id" t-value="page.id"/>
+                <t t-set="answered" t-value="'pages'"/>
+            </t>
+
+            <t t-if="len(ids) > 1">
+                <t t-if="survey.progression_mode == 'percent'">
+                    <span>
+                        <span class="o_survey_progress_percent" t-esc="round(100*(ids.index(id)/len(ids)))"/> % completed
+                    </span>
+                </t>
+                <t t-else="">
+                    <span>
+                        <span t-if="survey.questions_layout == 'page_per_question'" class="o_survey_progress_number" t-esc="ids.index(id)"/>
+                        <span t-else="" class="o_survey_progress_number" t-esc="ids.index(id)+1"/>
+                        of <span t-esc="len(ids)"/> <span t-esc="answered"/>
+                    </span>
+                </t>
+                <div class="progress flex-grow-1" style="height:0.5em">
+                    <div class="progress-bar bg-primary"
+                         t-if="survey.progression_mode == 'number' and not survey.questions_layout == 'page_per_question'"
+                         t-att-style="'width: '+ str(100*((ids.index(id)+1)/len(ids)))+'%'"/>
+                    <div class="progress-bar bg-primary" t-else=""
+                         t-att-style="'width: '+ str(100*(ids.index(id)/len(ids)))+'%'"/>
+                </div>
+            </t>
         </div>
     </template>
 
