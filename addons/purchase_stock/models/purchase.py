@@ -57,7 +57,9 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
-        self.picking_type_id = self._get_picking_type(self.company_id.id)
+        p_type = self.picking_type_id
+        if not(p_type and p_type.code == 'incoming' and (p_type.warehouse_id.company_id == self.company_id or not p_type.warehouse_id)):
+            self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     # --------------------------------------------------
     # CRUD
