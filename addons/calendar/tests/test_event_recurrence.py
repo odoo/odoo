@@ -584,7 +584,6 @@ class TestUpdateMonthlyByDay(TestRecurrentEvents):
                 'stop': event.stop - relativedelta(days=4),
             })
 
-    # LUL TODO test shift future
 
 class TestUpdateMonthlyByDate(TestRecurrentEvents):
 

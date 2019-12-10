@@ -15,7 +15,7 @@ class AlarmManager(models.AbstractModel):
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 
-    def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
+    def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partners=None):
         result = {}
         delta_request = """
             SELECT
@@ -50,16 +50,16 @@ class AlarmManager(models.AbstractModel):
 
         filter_user = """
                 RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
-                    AND part_rel.res_partner_id = %s
+                    AND part_rel.res_partner_id IN %s
         """
 
         # Add filter on alarm type
         tuple_params = (alarm_type,)
 
         # Add filter on partner_id
-        if partner_id:
+        if partners:
             base_request += filter_user
-            tuple_params += (partner_id, )
+            tuple_params += (tuple(partners.ids), )
 
         # Upper bound on first_alarm of requested events
         first_alarm_max_value = ""
@@ -117,10 +117,10 @@ class AlarmManager(models.AbstractModel):
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
+        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
                 if alarm.alarm_type == alarm_type and \
-                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
+                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > fields.Datetime.from_string(after)):
                     alert = {
                         'alarm_id': alarm.id,
@@ -132,6 +132,10 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def get_next_mail(self):
+        return self._get_partner_next_mail(partners=None)
+
+    @api.model
+    def _get_partner_next_mail(self, partners=None):
         last_notif_mail = fields.Datetime.to_string(self.env.context.get('lastcall') or fields.Datetime.now())
 
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm', raise_if_not_found=False)
@@ -153,7 +157,7 @@ class AlarmManager(models.AbstractModel):
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
 
-        all_meetings = self._get_next_potential_limit_alarm('email', seconds=cron_interval)
+        all_meetings = self._get_next_potential_limit_alarm('email', seconds=cron_interval, partners=partners)
 
         for meeting in self.env['calendar.event'].browse(all_meetings):
             max_delta = all_meetings[meeting.id]['max_duration']
@@ -183,7 +187,7 @@ class AlarmManager(models.AbstractModel):
         if not partner:
             return []
 
-        all_meetings = self._get_next_potential_limit_alarm('notification', partner_id=partner.id)
+        all_meetings = self._get_next_potential_limit_alarm('notification', partners=partner)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
         for event_id in all_meetings:
             max_delta = all_meetings[event_id]['max_duration']
@@ -215,7 +219,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.alarm_type == 'email':
-            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True, force_event_id=meeting)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True, ignore_recurrence=True)
         return result
 
     def do_notif_reminder(self, alert):
@@ -225,7 +229,7 @@ class AlarmManager(models.AbstractModel):
         if alarm.alarm_type == 'notification':
             message = meeting.display_time
 
-            delta = alert['notify_at'] - datetime.datetime.now()
+            delta = alert['notify_at'] - fields.Datetime.now()
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {

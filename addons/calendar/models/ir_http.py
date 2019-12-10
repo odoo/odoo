@@ -32,4 +32,4 @@ class IrHttp(models.AbstractModel):
         if error_message:
             raise BadRequest(error_message)
 
-        return True
+        cls._auth_method_public()
