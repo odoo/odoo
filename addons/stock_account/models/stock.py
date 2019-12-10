@@ -429,7 +429,8 @@ class StockMove(models.Model):
 
             qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
             qty = forced_qty or qty_done
-            if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
+            # If the current stock is negative, we should not average it with the incoming one
+            if float_is_zero(product_tot_qty_available, precision_rounding=rounding) or product_tot_qty_available < 0:
                 new_std_price = move._get_price_unit()
             elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
                     float_is_zero(product_tot_qty_available + qty, precision_rounding=rounding):
