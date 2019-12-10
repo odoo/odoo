@@ -22,7 +22,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_deposit_account_id(self):
-        return self._default_product_id().property_account_income_id
+        return self._default_product_id()._get_product_accounts()['income']
 
     @api.model
     def _default_deposit_taxes_id(self):
