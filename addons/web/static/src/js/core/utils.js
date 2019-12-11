@@ -549,8 +549,11 @@ var utils = {
                         metadata.origMethods[methodName] = original;
                     }
                     proto[methodName] = function (...args) {
+                        const previousSuper = this._super;
                         this._super = original;
-                        return method.call(this, ...args);
+                        const res = method.call(this, ...args);
+                        this._super = previousSuper;
+                        return res;
                     };
                 }
             });
