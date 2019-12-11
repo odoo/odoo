@@ -162,10 +162,10 @@
                         type="object"
                         name= "action_view_stock_move_lines"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                        class="oe_stat_button" icon="fa-exchange-alt"/>
+                        class="oe_stat_button" icon="fa-exchange"/>
                     <button name="action_view_orderpoints" type="object"
                         attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
-                        class="oe_stat_button" icon="fa-sync">
+                        class="oe_stat_button" icon="fa-refresh">
                         <div class="o_field_widget o_stat_info mr4">
                             <span class="o_stat_text">Min:</span>
                             <span class="o_stat_text">Max:</span>
@@ -178,7 +178,7 @@
                     <button type="object"
                         name="action_view_orderpoints"
                         attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
-                        class="oe_stat_button" icon="fa-sync">
+                        class="oe_stat_button" icon="fa-refresh">
                         <field name="nbr_reordering_rules" widget="statinfo"/>
                     </button>
                     <button string="Lot/Serial Numbers" type="object"
