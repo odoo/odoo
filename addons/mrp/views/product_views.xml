@@ -2,10 +2,11 @@
 <odoo>
     <data>
         <!-- Product Template -->
-        <record id="view_mrp_product_template_form_inherited" model="ir.ui.view">
+        <record id="product_template_form_view_stock_users_mrp" model="ir.ui.view">
             <field name="name">product.form.mrp.inherited</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="stock.product_template_form_view"/>
+            <field name="inherit_id" ref="stock.product_template_form_view_stock_users"/>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='route_ids']" position="after">
                     <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
@@ -68,10 +69,10 @@
             action="mrp_product_variant_action"
             parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2"/>
 
-        <record id="product_template_form_view_bom_button" model="ir.ui.view">
+        <record id="product_template_form_view_mrp_users" model="ir.ui.view">
             <field name="name">product.template.procurement</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="stock.product_template_form_view"/>
+            <field name="inherit_id" ref="stock.product_template_form_view_stock_users"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">

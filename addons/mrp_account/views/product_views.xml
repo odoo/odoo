@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-        <record id="product_template_form_view" model="ir.ui.view">
+        <record id="product_template_form_view_mrp_users" model="ir.ui.view">
             <field name="name">product_extended.product.form.view</field>
             <field name="model">product.template</field>
             <field name="priority">3</field>
@@ -10,6 +10,7 @@
                 <xpath expr="//div[@name='standard_price_uom']" position="inside">
                     <field name="cost_method" invisible="1"/>
                     <field name="valuation" invisible="1"/>
+                    <field name="bom_count" invisible="1"/>
                     <button name="button_bom_cost"
                         string="Compute Price from BoM" type="object"
                         attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
