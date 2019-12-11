@@ -26,10 +26,10 @@ class ResPartner(models.Model):
     def _format_vat_cl(self, values):
         identification_types = [self.env.ref('l10n_latam_base.it_vat').id, self.env.ref('l10n_cl.it_RUT').id,
                                 self.env.ref('l10n_cl.it_RUN').id]
-        country_id = self.env.ref('base.cl').id
-        if (values.get('country_id') == country_id or not values.get('country_id')) and \
-            values.get('l10n_latam_identification_type_id') and values.get('l10n_latam_identification_type_id') in \
-                identification_types and values.get('vat') and self.env.user.company_id.country_id.id == country_id:
+        company_country_is_chile = self.env.user.company_id.country_id == self.env.ref('base.cl')
+        partner_country_is_chile = values.get('country_id') == self.env.ref('base.cl')
+        if company_country_is_chile and (partner_country_is_chile or not values.get('country_id')) and \
+                values.get('l10n_latam_identification_type_id') in identification_types and values.get('vat'):
             return stdnum.util.get_cc_module('cl', 'vat').format(values['vat']).replace('.', '').replace(
                 'CL', '').upper()
         else:
