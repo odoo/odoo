@@ -278,14 +278,16 @@ class Survey(http.Controller):
             return request.render('survey.survey_closed_finished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
         elif answer_sudo.state == 'skip':
             page_or_question_id, is_last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id)
-            previous_id = survey_sudo._previous_page_or_question_id(answer_sudo, page_or_question_id.id)
 
             data.update({
                 'survey': survey_sudo,
                 page_or_question_key: page_or_question_id,
                 'answer': answer_sudo,
-                'previous_page_id': previous_id
             })
+            if survey_sudo.questions_layout != 'one_page':
+                data.update({
+                    'previous_page_id': survey_sudo._previous_page_or_question_id(answer_sudo, page_or_question_id.id)
+                })
             if is_last:
                 data.update({'last': True})
 
