@@ -170,6 +170,9 @@ var ActionManager = Widget.extend({
 
                 return action;
             });
+        }).then(function(action) {
+            odoo.isReady = true;
+            return action;
         });
     },
     /**
