@@ -827,6 +827,21 @@ class Cache(object):
             except KeyError:
                 pass
 
+    def get_until_miss(self, records, field):
+        """ Return the cached values of ``field`` for ``records`` until a value is not found. """
+        field_cache = self._data[field]
+        key = records.env.cache_key(field) if field.depends_context else None
+        vals = []
+        for record_id in records._ids:
+            try:
+                if key is not None:
+                    vals.append(field_cache[record_id][key])
+                else:
+                    vals.append(field_cache[record_id])
+            except KeyError:
+                break
+        return vals
+
     def get_records_different_from(self, records, field, value):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
         field_cache = self._data[field]

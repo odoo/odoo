@@ -757,6 +757,15 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         return False if value is None else value
 
+    def convert_to_record_multi(self, values, records):
+        """ Convert a list of values from the cache format to the record format.
+        Some field classes may override this method to add optimizations for
+        batch processing.
+        """
+        # spare the method lookup overhead
+        convert = self.convert_to_record
+        return [convert(value, records) for value in values]
+
     def convert_to_read(self, value, record, use_name_get=True):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
@@ -1007,6 +1016,38 @@ class Field(MetaField('DummyField', (object,), {})):
                     env.cache.set(record, self, value)
 
         return self.convert_to_record(value, record)
+
+    def mapped(self, records):
+        """ Return the values of ``self`` for ``records``, either as a list
+        (scalar fields), or as a recordset (relational fields).
+
+        This method is meant to be used internally and has very little benefit
+        over a simple call to `~odoo.models.BaseModel.mapped()` on a recordset.
+        """
+        if self.name == 'id':
+            # not stored in cache
+            return list(records._ids)
+
+        if self.compute:
+            # Force the computation of the subset of 'records' to compute. This
+            # is necessary because the values in cache are not valid for the
+            # records to compute. Note that this explicitly prevents an infinite
+            # loop upon recompute, which invokes mapped() on the records, which
+            # fetches record values, which calls flush, which calls recompute.
+            to_compute_ids = records.env.all.tocompute.get(self, ())
+            ids = [id_ for id_ in records._ids if id_ in to_compute_ids]
+            for record in records.browse(ids):
+                self.__get__(record, type(records))
+
+        # retrieve values in cache, and fetch missing ones
+        vals = records.env.cache.get_until_miss(records, self)
+        while len(vals) < len(records):
+            # trigger prefetching on remaining records, and continue retrieval
+            remaining = records[len(vals):]
+            self.__get__(first(remaining), type(remaining))
+            vals += records.env.cache.get_until_miss(remaining, self)
+
+        return self.convert_to_record_multi(vals, records)
 
     def __set__(self, records, value):
         """ set the value of field ``self`` on ``records`` """
@@ -2239,10 +2280,8 @@ class _Relational(Field):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
-        # multirecord case: return the union of the values of 'self' on records
-        get = super().__get__
-        comodel = records.env[self.comodel_name]
-        return comodel.union(*[get(record, owner) for record in records])
+        # multirecord case: use mapped
+        return self.mapped(records)
 
     def _setup_regular_base(self, model):
         super(_Relational, self)._setup_regular_base(model)
@@ -2424,6 +2463,12 @@ class Many2one(_Relational):
         ids = () if value is None else (value,)
         prefetch_ids = IterableGenerator(prefetch_many2one_ids, record, self)
         return record.pool[self.comodel_name]._browse(record.env, ids, prefetch_ids)
+
+    def convert_to_record_multi(self, values, records):
+        # return the ids as a recordset without duplicates
+        prefetch_ids = IterableGenerator(prefetch_many2one_ids, records, self)
+        ids = tuple(unique(id_ for id_ in values if id_ is not None))
+        return records.pool[self.comodel_name]._browse(records.env, ids, prefetch_ids)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -2690,6 +2735,19 @@ class _RelationalMulti(_Relational):
         if (
             Comodel._active_name
             and self.context.get('active_test', record.env.context.get('active_test', True))
+        ):
+            corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
+        return corecords
+
+    def convert_to_record_multi(self, values, records):
+        # return the list of ids as a recordset without duplicates
+        prefetch_ids = IterableGenerator(prefetch_x2many_ids, records, self)
+        Comodel = records.pool[self.comodel_name]
+        ids = tuple(unique(id_ for ids in values for id_ in ids))
+        corecords = Comodel._browse(records.env, ids, prefetch_ids)
+        if (
+            Comodel._active_name
+            and self.context.get('active_test', records.env.context.get('active_test', True))
         ):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
