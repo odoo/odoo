@@ -7,7 +7,9 @@ The PostgreSQL connector is a connectivity layer between the OpenERP code and
 the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
-
+import gc
+import pprint
+import traceback
 from contextlib import contextmanager
 from functools import wraps
 import itertools
@@ -18,6 +20,7 @@ import uuid
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
+from psycopg2 import errorcodes
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
@@ -169,6 +172,11 @@ class Cursor(object):
         self._serialized = serialized
 
         self._cnx = pool.borrow(dsn)
+        print("%s\n%s\n%s" % (
+            f' borrow {self} for {self.dbname} '.center(200, '='),
+            ''.join(traceback.format_stack()),
+            '='*200
+        ), flush=True)
         self._obj = self._cnx.cursor()
         if self.sql_log:
             self.__caller = frame_codeinfo(currentframe(), 2)
@@ -212,6 +220,12 @@ class Cursor(object):
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
+        self._obj.execute("""
+        SELECT pid = %s as self, datname, client_addr, xact_start, state, query
+        FROM pg_stat_activity
+        WHERE state is not null AND state != 'idle'
+        """, [self._cnx.get_backend_pid()])
+        tnx = self._obj.fetchall()
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
@@ -224,6 +238,10 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except Exception as e:
+            if getattr(e, 'pgcode', None) in (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED):
+                print(f" error {self} ".center(200, '='))
+                print('self, db, client_addr, start, state, query')
+                print(pprint.pformat(tnx), flush=True)
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", ustr(self._obj.query or query), e)
             raise
@@ -289,6 +307,8 @@ class Cursor(object):
 
         if not self._obj:
             return
+
+        print(f' release {self} for {self.dbname} '.center(200, '='), flush=True)
 
         del self.cache
 
