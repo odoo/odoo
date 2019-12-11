@@ -530,6 +530,21 @@ class TestExpression(TransactionCase):
         self.assertEqual(expression.distribute_not(source), expect,
             "distribute_not on long expression applied wrongly")
 
+    def test_immutable_constants(self):
+        some_term = ('id', '=', 42)
+        with self.assertRaises(TypeError):
+            expression.FALSE_DOMAIN += some_term
+        with self.assertRaises(TypeError):
+            expression.FALSE_DOMAIN.append(some_term)
+        with self.assertRaises(TypeError):
+            expression.FALSE_DOMAIN.extend([some_term])
+        with self.assertRaises(TypeError):
+            expression.FALSE_DOMAIN.insert(0, some_term)
+        with self.assertRaises(TypeError):
+            expression.FALSE_DOMAIN[0] = some_term
+        with self.assertRaises(TypeError):
+            expression.FALSE_DOMAIN[:0] = [some_term]
+
     def test_accent(self):
         if not self.registry.has_unaccent:
             return

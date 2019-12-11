@@ -172,8 +172,27 @@ TERM_OPERATORS_NEGATION = {
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
 
-TRUE_DOMAIN = [TRUE_LEAF]
-FALSE_DOMAIN = [FALSE_LEAF]
+class ConstantDomain(list):
+    """Reasonably immutable list, specially suited for domain constants.
+
+    This subclass of `list` has just enough protections to avoid casual alterations of ORM
+    domain constants. We want to avoid code doing this by mistake::
+
+        domain = get_domain()   # somehow returns expression.FALSE_DOMAIN
+        domain += extra_domain  # alters expression.FALSE_DOMAIN permanently!
+
+    Yet we don't really care about other less likely operations on those domains.
+    """
+
+    def __forbidden__(self, *args, **kwargs):
+        raise TypeError(
+            "Cannot alter ORM constants (FALSE_DOMAIN, TRUE_DOMAIN). "
+            "Use expression.AND() and expression.OR() to combine domains instead.")
+
+    extend = append = insert = __setitem__ = __iadd__ = __forbidden__
+
+TRUE_DOMAIN = ConstantDomain([TRUE_LEAF])
+FALSE_DOMAIN = ConstantDomain([FALSE_LEAF])
 
 _logger = logging.getLogger(__name__)
 
