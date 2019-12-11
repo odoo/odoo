@@ -381,6 +381,11 @@ class ProductProduct(models.Model):
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
 
+            # If some negative stock were fixed, we need to recompute the standard price.
+            product = self.with_context(force_company=company.id)
+            if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+                product.sudo().write({'standard_price': product.value_svl / product.quantity_svl})
+
             # Create the account move.
             if self.valuation != 'real_time':
                 continue
