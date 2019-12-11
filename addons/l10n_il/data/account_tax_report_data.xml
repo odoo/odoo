@@ -46,7 +46,7 @@
 <!-- PURCHASE lines -->
     <record id="account_tax_report_line_in_balance" model="account.tax.report.line">
         <field name="name">VAT INPUTS (TAX)</field>
-        <field name="formula">ILTAX_IN_BALANCE_17+ILTAX_IN_BALANCE_2_3+ILTAX_IN_BALANCE_1_4</field>
+        <field name="formula">ILTAX_IN_BALANCE_17+ILTAX_IN_BALANCE_2_3+ILTAX_IN_BALANCE_1_4+ILTAX_IN_BALANCE_PA</field>
         <field name="code">ILTAX_IN_BALANCE</field>
         <field name="sequence">4</field>
         <field name="country_id" ref="base.il"/>
@@ -61,11 +61,20 @@
         <field name="country_id" ref="base.il"/>
     </record>
 
+    <record id="account_tax_report_line_in_balance_pa_16" model="account.tax.report.line">
+        <field name="name">VAT Inputs PA 16%</field>
+        <field name="tag_name">VAT Inputs PA 16%</field>
+        <field name="code">ILTAX_IN_BALANCE_PA</field>
+        <field name="sequence">42</field>
+        <field name="parent_id" ref="account_tax_report_line_in_balance"/>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
     <record id="account_tax_report_line_in_balance_2_3" model="account.tax.report.line">
         <field name="name">VAT Inputs 2/3</field>
         <field name="tag_name">VAT Inputs 2/3</field>
         <field name="code">ILTAX_IN_BALANCE_2_3</field>
-        <field name="sequence">42</field>
+        <field name="sequence">43</field>
         <field name="parent_id" ref="account_tax_report_line_in_balance"/>
         <field name="country_id" ref="base.il"/>
     </record>
@@ -74,7 +83,7 @@
         <field name="name">VAT Inputs 1/4</field>
         <field name="tag_name">VAT Inputs 1/4</field>
         <field name="code">ILTAX_IN_BALANCE_1_4</field>
-        <field name="sequence">43</field>
+        <field name="sequence">44</field>
         <field name="parent_id" ref="account_tax_report_line_in_balance"/>
         <field name="country_id" ref="base.il"/>
     </record>
