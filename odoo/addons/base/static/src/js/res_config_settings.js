@@ -3,7 +3,6 @@ odoo.define('base.settings', function (require) {
 
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
-var config = require('web.config');
 var FormView = require('web.FormView');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
@@ -22,16 +21,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         this._super.apply(this, arguments);
         this.activeView = false;
         this.activeTab = false;
-    },
-
-    start: function () {
-        var prom = this._super.apply(this, arguments);
-        if (config.device.isMobile) {
-            core.bus.on("DOM_updated", this, function () {
-                this._moveToTab(this.currentIndex || this._currentAppIndex());
-            });
-        }
-        return prom;
     },
 
     /**
@@ -103,49 +92,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         }
     },
     /**
-     * In mobile view behaviour is like swipe content left / right and apps tab will be shown on the top.
-     * This method will set the required properties (styling and css).
-     *
-     * @private
-     * @param {int} currentTab
-     */
-    _activateSettingMobileTab: function (currentTab) {
-        var self = this;
-        var moveTo = currentTab;
-        var next = moveTo + 1;
-        var previous = moveTo - 1;
-
-        this.$(".settings .app_settings_block").removeClass("previous next current before after");
-        this.$(".settings_tab .tab").removeClass("previous next current before after");
-        _.each(this.modules, function (module, index) {
-            var tab = self.$(".tab[data-key='" + module.key + "']");
-            var view = module.settingView;
-
-            if (index === previous) {
-                tab.addClass("previous");
-                tab.css("margin-left", "0px");
-                view.addClass("previous");
-            } else if (index === next) {
-                tab.addClass("next");
-                tab.css("margin-left", "-" + tab.outerWidth() + "px");
-                view.addClass("next");
-            } else if (index < moveTo) {
-                tab.addClass("before");
-                tab.css("margin-left", "-" + tab.outerWidth() + "px");
-                view.addClass("before");
-            } else if (index === moveTo) {
-                var marginLeft = tab.outerWidth() / 2;
-                tab.css("margin-left", "-" + marginLeft + "px");
-                tab.addClass("current");
-                view.addClass("current");
-            } else if (index > moveTo) {
-                tab.addClass("after");
-                tab.css("margin-left", "0");
-                view.addClass("after");
-            }
-        });
-    },
-    /**
      * find current app index in modules
      *
      */
@@ -155,22 +101,6 @@ var BaseSettingRenderer = FormRenderer.extend({
             return module.key === self.activeSettingTab;
         });
         return index;
-    },
-    /**
-     * Enables swipe navigation between settings pages
-     *
-     * @private
-     */
-    _enableSwipe: function () {
-        var self = this;
-        this.$('.settings').swipe({
-            swipeLeft: function () {
-                self._moveToTab(self.currentIndex + 1);
-            },
-            swipeRight: function () {
-                self._moveToTab(self.currentIndex - 1);
-            }
-        });
     },
     /**
      *
@@ -214,12 +144,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             view.removeClass("o_hidden");
             this.activeView = view;
             this.activeTab = tab;
-
-            if (config.device.isMobile) {
-                this._activateSettingMobileTab(this.currentIndex);
-            } else {
-                tab.addClass("selected");
-            }
+            tab.addClass("selected");
         }
     },
 
@@ -239,10 +164,6 @@ var BaseSettingRenderer = FormRenderer.extend({
     _onKeyUpSearch: function (event) {
         this.searchText = this.searchInput.val();
         this.activeTab.removeClass('selected');
-        if (config.device.isMobile) {
-            this.$('.settings_tab').addClass('o_hidden');
-            this.$('.settings').addClass('d-block');
-        }
         this._searchSetting();
     },
     /**
@@ -261,10 +182,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         });
         this.activeTab.removeClass('o_hidden').addClass('selected');
         this.activeView.removeClass('o_hidden');
-        if (config.device.isMobile) {
-            this.$('.settings_tab').removeClass('o_hidden');
-            this.$('.settings').removeClass('d-block');
-        }
     },
 
     _render: function () {
@@ -273,10 +190,6 @@ var BaseSettingRenderer = FormRenderer.extend({
             self._initModules();
             self._renderLeftPanel();
             self._initSearch();
-            
-            if (config.device.isMobile) {
-                self._enableSwipe();
-            }
         });
     },
 
@@ -418,18 +331,6 @@ var BaseSettingView = FormView.extend({
         Renderer: BaseSettingRenderer,
         Controller: BaseSettingController,
     }),
-
-    /**
-     * Overrides to lazy-load touchSwipe library in mobile.
-     *
-     * @override
-    */
-    init: function () {
-        if (config.device.isMobile) {
-            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
-        }
-        this._super.apply(this, arguments);
-    },
 });
 
 view_registry.add('base_settings', BaseSettingView);
