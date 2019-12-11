@@ -167,6 +167,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101830'),
+                'plus_report_line_ids': [ref('account_tax_report_line_in_balance_pa_16')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -178,6 +179,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101830'),
+                'minus_report_line_ids': [ref('account_tax_report_line_in_balance_pa_16')]
             }),
         ]"/>
     </record>
