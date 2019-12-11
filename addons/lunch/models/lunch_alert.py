@@ -103,17 +103,16 @@ class LunchAlert(models.Model):
                     order_domain = expression.AND([order_domain, [('user_id.last_lunch_location_id', 'in', alert.location_ids.ids)]])
 
                 if alert.recipients != 'everyone':
-                    weeks = 1
+                    weeks = 1  # last_week
 
                     if alert.recipients == 'last_month':
                         weeks = 4
-                    else:  # last_year
+                    elif alert.recipients == 'last_year':  # last_year
                         weeks = 52
 
                     delta = timedelta(weeks=weeks)
                     order_domain = expression.AND([order_domain, [('date', '>=', today - delta)]])
 
-                orders = self.env['lunch.order'].search(order_domain).mapped('user_id')
-                partner_ids = [user.partner_id.id for user in orders]
-                if partner_ids:
-                    self.env['mail.thread'].message_notify(body=alert.message, partner_ids=partner_ids)
+                partners = self.env['lunch.order'].search(order_domain).user_id.partner_id
+                if partners:
+                    self.env['mail.thread'].message_notify(body=alert.message, partner_ids=partners.ids)
