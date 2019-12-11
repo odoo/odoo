@@ -118,6 +118,37 @@
             <field name="perm_create" eval="1"/>
         </record>
 
+        <record id="survey_question_answer_label_rule_survey_manager" model="ir.rule">
+            <field name="name">Survey question answer label: manager: all</field>
+            <field name="model_id" ref="survey.model_survey_question_answer_label"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_question_answer_label_rule_survey_user_read" model="ir.rule">
+            <field name="name">Survey question answer label: officer: read all</field>
+            <field name="model_id" ref="survey.model_survey_question_answer_label"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_question_answer_label_rule_survey_user_cw" model="ir.rule">
+            <field name="name">Survey question answer label: officer: create/write/unlink linked to own survey only</field>
+            <field name="model_id" ref="survey.model_survey_question_answer_label"/>
+            <field name="domain_force">['|', ('question_column_id.survey_id.create_uid', '=', user.id), ('question_row_id.survey_id.create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
         <!-- SURVEY: USER_INPUT, USER_INPUT_LINE -->
         <record id="survey_user_input_rule_survey_manager" model="ir.rule">
             <field name="name">Survey user input: manager: all</field>

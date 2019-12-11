@@ -11,34 +11,12 @@ from odoo.exceptions import ValidationError
 
 
 class SurveyQuestion(models.Model):
-    """ Questions that will be asked in a survey.
+    """ Questions asked in a survey. Questions can either be open (with inputs
+    being text, date, datetimes, numerical) or based on suggested values (
+    selection or matrix).
 
-        Each question can have one of more suggested answers (eg. in case of
-        dropdown choices, multi-answer checkboxes, radio buttons...).
-
-        Technical note:
-
-        survey.question is also the model used for the survey's pages (with the "is_page" field set to True).
-
-        A page corresponds to a "section" in the interface, and the fact that it separates the survey in
-        actual pages in the interface depends on the "questions_layout" parameter on the survey.survey model.
-        Pages are also used when randomizing questions. The randomization can happen within a "page".
-
-        Using the same model for questions and pages allows to put all the pages and questions together in a o2m field
-        (see survey.survey.question_and_page_ids) on the view side and easily reorganize your survey by dragging the
-        items around.
-
-        It also removes on level of encoding by directly having 'Add a page' and 'Add a question'
-        links on the tree view of questions, enabling a faster encoding.
-
-        However, this has the downside of making the code reading a little bit more complicated.
-        Efforts were made at the model level to create computed fields so that the use of these models
-        still seems somewhat logical. That means:
-        - A survey still has "page_ids" (question_and_page_ids filtered on is_page = True)
-        - These "page_ids" still have question_ids (questions located between this page and the next)
-        - These "question_ids" still have a "page_id"
-
-        That makes the use and display of these information at view and controller levels easier to understand.
+    Question model also holds fake questions being page based on the is_page field
+    allowing to have all pages / questions within a single model and o2m.
     """
     _name = 'survey.question'
     _description = 'Survey Question'
@@ -82,15 +60,19 @@ class SurveyQuestion(models.Model):
         "Save as user email", compute='_compute_save_as_email', readonly=False, store=True,
         help="If checked, this option will save the user's answer as its email address.")
     # -- multiple choice / matrix
+    matrix_column_ids = fields.One2many(
+        'survey.question.answer.label', 'question_column_id',
+        string='Matrix Columns', copy=True)
+    matrix_row_ids = fields.One2many(
+        'survey.question.answer.label', 'question_row_id',
+        string='Matrix Rows', copy=True)
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
+        compute='_compute_suggested_answer_ids', store=True, readonly=False,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
     selection_mode = fields.Selection([
         ('single', 'One choice per row'),
         ('multiple', 'Multiple choices per row')], string='Selection Mode', default='single')
-    matrix_row_ids = fields.One2many(
-        'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
-        help='Labels used for proposed choices: rows of matrix')
     # -- display options
     column_nb = fields.Selection([
         ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
@@ -160,6 +142,43 @@ class SurveyQuestion(models.Model):
         for question in self:
             if question.question_type != 'char_box' or not question.validation_email:
                 question.save_as_email = False
+
+    @api.depends('question_type', 'matrix_row_ids', 'matrix_column_ids')
+    def _compute_suggested_answer_ids(self):
+        for question in self:
+            print('computing _compute_suggested_answer_ids', question, question.question_type)
+            if question.question_type == 'answer_matrix':
+                value = []
+                existing = self.env['survey.question.answer']
+                for row, col in itertools.product(question.matrix_row_ids, question.matrix_column_ids):
+                    print('checking', row, row.name, '-', col, col.name)
+                    existing |= question.suggested_answer_ids.filtered(
+                        lambda answer:
+                            answer.matrix_row_label_id.id == row._origin.id and
+                            answer.matrix_column_label_id.id == col._origin.id
+                    )
+                    if not existing:
+                        value += [
+                            (0, 0, {
+                                'question_id': question.id,
+                                'matrix_row_label_id': row.id,
+                                'matrix_column_label_id': col.id,
+                                'value': '%s-%s' % (row.name, col.name),
+                            })
+                        ]
+                print('\texisting', existing)
+                to_delete = question.suggested_answer_ids - existing
+                print('\ttodelete', to_delete)
+                caca = [(3, answer.id) for answer in to_delete] + value
+                print('\tfinalcommand', caca)
+                question.suggested_answer_ids = caca
+            else:
+                question.suggested_answer_ids = []
+
+    def create(self, values):
+        print('creating question with', values)
+        res = super(SurveyQuestion, self).create(values)
+        return res
 
     # Validation methods
     def validate_question(self, answer, comment=None):
@@ -412,30 +431,50 @@ class SurveyQuestion(models.Model):
         }
 
 
+class SurveyQuestionAnswerLabel(models.Model):
+    """ Labels used for matrix question (either as row or column) """
+    _name = 'survey.question.answer.label'
+    _rec_name = 'name'
+    _order = 'name, sequence'
+    _description = 'Col/Row values'
+
+    name = fields.Char('Value')
+    sequence = fields.Integer('Sequence')
+    question_column_id = fields.Many2one('survey.question', string='Question (as column)', ondelete='cascade')
+    question_row_id = fields.Many2one('survey.question', string='Question (as row)', ondelete='cascade')
+
+    @api.constrains('question_column_id', 'question_row_id')
+    def _check_question_not_empty(self):
+        """Ensure that field question_id XOR field matrix_question_id is not null"""
+        for label in self:
+            if not bool(label.question_column_id) != bool(label.question_row_id):
+                raise ValidationError(_("A label must be attached to only one question."))
+
+
 class SurveyQuestionAnswer(models.Model):
-    """ A preconfigured answer for a question. This model stores values used
-    for
-
-      * simple choice, multiple choice: proposed values for the selection /
-        radio;
-      * matrix: row and column values;
-
-    """
+    """ A suggested answer for a question. This model stores values used
+    for answer_selection and answer_matrix. """
     _name = 'survey.question.answer'
     _rec_name = 'value'
     _order = 'sequence, id'
     _description = 'Survey Label'
 
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
-    matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
+    matrix_column_label_id = fields.Many2one(
+        'survey.question.answer.label', string='Column Label',
+        domain="[('question_column_id', '=', question_id)]")
+    matrix_row_label_id = fields.Many2one(
+        'survey.question.answer.label', string='Row Label',
+        domain="[('question_row_id', '=', question_id)]")
+    matrix_question_id = fields.Many2one('survey.question')  # delete me
     sequence = fields.Integer('Label Sequence order', default=10)
-    value = fields.Char('Suggested value', translate=True, required=True)
-    is_correct = fields.Boolean('Is a correct answer')
+    value = fields.Char('Value', translate=True, required=True)
+    is_correct = fields.Boolean('Is correct')
     answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    @api.constrains('question_id', 'matrix_question_id')
-    def _check_question_not_empty(self):
-        """Ensure that field question_id XOR field matrix_question_id is not null"""
-        for label in self:
-            if not bool(label.question_id) != bool(label.matrix_question_id):
-                raise ValidationError(_("A label must be attached to only one question."))
+    # @api.constrains('question_id', 'matrix_column_label_id', 'matrix_row_label_id')
+    # def _check_matrix_answers(self):
+    #     """Ensure that field question_id XOR field matrix_question_id is not null"""
+    #     for answer in self:
+    #         if answer.question_id.question_type == 'answer_matrix' and (not answer.matrix_column_label_id or not answer.matrix_row_label_id):
+    #             raise ValidationError(_('A suggested answer for matrix question should have a column and a row.'))

@@ -104,24 +104,44 @@
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
                             <separator />
-                            <label for="suggested_answer_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}" />
-                            <field name="suggested_answer_ids" string="Type of answers" context="{'default_question_id': active_id}"
-                                attrs="{'invisible': [('question_type', 'not in', ['answer_selection', 'answer_matrix'])]}">
+                            <group>
+                                <group>
+                                    <field name="matrix_column_ids" context="{'default_question_column_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="question_column_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="matrix_row_ids" context="{'default_question_row_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="question_row_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                            <field name="suggested_answer_ids" string="Type of answers"
+                                context="{'default_question_id': active_id}"
+                                attrs="{
+                                    'invisible': [('question_type', 'not in', ['answer_selection', 'answer_matrix'])],
+                                }">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
+                                    <field name="question_id" invisible="1"/>
+                                    <!-- <field name="matrix_row_label_id" invisible="1" domain="[('question_column_id', '=', active_id)]"/>
+                                    <field name="matrix_column_label_id" invisible="1" domain="[('question_column_id', '=', active_id)]"/> -->
+                                    <!-- <field name="matrix_row_label_id" attrs="{'column_invisible': [('parent.question_type', '!=', 'answer_matrix')]}"/>
+                                    <field name="matrix_column_label_id" attrs="{'column_invisible': [('parent.question_type', '!=', 'answer_matrix')]}"/> -->
                                     <field name="is_correct" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'answer_matrix')]}"/>
                                     <field name="answer_score" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'answer_matrix')]}"/>
                                 </tree>
                             </field>
                             <separator />
-                            <label for="matrix_row_ids" attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}" />
-                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}" attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}">
-                                <tree editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="value" string="Rows"/>
-                                </tree>
-                            </field>
                         </page>
                         <page string="Options">
                             <group string="Constraints">
@@ -214,8 +234,10 @@
             <tree string="Survey Label" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="question_id"/>
-                <field name="matrix_question_id"/>
+                <field name="matrix_column_label_id"/>
+                <field name="matrix_row_label_id"/>
                 <field name="value"/>
+                <field name="is_correct" groups="base.group_no_one"/>
                 <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
