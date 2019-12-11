@@ -40,6 +40,7 @@ class TestPurchaseOrderReport(AccountTestCommon):
                     'product_uom': uom_dozen.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today(),
+                    'taxes_id': False,
                 }),
                 (0, 0, {
                     'name': self.product2.name,
@@ -48,6 +49,7 @@ class TestPurchaseOrderReport(AccountTestCommon):
                     'product_uom': uom_dozen.id,
                     'price_unit': 200.0,
                     'date_planned': datetime.today(),
+                    'taxes_id': False,
                 }),
             ],
         })
