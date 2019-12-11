@@ -80,13 +80,6 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
-        company = self.event_id.company_id or self.env.user.company_id
-        currency = company.currency_id or self.env.user.company_id.currency_id
-        self.price_unit = currency._convert(
-            self.event_ticket_id.price, self.order_id.currency_id,
-            self.order_id.company_id or self.env.user.company_id,
-            self.order_id.date_order or fields.Date.today())
-
         # we call this to force update the default name
         self.product_id_change()
 
@@ -104,3 +97,14 @@ class SaleOrderLine(models.Model):
             return ticket.get_ticket_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
         else:
             return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+
+    def _get_display_price(self, product):
+        if self.event_ticket_id and self.event_id:
+            company = self.event_id.company_id or self.env.user.company_id
+            currency = company.currency_id or self.env.user.company_id.currency_id
+            return currency._convert(
+                self.event_ticket_id.price, self.order_id.currency_id,
+                self.order_id.company_id or self.env.user.company_id,
+                self.order_id.date_order or fields.Date.today())
+        else:
+            return super()._get_display_price(product)
