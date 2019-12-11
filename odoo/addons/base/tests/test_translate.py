@@ -649,19 +649,23 @@ class TestXMLTranslation(TransactionCase):
         view = self.create_view(archf, terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
 
         env_en = self.env(context={})
+        env_us = self.env(context={'lang': 'en_US'})
         env_fr = self.env(context={'lang': 'fr_FR'})
         env_nl = self.env(context={'lang': 'nl_NL'})
 
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_us).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
         # modify source term in view (fixed type in 'cheeze')
         terms_en = ('Bread and cheese',)
         view.write({'arch_db': archf % terms_en})
+        view.invalidate_cache(fnames=['arch_db'], ids=view.ids)
 
         # check whether translations have been synchronized
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_us).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
