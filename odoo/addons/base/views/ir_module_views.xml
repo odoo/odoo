@@ -79,7 +79,7 @@
                     </div>
                     <div class="oe_clear"/>
                     <notebook groups="base.group_no_one">
-                        <page string="Information">
+                        <page string="Information" name="information">
                             <group>
                                 <group>
                                     <field name="has_iap" invisible="1"/>
@@ -95,7 +95,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Technical Data">
+                        <page string="Technical Data" name="technical_data">
                             <group col="4">
                                 <field name="demo"/>
                                 <field name="application"/>
@@ -121,7 +121,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
+                        <page string="Installed Features" name="installed_features" attrs="{'invisible':[('state','!=','installed')]}">
                             <group string="Created Menus"/>
                             <p class="oe_grey" attrs="{'invisible': [('menus_by_module','not in',[None,False])]}"> -This module does not create menu.</p>
                             <field name="menus_by_module"/>

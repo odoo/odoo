@@ -66,7 +66,7 @@
                 <field name="l10n_it_tax_system"/>
             </xpath>
             <xpath expr="//page" position="after">
-                <page string="Electronic Invoicing">
+                <page string="Electronic Invoicing" name="electronic_invoicing">
                     <group>
                         <separator string="Economic and Administrative Index" colspan="4"/>
                         <div colspan="4">
@@ -170,7 +170,9 @@
                 </div>
             </xpath>
             <xpath expr="//page[@name='other_info']" position="after">
-                <page string="Electronic Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                <page string="Electronic Invoicing"
+                    name="electronic_invoicing"
+                    attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                     <group>
                         <group>
                             <field name="l10n_it_stamp_duty"/>

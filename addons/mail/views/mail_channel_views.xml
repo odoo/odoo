@@ -124,7 +124,7 @@
                             <field name="alias_contact" class="oe_inline" invisible="1"/>
                         </group>
                         <notebook>
-                            <page string="Privacy">
+                            <page string="Privacy" name="privacy">
                                 <group class="o_label_nowrap">
                                     <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                                     <field name="group_public_id"
@@ -134,7 +134,7 @@
                                         string="Auto Subscribe Groups"/>
                                 </group>
                             </page>
-                            <page string="Members">
+                            <page string="Members" name="members">
                                 <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
                                     <tree string="Members" editable="bottom">
                                         <field name="partner_id" required="1"/>
@@ -142,7 +142,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Moderation" attrs="{'invisible': [('moderation', '=', False)]}">
+                            <page string="Moderation" name="moderation" attrs="{'invisible': [('moderation', '=', False)]}">
                                 <group>
                                     <field name="moderator_ids" widget="many2many_tags"/>
                                     <field name="moderation_notify"/>

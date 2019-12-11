@@ -170,7 +170,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Products">
+                        <page string="Products" name="products">
                             <field name="order_line"
                                 widget="section_and_note_one2many"
                                 mode="tree,kanban"
@@ -244,10 +244,10 @@
                                             </group>
                                             <group colspan="12">
                                             <notebook>
-                                                <page string="Notes">
+                                                <page string="Notes" name="notes">
                                                     <field name="name"/>
                                                 </page>
-                                                <page string="Invoices and Incoming Shipments">
+                                                <page string="Invoices and Incoming Shipments" name="invoices_incoming_shiptments">
                                                     <field name="invoice_lines"/>
                                                 </page>
                                             </notebook>
