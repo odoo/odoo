@@ -1830,7 +1830,6 @@ class AccountInvoiceLine(models.Model):
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
                 self.account_id = account.id
-            self._set_taxes()
 
             product_name = self_lang._get_invoice_line_name_from_product()
             if product_name != None:
@@ -1840,6 +1839,7 @@ class AccountInvoiceLine(models.Model):
                 self.uom_id = product.uom_id.id
             domain['uom_id'] = [('category_id', '=', product.uom_id.category_id.id)]
 
+            self._set_taxes()
             if company and currency:
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
