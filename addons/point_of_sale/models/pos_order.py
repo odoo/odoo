@@ -606,12 +606,16 @@ class PosOrder(models.Model):
                 'amount_paid': 0,
             })
             for line in order.lines:
+                PosOrderLineLot = self.env['pos.pack.operation.lot']
+                for pack_lot in line.pack_lot_ids:
+                    PosOrderLineLot += pack_lot.copy()
                 line.copy({
                     'name': line.name + _(' REFUND'),
                     'qty': -line.qty,
                     'order_id': refund_order.id,
                     'price_subtotal': -line.price_subtotal,
                     'price_subtotal_incl': -line.price_subtotal_incl,
+                    'pack_lot_ids': PosOrderLineLot,
                     })
             refund_orders |= refund_order
 
