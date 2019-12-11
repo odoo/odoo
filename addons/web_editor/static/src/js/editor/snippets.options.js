@@ -651,7 +651,6 @@ const InputUserValueWidget = UserValueWidget.extend({
     events: {
         'input input': '_onInputInput',
         'blur input': '_onInputBlur',
-
         'keydown input': '_onInputKeydown',
     },
 
@@ -1006,15 +1005,18 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
-    events: _.extend({}, InputUserValueWidget.prototype.events || {}, {
+    events: { // Explicitely not consider all InputUserValueWidget events
+        'blur input': '_onInputBlur',
+        'change.datetimepicker': '_onDateTimePickerChange',
         'error.datetimepicker': '_onDateTimePickerError',
-    }),
+    },
 
     /**
      * @override
      */
     init: function () {
         this._super(...arguments);
+        this._value = moment().unix().toString();
         this.__libInput = 0;
     },
     /**
@@ -1024,11 +1026,9 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         await this._super(...arguments);
 
         const datetimePickerId = _.uniqueId('datetimepicker');
-        this.inputEl.setAttribute('type', 'text');
         this.inputEl.setAttribute('class', 'datetimepicker-input mx-0 text-left');
         this.inputEl.setAttribute('id', datetimePickerId);
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
-        this.inputEl.setAttribute('data-toggle', 'datetimepicker');
 
         const datepickersOptions = {
             minDate: moment({y: 1900}),
@@ -1047,6 +1047,14 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
                 showToday: true,
             },
             widgetParent: 'body',
+
+            // Open the datetimepicker on focus not on click. This allows to
+            // take care of a bug which is due to the summernote editor:
+            // sometimes, the datetimepicker loses the focus then get it back
+            // in the same execution flow. This was making the datepicker close
+            // for no apparent reason. Now, it only closes then reopens directly
+            // without it be possible to notice.
+            allowInputToggle: true,
         };
         this.__libInput++;
         const $input = $(this.inputEl);
@@ -1068,15 +1076,10 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-    * @override
-    */
-    getValue: function (methodName) {
-        const value = this._super(...arguments);
-        let date = new Date(value);
-        if (isNaN(date)) {
-            date = new Date();
-        }
-        return moment(date).unix().toString();
+     * @override
+     */
+    isActive: function () {
+        return true;
     },
 
     //--------------------------------------------------------------------------
@@ -1086,29 +1089,41 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     /**
      * @override
      */
-    _notifyValueChange: function () {
-        if (this.__libInput > 0) {
-            return;
-        }
-        this._super(...arguments);
+    _canUpdateUI: function () {
+        return this._super(...arguments) && !$(this.inputEl).data('datetimepicker').widget;
     },
     /**
      * @override
      */
     _updateUI: async function () {
         await this._super(...arguments);
-        const val = parseInt(this._value);
-        if (!isNaN(val)) {
-            this.__libInput++;
-            $(this.inputEl).datetimepicker('date', moment(val * 1000));
-            this.__libInput--;
+        let momentObj = moment.unix(this._value);
+        if (!momentObj.isValid()) {
+            momentObj = moment();
         }
+        this.__libInput++;
+        $(this.inputEl).datetimepicker('date', momentObj);
+        this.__libInput--;
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onDateTimePickerChange: function (ev) {
+        if (this.__libInput > 0) {
+            return;
+        }
+        if (!ev.date || !ev.date.isValid()) {
+            return;
+        }
+        this._value = ev.date.unix().toString();
+        this._onUserValuePreview(ev);
+    },
     /**
      * Prevents crash manager to throw CORS error. Note that library already
      * clears the wrong date format.
