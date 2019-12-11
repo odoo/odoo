@@ -25,7 +25,7 @@
                     <field name="create_variant" widget="radio" attrs="{'readonly': [('is_used_on_products', '=', True)]}"/>
                 </group>
                 <notebook>
-                    <page string="Attribute Values">
+                    <page string="Attribute Values" name="attribute_values">
                         <field name="value_ids" widget="one2many" nolabel="1">
                             <tree string="Values" editable="bottom">
                                 <field name="sequence" widget="handle"/>
@@ -33,7 +33,7 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Related Products" attrs="{'invisible': [('is_used_on_products', '=', False)]}">
+                    <page string="Related Products" name="related_products" attrs="{'invisible': [('is_used_on_products', '=', False)]}">
                         <field name="product_tmpl_ids">
                             <tree>
                                 <field name="name"/>

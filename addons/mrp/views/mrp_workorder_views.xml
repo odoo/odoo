@@ -141,12 +141,14 @@
                     </group>
                 </group>
                 <notebook>
-                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False),('worksheet_google_slide', '=', False)]}">
+                <page string="Work Instruction"
+                    name="work_instructions"
+                    attrs="{'invisible': [('worksheet', '=', False),('worksheet_google_slide', '=', False)]}">
                     <field name="worksheet_type" invisible="1"/>
                     <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '=', 'pdf')]}"/>
                     <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '=', 'google_slide')]}"/>
                 </page>
-                <page string="Current Production">
+                <page string="Current Production" name="current_production">
                     <group>
                         <group>
                             <field name="qty_producing" string="Quantity in Production" attrs="{'readonly': ['|', ('product_tracking', '=', 'serial'), ('state', 'in', ('done', 'cancel'))]}"/>
@@ -184,7 +186,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Time Tracking" groups="mrp.group_mrp_manager">
+                <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                     <group>
                         <group>
                             <label for="date_planned_start" string="Planned Date"/>

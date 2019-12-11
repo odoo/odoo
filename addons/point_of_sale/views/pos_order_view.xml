@@ -42,7 +42,7 @@
                     <field name="invoice_group" invisible="1"/>
                 </group>
                 <notebook colspan="4">
-                    <page string="Products">
+                    <page string="Products" name="products">
                         <field name="lines" colspan="4" nolabel="1">
                             <tree string="Order lines" editable="bottom">
                                 <field name="product_id"/>
@@ -93,7 +93,7 @@
                         </group>
                         <div class="oe_clear"/>
                     </page>
-                    <page string="Payments">
+                    <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1">
                             <tree string="Payments">
                                 <field name="currency_id" invisible="1" />
@@ -119,7 +119,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Notes" >
+                    <page string="Notes" name="notes">
                         <field name="note"/>
                     </page>
                 </notebook>

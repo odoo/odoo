@@ -95,7 +95,7 @@
                             </h1>
                         </div>
                         <notebook>
-                            <page string="Operators">
+                            <page string="Operators" name="operators">
                                 <group>
                                     <field name="user_ids" nolabel="1" colspan="2">
                                         <kanban>
@@ -120,7 +120,7 @@
                                     </p>
                                 </group>
                             </page>
-                            <page string="Options">
+                            <page string="Options" name="options">
                                 <group>
                                     <group string="Livechat Button">
                                         <field name="button_text"/>
@@ -147,13 +147,13 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Channel Rules">
+                            <page string="Channel Rules" name="channel_rules">
                                 <span class="text-muted">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
                                 <group>
                                     <field name="rule_ids" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Widget">
+                            <page string="Widget" name="configuration_widget">
                                 <group attrs='{"invisible": [["web_page", "!=", False]]}'>
                                     <div class="alert alert-warning mt4 mb16" role="alert">
                                     Save your Channel to get your configuration widget.

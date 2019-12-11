@@ -70,7 +70,7 @@
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                     </group>
                     <notebook>
-                        <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                        <page string="Cash Control" name="cash_control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                             <group class="col-md-12" style="margin-left: 140px;">
                                 <group class="col-md-7">
                                     <div style="margin:0;padding:0;">

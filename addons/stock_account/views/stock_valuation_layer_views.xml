@@ -13,7 +13,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Valuation">
+                        <page string="Valuation" name="valuation">
                             <group>
                                 <field name="quantity" />
                                 <field name="uom_id" groups="uom.group_uom" />
@@ -23,7 +23,7 @@
                                 <field name="remaining_qty" />
                             </group>
                         </page>
-                        <page string="Other Info">
+                        <page string="Other Info" name="other_info">
                             <group>
                                 <field name="description" />
                                 <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}" />

@@ -177,7 +177,9 @@
                                         'inline-field': 'body_html'
                                 }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             </page>
-                            <page string="Dynamic Placeholder Generator" groups="base.group_no_one">
+                            <page string="Dynamic Placeholder Generator"
+                                name="dynamic_placeholder_generator"
+                                groups="base.group_no_one">
                                 <group>
                                     <field name="model_object_field" attrs="{'invisible': True}"/>
                                     <field name="model_object_field"
@@ -190,7 +192,7 @@
                                     <field name="copyvalue"/>
                                 </group>
                             </page>
-                            <page string="Settings">
+                            <page string="Settings" name="settings">
                                 <group>
                                     <group>
                                         <field name="name" required="False" groups="base.group_no_one" string="Name"/>

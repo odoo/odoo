@@ -173,10 +173,10 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Components">
+                        <page string="Components" name="components">
                             <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'tree_view_ref': 'mrp.view_stock_move_raw_tree', 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True)]}"/>
                         </page>
-                        <page string="Finished Products">
+                        <page string="Finished Products" name="finished_products">
                             <field name="move_finished_ids" invisible="1"/>
                             <field name="finished_move_line_ids" context="{'form_view_ref': 'mrp.view_finisehd_move_line'}" attrs="{'readonly': [('is_locked', '=', True)], 'invisible': [('finished_move_line_ids', '=', [])]}">
                                  <tree default_order="done_move" editable="bottom" create="0" delete="0" decoration-muted="state in ('done', 'cancel')">
@@ -194,7 +194,7 @@
                                 Use the Produce button or process the work orders to create some finished products.
                             </p>
                         </page>
-                        <page string="Miscellaneous" groups="stock.group_stock_multi_locations">
+                        <page string="Miscellaneous" name="miscellaneous" groups="stock.group_stock_multi_locations">
                             <group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

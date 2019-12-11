@@ -52,7 +52,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Questions">
+                        <page string="Questions" name="questions">
                             <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
                                 <tree decoration-bf="is_page" editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -68,10 +68,10 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Description">
+                        <page string="Description" name="description">
                             <field name="description" nolabel="1"></field>
                         </page>
-                        <page string="Options">
+                        <page string="Options" name="options">
                             <group name="options">
                                 <group string="Questions" name="questions">
                                     <field name="questions_layout" widget="radio" />

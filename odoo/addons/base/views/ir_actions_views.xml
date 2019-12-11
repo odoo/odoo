@@ -201,7 +201,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Security">
+                        <page string="Security" name="security">
                             <field name="groups_id"/>
                         </page>
                     </notebook>
@@ -306,7 +306,7 @@
                                 <field name="groups_id"/>
                             </page>
 
-                            <page string="Actions" autofocus="autofocus"
+                            <page string="Actions" name="actions" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'multi')]}">
                                 <p class="oe_grey">
                                     If several child actions return an action, only the last one will be executed.
@@ -315,7 +315,7 @@
                                 <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help" autofocus="autofocus"
+                            <page string="Help" name="help_info" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <group>
                                     <div style="margin-top: 4px;">

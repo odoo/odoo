@@ -95,7 +95,7 @@
                         </group>
                     </group>
                     <notebook attrs="{'invisible': [('is_page', '=', True)]}">
-                        <page string="Answers">
+                        <page string="Answers" name="answers">
                             <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                             <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/><br/>
                             <field name="save_as_email" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_email', '=', False)]}"/>
@@ -122,7 +122,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Options">
+                        <page string="Options" name="options">
                             <group string="Constraints">
                                 <group colspan="2" col="4">
                                     <field name="constr_mandatory" string="Mandatory Answer"/>

@@ -28,7 +28,7 @@
                             </group>
                         </group>
                         <notebook colspan="4" groups="stock.group_adv_location">
-                            <page string="Warehouse Configuration" colspan="4">
+                            <page string="Warehouse Configuration" name="warehouse_config" colspan="4">
                                 <group colspan="4">
                                     <group string="Shipments">
                                         <field name="reception_steps" widget='radio'/>
@@ -41,7 +41,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Technical Information" groups='base.group_no_one'>
+                            <page string="Technical Information" name="technical_info" groups='base.group_no_one'>
                                 <group>
                                     <group string="Locations">
                                         <field name="view_location_id" string="Warehouse view location" readonly="1" required="0"/>

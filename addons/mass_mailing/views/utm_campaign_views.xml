@@ -16,7 +16,7 @@
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Mailings" attrs="{'invisible': [('mailing_mail_count', '=', 0)]}">
+                <page string="Mailings" name="mailings" attrs="{'invisible': [('mailing_mail_count', '=', 0)]}">
                     <field name="mailing_mail_ids" readonly="1" nolabel="1">
                         <tree>
                             <field name="subject"/>

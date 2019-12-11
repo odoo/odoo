@@ -71,7 +71,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Components">
+                        <page string="Components" name="components">
                             <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_company_id': company_id, 'default_routing_id': routing_id}">
                                 <tree string="Components" editable="bottom">
                                     <field name="company_id" invisible="1"/>
@@ -92,7 +92,10 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="By-products" attrs="{'invisible': [('type','!=','normal')]}" groups="mrp.group_mrp_byproducts">
+                        <page string="By-products"
+                            name="by_products"
+                            attrs="{'invisible': [('type','!=','normal')]}"
+                            groups="mrp.group_mrp_byproducts">
                             <field name="byproduct_ids"  context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_company_id': company_id, 'default_routing_id': routing_id}">
                                 <tree string="By-products"  editable="top">
                                     <field name="company_id" invisible="1"/>
@@ -104,7 +107,7 @@
                                 </tree>
                            </field>
                        </page>
-                        <page string="Miscellaneous">
+                        <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
                                     <field name="ready_to_produce" attrs="{'invisible': [('type','!=','normal')]}" string="Manufacturing Readiness" groups="mrp.group_mrp_routings"/>

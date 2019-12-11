@@ -38,7 +38,7 @@
                         </group>
                     </group>
                     <notebook name="main_book">
-                        <page string="Lines">
+                        <page string="Lines" name="order_lines">
                         <field name="sale_order_template_line_ids" widget="section_and_note_one2many">
                             <form string="Quotation Template Lines">
                                 <!--
@@ -63,13 +63,13 @@
                                     </group>
                                 </group>
                                 <notebook colspan="4" name="description">
-                                    <page string="Description" attrs="{'invisible': [('display_type', '!=', False)]}">
+                                    <page string="Description" name="order_description" attrs="{'invisible': [('display_type', '!=', False)]}">
                                         <field name="name" />
                                     </page>
-                                    <page string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}">
+                                    <page string="Section" name="order_section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}">
                                         <field name="name" />
                                     </page>
-                                    <page string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}">
+                                    <page string="Note" name="order_note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}">
                                         <field name="name" />
                                     </page>
                                 </notebook>
@@ -97,7 +97,7 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Optional Products">
+                    <page string="Optional Products" name="optional_products">
                         <field name="sale_order_template_option_ids">
                           <tree string="Quotation Template Lines" editable="bottom">
                             <field name="product_id"/>
@@ -110,7 +110,7 @@
                           </tree>
                         </field>
                     </page>
-                    <page string="Confirmation">
+                    <page string="Confirmation" name="confirmation">
                         <group>
                             <field name="require_signature"/>
                             <field name="require_payment"/>

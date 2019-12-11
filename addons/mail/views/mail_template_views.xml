@@ -41,13 +41,13 @@
                             </group>
                         </div>
                         <notebook>
-                            <page string="Content">
+                            <page string="Content" name="content">
                                 <label for="subject"/>
                                 <h2 style="display: inline-block;"><field name="subject" placeholder="Subject (placeholders may be used here)"/></h2>
                                 <field name="body_html" widget="html" options="{'style-inline': true}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
-                            <page string="Email Configuration">
+                            <page string="Email Configuration" name="email_configuration">
                                 <group>
                                     <field name="email_from"
                                             placeholder="Override author's email"/>
@@ -64,7 +64,7 @@
                                     <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
-                            <page string="Advanced Settings">
+                            <page string="Advanced Settings" name="advanced_settings">
                                 <group>
                                     <field name="lang"/>
                                     <field name="mail_server_id"/>
@@ -73,7 +73,7 @@
                                     <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
                                 </group>
                             </page>
-                            <page string="Dynamic Placeholder Generator">
+                            <page string="Dynamic Placeholder Generator" name="dynamic_placeholder_generator">
                                 <group>
                                     <field name="model_object_field"
                                             domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>

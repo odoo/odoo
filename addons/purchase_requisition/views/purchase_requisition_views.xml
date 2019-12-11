@@ -160,7 +160,7 @@
                     </group>
                 </group>
                 <notebook>
-                    <page string="Products">
+                    <page string="Products" name="products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" context="{'default_purchase_requisition': 'tenders'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
