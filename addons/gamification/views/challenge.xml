@@ -77,7 +77,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Goals">
+                        <page string="Goals" name="goals">
                             <field name="line_ids" nolabel="1" colspan="4">
                                 <tree string="Line List" editable="bottom" >
                                     <field name="sequence" widget="handle"/>
@@ -89,7 +89,7 @@
                             </field>
                             <field name="description" placeholder="Describe the challenge: what is does, who it targets, why it matters..."/>
                         </page>
-                        <page string="Reward">
+                        <page string="Reward" name="reward">
                             <group>
                                 <field name="reward_id" attrs="{'required': [('reward_realtime','=', True)]}" />
                                 <field name="reward_first_id" />
@@ -102,7 +102,7 @@
                                 <p>Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed.</p>
                             </div>
                         </page>
-                        <page string="Advanced Options">
+                        <page string="Advanced Options" name="advanced_options">
                             <group string="Subscriptions">
                                 <field name="invited_user_ids" widget="many2many_tags" />
                             </group>

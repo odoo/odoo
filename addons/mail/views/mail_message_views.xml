@@ -45,10 +45,10 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Body">
+                            <page string="Body" name="body">
                                 <field name="body" options="{'style-inline': true}"/>
                             </page>
-                            <page string="Gateway">
+                            <page string="Gateway" name="gateway">
                                 <group>
                                     <group>
                                         <field name="reply_to"/>
@@ -60,7 +60,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Recipients">
+                            <page string="Recipients" name="recipients">
                                 <group>
                                     <group>
                                         <field name="partner_ids" widget="many2many_tags"/>

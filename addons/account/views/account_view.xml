@@ -1178,7 +1178,7 @@ action = model.setting_init_bank_account_action()
                         </group>
                     </group>
                     <notebook>
-                        <page string="Definition">
+                        <page string="Definition" name="definition">
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="country_id" invisible="1"/>
                                 <group string="Repartition for Invoices">
@@ -1197,7 +1197,7 @@ action = model.setting_init_bank_account_action()
                                 </tree>
                             </field>
                         </page>
-                        <page string="Advanced Options">
+                        <page string="Advanced Options" name="advanced_options">
                             <group>
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>

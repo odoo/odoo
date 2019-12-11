@@ -18,7 +18,7 @@
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="SMS" attrs="{'invisible': [('mailing_sms_count', '=', 0)]}">
+                <page string="SMS" name="sms" attrs="{'invisible': [('mailing_sms_count', '=', 0)]}">
                     <group>
                         <field name="mailing_sms_ids" readonly="1" nolabel="1">
                             <tree>

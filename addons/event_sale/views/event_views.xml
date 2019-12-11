@@ -89,7 +89,7 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <page name="event_communication" position="before">
-                    <page string="Tickets">
+                    <page string="Tickets" name="tickets">
                         <field name="event_ticket_ids" context="{'default_name': name}" mode="tree,kanban">
                             <tree string="Tickets" editable="bottom">
                                 <field name="name"/>

@@ -21,7 +21,7 @@
                                 attrs="{'readonly': [('parent_state', '=', 'posted')]}"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Information">
+                            <page string="Information" name="information">
                                 <group>
                                     <group string="Amount">
                                         <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
@@ -76,7 +76,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
+                            <page string="Analytic Lines" name="analytic_lines" groups="analytic.group_analytic_accounting">
                                 <field name="date" invisible="1"/>
                                 <field name="analytic_line_ids" context="{'tree_view_ref':'analytic.view_account_analytic_line_tree', 'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                             </page>
