@@ -1049,8 +1049,18 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             widgetParent: 'body',
         };
         this.__libInput++;
-        $(this.inputEl).datetimepicker(datepickersOptions);
+        const $input = $(this.inputEl);
+        $input.datetimepicker(datepickersOptions);
         this.__libInput--;
+
+        // Monkey-patch the library option to add custom classes on the pickers
+        const libObject = $input.data('datetimepicker');
+        const oldFunc = libObject._getTemplate;
+        libObject._getTemplate = function () {
+            const $template = oldFunc.call(this, ...arguments);
+            $template.addClass('o_we_no_overlay o_we_datetimepicker');
+            return $template;
+        };
     },
 
     //--------------------------------------------------------------------------
