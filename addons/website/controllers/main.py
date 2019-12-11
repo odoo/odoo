@@ -113,11 +113,13 @@ class Website(Home):
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
+        """ :param lang: supposed to be value of `url_code` field """
         if lang == 'default':
             lang = request.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
-        redirect.set_cookie('frontend_lang', lang)
+        lang_code = request.env['res.lang']._lang_get_code(lang)
+        redirect.set_cookie('frontend_lang', lang_code)
         return redirect
 
     @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
