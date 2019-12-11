@@ -6,7 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Lost Reason">
                     <group class="oe_title">
-                        <field name="lost_reason_id"/>
+                        <field name="lost_reason_id" options="{'no_create_edit': True}" />
                     </group>
                     <footer>
                         <button name="action_lost_reason_apply" string="Submit" type="object" class="btn-primary"/>
