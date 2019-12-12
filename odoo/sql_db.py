@@ -219,6 +219,18 @@ class Cursor(object):
             _logger.warning(msg)
             self._close(True)
 
+    def _format(self, table):
+        widths = [0]*len(table[0])
+        for row in table:
+            for i, cell in enumerate(map(str, row)):
+                widths[i] = max(widths[i], len(cell))
+
+        for row in table:
+            print(' | '.join(
+                '{:{}}'.format(cell, w)
+                for w, cell in zip(widths, row)
+            ))
+
     @check
     def execute(self, query, params=None, log_exceptions=None):
         self._obj.execute("""
@@ -242,7 +254,7 @@ class Cursor(object):
         except Exception as e:
             if getattr(e, 'pgcode', None) in (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED):
                 print(f" error {self} pid {os.getpid()} ".center(200, '='))
-                print(pprint.pformat(tnx), flush=True)
+                print(self._format(tnx), flush=True)
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", ustr(self._obj.query or query), e)
             raise
