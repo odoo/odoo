@@ -4,69 +4,42 @@ odoo.define('sale_stock.QtyAtDateWidget', function (require) {
 var core = require('web.core');
 var QWeb = core.qweb;
 
-var Widget = require('web.Widget');
+var PopoverAbstract = require('stock.PopoverAbstract');
 var Context = require('web.Context');
 var data_manager = require('web.data_manager');
 var widget_registry = require('web.widget_registry');
-var config = require('web.config');
 
 var _t = core._t;
 var time = require('web.time');
 
-var QtyAtDateWidget = Widget.extend({
-    template: 'sale_stock.qtyAtDate',
-    events: _.extend({}, Widget.prototype.events, {
-        'click .fa-info-circle': '_onClickButton',
-    }),
+var QtyAtDateWidget = PopoverAbstract.extend({
+    icon: 'fa fa-info-circle',
+    title: _t('Availability'),
+    trigger: 'focus',
+    placement: 'left',
+    color: 'text-primary',
+    popoverTemplate: 'sale_stock.QtyDetailPopOver',
 
-    /**
-     * @override
-     * @param {Widget|null} parent
-     * @param {Object} params
-     */
-    init: function (parent, params) {
-        this.data = params.data;
-        this._super(parent);
-    },
-
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self._setPopOver();
-        });
-    },
-
-    updateState: function (state) {
-        this.$el.popover('dispose');
-        var candidate = state.data[this.getParent().currentRow];
-        if (candidate) {
-            this.data = candidate.data;
-            this.renderElement();
-            this._setPopOver();
+    _willRender: function () {
+        this.hide = !this.data.display_qty_widget;
+        if(this.data.virtual_available_at_date < this.data.qty_to_deliver && !this.data.is_mto) {
+            this.color = 'text-danger';
+        } else {
+            this.color = 'text-primary';
         }
     },
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-    /**
-     * Set a bootstrap popover on the current QtyAtDate widget that display available
-     * quantity.
-     */
+
     _setPopOver: function () {
-        var self = this;
-        if (!this.data.scheduled_date) {
+        if(!this.data.scheduled_date) {
             return;
         }
         this.data.delivery_date = this.data.scheduled_date.clone().add(this.getSession().getTZOffset(this.data.scheduled_date), 'minutes').format(time.getLangDateFormat());
-        // The grid view need a specific date format that could be different than
-        // the user one.
         this.data.delivery_date_grid = this.data.scheduled_date.clone().add(this.getSession().getTZOffset(this.data.scheduled_date), 'minutes').format('YYYY-MM-DD');
-        this.data.debug = config.isDebug();
-        var $content = $(QWeb.render('sale_stock.QtyDetailPopOver', {
-            data: this.data,
-        }));
-        var $forecastButton = $content.find('.action_open_forecast');
-        $forecastButton.on('click', function(ev) {
+
+        this._super();
+
+        var self = this;
+        this.$popover.find('.action_open_forecast').on('click', function(ev) {
             ev.stopPropagation();
             data_manager.load_action('stock.report_stock_quantity_action_product').then(function (action) {
                 // Change action context to choose a specific date and product(s)
@@ -92,25 +65,6 @@ var QtyAtDateWidget = Widget.extend({
                 });
             });
         });
-        var options = {
-            content: $content,
-            html: true,
-            placement: 'left',
-            title: _t('Availability'),
-            trigger: 'focus',
-            delay: {'show': 0, 'hide': 100 },
-        };
-        this.$el.popover(options);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-    _onClickButton: function () {
-        // We add the property special click on the widget link.
-        // This hack allows us to trigger the popover (see _setPopOver) without
-        // triggering the _onRowClicked that opens the order line form view.
-        this.$el.find('.fa-info-circle').prop('special_click', true);
     },
 });
 
