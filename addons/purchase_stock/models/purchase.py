@@ -32,6 +32,15 @@ class PurchaseOrder(models.Model):
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
+    purchase_effective_date = fields.Date("Purchase Effective Date", compute='_compute_purchase_effective_date',
+                                          store=True, help="Completion date of the first income order.")
+
+    @api.depends('picking_ids.date_done')
+    def _compute_purchase_effective_date(self):
+        for order in self:
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_id.usage == 'supplier')
+            dates_list = [date for date in pickings.mapped('date_done') if date]
+            order.purchase_effective_date = dates_list and min(dates_list).date()
 
     @api.depends('order_line.move_ids.returned_move_ids',
                  'order_line.move_ids.state',
