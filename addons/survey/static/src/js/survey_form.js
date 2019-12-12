@@ -6,11 +6,13 @@ var publicWidget = require('web.public.widget');
 var time = require('web.time');
 var core = require('web.core');
 var _t = core._t;
+var dom = require('web.dom');
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
+        'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click button[type="submit"]': '_onSubmit',
     },
 
@@ -32,6 +34,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
+            $(document).on('keypress', function (e) {
+                self._onKeyPress(e);
+            });
+            self._initChoiceItems();
+            self._initTextArea();
         });
     },
 
@@ -42,6 +49,38 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
+    _onKeyPress: function (event) {
+        var self = this;
+        var aIndex = 'a'.charCodeAt(0);
+        var zIndex = 'z'.charCodeAt(0);
+        var code = event.keyCode;
+        var insideTextArea = this.$("textarea").is(":focus");
+        var $choiceInputs = this.$("input[type='radio'],input[type='checkbox']");
+        var isFieldsetDisabled = this.$("fieldset:disabled").length > 0;
+        // Handle Start / Next / Submit
+        if (code === 13 && !insideTextArea) {  // Enter : go Next
+            event.preventDefault();
+            this.$("button.btn-primary").click();
+        } else if (aIndex <= code < zIndex
+                && self.options.questionsLayout === 'page_per_question'
+                && $choiceInputs.length && !insideTextArea
+                && !isFieldsetDisabled) {
+            var keyIndex = code - aIndex;
+            if ($choiceInputs.length > 26) {
+                return;
+            }
+            if ($choiceInputs.length >= keyIndex) {
+                var $targetInput = $($choiceInputs[keyIndex]);
+                if ($targetInput.attr('type') === 'radio') {
+                    $targetInput.prop("checked", true).trigger('change');
+                } else {
+                    $targetInput.prop("checked", !$targetInput.prop("checked")).trigger('change');
+                }
+                event.preventDefault();
+            }
+        }
+    },
+
     /**
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
     *   If not checked : Clear the comment textarea and disable it
@@ -51,16 +90,50 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * @param {Event} event
     */
     _onChangeChoiceItem: function (event) {
-        var $choiceItemGroup = $(event.currentTarget).parents('.o_survey_form_choice');
+        var $target = $(event.currentTarget);
+        var $choiceItemGroup = $target.parents('.o_survey_form_choice');
         var $otherItem = $choiceItemGroup.find('.o_survey_js_form_other_comment');
         var $commentInput = $choiceItemGroup.find('textarea[type="text"]');
 
-        if ($otherItem.prop('checked')) {
-            $commentInput.enable();
-            $commentInput.focus();
-        } else {
-            $commentInput.val('');
-            $commentInput.enable(false);
+        if ($otherItem.length > 0) {
+            if ($otherItem.prop('checked')) {
+                $commentInput.enable();
+                $commentInput.focus();
+            } else {
+                $commentInput.val('');
+                $commentInput.enable(false);
+            }
+        }
+
+        var $matrixBtn = $target.parents('.o_survey_matrix_btn');
+        if ($target.attr('type') === 'radio') {
+            if ($matrixBtn.length > 0) {
+                $matrixBtn.parents('tr').find('td').removeClass('o_survey_selected');
+                $matrixBtn.addClass('o_survey_selected');
+            } else {
+                $choiceItemGroup.find('label').toggleClass('o_survey_selected', false);
+                $target.closest('label').toggleClass('o_survey_selected', true);
+            }
+        } else {  // $target.attr('type') === 'checkbox'
+            if ($matrixBtn.length > 0) {
+                $matrixBtn.toggleClass('o_survey_selected', !$matrixBtn.hasClass('o_survey_selected'));
+            } else {
+                var $label = $target.closest('label');
+                $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
+            }
+        }
+    },
+
+    _onMatrixBtnClick: function (event) {
+        var isFieldsetDisabled = this.$("fieldset:disabled").length > 0;
+        if (!isFieldsetDisabled) {
+            var $target = $(event.currentTarget);
+            var $input = $target.find('input');
+            if ($input.attr('type') === 'radio') {
+                $input.prop("checked", true).trigger('change');
+            } else {
+                $input.prop("checked", !$input.prop("checked")).trigger('change');
+            }
         }
     },
 
@@ -144,6 +217,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             if ($target.val() === 'finish') {
                 self._initResultWidget();
             }
+            self._initChoiceItems();
+            self._initTextArea();
             self.$('.o_survey_form_content').fadeIn(400);
             $("html, body").animate({ scrollTop: 0 }, "fast");
         }
@@ -429,6 +504,22 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
+
+    _initTextArea: function () {
+        this.$('textarea').each(function () {
+            dom.autoresize($(this));
+        });
+    },
+
+    _initChoiceItems: function () {
+        this.$("input[type='radio'],input[type='checkbox']").each(function () {
+            var matrixBtn = $(this).parents('.o_survey_matrix_btn');
+            if ($(this).prop("checked")) {
+                var $target = matrixBtn.length > 0 ? matrixBtn : $(this).closest('label');
+                $target.toggleClass('o_survey_selected', true);
+            }
+        });
+    },
 
     _initBreadcrumb: function () {
         var self = this;

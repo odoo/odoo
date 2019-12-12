@@ -1,0 +1,198 @@
+.o_survey_question_text_box,
+.o_survey_question_date,
+.o_survey_question_datetime,
+.o_survey_question_numerical_box {
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 2px solid #00A09D;
+    background-color: transparent !important;
+    font-weight: bold;
+    color: #00A09D !important;
+    &:disabled {
+        border-color: grey;
+        color: black !important;
+        background-color: #e9ecef !important;
+        border-bottom: 2px solid grey;
+    }
+    &:focus {
+        border-color: #00A09D;
+    }
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: grey;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: white;
+    }
+}
+
+.o_survey_form_date .input-group-append {
+    margin-left: -36px;
+    .input-group-text {
+        border: 0px;
+        background-color: transparent;
+        i {
+            color: #00A09D;
+            font-size: large;
+        }
+    }
+}
+
+.o_survey_comment_container {
+    padding: 0rem 0.25rem;
+    &.col-lg-12 {
+        padding: 0rem 1.25rem;
+    }
+}
+
+.o_survey_choice_container {
+    flex-wrap: wrap;
+}
+
+.o_survey_choice_btn {
+    color: white;
+    background-color: rgba(0, 160, 157, 0.6);
+    transition: background-color 0.3s ease;
+    border: 2px solid #00a09d;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0.25rem 1rem;
+    margin: 0.25rem;
+    flex-grow: 1;
+    min-width: 300px;
+
+    span {
+        margin-left: 0.5rem;
+        line-height: 25px;
+    }
+    input {
+        visibility: hidden;
+        position: absolute;
+    }
+    i {
+        margin-top: 3px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    &.o_survey_selected {
+        background-color: rgba(0, 160, 157, 1);
+        i {
+            opacity: 1;
+            padding-top: 2px;
+        }
+    }
+    &:hover {
+        background-color: rgba(0, 160, 157, 0.8);
+        .o_survey_choice_key span.o_survey_key {
+            opacity: 1;
+        }
+    }
+}
+
+.o_survey_question_matrix {
+    color: white;
+    text-align: center;
+    tr {
+        color: white !important;
+        background-color: white !important;
+    }
+    th {
+        background-color: #00A09D;
+        border: 0px !important;
+    }
+    td {
+        color: #00A09D;
+        background-color: rgba(0, 160, 157, 0.2);
+        &:hover {
+            background-color: rgba(0, 160, 157, 0.5);
+            .o_survey_choice_key span.o_survey_key {
+                opacity: 1;
+            }
+        }
+        &.o_survey_selected {
+            i.fa-square {
+                display: none;
+            }
+            i.fa-check-square {
+                display: inline;
+            }
+        }
+        i {
+            left: 15px;
+            text-align: center;
+            position: relative;
+            &.fa-square {
+                color: white;
+                border: 2px solid #00A09D;
+                display: inline;
+            }
+            &.fa-check-square {
+                font-size: 18px;
+                display: none;
+            }
+        }
+    }
+}
+
+.o_survey_choice_key {
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border: 2px solid #00A09D;
+    position: relative;
+    span {
+        color: #00A09D;
+        margin-left: 5px;
+        font-size: large;
+        position: absolute;
+        top: -2px;
+        &.o_survey_key {
+            right: 20px;
+            border-left: 2px solid #00A09D;
+            border-bottom: 2px solid #00A09D;
+            border-top: 2px solid #00A09D;
+            height: 25px;
+            background-color: white;
+            font-size: unset !important;
+            padding: 0em 0.25em;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            white-space: nowrap;
+        }
+    }
+}
+
+.o_survey_enter {
+    color: #00A09D;
+}
+
+.o_survey_print {
+    .o_survey_choice_btn {
+        background-color: #e9ecef;
+        border-color: transparent;
+        color: black;
+        cursor: default;
+        &.o_survey_selected {
+            background-color: grey;
+            color: white;
+        }
+    }
+    .o_survey_question_matrix {
+        th {
+            background-color: grey;
+        }
+        td {
+            background-color: #e9ecef;
+        }
+        i.fa-square {
+            border: 2px solid grey;
+        }
+        i.fa-check-square {
+            color: grey;
+        }
+    }
+}
