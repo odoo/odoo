@@ -110,7 +110,10 @@ odoo.define('web.PivotRenderer', function (require) {
          * @private
          */
         _resetState() {
-            // This is a pourrav solution
+            // This check is used to avoid the destruction of the dropdown.
+            // The click on the header bubbles to window in order to hide
+            // all the other dropdowns (in this component or other components).
+            // So we need isHeaderClicked to cancel this behaviour.
             if (this.isHeaderClicked) {
                 this.isHeaderClicked = false;
                 return;
