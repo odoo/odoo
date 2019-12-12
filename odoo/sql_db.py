@@ -234,7 +234,7 @@ class Cursor(object):
     @check
     def execute(self, query, params=None, log_exceptions=None):
         self._obj.execute("""
-        SELECT pid = %s as self, datname, application_name, state, wait_event, query
+        SELECT pid = %s as self, datname, application_name, state, wait_event, query_start, query
         FROM pg_stat_activity
         WHERE state is not null AND state != 'idle' AND datname = %s
         """, [self._cnx.get_backend_pid(), self.dbname])
