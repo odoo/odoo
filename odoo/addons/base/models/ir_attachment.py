@@ -362,8 +362,9 @@ class IrAttachment(models.Model):
                 require_employee = True
             # For related models, check if we can write to the model, as unlinking
             # and creating attachments can be seen as an update to the model
-            records.check_access_rights('write' if mode in ('create', 'unlink') else mode)
-            records.check_access_rule(mode)
+            access_mode = 'write' if mode in ('create', 'unlink') else mode
+            records.check_access_rights(access_mode)
+            records.check_access_rule(access_mode)
 
         if require_employee:
             if not (self.env.user._is_admin() or self.env.user.has_group('base.group_user')):
@@ -503,7 +504,7 @@ class IrAttachment(models.Model):
             for field in ('file_size', 'checksum'):
                 values.pop(field, False)
             values = self._check_contents(values)
-            self.browse().check('write', values=values)
+            self.browse().check('create', values=values)
         return super(IrAttachment, self).create(vals_list)
 
     @api.multi
