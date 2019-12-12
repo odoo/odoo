@@ -2379,67 +2379,6 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
-    QUnit.test('field changes are correctly debounced in text fields', async function (assert) {
-        var done = assert.async();
-        assert.expect(5);
-
-        this.data.partner.fields.foo.type = 'text';
-
-        var def = testUtils.makeTestPromise();
-        var nbNotifyChanges = 0;
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form string="Partners">' +
-                    '<field name="foo"/>' +
-                '</form>',
-            res_id: 2,
-            fieldDebounce: 3,
-        });
-
-        var _onFieldChanged = form._onFieldChanged;
-        form._onFieldChanged = function () {
-            _onFieldChanged.apply(form, arguments);
-            nbNotifyChanges++;
-            def.resolve();
-        };
-
-        await testUtils.form.clickEdit(form);
-
-        testUtils.fields.editInput(form.$('textarea').first(), "1");
-        assert.strictEqual(nbNotifyChanges, 0,
-            "no event should have been triggered");
-        testUtils.fields.editInput(form.$('textarea').first(), "12");
-        assert.strictEqual(nbNotifyChanges, 0,
-            "no event should have been triggered");
-
-        return waitForChangeTriggered().then(async function () {
-            assert.strictEqual(nbNotifyChanges, 1,
-                "one event should have been triggered");
-
-            // add something in the textarea, then focus another input
-            await testUtils.fields.editInput(form.$('textarea').first(), "123");
-            assert.strictEqual(nbNotifyChanges, 2,
-                "one event should have been triggered immediately");
-
-            return waitForChangeTriggered();
-        }).then(function () {
-            assert.strictEqual(nbNotifyChanges, 2,
-                "no extra event should have been triggered");
-
-            form.destroy();
-            done();
-        });
-
-        function waitForChangeTriggered() {
-            return def.then(function () {
-                def = testUtils.makeTestPromise();
-                return testUtils.nextTick();
-            });
-        }
-    });
-
     QUnit.module('FieldImage');
 
     QUnit.test('image fields are correctly rendered', async function (assert) {
