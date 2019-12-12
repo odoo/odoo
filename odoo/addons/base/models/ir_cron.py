@@ -3,6 +3,8 @@
 import logging
 import threading
 import time
+import traceback
+
 import psycopg2
 import pytz
 from datetime import datetime, timedelta
@@ -199,6 +201,7 @@ class ir_cron(models.Model):
             for job in jobs:
                 lock_cr = db.cursor()
                 try:
+                    print(" CRON ".center(200, '=') + '\n' + ''.join(traceback.format_stack()), flush=True)
                     # Try to grab an exclusive lock on the job row from within the task transaction
                     # Restrict to the same conditions as for the search since the job may have already
                     # been run by an other thread when cron is running in multi thread
