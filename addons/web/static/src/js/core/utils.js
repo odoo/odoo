@@ -525,7 +525,7 @@ var utils = {
      * @param {Object} patch
      * @returns {Function}
      */
-    patch: function(C, patchName, patch) {
+    patch: function (C, patchName, patch) {
         let metadata = patchMap.get(C.prototype);
         if (!metadata) {
             metadata = {
@@ -562,7 +562,7 @@ var utils = {
             });
         }
 
-        return this.unpatch.bind(null, C, patchName);
+        return utils.unpatch.bind(null, C, patchName);
     },
     /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
@@ -722,10 +722,10 @@ var utils = {
      * @param {Class} C
      * @param {string} patchName
      */
-    unpatch: function(C, patchName) {
+    unpatch: function (C, patchName) {
         const proto = C.prototype;
         let metadata = patchMap.get(proto);
-        if (!metdata) {
+        if (!metadata) {
             return;
         }
         patchMap.delete(proto);
@@ -738,7 +738,7 @@ var utils = {
         // apply other patches
         for (let name of metadata.current) {
             if (name !== patchName) {
-                this.patch(C, name, metadata.patches[name]);
+                utils.patch(C, name, metadata.patches[name]);
             }
         }
     },
