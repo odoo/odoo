@@ -332,10 +332,11 @@ class SurveyUserInputLine(models.Model):
     def _save_line_matrix(self, vals, old_answers, answers, comment):
         vals_list = []
 
-        for row_key, row_answer in answers.items():
-            for answer in row_answer:
-                vals.update({'answer_type': 'suggestion', 'value_suggested': answer, 'value_suggested_row': row_key})
-                vals_list.append(vals.copy())
+        if answers:
+            for row_key, row_answer in answers.items():
+                for answer in row_answer:
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': answer, 'value_suggested_row': row_key})
+                    vals_list.append(vals.copy())
 
         if comment:
             vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'value_suggested': False})
