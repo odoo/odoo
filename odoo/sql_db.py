@@ -237,7 +237,7 @@ class Cursor(object):
             tnx = self._obj.fetchall()
             tnx.insert(0, [d.name for d in self._obj.description])
         else:
-            tnx = [f'Transaction is in error ({self._cnx..info})']
+            tnx = [f'Transaction is in error ({self._cnx.info})']
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
