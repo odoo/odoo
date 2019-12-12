@@ -448,7 +448,6 @@ class Registry(Mapping):
     def enter_test_mode(self, cr):
         """ Enter the 'test' mode, where one cursor serves several requests. """
         assert self.test_cr is None
-        print(f" setting test cursor to {cr} ".center(200, '^'), flush=True)
         cr.execute('set application_name = %s', [f'test-{os.getpid}-{threading.get_ident()}'])
         self.test_cr = cr
         self.test_lock = threading.RLock()
@@ -459,7 +458,6 @@ class Registry(Mapping):
     def leave_test_mode(self):
         """ Leave the test mode. """
         assert self.test_cr is not None
-        print(f' unsetting test cursor from {self.test_cr} '.center(200, 'v'), flush=True)
         self.test_cr = None
         self.test_lock = None
         assert Registry._saved_lock is not None

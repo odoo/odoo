@@ -172,11 +172,6 @@ class Cursor(object):
         self._serialized = serialized
 
         self._cnx = pool.borrow(dsn)
-        print("%s\n%s\n%s" % (
-            f' borrow {self} for {self.dbname} '.center(200, '='),
-            ''.join(traceback.format_stack()),
-            '='*200
-        ), flush=True)
         self._obj = self._cnx.cursor()
         self._obj.execute("SET application_name = %s", [f'odoo-{os.getpid()}-{threading.get_ident()}'])
         if self.sql_log:
@@ -233,13 +228,16 @@ class Cursor(object):
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
-        self._obj.execute("""
-        SELECT pid = %s as self, datname, application_name, state, wait_event, query_start, query
-        FROM pg_stat_activity
-        WHERE state is not null AND state != 'idle' AND datname = %s
-        """, [self._cnx.get_backend_pid(), self.dbname])
-        tnx = self._obj.fetchall()
-        tnx.insert(0, [d.name for d in self._obj.description])
+        if self._cnx.info.transaction_status in (psycopg2.extensions.TRANSACTION_STATUS_IDLE, psycopg2.extensions.TRANSACTION_STATUS_ACTIVE, psycopg2.extensions.TRANSACTION_STATUS_INTRANS):
+            self._obj.execute("""
+            SELECT pid = %s as self, datname, application_name, state, wait_event, query_start, query
+            FROM pg_stat_activity
+            WHERE state is not null AND state != 'idle' AND datname = %s
+            """, [self._cnx.get_backend_pid(), self.dbname])
+            tnx = self._obj.fetchall()
+            tnx.insert(0, [d.name for d in self._obj.description])
+        else:
+            tnx = [f'Transaction is in error ({self._cnx..info})']
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
@@ -320,8 +318,6 @@ class Cursor(object):
 
         if not self._obj:
             return
-
-        print(f' release {self} for {self.dbname} '.center(200, '='), flush=True)
 
         del self.cache
 
