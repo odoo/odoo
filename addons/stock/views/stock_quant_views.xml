@@ -75,7 +75,7 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <tree decoration-danger="inventory_quantity &lt; 0" editable="bottom"
-                  create="1" edit="1" js_class="singleton_list">
+                  create="1" edit="1" import="0" js_class="singleton_list">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"

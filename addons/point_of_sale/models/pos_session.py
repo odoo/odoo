@@ -408,6 +408,9 @@ class PosSession(models.Model):
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
 
+                # Increasing current partner's customer_rank
+                order.partner_id._increase_rank('customer_rank')
+
         ## SECTION: Create non-reconcilable move lines
         # Create account.move.line records for
         #   - sales
