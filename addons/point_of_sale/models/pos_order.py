@@ -366,6 +366,21 @@ class PosOrder(models.Model):
             raise UserError(_("Order %s is not fully paid.") % self.name)
 
         self.write({'state': 'paid'})
+
+        if self.partner_id:
+            try:
+                with self.env.cr.savepoint():
+                    self.env.cr.execute("SELECT 'customer_rank' FROM res_partner WHERE ID=%s FOR UPDATE NOWAIT",
+                                        (self.partner_id.id,))
+                    self.env.cr.execute("UPDATE res_partner SET customer_rank = customer_rank +1 WHERE ID=%s",
+                                        (self.partner_id.id,))
+                    self.env.cache.remove(self.partner_id, self.partner_id._fields['customer_rank'])
+            except psycopg2.DatabaseError as e:
+                if e.pgcode == '55P03':
+                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+                else:
+                    raise e
+
         return True
 
     def action_pos_order_invoice(self):
