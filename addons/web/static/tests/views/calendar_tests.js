@@ -351,7 +351,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.ok(calendar.$('.fc-month-view').length, "should display in month mode");
+        assert.ok(calendar.$('.fc-dayGridMonth-view').length, "should display in month mode");
 
         // click on an existing event to open the formViewDialog
 
@@ -654,7 +654,7 @@ QUnit.module('Views', {
         assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
             "should display the new event with title");
 
-        assert.deepEqual($newevent.data('fcSeg').event.record,
+        assert.deepEqual($newevent[0].fcSeg.eventRange.def.extendedProps.record,
             {
                 display_name: "new event",
                 start: fieldUtils.parse.datetime("2016-12-13 06:00:00", this.data.event.fields.start, {isUTC: true}),
@@ -972,7 +972,7 @@ QUnit.module('Views', {
         assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
             "should display the new event with title");
 
-        assert.deepEqual($newevent.data('fcSeg').event.record,
+        assert.deepEqual($newevent[0].fcSeg.eventRange.def.extendedProps.record,
             {
                 display_name: "new event",
                 start: fieldUtils.parse.datetime("2016-12-13 06:00:00", this.data.event.fields.start, {isUTC: true}),
@@ -1083,7 +1083,7 @@ QUnit.module('Views', {
         assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
             "should display the new event with title");
 
-        assert.deepEqual($newevent.data('fcSeg').event.record,
+        assert.deepEqual($newevent[0].fcSeg.eventRange.def.extendedProps.record,
             {
                 display_name: "new event",
                 start: fieldUtils.parse.datetime("2016-12-13 06:00:00", this.data.event.fields.start, {isUTC: true}),
@@ -1256,7 +1256,7 @@ QUnit.module('Views', {
         assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
             "should display the new event with title");
 
-        assert.deepEqual($newevent.data('fcSeg').event.record,
+        assert.deepEqual($newevent[0].fcSeg.eventRange.def.extendedProps.record,
             {
                 display_name: "new event",
                 start: fieldUtils.parse.datetime("2016-12-13 06:00:00", this.data.event.fields.start, {isUTC: true}),
@@ -1373,7 +1373,7 @@ QUnit.module('Views', {
         assert.hasAttrValue($newevent.parent(), 'colspan', "2",
             "should appear over two days.");
 
-        assert.deepEqual($newevent.data('fcSeg').event.record,
+        assert.deepEqual($newevent[0].fcSeg.eventRange.def.extendedProps.record,
             {
                 display_name: "new event",
                 start: fieldUtils.parse.datetime("2016-12-14 00:00:00", this.data.event.fields.start, {isUTC: true}),
@@ -1552,7 +1552,7 @@ QUnit.module('Views', {
         assert.hasAttrValue($newevent.parent(), 'colspan', "2",
             "should appear over two days.");
 
-        assert.deepEqual($newevent.data('fcSeg').event.record, {
+        assert.deepEqual($newevent[0].fcSeg.eventRange.def.extendedProps.record, {
             display_name: "new event",
             start: fieldUtils.parse.datetime("2016-12-14 05:00:00", this.data.event.fields.start, {isUTC: true}),
             stop: fieldUtils.parse.datetime("2016-12-15 17:00:00", this.data.event.fields.stop, {isUTC: true}),
@@ -1588,25 +1588,25 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsOnce(calendar, '.fc-agendaWeek-view', "should be in week mode");
+        assert.containsOnce(calendar, '.fc-timeGridWeek-view', "should be in week mode");
         assert.containsN(calendar, '.fc-event', 9, "should display 9 events on the week (4 event + 5 days event)");
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(19)'));
         // Clicking on a day in another week should switch to the other week view
-        assert.containsOnce(calendar, '.fc-agendaWeek-view', "should be in week mode");
+        assert.containsOnce(calendar, '.fc-timeGridWeek-view', "should be in week mode");
         assert.containsN(calendar, '.fc-event', 4, "should display 4 events on the week (1 event + 3 days event)");
         // Clicking on a day in the same week should switch to that particular day view
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
-        assert.containsOnce(calendar, '.fc-agendaDay-view', "should be in day mode");
+        assert.containsOnce(calendar, '.fc-timeGridDay-view', "should be in day mode");
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the day");
         // Clicking on the same day should toggle between day, month and week views
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
-        assert.containsOnce(calendar, '.fc-month-view', "should be in month mode");
+        assert.containsOnce(calendar, '.fc-dayGridMonth-view', "should be in month mode");
         assert.containsN(calendar, '.fc-event', 7, "should display 7 events on the month (event 5 is on multiple weeks and generates to .fc-event)");
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
-        assert.containsOnce(calendar, '.fc-agendaWeek-view', "should be in week mode");
+        assert.containsOnce(calendar, '.fc-timeGridWeek-view', "should be in week mode");
         assert.containsN(calendar, '.fc-event', 4, "should display 4 events on the week (1 event + 3 days event)");
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
-        assert.containsOnce(calendar, '.fc-agendaDay-view', "should be in day mode");
+        assert.containsOnce(calendar, '.fc-timeGridDay-view', "should be in day mode");
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the day");
 
         calendar.destroy();
@@ -2459,7 +2459,7 @@ QUnit.module('Views', {
         });
         assert.containsOnce(calendar, '.fc-day-grid .fc-event-container',
             "should be one event in the all day row");
-        assert.strictEqual(calendar.model.data.data[0].r_start.date(), 14,
+        assert.strictEqual(moment(calendar.model.data.data[0].r_start).date(), 14,
             "the date should be 14");
         calendar.destroy();
     });
