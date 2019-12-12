@@ -919,30 +919,8 @@ class IrModelFields(models.Model):
                     if field:
                         model._add_field(name, field)
                 except:
-                    self.env.cr.execute(
-                        """
-                        SELECT d.module
-                        FROM ir_model m
-                        LEFT JOIN ir_model_data d ON d.res_id = m.id AND d.model = 'ir.model'
-                        WHERE m.model = %s
-                        """,
-                        [field_data["relation"]],
-                    )
-                    modules = [e["module"] for e in self.env.cr.dictfetchall()]
-                    modules_not_in_addons_path = [
-                        module for module in modules if module not in modules_in_addon_path
-                    ]
-                    if len(modules_not_in_addons_path):
-                        if len(modules_not_in_addons_path)==1:
-                            _logger.warning("Field {} not loaded:"
-                            " module '{}' is not found in the addons-path".format(
-                                field_data['name'], modules_not_in_addons_path[0]))
-                        else:
-                            _logger.warning("Field {} not loaded:"
-                            " some of the module(s) '({})' are not found in the addons-path".format(
-                                field_data['name'], modules_not_in_addons_path))
-                    else:
-                        raise
+                    _logger.warning("Manual field '{}' : loading skipped".format(
+                        field_data['name']))
 
 class IrModelConstraint(models.Model):
     """

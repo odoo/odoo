@@ -2445,9 +2445,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue
                 raise
 
-        pool_loaded = self.pool.loaded
         for name in bad_fields:
-            if pool_loaded:
+            if self.pool.loaded:
                 cls._bad_fields[name] = cls._fields[name]
             del cls._fields[name]
             delattr(cls, name)
