@@ -178,7 +178,7 @@ class Cursor(object):
             '='*200
         ), flush=True)
         self._obj = self._cnx.cursor()
-        self._obj.execute("SET application_name = %s" % f'odoo-{os.getpid()}-{threading.get_ident()}')
+        self._obj.execute("SET application_name = %s", [f'odoo-{os.getpid()}-{threading.get_ident()}'])
         if self.sql_log:
             self.__caller = frame_codeinfo(currentframe(), 2)
         else:
