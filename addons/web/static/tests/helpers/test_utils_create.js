@@ -106,7 +106,12 @@ odoo.define('web.test_utils_create', function (require) {
             return calendar;
         }
         const viewElements = [...document.getElementById('qunit-fixture').children];
+        // prepend reset the scrollTop to zero so we restore it manually
+        let fcScroller = document.querySelector('.fc-scroller');
+        const scrollPosition = fcScroller.scrollTop;
         viewElements.forEach(el => document.body.prepend(el));
+        fcScroller = document.querySelector('.fc-scroller');
+        fcScroller.scrollTop = scrollPosition;
 
         const destroy = calendar.destroy;
         calendar.destroy = () => {
