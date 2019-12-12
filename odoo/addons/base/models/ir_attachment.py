@@ -384,8 +384,9 @@ class IrAttachment(models.Model):
             records = self.env[res_model].browse(res_ids).exists()
             # For related models, check if we can write to the model, as unlinking
             # and creating attachments can be seen as an update to the model
-            records.check_access_rights('write' if mode in ('create', 'unlink') else mode)
-            records.check_access_rule(mode)
+            access_mode = 'write' if mode in ('create', 'unlink') else mode
+            records.check_access_rights(access_mode)
+            records.check_access_rule(access_mode)
 
 
     def _read_group_allowed_fields(self):
@@ -478,9 +479,9 @@ class IrAttachment(models.Model):
 
         return len(result) if count else list(result)
 
-    def read(self, fields=None, load='_classic_read'):
+    def _read(self, fields):
         self.check('read')
-        return super(IrAttachment, self).read(fields, load=load)
+        return super(IrAttachment, self)._read(fields)
 
     def write(self, vals):
         self.check('write', values=vals)
@@ -528,7 +529,7 @@ class IrAttachment(models.Model):
             record_tuple_set.add(record_tuple)
         for record_tuple in record_tuple_set:
             (res_model, res_id) = record_tuple
-            self.check('write', values={'res_model':res_model, 'res_id':res_id})
+            self.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super(IrAttachment, self).create(vals_list)
 
     def _post_add_create(self):
