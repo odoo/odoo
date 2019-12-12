@@ -64,23 +64,6 @@ async function addMockSupportEnvironment(widget, params) {
         supportSession.rpc = originalRPC;
         widgetDestroy.call(this);
     };
-
-    // intercepts the getItem call to localStorage service for key
-    // 'im_support.poll_timeout', to simulate a pending longpolling connection to
-    // the Support server, such that the initSupport initiates a poll connection
-    if (params.enableSupportPoll) {
-        testUtils.mock.intercept(widget, 'call_service', function (ev) {
-            if (ev.data.service === 'local_storage') {
-                if (ev.data.method === 'getItem' && ev.data.args[0] === 'im_support.poll_timeout') {
-                    ev.data.callback(Date.now() + (60 * 1000));
-                    // hack to prevent the default mock to handle the request and erase the above value
-                    ev.data.callback = function () {};
-                }
-            }
-        }, true);
-        // manually call initSupport (which is supposed to be called at webclient startup)
-        widget.call('mail_service', 'initSupport');
-    }
 }
 
 return {

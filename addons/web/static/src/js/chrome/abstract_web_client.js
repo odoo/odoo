@@ -1,6 +1,8 @@
 odoo.define('web.AbstractWebClient', function (require) {
 "use strict";
 
+// TODO remove this file
+
 /**
  * AbstractWebClient
  *

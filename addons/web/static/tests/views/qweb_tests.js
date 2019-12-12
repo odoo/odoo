@@ -9,7 +9,7 @@ QUnit.module("Views", {
     QUnit.module("QWeb");
     QUnit.test("basic", async function (assert) {
         assert.expect(14);
-        var am = await utils.createActionManager({
+        var webClient = await utils.createWebClient({
             data: {
                 test: {
                     fields: {},
@@ -45,7 +45,7 @@ QUnit.module("Views", {
         });
         try {
             var resolved = false;
-            am.doAction({
+            utils.actionManager.doAction({
                 type: 'ir.actions.act_window',
                 views: [[false, 'qweb']],
                 res_model: 'test',
@@ -55,7 +55,7 @@ QUnit.module("Views", {
             await utils.nextTick();
             assert.ok(resolved, "Action is resolved asynchronously");
 
-            var $content = am.$('.o_content');
+            var $content = webClient.$('.o_content');
             assert.ok(/^\s*foo/.test($content.text()));
             await utils.dom.click($content.find('[type=toggle]'));
             assert.equal($content.find('div#sub').text(), 'ok', 'should have unfolded the sub-item');
@@ -65,7 +65,7 @@ QUnit.module("Views", {
 
             assert.verifySteps(['fetch', 'unfold', 'unfold']);
         } finally {
-            am.destroy();
+            webClient.destroy();
         }
     });
 });

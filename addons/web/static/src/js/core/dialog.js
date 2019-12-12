@@ -5,6 +5,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var Widget = require('web.Widget');
 const OwlDialog = require('web.OwlDialog');
+const { ComponentAdapter } = require('web.OwlCompatibility');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -36,7 +37,7 @@ var Dialog = Widget.extend({
      *        or 'small'
      * @param {boolean} [options.fullscreen=false] - whether or not the dialog
      *        should be open in fullscreen mode (the main usecase is mobile)
-     * @param {string} [options.dialogClass] - class to add to the modal-body
+     * @param {string} [options.dialogClass] - class to add to the modal-content
      * @param {jQuery} [options.$content]
      *        Element which will be the $el, replace the .modal-body and get the
      *        modal-body class
@@ -114,6 +115,7 @@ var Dialog = Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
             self.$modal = $(QWeb.render('Dialog', {
+                dialogClass: self.dialogClass,
                 fullscreen: self.fullscreen,
                 title: self.title,
                 subtitle: self.subtitle,
@@ -150,7 +152,7 @@ var Dialog = Widget.extend({
         if (this.$content) {
             this.setElement(this.$content);
         }
-        this.$el.addClass('modal-body ' + this.dialogClass);
+        this.$el.addClass('modal-body');
     },
     //--------------------------------------------------------------------------
     // Public
@@ -480,6 +482,28 @@ Dialog.safeConfirm = function (owner, message, options) {
     return dialog.open();
 };
 
+class DialogAdapter extends ComponentAdapter {
+    get widgetArgs() {
+        return [super.widgetArgs.options, super.widgetArgs.error];
+    }
+    async willStart() {
+        await super.willStart(...arguments);
+        var self = this;
+        const widgetDestroy = this.widget.destroy;
+        this.widget.destroy = function () {
+            widgetDestroy.apply(self.widget, ...arguments);
+            self.destroy();
+        }
+        this.widget.open();
+        return this.widget.opened();
+    }
+    __patch(target, vnode) {
+        vnode.elm = this.widget.$modal[0];
+        return owl.Component.prototype.__patch.apply(this, arguments);
+    }
+}
+
+Dialog.DialogAdapter = DialogAdapter;
 return Dialog;
 
 });

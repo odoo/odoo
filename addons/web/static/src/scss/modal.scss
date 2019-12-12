@@ -3,15 +3,15 @@
     .modal-content {
         border-radius: 0;
 
+        &.o_act_window .modal-body {
+            padding: 0;
+        }
+
         .modal-header .o_subtitle {
             margin-left: 10px;
         }
 
         .modal-body {
-            &.o_act_window {
-                padding: 0;
-            }
-
             .o_modal_header {
                 @include o-webclient-padding($top: 10px, $bottom: 10px);
                 @include clearfix;

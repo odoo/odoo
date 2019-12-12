@@ -1,38 +1,54 @@
 odoo.define('web.RainbowMan_tests', function (require) {
 "use strict";
 
-var RainbowMan = require('web.RainbowMan');
+const RainbowMan = require('web.RainbowMan');
+const testUtils = require('web.test_utils');
 
 QUnit.module('widgets', {}, function () {
 
 QUnit.module('RainbowMan', {
     beforeEach: function () {
         this.data = {
-            message: 'Congrats!',
+            message: '<div>Congrats!</div>',
+            fadeout: 'nextTick',
         };
     },
 }, function () {
 
-    QUnit.test("rendering a rainbowman", function (assert) {
-        var done = assert.async();
-        assert.expect(2);
+    QUnit.test("rendering a rainbowman destroy after animation", async function (assert) {
+        assert.expect(4);
 
-        var $target = $("#qunit-fixture");
+        const target = document.getElementById("qunit-fixture");
+        const _delays = RainbowMan.rainbowDelay;
+        RainbowMan.rainbowDelay = {nextTick: 0};
 
-        // Create and display rainbowman
-        var rainbowman = new RainbowMan(this.data);
-        rainbowman.appendTo($target).then(function () {
-            var $rainbow = rainbowman.$(".o_reward_rainbow");
-            assert.strictEqual($rainbow.length, 1,
-                "Should have displayed rainbow effect");
+        const rainbowman = await RainbowMan.display(this.data, { target });
+        assert.containsOnce(target, '.o_reward');
+        assert.containsOnce(rainbowman, '.o_reward_rainbow');
 
-            assert.ok(rainbowman.$('.o_reward_msg_content').html() === 'Congrats!',
-                "Card on the rainbowman should display 'Congrats!' message");
+        assert.strictEqual(rainbowman.el.querySelector('.o_reward_msg_content').innerHTML, '<div>Congrats!</div>');
+        await testUtils.nextTick();
+        const ev = new AnimationEvent('animationend', {animationName: 'reward-fading-reverse'});
+        rainbowman.el.dispatchEvent(ev);
+        assert.containsNone(target, '.o_reward');
 
-            rainbowman.destroy();
-            done();
-        });
+        RainbowMan.rainbowDelay = _delays;
+        rainbowman.destroy();
+    });
+    QUnit.test("rendering a rainbowman destroy on click", async function (assert) {
+        assert.expect(3);
 
+        const target = document.getElementById("qunit-fixture");
+        this.data.fadeout = 'no';
+        const rainbowman = await RainbowMan.display(this.data, { target });
+
+        assert.containsOnce(target, '.o_reward');
+        assert.containsOnce(rainbowman, '.o_reward_rainbow');
+
+        await testUtils.dom.click(target);
+        assert.containsNone(target, '.o_reward');
+
+        rainbowman.destroy();
     });
 });
 });

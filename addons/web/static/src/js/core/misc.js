@@ -99,11 +99,11 @@ function unblockUI() {
  * Redirect to url by replacing window.location
  * If wait is true, sleep 1s and wait for the server i.e. after a restart.
  */
-function redirect (url, wait) {
+function redirect(url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
     disableCrashManager();
 
-    var load = function() {
+    var load = function () {
         var old = "" + window.location;
         var old_no_hash = old.split("#")[0];
         var url_no_hash = url.split("#")[0];
@@ -113,7 +113,7 @@ function redirect (url, wait) {
         }
     };
 
-    var wait_server = function() {
+    var wait_server = function () {
         ajax.rpc("/web/webclient/version_info", {}).then(load).guardedCatch(function () {
             setTimeout(wait_server, 250);
         });
@@ -130,7 +130,7 @@ function redirect (url, wait) {
 //  * If params.menu_id, it opens the given menu entry.
 //  * If params.wait, reload will wait the openerp server to be reachable before reloading
 
-function Reload(parent, action) {
+function Reload(env, action) {
     var params = action.params || {};
     var menu_id = params.menu_id || false;
     var l = window.location;
@@ -159,7 +159,7 @@ core.action_registry.add("reload", Reload);
 /**
  * Client action to go back home.
  */
-function Home (parent, action) {
+function Home(env, action) {
     var url = '/' + (window.location.search || '');
     redirect(url, action && action.params && action.params.wait);
 }
@@ -177,13 +177,14 @@ function logout() {
 core.action_registry.add("logout", logout);
 
 /**
- * @param {ActionManager} parent
+ * @param {Object} env
+ * @param {function} env.services.notification.notify
  * @param {Object} action
  * @param {Object} action.params notification params
  * @see ServiceMixin.displayNotification
  */
-function displayNotification(parent, action) {
-    parent.displayNotification(action.params);
+function displayNotification(env, action) {
+    env.services.notification.notify(action.params);
 }
 core.action_registry.add("display_notification", displayNotification);
 
@@ -192,10 +193,10 @@ core.action_registry.add("display_notification", displayNotification);
  * HTTP requests will have the right one) then reload the
  * whole interface.
  */
-function ReloadContext (parent, action) {
+function ReloadContext(env, action) {
     // side-effect of get_session_info is to refresh the session context
-    ajax.rpc("/web/session/get_session_info", {}).then(function() {
-        Reload(parent, action);
+    ajax.rpc("/web/session/get_session_info", {}).then(function () {
+        Reload(env, action);
     });
 }
 core.action_registry.add("reload_context", ReloadContext);

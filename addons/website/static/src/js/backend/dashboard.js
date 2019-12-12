@@ -8,7 +8,6 @@ var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var session = require('web.session');
 var time = require('web.time');
-var web_client = require('web.web_client');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -342,7 +341,7 @@ var Dashboard = AbstractAction.extend({
 
     on_reverse_breadcrumb: function() {
         var self = this;
-        web_client.do_push_state({});
+        this.trigger_up('push_state', {});
         this.update_cp();
         this.fetch_data().then(function() {
             self.$('.o_website_dashboard').empty();

@@ -189,6 +189,19 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         return state;
     },
     /**
+     * Adds the model and view type to the state to push in the url.
+     *
+     * @override
+     * @returns {Object}
+     */
+    getState: function () {
+        const state = ActionMixin.getState.call(this, ...arguments);
+        return Object.assign({}, state, {
+            model: this.modelName,
+            view_type: this.viewType,
+        });
+    },
+    /**
      * Gives the focus to the renderer
      */
     giveFocus: function () {

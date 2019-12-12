@@ -5,12 +5,47 @@ var CrossTab = require('bus.CrossTab');
 var core = require('web.core');
 var ServicesMixin = require('web.ServicesMixin');
 
-var BusService =  CrossTab.extend(ServicesMixin, {
-    dependencies : ['local_storage'],
+var BusService = CrossTab.extend(ServicesMixin, {
+    dependencies: ['local_storage'],
 
     // properties
     _audio: null,
 
+    /**
+     * As the BusService doesn't extend AbstractService, we have to replicate
+     * here what it done in AbstractService
+     *
+     * @param {Object} env
+     */
+    init: function (env) {
+        this.env = env;
+        this._super();
+    },
+
+    /**
+     * Replicate the behavior of AbstractService:
+     *
+     * Directly calls the requested service, instead of triggering a
+     * 'call_service' event up, which wouldn't work as services have no parent.
+     *
+     * @param {OdooEvent} ev
+     */
+    _trigger_up: function (ev) {
+        if (ev.name === 'call_service') {
+            const payload = ev.data;
+            let args = payload.args || [];
+            if (payload.service === 'ajax' && payload.method === 'rpc') {
+                // ajax service uses an extra 'target' argument for rpc
+                args = args.concat(ev.target);
+            }
+            const service = this.env.services[payload.service];
+            const result = service[payload.method].apply(service, args);
+            payload.callback(result);
+        }
+        else if (ev.name === 'get_session') {
+            ev.data.callback(this.env.session);
+        }
+    },
     /**
      * This method is necessary in order for this Class to be used to instantiate services
      *

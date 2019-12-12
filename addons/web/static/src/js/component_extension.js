@@ -39,4 +39,23 @@
         }
         originalTrigger.call(this, component, evType, payload);
     };
+
+    /**
+     * Patch owl.Component.willPatch to handle xmlDependencies
+     * that is, lazy loaded templates
+     */
+    const originalWillStart = owl.Component.prototype.willStart;
+    owl.Component.prototype.willStart = async function() {
+        if (!(this.constructor.template in this.env.qweb.templates) && this.constructor.xmlDependencies) {
+            const proms = [];
+            for (const xml of this.constructor.xmlDependencies) {
+                const prom = owl.utils.loadFile(xml).then((res) => {
+                    this.env.qweb.addTemplates(res);
+                });
+                proms.push(prom);
+            }
+            await Promise.all(proms);
+        }
+        return originalWillStart.apply(this, ...arguments);
+    }
 })();

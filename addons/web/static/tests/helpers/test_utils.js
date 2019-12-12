@@ -10,91 +10,30 @@ odoo.define('web.test_utils', async function (require) {
      * instance of a view, appended in the dom, ready to be tested.
      */
 
-    const ajax = require('web.ajax');
-    const core = require('web.core');
-    const relationalFields = require('web.relational_fields');
-    const session = require('web.session');
-    const testUtilsCreate = require('web.test_utils_create');
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+    var relationalFields = require('web.relational_fields');
+    var session = require('web.session');
+    var testUtilsAsync = require('web.test_utils_async');
+    const testUtilsActionManager = require('web.test_utils_action_manager');
     const testUtilsControlPanel = require('web.test_utils_control_panel');
-    const testUtilsDom = require('web.test_utils_dom');
-    const testUtilsFields = require('web.test_utils_fields');
-    const testUtilsFile = require('web.test_utils_file');
-    const testUtilsForm = require('web.test_utils_form');
-    const testUtilsGraph = require('web.test_utils_graph');
-    const testUtilsKanban = require('web.test_utils_kanban');
-    const testUtilsMock = require('web.test_utils_mock');
-    const testUtilsModal = require('web.test_utils_modal');
-    const testUtilsPivot = require('web.test_utils_pivot');
-    const tools = require('web.tools');
+    var testUtilsCreate = require('web.test_utils_create');
+    var testUtilsDom = require('web.test_utils_dom');
+    var testUtilsFields = require('web.test_utils_fields');
+    var testUtilsFile = require('web.test_utils_file');
+    var testUtilsForm = require('web.test_utils_form');
+    var testUtilsGraph = require('web.test_utils_graph');
+    var testUtilsKanban = require('web.test_utils_kanban');
+    var testUtilsMock = require('web.test_utils_mock');
+    var testUtilsModal = require('web.test_utils_modal');
+    var testUtilsPivot = require('web.test_utils_pivot');
+    var tools = require('web.tools');
 
 
     function deprecated(fn, type) {
         const msg = `Helper 'testUtils.${fn.name}' is deprecated. ` +
             `Please use 'testUtils.${type}.${fn.name}' instead.`;
         return tools.deprecated(fn, msg);
-    }
-
-    /**
-     * Helper function, make a promise with a public resolve function. Note that
-     * this is not standard and should not be used outside of tests...
-     *
-     * @returns {Promise + resolve and reject function}
-     */
-    function makeTestPromise() {
-        let resolve;
-        let reject;
-        const promise = new Promise(function (_resolve, _reject) {
-            resolve = _resolve;
-            reject = _reject;
-        });
-        promise.resolve = function () {
-            resolve.apply(null, arguments);
-            return promise;
-        };
-        promise.reject = function () {
-            reject.apply(null, arguments);
-            return promise;
-        };
-        return promise;
-    }
-
-    /**
-     * Make a promise with public resolve and reject functions (see
-     * @makeTestPromise). Perform an assert.step when the promise is
-     * resolved/rejected.
-     *
-     * @param {Object} assert instance object with the assertion methods
-     * @param {function} assert.step
-     * @param {string} str message to pass to assert.step
-     * @returns {Promise + resolve and reject function}
-     */
-    function makeTestPromiseWithAssert(assert, str) {
-        const prom = makeTestPromise();
-        prom.then(() => assert.step('ok ' + str)).catch(function () { });
-        prom.catch(() => assert.step('ko ' + str));
-        return prom;
-    }
-
-    /**
-     * Create a new promise that can be waited by the caller in order to execute
-     * code after the next microtask tick and before the next jobqueue tick.
-     *
-     * @return {Promise} an already fulfilled promise
-     */
-    async function nextMicrotaskTick() {
-        return Promise.resolve();
-    }
-
-    /**
-     * Returns a promise that will be resolved after the tick after the
-     * nextAnimationFrame
-     *
-     * This is usefull to guarantee that OWL has had the time to render
-     *
-     * @returns {Promise}
-     */
-    async function nextTick() {
-        return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
     // Loading static files cannot be properly simulated when their real content is
@@ -119,9 +58,13 @@ odoo.define('web.test_utils', async function (require) {
         QUnit.start();
     }, 0);
     return {
+        actionManager: {
+            doAction: testUtilsActionManager.doAction,
+            loadState: testUtilsActionManager.loadState,
+        },
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,
-            getMockedOwlEnv: testUtilsMock.getMockedOwlEnv,
+            setMockedOwlEnv: testUtilsMock.setMockedOwlEnv,
             intercept: testUtilsMock.intercept,
             patch: testUtilsMock.patch,
             patchDate: testUtilsMock.patchDate,
@@ -236,19 +179,19 @@ odoo.define('web.test_utils', async function (require) {
             dropFiles: testUtilsFile.dropFiles,
         },
 
-        createActionManager: testUtilsCreate.createActionManager,
-        createComponent: testUtilsCreate.createComponent,
-        createControlPanel: testUtilsCreate.createControlPanel,
-        createDebugManager: testUtilsCreate.createDebugManager,
         createAsyncView: testUtilsCreate.createView,
         createCalendarView: testUtilsCreate.createCalendarView,
+        createComponent: testUtilsCreate.createComponent,
+        createControlPanel: testUtilsCreate.createControlPanel,
         createView: testUtilsCreate.createView,
         createModel: testUtilsCreate.createModel,
         createParent: testUtilsCreate.createParent,
-        makeTestPromise: makeTestPromise,
-        makeTestPromiseWithAssert: makeTestPromiseWithAssert,
-        nextMicrotaskTick: nextMicrotaskTick,
-        nextTick: nextTick,
+        createWebClient: testUtilsCreate.createWebClient,
+        makeTestPromise: testUtilsAsync.makeTestPromise,
+        makeTestPromiseWithAssert: testUtilsAsync.makeTestPromiseWithAssert,
+        nextMicrotaskTick: testUtilsAsync.nextMicrotaskTick,
+        nextTick: testUtilsAsync.nextTick,
+        owlCompatibilityExtraNextTick: testUtilsAsync.owlCompatibilityExtraNextTick,
         prepareTarget: testUtilsCreate.prepareTarget,
         returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 

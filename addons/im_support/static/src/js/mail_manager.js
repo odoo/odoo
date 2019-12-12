@@ -5,8 +5,8 @@ var MailManager = require('mail.Manager');
 
 var core = require('web.core');
 var session = require('web.session');
-var WebClient = require('web.WebClient');
 
+require('im_support.SupportBus');
 var SupportChannel = require('im_support.SupportChannel');
 var SupportMessage = require('im_support.SupportMessage');
 var supportSession = require('im_support.SupportSession');
@@ -250,22 +250,20 @@ MailManager.include({
     },
 });
 
+const env = owl.Component.env;
+if (env.services && env.services.mail_service) {
+    // the mail_service has already been instantiated when this patch is applied,
+    // so we can initialize the Support feature directly
+    env.services.mail_service.initSupport();
+} else {
+    // the mail_service hasn't been instantiated yet, so we patch it s.t. it
+    // will call 'initSupport' at startup
+    MailManager.include({
+        start() {
+            this._super.apply(this, arguments);
+            this.initSupport();
+        },
+    });
+}
 
-// Unfortunately, we can't override init() of MailService because it is called
-// before the include is applied, so we override the WebClient instead to call
-// an initialization hook for Livechat Support in the Mail service.
-WebClient.include({
-    /**
-     * Overrides to ask the Mail service to check whether there is a
-     * pending chat session with Support, and if so, to re-open it.
-     *
-     * @override
-     */
-    show_application: function () {
-        this.call('mail_service', 'initSupport');
-        return this._super.apply(this, arguments);
-    },
 });
-
-});
-

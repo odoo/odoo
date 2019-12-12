@@ -1,6 +1,7 @@
 odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
+    const { configureGui } = require('point_of_sale.Gui');
     const { useState, useRef } = owl.hooks;
     const { debounce } = owl.utils;
     const { loadCSS } = require('web.ajax');
@@ -60,6 +61,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         // OVERLOADED METHODS //
 
         mounted() {
+            configureGui({component: this});
             // remove default webclient handlers that induce click delay
             $(document).off();
             $(window).off();
@@ -107,6 +109,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
          * Call this function after the Chrome component is mounted.
          * This will load pos and assign it to the environment.
          */
+        async willStart() {
+            return this.start();
+        }
         async start() {
             try {
                 // Instead of passing chrome to the instantiation the PosModel,

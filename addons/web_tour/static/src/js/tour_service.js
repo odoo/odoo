@@ -5,6 +5,14 @@ var rootWidget = require('root.widget');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
+const { ComponentAdapter } = require('web.OwlCompatibility');
+
+let serviceProvider;
+if (!rootWidget || rootWidget instanceof owl.Component) {
+    serviceProvider = new ComponentAdapter(null, { Component: owl.Component} ); // dummy component as props
+} else {
+    serviceProvider = rootWidget;
+}
 
 const untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
 
@@ -32,7 +40,7 @@ return session.is_bound.then(function () {
     }
     return Promise.all(defs).then(function (results) {
         var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
-        var tour_manager = new TourManager(rootWidget, consumed_tours);
+        var tour_manager = new TourManager(serviceProvider, consumed_tours);
 
         function _isTrackedNode(node) {
             if (node.classList) {

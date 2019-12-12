@@ -1,10 +1,13 @@
 odoo.define('im_support.systray_tests', function (require) {
 "use strict";
 
+require('im_support.MailManager');
 var imSupportTestUtils = require('im_support.test_utils');
 
+const AbstractStorageService = require('web.AbstractStorageService');
 var mailTestUtils = require('mail.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
+const RamStorage = require('web.RamStorage');
 
 var testUtils = require('web.test_utils');
 
@@ -189,6 +192,21 @@ QUnit.test('post messages in Support channel', async function (assert) {
 QUnit.test('fold Support channel', async function (assert) {
     assert.expect(11);
 
+    const MockedLocalStorageService = AbstractStorageService.extend({
+        storage: new RamStorage(),
+        setItem(key, value) {
+            if (key === 'im_support.channel_state') {
+                assert.step('LocalStorage: setItem ' + key + ',' + value);
+            }
+            this._super(...arguments);
+        },
+        getItem(key) {
+            if (key === 'im_support.channel_state') {
+                assert.step('LocalStorage: getItem ' + key);
+            }
+            return this._super(...arguments);
+        }
+    });
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
@@ -204,15 +222,12 @@ QUnit.test('fold Support channel', async function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-        services: this.services,
+        services: Object.assign(this.services, {
+            local_storage: MockedLocalStorageService,
+        }),
         session: this.supportParams,
     });
     await testUtils.nextTick();
-    testUtils.mock.intercept(messagingMenu, 'call_service', function (ev) {
-        if (ev.data.service === 'local_storage') {
-            assert.step('LocalStorage: ' + ev.data.method + ' ' + ev.data.args);
-        }
-    }, true);
     await messagingMenu.appendTo($('#qunit-fixture'));
 
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
@@ -244,10 +259,19 @@ QUnit.test('fold Support channel', async function (assert) {
 QUnit.test('restore Support channel if necessary', async function (assert) {
     assert.expect(5);
 
+    const MockedLocalStorageService = AbstractStorageService.extend({
+        storage: new RamStorage(),
+        getItem(key) {
+            if (key === 'im_support.poll_timeout') {
+                return Date.now() + (60 * 1000);
+            }
+            return this._super(...arguments);
+        }
+    });
+
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
-        enableSupportPoll: true,
         mockRPC: function (route, args) {
             if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
@@ -260,7 +284,9 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-        services: this.services,
+        services: Object.assign(this.services, {
+            local_storage: MockedLocalStorageService,
+        }),
         session: this.supportParams,
     });
     await testUtils.nextTick();
@@ -283,10 +309,18 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
 
     var supportChannelID;
 
+    const MockedLocalStorageService = AbstractStorageService.extend({
+        storage: new RamStorage(),
+        getItem(key) {
+            if (key === 'im_support.poll_timeout') {
+                return Date.now() + (60 * 1000);
+            }
+            return this._super(...arguments);
+        }
+    });
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
-        enableSupportPoll: true,
         mockRPC: function (route, args) {
             if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
@@ -299,7 +333,9 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-        services: this.services,
+        services: Object.assign(this.services, {
+            local_storage: MockedLocalStorageService,
+        }),
         session: this.supportParams,
     });
     await testUtils.nextTick();

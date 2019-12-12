@@ -18,6 +18,8 @@ var rte = require('web_editor.rte');
 var ServicesMixin = require('web.ServicesMixin');
 var weWidgets = require('wysiwyg.widgets');
 
+const { ComponentAdapter } = require('web.OwlCompatibility');
+
 var _t = core._t;
 
 // Summernote Lib (neek change to make accessible: method and object)
@@ -39,6 +41,24 @@ const processAndApplyColor = function (target, eventName, color, preview) {
     var layoutInfo = dom.makeLayoutInfo(target);
     $.summernote.pluginEvents[eventName](undefined, eventHandler.modules.editor, layoutInfo, color, preview);
 };
+
+class ColorPaletteAdapter extends ComponentAdapter {
+    _trigger_up(ev) {
+        const evType = ev.name;
+        if (['custom_color_picked', 'color_picked'].includes(evType)) {
+            return processAndApplyColor(ev.data.target, evType, ev.data.color);
+        } else if (['color_hover', 'color_leave'].includes(evType)) {
+            return processAndApplyColor(ev.data.target, evType, ev.data.color, true);
+        } else if (evType === 'enter_key_color_colorpicker') {
+            return this.props.handlers.keyColorHandler();
+        }
+        return super._trigger_up(...arguments);
+    }
+    get widgetArgs() {
+        return [this.props.widgetArgs];
+    }
+}
+
 // Update and change the popovers content, and add history button
 renderer.createPalette = function ($container, options) {
     const $dropdownContent = $container.find(".colorPalette");
@@ -60,26 +80,40 @@ renderer.createPalette = function ($container, options) {
             }
             mutex.exec(() => {
                 const oldColorpicker = colorpicker;
-                const hookEl = oldColorpicker ? oldColorpicker.el : elem;
 
                 const r = range.create();
                 const targetNode = r.sc;
                 const targetElement = targetNode.nodeType === Node.ELEMENT_NODE ? targetNode : targetNode.parentNode;
-                colorpicker = new ColorPaletteWidget(parent, {
+
+                const colorPickerArgs = {
                     excluded: ['transparent_grayscale'],
                     $editable: rte.Class.prototype.editable(), // Our parent is the root widget, we can't retrieve the editable section from it...
                     selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
-                });
-                colorpicker.on('custom_color_picked color_picked', null, ev => {
-                    processAndApplyColor(ev.data.target, eventName, ev.data.color);
-                });
-                colorpicker.on('color_hover color_leave', null, ev => {
-                    processAndApplyColor(ev.data.target, eventName, ev.data.color, true);
-                });
-                colorpicker.on('enter_key_color_colorpicker', null, () => {
+                };
+                const keyColorHandler = () => {
                     $dropdown.children('.dropdown-toggle').dropdown('hide');
-                });
-                return colorpicker.replace(hookEl).then(() => {
+                }
+                const colorResetHandler = ev => applyColor(ev.data.target, eventName, 'inherit');
+                let replaceFn;
+                let hookEl;
+                if (!parent || parent instanceof owl.Component) {
+                    const colorPickerProps = {
+                        Component: ColorPaletteWidget,
+                        widgetArgs: colorPickerArgs,
+                        handlers: { keyColorHandler },
+                    };
+                    colorpicker = new ColorPaletteAdapter(null, colorPickerProps);
+                    replaceFn = colorpicker.mount.bind(colorpicker);
+                    hookEl = elem;
+                } else {
+                    colorpicker = new ColorPaletteWidget(parent, colorPickerArgs);
+                    colorpicker.on('color_picked', null, colorPickedHandler);
+                    colorpicker.on('color_reset', null, colorResetHandler);
+                    replaceFn = colorpicker.replace.bind(colorpicker);
+                    hookEl = oldColorpicker ? oldColorpicker.el : elem;
+                }
+
+                return replaceFn(hookEl).then(() => {
                     if (oldColorpicker) {
                         oldColorpicker.destroy();
                     }

@@ -13,6 +13,8 @@ odoo.define("web.env", function (require) {
 
     const qweb = new owl.QWeb({ translateFn: _t });
 
+    const env = {};
+
     function ajaxJsonRPC() {
         return jsonRpc(...arguments);
     }
@@ -60,8 +62,33 @@ odoo.define("web.env", function (require) {
         utils.set_cookie(...arguments);
     }
 
+    // There should be as much dependencies as possible in the env object.
+    // This will allow an easier testing of components.
+    // See https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
+    // for more information on environments.
+    Object.assign(env, {
+        _lt,
+        _t,
+        bus,
+        dataManager,
+        device,
+        isDebug,
+        qweb,
+        services: {
+            ajaxJsonRPC,
+            blockUI,
+            getCookie,
+            httpRequest,
+            navigate,
+            reloadPage,
+            rpc: performRPC,
+            setCookie,
+            unblockUI,
+        },
+        session,
+    });
+
     // ServiceProvider
-    const services = {}; // dict containing deployed service instances
     const UndeployedServices = {}; // dict containing classes of undeployed services
     function _deployServices() {
         let done = false;
@@ -69,7 +96,7 @@ odoo.define("web.env", function (require) {
             const serviceName = _.findKey(UndeployedServices, Service => {
                 // no missing dependency
                 return !_.some(Service.prototype.dependencies, depName => {
-                    return !services[depName];
+                    return !env.services[depName];
                 });
             });
             if (serviceName) {
@@ -103,8 +130,8 @@ odoo.define("web.env", function (require) {
                         }
                     },
                 });
-                const service = new PatchedService();
-                services[serviceName] = service;
+                const service = new Service(env);
+                env.services[serviceName] = service;
                 delete UndeployedServices[serviceName];
                 service.start();
             } else {
@@ -119,7 +146,7 @@ odoo.define("web.env", function (require) {
         UndeployedServices[serviceName] = Service;
     });
     serviceRegistry.onAdd((serviceName, Service) => {
-        if (serviceName in services || serviceName in UndeployedServices) {
+        if (serviceName in env.services || serviceName in UndeployedServices) {
             throw new Error(`Service ${serviceName} is already loaded.`);
         }
         UndeployedServices[serviceName] = Service;
@@ -127,28 +154,5 @@ odoo.define("web.env", function (require) {
     });
     _deployServices();
 
-    // There should be as much dependencies as possible in the env object.
-    // This will allow an easier testing of components.
-    // See https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
-    // for more information on environments.
-    return {
-        _t,
-        bus,
-        dataManager,
-        device,
-        isDebug,
-        qweb,
-        services: Object.assign(services, {
-            ajaxJsonRPC,
-            blockUI,
-            getCookie,
-            httpRequest,
-            navigate,
-            reloadPage,
-            rpc: performRPC,
-            setCookie,
-            unblockUI,
-        }),
-        session,
-    };
+    return env;
 });

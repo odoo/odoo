@@ -12,14 +12,18 @@ odoo.define('web.RainbowMan', function (require) {
  * service (by triggering the 'show_effect' event)
  */
 
-var Widget = require('web.Widget');
-var core = require('web.core');
-
-var _t = core._t;
-
-var RainbowMan = Widget.extend({
-    template: 'rainbow_man.notification',
-    xmlDependencies: ['/web/static/src/xml/rainbow_man.xml'],
+class RainbowMan extends owl.Component {
+    static async display(props, options) {
+        let target = document.body;
+        let parent = null;
+        if (options) {
+            target = options.target || target;
+            parent = options.parent || parent;
+        }
+        const rainbowman = new this(parent, props);
+        await rainbowman.mount(target);
+        return rainbowman;
+    }
     /**
      * @override
      * @constructor
@@ -28,44 +32,41 @@ var RainbowMan = Widget.extend({
      * @param {string} [options.fadeout='medium'] Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear quickly, 'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer), 'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
      * @param {string} [options.img_url] URL of the image to be displayed
      */
-    init: function (options) {
-        this._super.apply(this, arguments);
-        var rainbowDelay = {slow: 4500, medium: 3500, fast: 2000, no: false};
-        this.options = _.defaults(options || {}, {
-            fadeout: 'medium',
-            img_url: '/web/static/src/img/smile.svg',
-            message: _t('Well Done!'),
-        });
-        this.delay = rainbowDelay[this.options.fadeout];
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        // destroy rainbow man when the user clicks outside
-        // this is done in a setTimeout to prevent the click that triggered the
-        // rainbow man to close it directly
-        setTimeout(function () {
-            core.bus.on('click', self, function (ev) {
-                if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
-                    this.destroy();
-                }
-            });
-        });
-        if (this.delay) {
-            setTimeout(function () {
-                self.$el.addClass('o_reward_fading');
-                setTimeout(function () {
-                    self.destroy();
-                }, 600); // destroy only after fadeout animation is completed
-            }, this.delay);
-        }
-        this.$('.o_reward_msg_content').append(this.options.message);
-        return this._super.apply(this, arguments);
+    constructor() {
+        super(...arguments);
+        owl.hooks.useExternalListener(document.body, 'click', this._closeRainbowMan);
+        const fadeout = 'fadeout' in this.props ? this.props.fadeout : 'medium';
+        const delay = this.constructor.rainbowDelay[fadeout];
+        this.delay = typeof delay === 'number' ? delay : false;
+        this.img_url = this.props.img_url || '/web/static/src/img/smile.svg';
+        this.message = this.props.message || this.env._t('Well Done!');
     }
-});
+    mounted() {
+        if (this.delay !== false) {
+            setTimeout(
+                () => {
+                    if (!this.__owl__.isDestroyed) {
+                        this.el.classList.add('o_reward_fading')
+                    }
+                },
+                this.delay
+            );
+        }
+        super.mounted();
+    }
+    _onAnimationEnd(ev) {
+        if (this.delay !== false && ev.animationName === 'reward-fading-reverse') {
+            this._closeRainbowMan();
+        }
+    }
+    _closeRainbowMan() {
+        this.trigger('close-rainbowman');
+        this.destroy();
+    }
+}
+RainbowMan.rainbowDelay = {slow: 4500, medium: 3500, fast: 2000, no: false};
+RainbowMan.template = 'rainbow_man.notification';
+RainbowMan.xmlDependencies = ['/web/static/src/xml/rainbow_man.xml'];
 
 return RainbowMan;
-
 });
