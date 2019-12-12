@@ -7,7 +7,7 @@ The PostgreSQL connector is a connectivity layer between the OpenERP code and
 the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
-import gc
+import os
 import pprint
 import traceback
 from contextlib import contextmanager
@@ -178,6 +178,7 @@ class Cursor(object):
             '='*200
         ), flush=True)
         self._obj = self._cnx.cursor()
+        self._obj.execute("SET application_name = %s" % f'odoo-{os.getpid()}-{threading.get_ident()}')
         if self.sql_log:
             self.__caller = frame_codeinfo(currentframe(), 2)
         else:
@@ -221,11 +222,12 @@ class Cursor(object):
     @check
     def execute(self, query, params=None, log_exceptions=None):
         self._obj.execute("""
-        SELECT pid = %s as self, datname, client_addr, xact_start, state, query
+        SELECT pid = %s as self, datname, application_name, state, wait_event, query
         FROM pg_stat_activity
-        WHERE state is not null AND state != 'idle'
-        """, [self._cnx.get_backend_pid()])
+        WHERE state is not null AND state != 'idle' AND datname = %s
+        """, [self._cnx.get_backend_pid(), self.dbname])
         tnx = self._obj.fetchall()
+        tnx.insert(0, self._obj.description)
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
@@ -239,8 +241,7 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except Exception as e:
             if getattr(e, 'pgcode', None) in (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED):
-                print(f" error {self} ".center(200, '='))
-                print('self, db, client_addr, start, state, query')
+                print(f" error {self} pid {os.getpid()} ".center(200, '='))
                 print(pprint.pformat(tnx), flush=True)
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", ustr(self._obj.query or query), e)
@@ -426,6 +427,9 @@ class Cursor(object):
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
         self.execute('SAVEPOINT "%s"' % name)
+        print("SET SAVEPOINT %s (%s)\n%s" % (
+            name, self, traceback.print_stack()
+        ))
         try:
             yield
         except Exception:
@@ -625,7 +629,9 @@ class ConnectionPool(object):
         try:
             result = psycopg2.connect(
                 connection_factory=PsycoConnection,
-                **connection_info)
+                **connection_info,
+                application_name='odoo-%s' % os.getpid()
+            )
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
