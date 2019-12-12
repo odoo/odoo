@@ -3,6 +3,7 @@ odoo.define('mail.model.TimerTests', function (require) {
 
 var testUtils = require("web.test_utils");
 var Timer = require('mail.model.Timer');
+var concurrency = require('web.concurrency');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model', {}, function () {
@@ -20,9 +21,8 @@ QUnit.test('start()', async function (assert) {
     assert.verifySteps([], "should not have called the function");
 
     t.start();
-    await prom.then(function () {
-        assert.ok(true, "should have called the function");
-    });
+    await prom;
+    assert.ok(true, "should have called the function");
 });
 
 QUnit.test('clear()', function (assert) {
@@ -44,15 +44,17 @@ QUnit.test('clear()', function (assert) {
     setTimeout(function () {
         assert.verifySteps([], "should not have called the function");
         done();
-    }, 0);
+    }, 1);
 });
 
 QUnit.test('reset()', async function (assert) {
     assert.expect(4);
 
-    var prom = testUtils.makeTestPromise();
+    var i = 0;
+
     var func = function () {
-        assert.step('function_called');
+        ++i;
+        assert.step('function_called ' + i);
     };
     var t = new Timer({
         duration: 0,
@@ -62,18 +64,14 @@ QUnit.test('reset()', async function (assert) {
     t.start();
 
     // Called after 1st timer timeout
-    await testUtils.nextTick();
-    assert.verifySteps(['function_called'], "should have called the function once");
+    await concurrency.delay(1);
+    assert.verifySteps(['function_called 1'], "should have called the function once");
     t.reset();
-    // Called after 2nd timer timeout
-    setTimeout(function () {
-        prom.resolve();
-    }, 0);
 
-    await prom.then(function () {
-        assert.verifySteps(['function_called'],
-            "should have called the function twice (2nd time from reset)");
-    });
+    // Called after 2nd timer timeout
+    await concurrency.delay(1);
+    assert.verifySteps(['function_called 2'],
+        "should have called the function twice (2nd time from reset)");
 });
 
 });
