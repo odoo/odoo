@@ -358,12 +358,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   This method adds matrix answers one by one and add comment if any to a params key,value like :
     *   params = { 'matrixQuestionId' : {'rowId1': [colId1, colId2,...], 'rowId2': [colId1, colId3, ...], 'comment': comment }}
     */
-    _prepareSubmitAnswersMatrix: function (params, $matrixDiv) {
+    _prepareSubmitAnswersMatrix: function (params, $matrixTable) {
         var self = this;
-        $matrixDiv.find('input:checked').each(function () {
-            params = self._prepareSubmitAnswerMatrix(params, $matrixDiv.data('name'), $(this).data('rowId'), this.value);
+        $matrixTable.find('input:checked').each(function () {
+            params = self._prepareSubmitAnswerMatrix(params, $matrixTable.data('name'), $(this).data('rowId'), this.value);
         });
-        params = self._prepareSubmitComment(params, $matrixDiv, $matrixDiv.data('name'), true);
+        params = self._prepareSubmitComment(params, $matrixTable.closest('.js_question-wrapper'), $matrixTable.data('name'), true);
         return params;
     },
 
@@ -372,12 +372,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   This method regroups answers by question and by row to make an object like :
     *   params = { 'matrixQuestionId' : { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] } }
     */
-    _prepareSubmitAnswerMatrix: function (params, questionId, rowId, colId) {
+    _prepareSubmitAnswerMatrix: function (params, questionId, rowId, colId, isComment) {
         var value = questionId in params ? params[questionId] : {};
-        if (rowId in value) {
-            value[rowId].push(colId);
+        if (isComment) {
+            value['comment'] = colId;
         } else {
-            value[rowId] = [colId];
+            if (rowId in value) {
+                value[rowId].push(colId);
+            } else {
+                value[rowId] = [colId];
+            }
         }
         params[questionId] = value;
         return params;
@@ -414,7 +418,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             if (this.value) {
                 var value = {'comment': this.value};
                 if (isMatrix) {
-                    params = self._prepareSubmitAnswerMatrix(params, questionId, this.name, value);
+                    params = self._prepareSubmitAnswerMatrix(params, questionId, this.name, this.value, true);
                 } else {
                     params = self._prepareSubmitAnswer(params, questionId, value);
                 }
