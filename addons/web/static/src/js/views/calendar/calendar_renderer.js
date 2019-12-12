@@ -16,9 +16,9 @@ var _t = core._t;
 var qweb = core.qweb;
 
 var scales = {
-    day: 'agendaDay',
-    week: 'agendaWeek',
-    month: 'month'
+    day: 'timeGridDay',
+    week: 'timeGridWeek',
+    month: 'dayGridMonth'
 };
 
 var SidebarFilterM2O = relational_fields.FieldMany2One.extend({
@@ -78,6 +78,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     {
                         mode: 'edit',
                         attrs: {
+                            string: _t(self.fields[self.fieldName].string),
                             placeholder: "+ " + _.str.sprintf(_t("Add %s"), self.title),
                             can_create: false
                         },
@@ -192,6 +193,7 @@ return AbstractRenderer.extend({
         this.hideDate = params.hideDate;
         this.hideTime = params.hideTime;
         this.canDelete = params.canDelete;
+        this._isInDOM = false;
     },
     /**
      * @override
@@ -209,22 +211,29 @@ return AbstractRenderer.extend({
      * @override
      */
     on_attach_callback: function () {
+        this._super(...arguments);
+        this._isInDOM = true;
         if (config.device.isMobile) {
             this.$el.height($(window).height() - this.$el.offset().top);
         }
-        var scrollTop = this.$calendar.find('.fc-scroller').scrollTop();
-        if (scrollTop) {
-            this.$calendar.fullCalendar('reinitView');
-        } else {
-            this.$calendar.fullCalendar('render');
-        }
+        // BUG Test ????
+        // this.$el.height($(window).height() - this.$el.offset().top);
+        this.calendar.render();
+        this._renderCalendar();
+    },
+    /**
+     * Called when the field is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this._super(...arguments);
+        this._isInDOM = false;
     },
     /**
      * @override
      */
     destroy: function () {
-        if (this.$calendar) {
-            this.$calendar.fullCalendar('destroy');
+        if (this.calendar) {
+            this.calendar.destroy();
         }
         if (this.$small_calendar) {
             this.$small_calendar.datepicker('destroy');
@@ -296,9 +305,9 @@ return AbstractRenderer.extend({
      * @override
      */
     getLocalState: function () {
-        var $fcScroller = this.$calendar.find('.fc-scroller');
+        var fcScroller = this.calendarElement.querySelector('.fc-scroller');
         return {
-            scrollPosition: $fcScroller.scrollTop(),
+            scrollPosition: fcScroller.scrollTop,
         };
     },
     /**
@@ -306,8 +315,8 @@ return AbstractRenderer.extend({
      */
     setLocalState: function (localState) {
         if (localState.scrollPosition) {
-            var $fcScroller = this.$calendar.find('.fc-scroller');
-            $fcScroller.scrollTop(localState.scrollPosition);
+            var fcScroller = this.calendarElement.querySelector('.fc-scroller');
+            fcScroller.scrollTop = localState.scrollPosition;
         }
     },
 
@@ -325,14 +334,15 @@ return AbstractRenderer.extend({
         var self = this;
         var touchStartX;
         var touchEndX;
-        this.$calendar.on('touchstart', function (event) {
-            touchStartX = event.originalEvent.touches[0].pageX;
+        this.calendarElement.addEventListener('touchstart', function (event) {
+            self.isSwipeEnabled = true;
+            touchStartX = event.touches[0].pageX;
         });
-        this.$calendar.on('touchend', function (event) {
-            touchEndX = event.originalEvent.changedTouches[0].pageX;
+        this.calendarElement.addEventListener('touchend', function (event) {
             if (!self.isSwipeEnabled) {
                 return;
             }
+            touchEndX = event.changedTouches[0].pageX;
             if (touchStartX - touchEndX > 100) {
                 self.trigger_up('next');
             } else if (touchStartX - touchEndX < -100) {
@@ -341,14 +351,43 @@ return AbstractRenderer.extend({
         });
     },
     /**
+     * Convert the new format of Event from FullCalendar V4 to a Event FullCalendar V3
+     * @param fc4Event
+     * @return {Object} FullCalendar V3 Object Event
+     * @private
+     */
+    _convertEventToFC3Event: function (fc4Event) {
+        var event = fc4Event;
+        if (!moment.isMoment(fc4Event.start)) {
+            event = {
+                id: fc4Event.id,
+                title: fc4Event.title,
+                start: moment(fc4Event.start).utcOffset(0, true),
+                end: fc4Event.end && moment(fc4Event.end).utcOffset(0, true),
+                allDay: fc4Event.allDay,
+                color: fc4Event.color,
+            };
+            if (fc4Event.extendedProps) {
+                event = Object.assign({}, event, {
+                    r_start: fc4Event.extendedProps.r_start && moment(fc4Event.extendedProps.r_start).utcOffset(0, true),
+                    r_end: fc4Event.extendedProps.r_end && moment(fc4Event.extendedProps.r_end).utcOffset(0, true),
+                    reset_allday: fc4Event.extendedProps.reset_allday,
+                    record: fc4Event.extendedProps.record,
+                    attendees: fc4Event.extendedProps.attendees,
+                });
+            }
+        }
+        return event;
+    },
+    /**
      * @param {any} event
      * @returns {string} the html for the rendered event
      */
     _eventRender: function (event) {
         var qweb_context = {
             event: event,
-            record: event.record,
-            color: this.getColor(event.color_index),
+            record: event.extendedProps.record,
+            color: this.getColor(event.extendedProps.color_index),
         };
         this.qweb_context = qweb_context;
         if (_.isEmpty(qweb_context.record)) {
@@ -379,43 +418,50 @@ return AbstractRenderer.extend({
     _initCalendar: function () {
         var self = this;
 
-        this.$calendar = this.$(".o_calendar_widget");
-
-        // This seems like a workaround but apparently passing the locale
-        // in the options is not enough. We should initialize it beforehand
+        this.calendarElement = this.$(".o_calendar_widget")[0];
         var locale = moment.locale();
-        $.fullCalendar.locale(locale);
 
-        //Documentation here : http://arshaw.com/fullcalendar/docs/
         var fc_options = $.extend({}, this.state.fc_options, {
-            eventDrop: function (event) {
+            plugins: [
+                'moment',
+                'interaction',
+                'dayGrid',
+                'timeGrid'
+            ],
+            eventDrop: function (eventDropInfo) {
+                var event = self._convertEventToFC3Event(eventDropInfo.event);
                 self.trigger_up('dropRecord', event);
             },
-            eventResize: function (event) {
+            eventResize: function (eventResizeInfo) {
+                self.isSwipeEnabled = false;
                 self._unselectEvent();
+                var event = self._convertEventToFC3Event(eventResizeInfo.event);
                 self.trigger_up('updateRecord', event);
             },
-            eventClick: function (eventData, ev) {
+            eventClick: function (eventClickInfo) {
+                var eventData = eventClickInfo.event;
                 self._unselectEvent();
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
-                self._renderEventPopover(eventData, $(ev.currentTarget));
+                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
+                self._renderEventPopover(eventData, $(eventClickInfo.el));
             },
-            select: function (startDate, endDate) {
-                self.isSwipeEnabled = false;
+            select: function (selectionInfo) {
                 // Clicking on the view, dispose any visible popover. Otherwise create a new event.
                 if (self.$('.o_cw_popover').length) {
                     self._unselectEvent();
                 } else {
-                    var data = {start: startDate, end: endDate};
+                    var data = {start: selectionInfo.start, end: selectionInfo.end};
                     if (self.state.context.default_name) {
                         data.title = self.state.context.default_name;
                     }
-                    self.trigger_up('openCreate', data);
+                    self.trigger_up('openCreate', self._convertEventToFC3Event(data));
                 }
-                self.$calendar.fullCalendar('unselect');
+                self.calendar.unselect();
             },
-            eventRender: function (event, element, view) {
+            eventRender: function (info) {
                 self.isSwipeEnabled = false;
+                var event = info.event;
+                var element = $(info.el);
+                var view = info.view;
                 var $render = $(self._eventRender(event));
                 element.find('.fc-content').html($render.html());
                 element.addClass($render.attr('class'));
@@ -426,17 +472,17 @@ return AbstractRenderer.extend({
                     element.find('.fc-content').after($('<div/>', {class: 'fc-bg'}));
                 }
 
-                if (view.name === 'month' && event.record) {
-                    var start = event.r_start || event.start;
-                    var end = event.r_end || event.end;
+                if (view.type === 'dayGridMonth' && event.extendedProps.record) {
+                    var start = event.extendedProps.r_start || event.start;
+                    var end = event.extendedProps.r_end || event.end;
                     // Detect if the event occurs in just one day
                     // note: add & remove 1 min to avoid issues with 00:00
-                    var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
-                    if (!event.record.allday && isSameDayEvent) {
+                    var isSameDayEvent = moment(start).clone().add(1, 'minute').isSame(moment(end).clone().subtract(1, 'minute'), 'day');
+                    if (!event.extendedProps.record.allday && isSameDayEvent) {
                         // For month view: do not show background for non allday, single day events
                         element.addClass('o_cw_nobg');
-                        if (event.showTime && !self.hideTime) {
-                            const displayTime = start.format(self._getDbTimeFormat());
+                        if (event.extendedProps.showTime && !self.hideTime) {
+                            const displayTime = moment(start).clone().format(self._getDbTimeFormat());
                             element.find('.fc-content .fc-time').text(displayTime);
                         }
                     }
@@ -447,32 +493,36 @@ return AbstractRenderer.extend({
                     self.trigger_up('edit_event', {id: event.id});
                 });
             },
-            eventAfterAllRender: function () {
-                self.isSwipeEnabled = true;
+            eventPositioned: function (){
+                self.isSwipeEnabled = false;
             },
-            viewRender: function (view) {
-                // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
-                var mode = view.name === 'month' ? 'month' : (view.name === 'agendaWeek' ? 'week' : 'day');
+            datesRender: function (info) {
+                // compute mode from view.type which is either 'dayGridMonth', 'timeGridWeek' or 'timeGridDay'
+                var mode = info.view.type === 'dayGridMonth' ? 'month' : (info.view.type === 'timeGridWeek' ? 'week' : 'day');
                 self.trigger_up('viewUpdated', {
                     mode: mode,
-                    title: view.title,
+                    title: info.view.title,
                 });
             },
             // Add/Remove a class on hover to style multiple days events.
             // The css ":hover" selector can't be used because these events
             // are rendered using multiple elements.
-            eventMouseover: function (eventData) {
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
+            eventMouseEnter: function (mouseEnterInfo) {
+                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseEnterInfo.event.id)).addClass('o_cw_custom_hover');
             },
-            eventMouseout: function (eventData) {
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).removeClass('o_cw_custom_hover');
+            eventMouseLeave: function (mouseLeaveInfo) {
+                if (!mouseLeaveInfo.event.id) {
+                    return;
+                }
+                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseLeaveInfo.event.id)).removeClass('o_cw_custom_hover');
             },
-            eventDragStart: function (eventData) {
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
+            eventDragStart: function (mouseDragInfo) {
+                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseDragInfo.event.id)).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
-            eventResizeStart: function (eventData) {
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
+            eventResizeStart: function (mouseResizeInfo) {
+                self.isSwipeEnabled = false;
+                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseResizeInfo.event.id)).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
             eventLimitClick: function () {
@@ -483,23 +533,23 @@ return AbstractRenderer.extend({
                 self._render();
             },
             views: {
-                day: {
-                    columnFormat: 'LL'
+                timeGridDay: {
+                    columnHeaderFormat: 'LL'
                 },
-                week: {
-                    columnFormat: 'ddd D'
+                timeGridWeek: {
+                    columnHeaderFormat: 'ddd D'
                 },
-                month: {
-                    columnFormat: config.device.isMobile ? 'ddd' : 'dddd'
+                dayGridMonth: {
+                    columnHeaderFormat: config.device.isMobile ? 'ddd' : 'dddd'
                 }
             },
             height: 'parent',
             unselectAuto: false,
-            isRTL: _t.database.parameters.direction === "rtl",
-            locale: locale, // reset locale when fullcalendar has already been instanciated before now
+            dir: _t.database.parameters.direction,
+            locale: locale,
         });
 
-        this.$calendar.fullCalendar(fc_options);
+        this.calendar = new FullCalendar.Calendar(this.calendarElement, fcOptions);
     },
     /**
      * Initialize the mini calendar in the sidebar
@@ -551,22 +601,10 @@ return AbstractRenderer.extend({
      * @returns {Promise}
      */
     _render: function () {
-        var $calendar = this.$calendar;
-        var $fc_view = $calendar.find('.fc-view');
-        var scrollPosition = $fc_view.scrollLeft();
-
-        $fc_view.scrollLeft(0);
-        $calendar.fullCalendar('unselect');
-
-        if (scales[this.state.scale] !== $calendar.data('fullCalendar').getView().type) {
-            $calendar.fullCalendar('changeView', scales[this.state.scale]);
+        this.$('.o_calendar_view')[0].prepend(this.calendarElement);
+        if (this._isInDOM) {
+            this._renderCalendar();
         }
-
-        if (this.target_date !== this.state.target_date.toString()) {
-            $calendar.fullCalendar('gotoDate', moment(this.state.target_date));
-            this.target_date = this.state.target_date.toString();
-        }
-
         this.$small_calendar.datepicker("setDate", this.state.highlight_date.toDate())
                             .find('.o_selected_range')
                             .removeClass('o_color o_selected_range');
@@ -581,14 +619,30 @@ return AbstractRenderer.extend({
             $a.not('.ui-state-active').addClass('o_color');
         });
 
-        $fc_view.scrollLeft(scrollPosition);
-
-        this._unselectEvent();
         var filterProm = this._renderFilters();
-        this._renderEvents();
-        this.$calendar.prependTo(this.$('.o_calendar_view'));
 
         return Promise.all([filterProm, this._super.apply(this, arguments)]);
+    },
+    /**
+     * Render the specific code for the FullCalendar when it's in the DOM
+     *
+     * @private
+     */
+    _renderCalendar() {
+        this.calendar.unselect();
+
+        if (scales[this.state.scale] !== this.calendar.view.type) {
+            this.calendar.changeView(scales[this.state.scale]);
+        }
+
+        if (this.target_date !== this.state.target_date.toString()) {
+            this.calendar.gotoDate(moment(this.state.target_date).toDate());
+            this.target_date = this.state.target_date.toString();
+        }
+
+        this._unselectEvent();
+        this._renderEvents();
+        // this._scrollToScrollTime();
     },
     /**
      * Render all events
@@ -596,8 +650,10 @@ return AbstractRenderer.extend({
      * @private
      */
     _renderEvents: function () {
-        this.$calendar.fullCalendar('removeEvents');
-        this.$calendar.fullCalendar('addEventSource', this.state.data);
+        this.calendar.getEvents().forEach(function(event) {
+            event.remove();
+        });
+        this.calendar.addEventSource(this.state.data);
     },
     /**
      * Render all filters
@@ -612,7 +668,7 @@ return AbstractRenderer.extend({
             filter.destroy();
         });
         if (this.state.fullWidth) {
-            return;
+            return Promise.resolve();
         }
         return this._renderFiltersOneByOne();
     },
@@ -699,12 +755,12 @@ return AbstractRenderer.extend({
             canDelete: this.canDelete,
         };
 
-        var start = moment(eventData.r_start || eventData.start);
-        var end = moment(eventData.r_end || eventData.end);
+        var start = moment((eventData.extendedProps && eventData.extendedProps.r_start) || eventData.start);
+        var end = moment((eventData.extendedProps && eventData.extendedProps.r_end) || eventData.end);
         var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
 
         // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
-        if (!this.hideTime && !eventData.record.allday && isSameDayEvent) {
+        if (!this.hideTime && !eventData.extendedProps.record.allday && isSameDayEvent) {
             var dbTimeFormat = this._getDbTimeFormat();
 
             context.eventTime.time = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
@@ -729,9 +785,9 @@ return AbstractRenderer.extend({
                 context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
             }
 
-            if (eventData.record.allday && isSameDayEvent) {
+            if (eventData.extendedProps.record.allday && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
-            } else if (eventData.record.allday && !isSameDayEvent) {
+            } else if (eventData.extendedProps.record.allday && !isSameDayEvent) {
                 var daysLocaleData = moment.localeData();
                 var days = moment.duration(end.diff(start)).days();
                 context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
@@ -756,8 +812,8 @@ return AbstractRenderer.extend({
             },
             trigger: 'manual',
             html: true,
-            title: eventData.record.display_name,
-            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
+            title: eventData.extendedProps.record.display_name,
+            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.extendedProps.color_index)}),
             container: eventData.allDay ? '.fc-view' : '.fc-scroller',
         }
     },
@@ -780,6 +836,14 @@ return AbstractRenderer.extend({
                 self._onPopoverShown($(this), calendarPopover);
             }).popover('show');
         });
+    },
+    /**
+     * Scroll to the time set in the FullCalendar parameter
+     * @private
+     */
+    _scrollToScrollTime: function () {
+        var scrollTime = this.calendar.getOption('scrollTime');
+        this.calendar.scrollToTime(scrollTime);
     },
 
     //--------------------------------------------------------------------------
@@ -812,7 +876,7 @@ return AbstractRenderer.extend({
      */
     _onDeleteEvent: function (event) {
         this._unselectEvent();
-        this.trigger_up('deleteRecord', {id: event.data.id});
+        this.trigger_up('deleteRecord', {id: parseInt(event.data.id, 10)});
     },
 });
 
