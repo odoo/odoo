@@ -21,7 +21,7 @@ class MailResendCancel(models.TransientModel):
         for wizard in self:
             self._cr.execute("""
                                 SELECT notif.id, mes.id
-                                FROM mail_message_res_partner_needaction_rel notif
+                                FROM mail_notification notif
                                 JOIN mail_message mes
                                     ON notif.mail_message_id = mes.id
                                 WHERE notif.notification_status IN ('bounced', 'exception')

@@ -42,7 +42,7 @@ class Partner(models.Model):
             self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
             self.env.cr.execute("""
                 SELECT count(*) as needaction_count
-                FROM mail_message_res_partner_needaction_rel R
+                FROM mail_notification R
                 WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')

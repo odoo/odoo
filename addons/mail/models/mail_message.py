@@ -86,7 +86,7 @@ class Message(models.Model):
     # list of partner having a notification. Caution: list may change over time because of notif gc cron.
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
-        'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action',
+        'res.partner', 'mail_notification', string='Partners with Need Action',
         context={'active_test': False}, depends=['notification_ids'])
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
@@ -265,7 +265,7 @@ class Message(models.Model):
             FROM "%s" m
             LEFT JOIN "mail_message_res_partner_rel" partner_rel
             ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-            LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+            LEFT JOIN "mail_notification" needaction_rel
             ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
             LEFT JOIN "mail_message_mail_channel_rel" channel_rel
             ON channel_rel.mail_message_id = m.id
@@ -387,7 +387,7 @@ class Message(models.Model):
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+                LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_message_mail_channel_rel" channel_rel
                 ON channel_rel.mail_message_id = m.id
@@ -416,7 +416,7 @@ class Message(models.Model):
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+                LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_message_mail_channel_rel" channel_rel
                 ON channel_rel.mail_message_id = m.id

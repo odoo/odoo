@@ -22,7 +22,7 @@ class SMSCancel(models.TransientModel):
         for wizard in self:
             self._cr.execute("""
 SELECT notif.id, msg.id
-FROM mail_message_res_partner_needaction_rel notif
+FROM mail_notification notif
 JOIN mail_message msg
     ON notif.mail_message_id = msg.id
 WHERE notif.notification_type = 'sms' IS TRUE AND notif.notification_status IN ('bounced', 'exception')

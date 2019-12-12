@@ -8,7 +8,6 @@ from odoo.tools.translate import _
 
 class MailNotification(models.Model):
     _name = 'mail.notification'
-    _table = 'mail_message_res_partner_needaction_rel'
     _rec_name = 'id'
     _log_access = False
     _description = 'Message Notifications'
@@ -43,7 +42,7 @@ class MailNotification(models.Model):
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_res_partner_id_is_read_notification_status_mail_message_id',))
         if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_notification_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, is_read, notification_status, mail_message_id)')
+            self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_notification_status_mail_message_id ON mail_notification (res_partner_id, is_read, notification_status, mail_message_id)')
 
     def format_failure_reason(self):
         self.ensure_one()

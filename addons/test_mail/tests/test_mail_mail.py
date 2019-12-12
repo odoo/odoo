@@ -74,7 +74,7 @@ class TestMailMailRace(common.TransactionCase):
             with this.registry.cursor() as cr, mute_logger('odoo.sql_db'):
                 try:
                     # try ro aquire lock (no wait) on notification (should fail)
-                    cr.execute("SELECT notification_status FROM mail_message_res_partner_needaction_rel WHERE id = %s FOR UPDATE NOWAIT", [notif.id])
+                    cr.execute("SELECT notification_status FROM mail_notification WHERE id = %s FOR UPDATE NOWAIT", [notif.id])
                 except psycopg2.OperationalError:
                     # record already locked by send, all good
                     bounce_deferred.append(True)
@@ -83,7 +83,7 @@ class TestMailMailRace(common.TransactionCase):
                     # Only here to simulate the initial use case
                     # If the record is lock, this line would create a deadlock since we are in the same thread
                     # In practice, the update will wait the end of the send() transaction and set the notif as bounce, as expeced
-                    cr.execute("UPDATE mail_message_res_partner_needaction_rel SET notification_status='bounced' WHERE id = %s", [notif.id])
+                    cr.execute("UPDATE mail_notification SET notification_status='bounced' WHERE id = %s", [notif.id])
             return message['Message-Id']
         self.env['ir.mail_server']._patch_method('send_email', send_email)
 
