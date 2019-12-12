@@ -11,7 +11,7 @@ var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var pyUtils = require('web.py_utils');
-var session  = require('web.session');
+var session = require('web.session');
 var viewRegistry = require('web.view_registry');
 
 var _t = core._t;
@@ -436,6 +436,7 @@ var BoardView = FormView.extend({
         Renderer: BoardRenderer,
     }),
     display_name: _lt('Board'),
+    withControlPanel: false,
 
     /**
      * @override

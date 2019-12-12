@@ -12,7 +12,7 @@
         aria-hidden="true"
         >
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div t-attf-class="modal-content #{dialogClass ? dialogClass : ''}">
                 <header t-if="renderHeader" class="modal-header">
                     <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small" t-esc="subtitle"/></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1">×</button>

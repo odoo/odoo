@@ -3459,15 +3459,15 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         done();
     });
     testUtils.nextTick().then(function() {
-        assert.strictEqual($('.modal-body.o_act_window').length, 1,
+        assert.containsOnce(document.body, '.modal-content.o_act_window',
             "there should be one modal opened to edit the empty email");
-        assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
+        assert.strictEqual($('.modal-content.o_act_window input[name="display_name"]').val(), "silver",
             "the opened modal should be a form view dialog with the partner_type 14");
-        assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
+        assert.containsOnce(document.body, '.modal-content.o_act_window input[name="email"]',
             "there should be an email field in the modal");
 
         // set the email and save the modal (will render the form view)
-        testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
+        testUtils.fields.editInput($('.modal-content.o_act_window input[name="email"]'), 'coucou@petite.perruche');
         testUtils.dom.click($('.modal-footer .btn-primary'));
     });
 
@@ -3512,15 +3512,15 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     await testUtils.fields.many2one.clickOpenDropdown('timmy');
     await testUtils.fields.many2one.clickHighlightedItem('timmy');
 
-    assert.strictEqual($('.modal-body.o_act_window').length, 1,
+    assert.containsOnce(document.body, '.modal-content.o_act_window',
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
+    assert.strictEqual($('.modal-content.o_act_window input[name="display_name"]').val(), "silver",
         "the opened modal in edit mode should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
+    assert.containsOnce(document.body, '.modal-content.o_act_window input[name="email"]',
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    await testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
+    await testUtils.fields.editInput($('.modal-content.o_act_window input[name="email"]'), 'coucou@petite.perruche');
     await testUtils.dom.click($('.modal-footer .btn-primary'));
 
     assert.containsN(form, '.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0', 2,

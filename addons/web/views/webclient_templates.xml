@@ -89,6 +89,7 @@
         <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
         <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
         <script type="text/javascript" src="/web/static/src/js/component_extension.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/owl_compatibility.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
         <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
@@ -242,13 +243,13 @@
         <script type="text/javascript" src="/web/static/src/js/core/mvc.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/py_utils.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/abstract_action.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_act_window.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_report.js"/>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_mixin.js"/>
         <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/root_widget.js"></script>
         <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
@@ -276,7 +277,6 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/user_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/menu.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/chrome/apps_menu.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/widgets/pie_chart.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/ribbon.js"></script>
@@ -376,8 +376,6 @@
         <script type="text/javascript" src="/web/static/src/js/views/qweb/qweb_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/attach_document.js"></script>
         <script type="text/javascript" src="/web/static/src/js/fields/signature.js"></script>
-
-        <script type="text/javascript" src="/web/static/src/js/owl_compatibility.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
@@ -646,6 +644,8 @@
             }
         </style>
 
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_async.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_action_manager.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils_control_panel.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
@@ -722,6 +722,7 @@
                 <script type="text/javascript" src="/web/static/tests/core/owl_dialog_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/dom_tests.js"></script>
 
+                <script type="text/javascript" src="/web/static/tests/chrome/web_client_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/action_manager_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/keyboard_navigation_mixin_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/menu_tests.js"></script>
@@ -750,6 +751,7 @@
                 <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/model_field_selector_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/rainbow_man_tests.js"/>
+                <script type="text/javascript" src="/web/static/tests/widgets/loading_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/tools/debug_manager_tests.js"/>
 
@@ -836,6 +838,8 @@
                     }
                 </style>
 
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_async.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_action_manager.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
@@ -875,7 +879,7 @@
                 <script type="text/javascript" src="/web/static/src/js/main.js"></script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
-            <t t-set="body_classname" t-value="'o_web_client'"/>
+            <!-- <t t-set="body_classname" t-value="'o_web_client'"/> -->
         </t>
     </template>
 

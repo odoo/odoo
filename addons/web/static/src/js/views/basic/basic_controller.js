@@ -196,9 +196,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     reload: function (params) {
         if (params && params.controllerState) {
-            if (params.controllerState.currentId) {
-                params.currentId = params.controllerState.currentId;
-            }
+            params.currentId = params.currentId || params.controllerState.currentId;
             params.ids = params.controllerState.resIds;
         }
         return this._super.apply(this, arguments);

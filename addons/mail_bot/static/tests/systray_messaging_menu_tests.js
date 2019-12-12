@@ -5,6 +5,7 @@ var MessagingMenu = require('mail.systray.MessagingMenu');
 var mailTestUtils = require('mail.testUtils');
 
 var MailBotService = require('mail_bot.MailBotService');
+const NotificationService = require('web.NotificationService');
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
@@ -145,7 +146,9 @@ QUnit.test('messaging menu widget: respond to notification prompt', async functi
     var messagingMenu = new MessagingMenu();
     await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
-        services: this.services,
+        services: Object.assign(this.services, {
+            notification: NotificationService,
+        }),
     });
     await messagingMenu.appendTo($('#qunit-fixture'));
 

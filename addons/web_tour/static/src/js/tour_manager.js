@@ -9,7 +9,6 @@ var utils = require('web_tour.utils');
 var TourStepUtils = require('web_tour.TourStepUtils');
 var RainbowMan = require('web.RainbowMan');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
-var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
 
@@ -25,7 +24,7 @@ var get_first_visible_element = utils.get_first_visible_element;
 var do_before_unload = utils.do_before_unload;
 var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
-return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
+return core.Class.extend(mixins.EventDispatcherMixin, {
     init: function(parent, consumed_tours) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
@@ -100,10 +99,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {Promise}
      */
     _waitBeforeTourStart: function () {
-        return new Promise(function (resolve) {
-            $(function () {
-                setTimeout(resolve);
-            });
+        return new Promise(resolve => {
+            core.bus.on('web-client-mounted', null, resolve);
         });
     },
     _register_all: function (do_update) {
@@ -391,11 +388,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         //display rainbow at the end of any tour
         if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
             this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
-            var $rainbow_message = $('<strong>' +
-                                '<b>Good job!</b>' +
-                                ' You went through all steps of this tour.' +
-                                '</strong>');
-            new RainbowMan({message: $rainbow_message}).appendTo(this.$body);
+            const rainbow_message = `
+                <strong>
+                    <b>Good job!</b>
+                    You went through all steps of this tour
+                </strong>`;
+            RainbowMan.display({message: rainbow_message});
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));

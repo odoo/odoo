@@ -40,24 +40,8 @@
         <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
         <t t-call="web.conditional_assets_tests"/>
-
-        <script type="text/javascript" id="loading-script" t-raw="init">
-            odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.AbstractWebClient');
-                var web_client = new WebClient();
-
-                web_client._title_changed = function() {};
-                web_client.show_application = function() {
-                    return web_client.action_manager.do_action("pos.ui");
-                };
-
-                $(function () {
-                    web_client.setElement($(document.body));
-                    web_client.start();
-                });
-                return web_client;
-            });
-        </script>
+        <script type="text/javascript" src="/web/static/src/js/env.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>
     </head>
     <body>
     </body>

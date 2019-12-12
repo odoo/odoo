@@ -3585,6 +3585,34 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create should not push state', async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            intercepts: {
+                push_state: function (ev) {
+                    assert.step(ev.name);
+                },
+            },
+        });
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_quick_add'));
+        // Only 1 push_state should be triggered. It comes from the view itself.
+        assert.verifySteps(['push_state']);
+
+        kanban.destroy();
+    });
+
     QUnit.test('if view was not grouped at start, it can be grouped and ungrouped', async function (assert) {
         assert.expect(3);
 
@@ -5345,7 +5373,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('check if the view destroys all widgets and instances', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var instanceNumber = 0;
         testUtils.mock.patch(mixins.ParentedMixin, {
@@ -5382,21 +5410,10 @@ QUnit.module('Views', {
         };
 
         var kanban = await createView(params);
-        kanban.destroy();
-
-        var initialInstanceNumber = instanceNumber;
-        instanceNumber = 0;
-
-        kanban = await createView(params);
-
-        // call destroy function of controller to ensure that it correctly destroys everything
-        kanban.__destroy();
-
-        // + 1 (parent)
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 1,
-            "every widget must be destroyed exept the parent");
+        assert.ok(instanceNumber > 0);
 
         kanban.destroy();
+        assert.strictEqual(instanceNumber, 0);
 
         testUtils.mock.unpatch(mixins.ParentedMixin);
     });

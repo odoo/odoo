@@ -6,7 +6,6 @@ var view_registry = require('web.view_registry');
 
 var createView = testUtils.createView;
 var BaseSettingsView = view_registry.get('base_settings');
-var createActionManager = testUtils.createActionManager;
 
 
 QUnit.module('base_settings_tests', {
@@ -113,7 +112,7 @@ QUnit.module('base_settings_tests', {
             'project,false,search': '<search></search>',
         };
 
-        var actionManager = await createActionManager({
+        var webClient = await testUtils.createWebClient({
             actions: actions,
             archs: archs,
             data: this.data,
@@ -125,11 +124,10 @@ QUnit.module('base_settings_tests', {
             },
         });
 
-        await actionManager.doAction(1);
-        await testUtils.nextTick();
-        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        await testUtils.actionManager.doAction(1);
+        await testUtils.dom.click(webClient.el.querySelector('button[name="4"]'));
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
-        assert.hasClass(actionManager.$('.o_form_view'), 'o_form_editable');
+        assert.hasClass(webClient.el.querySelector('.o_form_view'), 'o_form_editable');
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record
@@ -140,7 +138,7 @@ QUnit.module('base_settings_tests', {
             'default_get', // when we come back, we want to restart from scratch
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('clicking on any button in setting should show discard warning if setting form is dirty', async function (assert) {
@@ -186,7 +184,7 @@ QUnit.module('base_settings_tests', {
             'project,false,search': '<search></search>',
         };
 
-        var actionManager = await createActionManager({
+        var webClient = await testUtils.createWebClient({
             actions: actions,
             archs: archs,
             data: this.data,
@@ -205,39 +203,39 @@ QUnit.module('base_settings_tests', {
             },
         });
 
-        await actionManager.doAction(1);
-        assert.containsNone(actionManager, '.o_field_boolean input:checked',
+        await testUtils.actionManager.doAction(1);
+        assert.containsNone(webClient, '.o_field_boolean input:checked',
             "checkbox should not be checked");
 
-        await testUtils.dom.click(actionManager.$("input[type='checkbox']"));
-        assert.containsOnce(actionManager, '.o_field_boolean input:checked',
+        await testUtils.dom.click(webClient.$("input[type='checkbox']"));
+        assert.containsOnce(webClient, '.o_field_boolean input:checked',
             "checkbox should be checked");
 
-        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        await testUtils.dom.click(webClient.$('button[name="4"]'));
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
         await testUtils.dom.click($('.modal button:contains(Ok)'));
-        assert.containsOnce(actionManager, '.o_list_view', "should be open list view");
+        assert.containsOnce(webClient, '.o_list_view', "should be open list view");
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
-        assert.containsNone(actionManager, '.o_field_boolean input:checked',
+        assert.containsNone(webClient, '.o_field_boolean input:checked',
             "checkbox should not be checked");
 
-        await testUtils.dom.click(actionManager.$("input[type='checkbox']"));
-        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        await testUtils.dom.click(webClient.$("input[type='checkbox']"));
+        await testUtils.dom.click(webClient.$('button[name="4"]'));
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
         await testUtils.dom.click($('.modal button:contains(Cancel)'));
-        assert.containsOnce(actionManager, '.o_form_view' ,"should be remain on form view");
+        assert.containsOnce(webClient, '.o_form_view' ,"should be remain on form view");
 
-        await testUtils.dom.click(actionManager.$("button[name='execute']"));
+        await testUtils.dom.click(webClient.$("button[name='execute']"));
         assert.containsNone(document.body, '.modal', "should not open a warning dialog");
 
-        await testUtils.dom.click(actionManager.$("input[type='checkbox']"));
-        await testUtils.dom.click(actionManager.$("button[name='cancel']"));
+        await testUtils.dom.click(webClient.$("input[type='checkbox']"));
+        await testUtils.dom.click(webClient.$("button[name='cancel']"));
         assert.containsNone(document.body, '.modal', "should not open a warning dialog");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('settings view does not display other settings after reload', async function (assert) {

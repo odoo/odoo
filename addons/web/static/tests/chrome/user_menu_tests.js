@@ -3,28 +3,28 @@ odoo.define('web.user_menu_tests', function (require) {
 
 var testUtils = require('web.test_utils');
 var UserMenu = require('web.UserMenu');
-var Widget = require('web.Widget');
+
+const { Component, tags } = owl;
 
 QUnit.module('chrome', {}, function () {
     QUnit.module('UserMenu');
 
     QUnit.test('basic rendering', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
-        var parent = new Widget();
+        class Parent extends Component {}
+        Parent.template = tags.xml`<UserMenu/>`;
+        Parent.components = { UserMenu };
 
-        testUtils.mock.addMockEnvironment(parent, {});
-        var userMenu = new UserMenu(parent);
-        await userMenu.appendTo($('body'));
+        const target = testUtils.prepareTarget();
+        const parent = new Parent();
+        await parent.mount(target);
 
-        assert.strictEqual($('.o_user_menu').length, 1,
-            "should have a user menu in the DOM");
-        assert.hasClass(userMenu.$el,'o_user_menu',
-            "user menu in DOM should be from user menu widget instantiation");
-        assert.containsOnce(userMenu, '.dropdown-item[data-menu="shortcuts"]',
-            "should have a 'Shortcuts' item");
+        assert.containsOnce(target, '.o_user_menu');
+        assert.containsOnce(target, '.o_user_menu > a');
+        assert.containsOnce(target, '.o_user_menu > .dropdown-menu');
+        assert.containsOnce(target, '.dropdown-item[data-menu="shortcuts"]');
 
-        userMenu.destroy();
         parent.destroy();
     });
 });

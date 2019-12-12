@@ -1,24 +1,28 @@
 odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
-var ActionManager = require('web.ActionManager');
-var ReportClientAction = require('report.client_action');
-var Notification = require('web.Notification');
-var NotificationService = require('web.NotificationService');
-var AbstractAction = require('web.AbstractAction');
-var AbstractStorageService = require('web.AbstractStorageService');
-var BasicFields = require('web.basic_fields');
-var core = require('web.core');
-var ListController = require('web.ListController');
-var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
-var RamStorage = require('web.RamStorage');
-var ReportService = require('web.ReportService');
-var SessionStorageService = require('web.SessionStorageService');
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
+const ActionManager = require('web.ActionManager');
+const AbstractAction = require('web.AbstractAction');
+const AbstractStorageService = require('web.AbstractStorageService');
+const BasicFields = require('web.basic_fields');
+const { CrashManager } = require('web.CrashManager');
+const core = require('web.core');
+const ListController = require('web.ListController');
+const Notification = require('web.Notification');
+const NotificationService = require('web.NotificationService');
+const RamStorage = require('web.RamStorage');
+const ReportClientAction = require('report.client_action');
+const ReportService = require('web.ReportService');
+const SessionStorageService = require('web.SessionStorageService');
+const StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
+const testUtils = require('web.test_utils');
+const utils = require('web.utils');
+const Widget = require('web.Widget');
 
-var createActionManager = testUtils.createActionManager;
+const { createWebClient, nextTick } = testUtils;
+
 const cpHelpers = testUtils.controlPanel;
+const doAction = testUtils.actionManager.doAction;
 
 QUnit.module('ActionManager', {
     beforeEach: function () {
@@ -112,6 +116,20 @@ QUnit.module('ActionManager', {
             report_type: 'qweb-pdf',
             type: 'ir.actions.report',
             close_on_report_download: true,
+        }, {
+            id: 24,
+            name: 'Partner',
+            res_id: 2,
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[666, 'form']],
+        }, {
+            id: 25,
+            name: 'Create a Partner',
+            res_model: 'partner',
+            target: 'new',
+            type: 'ir.actions.act_window',
+            views: [[1, 'form']],
         }];
 
         this.archs = {
@@ -136,6 +154,26 @@ QUnit.module('ActionManager', {
                         '<field name="foo"/>' +
                     '</group>' +
                 '</form>',
+
+            'partner,1,form': `
+                <form>
+                    <footer>
+                        <button class="btn-primary" string="Save" special="save"/>
+                    </footer>
+                </form>`,
+
+             'partner,666,form': `<form>
+                    <header></header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" modifiers="{}">
+                            <button class="oe_stat_button" type="action" name="1" icon="fa-star" context="{'default_partner': active_id}">
+                                <field string="Partners" name="o2m" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <field name="display_name"/>
+                    </sheet>
+                </form>`,
+
             'pony,false,form': '<form>' +
                     '<field name="name"/>' +
                 '</form>',
@@ -157,27 +195,42 @@ QUnit.module('ActionManager', {
         this.actions[3].views = [[false, 'form']];
         this.actions[3].target = 'inline';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(4);
-        assert.ok(!$('.o_control_panel').is(':visible'),
+        await doAction(4);
+        assert.ok(!$(webClient.el).find('.o_control_panel').is(':visible'),
             "control panel should not be visible");
 
-        await actionManager.doAction(1, {clear_breadcrumbs: true});
-        assert.ok($('.o_control_panel').is(':visible'),
+        await doAction(1, {clear_breadcrumbs: true});
+        assert.ok($(webClient.el).find('.o_control_panel').is(':visible'),
             "control panel should now be visible");
-        assert.strictEqual($('.o_control_panel .breadcrumb').text(), "Partners Action 1",
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb').text(), "Partners Action 1",
             "should have only one current action visible in breadcrumbs");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('no widget memory leaks when doing some action stuff', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
+
+        const components = new Set();
+        const originalMethods = {
+            __patch: owl.Component.prototype.__patch,
+            __destroy: owl.Component.prototype.__destroy,
+        };
+        owl.Component.prototype.__patch = function() {
+            components.add(this);
+            return originalMethods.__patch.call(this, ...arguments);
+        };
+        owl.Component.prototype.__destroy = function() {
+            components.delete(this);
+            return originalMethods.__destroy.call(this, ...arguments);
+        };
 
         var delta = 0;
         testUtils.mock.patch(Widget, {
@@ -191,31 +244,51 @@ QUnit.module('ActionManager', {
             },
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(8);
+
+        await doAction(8);
 
         var n = delta;
-        await actionManager.doAction(4);
-
+        await doAction(4);
         // kanban view is loaded, switch to list view
-        await cpHelpers.switchView(actionManager, 'list');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        // go back to action 7 in breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        // go back to action 8 in breadcrumbs
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:first'));
 
         assert.strictEqual(delta, n,
             "should have properly destroyed all other widgets");
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(Widget);
+        for (const key in originalMethods) {
+            owl.Component.prototype[key] = originalMethods[key];
+        }
+
+        assert.strictEqual(components.size, 0);
     });
 
     QUnit.test('no widget memory leaks when executing actions in dialog', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
+
+        const components = new Set();
+        const originalMethods = {
+            __patch: owl.Component.prototype.__patch,
+            __destroy: owl.Component.prototype.__destroy,
+        };
+        owl.Component.prototype.__patch = function() {
+            components.add(this);
+            return originalMethods.__patch.call(this, ...arguments);
+        };
+        owl.Component.prototype.__destroy = function() {
+            components.delete(this);
+            return originalMethods.__destroy.call(this, ...arguments);
+        };
 
         var delta = 0;
         testUtils.mock.patch(Widget, {
@@ -231,28 +304,49 @@ QUnit.module('ActionManager', {
             },
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
+
         var n = delta;
 
-        await actionManager.doAction(5);
-        await actionManager.doAction({type: 'ir.actions.act_window_close'});
+        await doAction(5);
+        await doAction({type: 'ir.actions.act_window_close'});
 
         assert.strictEqual(delta, n,
             "should have properly destroyed all widgets");
 
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(Widget);
+        for (const key in originalMethods) {
+            owl.Component.prototype[key] = originalMethods[key];
+        }
+
+        assert.strictEqual(components.size, 0);
     });
 
     QUnit.test('no memory leaks when executing an action while switching view', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
-        var def;
-        var delta = 0;
+        const components = new Set();
+        const originalMethods = {
+            __patch: owl.Component.prototype.__patch,
+            __destroy: owl.Component.prototype.__destroy,
+        };
+        owl.Component.prototype.__patch = function() {
+            components.add(this);
+            return originalMethods.__patch.call(this, ...arguments);
+        };
+        owl.Component.prototype.__destroy = function() {
+            components.delete(this);
+            return originalMethods.__destroy.call(this, ...arguments);
+        };
+
+        let def;
+        let delta = 0;
         testUtils.mock.patch(Widget, {
             init: function () {
                 delta += 1;
@@ -264,44 +358,63 @@ QUnit.module('ActionManager', {
             },
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
+                const result = this._super.apply(this, arguments);
                 if (args.method === 'read') {
-                    return Promise.resolve(def).then(_.constant(result));
+                    return Promise.resolve(def).then(() => result);
                 }
                 return result;
             },
         });
 
-        await actionManager.doAction(4);
-        var n = delta;
+        await doAction(4);
+        const n = delta;
 
-        await actionManager.doAction(3, {clear_breadcrumbs: true});
+        await doAction(3, {clear_breadcrumbs: true});
 
         // switch to the form view (this request is blocked)
         def = testUtils.makeTestPromise();
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
         // execute another action meanwhile (don't block this request)
-        await actionManager.doAction(4, {clear_breadcrumbs: true});
+        await doAction(4, {clear_breadcrumbs: true});
 
         // unblock the switch to the form view in action 3
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.strictEqual(n, delta,
-            "all widgets of action 3 should have been destroyed");
+        assert.strictEqual(delta, n, "all widgets of action 3 should have been destroyed");
 
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(Widget);
+        for (const key in originalMethods) {
+            owl.Component.prototype[key] = originalMethods[key];
+        }
+
+        assert.strictEqual(components.size, 0);
     });
 
     QUnit.test('no memory leaks when executing an action while loading views', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
+
+        const components = new Set();
+        const originalMethods = {
+            __patch: owl.Component.prototype.__patch,
+            __destroy: owl.Component.prototype.__destroy,
+        };
+        owl.Component.prototype.__patch = function() {
+            components.add(this);
+            return originalMethods.__patch.call(this, ...arguments);
+        };
+        owl.Component.prototype.__destroy = function() {
+            components.delete(this);
+            return originalMethods.__destroy.call(this, ...arguments);
+        };
 
         var def;
         var delta = 0;
@@ -316,10 +429,11 @@ QUnit.module('ActionManager', {
             },
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                var result = this._super.apply(this, arguments);
                 if (args.method === 'load_views') {
@@ -330,27 +444,46 @@ QUnit.module('ActionManager', {
         });
 
         // execute action 4 to know the number of widgets it instantiates
-        await actionManager.doAction(4);
+        await doAction(4);
         var n = delta;
 
         // execute a first action (its 'load_views' RPC is blocked)
         def = testUtils.makeTestPromise();
-        actionManager.doAction(3, {clear_breadcrumbs: true});
+        doAction(3, {clear_breadcrumbs: true});
 
         // execute another action meanwhile (and unlock the RPC)
-        actionManager.doAction(4, {clear_breadcrumbs: true});
+        doAction(4, {clear_breadcrumbs: true});
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.strictEqual(n, delta,
             "all widgets of action 3 should have been destroyed");
 
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(Widget);
+        for (const key in originalMethods) {
+            owl.Component.prototype[key] = originalMethods[key];
+        }
+
+        assert.strictEqual(components.size, 0);
     });
 
     QUnit.test('no memory leaks when executing an action while loading data of default view', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
+
+        const components = new Set();
+        const originalMethods = {
+            __patch: owl.Component.prototype.__patch,
+            __destroy: owl.Component.prototype.__destroy,
+        };
+        owl.Component.prototype.__patch = function() {
+            components.add(this);
+            return originalMethods.__patch.call(this, ...arguments);
+        };
+        owl.Component.prototype.__destroy = function() {
+            components.delete(this);
+            return originalMethods.__destroy.call(this, ...arguments);
+        };
 
         var def;
         var delta = 0;
@@ -365,10 +498,11 @@ QUnit.module('ActionManager', {
             },
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route) {
                 var result = this._super.apply(this, arguments);
                 if (route === '/web/dataset/search_read') {
@@ -379,23 +513,28 @@ QUnit.module('ActionManager', {
         });
 
         // execute action 4 to know the number of widgets it instantiates
-        await actionManager.doAction(4);
+        await doAction(4);
         var n = delta;
 
         // execute a first action (its 'search_read' RPC is blocked)
         def = testUtils.makeTestPromise();
-        actionManager.doAction(3, {clear_breadcrumbs: true});
+        doAction(3, {clear_breadcrumbs: true});
 
         // execute another action meanwhile (and unlock the RPC)
-        actionManager.doAction(4, {clear_breadcrumbs: true});
+        doAction(4, {clear_breadcrumbs: true});
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.strictEqual(n, delta,
             "all widgets of action 3 should have been destroyed");
 
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(Widget);
+        for (const key in originalMethods) {
+            owl.Component.prototype[key] = originalMethods[key];
+        }
+
+        assert.strictEqual(components.size, 0);
     });
 
     QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
@@ -403,119 +542,120 @@ QUnit.module('ActionManager', {
 
         _.findWhere(this.actions, {id: 4}).context = {no_breadcrumbs: true};
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        await doAction(3);
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
 
         // push another action flagged with 'no_breadcrumbs=true'
-        await actionManager.doAction(4);
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 0,
+        await doAction(4);
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 0,
             "the breadcrumbs should be empty");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('on_reverse_breadcrumb handler is correctly called', async function (assert) {
         assert.expect(3);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
         // execute action 3 and open a record in form view
-        await actionManager.doAction(3);
-        testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await doAction(3);
+        testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
         // execute action 4 without 'on_reverse_breadcrumb' handler, then go back
-        await actionManager.doAction(4);
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
+        await doAction(4);
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:first'));
         assert.verifySteps([]);
 
         // execute action 4 with an 'on_reverse_breadcrumb' handler, then go back
-        await actionManager.doAction(4, {
+        await doAction(4, {
             on_reverse_breadcrumb: function () {
                 assert.step('on_reverse_breadcrumb');
             }
         });
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:first'));
         assert.verifySteps(['on_reverse_breadcrumb']);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(2);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(4);
-        await actionManager.doAction(3);
-        actionManager.trigger_up('history_back');
+        await doAction(4);
+        await doAction(3);
+        webClient.env.bus.trigger('history-back');
+        await nextTick();
 
-        await testUtils.nextTick();
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.containsOnce(webClient, '.o_control_panel .breadcrumb-item',
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners Action 4',
             "breadcrumbs should display the display_name of the action");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('stores and restores scroll position', async function (assert) {
-        assert.expect(7);
+        assert.expect(5);
 
-        var left;
-        var top;
-        var actionManager = await createActionManager({
+        var left = 0;
+        var top = 0;
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                getScrollPosition: function (ev) {
-                    assert.step('getScrollPosition');
-                    ev.data.callback({left: left, top: top});
+            menus: this.menus,
+            webClient: {
+                _getScrollPosition: function () {
+                    return { top, left };
                 },
-                scrollTo: function (ev) {
-                    assert.step('scrollTo left ' + ev.data.left + ', top ' + ev.data.top);
+                _scrollTo: function (to) {
+                    assert.step('scrollTo left ' + to.left + ', top ' + to.top);
                 },
             },
         });
 
         // execute a first action and simulate a scroll
         assert.step('execute action 3');
-        await actionManager.doAction(3);
+        await doAction(3);
         left = 50;
         top = 100;
 
         // execute a second action (in which we don't scroll)
         assert.step('execute action 4');
-        await actionManager.doAction(4);
+        await doAction(4);
 
         // go back using the breadcrumbs
         assert.step('go back to action 3');
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
 
         assert.verifySteps([
             'execute action 3',
             'execute action 4',
-            'getScrollPosition', // of action 3, before leaving it
             'go back to action 3',
-            'getScrollPosition', // of action 4, before leaving it
             'scrollTo left 50, top 100', // restore scroll position of action 3
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('executing an action with target != "new" closes all dialogs', async function (assert) {
@@ -528,25 +668,26 @@ QUnit.module('ActionManager', {
                 '</field>' +
             '</form>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(3);
-        assert.containsOnce(actionManager, '.o_list_view');
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
 
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_form_view');
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_form_view');
 
-        await testUtils.dom.click(actionManager.$('.o_form_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view .o_data_row:first'));
         assert.containsOnce(document.body, '.modal .o_form_view');
 
-        await actionManager.doAction(1); // target != 'new'
+        await doAction(1); // target != 'new'
         assert.containsNone(document.body, '.modal');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('executing an action with target "new" does not close dialogs', async function (assert) {
@@ -559,25 +700,190 @@ QUnit.module('ActionManager', {
                 '</field>' +
             '</form>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(3);
-        assert.containsOnce(actionManager, '.o_list_view');
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
 
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_form_view');
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_form_view');
 
-        await testUtils.dom.click(actionManager.$('.o_form_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view .o_data_row:first'));
         assert.containsOnce(document.body, '.modal .o_form_view');
 
-        await actionManager.doAction(5); // target 'new'
+        await doAction(5); // target 'new'
         assert.containsN(document.body, '.modal .o_form_view', 2);
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test("rainbowman integrated to webClient", async function (assert) {
+        assert.expect(10);
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            session: {
+                show_effect: true,
+            },
+        });
+        await doAction(1);
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(webClient, '.o_reward');
+        webClient.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
+        await testUtils.nextTick();
+
+        assert.containsOnce(webClient, '.o_reward');
+        assert.containsOnce(webClient, '.o_kanban_view');
+        await testUtils.dom.click(webClient.el.querySelector('.o_kanban_record'));
+        assert.containsNone(webClient, '.o_reward');
+        assert.containsOnce(webClient, '.o_kanban_view');
+
+        webClient.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
+        await testUtils.nextTick();
+        assert.containsOnce(webClient, '.o_reward');
+        assert.containsOnce(webClient, '.o_kanban_view');
+
+        // Do not force rainbow man to destroy on doAction
+        // we let it die either after its animation or on user click
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_reward');
+        assert.containsOnce(webClient, '.o_list_view');
+
+        webClient.destroy();
+    });
+
+    QUnit.test('show effect notification', async function (assert) {
+        assert.expect(6);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            session: {
+                show_effect: false,
+            },
+            services: {
+                notification: NotificationService
+            }
+        });
+        await doAction(1);
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(webClient, '.o_reward');
+        assert.containsNone(document.querySelector('body'), '.o_notification');
+        webClient.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
+        await testUtils.nextTick();
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(webClient, '.o_reward');
+        assert.containsOnce(document.querySelector('body'), '.o_notification');
+        webClient.destroy();
+    });
+
+    QUnit.test('deconnection and reconnection notifications', async function (assert) {
+        assert.expect(8);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            services: {
+                notification: NotificationService
+            }
+        });
+        await doAction(1);
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(document.querySelector('body'), '.o_notification');
+        webClient.env.bus.trigger('connection_lost');
+        await testUtils.nextTick();
+        assert.containsOnce(document.querySelector('body'), '.o_notification');
+        assert.strictEqual(
+            document.querySelector('body .o_notification .o_notification_title').innerHTML,
+            'Connection lost'
+        );
+        assert.containsOnce(webClient, '.o_kanban_view');
+
+        webClient.env.bus.trigger('connection_restored');
+        await testUtils.nextTick();
+        assert.containsN(document.querySelector('body'), '.o_notification', 2);
+        assert.strictEqual(
+            document.querySelectorAll('body .o_notification .o_notification_title')[1].innerHTML,
+            'Connection restored'
+        );
+        assert.containsOnce(webClient, '.o_kanban_view');
+        webClient.destroy();
+    });
+
+    QUnit.test('display warning as notification', async function (assert) {
+        assert.expect(6);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            services: {
+                notification: NotificationService
+            }
+        });
+        await doAction(1);
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(document.querySelector('body'), '.o_notification');
+        webClient.trigger('warning', {title: 'gloria', message: 'Like to tell ya about my baby'});
+        await testUtils.nextTick();
+        assert.containsOnce(document.querySelector('body'), '.o_notification');
+        assert.strictEqual(
+            document.querySelector('body .o_notification .o_notification_title').innerHTML,
+            'gloria'
+        );
+        assert.strictEqual(
+            document.querySelector('body .o_notification .o_notification_content').innerHTML,
+            'Like to tell ya about my baby'
+        );
+        assert.containsOnce(webClient, '.o_kanban_view');
+        webClient.destroy();
+    });
+
+    QUnit.test('display warning as modal', async function (assert) {
+        assert.expect(8);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            services: {
+                notification: NotificationService
+            }
+        });
+        await doAction(1);
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(document.querySelector('body'), '.modal');
+        webClient.trigger('warning', {title: 'gloria', type: 'dialog', message: 'Like to tell ya about my baby'});
+        await testUtils.nextTick();
+        // In this case the bootstrap modal may take one more tick to be here
+        await testUtils.nextTick();
+        assert.containsOnce(document.querySelector('body'), '.modal');
+        assert.strictEqual(
+            document.querySelector('body .modal .modal-title').textContent,
+            'gloria'
+        );
+        assert.strictEqual(
+            document.querySelector('body .modal .modal-body').textContent.trim(),
+            'Like to tell ya about my baby'
+        );
+        assert.containsOnce(webClient, '.o_kanban_view');
+        await testUtils.dom.click(document.querySelector('body .modal .modal-footer button'));
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(document.querySelector('body'), '.modal');
+        webClient.destroy();
     });
 
     QUnit.module('Push State');
@@ -591,34 +897,36 @@ QUnit.module('ActionManager', {
             {action: 8, id: 4, model: "pony", title: "Twilight Sparkle", view_type: "form"},
         ];
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                push_state: function (event) {
+            menus: this.menus,
+            webClient: {
+                _updateState(state) {
                     var descr = stateDescriptions.shift();
-                    assert.deepEqual(_.extend({}, event.data.state), descr,
+                    assert.deepEqual(_.extend({}, state), descr,
                         "should notify the environment of new state");
                 },
             },
         });
-        await actionManager.doAction(4);
-        await actionManager.doAction(8);
-        await testUtils.dom.click(actionManager.$('tr.o_data_row:first'));
+        await doAction(4);
+        await doAction(8);
+        await testUtils.dom.click($(webClient.el).find('tr.o_data_row:first'));
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('push state after action is loaded, not before', async function (assert) {
         assert.expect(5);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                push_state: function () {
+            menus: this.menus,
+            webClient: {
+                _updateState: function () {
                     assert.step('push_state');
                 },
             },
@@ -627,7 +935,7 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(4);
+        await doAction(4);
         assert.verifySteps([
             '/web/action/load',
             '/web/dataset/call_kw/partner',
@@ -635,41 +943,48 @@ QUnit.module('ActionManager', {
             'push_state'
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('do not push state for actions in target=new', async function (assert) {
         assert.expect(3);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                push_state: function () {
+            menus: this.menus,
+            webClient: {
+                _setWindowHash: function () {
                     assert.step('push_state');
                 },
             },
         });
-        await actionManager.doAction(4);
+        await doAction(4);
         assert.verifySteps(['push_state']);
-        await actionManager.doAction(5);
+        await doAction(5);
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('do not push state when action fails', async function (assert) {
         assert.expect(4);
 
-        var actionManager = await createActionManager({
+        let _hash = '';
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                push_state: function () {
+            menus: this.menus,
+            webClient: {
+                _setWindowHash(newHash) {
                     assert.step('push_state');
+                    _hash = newHash;
                 },
+                _getWindowHash() {
+                    return _hash;
+                }
             },
             mockRPC: function (route, args) {
                 if (args.method === 'read') {
@@ -679,15 +994,15 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(8);
+        await doAction(8);
         assert.verifySteps(['push_state']);
-        await testUtils.dom.click(actionManager.$('tr.o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('tr.o_data_row:first'));
         assert.verifySteps([]);
         // we make sure here that the list view is still in the dom
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "there should still be a list view in dom");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.module('Load State');
@@ -695,23 +1010,27 @@ QUnit.module('ActionManager', {
     QUnit.test('should not crash on invalid state', async function (assert) {
         assert.expect(2);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-        });
-         await actionManager.loadState({
-            res_model: 'partner', // the valid key for the model is 'model', not 'res_model'
+            webClient: {
+                _getWindowHash() {
+                    return '#res_model=partner'; // the valid key for the model is 'model', not 'res_model'
+                }
+            },
         });
 
-        assert.strictEqual(actionManager.$el.text(), '', "should display nothing");
+        assert.strictEqual(webClient.el.querySelector('.o_action_manager').textContent, '',
+            "should display nothing");
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('properly load client actions', async function (assert) {
@@ -725,47 +1044,53 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('HelloWorldTest', ClientAction);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-        });
-        await actionManager.loadState({
-            action: 'HelloWorldTest',
+            webClient: {
+                _getWindowHash() {
+                    return '#action=HelloWorldTest';
+                }
+            }
         });
 
-        assert.strictEqual(actionManager.$('.o_client_action_test').text(),
+        assert.strictEqual($(webClient.el).find('.o_client_action_test').text(),
             'Hello World', "should have correctly rendered the client action");
 
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.HelloWorldTest;
     });
 
     QUnit.test('properly load act window actions', async function (assert) {
         assert.expect(6);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-        });
-         await actionManager.loadState({
-            action: 1,
+            webClient: {
+                _getWindowHash() {
+                    return '#action=1';
+                }
+            }
         });
 
-        assert.strictEqual($('.o_control_panel').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel').length, 1,
             "should have rendered a control panel");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should have rendered a kanban view");
 
         assert.verifySteps([
@@ -774,29 +1099,82 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('properly push state active_id', async function (assert) {
+        assert.expect(13);
+
+        Object.assign(this.archs, {
+            // kanban views
+            'partner,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
+                    '<div class="oe_kanban_global_click"><a name="1" type="action"></a><field name="foo"/></div>' +
+                '</t></templates></kanban>',
+        });
+
+        let _hash = '#action=1';
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            webClient: {
+                _getWindowHash() {
+                    return _hash;
+                },
+                _setWindowHash(newHash) {
+                    assert.step(newHash);
+                    _hash = newHash;
+                }
+            }
+        });
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            '/web/dataset/search_read',
+            '#model=partner&view_type=kanban&action=1',
+        ]);
+        await testUtils.dom.click(webClient.el.querySelector('.o_kanban_record a'));
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            '/web/dataset/search_read',
+            '#model=partner&view_type=kanban&action=1&active_id=1',
+        ]);
+        await testUtils.dom.click(webClient.el.querySelector('.breadcrumb-item'));
+        assert.verifySteps([
+            '/web/dataset/search_read',
+            '#model=partner&view_type=kanban&action=1',
+        ]);
+        webClient.destroy();
     });
 
     QUnit.test('properly load records', async function (assert) {
         assert.expect(5);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-        });
-         await actionManager.loadState({
-            id: 2,
-            model: 'partner',
+            webClient: {
+                _getWindowHash() {
+                    return '#model=partner&id=2';
+                }
+            }
         });
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should have rendered a form view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Second record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Second record',
             "should have opened the second record");
 
         assert.verifySteps([
@@ -804,29 +1182,29 @@ QUnit.module('ActionManager', {
             'read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('properly load default record', async function (assert) {
         assert.expect(5);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-        });
-        await actionManager.loadState({
-            action: 3,
-            id: "",  // might happen with bbq and id=& in URL
-            model: 'partner',
-            view_type: 'form',
+            webClient: {
+                _getWindowHash() {
+                    return '#action=3&id=&model=partner&view_type=form';
+                }
+            }
         });
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should have rendered a form view");
 
         assert.verifySteps([
@@ -835,29 +1213,31 @@ QUnit.module('ActionManager', {
             'default_get',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('load requested view for act window actions', async function (assert) {
         assert.expect(6);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-        });
-         await actionManager.loadState({
-            action: 3,
-            view_type: 'kanban',
+            webClient: {
+                _getWindowHash() {
+                    return '#action=3&view_type=kanban';
+                }
+            }
         });
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not have rendered a list view");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should have rendered a kanban view");
 
         assert.verifySteps([
@@ -866,40 +1246,41 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('lazy load multi record view if mono record one is requested', async function (assert) {
         assert.expect(11);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
+            webClient: {
+                _getWindowHash() {
+                    return '#action=3&id=2&view_type=form';
+                }
+            }
         });
-        await actionManager.loadState({
-            action: 3,
-            id: 2,
-            view_type: 'form',
-        });
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not have rendered a list view");
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should have rendered a form view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Second record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Second record',
             "breadcrumbs should contain the display_name of the opened record");
 
         // go back to Lst
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.containsOnce(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should now display the list view");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "should not display the form view anymore");
 
         assert.verifySteps([
@@ -909,52 +1290,54 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // search read when coming back to List
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('lazy load multi record view with previous action', async function (assert) {
         assert.expect(6);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(4);
+        await doAction(4);
 
-        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb li').length, 1,
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
             "breadcrumbs should contain the display_name of the opened record");
 
-        await actionManager.doAction(3, {
+        await doAction(3, {
             resID: 2,
             viewType: 'form',
         });
 
-        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 3,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb li').length, 3,
             "there should be three controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4PartnersSecond record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb li').text(), 'Partners Action 4PartnersSecond record',
             "the breadcrumb elements should be correctly ordered");
 
         // go back to List
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:last'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:last'));
 
-        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb li').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb li').text(), 'Partners Action 4Partners',
             "the breadcrumb elements should be correctly ordered");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('lazy loaded multi record view with failing mono record one', async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 if (args.method === 'read') {
                     return Promise.reject();
@@ -963,68 +1346,65 @@ QUnit.module('ActionManager', {
             },
         });
 
-        await actionManager.loadState({
+        await testUtils.actionManager.loadState(webClient, {
             action: 3,
             id: 2,
             view_type: 'form',
-        }).then(function () {
-            assert.ok(false, 'should not resolve the deferred');
-        }).catch(function () {
-            assert.ok(true, 'should reject the deferred');
         });
 
-        assert.containsNone(actionManager, '.o_form_view');
-        assert.containsNone(actionManager, '.o_list_view');
+        assert.containsNone(webClient, '.o_form_view');
+        assert.containsNone(webClient, '.o_list_view');
 
-        await actionManager.doAction(1);
+        await doAction(1);
 
-        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsOnce(webClient, '.o_kanban_view');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(13);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        await doAction(3);
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should have rendered a list view");
 
         // switch to kanban view
-         await actionManager.loadState({
+        await testUtils.actionManager.loadState(webClient, {
             action: 3,
             view_type: 'kanban',
         });
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should have switched to the kanban view");
 
         // switch to form view, open record 4
-         await actionManager.loadState({
+        await testUtils.actionManager.loadState(webClient, {
             action: 3,
             id: 4,
             view_type: 'form',
         });
 
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should not display the kanban view anymore");
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should have switched to the form view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Fourth record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Fourth record',
             "should have opened the requested record");
 
         // verify steps to ensure that the whole action hasn't been re-executed
@@ -1038,16 +1418,17 @@ QUnit.module('ActionManager', {
             'read', // form view
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('change the id of the current action', async function (assert) {
         assert.expect(11);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
@@ -1055,26 +1436,26 @@ QUnit.module('ActionManager', {
         });
 
         // execute action 3 and open the first record in a form view
-        await actionManager.doAction(3);
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await doAction(3);
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should have rendered a form view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "should have opened the first record");
 
         // switch to record 4
-        await actionManager.loadState({
+        await testUtils.actionManager.loadState(webClient, {
             action: 3,
             id: 4,
             view_type: 'form',
         });
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should still display the form view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Fourth record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Fourth record',
             "should have switched to the requested record");
 
         // verify steps to ensure that the whole action hasn't been re-executed
@@ -1088,32 +1469,44 @@ QUnit.module('ActionManager', {
             'read', // form view, record 4
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
-    QUnit.test('should not push a loaded state', async function (assert) {
-        assert.expect(3);
+    QUnit.test('should not load twice a loaded state', async function (assert) {
+        // This test is historical, and has been roughly re-written when the
+        // webclient/action manager have been converted to in Owl. It's purpose was
+        // to ensure that, when loading a state from the url, that state wasn't
+        // pushed back to the url when loaded, which would re-trigger a loading
+        // of that exact same state, again, and again...
+        assert.expect(6);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                push_state: function () {
-                    assert.step('push_state');
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super(...arguments);
+            },
+            webClient: {
+                _getWindowHash() {
+                    return '#action=3';
                 },
             },
         });
-        await actionManager.loadState({action: 3});
 
-        assert.verifySteps([], "should not push the loaded state");
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            '/web/dataset/search_read'
+        ], "should load the action only once");
 
-        await testUtils.dom.click(actionManager.$('tr.o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('tr.o_data_row:first'));
 
-        assert.verifySteps(['push_state'],
-            "should push the state of it changes afterwards");
+        assert.verifySteps(['read'], "should correctly load the subsequent view");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('should not push a loaded state of a client action', async function (assert) {
@@ -1139,31 +1532,33 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('ClientAction', ClientAction);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                push_state: function (ev) {
+            menus: this.menus,
+            webClient: {
+                _setWindowHash: function (newHash) {
                     assert.step('push_state');
-                    assert.deepEqual(ev.data.state, {
-                        action: 9,
-                        someValue: 'X',
-                        title: 'A Client Action',
-                    });
+                    assert.strictEqual(
+                        newHash,
+                        '#someValue=X&action=9'
+                    );
                 },
+                _getWindowHash() {
+                    return '#action=9';
+                }
             },
         });
-         await actionManager.loadState({action: 9});
 
         assert.verifySteps([], "should not push the loaded state");
 
-        await testUtils.dom.click(actionManager.$('button'));
+        await testUtils.dom.click($(webClient.el).find('button'));
 
         assert.verifySteps(['push_state'],
             "should push the state of it changes afterwards");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('change a param of an ir.actions.client in the url', async function (assert) {
@@ -1189,35 +1584,33 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('ClientAction', ClientAction);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
         // execute the client action
-        await actionManager.doAction(9);
+        await doAction(9);
 
-        assert.strictEqual(actionManager.$('.o_client_action .o_content').text(), 'default value',
+        assert.strictEqual($(webClient.el).find('.o_client_action .o_content').text(), 'default value',
             "should have rendered the client action");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
 
         // update param 'a' in the url
-         await actionManager.loadState({
-            action: 9,
-            a: 'new value',
-        });
+        await testUtils.actionManager.loadState(webClient, { action: 9, a: 'new value' });
 
-        assert.strictEqual(actionManager.$('.o_client_action .o_content').text(), 'new value',
+        assert.strictEqual($(webClient.el).find('.o_client_action .o_content').text(), 'new value',
             "should have rerendered the client action with the correct param");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should still be one controller in the breadcrumbs");
 
         // should have executed the client action twice
         assert.verifySteps(['start', 'start']);
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.ClientAction;
     });
 
@@ -1226,12 +1619,21 @@ QUnit.module('ActionManager', {
 
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
+            getItem() {
+                assert.step('getItem');
+                return this._super.apply(this, arguments);
+            },
+            setItem() {
+                assert.step('setItem');
+                this._super.apply(this, arguments);
+            }
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
                 session_storage: RamStorageService,
             },
@@ -1240,30 +1642,20 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
+        await doAction(4);
 
-        testUtils.mock.intercept(actionManager, 'call_service', function (ev) {
-            if (ev.data.service === 'session_storage') {
-                assert.step(ev.data.method);
-            }
-        }, true);
-
-        await actionManager.doAction(4);
-
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should display a kanban view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners Action 4',
             "breadcrumbs should display the display_name of the action");
 
-         await actionManager.loadState({
-            model: 'partner',
-            view_type: 'list',
-        });
+        await testUtils.actionManager.loadState(webClient, { model: 'partner', view_type: 'list' });
 
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners Action 4',
             "should still be in the same action");
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should no longer display a kanban view");
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display a list view");
 
         assert.verifySteps([
@@ -1277,7 +1669,137 @@ QUnit.module('ActionManager', {
             'setItem', // loaded action
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('load state supports being given menu_id alone', async function (assert) {
+        assert.expect(6);
+
+        const menus = {
+            all_menu_ids: [666],
+            children: [{
+                id: 666,
+                action: 'ir.actions.act_window,1',
+                children: [],
+            }]
+        };
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: menus,
+            mockRPC(route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+            webClient: {
+                _getWindowHash() {
+                    return '#menu_id=666';
+                }
+            }
+        });
+        assert.containsOnce(webClient, '.o_kanban_view',
+            "should display a kanban view");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners Action 1',
+            "breadcrumbs should display the display_name of the action");
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/search_read',
+        ]);
+
+        webClient.destroy();
+    });
+
+    QUnit.test('load state supports #home', async function (assert) {
+        assert.expect(12);
+
+        const menus = {
+            all_menu_ids: [666],
+            children: [{
+                id: 666,
+                action: 'ir.actions.act_window,1',
+                children: [],
+            }]
+        };
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: menus,
+            mockRPC(route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+            webClient: {
+                _getWindowHash() {
+                    return '#action=3';
+                }
+            }
+        });
+        assert.containsOnce(webClient, '.o_list_view',
+            "should display a list view");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners',
+            "breadcrumbs should display the display_name of the action");
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/search_read',
+        ]);
+
+        await testUtils.actionManager.loadState(webClient, {
+            home: true,
+        });
+        assert.containsOnce(webClient, '.o_kanban_view',
+            "should display a kanban view");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners Action 1',
+            "breadcrumbs should display the display_name of the action");
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/search_read',
+        ]);
+        webClient.destroy();
+    });
+
+    QUnit.test('load state supports #home as initial state', async function (assert) {
+        assert.expect(6);
+
+        const menus = {
+            all_menu_ids: [666],
+            children: [{
+                id: 666,
+                action: 'ir.actions.act_window,1',
+                children: [],
+            }]
+        };
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: menus,
+            mockRPC(route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+            webClient: {
+                _getWindowHash() {
+                    return '#home';
+                }
+            }
+        });
+        assert.containsOnce(webClient, '.o_kanban_view',
+            "should display a kanban view");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners Action 1',
+            "breadcrumbs should display the display_name of the action");
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/search_read',
+        ]);
+        webClient.destroy();
     });
 
     QUnit.module('Concurrency management');
@@ -1286,10 +1808,11 @@ QUnit.module('ActionManager', {
         assert.expect(6);
 
         var def = testUtils.makeTestPromise();
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route) {
                 var result = this._super.apply(this, arguments);
                 assert.step(route);
@@ -1299,23 +1822,24 @@ QUnit.module('ActionManager', {
                 return result;
             },
         });
-        actionManager.doAction(4);
-        actionManager.doAction(8);
+        doAction(4);
+        await nextTick();
+        doAction(8);
+        await nextTick();
 
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
         // action 4 loads a kanban view first, 6 loads a list view. We want a list
-        assert.containsOnce(actionManager, '.o_list_view',
-            'there should be a list view in DOM');
+        assert.containsOnce(webClient, '.o_list_view');
 
         assert.verifySteps([
-            '/web/action/load',  // load action 4
+            '/web/action/load', // load action 4
             '/web/action/load', // load action 6
             '/web/dataset/call_kw/pony', // load views for action 6
             '/web/dataset/search_read', // search read for list view action 6
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('handle switching view and switching back on slow network', async function (assert) {
@@ -1324,10 +1848,11 @@ QUnit.module('ActionManager', {
         var def = testUtils.makeTestPromise();
         var defs = [Promise.resolve(), def, Promise.resolve()];
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route) {
                 assert.step(route);
                 var result = this._super.apply(this, arguments);
@@ -1337,15 +1862,17 @@ QUnit.module('ActionManager', {
                 }
                 return result;
             },
+            debounce: false,
         });
-        await actionManager.doAction(4);
+        doAction(4);
+        await nextTick();
 
         // kanban view is loaded, switch to list view
-        await cpHelpers.switchView(actionManager, 'list');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
 
         // here, list view is not ready yet, because def is not resolved
         // switch back to kanban view
-        await cpHelpers.switchView(actionManager, 'kanban');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
 
         // here, we want the kanban view to reload itself, regardless of list view
         assert.verifySteps([
@@ -1358,13 +1885,13 @@ QUnit.module('ActionManager', {
 
         // we resolve def => list view is now ready (but we want to ignore it)
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        await nextTick();
+        assert.containsOnce(webClient, '.o_kanban_view',
             "there should be a kanban view in dom");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "there should not be a list view in dom");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('when an server action takes too much time...', async function (assert) {
@@ -1372,10 +1899,11 @@ QUnit.module('ActionManager', {
 
         var def = testUtils.makeTestPromise();
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route) {
                 if (route === '/web/action/run') {
                     return def.then(_.constant(1));
@@ -1384,15 +1912,15 @@ QUnit.module('ActionManager', {
             },
         });
 
-        actionManager.doAction(2);
-        actionManager.doAction(4);
+        doAction(2);
+        doAction(4);
 
         def.resolve();
-        await testUtils.nextTick();
-        assert.strictEqual($('.o_control_panel .breadcrumb-item.active').text(), 'Partners Action 4',
+        await nextTick();
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item.active').text(), 'Partners Action 4',
             'action 4 should be loaded');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('clicking quickly on breadcrumbs...', async function (assert) {
@@ -1400,10 +1928,11 @@ QUnit.module('ActionManager', {
 
         var def = Promise.resolve();
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'read') {
@@ -1414,38 +1943,40 @@ QUnit.module('ActionManager', {
         });
 
         // create a situation with 3 breadcrumbs: kanban/form/list
-        await actionManager.doAction(4);
-        await testUtils.dom.click(actionManager.$('.o_kanban_record:first'));
-        actionManager.doAction(8);
+        doAction(4);
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_kanban_record:first'));
+        doAction(8);
 
         // now, the next read operations will be promise (this is the read
         // operation for the form view reload)
         def = testUtils.makeTestPromise();
-        await testUtils.nextTick();
+        await nextTick();
 
         // click on the breadcrumbs for the form view, then on the kanban view
         // before the form view is fully reloaded
-        await testUtils.dom.click($('.o_control_panel .breadcrumb-item:eq(1)'));
-        await testUtils.dom.click($('.o_control_panel .breadcrumb-item:eq(0)'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:eq(1)'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:eq(0)'));
 
         // resolve the form view read
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.strictEqual($('.o_control_panel .breadcrumb-item.active').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item.active').text(), 'Partners Action 4',
             'action 4 should be loaded and visible');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute a new action while loading a lazy-loaded controller', async function (assert) {
         assert.expect(15);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 assert.step(args.method || route);
@@ -1454,30 +1985,30 @@ QUnit.module('ActionManager', {
                 }
                 return result;
             },
-        });
-         await actionManager.loadState({
-            action: 4,
-            id: 2,
-            view_type: 'form',
+            webClient: {
+                _getWindowHash() {
+                    return "#action=3&id=2&view_type=form";
+                },
+            },
         });
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should display the form view of action 4");
 
         // click to go back to Kanban (this request is blocked)
         def = testUtils.makeTestPromise();
-        await testUtils.nextTick();
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
         "should still display the form view of action 4");
 
         // execute another action meanwhile (don't block this request)
-        await actionManager.doAction(8, {clear_breadcrumbs: true});
+        await doAction(8, {clear_breadcrumbs: true});
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
         "should display action 8");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
         "should no longer display the form view");
 
         assert.verifySteps([
@@ -1492,16 +2023,16 @@ QUnit.module('ActionManager', {
 
         // unblock the switch to Kanban in action 4
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should still display action 8");
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should not display the kanban view of action 4");
 
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute a new action while handling a call_button', async function (assert) {
@@ -1509,10 +2040,11 @@ QUnit.module('ActionManager', {
 
         var self = this;
         var def = testUtils.makeTestPromise();
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/web/dataset/call_button') {
@@ -1523,24 +2055,26 @@ QUnit.module('ActionManager', {
         });
 
         // execute action 3 and open a record in form view
-        await actionManager.doAction(3);
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        doAction(3);
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should display the form view of action 3");
 
         // click on 'Call method' button (this request is blocked)
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Call method)'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains(Call method)'));
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should still display the form view of action 3");
 
         // execute another action
-        await actionManager.doAction(8, {clear_breadcrumbs: true});
+        doAction(8, {clear_breadcrumbs: true});
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view of action 8");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "should no longer display the form view");
 
         assert.verifySteps([
@@ -1556,25 +2090,26 @@ QUnit.module('ActionManager', {
 
         // unblock the call_button request
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsOnce(actionManager, '.o_list_view',
+        await nextTick();
+        assert.containsOnce(webClient, '.o_list_view',
             "should still display the list view of action 8");
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should not display action 1");
 
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute a new action while switching to another controller', async function (assert) {
         assert.expect(15);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 assert.step(args.method || route);
@@ -1585,59 +2120,62 @@ QUnit.module('ActionManager', {
             },
         });
 
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view of action 3");
 
         // switch to the form view (this request is blocked)
         def = testUtils.makeTestPromise();
-        await testUtils.nextTick();
-        testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
         "should still display the list view of action 3");
 
         // execute another action meanwhile (don't block this request)
-        await actionManager.doAction(4, {clear_breadcrumbs: true});
+        doAction(4, {clear_breadcrumbs: true});
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should display the kanban view of action 8");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should no longer display the list view");
 
         assert.verifySteps([
             '/web/action/load', // action 3
             'load_views', // action 3
             '/web/dataset/search_read', // search read of list view of action 3
-            '/web/action/load', // action 4
             'read', // read the opened record of action 3 (this request is blocked)
+            '/web/action/load', // action 4
             'load_views', // action 4
             '/web/dataset/search_read', // search read action 4
         ]);
 
         // unblock the switch to the form view in action 3
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should still display the kanban view of action 8");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "should not display the form view of action 3");
 
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute a new action while loading views', async function (assert) {
         assert.expect(10);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 assert.step(args.method || route);
@@ -1650,22 +2188,22 @@ QUnit.module('ActionManager', {
 
         // execute a first action (its 'load_views' RPC is blocked)
         def = testUtils.makeTestPromise();
-        actionManager.doAction(3);
+        doAction(3);
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view of action 3");
 
-        await testUtils.nextTick();
+        await nextTick();
         // execute another action meanwhile (and unlock the RPC)
-        actionManager.doAction(4);
+        doAction(4);
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should display the kanban view of action 4");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view of action 3");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
 
         assert.verifySteps([
@@ -1676,17 +2214,18 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // search read action 4
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute a new action while loading data of default view', async function (assert) {
         assert.expect(11);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 assert.step(args.method || route);
@@ -1699,21 +2238,21 @@ QUnit.module('ActionManager', {
 
         // execute a first action (its 'search_read' RPC is blocked)
         def = testUtils.makeTestPromise();
-        actionManager.doAction(3);
+        doAction(3);
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view of action 3");
 
-        await testUtils.nextTick();
+        await nextTick();
         // execute another action meanwhile (and unlock the RPC)
-        actionManager.doAction(4);
+        doAction(4);
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        await nextTick();
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should display the kanban view of action 4");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view of action 3");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
 
         assert.verifySteps([
@@ -1725,17 +2264,18 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // search read action 4
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('open a record while reloading the list view', async function (assert) {
         assert.expect(12);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route) {
                 var result = this._super.apply(this, arguments);
                 if (route === '/web/dataset/search_read') {
@@ -1745,55 +2285,56 @@ QUnit.module('ActionManager', {
             },
         });
 
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
-        assert.containsN(actionManager, '.o_list_view .o_data_row', 5,
+        assert.containsN(webClient, '.o_list_view .o_data_row', 5,
             "list view should contain 5 records");
-        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_list_buttons').length, 1,
             "list view buttons should be displayed in control panel");
 
         // reload (the search_read RPC will be blocked)
         def = testUtils.makeTestPromise();
-        await testUtils.nextTick();
-        await cpHelpers.switchView(actionManager, 'list');
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
 
-        assert.containsN(actionManager, '.o_list_view .o_data_row', 5,
+        assert.containsN(webClient, '.o_list_view .o_data_row', 5,
             "list view should still contain 5 records");
-        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_list_buttons').length, 1,
             "list view buttons should still be displayed in control panel");
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should display the form view");
-        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 0,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_list_buttons').length, 0,
             "list view buttons should no longer be displayed in control panel");
-        assert.strictEqual($('.o_control_panel .o_form_buttons_view').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_form_buttons_view').length, 1,
             "form view buttons should be displayed instead");
 
         // unblock the search_read RPC
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should display the form view");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view");
-        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 0,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_list_buttons').length, 0,
             "list view buttons should still not be displayed in control panel");
-        assert.strictEqual($('.o_control_panel .o_form_buttons_view').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_form_buttons_view').length, 1,
             "form view buttons should still be displayed instead");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.module('Client Actions');
 
     QUnit.test('can execute client actions from tag name', async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         var ClientAction = AbstractAction.extend({
             start: function () {
@@ -1803,21 +2344,20 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('HelloWorldTest', ClientAction);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
-            }
+            },
         });
-        await actionManager.doAction('HelloWorldTest');
+        doAction('HelloWorldTest');
+        await nextTick();
 
-        assert.strictEqual($('.o_control_panel:visible').length, 0, // AAB: global selector until the ControlPanel is moved from ActionManager to the Views
-            "shouldn't have rendered a control panel");
-        assert.strictEqual(actionManager.$('.o_client_action_test').text(),
-            'Hello World', "should have correctly rendered the client action");
+        assert.strictEqual(webClient.el.querySelector('.o_action_manager').innerHTML,
+            '<div class="o_action o_client_action_test">Hello World</div>');
         assert.verifySteps([]);
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.HelloWorldTest;
     });
 
@@ -1835,19 +2375,19 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('HelloWorldTest', ClientAction);
 
-        var actionManager = await createActionManager();
-        await actionManager.doAction('HelloWorldTest');
+        const webClient = await createWebClient();
+        await doAction('HelloWorldTest');
 
-        assert.strictEqual($('.o_control_panel:visible').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel:visible').length, 1,
             "should have rendered a control panel");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Hello',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Hello',
             "breadcrumbs should still display the title of the controller");
-        assert.strictEqual(actionManager.$('.o_client_action_test .o_content').text(),
+        assert.strictEqual($(webClient.el).find('.o_client_action_test .o_content').text(),
             'Hello World', "should have correctly rendered the client action");
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.HelloWorldTest;
     });
 
@@ -1862,23 +2402,25 @@ QUnit.module('ActionManager', {
                 return {foo: 'baz'};
             }
         });
-        const actionManager = await createActionManager({
-            intercepts: {
-                push_state: function (ev) {
-                    const expectedState = {action: 'HelloWorldTest', foo: 'baz', title: 'a title'};
-                    assert.deepEqual(ev.data.state, expectedState,
-                        "should include a complete state description, including custom state");
-                    assert.step('push state');
+        const webClient = await createWebClient({
+            webClient: {
+                _setWindowHash(hash) {
+                    assert.step(`hash: ${hash}`);
+                },
+                _setWindowTitle(title) {
+                    assert.step(`title: ${title}`);
                 },
             },
         });
         core.action_registry.add('HelloWorldTest', ClientAction);
 
-        await actionManager.doAction('HelloWorldTest');
+        await doAction('HelloWorldTest');
 
-        assert.verifySteps(['push state']);
-
-        actionManager.destroy();
+        assert.verifySteps([
+            "hash: #foo=baz&action=HelloWorldTest",
+            "title: a title",
+        ]);
+        webClient.destroy();
         delete core.action_registry.map.HelloWorldTest;
     });
 
@@ -1899,18 +2441,18 @@ QUnit.module('ActionManager', {
                 await this._super.apply(this, arguments);
             },
         });
-        var actionManager = await createActionManager();
+        const webClient = await createWebClient();
         core.action_registry.add('HelloWorldTest', ClientAction);
-        await actionManager.doAction('HelloWorldTest');
+        await doAction('HelloWorldTest');
 
         assert.strictEqual($('ol.breadcrumb').text(), "initial title",
             "should have initial title as breadcrumb content");
 
-        await testUtils.dom.click(actionManager.$('.o_client_action_test'));
+        await testUtils.dom.click($(webClient.el).find('.o_client_action_test'));
         assert.strictEqual($('ol.breadcrumb').text(), "new title",
             "should have updated title as breadcrumb content");
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.HelloWorldTest;
     });
 
@@ -1921,19 +2463,20 @@ QUnit.module('ActionManager', {
             _animation: false,
         });
 
-        const actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
                 notification: NotificationService,
             },
         });
 
-        await actionManager.doAction(1);
-        assert.containsOnce(actionManager, '.o_kanban_view');
+        await doAction(1);
+        assert.containsOnce(webClient, '.o_kanban_view');
 
-        await actionManager.doAction({
+        await doAction({
             type: 'ir.actions.client',
             tag: 'display_notification',
             params: {
@@ -1959,7 +2502,7 @@ QUnit.module('ActionManager', {
             "the notification should have the correct message"
         );
 
-        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsOnce(webClient, '.o_kanban_view');
 
         await testUtils.dom.click(
             notificationElement.querySelector('.o_notification_close')
@@ -1968,7 +2511,7 @@ QUnit.module('ActionManager', {
         assert.containsNone(document.body, notificationSelector,
             "the notification should be destroy ");
 
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(Notification);
     });
 
@@ -1977,10 +2520,11 @@ QUnit.module('ActionManager', {
     QUnit.test('can execute server actions from db ID', async function (assert) {
         assert.expect(9);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/web/action/run') {
@@ -1991,12 +2535,10 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(2);
+        await doAction(2);
 
-        assert.strictEqual($('.o_control_panel:visible').length, 1,
-            "should have rendered a control panel");
-        assert.containsOnce(actionManager, '.o_kanban_view',
-            "should have rendered a kanban view");
+        assert.containsOnce(webClient, '.o_control_panel');
+        assert.containsOnce(webClient, '.o_kanban_view');
         assert.verifySteps([
             '/web/action/load',
             '/web/action/run',
@@ -2005,16 +2547,17 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('handle server actions returning false', async function (assert) {
         assert.expect(9);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/web/action/run') {
@@ -2025,16 +2568,16 @@ QUnit.module('ActionManager', {
         });
 
         // execute an action in target="new"
-        await actionManager.doAction(5, {
+        doAction(5, {
             on_close: assert.step.bind(assert, 'close handler'),
         });
-        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
-            "should have rendered a form view in a modal");
+        await nextTick();
+        assert.containsOnce(document.body, '.o_technical_modal .o_form_view');
 
         // execute a server action that returns false
-        await actionManager.doAction(2);
-        assert.strictEqual($('.o_technical_modal').length, 0,
-            "should have closed the modal");
+        doAction(2);
+        await nextTick();
+        assert.containsNone(document.body, '.o_technical_modal');
         assert.verifySteps([
             '/web/action/load', // action 5
             'load_views',
@@ -2044,20 +2587,23 @@ QUnit.module('ActionManager', {
             'close handler',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.module('Report actions');
 
     QUnit.test('can execute report actions from db ID', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
+                blockUI: () => assert.step('blockUI'),
                 report: ReportService,
+                unblockUI: () => assert.step('unblockUI'),
             },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
@@ -2075,31 +2621,36 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        await actionManager.doAction(7, {
+        await doAction(7, {
             on_close: function () {
                 assert.step('on_close');
             },
         });
-        await testUtils.nextTick();
+        await nextTick();
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
+            'blockUI',
             '/report/download',
+            'unblockUI',
             'on_close',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('report actions can close modals and reload views', async function (assert) {
-        assert.expect(8);
+        assert.expect(12);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
+                blockUI: () => assert.step('blockUI'),
                 report: ReportService,
+                unblockUI: () => assert.step('unblockUI'),
             },
             mockRPC: function (route, args) {
                 if (route === '/report/check_wkhtmltopdf') {
@@ -2118,7 +2669,7 @@ QUnit.module('ActionManager', {
         });
 
         // load modal
-        await actionManager.doAction(5, {
+        await doAction(5, {
             on_close: function () {
                 assert.step('on_close');
             },
@@ -2127,7 +2678,7 @@ QUnit.module('ActionManager', {
         assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
         "should have rendered a form view in a modal");
 
-        await actionManager.doAction(7, {
+        await doAction(7, {
             on_close: function () {
                 assert.step('on_printed');
             },
@@ -2136,34 +2687,39 @@ QUnit.module('ActionManager', {
         assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
         "The modal should still exist");
 
-        await actionManager.doAction(11);
+        await doAction(11);
 
         assert.strictEqual($('.o_technical_modal .o_form_view').length, 0,
         "the modal should have been closed after the action report");
 
         assert.verifySteps([
+            'blockUI',
             '/report/download',
+            'unblockUI',
             'on_printed',
+            'blockUI',
             '/report/download',
+            'unblockUI',
             'on_close',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('should trigger a notification if wkhtmltopdf is to upgrade', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
+                blockUI: () => assert.step('blockUI'),
+                unblockUI: () => assert.step('unblockUI'),
                 report: ReportService,
                 notification: NotificationService.extend({
-                    notify: function (params) {
-                        assert.step(params.type || 'notification');
-                    }
+                    notify: () => assert.step('warning'),
                 }),
             },
             mockRPC: function (route, args) {
@@ -2182,15 +2738,17 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        await actionManager.doAction(7);
+        await doAction(7);
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'warning',
+            'blockUI',
             '/report/download',
+            'unblockUI',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('should open the report client action if wkhtmltopdf is broken', async function (assert) {
@@ -2211,16 +2769,15 @@ QUnit.module('ActionManager', {
             }
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
                 report: ReportService,
                 notification: NotificationService.extend({
-                    notify: function (params) {
-                        assert.step(params.type || 'notification');
-                    }
+                    notify: () => assert.step('warning'),
                 })
             },
             mockRPC: function (route, args) {
@@ -2240,9 +2797,9 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        await actionManager.doAction(7);
+        await doAction(7);
 
-        assert.containsOnce(actionManager, '.o_report_iframe',
+        assert.containsOnce(webClient, '.o_report_iframe',
             "should have opened the report client action");
         assert.containsOnce(actionManager, '.o_cp_buttons .o_report_buttons .o_report_print');
 
@@ -2253,17 +2810,26 @@ QUnit.module('ActionManager', {
             '/report/html/some_report', // report client action's iframe
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
         testUtils.mock.unpatch(ReportClientAction);
     });
 
     QUnit.test('crashmanager service called on failed report download actions', async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             data: this.data,
             actions: this.actions,
+            menus: this.menus,
             services: {
+                blockUI: () => {},
+                unblockUI: () => {},
+                crash_manager: CrashManager.extend({
+                    rpc_error: () => assert.step('rpc_error'),
+                }),
+                notification: NotificationService.extend({
+                    notify: (params) => assert.step(`notification ${params.type}`),
+                }),
                 report: ReportService,
             },
             mockRPC: function (route) {
@@ -2287,14 +2853,16 @@ QUnit.module('ActionManager', {
         });
 
         try {
-            await actionManager.doAction(11);
+            await doAction(11);
         } catch (e) {
             // e is undefined if we land here because of a rejected promise,
             // otherwise, it is an Error, which is not what we expect
             assert.strictEqual(e, undefined);
         }
 
-        actionManager.destroy();
+        assert.verifySteps(['rpc_error', 'notification danger']);
+
+        webClient.destroy();
     });
 
     QUnit.module('Window Actions');
@@ -2302,37 +2870,38 @@ QUnit.module('ActionManager', {
     QUnit.test('can execute act_window actions from db ID', async function (assert) {
         assert.expect(6);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(1);
+        doAction(1);
+        await nextTick();
 
-        assert.strictEqual($('.o_control_panel').length, 1,
-            "should have rendered a control panel");
-        assert.containsOnce(actionManager, '.o_kanban_view',
-            "should have rendered a kanban view");
+        assert.containsOnce(webClient, '.o_control_panel');
+        assert.containsOnce(webClient, '.o_kanban_view');
         assert.verifySteps([
             '/web/action/load',
             'load_views',
             '/web/dataset/search_read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('sidebar is present in list view', async function (assert) {
         assert.expect(4);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 var res = this._super.apply(this, arguments);
                 if (args.method === 'load_views') {
@@ -2348,62 +2917,65 @@ QUnit.module('ActionManager', {
                 return res;
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         assert.containsNone(actionManager, '.o_cp_action_menus');
 
-        await testUtils.dom.clickFirst(actionManager.$('input.custom-control-input'));
-        assert.isVisible(actionManager.$('.o_cp_action_menus button.o_dropdown_toggler_btn:contains("Print")'));
-        assert.isVisible(actionManager.$('.o_cp_action_menus button.o_dropdown_toggler_btn:contains("Action")'));
+        await testUtils.dom.clickFirst($(webClient.el).find('input.custom-control-input'));
+        assert.isVisible($(webClient.el).find('.o_cp_action_menus button.o_dropdown_toggler_btn:contains("Print")'));
+        assert.isVisible($(webClient.el).find('.o_cp_action_menus button.o_dropdown_toggler_btn:contains("Action")'));
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('can switch between views', async function (assert) {
         assert.expect(18);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
 
         // switch to kanban view
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.containsNone(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.containsNone(webClient, '.o_list_view',
             "should no longer display the list view");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should display the kanban view");
 
         // switch back to list view
-        await cpHelpers.switchView(actionManager, 'list');
-        assert.containsOnce(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should no longer display the kanban view");
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsNone(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsNone(webClient, '.o_list_view',
             "should no longer display the list view");
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should display the form view");
-        assert.strictEqual(actionManager.$('.o_field_widget[name=foo]').text(), 'yop',
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=foo]').text(), 'yop',
             "should have opened the correct record");
 
         // go back to list view using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.containsOnce(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "should no longer display the form view");
 
         assert.verifySteps([
@@ -2416,7 +2988,7 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // list
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('orderedBy in context is not propagated when executing another action', async function (assert) {
@@ -2424,15 +2996,17 @@ QUnit.module('ActionManager', {
 
         this.data.partner.fields.foo.sortable = true;
 
-        this.archs['partner,false,form'] = '<header>' +
-                                                '<button name="8" string="Execute action" type="action"/>' +
-                                            '</header>';
+        this.archs['partner,false,form'] = `
+            <header>
+                <button name="8" string="Execute action" type="action"/>
+            </header>`;
 
         var searchReadCount = 1;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     if (searchReadCount === 1) {
@@ -2452,7 +3026,8 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // Simulate the activation of a filter
         var searchData = {
@@ -2461,179 +3036,185 @@ QUnit.module('ActionManager', {
                 orderedBy: [],
             }],
         };
-        actionManager.trigger_up('search', searchData);
+        webClient.trigger('search', searchData);
 
         // Sort records
-        await testUtils.dom.click(actionManager.$('.o_list_view th.o_column_sortable'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view th.o_column_sortable'));
 
         // get to the form view of the model, on the first record
-         await testUtils.dom.click(actionManager.$('.o_data_cell:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_data_cell:first'));
 
         // Change model by clicking on the button within the form
-         await testUtils.dom.click(actionManager.$('.o_form_view button'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button'));
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('breadcrumbs are updated when switching between views', async function (assert) {
-        assert.expect(15);
+        assert.expect(16);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners',
             "breadcrumbs should display the display_name of the action");
 
         // switch to kanban view
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should still be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners',
             "breadcrumbs should still display the display_name of the action");
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_kanban_view .o_kanban_record:first'));
-        await testUtils.nextTick();
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        await testUtils.dom.click($(webClient.el).find('.o_kanban_view .o_kanban_record:first'));
+        await nextTick();
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "breadcrumbs should contain the display_name of the opened record");
 
         // go back to kanban view using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.containsOnce(webClient, '.o_kanban_view', "should be back on kanban view");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners',
             "breadcrumbs should display the display_name of the action");
 
         // switch back to list view
-        await cpHelpers.switchView(actionManager, 'list');
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should still be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners',
             "breadcrumbs should still display the display_name of the action");
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "breadcrumbs should contain the display_name of the opened record");
 
         // go back to list view using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.containsOnce(actionManager, '.o_list_view',
-            "should be back on list view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.containsOnce(webClient, '.o_list_view', "should be back on list view");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(), 'Partners',
             "breadcrumbs should display the display_name of the action");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('switch buttons are updated when switching between views', async function (assert) {
         assert.expect(13);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.containsN(actionManager, '.o_control_panel button.o_switch_view', 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button').length, 2,
             "should have two switch buttons (list and kanban)");
-        assert.containsOnce(actionManager, '.o_control_panel button.o_switch_view.active',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button.active').length, 1,
             "should have only one active button");
-        assert.hasClass($('.o_control_panel .o_switch_view:first'),'o_list',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button:first'),'o_cp_switch_list',
             "list switch button should be the first one");
-        assert.hasClass($('.o_control_panel .o_switch_view.o_list'), 'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_list'),'active',
             "list should be the active view");
 
         // switch to kanban view
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.containsN(actionManager, '.o_control_panel .o_switch_view', 2,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button').length, 2,
             "should still have two switch buttons (list and kanban)");
-        assert.containsOnce(actionManager, '.o_control_panel .o_switch_view.active',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button.active').length, 1,
             "should still have only one active button");
-        assert.hasClass($('.o_control_panel .o_switch_view:first'), 'o_list',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button:first'),'o_cp_switch_list',
             "list switch button should still be the first one");
-        assert.hasClass($('.o_control_panel .o_switch_view.o_kanban'),'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'),'active',
             "kanban should now be the active view");
 
         // switch back to list view
-        await cpHelpers.switchView(actionManager, 'list');
-        assert.containsN(actionManager, '.o_control_panel .o_switch_view', 2,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button').length, 2,
             "should still have two switch buttons (list and kanban)");
-        assert.hasClass($('.o_control_panel .o_switch_view.o_list'),'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_list'),'active',
             "list should now be the active view");
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsNone(actionManager, '.o_control_panel .o_switch_view',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button').length, 0,
             "should not have any switch buttons");
 
         // go back to list view using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.containsN(actionManager, '.o_control_panel .o_switch_view', 2,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_cp_switch_buttons button').length, 2,
             "should have two switch buttons (list and kanban)");
-        assert.hasClass($('.o_control_panel .o_switch_view.o_list'),'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_list'),'active',
             "list should be the active view");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('pager is updated when switching between views', async function (assert) {
         assert.expect(10);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(4);
+        doAction(4);
+        await nextTick();
 
-        assert.strictEqual($('.o_control_panel .o_pager_value').text(), '1-5',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_value').text(), '1-5',
             "value should be correct for kanban");
-        assert.strictEqual($('.o_control_panel .o_pager_limit').text(), '5',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_limit').text(), '5',
             "limit should be correct for kanban");
 
         // switch to list view
-        await cpHelpers.switchView(actionManager, 'list');
-        assert.strictEqual($('.o_control_panel .o_pager_value').text(), '1-3',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_value').text(), '1-3',
             "value should be correct for list");
-        assert.strictEqual($('.o_control_panel .o_pager_limit').text(), '5',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_limit').text(), '5',
             "limit should be correct for list");
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.strictEqual($('.o_control_panel .o_pager_value').text(), '1',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_value').text(), '1',
             "value should be correct for form");
-        assert.strictEqual($('.o_control_panel .o_pager_limit').text(), '3',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_limit').text(), '3',
             "limit should be correct for form");
 
         // go back to list view using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.strictEqual($('.o_control_panel .o_pager_value').text(), '1-3',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_value').text(), '1-3',
             "value should be correct for list");
-        assert.strictEqual($('.o_control_panel .o_pager_limit').text(), '5',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_limit').text(), '5',
             "limit should be correct for list");
 
         // switch back to kanban view
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.strictEqual($('.o_control_panel .o_pager_value').text(), '1-5',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_value').text(), '1-5',
             "value should be correct for kanban");
-        assert.strictEqual($('.o_control_panel .o_pager_limit').text(), '5',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_pager_limit').text(), '5',
             "limit should be correct for kanban");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test("domain is kept when switching between views", async function (assert) {
@@ -2641,199 +3222,209 @@ QUnit.module('ActionManager', {
 
         this.actions[2].search_view_id = [1, 'a custom search view'];
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(3);
-        assert.containsN(actionManager, '.o_data_row', 5);
+        doAction(3);
+        await nextTick();
+        assert.containsN(webClient, '.o_data_row', 5);
 
         // activate a domain
-        await cpHelpers.toggleFilterMenu(actionManager);
-        await cpHelpers.toggleMenuItem(actionManager, "Bar");
-        assert.containsN(actionManager, '.o_data_row', 2);
+        await testUtils.dom.click($(webClient.el).find('.o_search_options .o_filters_menu_button'));
+        await testUtils.dom.click($(webClient.el).find('.o_search_options .o_filters_menu a:contains(Bar)'));
+        assert.containsN(webClient, '.o_data_row', 2);
 
         // switch to kanban
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 2);
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // remove the domain
-        await testUtils.dom.click(actionManager.$('.o_searchview .o_facet_remove'));
-        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 5);
+        await testUtils.dom.click($(webClient.el).find('.o_searchview .o_facet_remove'));
+        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 5);
 
         // switch back to list
-        await cpHelpers.switchView(actionManager, 'list');
-        assert.containsN(actionManager, '.o_data_row', 5);
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
+        assert.containsN(webClient, '.o_data_row', 5);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('there is no flickering when switching between views', async function (assert) {
         assert.expect(20);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function () {
                 var result = this._super.apply(this, arguments);
                 return Promise.resolve(def).then(_.constant(result));
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // switch to kanban view
         def = testUtils.makeTestPromise();
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.containsOnce(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should still display the list view");
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "shouldn't display the kanban view yet");
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsNone(actionManager, '.o_list_view',
+        await nextTick();
+        assert.containsNone(webClient, '.o_list_view',
             "shouldn't display the list view anymore");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should now display the kanban view");
 
         // switch back to list view
         def = testUtils.makeTestPromise();
-        await cpHelpers.switchView(actionManager, 'list');
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_list'));
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should still display the kanban view");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "shouldn't display the list view yet");
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsNone(actionManager, '.o_kanban_view',
+        await nextTick();
+        assert.containsNone(webClient, '.o_kanban_view',
             "shouldn't display the kanban view anymore");
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should now display the list view");
 
         // open a record in form view
         def = testUtils.makeTestPromise();
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should still display the list view");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "shouldn't display the form view yet");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should still be one controller in the breadcrumbs");
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsNone(actionManager, '.o_list_view',
+        await nextTick();
+        assert.containsNone(webClient, '.o_list_view',
             "should no longer display the list view");
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should display the form view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
 
         // go back to list view using the breadcrumbs
         def = testUtils.makeTestPromise();
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
-        assert.containsOnce(actionManager, '.o_form_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        assert.containsOnce(webClient, '.o_form_view',
             "should still display the form view");
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "shouldn't display the list view yet");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should still be two controllers in the breadcrumbs");
         def.resolve();
-        await testUtils.nextTick();
-        assert.containsNone(actionManager, '.o_form_view',
+        await nextTick();
+        assert.containsNone(webClient, '.o_form_view',
             "should no longer display the form view");
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('breadcrumbs are updated when display_name changes', async function (assert) {
         assert.expect(4);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "breadcrumbs should contain the display_name of the opened record");
 
         // switch to edit mode and change the display_name
-        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name=display_name]'), 'New name');
-        await testUtils.dom.click($('.o_control_panel .o_form_button_save'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_form_button_edit'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name=display_name]'), 'New name');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_form_button_save'));
 
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should still be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'New name',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'New name',
             "breadcrumbs should contain the display_name of the opened record");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
         assert.expect(4);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Execute action)'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains(Execute action)'));
 
-        assert.containsN(actionManager, '.o_control_panel .breadcrumb li', 3);
+        assert.containsN(webClient, '.o_control_panel .breadcrumb li', 3);
 
-        var $previousBreadcrumb = actionManager.$('.o_control_panel .breadcrumb li.active').prev();
+        var $previousBreadcrumb = $(webClient.el).find('.o_control_panel .breadcrumb li.active').prev();
         assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
             "previous breadcrumb should have accessKey 'b'");
         await testUtils.dom.click($previousBreadcrumb);
 
-        assert.containsN(actionManager, '.o_control_panel .breadcrumb li', 2);
+        assert.containsN(webClient, '.o_control_panel .breadcrumb li', 2);
 
-        var $previousBreadcrumb = actionManager.$('.o_control_panel .breadcrumb li.active').prev();
+        var $previousBreadcrumb = $(webClient.el).find('.o_control_panel .breadcrumb li.active').prev();
         assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
             "previous breadcrumb should have accessKey 'b'");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('reload previous controller when discarding a new record', async function (assert) {
         assert.expect(8);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // create a new record
-        await testUtils.dom.click($('.o_control_panel .o_list_button_add'));
-        assert.containsOnce(actionManager, '.o_form_view.o_form_editable',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_list_button_add'));
+        assert.containsOnce(webClient, '.o_form_view.o_form_editable',
             "should have opened the form view in edit mode");
 
         // discard
-        await testUtils.dom.click($('.o_control_panel .o_form_button_cancel'));
-        assert.containsOnce(actionManager, '.o_list_view',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_form_button_cancel'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should have switched back to the list view");
 
         assert.verifySteps([
@@ -2844,17 +3435,18 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // list
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('requests for execute_action of type object are handled', async function (assert) {
         assert.expect(10);
 
         var self = this;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/web/dataset/call_button') {
@@ -2874,16 +3466,17 @@ QUnit.module('ActionManager', {
                 some_key: 2,
             }},
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.strictEqual(actionManager.$('.o_field_widget[name=foo]').text(), 'yop',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=foo]').text(), 'yop',
             "check initial value of 'yop' field");
 
         // click on 'Call method' button (should call an Object method)
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Call method)'));
-        assert.strictEqual(actionManager.$('.o_field_widget[name=foo]').text(), 'value changed',
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains(Call method)'));
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=foo]').text(), 'value changed',
             "'yop' has been changed by the server, and should be updated in the UI");
 
         assert.verifySteps([
@@ -2895,33 +3488,35 @@ QUnit.module('ActionManager', {
             'read', // re-read form view
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('requests for execute_action of type action are handled', async function (assert) {
         assert.expect(11);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
         // click on 'Execute action' button (should execute an action)
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two parts in the breadcrumbs");
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Execute action)'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 3,
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains(Execute action)'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 3,
             "the returned action should have been stacked over the previous one");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "the returned action should have been executed");
 
         assert.verifySteps([
@@ -2934,17 +3529,18 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read', // kanban for action 4
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('requests for execute_action of type object: disable buttons', async function (assert) {
         assert.expect(2);
 
         var def;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_button') {
                     return Promise.resolve(false);
@@ -2956,61 +3552,120 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
         // click on 'Call method' button (should call an Object method)
         def = testUtils.makeTestPromise();
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Call method)'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains(Call method)'));
 
         // Buttons should be disabled
         assert.strictEqual(
-            actionManager.$('.o_form_view button:contains(Call method)').attr('disabled'),
+            $(webClient.el).find('.o_form_view button:contains(Call method)').attr('disabled'),
             'disabled', 'buttons should be disabled');
 
         // Release the 'read' call
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
         // Buttons should be enabled after the reload
         assert.strictEqual(
-            actionManager.$('.o_form_view button:contains(Call method)').attr('disabled'),
-            undefined, 'buttons should be disabled')
+            $(webClient.el).find('.o_form_view button:contains(Call method)').attr('disabled'),
+            undefined, 'buttons should be disabled');
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('requests for execute_action of type object: disable buttons (2)', async function (assert) {
+        assert.expect(6);
+
+        this.archs['pony,44,form'] = `
+            <form>
+                <field name="name"/>
+                <button string="Cancel" class="cancel-btn" special="cancel"/>
+            </form>`;
+        this.actions[3] = {
+            id: 4,
+            name: 'Create a Partner',
+            res_model: 'pony',
+            target: 'new',
+            type: 'ir.actions.act_window',
+            views: [[44, 'form']],
+        };
+        var def = testUtils.makeTestPromise();
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                const result = this._super.apply(this, arguments);
+                if (args.method === 'default_get') {
+                    // delay the opening of the dialog
+                    return Promise.resolve(def).then(() => result);
+                }
+                return result;
+            },
+        });
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
+
+        // open first record in form view
+        await testUtils.dom.click(webClient.el.querySelector('.o_list_view .o_data_row'));
+        assert.containsOnce(webClient, '.o_form_view');
+
+        // click on 'Execute action', to execute action 4 in a dialog
+        await testUtils.dom.click(webClient.el.querySelector('.o_form_view button[name="4"]'));
+        assert.ok(webClient.el.querySelector('.o_cp_buttons .o_form_button_edit').disabled,
+            'control panel buttons should be disabled');
+
+        def.resolve();
+        await testUtils.nextTick();
+        assert.containsOnce(webClient, '.modal .o_form_view');
+        assert.notOk(webClient.el.querySelector('.o_cp_buttons .o_form_button_edit').disabled,
+            'control panel buttons should have been re-enabled');
+
+        await testUtils.dom.click(webClient.el.querySelector('.modal .cancel-btn'));
+        assert.notOk(webClient.el.querySelector('.o_cp_buttons .o_form_button_edit').disabled,
+            'control panel buttons should still be enabled');
+
+        webClient.destroy();
     });
 
     QUnit.test('can open different records from a multi record view', async function (assert) {
         assert.expect(11);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open the first record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "breadcrumbs should contain the display_name of the opened record");
-        assert.strictEqual(actionManager.$('.o_field_widget[name=foo]').text(), 'yop',
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=foo]').text(), 'yop',
             "should have opened the correct record");
 
         // go back to list view using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a'));
 
         // open the second record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:nth(1)'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Second record',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:nth(1)'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Second record',
             "breadcrumbs should contain the display_name of the opened record");
-        assert.strictEqual(actionManager.$('.o_field_widget[name=foo]').text(), 'blip',
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=foo]').text(), 'blip',
             "should have opened the correct record");
 
         assert.verifySteps([
@@ -3022,7 +3677,7 @@ QUnit.module('ActionManager', {
             'read', // form
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('restore previous view state when switching back', async function (assert) {
@@ -3031,32 +3686,34 @@ QUnit.module('ActionManager', {
         this.actions[2].views.unshift([false, 'graph']);
         this.archs['partner,false,graph'] = '<graph></graph>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.hasClass($('.o_control_panel  .fa-bar-chart-o'),'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel  .fa-bar-chart-o'),'active',
             "bar chart button is active");
-        assert.doesNotHaveClass($('.o_control_panel  .fa-area-chart'), 'active',
+        assert.doesNotHaveClass($(webClient.el).find('.o_control_panel  .fa-area-chart'), 'active',
             "line chart button is not active");
 
         // display line chart
-        await testUtils.dom.click($('.o_control_panel  .fa-area-chart'));
-        assert.hasClass($('.o_control_panel  .fa-area-chart'),'active',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel  .fa-area-chart'));
+        assert.hasClass($(webClient.el).find('.o_control_panel  .fa-area-chart'),'active',
             "line chart button is now active");
 
         // switch to kanban and back to graph view
-        await cpHelpers.switchView(actionManager, 'kanban');
-        assert.strictEqual($('.o_control_panel  .fa-area-chart').length, 0,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel  .fa-area-chart').length, 0,
             "graph buttons are no longer in control panel");
 
-        await cpHelpers.switchView(actionManager, 'graph');
-        assert.hasClass($('.o_control_panel  .fa-area-chart'),'active',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_graph'));
+        assert.hasClass($(webClient.el).find('.o_control_panel  .fa-area-chart'),'active',
             "line chart button is still active");
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('view switcher is properly highlighted in graph view', async function (assert) {
@@ -3067,25 +3724,27 @@ QUnit.module('ActionManager', {
         this.actions[2].views.splice(1, 1, [false, 'graph']);
         this.archs['partner,false,graph'] = '<graph></graph>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.hasClass($('.o_control_panel .o_switch_view.o_list'),'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_switch_view.o_list'),'active',
             "list button in control panel is active");
-        assert.doesNotHaveClass($('.o_control_panel .o_switch_view.o_graph'), 'active',
+        assert.doesNotHaveClass($(webClient.el).find('.o_control_panel .o_switch_view.o_graph'), 'active',
             "graph button in control panel is not active");
 
         // switch to graph view
-        await cpHelpers.switchView(actionManager, 'graph');
-        assert.doesNotHaveClass($('.o_control_panel .o_switch_view.o_list'), 'active',
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_graph'));
+        assert.doesNotHaveClass($(webClient.el).find('.o_control_panel .o_cp_switch_list'), 'active',
             "list button in control panel is not active");
-        assert.hasClass($('.o_control_panel .o_switch_view.o_graph'),'active',
+        assert.hasClass($(webClient.el).find('.o_control_panel .o_cp_switch_graph'),'active',
             "graph button in control panel is active");
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('can interact with search view', async function (assert) {
@@ -3096,26 +3755,28 @@ QUnit.module('ActionManager', {
                     '<filter name="foo" string="foo" context="{\'group_by\': \'foo\'}"/>' +
                 '</group>'+
             '</search>';
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.doesNotHaveClass(actionManager.$('.o_list_table'), 'o_list_table_grouped',
+        assert.doesNotHaveClass($(webClient.el).find('.o_list_table'), 'o_list_table_grouped',
             "list view is not grouped");
 
         // open group by dropdown
-        await testUtils.dom.click($('.o_control_panel .o_cp_right button:contains(Group By)'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_right button:contains(Group By)'));
 
         // click on first link
-        await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_group_by_menu a:first'));
 
-        assert.hasClass(actionManager.$('.o_list_table'),'o_list_table_grouped',
+        assert.hasClass($(webClient.el).find('.o_list_table'),'o_list_table_grouped',
             'list view is now grouped');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('can open a many2one external window', async function (assert) {
@@ -3135,10 +3796,11 @@ QUnit.module('ActionManager', {
             '</group>' +
         '</form>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(route);
                 if (args.method === "get_formview_id") {
@@ -3147,15 +3809,16 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open first record in form view
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
         // click on edit
-        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_form_button_edit'));
 
         // click on external button for m2o
-        await testUtils.dom.click(actionManager.$('.o_external_button'));
+        await testUtils.dom.click($(webClient.el).find('.o_external_button'));
         assert.verifySteps([
             '/web/action/load',             // initial load action
             '/web/dataset/call_kw/partner', // load views
@@ -3165,28 +3828,30 @@ QUnit.module('ActionManager', {
             '/web/dataset/call_kw/partner', // load form view for modal
             '/web/dataset/call_kw/partner/read' // read data for m2o record
         ]);
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('ask for confirmation when leaving a "dirty" view', async function (assert) {
         assert.expect(4);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(4);
+        doAction(4);
+        await nextTick();
 
         // open record in form view
-        await testUtils.dom.click(actionManager.$('.o_kanban_record:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_kanban_record:first'));
 
         // edit record
-        await testUtils.dom.click($('.o_control_panel button.o_form_button_edit'));
-        await testUtils.fields.editInput(actionManager.$('input[name="foo"]'), 'pinkypie');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel button.o_form_button_edit'));
+        await testUtils.fields.editInput($(webClient.el).find('input[name="foo"]'), 'pinkypie');
 
         // go back to kanban view
-        await testUtils.dom.click($('.o_control_panel .breadcrumb-item:first a'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:first a'));
 
         assert.strictEqual($('.modal .modal-body').text(),
             "The record has been modified, your changes will be discarded. Do you want to proceed?",
@@ -3195,116 +3860,125 @@ QUnit.module('ActionManager', {
         // cancel
         await testUtils.dom.click($('.modal .modal-footer button.btn-secondary'));
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "should still be in form view");
 
         // go back again to kanban view
-        await testUtils.dom.click($('.o_control_panel .breadcrumb-item:first a'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:first a'));
 
         // confirm discard
         await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
 
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "should no longer be in form view");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should be in kanban view");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('limit set in action is passed to each created controller', async function (assert) {
         assert.expect(2);
 
         _.findWhere(this.actions, {id: 3}).limit = 2;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.containsN(actionManager, '.o_data_row', 2,
+        assert.containsN(webClient, '.o_data_row', 2,
             "should only display 2 record");
 
         // switch to kanban view
-        await cpHelpers.switchView(actionManager, 'kanban');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_switch_kanban'));
 
-        assert.strictEqual(actionManager.$('.o_kanban_record:not(.o_kanban_ghost)').length, 2,
+        assert.strictEqual($(webClient.el).find('.o_kanban_record:not(.o_kanban_ghost)').length, 2,
             "should only display 2 record");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('go back to a previous action using the breadcrumbs', async function (assert) {
         assert.expect(10);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "breadcrumbs should contain the display_name of the opened record");
 
         // push another action on top of the first one, and come back to the form view
-        await actionManager.doAction(4);
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 3,
+        doAction(4);
+        await nextTick();
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 3,
             "there should be three controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Partners Action 4',
             "breadcrumbs should contain the name of the current action");
         // go back using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:nth(1)'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:nth(1)'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'First record',
             "breadcrumbs should contain the display_name of the opened record");
 
         // push again the other action on top of the first one, and come back to the list view
-        await actionManager.doAction(4);
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 3,
+        doAction(4);
+        await nextTick();
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 3,
             "there should be three controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Partners Action 4',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Partners Action 4',
             "breadcrumbs should contain the name of the current action");
         // go back using the breadcrumbs
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:first'));
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Partners',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Partners',
             "breadcrumbs should contain the name of the current action");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('form views are restored in readonly when coming back in breadcrumbs', async function (assert) {
         assert.expect(2);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
         // open a record in form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
         // switch to edit mode
-        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_form_button_edit'));
 
-        assert.hasClass(actionManager.$('.o_form_view'), 'o_form_editable');
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_editable');
         // do some other action
-        await actionManager.doAction(4);
+        doAction(4);
+        await nextTick();
         // go back to form view
-        await testUtils.dom.clickLast($('.o_control_panel .breadcrumb a'));
-        await testUtils.nextTick();
-        assert.hasClass(actionManager.$('.o_form_view'), 'o_form_readonly');
+        await testUtils.dom.clickLast($(webClient.el).find('.o_control_panel .breadcrumb a'));
+        await nextTick();
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_readonly');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('honor group_by specified in actions context', async function (assert) {
@@ -3317,34 +3991,36 @@ QUnit.module('ActionManager', {
             '</group>'+
         '</search>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_table_grouped',
+        assert.containsOnce(webClient, '.o_list_table_grouped',
             "should be grouped");
-        assert.containsN(actionManager, '.o_group_header', 2,
+        assert.containsN(webClient, '.o_group_header', 2,
             "should be grouped by 'bar' (two groups) at first load");
 
         // groupby 'bar' using the searchview
-        await testUtils.dom.click($('.o_control_panel .o_cp_right button:contains(Group By)'));
-        await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_right button:contains(Group By)'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_group_by_menu a:first'));
 
-        assert.containsN(actionManager, '.o_group_header', 5,
+        assert.containsN(webClient, '.o_group_header', 5,
             "should be grouped by 'foo' (five groups)");
 
         // remove the groupby in the searchview
-        await testUtils.dom.click($('.o_control_panel .o_searchview .o_facet_remove'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_searchview .o_facet_remove'));
 
-        assert.containsOnce(actionManager, '.o_list_table_grouped',
+        assert.containsOnce(webClient, '.o_list_table_grouped',
             "should still be grouped");
-        assert.containsN(actionManager, '.o_group_header', 2,
+        assert.containsN(webClient, '.o_group_header', 2,
             "should be grouped by 'bar' (two groups) at reload");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('switch request to unknown view type', async function (assert) {
@@ -3358,25 +4034,27 @@ QUnit.module('ActionManager', {
             views: [[false, 'list'], [1, 'kanban']], // no form view
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(33);
+        doAction(33);
+        await nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
 
         // try to open a record in a form view
-        testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_list_view',
+        testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_list_view',
             "should still display the list view");
-        assert.containsNone(actionManager, '.o_form_view',
+        assert.containsNone(webClient, '.o_form_view',
             "should not display the form view");
 
         assert.verifySteps([
@@ -3385,7 +4063,7 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('save current search', async function (assert) {
@@ -3413,45 +4091,179 @@ QUnit.module('ActionManager', {
             views: [[false, 'list']],
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            env: {
-                dataManager: {
-                    create_filter: function (filter) {
-                        assert.strictEqual(filter.domain, `[("bar", "=", 1)]`,
-                            "should save the correct domain");
-                        const expectedContext = {
-                            group_by: [], // default groupby is an empty list
-                            shouldBeInFilterContext: true,
-                        };
-                        assert.deepEqual(filter.context, expectedContext,
-                            "should save the correct context");
-                    },
-                }
+            menus: this.menus,
+            dataManager: {
+                create_filter: function (filter) {
+                    assert.strictEqual(filter.domain, `[("bar", "=", 1)]`,
+                        "should save the correct domain");
+                    const expectedContext = {
+                        group_by: [], // default groupby is an empty list
+                        shouldBeInFilterContext: true,
+                    };
+                    assert.deepEqual(filter.context, expectedContext,
+                        "should save the correct context");
+                },
             },
         });
-        await actionManager.doAction(33);
+        doAction(33);
+        await nextTick();
 
-        assert.containsN(actionManager, '.o_data_row', 5,
+        assert.containsN(webClient, '.o_data_row', 5,
             "should contain 5 records");
 
         // filter on bar
-        await cpHelpers.toggleFilterMenu(actionManager);
-        await cpHelpers.toggleMenuItem(actionManager, "Bar");
+        await cpHelpers.toggleFilterMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, "Bar");
 
-        assert.containsN(actionManager, '.o_data_row', 2);
+        assert.containsN(webClient, '.o_data_row', 2);
 
         // save filter
-        await cpHelpers.toggleFavoriteMenu(actionManager);
-        await cpHelpers.toggleSaveFavorite(actionManager);
-        await cpHelpers.editFavoriteName(actionManager, "some name");
-        await cpHelpers.saveFavorite(actionManager);
+        await cpHelpers.toggleFavoriteMenu(webClient);
+        await cpHelpers.toggleSaveFavorite(webClient);
+        await cpHelpers.editFavoriteName(webClient, "some name");
+        await cpHelpers.saveFavorite(webClient);
 
         testUtils.mock.unpatch(ListController);
-        actionManager.destroy();
+        webClient.destroy();
     });
+
+    QUnit.test('execute smart button and back', async function (assert) {
+        assert.expect(8);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            webClient: {
+                _getWindowHash() {
+                    return '#action=24';
+                }
+            },
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.notOk('default_partner' in args.kwargs.context);
+                }
+                if (route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.context.default_partner, 2);
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.containsN(webClient, '.o_form_buttons_view button:not([disabled])', 2);
+
+        await testUtils.dom.click(webClient.el.querySelector('.oe_stat_button'));
+        assert.containsOnce(webClient, '.o_kanban_view');
+
+        await testUtils.dom.click(webClient.el.querySelector('.breadcrumb-item'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.containsN(webClient, '.o_form_buttons_view button:not([disabled])', 2);
+        webClient.destroy();
+    });
+
+    QUnit.test('execute smart button and fails', async function (assert) {
+        assert.expect(12);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            webClient: {
+                _getWindowHash() {
+                    return '#action=24';
+                }
+            },
+            mockRPC(route, args) {
+                assert.step(route);
+                if (route === '/web/dataset/search_read') {
+                    return Promise.reject();
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.containsN(webClient, '.o_form_buttons_view button:not([disabled])', 2);
+
+        await testUtils.dom.click(webClient.el.querySelector('.oe_stat_button'));
+        assert.containsOnce(webClient, '.o_form_view');
+
+        assert.containsN(webClient, '.o_form_buttons_view button:not([disabled])', 2);
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/call_kw/partner/read',
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/search_read',
+            '/web/dataset/call_kw/partner/read',
+        ]);
+        webClient.destroy();
+    });
+
+    QUnit.test('execute action without modal', async function (assert) {
+        // TODO: I don't like those 2 tooltips
+        // Just because there are two bodies
+        assert.expect(11);
+
+        Object.assign(this.archs, {
+            'partner,666,form': `<form>
+                <header><button name="object" string="Call method" type="object" help="need somebody"/></header>
+                    <field name="display_name"/>
+                </form>`,
+        });
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            webClient: {
+                _getWindowHash() {
+                    return '#action=24';
+                }
+            },
+            mockRPC(route, args) {
+                assert.step(route);
+                if (route === '/web/dataset/call_button') {
+                    // Some business stuff server side, then return an implicit close action
+                    return Promise.resolve(false);
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/call_kw/partner/read',
+        ]);
+        assert.containsN(webClient, '.o_form_buttons_view button:not([disabled])', 2);
+        const actionButton = webClient.el.querySelector('button[name=object]');
+        const tooltipProm = new Promise((resolve) => {
+            $(document.body).one("shown.bs.tooltip", () => {
+                $(actionButton).mouseleave();
+                resolve();
+            });
+        });
+        $(actionButton).mouseenter();
+        await tooltipProm;
+        assert.containsN(document.body, '.tooltip', 2);
+        await testUtils.dom.click(actionButton);
+        assert.verifySteps([
+            '/web/dataset/call_button',
+            '/web/dataset/call_kw/partner/read',
+        ]);
+        assert.containsNone(document.body, '.tooltip'); // body different from webClient in tests !
+        assert.containsN(webClient, '.o_form_buttons_view button:not([disabled])', 2);
+        webClient.destroy();
+    });
+
 
     QUnit.test('list with default_order and favorite filter with no orderedBy', async function (assert) {
         assert.expect(5);
@@ -3466,10 +4278,11 @@ QUnit.module('ActionManager', {
             views: [[1, 'list'], [false, 'form']],
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             favoriteFilters: [{
                 user_id: [2, "Mitchell Admin"],
                 name: 'favorite filter',
@@ -3479,56 +4292,57 @@ QUnit.module('ActionManager', {
                 domain: '[("bar", "=", 1)]'
             }],
         });
-        await actionManager.doAction(12);
 
-        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'zoupyopplopgnapblip',
+        doAction(12);
+        await nextTick();
+        assert.strictEqual($(webClient.el).find('.o_list_view tr.o_data_row .o_data_cell').text(), 'zoupyopplopgnapblip',
             'record should be in descending order as default_order applies');
 
-        await cpHelpers.toggleFavoriteMenu(actionManager);
-        await cpHelpers.toggleMenuItem(actionManager, "favorite filter");
-
-        assert.strictEqual(actionManager.$('.o_control_panel .o_facet_values').text().trim(),
+        await cpHelpers.toggleFavoriteMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, "favorite filter");
+        assert.strictEqual($(webClient.el).find('.o_control_panel .o_facet_values').text().trim(),
             'favorite filter', 'favorite filter should be applied');
-        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'gnapblip',
+        assert.strictEqual($(webClient.el).find('.o_list_view tr.o_data_row .o_data_cell').text(), 'gnapblip',
             'record should still be in descending order after default_order applied');
 
         // go to formview and come back to listview
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        await testUtils.dom.click(actionManager.$('.o_control_panel .breadcrumb a:eq(0)'));
-        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'gnapblip',
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb a:eq(0)'));
+        assert.strictEqual($(webClient.el).find('.o_list_view tr.o_data_row .o_data_cell').text(), 'gnapblip',
             'order of records should not be changed, while coming back through breadcrumb');
 
         // remove filter
-        await cpHelpers.removeFacet(actionManager, 0);
-        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(),
+        await cpHelpers.removeFacet(webClient, 0);
+        assert.strictEqual($(webClient.el).find('.o_list_view tr.o_data_row .o_data_cell').text(),
             'zoupyopplopgnapblip', 'order of records should not be changed, after removing current filter');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test("search menus are still available when switching between actions", async function (assert) {
         assert.expect(3);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(1);
-        assert.isVisible(actionManager.el.querySelector('.o_search_options .o_dropdown.o_filter_menu'),
+        await doAction(1);
+        assert.isVisible(webClient.el.querySelector('.o_search_options .o_dropdown.o_filter_menu'),
             "the search options should be available");
 
-        await actionManager.doAction(3);
-        assert.isVisible(actionManager.el.querySelector('.o_search_options .o_dropdown.o_filter_menu'),
+        await doAction(3);
+        assert.isVisible(webClient.el.querySelector('.o_search_options .o_dropdown.o_filter_menu'),
             "the search options should be available");
 
         // go back using the breadcrumbs
         await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
-        assert.isVisible(actionManager.el.querySelector('.o_search_options .o_dropdown.o_filter_menu'),
+        assert.isVisible(webClient.el.querySelector('.o_search_options .o_dropdown.o_filter_menu'),
             "the search options should be available");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test("current act_window action is stored in session_storage", async function (assert) {
@@ -3537,10 +4351,11 @@ QUnit.module('ActionManager', {
         var expectedAction = _.extend({}, _.findWhere(this.actions, {id: 3}), {
             context: {},
         });
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
                 session_storage: SessionStorageService.extend({
                     setItem: function (key, value) {
@@ -3551,9 +4366,10 @@ QUnit.module('ActionManager', {
             },
         });
 
-        await actionManager.doAction(3);
+        doAction(3);
+        await nextTick();
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test("store evaluated context of current action in session_storage", async function (assert) {
@@ -3573,10 +4389,11 @@ QUnit.module('ActionManager', {
             },
         });
         var checkSessionStorage = false;
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             services: {
                 session_storage: SessionStorageService.extend({
                     setItem: function (key, value) {
@@ -3590,42 +4407,45 @@ QUnit.module('ActionManager', {
         });
 
         // execute an action and open a record in form view
-        await actionManager.doAction(3);
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        doAction(3);
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
         // click on 'Execute action' button (it executes an action with a CompoundContext as context)
         checkSessionStorage = true;
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Execute action)'));
+        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains(Execute action)'));
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
         assert.expect(6);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
+            webClient: {
+                _getWindowHash() {
+                    return `#action=3&id=2&view_type=form`;
+                }
+            }
         });
-        await actionManager.loadState({
-            action: 3,
-            id: 2,
-            view_type: 'form',
-        });
-        assert.containsNone(actionManager, '.o_list_view');
-        assert.containsOnce(actionManager, '.o_form_view');
-        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+        assert.containsNone(webClient, '.o_list_view');
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').length, 2,
             "there should be two controllers in the breadcrumbs");
-        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'Second record',
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item:last').text(), 'Second record',
             "breadcrumbs should contain the display_name of the opened record");
 
-        await actionManager.doAction(1, {clear_breadcrumbs: true});
+        doAction(1, {clear_breadcrumbs: true});
+        await nextTick();
 
-        assert.containsNone(actionManager, '.o_form_view');
-        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsNone(webClient, '.o_form_view');
+        assert.containsOnce(webClient, '.o_kanban_view');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute action from dirty, new record, and come back', async function (assert) {
@@ -3637,10 +4457,11 @@ QUnit.module('ActionManager', {
                                                 '<field name="bar" readonly="1"/>' +
                                             '</form>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (args.method === 'get_formview_action') {
@@ -3653,37 +4474,33 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
-            intercepts: {
-                do_action: function (ev) {
-                    actionManager.doAction(ev.data.action, {});
-                },
-            },
         });
 
         // execute an action and create a new record
-        await actionManager.doAction(3);
-        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
-        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
-        assert.containsOnce(actionManager, '.o_form_uri:contains(First record)');
-        assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),
+        doAction(3);
+        await nextTick();
+        await testUtils.dom.click($(webClient.el).find('.o_list_button_add'));
+        assert.containsOnce(webClient, '.o_form_view.o_form_editable');
+        assert.containsOnce($(webClient.el), '.o_form_uri:contains(First record)');
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(),
             "PartnersNew");
 
         // set form view dirty and open m2o record
-        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'val');
-        await testUtils.dom.click(actionManager.$('.o_form_uri:contains(First record)'));
+        await testUtils.fields.editInput($(webClient.el).find('input[name=foo]'), 'val');
+        await testUtils.dom.click($(webClient.el).find('.o_form_uri:contains(First record)'));
         assert.containsOnce($('body'), '.modal'); // confirm discard dialog
 
         // confirm discard changes
         await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
-        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
-        assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),
+        assert.containsOnce(webClient, '.o_form_view.o_form_readonly');
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(),
             "PartnersNewFirst record");
 
         // go back to New using the breadcrumbs
-        await testUtils.dom.click(actionManager.$('.o_control_panel .breadcrumb-item:nth(1) a'));
-        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
-        assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:nth(1) a'));
+        assert.containsOnce(webClient, '.o_form_view.o_form_editable');
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item').text(),
             "PartnersNew");
 
         assert.verifySteps([
@@ -3699,7 +4516,104 @@ QUnit.module('ActionManager', {
             'name_get', // m2o in form
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('open form view, use the pager, execute action, and come back', async function (assert) {
+        assert.expect(8);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+        });
+
+        // execute an action and open a record
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
+        assert.containsN(webClient, '.o_list_view .o_data_row', 5);
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=display_name]').text(), 'First record');
+
+        // switch to second record
+        await testUtils.dom.click($(webClient.el).find('.o_pager_next'));
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=display_name]').text(), 'Second record');
+
+        // execute an action from the second record
+        await testUtils.dom.click($(webClient.el).find('.o_statusbar_buttons button[name=4]'));
+        assert.containsOnce(webClient, '.o_kanban_view');
+
+        // go back using the breadcrumbs
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:nth(1) a'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=display_name]').text(), 'Second record');
+
+        webClient.destroy();
+    });
+
+    QUnit.test('create a new record in a form view, execute action, and come back', async function (assert) {
+        assert.expect(8);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+        });
+
+        // execute an action and create a new record
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
+        await testUtils.dom.click($(webClient.el).find('.o_list_button_add'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_editable');
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name=display_name]'), 'another record');
+        await testUtils.dom.click($(webClient.el).find('.o_form_button_save'));
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_readonly');
+
+        // execute an action from the second record
+        await testUtils.dom.click($(webClient.el).find('.o_statusbar_buttons button[name=4]'));
+        assert.containsOnce(webClient, '.o_kanban_view');
+
+        // go back using the breadcrumbs
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item:nth(1) a'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_readonly');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name=display_name]').text(), 'another record');
+
+        webClient.destroy();
+    });
+
+    QUnit.test('open a record, come back, and create a new record', async function (assert) {
+        assert.expect(7);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+        });
+
+        // execute an action and open a record
+        await doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
+        assert.containsN(webClient, '.o_list_view .o_data_row', 5);
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_readonly');
+
+        // go back using the breadcrumbs
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .breadcrumb-item a'));
+        assert.containsOnce(webClient, '.o_list_view');
+
+        // create a new record
+        await testUtils.dom.click($(webClient.el).find('.o_list_button_add'));
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.hasClass($(webClient.el).find('.o_form_view'), 'o_form_editable');
+
+        webClient.destroy();
     });
 
     QUnit.test('execute a contextual action from a form view', async function (assert) {
@@ -3750,22 +4664,23 @@ QUnit.module('ActionManager', {
     QUnit.test('can execute act_window actions in target="new"', async function (assert) {
         assert.expect(7);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(5);
+        await doAction(5);
 
-        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
+        assert.containsOnce(document.body, '.o_technical_modal .o_form_view',
             "should have rendered a form view in a modal");
-        assert.hasClass($('.o_technical_modal .modal-body'),'o_act_window',
+        assert.hasClass($('.o_technical_modal .modal-content'), 'o_act_window',
             "dialog main element should have classname 'o_act_window'");
-        assert.hasClass($('.o_technical_modal .o_form_view'),'o_form_editable',
+        assert.hasClass($('.o_technical_modal .o_form_view'), 'o_form_editable',
             "form view should be in edit mode");
 
         assert.verifySteps([
@@ -3774,7 +4689,7 @@ QUnit.module('ActionManager', {
             'default_get',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('chained action on_close', async function (assert) {
@@ -3782,24 +4697,25 @@ QUnit.module('ActionManager', {
 
         function on_close() {
             assert.step('Close Action');
-        };
+        }
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(5, {on_close: on_close});
+        await doAction(5, {on_close: on_close});
 
         // a target=new action shouldn't activate the on_close
-        await actionManager.doAction(5);
+        await doAction(5);
         assert.verifySteps([]);
 
         // An act_window_close should trigger the on_close
-        await actionManager.doAction(10);
+        await doAction(10);
         assert.verifySteps(['Close Action']);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('footer buttons are moved to the dialog footer', async function (assert) {
@@ -3812,12 +4728,13 @@ QUnit.module('ActionManager', {
                 '</footer>' +
             '</form>';
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction(5);
+        await doAction(5);
 
         assert.containsNone($('.o_technical_modal .modal-body'), 'button.infooter',
             "the button should not be in the body");
@@ -3826,17 +4743,47 @@ QUnit.module('ActionManager', {
         assert.containsOnce($('.o_technical_modal .modal-footer'), 'button',
             "the modal footer should only contain one button");
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('footer buttons are updated when having another action in target "new"', async function (assert) {
+        assert.expect(9);
+
+        this.archs['partner,false,form'] = '<form>' +
+                '<field name="display_name"/>' +
+                '<footer>' +
+                    '<button string="Create" type="object" class="infooter"/>' +
+                '</footer>' +
+            '</form>';
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+        });
+        await doAction(5);
+        assert.containsNone(webClient, '.o_technical_modal .modal-body button[special="save"]');
+        assert.containsNone(webClient, '.o_technical_modal .modal-body button.infooter');
+        assert.containsOnce(webClient, '.o_technical_modal .modal-footer button.infooter');
+        assert.containsOnce(webClient, '.o_technical_modal .modal-footer button');
+
+        await doAction(25);
+        assert.containsNone(webClient, '.o_technical_modal .modal-body button.infooter');
+        assert.containsNone(webClient, '.o_technical_modal .modal-footer button.infooter');
+        assert.containsNone(webClient, '.o_technical_modal .modal-body button[special="save"]');
+        assert.containsOnce(webClient, '.o_technical_modal .modal-footer button[special="save"]');
+        assert.containsOnce(webClient, '.o_technical_modal .modal-footer button');
+
+        webClient.destroy();
     });
 
     QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         var ClientAction = AbstractAction.extend({
             on_attach_callback: function () {
                 assert.step('on_attach_callback');
-                assert.ok(actionManager.currentDialogController,
-                    "the currentDialogController should have been set already");
             },
             start: function () {
                 this.$el.addClass('o_test');
@@ -3844,22 +4791,23 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('test', ClientAction);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction({
+        await doAction({
             tag: 'test',
             target: 'new',
             type: 'ir.actions.client',
         });
 
-        assert.strictEqual($('.modal .o_test').length, 1,
+        assert.containsOnce(document.body, '.modal .o_test',
             "should have rendered the client action in a dialog");
         assert.verifySteps(['on_attach_callback']);
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.test;
     });
 
@@ -3868,18 +4816,19 @@ QUnit.module('ActionManager', {
     QUnit.test('form views for actions in target="inline" open in edit mode', async function (assert) {
         assert.expect(5);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(6);
+        await doAction(6);
 
-        assert.containsOnce(actionManager, '.o_form_view.o_form_editable',
+        assert.containsOnce(webClient, '.o_form_view.o_form_editable',
             "should have rendered a form view in edit mode");
 
         assert.verifySteps([
@@ -3888,7 +4837,7 @@ QUnit.module('ActionManager', {
             'read',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.module('Actions in target="fullscreen"');
@@ -3897,107 +4846,154 @@ QUnit.module('ActionManager', {
         assert.expect(7);
 
         this.actions[0].target = 'fullscreen';
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-            intercepts: {
-                toggle_fullscreen: function () {
-                    assert.step('toggle_fullscreen');
-                },
-            },
         });
-        await actionManager.doAction(1);
+        await doAction(1);
 
-        assert.strictEqual($('.o_control_panel').length, 1,
+        assert.strictEqual($(webClient.el).find('.o_control_panel').length, 1,
             "should have rendered a control panel");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should have rendered a kanban view");
+        assert.hasClass(webClient.el, 'o_fullscreen');
         assert.verifySteps([
             '/web/action/load',
             'load_views',
             '/web/dataset/search_read',
-            'toggle_fullscreen',
         ]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
-        assert.expect(3);
+        assert.expect(7);
+
+        const menus = {
+            all_menu_ids: [999, 1],
+            children: [{
+                id: 999,
+                action: 'ir.actions.act_window,6',
+                name: 'MAIN APP',
+                children: [{
+                    id: 1,
+                    name: 'P1',
+                    children: [],
+                }]
+            }],
+        };
 
         this.actions[0].target = 'fullscreen';
-        this.archs['partner,false,form'] = '<form>' +
-                                            '<button name="1" type="action" class="oe_stat_button" />' +
-                                        '</form>';
+        this.archs['partner,false,form'] = `
+            <form>
+                <button name="1" type="action" class="oe_stat_button"/>
+            </form>`;
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                toggle_fullscreen: function (ev) {
-                    var fullscreen = ev.data.fullscreen;
-
-                    switch (toggleFullscreenCalls) {
-                        case 0:
-                            assert.strictEqual(fullscreen, false);
-                            break;
-                        case 1:
-                            assert.strictEqual(fullscreen, true);
-                            break;
-                        case 2:
-                            assert.strictEqual(fullscreen, false);
-                            break;
-                    }
-                },
-            },
-
+            menus: menus,
         });
 
-        var toggleFullscreenCalls = 0;
-        await actionManager.doAction(6);
+        assert.containsOnce(webClient, 'nav .o_menu_brand');
+        assert.strictEqual(webClient.el.querySelector('nav .o_menu_brand').textContent, 'MAIN APP');
 
-        toggleFullscreenCalls = 1;
-        await testUtils.dom.click(actionManager.$('button[name=1]'));
+        assert.doesNotHaveClass(webClient.el, 'o_fullscreen');
 
-        toggleFullscreenCalls = 2;
-        await testUtils.dom.click(actionManager.$('.breadcrumb li a:first'));
+        await testUtils.dom.click($(webClient.el).find('button[name=1]'));
+        assert.hasClass(webClient.el, 'o_fullscreen');
 
-        actionManager.destroy();
+        await testUtils.dom.click($(webClient.el).find('.breadcrumb li a:first'));
+        assert.doesNotHaveClass(webClient.el, 'o_fullscreen');
+
+        assert.containsOnce(webClient, 'nav .o_menu_brand');
+        assert.strictEqual(webClient.el.querySelector('nav .o_menu_brand').textContent, 'MAIN APP');
+
+        webClient.destroy();
+    });
+
+    QUnit.test('fullscreen on action change: back to another "current" action', async function (assert) {
+        assert.expect(8);
+
+        const menus = {
+            all_menu_ids: [999, 1],
+            children: [{
+                id: 999,
+                action: 'ir.actions.act_window,6',
+                name: 'MAIN APP',
+                children: [{
+                    id: 1,
+                    name: 'P1',
+                    children: [],
+                }]
+            }],
+        };
+
+        this.actions[0].target = 'fullscreen';
+        this.archs['partner,false,form'] = `
+            <form>
+                <button name="24" type="action" class="oe_stat_button"/>
+            </form>`;
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: menus,
+        });
+
+        assert.containsOnce(webClient, 'nav .o_menu_brand');
+        assert.strictEqual(webClient.el.querySelector('nav .o_menu_brand').textContent, 'MAIN APP');
+        assert.doesNotHaveClass(webClient.el, 'o_fullscreen');
+
+        await testUtils.dom.click(webClient.el.querySelector('button[name="24"]'));
+        assert.doesNotHaveClass(webClient.el, 'o_fullscreen');
+
+        await testUtils.dom.click(webClient.el.querySelector('button[name="1"]'));
+        assert.hasClass(webClient.el, 'o_fullscreen');
+
+        await testUtils.dom.click(webClient.el.querySelectorAll('.breadcrumb li a')[1]);
+        assert.doesNotHaveClass(webClient.el, 'o_fullscreen');
+
+        assert.containsOnce(webClient, 'nav .o_menu_brand');
+        assert.strictEqual(webClient.el.querySelector('nav .o_menu_brand').textContent, 'MAIN APP');
+
+        webClient.destroy();
     });
 
     QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
         assert.expect(3);
 
         this.actions[5].target = 'fullscreen';
-        this.archs['partner,false,form'] = '<form>' +
-                                            '<button name="1" type="action" class="oe_stat_button" />' +
-                                        '</form>';
+        this.archs['partner,false,form'] = `
+            <form>
+                <button name="1" type="action" class="oe_stat_button"/>
+            </form>`;
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                toggle_fullscreen: function (ev) {
-                    var fullscreen = ev.data.fullscreen;
-                    assert.strictEqual(fullscreen, true);
-                },
-            },
+            menus: this.menus,
         });
 
-        await actionManager.doAction(6);
+        await doAction(6);
+        assert.hasClass(webClient.el, 'o_fullscreen');
 
-        await testUtils.dom.click(actionManager.$('button[name=1]'));
+        await testUtils.dom.click($(webClient.el).find('button[name=1]'));
+        assert.hasClass(webClient.el, 'o_fullscreen');
 
-        await testUtils.dom.click(actionManager.$('.breadcrumb li a:first'));
+        await testUtils.dom.click($(webClient.el).find('.breadcrumb li a:first'));
+        assert.hasClass(webClient.el, 'o_fullscreen');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.module('"ir.actions.act_window_close" actions');
@@ -4005,58 +5001,64 @@ QUnit.module('ActionManager', {
     QUnit.test('close the currently opened dialog', async function (assert) {
         assert.expect(2);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
         // execute an action in target="new"
-        await actionManager.doAction(5);
+        await doAction(5);
         assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
             "should have rendered a form view in a modal");
 
         // execute an 'ir.actions.act_window_close' action
-        await actionManager.doAction({
+        await doAction({
             type: 'ir.actions.act_window_close',
         });
         assert.strictEqual($('.o_technical_modal').length, 0,
             "should have closed the modal");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('execute "on_close" only if there is no dialog to close', async function (assert) {
         assert.expect(3);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
         // execute an action in target="new"
-        await actionManager.doAction(5);
+        await doAction(5);
 
         var options = {
             on_close: assert.step.bind(assert, 'on_close'),
         };
         // execute an 'ir.actions.act_window_close' action
         // should not call 'on_close' as there is a dialog to close
-        await actionManager.doAction({type: 'ir.actions.act_window_close'}, options);
+        await doAction({type: 'ir.actions.act_window_close'}, options);
 
         assert.verifySteps([]);
 
         // execute again an 'ir.actions.act_window_close' action
         // should call 'on_close' as there is no dialog to close
-        await actionManager.doAction({type: 'ir.actions.act_window_close'}, options);
+        await doAction({type: 'ir.actions.act_window_close'}, options);
 
         assert.verifySteps(['on_close']);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
-    QUnit.test('doAction resolved with an action', async function (assert) {
+    QUnit.skip('doAction resolved with an action', async function (assert) {
+        // We could quite easily do something equivalent, with an success callback
+        // given in the do-action event payload. However, I'm not sure it's still
+        // useful, so if it is not strictly necessary, I would not re-implement
+        // the feature for now
         assert.expect(4);
 
         this.actions.push({
@@ -4065,13 +5067,14 @@ QUnit.module('ActionManager', {
             type: 'ir.actions.act_window_close',
         });
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
-        await actionManager.doAction(21).then(function (action) {
+        await doAction(21).then(function (action) {
             assert.ok(action, "doAction should be resolved with an action");
             assert.strictEqual(action.id, 21,
                 "should be resolved with correct action id");
@@ -4079,17 +5082,18 @@ QUnit.module('ActionManager', {
                 "should be resolved with correct action name");
             assert.strictEqual(action.type, 'ir.actions.act_window_close',
                 "should be resolved with correct action type");
-            actionManager.destroy();
+            webClient.destroy();
         });
     });
 
     QUnit.test('close action with provided infos', async function (assert) {
         assert.expect(1);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
         var options = {
@@ -4099,34 +5103,109 @@ QUnit.module('ActionManager', {
             }
         };
 
-        await actionManager.doAction({
+        await doAction({
             type: 'ir.actions.act_window_close',
             infos: 'just for testing',
         }, options);
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('on close with effect from server', async function (assert) {
+        assert.expect(1);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            session: {
+                show_effect: true,
+            },
+            mockRPC(route, args) {
+                if (route === '/web/dataset/call_button') {
+                    return Promise.resolve({
+                        type: 'ir.actions.act_window_close',
+                        effect: {
+                            type: 'rainbow_man',
+                            message: 'button called',
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await doAction(6);
+        await testUtils.dom.click(webClient.el.querySelector('button[name="object"]'));
+        await testUtils.nextTick();
+        assert.containsOnce(webClient, '.o_reward');
+
+        webClient.destroy();
+    });
+
+    QUnit.test('on close with effect in xml', async function (assert) {
+        assert.expect(2);
+
+        this.archs['partner,false,form'] = `
+            <form>
+                <header>
+                    <button string="Call method"
+                        name="object"
+                        type="object"
+                        effect="{'type': 'rainbow_man', 'message': 'rainBowInXML'}"/>
+                </header>
+                    <field name="display_name"/>
+            </form>`;
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            session: {
+                show_effect: true,
+            },
+            mockRPC(route, args) {
+                if (route === '/web/dataset/call_button') {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await doAction(6);
+        await testUtils.dom.click(webClient.el.querySelector('button[name="object"]'));
+        await testUtils.nextTick();
+        assert.containsOnce(webClient, '.o_reward');
+        assert.strictEqual(
+            webClient.el.querySelector('.o_reward .o_reward_msg_content').textContent,
+            'rainBowInXML'
+        );
+
+        webClient.destroy();
     });
 
     QUnit.test('history back calls on_close handler of dialog action', async function (assert) {
         assert.expect(2);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
 
         // open a new dialog form
-        await actionManager.doAction(this.actions[4], {
+        await doAction(this.actions[4], {
             on_close: function () {
                 assert.step('on_close');
             },
         });
 
-        actionManager.trigger_up('history_back');
+        webClient.env.bus.trigger('history-back');
+        await testUtils.nextTick();
         assert.verifySteps(['on_close'], "should have called the on_close handler");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('properly drop client actions after new action is initiated', async function (assert) {
@@ -4142,19 +5221,20 @@ QUnit.module('ActionManager', {
 
         core.action_registry.add('slowAction', ClientAction);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        actionManager.doAction('slowAction');
-        actionManager.doAction(4);
+        doAction('slowAction');
+        doAction(4);
         slowWillStartDef.resolve();
-        await testUtils.nextTick();
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        await nextTick();
+        assert.containsOnce(webClient, '.o_kanban_view',
             'should have loaded a kanban view');
 
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.map.slowAction;
     });
 
@@ -4163,16 +5243,17 @@ QUnit.module('ActionManager', {
         var ClientAction = AbstractAction.extend({
         });
         core.action_registry.add('ClientAction', ClientAction);
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction('ClientAction');
-        actionManager.trigger_up('navigation_move', {direction:'down'});
+        await doAction('ClientAction');
+        webClient.trigger('navigation_move', {direction:'down'});
 
         assert.ok(true); // no error so it's good
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.ClientAction;
     });
 
@@ -4207,12 +5288,13 @@ QUnit.module('ActionManager', {
             }
         });
         core.action_registry.add('ClientAction', ClientAction);
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
         });
-        await actionManager.doAction('ClientAction');
+        await doAction('ClientAction');
         inputWidget.$el[0].focus();
         var event = $.Event('keydown', {
             which: $.ui.keyCode.TAB,
@@ -4222,7 +5304,7 @@ QUnit.module('ActionManager', {
 
         assert.notOk(event.isDefaultPrevented(),
             "the keyboard event default should not be prevented"); // no crash is good
-        actionManager.destroy();
+        webClient.destroy();
         delete core.action_registry.ClientAction;
     });
 
@@ -4231,10 +5313,11 @@ QUnit.module('ActionManager', {
 
         var readOnFirstRecordDef = testUtils.makeTestPromise();
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 if (args.method === 'read' && args.args[0][0] === 1) {
                     return readOnFirstRecordDef;
@@ -4243,35 +5326,37 @@ QUnit.module('ActionManager', {
             }
         });
 
-        await actionManager.doAction(3);
+        await doAction(3);
 
         // open first record in form view. this will crash and will not
         // display a form view
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
 
-        readOnFirstRecordDef.reject("not working as intended");
+        readOnFirstRecordDef.reject(new Error("not working as intended"));
+        await testUtils.nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "there should still be a list view in dom");
 
         // open another record, the read will not crash
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:eq(2)'));
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:eq(2)'));
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "there should not be a list view in dom");
 
-        assert.containsOnce(actionManager, '.o_form_view',
+        assert.containsOnce(webClient, '.o_form_view',
             "there should be a form view in dom");
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('data-mobile attribute on action button, in desktop', async function (assert) {
         assert.expect(2);
 
-        testUtils.mock.patch(ActionManager, {
+        utils.patch(ActionManager, 'ActionManagerTestPatch', {
             doAction(action, options) {
-                assert.strictEqual(options.plop, undefined);
+                const plop = options ? options.plop : undefined;
+                assert.strictEqual(plop, undefined);
                 return this._super(...arguments);
             },
         });
@@ -4300,17 +5385,17 @@ QUnit.module('ActionManager', {
             views: [[75, 'kanban']],
         });
 
-        const actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data
         });
 
-        await actionManager.doAction(100, {});
-        await testUtils.dom.click(actionManager.$('button[data-mobile]:first'));
+        await doAction(100, {});
+        await testUtils.dom.click(webClient.$('button[data-mobile]:first'));
 
-        actionManager.destroy();
-        testUtils.mock.unpatch(ActionManager);
+        webClient.destroy();
+        utils.unpatch(ActionManager, 'ActionManagerTestPatch');
     });
 
     QUnit.module('Search View Action');
@@ -4327,10 +5412,11 @@ QUnit.module('ActionManager', {
 
         var searchPromise = testUtils.makeTestPromise();
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            menus: this.menus,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.step('search_read ' + args.domain);
@@ -4341,64 +5427,101 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        await actionManager.doAction(3);
 
-        await cpHelpers.editSearch(actionManager, "m");
-        await cpHelpers.validateSearch(actionManager);
+        await doAction(3);
+
+        await cpHelpers.editSearch(webClient, "m");
+        await cpHelpers.validateSearch(webClient);
 
         assert.verifySteps(["search_read ", "search_read foo,ilike,m"]);
 
         // Triggering the do_search above will kill the current searchview Input
-        await cpHelpers.editSearch(actionManager, "o");
+        await cpHelpers.editSearch(webClient, "o");
 
         // We have something in the input of the search view. Making the search_read
         // return at this point will trigger the redraw of the view.
         // However we want to hold on to what we just typed
         searchPromise.resolve();
-        await cpHelpers.validateSearch(actionManager);
+        await cpHelpers.validateSearch(webClient);
 
         assert.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('Call twice clearUncommittedChanges in a row does not display twice the discard warning', async function (assert) {
         assert.expect(4);
 
-        var actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            intercepts: {
-                clear_uncommitted_changes: function () {
-                    actionManager.clearUncommittedChanges();
-                },
-            },
+            menus: this.menus,
         });
 
         // execute an action and edit existing record
-        await actionManager.doAction(3);
+        await doAction(3);
 
-        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+        await testUtils.dom.click($(webClient.el).find('.o_list_view .o_data_row:first'));
+        assert.containsOnce(webClient, '.o_form_view.o_form_readonly');
 
-        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
-        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_form_button_edit'));
+        assert.containsOnce(webClient, '.o_form_view.o_form_editable');
 
-        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'val');
-        actionManager.trigger_up('clear_uncommitted_changes');
-        await testUtils.nextTick();
+        await testUtils.fields.editInput($(webClient.el).find('input[name=foo]'), 'val');
+        webClient.actionManager.clearUncommittedChanges();
+        await nextTick();
 
-        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+        assert.containsOnce(document.body, '.modal'); // confirm discard dialog
         // confirm discard changes
         await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
-        actionManager.trigger_up('clear_uncommitted_changes');
-        await testUtils.nextTick();
+        webClient.actionManager.clearUncommittedChanges();
+        await nextTick();
 
-        assert.containsNone($('body'), '.modal');
+        assert.containsNone(document.body, '.modal');
 
-        actionManager.destroy();
+        webClient.destroy();
+    });
+
+    QUnit.test('on_close should be called only once', async function (assert) {
+        /**
+         * TODO: Improve this test
+         *
+         * When clicking on dialog button it should trigger act_window_close and
+         * then execute_action (that will be redirected to an act_window_close)
+         *
+         * The execute_action comes from BasicController._callButtonAction
+         *
+         * A real case: event_configurator_widget.js
+         */
+        assert.expect(2);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+        });
+
+        await doAction(3);
+        await testUtils.dom.click(webClient.el.querySelector('.o_list_view .o_data_row'));
+        await testUtils.dom.click(webClient.el.querySelector('.o_form_buttons_view .o_form_button_edit'));
+
+        await doAction(25, {
+            on_close() {
+                assert.step('on_close');
+            },
+        });
+
+        // Close dialog by clicking on save button
+        testUtils.dom.click(webClient.el.querySelector('.o_dialog .modal-footer button[special=save]'));
+        // Directly do act_window_close
+        await doAction(10);
+
+        assert.verifySteps(['on_close']);
+
+        webClient.destroy();
     });
 });
 

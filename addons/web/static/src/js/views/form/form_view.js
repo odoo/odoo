@@ -127,19 +127,30 @@ var FormView = BasicView.extend({
                     // (e.g. create: 0) to apply to subviews. We use here the same logic as
                     // the one applied by the server for inline views.
                     refinedContext.base_model_name = self.controllerParams.modelName;
-                    defs.push(parent.loadViews(
-                            field.relation,
-                            new Context(context, self.userContext, refinedContext).eval(),
-                            [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
-                        .then(function (views) {
-                            for (var viewName in views) {
-                                // clone to make runbot green?
-                                attrs.views[viewName] = self._processFieldsView(views[viewName], viewName);
-                                attrs.views[viewName].fields = attrs.views[viewName].viewFields;
-                                self._processSubViewAttrs(attrs.views[viewName], attrs);
-                            }
-                            self._setSubViewLimit(attrs);
-                        }));
+
+                    // FIXME: assumes that the parent is an Owl component
+                    const params = {
+                        model: field.relation,
+                        context: new Context(context, self.userContext, refinedContext).eval(),
+                        views_descr: [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]],
+                    };
+                    let def;
+                    if (parent.loadViews) {
+                        // legacy parent
+                        def = parent.loadViews(params.model, params.context, params.views_descr);
+                    } else {
+                        // Owl parent
+                        def = parent.env.dataManager.load_views(params, {});
+                    }
+                    defs.push(def.then(function (views) {
+                        for (var viewName in views) {
+                            // clone to make runbot green?
+                            attrs.views[viewName] = self._processFieldsView(views[viewName], viewName);
+                            attrs.views[viewName].fields = attrs.views[viewName].viewFields;
+                            self._processSubViewAttrs(attrs.views[viewName], attrs);
+                        }
+                        self._setSubViewLimit(attrs);
+                    }));
                 } else {
                     self._setSubViewLimit(attrs);
                 }

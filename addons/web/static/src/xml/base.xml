@@ -3,6 +3,49 @@
 
 <!-- Owl Templates -->
 
+<t t-name="web.WebClient" owl="1">
+    <t t-set="renderingInfo" t-value="renderingInfo || {}"/>
+    <body class="o_web_client" t-att-class="{ o_fullscreen: renderingInfo.fullscreen }"
+          t-on-push-state="_onPushState"
+          t-on-show-effect="_onShowEffect"
+          t-on-warning="_onDisplayWarning">
+        <Menu t-if="!renderingInfo.fullscreen" t-ref="menu"
+            t-on-open-menu="_onOpenMenu"
+            menus="menus"
+            menuID="renderingInfo.menuID"/>
+        <ComponentAdapter Component="LoadingWidget" widgetArgs="[]"/>
+        <div class="o_action_manager"
+            t-on-breadcrumb-clicked.stop="_onBreadcrumbClicked"
+            t-on-execute-action.stop="_onExecuteAction"
+            t-on-reloading-legacy.stop="_onReloadingLegacy"
+            t-on-dialog-closed="_onDialogClosed">
+
+             <t t-set="mainRenderingInfo" t-value="renderingInfo.main"/>
+            <!-- fixme: class below totally ignored -->
+            <Action t-if="mainRenderingInfo" class="o_action" t-ref="currentControllerComponent"
+                    t-key="mainRenderingInfo.controller.jsID"
+                    Component="mainRenderingInfo.controller.Component"
+                    action="mainRenderingInfo.action"
+                    options="mainRenderingInfo.controller.options"
+                    shouldUpdate='mainRenderingInfo.reload'/>
+
+             <t t-set='dialogRenderingInfo' t-value='renderingInfo.dialog' />
+            <DialogAction t-if='dialogRenderingInfo'
+                contentClass="dialogRenderingInfo.controller.className"
+                target="'.o_dialogs'"
+                title="dialogRenderingInfo.action.name">
+                <Action class="o_action" t-key="dialogRenderingInfo.controller.jsID"
+                    t-ref="currentDialogComponent"
+                    Component="dialogRenderingInfo.controller.Component"
+                    action="dialogRenderingInfo.action"
+                    options="dialogRenderingInfo.controller.options"
+                    inDialog=""/>
+            </DialogAction>
+        </div>
+        <div class="o_dialogs"/>
+    </body>
+</t>
+
 <t t-name="web.ControlPanel" owl="1">
     <div class="o_control_panel">
         <div class="o_cp_top">
@@ -470,7 +513,7 @@
 </t>
 
 <t t-name="web.OwlDialog" owl="1">
-    <Portal target="'body'">
+    <Portal target="props.target">
         <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick">
             <div t-if="props.backdrop" class="modal-backdrop show" t-on-click="_onBackdropClick"/>
             <div role="dialog" class="modal"

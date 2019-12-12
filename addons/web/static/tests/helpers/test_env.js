@@ -1,10 +1,9 @@
 odoo.define('web.test_env', async function (require) {
     "use strict";
 
-    const AbstractStorageService = require('web.AbstractStorageService');
-    const Bus = require("web.Bus");
-    const RamStorage = require('web.RamStorage');
-    const { buildQuery } = require("web.rpc");
+    const Bus = require('web.Bus');
+    const DebugManager = require('web.DebugManager');
+    const { buildQuery } = require('web.rpc');
     const session = require('web.session');
 
     /**
@@ -17,9 +16,6 @@ odoo.define('web.test_env', async function (require) {
      * @returns {Proxy}
      */
     function makeTestEnvironment(env = {}, providedRPC = null) {
-        const RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
         const database = {
             parameters: {
                 code: "en_US",
@@ -31,31 +27,24 @@ odoo.define('web.test_env', async function (require) {
                 time_format: '%H:%M:%S',
             },
         };
-        let testEnv = {};
         const defaultEnv = {
             _t: env._t || Object.assign((s => s), { database }),
             _lt: env._lt || Object.assign((s => s), { database }),
-            bus: new Bus(),
+            bus: env.bus || new Bus(), // FIXME: never destroyed
             device: Object.assign({ isMobile: false }, env.device),
             isDebug: env.isDebug || (() => false),
             qweb: new owl.QWeb({ templates: session.owlTemplates }),
             services: Object.assign({
-                ajax: { // for legacy subwidgets
+                ajax: {
                     rpc() {
-                        const prom = testEnv.session.rpc(...arguments);
-                        prom.abort = function () {
-                            throw new Error("Can't abort this request");
-                        };
-                        return prom;
-                    },
+                      return env.session.rpc(...arguments); // Compatibility Legacy Widgets
+                    }
                 },
                 getCookie() { },
                 rpc(params, options) {
                     const query = buildQuery(params);
-                    return testEnv.session.rpc(query.route, query.params, options);
+                    return env.session.rpc(query.route, query.params, options);
                 },
-                local_storage: new RamStorageService(),
-                session_storage: new RamStorageService(),
                 notification: { notify() { } },
             }, env.services),
             session: Object.assign({
@@ -65,10 +54,10 @@ odoo.define('web.test_env', async function (require) {
                     }
                     throw new Error(`No method to perform RPC`);
                 },
+                url: session.url,
             }, env.session),
         };
-        testEnv = Object.assign(env, defaultEnv);
-        return testEnv;
+        return Object.assign(env, defaultEnv);
     }
 
     /**
@@ -76,6 +65,11 @@ odoo.define('web.test_env', async function (require) {
      */
     QUnit.on('OdooBeforeTestHook', function () {
         owl.Component.env = makeTestEnvironment();
+
+        // In debug mode, the DebugManager is automatically deployed, but we
+        // don't want to have it in tests (mainly because it does an RPC).
+        // DebugManager tests have to manually deploy it themselves.
+        DebugManager.undeploy();
     });
 
     return makeTestEnvironment;

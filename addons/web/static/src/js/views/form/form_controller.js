@@ -130,7 +130,9 @@ var FormController = BasicController.extend({
     getState: function () {
         const state = this._super.apply(this, arguments);
         const env = this.model.get(this.handle, {env: true});
-        state.id = env.currentId;
+        if (env.currentId) {
+            state.id = env.currentId;
+        }
         return state;
     },
     /**

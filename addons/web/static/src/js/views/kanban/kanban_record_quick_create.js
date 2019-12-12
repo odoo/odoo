@@ -17,6 +17,7 @@ var RecordQuickCreate = Widget.extend({
     custom_events: {
         add: '_onAdd',
         cancel: '_onCancel',
+        push_state: '_onPushState',
     },
     events: {
         'click .o_kanban_add': '_onAddClicked',
@@ -244,6 +245,15 @@ var RecordQuickCreate = Widget.extend({
     _onEditClicked: function (ev) {
         ev.stopPropagation();
         this._add({openRecord: true});
+    },
+    /**
+     * Do not change the state triggered from sub form
+     * 
+     * @private
+     * @param {OdooEvent} ev 
+     */
+    _onPushState(ev) {
+        ev.stopPropagation();
     },
     /**
      * When a click happens outside the quick create, we want to close the quick

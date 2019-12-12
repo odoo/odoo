@@ -9,7 +9,6 @@ odoo.define('web.ChangePassword', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var web_client = require('web.web_client');
 
 var _t = core._t;
 
@@ -24,7 +23,6 @@ var ChangePassword = AbstractAction.extend({
      */
     start: function () {
         var self = this;
-        web_client.set_title(_t("Change Password"));
         var $button = self.$('.oe_form_button');
         $button.appendTo(this.getParent().$footer);
         $button.eq(1).click(function () {
@@ -45,6 +43,9 @@ var ChangePassword = AbstractAction.extend({
                     }
                 });
         });
+    },
+    getTitle: function () {
+        return _t("Change Password");
     },
 
     //--------------------------------------------------------------------------

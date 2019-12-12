@@ -2,9 +2,10 @@ odoo.define('mail.activity_view_tests', function (require) {
 'use strict';
 
 var ActivityView = require('mail.ActivityView');
+var Bus = require('web.Bus');
 var testUtils = require('web.test_utils');
 
-var createActionManager = testUtils.createActionManager;
+var createWebClient = testUtils.createWebClient;
 
 var createView = testUtils.createView;
 
@@ -264,56 +265,57 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
 QUnit.test('activity view: activity widget', async function (assert) {
     assert.expect(16);
 
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        var action = payload.action;
+        if (action.serverGeneratedAction) {
+            assert.step('serverGeneratedAction');
+        } else if (action.res_model === 'mail.compose.message') {
+            assert.deepEqual({
+                default_model: "task",
+                default_res_id: 30,
+                default_template_id: 8,
+                default_use_template: true,
+                force_email: true
+                }, action.context);
+            assert.step("do_action_compose");
+        } else if (action.res_model === 'mail.activity') {
+            assert.deepEqual({
+                default_res_id: 30,
+                default_res_model: "task"
+            }, action.context);
+            assert.step("do_action_activity");
+        } else {
+            assert.step("Unexpected action");
+        }
+    });
     const params = {
         View: ActivityView,
         model: 'task',
         data: this.data,
-        arch: '<activity string="Task">' +
-                '<templates>' +
-                    '<div t-name="activity-box">' +
-                        '<field name="foo"/>' +
-                    '</div>' +
-                '</templates>'+
-            '</activity>',
-        mockRPC: function(route, args) {
-            if (args.method === 'activity_send_mail'){
-                assert.deepEqual([[30],8],args.args, "Should send template 8 on record 30");
+        arch: `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+        mockRPC: function (route, args) {
+            if (args.method === 'activity_send_mail') {
+                assert.deepEqual([[30], 8], args.args, "Should send template 8 on record 30");
                 assert.step('activity_send_mail');
                 return Promise.resolve();
             }
-            if (args.method === 'action_feedback_schedule_next'){
-                assert.deepEqual([[3]],args.args, "Should execute action_feedback_schedule_next on activity 3 only ");
+            if (args.method === 'action_feedback_schedule_next') {
+                assert.deepEqual([[3]], args.args, "Should execute action_feedback_schedule_next on activity 3 only ");
                 assert.equal(args.kwargs.feedback, "feedback2");
                 assert.step('action_feedback_schedule_next');
                 return Promise.resolve({serverGeneratedAction: true});
             }
             return this._super.apply(this, arguments);
         },
-        intercepts: {
-            do_action: function (ev) {
-                var action = ev.data.action;
-                if (action.serverGeneratedAction) {
-                    assert.step('serverGeneratedAction');
-                } else if (action.res_model === 'mail.compose.message') {
-                    assert.deepEqual({
-                        default_model: "task",
-                        default_res_id: 30,
-                        default_template_id: 8,
-                        default_use_template: true,
-                        force_email: true
-                        }, action.context);
-                    assert.step("do_action_compose");
-                } else if (action.res_model === 'mail.activity') {
-                    assert.deepEqual({
-                        "default_res_id": 30,
-                        "default_res_model": "task"
-                    }, action.context);
-                    assert.step("do_action_activity");
-                } else {
-                    assert.step("Unexpected action");
-                }
-            },
-        },
+        bus: bus,
     };
 
     var activity = await createView(params);
@@ -321,7 +323,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
     var dropdown = today.find('.dropdown-menu.o_activity');
 
     await testUtils.dom.click(today.find('.o_closest_deadline'));
-    assert.hasClass(dropdown,'show', "dropdown should be displayed");
+    assert.hasClass(dropdown, 'show', "dropdown should be displayed");
     assert.ok(dropdown.find('.o_activity_color_today:contains(Today)').length, "Title should be today");
     assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first div:contains(template8)').length,
         "template8 should be available");
@@ -348,36 +350,30 @@ QUnit.test('activity view: activity widget', async function (assert) {
         "do_action_activity",
         "action_feedback_schedule_next",
         "serverGeneratedAction"
-        ]);
+    ]);
 
     activity.destroy();
+    bus.destroy();
 });
 QUnit.test('activity view: no group_by_menu and no time_range_menu', async function (assert) {
     assert.expect(4);
 
-    var actionManager = await createActionManager({
-        actions: [{
-            id: 1,
-            name: 'Task Action',
-            res_model: 'task',
-            type: 'ir.actions.act_window',
-            views: [[false, 'activity']],
-        }],
-        archs: {
-            'task,false,activity': '<activity string="Task">' +
-                                    '<templates>' +
-                                        '<div t-name="activity-box">' +
-                                            '<field name="foo"/>' +
-                                        '</div>' +
-                                    '</templates>' +
-                                '</activity>',
-            'task,false,search': '<search></search>',
-        },
+    const activity = await createView({
+        View: ActivityView,
+        model: 'task',
         data: this.data,
+        arch: `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
         session: {
             user_context: {lang: 'zz_ZZ'},
         },
-        mockRPC: function(route, args) {
+        mockRPC: function (route, args) {
             if (args.method === 'get_activity_data') {
                 assert.deepEqual(args.kwargs.context, {lang: 'zz_ZZ'},
                     'The context should have been passed');
@@ -386,15 +382,13 @@ QUnit.test('activity view: no group_by_menu and no time_range_menu', async funct
         },
     });
 
-    await actionManager.doAction(1);
-
-    assert.containsN(actionManager, '.o_search_options .o_dropdown button:visible', 2,
+    assert.containsN(activity, '.o_search_options .o_dropdown button:visible', 2,
         "only two elements should be available in view search");
-    assert.isVisible(actionManager.$('.o_search_options .o_dropdown.o_filter_menu > button'),
+    assert.isVisible(activity.$('.o_search_options .o_dropdown.o_filter_menu > button'),
         "filter should be available in view search");
-    assert.isVisible(actionManager.$('.o_search_options .o_dropdown.o_favorite_menu > button'),
+    assert.isVisible(activity.$('.o_search_options .o_dropdown.o_favorite_menu > button'),
         "favorites should be available in view search");
-    actionManager.destroy();
+    activity.destroy();
 });
 
 QUnit.test('activity view: search more to schedule an activity for a record of a respecting model', async function (assert) {
@@ -463,7 +457,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
 QUnit.test('Activity view: discard an activity creation dialog', async function (assert) {
     assert.expect(2);
 
-    var actionManager = await createActionManager({
+    const webClient = await createWebClient({
         actions: [{
             id: 1,
             name: 'Task Action',
@@ -490,33 +484,26 @@ QUnit.test('Activity view: discard an activity creation dialog', async function 
                 </form>`
         },
         data: this.data,
-        intercepts: {
-            do_action(ev) {
-                actionManager.doAction(ev.data.action, ev.data.options);
-            }
-        },
-        async mockRPC(route, args) {
+        mockRPC(route, args) {
             if (args.method === 'check_access_rights') {
                 return true;
             }
             return this._super(...arguments);
         },
     });
-    await actionManager.doAction(1);
 
-    await testUtils.dom.click(actionManager.$('.o_activity_view .o_data_row .o_activity_empty_cell')[0]);
-    assert.containsOnce(
-        $,
-        '.modal.o_technical_modal.show',
+    await testUtils.actionManager.doAction(1);
+    await testUtils.owlCompatibilityExtraNextTick();
+    await testUtils.dom.click($(webClient.el).find('.o_activity_view .o_data_row .o_activity_empty_cell:first'));
+    assert.containsOnce(document.body, '.modal.o_technical_modal',
         "Activity Modal should be opened");
 
-    await testUtils.dom.click($('.modal.o_technical_modal.show button[special="cancel"]'));
-    assert.containsNone(
-        $,
-        '.modal.o_technical_modal.show',
+    await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
+    await testUtils.owlCompatibilityExtraNextTick();
+    assert.containsNone(document.body, '.modal.o_technical_modal',
         "Activity Modal should be closed");
 
-    actionManager.destroy();
+    webClient.destroy();
 });
 
 });

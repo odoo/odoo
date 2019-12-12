@@ -1,7 +1,7 @@
 odoo.define('web.DebugManager.Backend', function (require) {
 "use strict";
 
-var ActionManager = require('web.ActionManager');
+const { DialogAction } = require('web.Action');
 var DebugManager = require('web.DebugManager');
 var dialogs = require('web.view_dialogs');
 var startClickEverywhere = require('web.clickEverywhere');
@@ -9,9 +9,9 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
+const { ComponentAdapter } = require('web.OwlCompatibility');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
-var WebClient = require('web.WebClient');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -39,9 +39,9 @@ DebugManager.include({
     },
 
     /**
-     * Updates current action (action descriptor) on tag = action,
+     * @override
      */
-    update: function (tag, descriptor) {
+    update: function () {
         return this._super().then(function () {
             this.$dropdown.find(".o_debug_split_assets").before(QWeb.render('WebClient.DebugManager.Backend', {
                 manager: this,
@@ -110,14 +110,32 @@ DebugManager.include({
  * (window action)
  */
 DebugManager.include({
-    async start() {
+    init: function (parent, env, mode) {
+        this._super(...arguments);
+        this.env = env;
+        this.mode = mode || 'main';
+    },
+    async willStart() {
         const [_, canSeeRecordRules, canSeeModelAccess] = await Promise.all([
             this._super(...arguments),
             this._checkAccessRight('ir.rule', 'read'),
             this._checkAccessRight('ir.model.access', 'read'),
-        ])
+        ]);
         this.canSeeRecordRules = canSeeRecordRules;
         this.canSeeModelAccess = canSeeModelAccess;
+    },
+    async start() {
+        await this._super(...arguments);
+        this._updateCB = webClient => {
+            const state = webClient.actionManager.getCurrentState();
+            const { action, controller } = state[this.mode] || {};
+            this.update('action', action, controller && controller.component);
+        };
+        this.env.bus.on('web-client-updated', this, this._updateCB);
+    },
+    destroy: function () {
+        this.env.bus.off('web-client-updated', this, this._updateCB);
+        this._super(...arguments);
     },
     /**
      * Return the ir.model id from the model name
@@ -130,10 +148,12 @@ DebugManager.include({
             args: [[['model', '=', modelName]]],
             kwargs: { limit: 1},
         });
-        return modelId
+        return modelId;
     },
     /**
-     * Updates current action (action descriptor) on tag = action,
+     * Updates current action (action descriptor) on tag = action
+     *
+     * @override
      */
     update: function (tag, descriptor) {
         if (tag === 'action') {
@@ -236,22 +256,28 @@ DebugManager.include({
             ]
         );
     },
-    update: function (tag, descriptor, widget) {
-        if (tag === 'action' || tag === 'view') {
-            this._controller = widget;
+    /**
+     * @override
+     */
+    update: async function (tag, descriptor, actionComponent) {
+        if (tag === 'view') {
+            throw Error('tag view');
         }
-        return this._super(tag, descriptor).then(function () {
-            this.$dropdown.find(".o_debug_leave_section").before(QWeb.render('WebClient.DebugManager.View', {
-                action: this._action,
-                can_edit: this._can_edit_views,
-                controller: this._controller,
-                withControlPanel: this._controller && this._controller.withControlPanel,
-                manager: this,
-                view: this._controller && _.findWhere(this._action.views, {
-                    type: this._controller.viewType,
-                }),
-            }));
-        }.bind(this));
+        if (tag === 'action') {
+            this._controller = actionComponent && actionComponent.getController();
+        }
+        await this._super(tag, descriptor);
+        const viewDebugEl = QWeb.render('WebClient.DebugManager.View', {
+            action: this._action,
+            can_edit: this._can_edit_views,
+            controller: this._controller,
+            withControlPanel: this._controller && this._controller.withControlPanel,
+            manager: this,
+            view: this._controller && _.findWhere(this._action.views, {
+                type: this._controller.viewType,
+            }),
+        });
+        this.$dropdown.find(".o_debug_leave_section").before(viewDebugEl);
     },
     get_attachments: function() {
         var selectedIDs = this._controller.getSelectedIds();
@@ -715,88 +741,59 @@ var RequestDetails = Widget.extend({
     }
 });
 
-if (config.isDebug()) {
+class DebugManagerAdapter extends ComponentAdapter {
+    get widgetArgs() {
+        return [this.env, 'dialog'];
+    }
+    update() {
+        this.widget.update(...arguments);
+    }
+    /**
+     * As we manually instantiate the DebugManagerAdapter in the DialogAction,
+     * Owl destroys it in __render (like if it was a component that had been
+     * instantiated by a former rendering, that has been cancelled by the
+     * current one). Owl could be a little bit smarter here, and not destroy
+     * root components (components that have been manually mounted). For now,
+     * it doesn't, so we have to prevent it from destroying our component
+     * directly (it will be correctly destroyed when the dialog will be
+     * destroyed, as in this case '__destroy' is called without going through
+     * 'destroy').
+     */
+    destroy() {}
+}
+
+DebugManager.deploy = function () {
+    // main (deployed in the navbar)
     SystrayMenu.Items.push(DebugManager);
 
-    WebClient.include({
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        current_action_updated: function (action, controller) {
-            this._super.apply(this, arguments);
-            var debugManager = _.find(this.menu.systray_menu.widgets, function(item) {
-                return item instanceof DebugManager;
+    // dialog (deployed in the header of action dialogs)
+    utils.patch(DialogAction, 'DialogActionDebug', {
+        async willStart() {
+            await this._super(...arguments);
+            this.debugManager = new DebugManagerAdapter(this, {
+                Component: DebugManager,
             });
-            debugManager.update('action', action, controller && controller.widget);
+            await this.debugManager.mount(document.createDocumentFragment());
+        },
+        mounted() {
+            this.dialog.comp.headerRef.el.prepend(this.debugManager.el);
+            this._super(...arguments);
         },
     });
+};
+DebugManager.undeploy = function () {
+    // main
+    const index = SystrayMenu.Items.indexOf(DebugManager);
+    if (index > -1) {
+        SystrayMenu.Items.splice(index, 1);
+    }
 
-    ActionManager.include({
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
+    // dialog
+    utils.unpatch(DialogAction, 'DialogActionDebug');
+};
 
-        /**
-         * Returns the action of the controller currently opened in a dialog,
-         * i.e. a target='new' action, if any.
-         *
-         * @returns {Object|null}
-         */
-        getCurrentActionInDialog: function () {
-            if (this.currentDialogController) {
-                return this.actions[this.currentDialogController.actionID];
-            }
-            return null;
-        },
-        /**
-         * Returns the controller currently opened in a dialog, if any.
-         *
-         * @returns {Object|null}
-         */
-        getCurrentControllerInDialog: function () {
-            return this.currentDialogController;
-        },
-    });
-
-    Dialog.include({
-        //--------------------------------------------------------------------------
-        // Public
-        //--------------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        open: function() {
-            var self = this;
-            // if the dialog is opened by the ActionManager, instantiate a
-            // DebugManager and insert it into the DOM once the dialog is opened
-            // (delay this with a setTimeout(0) to ensure that the internal
-            // state, i.e. the current action and controller, of the
-            // ActionManager is set to properly update the DebugManager)
-            this.opened(function() {
-                setTimeout(function () {
-                    var parent = self.getParent();
-                    if (parent instanceof ActionManager) {
-                        var action = parent.getCurrentActionInDialog();
-                        if (action) {
-                            var controller = parent.getCurrentControllerInDialog();
-                            self.debugManager = new DebugManager(self);
-                            var $header = self.$modal.find('.modal-header:first');
-                            return self.debugManager.prependTo($header).then(function () {
-                                self.debugManager.update('action', action, controller.widget);
-                            });
-                        }
-                    }
-                }, 0);
-            });
-
-            return this._super.apply(this, arguments);
-        },
-    });
+if (config.isDebug()) {
+    DebugManager.deploy();
 }
 
 return DebugManager;

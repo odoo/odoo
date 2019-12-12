@@ -6,7 +6,6 @@ var GraphView = require('web.GraphView');
 var testUtils = require('web.test_utils');
 
 const cpHelpers = testUtils.controlPanel;
-var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
 
@@ -1170,16 +1169,15 @@ QUnit.module('Views', {
                 for await (var combination of graphGenerator(combinations)) {
                     // we can check particular combinations here
                     if (combination.toString() in self.combinationsToCheck) {
-                        var graph = self.actionManager.getCurrentController().widget;
                         if (self.combinationsToCheck[combination].errorMessage) {
                             assert.strictEqual(
-                                graph.$('.o_nocontent_help p').eq(1).text().trim(),
+                                this.graph.$('.o_nocontent_help p').eq(1).text().trim(),
                                 self.combinationsToCheck[combination].errorMessage
                             );
                         } else {
-                            assert.checkLabels(graph, self.combinationsToCheck[combination].labels);
-                            assert.checkLegend(graph, self.combinationsToCheck[combination].legend);
-                            assert.checkDatasets(graph, ['label', 'data'], self.combinationsToCheck[combination].datasets);
+                            assert.checkLabels(this.graph, self.combinationsToCheck[combination].labels);
+                            assert.checkLegend(this.graph, self.combinationsToCheck[combination].legend);
+                            assert.checkDatasets(this.graph, ['label', 'data'], self.combinationsToCheck[combination].datasets);
                         }
                     }
                 }
@@ -1254,36 +1252,31 @@ QUnit.module('Views', {
                 await testUtils.dom.click($(`.o_control_panel .o_graph_button[data-mode="${mode}"]`));
             };
 
-            // // create an action manager to test the interactions with the search view
-            this.actionManager = await createActionManager({
+            this.graph = await createView({
+                View: GraphView,
+                model: 'foo',
                 data: this.data,
+                arch: `
+                    <graph string="Partners" type="bar">
+                        <field name="foo" type="measure"/>
+                    </graph>`,
                 archs: {
-                    'foo,false,graph': '<graph string="Partners" type="bar">' +
-                        '<field name="foo" type="measure"/>' +
-                    '</graph>',
-                    'foo,false,search': '<search>' +
-                        '<filter name="date" string="Date" context="{\'group_by\': \'date\'}"/>' +
-                        '<filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
-                        '<filter name="product_id" string="Product" context="{\'group_by\': \'product_id\'}"/>' +
-                        '<filter name="color_id" string="Color" context="{\'group_by\': \'color_id\'}"/>' +
-                    '</search>',
+                    'foo,false,search': `
+                        <search>
+                            <filter name="date" string="Date" context="{'group_by': 'date'}"/>
+                            <filter name="bar" string="Bar" context="{'group_by': 'bar'}"/>
+                            <filter name="product_id" string="Product" context="{'group_by': 'product_id'}"/>
+                            <filter name="color_id" string="Color" context="{'group_by': 'color_id'}"/>
+                        </search>`,
                 },
-            });
-
-            await this.actionManager.doAction({
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[false, 'graph']],
-                flags: {
-                    graph: {
-                        additionalMeasures: ['product_id'],
-                    }
+                viewOptions: {
+                    additionalMeasures: ['product_id'],
                 },
             });
         },
         afterEach: function () {
             this.unpatchDate();
-            this.actionManager.destroy();
+            this.graph.destroy();
         },
     }, function () {
         QUnit.test('comparison with one groupby equal to comparison date field', async function (assert) {

@@ -5,7 +5,7 @@ var AbstractView = require('web.AbstractView');
 var ajax = require('web.ajax');
 var testUtils = require('web.test_utils');
 
-var createActionManager = testUtils.createActionManager;
+var createWebClient = testUtils.createWebClient;
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -113,7 +113,7 @@ QUnit.module('Views', {
     QUnit.test('group_by from context can be a string, instead of a list of strings', async function (assert) {
         assert.expect(1);
 
-        var actionManager = await createActionManager({
+        var webClient = await createWebClient({
             actions: [{
                 id: 1,
                 name: 'Foo',
@@ -137,9 +137,9 @@ QUnit.module('Views', {
             },
         });
 
-        await actionManager.doAction(1);
+        await testUtils.actionManager.doAction(1);
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
 });

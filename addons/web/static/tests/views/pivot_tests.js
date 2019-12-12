@@ -8,7 +8,6 @@ var testUtilsDom = require('web.test_utils_dom');
 
 var _t = core._t;
 const cpHelpers = testUtils.controlPanel;
-var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
 
@@ -2303,10 +2302,9 @@ QUnit.module('Views', {
 
     QUnit.test('Navigation list view for a group and back with breadcrumbs', async function (assert) {
         assert.expect(16);
-        // create an action manager to test the interactions with the search view
-        var readGroupCount = 0;
 
-        var actionManager = await createActionManager({
+        var readGroupCount = 0;
+        var webClient = await testUtils.createWebClient({
             data: this.data,
             archs: {
                 'partner,false,pivot': '<pivot>' +
@@ -2316,19 +2314,13 @@ QUnit.module('Views', {
                 'partner,false,list': '<tree><field name="foo"/></tree>',
                 'partner,false,form': '<form><field name="foo"/></form>',
             },
-            intercepts: {
-                do_action: function (event) {
-                    var action = event.data.action;
-                    actionManager.doAction(action);
-                }
-            },
             mockRPC: function (route, args) {
                 if (args.method === 'read_group') {
                     assert.step('read_group');
                     const domain = args.kwargs.domain;
-                    if ([0,1].indexOf(readGroupCount) !== -1) {
-                        assert.deepEqual(domain, [], 'domain empty');
-                    } else if ([2,3,4,5].indexOf(readGroupCount) !== -1) {
+                    if ([0, 1].indexOf(readGroupCount) !== -1) {
+                        assert.deepEqual(domain, [], 'initial domain empty');
+                    } else if ([2, 3, 4, 5].indexOf(readGroupCount) !== -1) {
                         assert.deepEqual(domain, [['foo', '=', 12]],
                             'domain conserved when back with breadcrumbs');
                     }
@@ -2344,30 +2336,31 @@ QUnit.module('Views', {
             },
         });
 
-        await actionManager.doAction({
+        await testUtils.actionManager.doAction({
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'pivot']],
         });
+        await testUtils.owlCompatibilityExtraNextTick();
 
-
-        await cpHelpers.toggleFilterMenu(actionManager);
-        await cpHelpers.toggleMenuItem(actionManager, 0);
+        await cpHelpers.toggleFilterMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, 0);
         await testUtils.nextTick();
 
-        await testUtilsDom.click(actionManager.$('.o_pivot_cell_value:nth(1)'));
+        await testUtilsDom.click($(webClient.el).find('.o_pivot_cell_value:nth(1)'));
         await testUtils.nextTick();
 
-        assert.containsOnce(actionManager, '.o_list_view');
+        assert.containsOnce(webClient.el, '.o_list_view');
 
-        await testUtilsDom.click(actionManager.$('.o_control_panel ol.breadcrumb li.breadcrumb-item').eq(0));
+        await testUtilsDom.click($(webClient.el).find('.o_control_panel ol.breadcrumb li.breadcrumb-item').eq(0));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.verifySteps([
             'read_group', 'read_group',
             'read_group', 'read_group',
             'search_read',
             'read_group', 'read_group']);
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.test('Cell values are kept when flippin a pivot view in comparison mode', async function (assert) {

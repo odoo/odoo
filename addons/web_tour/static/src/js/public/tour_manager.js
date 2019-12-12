@@ -9,12 +9,12 @@ TourManager.include({
      * @override
      */
     _waitBeforeTourStart: function () {
-        return this._super.apply(this, arguments).then(function () {
-            return lazyloader.allScriptsLoaded;
-        }).then(function () {
-            return new Promise(function (resolve) {
-                setTimeout(resolve);
-            });
+        return new Promise(resolve => {
+            $(() => {
+                lazyloader.allScriptsLoaded.then(() => {
+                    setTimeout(resolve);
+                });
+            })
         });
     },
 });

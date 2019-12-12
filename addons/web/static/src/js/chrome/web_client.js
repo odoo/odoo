@@ -1,243 +1,500 @@
 odoo.define('web.WebClient', function (require) {
 "use strict";
 
-var AbstractWebClient = require('web.AbstractWebClient');
-var config = require('web.config');
-var core = require('web.core');
-var data_manager = require('web.data_manager');
-var dom = require('web.dom');
-var Menu = require('web.Menu');
-var session = require('web.session');
+const ActionManager = require('web.ActionManager');
+const { Action, DialogAction } = require('web.Action');
+const { ComponentAdapter } = require('web.OwlCompatibility');
+const LoadingWidget = require('web.Loading');
+const Menu = require('web.Menu');
+const RainbowMan = require('web.RainbowMan');
+const LegacyDialog = require('web.Dialog');
+const WarningDialog = require('web.CrashManager').WarningDialog;
 
-return AbstractWebClient.extend({
-    custom_events: _.extend({}, AbstractWebClient.prototype.custom_events, {
-        app_clicked: 'on_app_clicked',
-        menu_clicked: 'on_menu_clicked',
-    }),
-    start: function () {
-        core.bus.on('change_menu_section', this, function (menuID) {
-            this.do_push_state(_.extend($.bbq.getState(), {
-                menu_id: menuID,
-            }));
-        });
+const { Component, hooks } = owl;
+const useRef = hooks.useRef;
 
-        return this._super.apply(this, arguments);
-    },
-    bind_events: function () {
-        var self = this;
-        this._super.apply(this, arguments);
-
-        /*
-            Small patch to allow having a link with a href towards an anchor. Since odoo use hashtag
-            to represent the current state of the view, we can't easily distinguish between a link
-            towards an anchor and a link towards anoter view/state. If we want to navigate towards an
-            anchor, we must not change the hash of the url otherwise we will be redirected to the app
-            switcher instead.
-            To check if we have an anchor, first check if we have an href attributes starting with #.
-            Try to find a element in the DOM using JQuery selector.
-            If we have a match, it means that it is probably a link to an anchor, so we jump to that anchor.
-        */
-        this.$el.on('click', 'a', function (ev) {
-            var disable_anchor = ev.target.attributes.disable_anchor;
-            if (disable_anchor && disable_anchor.value === "true") {
-                return;
-            }
-
-            var href = ev.target.attributes.href;
-            if (href) {
-                if (href.value[0] === '#' && href.value.length > 1) {
-                    if (self.$("[id='"+href.value.substr(1)+"']").length) {
-                        ev.preventDefault();
-                        self.trigger_up('scrollTo', {'selector': href.value});
-                    }
-                }
+class WebClient extends Component {
+    constructor() {
+        super();
+        this.LoadingWidget = LoadingWidget;
+        this.renderingInfo = null;
+        this.currentControllerComponent = useRef('currentControllerComponent');
+        this.currentDialogComponent = useRef('currentDialogComponent');
+        this.actionManager = new ActionManager(this.env);
+        this.actionManager.on('cancel', this, () => {
+            if (this.renderingInfo) {
+                this.__owl__.currentFiber.cancel();
             }
         });
-    },
-    load_menus: function () {
-        return (odoo.loadMenusPromise || odoo.reloadMenus())
-            .then(function (menuData) {
-                // Compute action_id if not defined on a top menu item
-                for (var i = 0; i < menuData.children.length; i++) {
-                    var child = menuData.children[i];
-                    if (child.action === false) {
-                        while (child.children && child.children.length) {
-                            child = child.children[0];
-                            if (child.action) {
-                                menuData.children[i].action = child.action;
-                                break;
-                            }
-                        }
-                    }
-                }
-                odoo.loadMenusPromise = null;
-                return menuData;
-            });
-    },
-    show_application: function () {
-        var self = this;
-        this.set_title();
+        this.actionManager.on('update', this, payload => {
+            this.renderingInfo = payload;
+            if (!this.renderingInfo.menuID && !this.state.menu_id && payload.main) {
+                // retrieve menu_id from action
+                const menu = Object.values(this.menus).find(menu => {
+                    return menu.actionID === payload.main.action.id;
+                });
+                this.renderingInfo.menuID = menu && menu.id;
+            }
+            this._domCleaning();
+            this.render();
+        });
+        this.menu = useRef('menu');
 
-        return this.menu_dp.add(this.instanciate_menu_widgets()).then(function () {
-            $(window).bind('hashchange', self.on_hashchange);
+        this.ignoreHashchange = false;
 
-            // If the url's state is empty, we execute the user's home action if there is one (we
-            // show the first app if not)
-            var state = $.bbq.getState(true);
-            if (_.keys(state).length === 1 && _.keys(state)[0] === "cids") {
-                return self.menu_dp.add(self._rpc({
-                        model: 'res.users',
-                        method: 'read',
-                        args: [session.uid, ["action_id"]],
-                    }))
-                    .then(function (result) {
-                        var data = result[0];
-                        if (data.action_id) {
-                            return self.do_action(data.action_id[0]).then(function () {
-                                self.menu.change_menu_section(self.menu.action_id_to_primary_menu_id(data.action_id[0]));
-                            });
-                        } else {
-                            self.menu.openFirstApp();
-                        }
-                    });
+        // the state of the webclient contains information like the current
+        // menu id, action id, view type (for act_window actions)...
+        this.state = {};
+        this.env.bus.on('show-effect', this, this._showEffect);
+        this.env.bus.on('connection_lost', this, this._onConnectionLost);
+        this.env.bus.on('connection_restored', this, this._onConnectionRestored);
+    }
+
+    get titleParts() {
+        this._titleParts = this._titleParts || {};
+        return this._titleParts;
+    }
+    // TODO: handle set_title* events
+    setTitlePart(part, title) {
+        this.titleParts[part] = title;
+    }
+
+    async willStart() {
+        this.menus = await this._loadMenus();
+        this.actionManager.menus = this.menus;
+
+        const state = this._getUrlState();
+        this._determineCompanyIds(state);
+        return this.actionManager.loadState(state, { menuID: state.menu_id });
+    }
+    mounted() {
+        this._onHashchange = () => {
+            if (!this.ignoreHashchange) {
+                const state = this._getUrlState();
+                this.actionManager.loadState(state, { menuID: state.menu_id });
+            }
+            this.ignoreHashchange = false;
+            // TODO: reset oldURL in case of failure?
+        };
+        window.addEventListener('hashchange', this._onHashchange);
+        super.mounted();
+        this._wcUpdated();
+        odoo.isReady = true;
+        this.env.bus.trigger('web-client-mounted');
+    }
+    willPatch() {
+        super.willPatch();
+        const scrollPosition = this._getScrollPosition();
+        this.actionManager.storeScrollPosition(scrollPosition);
+    }
+    patched() {
+        super.patched();
+        this._wcUpdated();
+    }
+
+    catchError(e) {
+        if (e && e.name) {
+            // Real runtime error
+            throw e;
+        }
+        // Errors that have been handled before
+        console.warn(e);
+        if (this.renderingInfo) {
+            this.renderingInfo.onFail();
+        }
+        this.actionManager.restoreController();
+    }
+    willUnmount() {
+        window.removeEventListener('hashchange', this._onHashchange);
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    _getWindowHash() {
+        return window.location.hash;
+    }
+    _setWindowHash(newHash) {
+        this.ignoreHashchange = true;
+        window.location.hash = newHash;
+    }
+    /**
+     * @private
+     * @returns {Object}
+     */
+    _getUrlState() {
+        const hash = this._getWindowHash();
+        const hashParts = hash ? hash.substr(1).split("&") : [];
+        const state = {};
+        for (const part of hashParts) {
+            const [ key, val ] = part.split('=');
+            let decodedVal;
+            if (val === undefined) {
+                decodedVal = '1';
             } else {
-                return self.on_hashchange();
+                decodedVal = decodeURI(val);
             }
-        });
-    },
-
-    instanciate_menu_widgets: function () {
-        var self = this;
-        var proms = [];
-        return this.load_menus().then(function (menuData) {
-            self.menu_data = menuData;
-
-            // Here, we instanciate every menu widgets and we immediately append them into dummy
-            // document fragments, so that their `start` method are executed before inserting them
-            // into the DOM.
-            if (self.menu) {
-                self.menu.destroy();
-            }
-            self.menu = new Menu(self, menuData);
-            proms.push(self.menu.prependTo(self.$el));
-            return Promise.all(proms);
-        });
-    },
-
-    // --------------------------------------------------------------
-    // URL state handling
-    // --------------------------------------------------------------
-    on_hashchange: function (event) {
-        if (this._ignore_hashchange) {
-            this._ignore_hashchange = false;
-            return Promise.resolve();
+            state[key] = isNaN(decodedVal) ? decodedVal : parseInt(decodedVal, 10);
         }
 
-        var self = this;
-        return this.clear_uncommitted_changes().then(function () {
-            var stringstate = $.bbq.getState(false);
-            if (!_.isEqual(self._current_state, stringstate)) {
-                var state = $.bbq.getState(true);
-                if (state.action || (state.model && (state.view_type || state.id))) {
-                    return self.menu_dp.add(self.action_manager.loadState(state, !!self._current_state)).then(function () {
-                        if (state.menu_id) {
-                            if (state.menu_id !== self.menu.current_primary_menu) {
-                                core.bus.trigger('change_menu_section', state.menu_id);
-                            }
-                        } else {
-                            var action = self.action_manager.getCurrentAction();
-                            if (action) {
-                                var menu_id = self.menu.action_id_to_primary_menu_id(action.id);
-                                core.bus.trigger('change_menu_section', menu_id);
-                            }
-                        }
-                    });
-                } else if (state.menu_id) {
-                    var action_id = self.menu.menu_id_to_action_id(state.menu_id);
-                    return self.menu_dp.add(self.do_action(action_id, {clear_breadcrumbs: true})).then(function () {
-                        core.bus.trigger('change_menu_section', state.menu_id);
-                    });
-                } else {
-                    self.menu.openFirstApp();
-                }
-            }
-            self._current_state = stringstate;
-        }, function () {
-            if (event) {
-                self._ignore_hashchange = true;
-                window.location = event.originalEvent.oldURL;
-            }
-        });
-    },
-
-    // --------------------------------------------------------------
-    // Menu handling
-    // --------------------------------------------------------------
-    on_app_clicked: function (ev) {
-        var self = this;
-        return this.menu_dp.add(data_manager.load_action(ev.data.action_id))
-            .then(function (result) {
-                return self.action_mutex.exec(function () {
-                    var completed = new Promise(function (resolve, reject) {
-                        var options = _.extend({}, ev.data.options, {
-                            clear_breadcrumbs: true,
-                            action_menu_id: ev.data.menu_id,
-                        });
-
-                        Promise.resolve(self._openMenu(result, options))
-                               .then(function() {
-                                    self._on_app_clicked_done(ev)
-                                        .then(resolve)
-                                        .guardedCatch(reject);
-                               }).guardedCatch(function() {
-                                    resolve();
-                               });
-                        setTimeout(function () {
-                                resolve();
-                            }, 2000);
-                    });
-                    return completed;
-                });
-            });
-    },
-    _on_app_clicked_done: function (ev) {
-        core.bus.trigger('change_menu_section', ev.data.menu_id);
-        return Promise.resolve();
-    },
-    on_menu_clicked: function (ev) {
-        var self = this;
-        return this.menu_dp.add(data_manager.load_action(ev.data.action_id))
-            .then(function (result) {
-                self.$el.removeClass('o_mobile_menu_opened');
-
-                return self.action_mutex.exec(function () {
-                    var completed = new Promise(function (resolve, reject) {
-                        Promise.resolve(self._openMenu(result, {
-                            clear_breadcrumbs: true,
-                        })).then(resolve).guardedCatch(reject);
-
-                        setTimeout(function () {
-                            resolve();
-                        }, 2000);
-                    });
-                    return completed;
-                });
-            }).guardedCatch(function () {
-                self.$el.removeClass('o_mobile_menu_opened');
-            });
-    },
+        return state;
+    }
+    _determineCompanyIds(state) {
+        const userCompanies = this.env.session.user_companies;
+        const currentCompanyId = userCompanies.current_company[0];
+        if (!state.cids) {
+            state.cids = this.env.services.getCookie('cids') || currentCompanyId;
+        }
+        let stateCompanyIds = state.cids.toString().split(',').map(id => parseInt(id, 10));
+        const userCompanyIds = userCompanies.allowed_companies.map(company => company[0]);
+        // Check that the user has access to all the companies
+        if (!_.isEmpty(_.difference(stateCompanyIds, userCompanyIds))) {
+            state.cids = String(currentCompanyId);
+            stateCompanyIds = [currentCompanyId];
+        }
+        this.env.session.user_context.allowed_company_ids = stateCompanyIds;
+    }
+    _displayNotification(params) {
+        const notifService = this.env.services.notification;
+        return notifService.notify(params);
+    }
     /**
-     * Open the action linked to a menu.
-     * This function is mostly used to allow override in other modules.
+     * FIXME: consider moving this to menu.js
+     * Loads and sanitizes the menu data
      *
      * @private
-     * @param {Object} action
-     * @param {Object} options
-     * @returns {Promise}
+     * @returns {Promise<Object>}
      */
-    _openMenu: function (action, options) {
-        return this.do_action(action, options);
-    },
-});
+    _loadMenus() {
+        if (!odoo.loadMenusPromise) {
+            throw new Error('can we get here? tell aab if so');
+        }
+        const loadMenusPromise = odoo.loadMenusPromise || odoo.reloadMenus();
+        return loadMenusPromise.then(menuData => {
+            // set action if not defined on top menu items
+            for (let app of menuData.children) {
+                let child = app;
+                while (app.action === false && child.children.length) {
+                    child = child.children[0];
+                    app.action = child.action;
+                }
+            }
+
+            // sanitize menu data:
+            //  - menus ({menuID: menu}): flat representation of all menus
+            //  - menu: {
+            //      id
+            //      name
+            //      children (array of menu ids)
+            //      appID (id of the parent app)
+            //      actionID
+            //      actionModel (e.g. ir.actions.act_window)
+            //      xmlid
+            //    }
+            // - menu.root.children: array of app ids
+            const menus = {};
+            function processMenu(menu, appID) {
+                appID = appID || menu.id;
+                for (let submenu of menu.children) {
+                    processMenu(submenu, appID);
+                }
+                const action = menu.action && menu.action.split(',');
+                const menuID = menu.id || 'root';
+                menus[menuID] = {
+                    id: menuID,
+                    appID: appID,
+                    name: menu.name,
+                    children: menu.children.map(submenu => submenu.id),
+                    actionModel: action ? action[0] : false,
+                    actionID: action ? parseInt(action[1], 10) : false,
+                    xmlid: menu.xmlid,
+                };
+            }
+            processMenu(menuData);
+
+            odoo.loadMenusPromise = null;
+            return menus;
+        });
+    }
+    /**
+     * @private
+     * @param {Object} state
+     */
+    _updateState(state) {
+        // the action and menu_id may not have changed
+        state.action = state.action || this.state.action || '';
+        const menuID = state.menu_id || this.state.menu_id || '';
+        if (menuID) {
+            state.menu_id = menuID;
+        }
+        if ('title' in state) {
+            this.setTitlePart('action', state.title);
+            delete state.title
+        }
+        this.state = state;
+        const hashParts = Object.keys(state).map(key => {
+            const value = state[key];
+            if (value !== null) {
+                return `${key}=${encodeURI(value)}`;
+            }
+            return '';
+        });
+        const hash = "#" + hashParts.join("&");
+        if (hash !== this._getWindowHash()) {
+            this._setWindowHash(hash);
+        }
+        const fullTitle = this._computeTitle();
+        this._setWindowTitle(fullTitle);
+    }
+    _wcUpdated() {
+        if (this.renderingInfo) {
+            let mainComponent;
+            let state = {};
+            if (this.renderingInfo.main) {
+                const mainAction = this.renderingInfo.main.action;
+                mainComponent = this.currentControllerComponent.comp;
+                Object.assign(state, mainComponent.getState());
+                state.action = mainAction.id;
+                let active_id = null;
+                let active_ids = null;
+                if (mainAction.context) {
+                    active_id = mainAction.context.active_id || null;
+                    active_ids = mainAction.context.active_ids;
+                    if (active_ids && !(active_ids.length === 1 && active_ids[0] === active_id)) {
+                        active_ids = active_ids.join(',');
+                    } else {
+                        active_ids = null;
+                    }
+                }
+                if (active_id) {
+                    state.active_id = active_id;
+                }
+                if (active_ids) {
+                    state.active_ids = active_ids;
+                }
+                if (!('title' in state)) {
+                    state.title = mainComponent.title;
+                }
+                // keep cids in hash
+                //this._determineCompanyIds(state);
+                const scrollPosition = this.renderingInfo.main.controller.scrollPosition;
+                if (scrollPosition) {
+                    this._scrollTo(scrollPosition);
+                }
+            }
+            if (this.renderingInfo.onSuccess) {
+                const dialogComponent = this.currentDialogComponent.comp;
+                this.renderingInfo.onSuccess(mainComponent, dialogComponent); // FIXME: onSuccess not called if no background controller
+            }
+            if (this.renderingInfo.menuID) {
+                state.menu_id = this.renderingInfo.menuID;
+            }
+            if (!this.renderingInfo.dialog) {
+                this._updateState(state);
+            }
+        }
+        this.renderingInfo = null;
+        this.env.bus.trigger('web-client-updated', this);
+    }
+    _domCleaning() {
+        const body = document.body;
+        // multiple bodies in tests
+        const tooltips = body.querySelectorAll('body .tooltip');
+        for (let tt of tooltips) {
+            tt.parentNode.removeChild(tt);
+        }
+    }
+    _computeTitle() {
+        const parts = Object.keys(this.titleParts).sort();
+        let tmp = "";
+        for (let part of parts) {
+            const title = this.titleParts[part];
+            if (title) {
+                tmp = tmp ? tmp + " - " + title : title;
+            }
+        }
+        return tmp;
+    }
+    /**
+     * Returns the left and top scroll positions of the main scrolling area
+     * (i.e. the '.o_content' div in desktop).
+     *
+     * @private
+     * @returns {Object} with keys left and top
+     */
+    _getScrollPosition() {
+        var scrollingEl = this.el.getElementsByClassName('o_content')[0];
+        return {
+            left: scrollingEl ? scrollingEl.scrollLeft : 0,
+            top: scrollingEl ? scrollingEl.scrollTop : 0,
+        };
+    }
+    _setWindowTitle(title) {
+        document.title = title;
+    }
+    _getWindowTitle() {
+        return document.title;
+    }
+    _scrollTo(scrollPosition) {
+        const scrollingEl = this.el.getElementsByClassName('o_content')[0];
+        if (!scrollingEl) {
+            return;
+        }
+        // TODO: handle scrollTo events ( + scrolling to a selector)
+        // let offset = {
+        //     top: scrollPosition.top,
+        //     left: scrollPosition.left || 0,
+        // };
+        // if (!offset.top) {
+        //     offset = dom.getPosition(document.querySelector(ev.data.selector));
+        //     // Substract the position of the scrolling element
+        //     offset.top -= dom.getPosition(scrollingEl).top;
+        // }
+
+        scrollingEl.scrollTop = scrollPosition.top || 0;
+        scrollingEl.scrollLeft = scrollPosition.left || 0;
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onOpenMenu(ev) {
+        const action = this.menus[ev.detail.menuID].actionID;
+        this.actionManager.doAction(action, {
+            clear_breadcrumbs: true,
+            menuID: ev.detail.menuID,
+        });
+    }
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.detail.controllerID
+     */
+    _onBreadcrumbClicked(ev) {
+        this.actionManager.restoreController(ev.detail.controllerID);
+    }
+    /**
+     * Whenever the connection is lost, we need to notify the user.
+     *
+     * @private
+     */
+    _onConnectionLost() {
+        this.connectionNotificationID = this._displayNotification({
+            title: this.env._t('Connection lost'),
+            message: this.env._t('Trying to reconnect...'),
+            sticky: true
+        });
+    }
+    /**
+     * Whenever the connection is restored, we need to notify the user.
+     *
+     * @private
+     */
+    _onConnectionRestored() {
+        if (this.connectionNotificationID) {
+            this.env.services.notification.close(this.connectionNotificationID);
+            this._displayNotification({
+                type: 'info',
+                title: this.env._t('Connection restored'),
+                message: this.env._t('You are back online'),
+                sticky: false
+            });
+            this.connectionNotificationID = false;
+        }
+    }
+    _onDialogClosed() {
+        this.actionManager.doAction({type: 'ir.actions.act_window_close'});
+    }
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.detail
+     */
+    _onExecuteAction(ev) {
+        this.actionManager.executeContextualActionTODONAME(ev.detail);
+    }
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.detail.state
+     */
+    _onPushState(ev) {
+        if (!this.renderingInfo) {
+            // Deal with that event only if we are not in a rendering cycle
+            // i.e.: the rendering cycle will update the state at its end
+            // Any event hapening in the meantime would be irrelevant
+            this._updateState(ev.detail.state);
+        }
+    }
+    _showEffect(params) {
+        params = params || {};
+        const type = params.type || 'rainbow_man';
+        if (type === 'rainbow_man') {
+            if (this.env.session.show_effect) {
+                RainbowMan.display(params, {target: this.el, parent: this});
+            } else {
+                // For instance keep title blank, as we don't have title in data
+                this._displayNotification({
+                    title: "",
+                    message: params.message,
+                    sticky: false
+                });
+            }
+        } else {
+            throw new Error('Unknown effect type: ' + type);
+        }
+    }
+    /**
+     * Displays a visual effect (for example, a rainbowMan0
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} [ev.data] - key-value options to decide rainbowMan
+     *   behavior / appearance
+     */
+    _onShowEffect(ev) {
+        if (!this.renderingInfo) {
+            const params = ev.detail;
+            this._showEffect(params);
+        }
+    }
+    /**
+     * Displays a warning in a dialog or with the notification service
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.message the warning's message
+     * @param {string} ev.data.title the warning's title
+     * @param {string} [ev.data.type] 'dialog' to display in a dialog
+     * @param {boolean} [ev.data.sticky] whether or not the warning should be
+     *   sticky (if displayed with the Notification)
+     */
+    _onDisplayWarning(ev) {
+        var data = ev.detail;
+        if (data.type === 'dialog') {
+            const warningDialog = new LegacyDialog.DialogAdapter(this,
+                {
+                    Component: WarningDialog,
+                    widgetArgs: {
+                        options: {title: data.title},
+                        error: data
+                    },
+                }
+            );
+            warningDialog.mount(this.el.querySelector('.o_dialogs'));
+        } else {
+            data.type = 'warning';
+            this._displayNotification(data);
+        }
+    }
+}
+WebClient.components = { Action, Menu, DialogAction, ComponentAdapter };
+WebClient.template = 'web.WebClient';
+
+return WebClient;
 
 });

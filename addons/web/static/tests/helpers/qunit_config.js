@@ -150,6 +150,7 @@ QUnit.on('OdooAfterTestHook', function () {
         QUnit.pushFailure(`#qunit-fixture still contains elements`);
         if (!document.body.classList.contains('debug')) {
             $(qunitFixture.children).remove();
+            $(document.body).removeClass('modal-open');
         }
     }
 });

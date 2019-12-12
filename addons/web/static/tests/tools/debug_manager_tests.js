@@ -1,175 +1,333 @@
 odoo.define('web.debugManagerTests', function (require) {
 "use strict";
 
-var testUtils = require('web.test_utils');
-var FormView = require('web.FormView');
+const DebugManager = require('web.DebugManager');
+const testUtils = require('web.test_utils');
 
-var createDebugManager = testUtils.createDebugManager;
+const createWebClient = testUtils.createWebClient;
+const doAction = testUtils.actionManager.doAction;
 
-QUnit.module('DebugManager', {}, function () {
-
-    QUnit.test("list: edit view menu item", async function (assert) {
-        assert.expect(3);
-
-        var debugManager = createDebugManager();
-
-        await debugManager.appendTo($('#qunit-fixture'));
-
-        // Simulate update debug manager from web client
-        var action = {
-            views: [{
-                displayName: "List",
-                fieldsView: {
-                    view_id: 1,
-                },
-                type: "list",
-            }],
+QUnit.module('DebugManager', {
+    beforeEach: function () {
+        this.data = {
+            'partner': {
+                fields: {},
+                records: [
+                    {id: 1, display_name: "First partner"},
+                    {id: 2, display_name: "Second partner"},
+                ],
+            },
+            'ir.ui.view': {
+                fields: {},
+                records: [],
+                check_access_rights: () => true,
+            },
+            'ir.rule': {
+                fields: {},
+                records: [],
+                check_access_rights: () => true,
+            },
+            'ir.model.access': {
+                fields: {},
+                records: [],
+                check_access_rights: () => true,
+            },
         };
-        var view = {
-            viewType: "list",
+
+        this.actions = [{
+            id: 10,
+            name: 'Partners',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[23, 'list'], [8, 'form']],
+        }, {
+            id: 12,
+            name: 'Create a Partner (Dialog)',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[9, 'form']],
+            target: 'new',
+        }];
+
+        this.archs = {
+            'partner,23,list': '<tree><field name="id"/><field name="display_name"/></tree>',
+            'partner,8,form': '<form><sheet><field name="display_name"/></sheet></form>',
+            'partner,9,form': '<form><sheet><field name="id"/></sheet></form>',
+            'partner,99,search': '<search/>',
         };
-        await testUtils.nextTick();
-        await debugManager.update('action', action, view);
+    },
+}, function () {
+    QUnit.test("debug manager on a list view with access rights", async function (assert) {
+        assert.expect(7);
 
-        var $editView = debugManager.$('a[data-action=edit][data-model="ir.ui.view"]');
-        assert.strictEqual($editView.length, 1, "should have edit view menu item");
-        assert.strictEqual($editView.text().trim(), "Edit View: List",
-            "should have correct menu item text for editing view");
-        assert.strictEqual($editView.data('id'), 1, "should have correct view_id");
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+        });
 
-        debugManager.destroy();
+        await doAction(10);
+
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
+        assert.containsOnce(debugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(debugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(debugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(debugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="23"]'); // list view
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        webClient.destroy();
+    });
+
+    QUnit.test("debug manager on a form view with access rights", async function (assert) {
+        assert.expect(10);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+        });
+
+        await doAction(10);
+        await testUtils.dom.click('.o_data_row:first');
+
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
+        assert.containsOnce(debugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(debugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(debugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(debugDropdown, 'a[data-action="set_defaults"]'); // set defaults
+        assert.containsOnce(debugDropdown, 'a[data-action="get_metadata"]'); // view metadata
+        assert.containsOnce(debugDropdown, 'a[data-action="get_attachments"]'); // manage attachments
+        assert.containsOnce(debugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="8"]'); // form view
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        webClient.destroy();
+    });
+
+    QUnit.test("debug manager on a form view on a new record", async function (assert) {
+        assert.expect(10);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+        });
+
+        await doAction(10);
+        await testUtils.dom.click(webClient.$('.o_list_button_add'));
+
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
+        assert.containsOnce(debugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(debugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(debugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(debugDropdown, 'a[data-action="set_defaults"]'); // set defaults
+        assert.containsNone(debugDropdown, 'a[data-action="get_metadata"]'); // view metadata
+        assert.containsNone(debugDropdown, 'a[data-action="get_attachments"]'); // manage attachments
+        assert.containsOnce(debugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="8"]'); // form view
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        webClient.destroy();
+    });
+
+    QUnit.test("debug manager on a list view without access rights", async function (assert) {
+        assert.expect(7);
+
+        this.data['ir.ui.view'].check_access_rights = () => false;
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+        });
+
+        await doAction(10);
+
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
+        assert.containsOnce(debugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(debugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(debugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(debugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsNone(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="23"]'); // list view
+        assert.containsNone(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        webClient.destroy();
+    });
+
+    QUnit.test("debug manager on a form view without access rights", async function (assert) {
+        assert.expect(10);
+
+        this.data['ir.ui.view'].check_access_rights = () => false;
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+        });
+
+        await doAction(10);
+        await testUtils.dom.click('.o_data_row:first');
+
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
+        assert.containsOnce(debugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(debugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(debugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(debugDropdown, 'a[data-action="set_defaults"]'); // set defaults
+        assert.containsOnce(debugDropdown, 'a[data-action="get_metadata"]'); // view metadata
+        assert.containsOnce(debugDropdown, 'a[data-action="get_attachments"]'); // manage attachments
+        assert.containsOnce(debugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsNone(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="8"]'); // form view
+        assert.containsNone(debugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        webClient.destroy();
     });
 
     QUnit.test("form: Manage Attachments option", async function (assert) {
-        assert.expect(3);
+        assert.expect(7);
 
-        var debugManager = createDebugManager({
-            intercepts: {
-                do_action: function (event) {
-                    assert.deepEqual(event.data.action, {
-                      context: {
-                        default_res_model: "test.model",
-                        default_res_id: 5,
-                      },
-                      domain: [["res_model", "=", "test.model"],["res_id", "=", 5]],
-                      name: "Manage Attachments",
-                      res_model: "ir.attachment",
-                      type: "ir.actions.act_window",
-                      views: [[false, "list"],[false, "form"]],
-                    });
-                },
-            },
-        });
-        await debugManager.appendTo($('#qunit-fixture'));
-
-        // Simulate update debug manager from web client
-        var action = {
-            views: [{
-                displayName: "Form",
-                fieldsView: {
-                    view_id: 2,
-                },
-                type: "form",
-            }],
-            res_model: "test.model",
+        this.data['ir.attachment'] = {
+            fields: {},
+            records: [],
         };
-        var view = {
-            viewType: "form",
-            getSelectedIds: function () {
-                return [5];
-            },
-        };
-        await debugManager.update('action', action, view);
-
-        var $attachmentMenu = debugManager.$('a[data-action=get_attachments]');
-        assert.strictEqual($attachmentMenu.length, 1, "should have Manage Attachments menu item");
-        assert.strictEqual($attachmentMenu.text().trim(), "Manage Attachments",
-            "should have correct menu item text");
-        await testUtils.dom.click(debugManager.$('> a')); // open dropdown
-        await testUtils.dom.click($attachmentMenu);
-
-        debugManager.destroy();
-    });
-
-    QUnit.test("Debug: Set defaults with right model", async function (assert) {
-        assert.expect(2);
-
-        /*  Click on debug > set default,
-         *  set some defaults, click on save
-         *  model and some other data should be sent to server
-         */
-
-        // We'll need a full blown architecture with some data
-        var data = {
-            partner: {
-                fields: {
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value"},
-                },
-                records: [{
-                    id: 1,
-                    foo: "yop",
-                }]
-            },
-            'ir.default': { // We just need this to be defined
-                fields: {},
-            },
-        };
-
-        var form = await testUtils.createView({
-            View: FormView,
-            model: 'partner',
-            data: data,
-            arch: '<form string="Partners">' +
-                    '<field name="foo" />' +
-                '</form>',
-            res_id: 1,
+        this.archs = Object.assign(this.archs, {
+            'ir.attachment,false,list': '<tree><field name="display_name"/></tree>',
+            'ir.attachment,false,form': '<form><field name="display_name"/></form>',
+            'ir.attachment,false,search': '<search/>',
         });
 
-        // Now the real tested component
-        var debugManager = createDebugManager({
-            data: data,
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
             mockRPC: function (route, args) {
-                if (route == "/web/dataset/call_kw/ir.default/set") {
-                    assert.deepEqual(args.args, ["partner", "foo", "yop", true, true, false],
-                        'Model, field, value and booleans for current user/company should have been passed');
-                    return Promise.resolve();
+                if (args.model === 'ir.attachment') {
+                    if (args.method === 'load_views') {
+                        assert.deepEqual(args.kwargs.views,
+                            [[false, 'list'], [false, 'form'], [false, 'search']]);
+                    }
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain,
+                            [['res_model', '=', 'partner'], ['res_id', '=', 1]]);
+                        assert.deepEqual(args.context, {
+                            bin_size: true,
+                            default_res_model: "partner",
+                            default_res_id: 1,
+                        });
+                    }
                 }
-                return this._super.apply(this, arguments);
+                return this._super(...arguments);
             }
         });
 
-        await debugManager.appendTo($('#qunit-fixture'));
+        await doAction(10);
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsNone(debugDropdown, 'a[data-action="get_attachments"]');
 
-        // Simulate update debug manager from web client
-        var action = {
-            controlPanelFieldsView: {},
-            views: [{
-                fieldsView: {
-                    view_id: 1,
-                    model: 'partner',
-                    type: 'form',
-                },
-                type: "form",
-            }],
-            res_model: 'partner',
+        await testUtils.dom.click('.o_data_row:first');
+        assert.containsOnce(debugDropdown, 'a[data-action="get_attachments"]');
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_debug_manager > a')); // open dropdown
+        await testUtils.dom.click(debugDropdown.querySelector('a[data-action="get_attachments"]'));
+        assert.containsOnce(webClient, '.o_list_view');
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb').text(),
+            "PartnersFirst partnerManage Attachments");
+
+        webClient.destroy();
+    });
+
+    QUnit.test("form: Set Defaults option", async function (assert) {
+        assert.expect(4);
+
+        this.data['ir.default'] = {
+            fields: {},
+            records: [],
         };
 
-        // We are all set
-        await debugManager.update('action', action, form);
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/ir.default/set") {
+                    assert.deepEqual(args.args,
+                        ["partner", "display_name", "First partner", true, true, false],
+                        'model, field, value and booleans for current user/company should have been passed');
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
 
-        // click on set_defaults dropdown
-        await testUtils.dom.click(debugManager.$('> a')); // open dropdown
-        await testUtils.dom.click(debugManager.$('a[data-action="set_defaults"]'));
-        var $modal = $('.modal-content');
-        assert.strictEqual($modal.length, 1, 'One modal present');
+        await doAction(10);
+        const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsNone(debugDropdown, 'a[data-action="set_defaults"]');
 
-        $modal.find('select[id=formview_default_fields] option[value=foo]').prop('selected', true);
+        await testUtils.dom.click('.o_data_row:first');
+        assert.containsOnce(debugDropdown, 'a[data-action="set_defaults"]');
 
-        // Save
-        await testUtils.dom.click($modal.find('.modal-footer button').eq(1));
+        await testUtils.dom.click(webClient.el.querySelector('.o_debug_manager > a')); // open dropdown
+        await testUtils.dom.click(debugDropdown.querySelector('a[data-action="set_defaults"]'));
+        assert.containsOnce(document.body, '.modal');
 
-        form.destroy();
-        debugManager.destroy();
+        // set a default and save
+        $('.modal').find('select[id=formview_default_fields] option[value=display_name]').prop('selected', true);
+        await testUtils.dom.click($('.modal').find('.modal-footer button').eq(1));
+
+        webClient.destroy();
+    });
+
+    QUnit.test("dialog: debug manager on a form view", async function (assert) {
+        assert.expect(17);
+
+        DebugManager.deploy();
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            SystrayItems: [DebugManager],
+        });
+
+        await doAction(10);
+        await doAction(12);
+        await testUtils.owlCompatibilityExtraNextTick();
+
+        const mainDebugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="23"]'); // list view
+        assert.containsOnce(mainDebugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        assert.containsOnce(webClient, '.o_dialogs .o_dialog');
+        assert.containsOnce(webClient, '.o_dialogs .o_dialog .modal-header .o_debug_manager');
+        const dialogDebugDropdown = webClient.el.querySelector('.o_dialog .modal-header .o_debug_manager .o_debug_dropdown');
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="12"]'); // action
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="get_view_fields"]'); // view fields
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="manage_filters"]'); // manage filters
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="translate"]'); // technical translation
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="set_defaults"]'); // set defaults
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="fvg"]'); // fields view get
+        assert.containsOnce(dialogDebugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="9"]'); // form view
+        assert.containsNone(dialogDebugDropdown, 'a[data-action="edit"][data-model="ir.ui.view"][data-id="99"]'); // control panel view
+
+        webClient.destroy();
+        DebugManager.undeploy();
     });
 });
 });
