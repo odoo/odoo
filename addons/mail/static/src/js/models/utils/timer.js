@@ -13,7 +13,7 @@ var Timer = Class.extend({
      * initialization (@see start method).
      *
      * @param {Object} params
-     * @param {integer} params.duration duration of timer before timeout in
+     * @param {number} params.duration duration of timer before timeout in
      *   milli-seconds.
      * @param {function} params.onTimeout function that is called when the
      *   timer times out.
