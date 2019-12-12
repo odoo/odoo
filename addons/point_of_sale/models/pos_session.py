@@ -482,7 +482,7 @@ class PosSession(models.Model):
         #   - non-cash combine receivables (not for automatic reconciliation)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
-        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items()]
+        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items() if amounts['amount']]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
         tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
         if len(tax_names_no_account) > 0:
