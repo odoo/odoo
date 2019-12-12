@@ -45,6 +45,9 @@ class IrConfigParameter(models.Model):
         Initializes the parameters listed in _default_parameters.
         It overrides existing parameters if force is ``True``.
         """
+        # avoid prefetching during module installation, as the res_users table
+        # may not have all prescribed columns
+        self = self.with_context(prefetch_fields=False)
         for key, func in _default_parameters.items():
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])

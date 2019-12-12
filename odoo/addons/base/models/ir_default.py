@@ -117,7 +117,7 @@ class IrDefault(models.Model):
         return json.loads(default.json_value) if default else None
 
     @api.model
-    @tools.ormcache('self.env.uid', 'model_name', 'condition')
+    @tools.ormcache('self.env.uid', 'self.env.company.id', 'model_name', 'condition')
     # Note about ormcache invalidation: it is not needed when deleting a field,
     # a user, or a company, as the corresponding defaults will no longer be
     # requested. It must only be done when a user's company is modified.
@@ -126,16 +126,16 @@ class IrDefault(models.Model):
             current user), as a dict mapping field names to values.
         """
         cr = self.env.cr
-        query = """ SELECT f.name, d.json_value FROM ir_default d
+        query = """ SELECT f.name, d.json_value
+                    FROM ir_default d
                     JOIN ir_model_fields f ON d.field_id=f.id
-                    JOIN res_users u ON u.id=%s
                     WHERE f.model=%s
-                        AND (d.user_id IS NULL OR d.user_id=u.id)
-                        AND (d.company_id IS NULL OR d.company_id=u.company_id)
+                        AND (d.user_id IS NULL OR d.user_id=%s)
+                        AND (d.company_id IS NULL OR d.company_id=%s)
                         AND {}
                     ORDER BY d.user_id, d.company_id, d.id
                 """
-        params = [self.env.uid, model_name]
+        params = [model_name, self.env.uid, self.env.company.id]
         if condition:
             query = query.format("d.condition=%s")
             params.append(condition)
