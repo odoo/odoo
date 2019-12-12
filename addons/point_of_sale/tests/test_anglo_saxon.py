@@ -208,7 +208,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # Create the customer invoice
         pos_order_pos0.action_pos_order_invoice()
-        pos_order_pos0.account_move.post()
 
         # validate the session
         current_session_id = self.pos_config.current_session_id

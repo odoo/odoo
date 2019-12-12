@@ -334,13 +334,15 @@ class AccountMove(models.Model):
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
-        company_currency = self.company_id.currency_id
-        has_foreign_currency = self.currency_id and self.currency_id != company_currency
+        if self.is_invoice(include_receipts=True):
+            company_currency = self.company_id.currency_id
+            has_foreign_currency = self.currency_id and self.currency_id != company_currency
 
-        for line in self.line_ids:
-            new_currency = has_foreign_currency and self.currency_id
-            line.currency_id = new_currency
-            line._onchange_currency()
+            for line in self.line_ids:
+                new_currency = has_foreign_currency and self.currency_id
+                line.currency_id = new_currency
+
+        self.line_ids._onchange_currency()
         self._recompute_dynamic_lines()
 
     @api.onchange('invoice_payment_ref')
@@ -1755,7 +1757,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         journal = self.journal_id
-        if self.type in ('entry', 'out_invoice', 'in_invoice') or not journal.refund_sequence:
+        if self.type in ('entry', 'out_invoice', 'in_invoice', 'out_receipt', 'in_receipt') or not journal.refund_sequence:
             return journal.sequence_id
         if not journal.refund_sequence_id:
             return
@@ -2885,6 +2887,7 @@ class AccountMoveLine(models.Model):
             if not line.currency_id:
                 continue
             if not line.move_id.is_invoice(include_receipts=True):
+                line._recompute_debit_credit_from_amount_currency()
                 continue
             line.update(line._get_fields_onchange_balance(
                 balance=line.amount_currency,
@@ -2905,7 +2908,19 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.move_id.is_invoice(include_receipts=True):
                 line._onchange_price_subtotal()
+            else:
+                line._recompute_debit_credit_from_amount_currency()
 
+    def _recompute_debit_credit_from_amount_currency(self):
+        for line in self:
+            # Recompute the debit/credit based on amount_currency/currency_id and date.
+
+            company_currency = line.account_id.company_id.currency_id
+            balance = line.amount_currency
+            if line.currency_id and company_currency and line.currency_id != company_currency:
+                balance = line.currency_id._convert(balance, company_currency, line.account_id.company_id, line.move_id.date or fields.Date.today())
+                line.debit = balance > 0 and balance or 0.0
+                line.credit = balance < 0 and -balance or 0.0
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
