@@ -670,7 +670,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                    <field name="number" string="Invoice" context="{'active_test': False}" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
                     <field name="journal_id"/>
                     <separator/>
