@@ -227,7 +227,7 @@ class Cursor(object):
         WHERE state is not null AND state != 'idle' AND datname = %s
         """, [self._cnx.get_backend_pid(), self.dbname])
         tnx = self._obj.fetchall()
-        tnx.insert(0, self._obj.description)
+        tnx.insert(0, [d.name for d in self._obj.description])
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
