@@ -335,24 +335,6 @@ DebugManager.include({
             .sortBy(function (field) { return field.string; })
             .value();
 
-        var conditions = _.chain(fieldNamesInView)
-            .filter(function (fieldName) {
-                var fieldInfo = fields[fieldName];
-                return fieldInfo.change_default;
-            })
-            .map(function (fieldName) {
-                var fieldInfo = fields[fieldName];
-                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
-                var value = valueDisplayed[0];
-                var displayed = valueDisplayed[1];
-                return {
-                    name: fieldName,
-                    string: fieldInfo.string,
-                    value: value,
-                    displayed: displayed,
-                };
-            })
-            .value();
         var d = new Dialog(this, {
             title: _t("Set Default"),
             buttons: [
@@ -365,7 +347,6 @@ DebugManager.include({
                         return;
                     }
                     var selfUser = d.$el.find('#formview_default_self').is(':checked');
-                    var condition = d.$el.find('#formview_default_conditions').val();
                     var value = _.find(self.fields, function (field) {
                         return field.name === fieldToSet;
                     }).value;
@@ -378,7 +359,6 @@ DebugManager.include({
                             value,
                             selfUser,
                             true,
-                            condition || false,
                         ],
                     }).then(function () { d.close(); });
                 }}
@@ -386,7 +366,6 @@ DebugManager.include({
         });
         d.args = {
             fields: this.fields,
-            conditions: conditions,
         };
         d.template = 'FormView.set_default';
         d.open();

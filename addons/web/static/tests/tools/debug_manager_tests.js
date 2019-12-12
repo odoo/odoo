@@ -130,7 +130,7 @@ QUnit.module('DebugManager', {}, function () {
             data: data,
             mockRPC: function (route, args) {
                 if (route == "/web/dataset/call_kw/ir.default/set") {
-                    assert.deepEqual(args.args, ["partner", "foo", "yop", true, true, false],
+                    assert.deepEqual(args.args, ["partner", "foo", "yop", true, true],
                         'Model, field, value and booleans for current user/company should have been passed');
                     return Promise.resolve();
                 }

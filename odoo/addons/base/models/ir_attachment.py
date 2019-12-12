@@ -301,10 +301,10 @@ class IrAttachment(models.Model):
     res_field = fields.Char('Resource Field', readonly=True)
     res_id = fields.Many2oneReference('Resource ID', model_field='res_model',
                                       readonly=True, help="The record id this is attached to.")
-    company_id = fields.Many2one('res.company', string='Company', change_default=True,
+    company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
-                            string='Type', required=True, default='binary', change_default=True,
+                            string='Type', required=True, default='binary',
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")
     url = fields.Char('Url', index=True, size=1024)
     public = fields.Boolean('Is public document')
@@ -519,7 +519,7 @@ class IrAttachment(models.Model):
             if 'datas' in values:
                 values.update(self._get_datas_related_values(values.pop('datas'), values['mimetype']))
             # 'check()' only uses res_model and res_id from values, and make an exists.
-            # We can group the values by model, res_id to make only one query when 
+            # We can group the values by model, res_id to make only one query when
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)

@@ -63,7 +63,7 @@ class ProductTemplate(models.Model):
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
-        change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
+        default=_get_default_category_id, group_expand='_read_group_categ_id',
         required=True, help="Select category for the current product")
 
     currency_id = fields.Many2one(

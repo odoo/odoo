@@ -51,10 +51,6 @@
             <span class="oe_tooltip_technical_title">Modifiers:</span>
             <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
-        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
-            <span class="oe_tooltip_technical_title">Change default:</span>
-            Yes
-        </li>
         <li t-if="widget.attrs.on_change" data-item="on_change">
             <span class="oe_tooltip_technical_title">On change:</span>
             <t t-esc="widget.attrs.on_change"/>
@@ -385,23 +381,6 @@
                     <option t-foreach="args.fields" t-as="field"
                             t-att-value="field.name">
                         <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
-                    </option>
-                </select>
-            </td>
-        </tr>
-        <tr t-if="args.conditions.length">
-            <td>
-                <label for="formview_default_conditions"
-                       class="oe_label oe_align_right">
-                    Condition:
-                </label>
-            </td>
-            <td>
-                <select id="formview_default_conditions" class="o_input">
-                    <option value=""/>
-                    <option t-foreach="args.conditions" t-as="cond"
-                            t-att-value="cond.name + '=' + cond.value">
-                        <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
                     </option>
                 </select>
             </td>

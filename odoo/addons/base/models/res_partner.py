@@ -180,7 +180,7 @@ class Partner(models.Model):
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
     street = fields.Char()
     street2 = fields.Char()
-    zip = fields.Char(change_default=True)
+    zip = fields.Char()
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
@@ -701,7 +701,7 @@ class Partner(models.Model):
         self.flush()
         if args is None:
             args = []
-        order_by_rank = self.env.context.get('res_partner_search_mode') 
+        order_by_rank = self.env.context.get('res_partner_search_mode')
         if (name or order_by_rank) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
             where_query = self._where_calc(args)

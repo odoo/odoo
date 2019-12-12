@@ -105,7 +105,7 @@ class EventEvent(models.Model):
         tracking=True,
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
-        'res.company', string='Company', change_default=True,
+        'res.company', string='Company',
         default=lambda self: self.env.company,
         required=False, readonly=False, states={'done': [('readonly', True)]})
     organizer_id = fields.Many2one(

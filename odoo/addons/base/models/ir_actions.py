@@ -585,7 +585,7 @@ class IrServerObjectLines(models.Model):
         ('value', 'Value'),
         ('reference', 'Reference'),
         ('equation', 'Python expression')
-    ], 'Evaluation Type', default='value', required=True, change_default=True)
+    ], 'Evaluation Type', default='value', required=True)
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model',
         compute='_compute_resource_ref', inverse='_set_resource_ref')

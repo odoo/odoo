@@ -129,7 +129,7 @@ class Lead(models.Model):
     # Fields for address, due to separation from crm and res.partner
     street = fields.Char('Street')
     street2 = fields.Char('Street2')
-    zip = fields.Char('Zip', change_default=True)
+    zip = fields.Char('Zip')
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country')

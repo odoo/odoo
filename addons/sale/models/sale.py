@@ -147,7 +147,7 @@ class SaleOrder(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Customer', readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        required=True, change_default=True, index=True, tracking=1,
+        required=True, index=True, tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address',
@@ -202,7 +202,7 @@ class SaleOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
-        change_default=True, default=_get_default_team, check_company=True,  # Unrequired company
+        default=_get_default_team, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     signature = fields.Image('Signature', help='Signature received through the portal.', copy=False, attachment=True, max_width=1024, max_height=1024)
@@ -1196,7 +1196,7 @@ class SaleOrderLine(models.Model):
 
     product_id = fields.Many2one(
         'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        change_default=True, ondelete='restrict', check_company=True)  # Unrequired company
+        ondelete='restrict', check_company=True)  # Unrequired company
     product_template_id = fields.Many2one(
         'product.template', string='Product Template',
         related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])

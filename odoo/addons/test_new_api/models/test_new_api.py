@@ -341,7 +341,7 @@ class Foo(models.Model):
     _description = 'Test New API Foo'
 
     name = fields.Char()
-    value1 = fields.Integer(change_default=True)
+    value1 = fields.Integer()
     value2 = fields.Integer()
 
 

@@ -37,7 +37,7 @@ DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
 
 RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
-DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
+DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead."), ("change_default", "use onchanges or computed fields instead.")]
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -244,7 +244,6 @@ class Field(MetaField('DummyField', (object,), {})):
         'required': False,              # whether the field is required
         'states': None,                 # set readonly and required depending on state
         'groups': None,                 # csv list of group xml ids
-        'change_default': False,        # whether the field may trigger a "user-onchange"
         'deprecated': None,             # whether the field is deprecated
 
         'related_field': None,          # corresponding related field
@@ -712,7 +711,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_required = property(attrgetter('required'))
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
-    _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
     _description_group_operator = property(attrgetter('group_operator'))
 

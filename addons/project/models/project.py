@@ -489,7 +489,7 @@ class Task(models.Model):
         readonly=True)
     project_id = fields.Many2one('project.project', string='Project',
         compute='_compute_project_id', store=True, readonly=False,
-        index=True, tracking=True, check_company=True, change_default=True)
+        index=True, tracking=True, check_company=True)
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     user_id = fields.Many2one('res.users',
