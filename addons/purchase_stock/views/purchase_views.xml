@@ -36,6 +36,9 @@
                 <field name="default_location_dest_id_usage" invisible="1"/>
                 <field name="incoterm_id"/>
             </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']/group/group" position="inside">
+                <field name="purchase_effective_date" string="Effective date"/>
+            </xpath>
         </field>
     </record>
 
