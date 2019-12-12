@@ -236,11 +236,12 @@ class SurveyUserInput(models.Model):
     def _save_line_matrix(self, question, old_answers, answers, comment):
         vals_list = []
 
-        for row_key, row_answer in answers.items():
-            for answer in row_answer:
-                vals = self._get_line_answer_values(question, answer, 'suggestion')
-                vals['matrix_row_id'] = row_key
-                vals_list.append(vals.copy())
+        if answers:
+            for row_key, row_answer in answers.items():
+                for answer in row_answer:
+                    vals = self._get_line_answer_values(question, answer, 'suggestion')
+                    vals['matrix_row_id'] = row_key
+                    vals_list.append(vals.copy())
 
         if comment:
             vals_list.append(self._get_line_comment_values(question, comment))
