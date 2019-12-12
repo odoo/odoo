@@ -739,7 +739,7 @@ class ReportSaleDetails(models.AbstractModel):
         domain = [('state', 'in', ['paid','invoiced','done'])]
 
         if (session_ids):
-            AND([domain, [('session_id', 'in', session_ids)]])
+            domain = AND([domain, [('session_id', 'in', session_ids.ids)]])
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
@@ -758,13 +758,13 @@ class ReportSaleDetails(models.AbstractModel):
                 # stop by default today 23:59:59
                 date_stop = date_start + timedelta(days=1, seconds=-1)
 
-            AND([domain,
+            domain = AND([domain,
                 [('date_order', '>=', fields.Datetime.to_string(date_start)),
                 ('date_order', '<=', fields.Datetime.to_string(date_stop))]
             ])
 
             if config_ids:
-                AND([domain, [('config_id', 'in', config_ids)]])
+                domain = AND([domain, [('config_id', 'in', config_ids.ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
