@@ -34,7 +34,7 @@
                     <t t-else="">
                         Start Survey
                     </t>
-                </button>
+                </button><span class="o_survey_enter font-weight-bold ml-2">or press Enter</span>
             </div>
             <div class="oe_structure" id="oe_structure_survey_init_2"/>
         </div>
@@ -63,7 +63,8 @@
             </t>
 
             <div class="text-center mt16 mb256">
-                <button type="submit" value="finish" class="btn btn-primary">Submit Survey</button>
+                <button type="submit" value="finish" class="btn btn-primary">
+                    Submit</button><span class="o_survey_enter font-weight-bold ml-2">or press Enter</span>
             </div>
         </t>
 
@@ -75,28 +76,36 @@
             <t t-foreach='page.question_ids' t-as='question'>
                 <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
-            <t t-call="survey.survey_progression"/>
 
-            <div class="text-center mt16 mb256">
-                <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
-                        name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
-                <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                    <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
-                </button>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6 text-center mt16 mb256">
+                    <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
+                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
+                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                        Continue</button><span class="o_survey_enter font-weight-bold ml-2">or press Enter</span>
+                </div>
+                <div class="col-3">
+                    <t t-call="survey.survey_progression"/>
+                </div>
             </div>
         </t>
 
         <t t-if="survey.questions_layout == 'page_per_question'">
             <input type="hidden" name="question_id" t-att-value="question.id" />
             <t t-call="survey.question_container"/>
-            <t t-call="survey.survey_progression"/>
 
-            <div class="text-center mt16 mb256">
-                <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
-                        name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
-                <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                    <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
-                </button>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6 text-center mt16 mb256">
+                    <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
+                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
+                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                        Continue</button><span class="o_survey_enter font-weight-bold ml-2">or press Enter</span>
+                </div>
+                <div class="col-3">
+                    <t t-call="survey.survey_progression"/>
+                </div>
             </div>
         </t>
     </template>
@@ -109,7 +118,8 @@
                 t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited
                     and answer.start_datetime and not finished else False"
                 t-att-data-time-limit-minutes="survey.time_limit"
-                t-att-data-is-start-screen="start">
+                t-att-data-is-start-screen="start"
+                t-att-data-questions-layout="survey.questions_layout">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.access_token" />
             <div class="o_survey_error alert alert-danger d-none" role="alert">
@@ -176,6 +186,7 @@
     <!-- Question widgets -->
     <template id="question_container" name="Survey: question container">
         <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
+        <t t-set="useKeySelection" t-value="len(question.suggested_answer_ids) &lt; 26 and survey.questions_layout == 'page_per_question'"/>
         <div class="js_question-wrapper" t-att-id="question.id" t-att-data-required="question.constr_mandatory">
             <h4>
                 <span t-field='question.title' />
@@ -249,21 +260,42 @@
         <div class="row o_survey_form_choice"
              t-att-data-name="question.id"
              data-question-type="simple_choice_radio">
-            <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
-                    <input type="radio" t-att-value='label.id' class="o_survey_form_choice_item"
-                           t-att-name='question.id'
-                           t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"/>
-                    <span t-field='label.value'/>
-                </label>
+            <t t-set="letters" t-value="'ABCDEFGHIJKLMNOPQRSTUVWXY'"/>
+            <t t-set="item_idx" t-value="0"/>
+            <div class="o_survey_choice_container font-weight-bold d-flex col-lg-12">
+                <t t-foreach='question.suggested_answer_ids' t-as='label'>
+                    <t t-set="item_idx" t-value="question.suggested_answer_ids.ids.index(label.id)"/>
+                    <label t-att-for="str(question.id) + '_' + str(label.id)"
+                           t-att-class="'o_survey_choice_btn'
+                           + (' bg-success ' if quizz_correction and label.answer_score > 0.0 else '')
+                           + (' o_survey_selected ' if answer_line and answer_line.suggested_answer_id.id == label.id else '')">
+                        <div t-if="useKeySelection" class="o_survey_choice_key float-left d-flex">
+                            <span class="o_survey_key">Key</span>
+                            <span t-esc="letters[item_idx]"/>
+                        </div>
+                        <span t-field='label.value'/>
+                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id' class="o_survey_form_choice_item"
+                               t-att-name='question.id'
+                               t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"/>
+                        <i class="fa fa-check float-right"></i>
+                    </label>
+                </t>
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
-                <label>
-                    <input type="radio" class="o_survey_form_choice_item o_survey_js_form_other_comment" value="-1"
-                           t-att-name='question.id'
-                           t-att-checked="comment_line and 'checked' or None"/>
-                    <span t-field="question.comments_message" />
-                </label>
+                <div class="o_survey_choice_container d-flex font-weight-bold">
+                    <label t-att-class="'o_survey_choice_btn' + (' o_survey_selected ' if comment_line else '')">
+                        <t t-set="item_idx" t-value="item_idx + 1"/>
+                        <div t-if="useKeySelection" class="o_survey_choice_key float-left d-flex">
+                            <span class="o_survey_key">Key</span>
+                            <span t-esc="letters[item_idx]"/>
+                        </div>
+                        <input type="radio" class="o_survey_form_choice_item o_survey_js_form_other_comment" value="-1"
+                               t-att-name='question.id'
+                               t-att-checked="comment_line and 'checked' or None"/>
+                        <span t-field="question.comments_message" />
+                        <i class="fa fa-check float-right"></i>
+                    </label>
+                </div>
                 <textarea type="text" class="form-control"
                           t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
@@ -279,23 +311,42 @@
         <div class="row o_survey_form_choice o_survey_question_multiple_choice"
              t-att-data-name="question.id"
              t-att-data-question-type="question.question_type">
-            <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
-                    <input type="checkbox" t-att-value='label.id' class="o_survey_form_choice_item"
-                           t-att-name="question.id"
-                           t-att-checked="'checked' if answer_line else None"/>
-                    <span t-field='label.value'/>
-                </label>
+            <t t-set="letters" t-value="'ABCDEFGHIJKLMNOPQRSTUVWXY'"/>
+            <t t-set="item_idx" t-value="0"/>
+            <div class="o_survey_choice_container font-weight-bold d-flex col-lg-12">
+                <t t-foreach='question.suggested_answer_ids' t-as='label'>
+                    <t t-set="item_idx" t-value="question.suggested_answer_ids.ids.index(label.id)"/>
+                    <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
+                    <label t-att-class="'o_survey_choice_btn'
+                    + (' bg-success ' if quizz_correction and label.answer_score > 0.0 else '')
+                    + (' o_survey_selected ' if answer_line else '')">
+                        <div t-if="useKeySelection" class="o_survey_choice_key float-left d-flex">
+                            <span class="o_survey_key">Key</span>
+                            <span t-esc="letters[item_idx]"/>
+                        </div>
+                        <input type="checkbox" t-att-value='label.id' class="o_survey_form_choice_item"
+                               t-att-name="question.id"
+                               t-att-checked="'checked' if answer_line else None"/>
+                        <span t-field='label.value'/>
+                        <i class="fa fa-check float-right"></i>
+                    </label>
+                </t>
             </div>
-
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
-                <label>
-                    <input type="checkbox" class="o_survey_form_choice_item o_survey_js_form_other_comment" value="-1"
-                           t-att-name="question.id"
-                           t-att-checked="comment_line and 'checked' or None"/>
-                    <span t-field="question.comments_message" />
-                </label>
+                <div class="o_survey_choice_container d-flex font-weight-bold">
+                    <label t-att-class="'o_survey_choice_btn' + (' o_survey_selected ' if comment_line else '')">
+                        <t t-set="item_idx" t-value="item_idx + 1"/>
+                        <div t-if="useKeySelection" class="o_survey_choice_key float-left d-flex">
+                             <span class="o_survey_key">Key</span>
+                             <span t-esc="letters[item_idx]"/>
+                        </div>
+                        <input type="checkbox" class="o_survey_form_choice_item o_survey_js_form_other_comment" value="-1"
+                               t-att-name="question.id"
+                               t-att-checked="comment_line and 'checked' or None"/>
+                        <span t-field="question.comments_message" />
+                        <i class="fa fa-check float-right"></i>
+                    </label>
+                </div>
                 <textarea type="text" class="form-control"
                           t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
@@ -376,7 +427,7 @@
         <t t-call="survey.layout">
             <t t-set="survey_form_readonly" t-value="true"/>
             <div class="wrap">
-                <div class="container">
+                <div class="o_survey_print container">
                     <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
                     <div class='jumbotron mt32'>
                         <h1><span t-field='survey.title'/></h1>

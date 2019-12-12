@@ -1,0 +1,85 @@
+.o_survey_choice_container {
+    flex-wrap: wrap;
+}
+.o_survey_choice_btn {
+    color: white;
+    background-color: rgba(0, 160, 157, 0.6);
+    transition: background-color 0.3s ease;
+    border: 2px solid #00a09d;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0.25rem 1rem;
+    margin: 0.25rem;
+    flex-grow: 1;
+    min-width: 300px;
+    .o_survey_choice_key {
+        width: 25px;
+        height: 25px;
+        background-color: white;
+        border: 2px solid #00A09D;
+        position: relative;
+        span {
+            color: #00A09D;
+            margin-left: 5px;
+            font-size: large;
+            position: absolute;
+            top: -2px;
+            &.o_survey_key {
+                right: 20px;
+                border-left: 2px solid #00A09D;
+                border-bottom: 2px solid #00A09D;
+                border-top: 2px solid #00A09D;
+                height: 25px;
+                background-color: white;
+                font-size: unset !important;
+                padding: 0em 0.25em;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                white-space: nowrap;
+            }
+        }
+    }
+    span {
+        margin-left: 0.5rem;
+        line-height: 25px;
+    }
+    input {
+        visibility: hidden;
+        position: absolute;
+    }
+    i {
+        margin-top: 3px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    &.o_survey_selected {
+        background-color: rgba(0, 160, 157, 1);
+        i {
+            opacity: 1;
+            padding-top: 2px;
+        }
+    }
+    &:hover {
+        background-color: rgba(0, 160, 157, 0.8);
+        .o_survey_choice_key span.o_survey_key {
+            opacity: 1;
+        }
+    }
+}
+
+.o_survey_print {
+    .o_survey_choice_btn {
+        background-color: #e9ecef;
+        border-color: transparent;
+        color: black;
+        cursor: default;
+        &.o_survey_selected {
+            background-color: grey;
+            color: white;
+        }
+    }
+}
+
+.o_survey_enter {
+    color: #00A09D;
+}
