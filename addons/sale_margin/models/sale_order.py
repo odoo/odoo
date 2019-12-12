@@ -18,7 +18,7 @@ class SaleOrderLine(models.Model):
             product_cost = product.standard_price
             fro_cur = product.cost_currency_id
             to_cur = line.currency_id or line.order_id.currency_id
-            if line.product_uom != product.uom_id:
+            if line.product_uom and line.product_uom != product.uom_id:
                 product_cost = product.uom_id._compute_price(
                     product_cost,
                     line.product_uom,
