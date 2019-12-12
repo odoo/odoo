@@ -25,7 +25,7 @@ var AttendeeCalendarPopover = CalendarPopover.extend({
             _.each(this.fields.attendee_status.selection, function (selection) {
                 self.statusInfo[selection[0]] = {text: selection[1], color: self.statusColors[selection[0]]};
             });
-            this.selectedStatusInfo = this.statusInfo[this.event.record.attendee_status];
+            this.selectedStatusInfo = this.statusInfo[this.event.extendedProps.record.attendee_status];
         }
     },
 
@@ -37,7 +37,7 @@ var AttendeeCalendarPopover = CalendarPopover.extend({
      * @return {boolean}
      */
     isCurrentPartnerAttendee() {
-        return this.event.record.partner_ids.includes(session.partner_id);
+        return this.event.extendedProps.record.partner_ids.includes(session.partner_id);
     },
     /**
      * @override
@@ -70,7 +70,7 @@ var AttendeeCalendarPopover = CalendarPopover.extend({
      * @return {boolean}
      */
     _isEventPrivate() {
-        return this.event.record.privacy === 'private';
+        return this.event.extendedProps.record.privacy === 'private';
     },
 
     //--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ var AttendeeCalendarPopover = CalendarPopover.extend({
             method: 'change_attendee_status',
             args: [this.event.id, selectedStatus],
         }).then(function () {
-            self.event.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
+            self.event.extendedProps.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
             self.$('.o-calendar-attendee-status-text').text(self.statusInfo[selectedStatus].text);
             self.$('.o-calendar-attendee-status-icon').removeClass(_.values(self.statusColors).join(' ')).addClass(self.statusInfo[selectedStatus].color);
         });
