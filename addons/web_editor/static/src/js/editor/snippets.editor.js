@@ -330,6 +330,19 @@ var SnippetEditor = Widget.extend({
         });
     },
     /**
+     * @returns {Promise<boolean>}
+     */
+    toggleTargetVisibility: async function () {
+        this.$target.toggleClass('d-none');
+        const isVisible = !this.$target.hasClass('d-none');
+        var styles = _.values(this.styles);
+        const proms = _.sortBy(styles, '__order').map(style => {
+            return isVisible ? style.onTargetShow() : style.onTargetHide();
+        });
+        await Promise.all(proms);
+        return isVisible;
+    },
+    /**
      * @param {boolean} [isTextEdition=false]
      */
     toggleTextEdition: function (isTextEdition) {
@@ -780,6 +793,18 @@ var SnippetsMenu = Widget.extend({
         this._snippetEditionMutex = new concurrency.Mutex();
 
         this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
+
+        this._notActivableElementsSelector = [
+            '#web_editor-top-edit',
+            '#oe_snippets',
+            '#oe_manipulators',
+            '.o_technical_modal',
+            '.oe_drop_zone',
+            '.o_notification_manager',
+            '.o_we_no_overlay',
+            '.ui-autocomplete',
+            '.modal .close',
+        ].join(', ');
     },
     /**
      * @override
@@ -839,7 +864,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay, .ui-autocomplete').length) {
+            if ($target.closest(this._notActivableElementsSelector).length) {
                 return;
             }
             this._activateSnippet($target);
@@ -1878,16 +1903,14 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onInvisibleEntryClick: function (ev) {
+    _onInvisibleEntryClick: async function (ev) {
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
-        let prom = null;
-        $snippet.trigger('invisible_snippet_activation', {
-            onSuccess: _prom => prom = _prom,
+        const isVisible = await this._activateSnippetMutex.exec(async () => {
+            const editor = await this._createSnippetEditor($snippet);
+            return editor.toggleTargetVisibility();
         });
-        Promise.resolve(prom).then(() => {
-            return this._activateSnippet($snippet);
-        });
+        return this._activateSnippet(isVisible ? $snippet : false);
     },
     /**
      * @private
