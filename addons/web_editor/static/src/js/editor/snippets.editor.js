@@ -829,7 +829,7 @@ var SnippetsMenu = Widget.extend({
             this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
             this.invisibleDOMPanelEl.appendChild(
                 $('<div/>', {
-                    text: _t('Invisible'),
+                    text: _t('Invisible Elements'),
                     class: 'o_panel_header',
                 }).prepend(
                     $('<i/>', {class: 'fa fa-eye-slash'})
@@ -1170,9 +1170,9 @@ var SnippetsMenu = Widget.extend({
 
         _.each($invisibleSnippets, el => {
             const $invisEntry = $('<div/>', {
-                class: 'o_we_invisible_entry d-flex align-items-center',
-                text: _t(el.getAttribute('string')),
-            }).append($('<i/>', {class: 'fa fa-edit ml-2'}));
+                class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
+                text: $(el).data('name'),
+            }).append($('<i/>', {class: 'fa fa-eye ml-2'}));
             $invisibleDOMPanelEl.append($invisEntry);
             this.invisibleDOMMap.set($invisEntry[0], el);
         });
