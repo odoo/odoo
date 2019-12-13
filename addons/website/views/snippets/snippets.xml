@@ -408,10 +408,13 @@
     </div>
 
     <!-- Stretch section -->
-    <div data-js="SectionStretch"
-        data-selector="section"
-        data-target="> .container, > .container-fluid">
-        <we-checkbox string="Stretch" data-select-class="container|container-fluid" data-no-preview="true"/>
+    <div data-selector="section"
+        data-target="> .container, > .container-fluid, > .o_container_small">
+        <we-select string="Width" class="o_we_inline">
+            <we-button data-select-class="container-fluid">Full</we-button>
+            <we-button data-select-class="container">Regular</we-button>
+            <we-button data-select-class="o_container_small">Small</we-button>
+        </we-select>
     </div>
 </template>
 </odoo>

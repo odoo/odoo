@@ -1,6 +1,5 @@
 // ======= VARIABLES =======
-$o-wblog-read-width: 620px;
-$o-wblog-read-container-sidebar-width :900px;
+$o-wblog-sidebar-width: 280px;
 $o-wblog-loader-size: 50px;
 
 $o-wblog-title-sizes-variants: (
@@ -99,12 +98,8 @@ $o-wblog-title-sizes-variants: (
         background-color: rgba(black, 0.005);
     }
 
-    .o_wblog_read {
-        max-width: $o-wblog-read-width;
-    }
-
     .o_wblog_read_with_sidebar {
-        max-width: $o-wblog-read-container-sidebar-width;
+        max-width: map-get($container-max-widths, md) + $o-wblog-sidebar-width;
     }
 
     // This option class is assigned to the post's content using the "Customize"

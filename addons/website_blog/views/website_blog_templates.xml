@@ -91,7 +91,7 @@ list of filtered posts (by date or tag).
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
             <div class="container py-4">
                 <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
-                    <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_wblog_read' if opt_blog_list_view else ''}">
+                    <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_container_small mx-0' if opt_blog_list_view else ''}">
 
                         <t t-call="website_blog.posts_loop">
                             <t t-if="not blog" t-set="posts_list_show_parent_blog" t-value="True"/>
@@ -254,7 +254,7 @@ list of filtered posts (by date or tag).
             <!-- Sidebar-enabled Layout -->
             <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
                 <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
-                    <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_wblog_read w-100 flex-shrink-0' or 'w-lg-75'}">
+                    <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
                     <div id="o_wblog_post_sidebar_col" t-attf-class="pl-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
@@ -264,9 +264,9 @@ list of filtered posts (by date or tag).
             </div>
 
             <!-- No-Sidebar Layout -->
-            <div t-if="not opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read'}">
+            <div t-if="not opt_blog_post_sidebar" t-attf-class="#{opt_blog_post_readable and 'o_container_small'}">
                 <div class="d-flex flex-column flex-lg-row">
-                    <div id="o_wblog_post_content" t-attf-class=" #{opt_blog_post_readable and 'o_wblog_read w-100 flex-shrink-0'}">
+                    <div id="o_wblog_post_content" t-attf-class=" #{opt_blog_post_readable and 'o_container_small w-100 flex-shrink-0'}">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
                 </div>
@@ -371,11 +371,11 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//section[@id='o_wblog_post_main']" position="inside">
         <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar'"/>
-        <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'o_wblog_read'"/>
+        <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'o_container_small'"/>
 
         <div class="container">
             <div t-attf-class="mx-auto #{readableClass}">
-                <div id="o_wblog_post_comments" t-attf-class="pt-4 o_wblog_read">
+                <div id="o_wblog_post_comments" t-attf-class="pt-4 o_container_small">
                     <div groups="base.group_public" class="small mb-4">
                         <a href="/web/login" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                     </div>
@@ -401,7 +401,7 @@ list of filtered posts (by date or tag).
         <div t-if="next_post" class="css_editable_mode_hidden mt-5">
             <t t-if="opt_blog_post_regular_cover">
                 <t t-if="opt_blog_post_sidebar" t-set="readableClass" t-value="'o_wblog_read_with_sidebar'"/>
-                <t t-else="" t-set="readableClass" t-value="'o_wblog_read'"/>
+                <t t-else="" t-set="readableClass" t-value="'o_container_small'"/>
 
                 <div class="container">
                     <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
