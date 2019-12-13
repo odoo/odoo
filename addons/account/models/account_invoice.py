@@ -408,7 +408,7 @@ class AccountInvoice(models.Model):
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
-    @api.depends('partner_id', 'source_email')
+    @api.depends('partner_id.name', 'source_email')
     def _get_vendor_display_info(self):
         for invoice in self:
             vendor_display_name = invoice.partner_id.name
