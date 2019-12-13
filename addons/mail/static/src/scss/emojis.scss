@@ -1,0 +1,30 @@
+.o_mail_add_emoji {
+    float: right;
+    margin-bottom: 1rem;
+    .dropdown-menu {
+        .o_mail_emoji {
+            cursor: pointer;
+            padding: 2px;
+
+            @include hover-focus() {
+                background-color: grey('100');
+            }
+        }
+    }
+}
+
+.o_mail_emojis_dropdown {
+    height: 25px;
+    width: 40px;
+    float: right;
+    margin-top: -35px;
+
+    * {
+        outline: none!important;
+        box-shadow: none!important;
+    }
+
+    .dropdown-toggle:after {
+        display: none;
+    }
+}
