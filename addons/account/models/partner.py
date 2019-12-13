@@ -403,6 +403,7 @@ class ResPartner(models.Model):
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
+        domain="[('company_id', 'in', [company_id or current_company_id, False])]",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
@@ -470,14 +471,6 @@ class ResPartner(models.Model):
         ]
         action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            company = self.company_id
-        else:
-            company = self.env.company
-        return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
     def can_edit_vat(self):
         ''' Can't edit `vat` if there is (non draft) issued invoices. '''
