@@ -1534,6 +1534,8 @@ class AccountMove(models.Model):
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
 
         moves = super(AccountMove, self).create(vals_list)
+        for move in moves:
+            move._onchange_partner_id()
 
         # Trigger 'action_invoice_paid' when the invoice is directly paid at its creation.
         moves.filtered(lambda move: move.is_invoice(include_receipts=True) and move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
