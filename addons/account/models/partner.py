@@ -3,10 +3,6 @@
 
 import time
 import logging
-<<<<<<< HEAD
-
-=======
->>>>>>> 6b99dd1bf56... temp
 from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
