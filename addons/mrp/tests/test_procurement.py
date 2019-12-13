@@ -197,3 +197,46 @@ class TestProcurement(TestMrpCommon):
         # Adding 5 days to the date planned start makes the next move's date 4 days and 23 hours
         # later since the date planned start was set one hour before the date_planned_end.
         self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=4, hours=23), delta=timedelta(seconds=1), msg='date is not propagated')
+
+    def test_finished_move_cancellation(self):
+        """Check state of finished move on cancellation of raw moves. """
+        product_bottle = self.env['product.product'].create({
+            'name': 'Plastic Bottle',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+        })
+
+        component_mold = self.env['product.product'].create({
+            'name': 'Plastic Mold',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_bottle.id,
+            'product_tmpl_id': product_bottle.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_mold.id, 'product_qty': 1}),
+            ]})
+
+        move_dest = self.env['stock.move'].create({
+            'name': 'move_bottle',
+            'product_id': product_bottle.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 10,
+            'procure_method': 'make_to_order',
+        })
+
+        move_dest._action_confirm()
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', product_bottle.id),
+            ('state', '=', 'confirmed')
+        ])
+        mo.move_raw_ids[0]._action_cancel()
+        self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
+        self.assertEqual(mo.move_finished_ids[0].state, 'cancel', 'Finished move should be cancelled if mo is cancelled.')
+        self.assertEqual(mo.move_dest_ids[0].state, 'waiting', 'Destination move should not be cancelled if prapogation cancel is False on manufacturing rule.')
