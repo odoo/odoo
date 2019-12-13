@@ -2357,7 +2357,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         if cls._setup_done:
             return
-
+        cls._bad_fields = dict()
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
         cls0 = cls.pool.model_cache.get(cls._model_cache_key)
@@ -2388,7 +2388,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for name in cls._fields:
                 delattr(cls, name)
             cls._fields = OrderedDict()
-            cls._bad_fields = dict()
             for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
