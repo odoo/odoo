@@ -25,9 +25,6 @@ def _auto_install_l10n(cr, registry):
         elif country_code == 'DE':
             module_list.append('l10n_de_skr03')
             module_list.append('l10n_de_skr04')
-        elif country_code == 'CN':
-            module_list.append('l10n_cn_small_business')
-            module_list.append('l10n_cn_standard')
         else:
             if env['ir.module.module'].search([('name', '=', 'l10n_' + country_code.lower())]):
                 module_list.append('l10n_' + country_code.lower())

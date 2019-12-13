@@ -22,9 +22,25 @@ Account Type/科目类型
 
 State Data/省份数据
 
+    科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
+
+    添加中文省份数据
+
+    增加小企业会计科目表
+
+    修改小企业会计科目表
+
+    修改小企业会计税率
+
     """,
     'depends': ['base', 'account', 'l10n_multilang'],
     'data': [
         'data/account_tax_group_data.xml',
+        'data/l10n_cn_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_cn_chart_post_data.xml',
+        'data/account_tax_template_data.xml',
+        'data/account_chart_template_data.xml',
     ],
+    'post_init_hook': 'load_translations',
 }
