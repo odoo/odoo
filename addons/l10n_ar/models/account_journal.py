@@ -48,7 +48,7 @@ class AccountJournal(models.Model):
                 '13': ['C', 'E'],
             },
             'received': {
-                '1': ['A', 'C', 'M', 'I'],
+                '1': ['A', 'B', 'C', 'M', 'I'],
                 '3': ['B', 'C', 'I'],
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
