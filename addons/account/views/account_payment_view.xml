@@ -206,6 +206,8 @@
             <field name="model">account.payment.register</field>
             <field name="arch" type="xml">
                 <form string="Register Payment">
+                    <field name="invoice_company_id" invisible="1"/>
+                    <field name="available_payment_methods" invisible="1"/>
                     <group>
                         <group>
                             <field name="payment_method_id" widget="radio"/>
