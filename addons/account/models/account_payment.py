@@ -89,7 +89,8 @@ class account_payment(models.Model):
         string='Journal Item Label',
         help='Change label of the counterpart that will hold the payment difference',
         default='Write-Off')
-    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id), ('partner_id', 'in', possible_bank_partner_ids)]")
+    possible_bank_partner_ids = fields.Many2many('res.partner', compute='_compute_possible_bank_partners')
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
@@ -150,6 +151,12 @@ class account_payment(models.Model):
                 m = p.journal_id.outbound_payment_method_ids
 
             p._payment_methods = m | Methods.browse(self.env.context.get('default_payment_method_id'))
+
+    @api.depends('partner_id.commercial_partner_id')
+    def _compute_possible_bank_partners(self):
+        for r in self:
+            r.possible_bank_partner_ids = \
+                r.partner_id | r.partner_id.commercial_partner_id
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -223,7 +230,6 @@ class account_payment(models.Model):
                 self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
             else:
                 self.partner_bank_account_id = False
-        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
