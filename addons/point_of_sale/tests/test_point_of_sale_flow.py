@@ -142,23 +142,28 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 6,
                 'discount': 0,
                 'qty': 2,
-                'tax_ids': [[6, False, [1]]],
+                'tax_ids': [[6, False, []]],
                 'price_subtotal': 12,
-                'price_subtotal_incl': 13.8,
+                'price_subtotal_incl': 12,
                 'pack_lot_ids': [
                     [0, 0, {'lot_name': '1001'}],
                     [0, 0, {'lot_name': '1002'}],
                 ]
             })],
             'pricelist_id': 1,
-            'amount_paid': 13.8,
-            'amount_total': 13.8,
-            'amount_tax': 1.8,
-            'amount_return': 6.2,
+            'amount_paid': 12.0,
+            'amount_total': 12.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
             'to_invoice': False,
             })
 
-        order.action_pos_order_paid()
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
 
         # I create a refund
         refund_action = order.refund()
@@ -181,6 +186,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         refund_payment.with_context(**payment_context).check()
 
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
+        current_session.action_pos_session_closing_control()
 
     def test_order_to_picking(self):
         """
