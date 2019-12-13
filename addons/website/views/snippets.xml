@@ -1170,7 +1170,7 @@
 
     <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
         <we-button data-add-tab="1" data-no-preview="true">Add Tab</we-button>
-        <we-button data-remove-tab="1" data-no-preview="true">Remove Tab</we-button>
+        <we-button data-remove-tab="1" data-name="remove_tab_opt" data-no-preview="true">Remove Tab</we-button>
     </div>
 
     <div data-js="gallery" data-selector=".o_gallery">
@@ -1179,11 +1179,11 @@
         <we-divider/>
         <we-select string="Mode">
             <we-button data-mode="nomode">Float</we-button>
-            <we-button data-mode="masonry">Masonry</we-button>
-            <we-button data-mode="grid">Grid</we-button>
-            <we-button data-mode="slideshow">Slideshow</we-button>
+            <we-button data-mode="masonry" data-name="masonry_mode_opt">Masonry</we-button>
+            <we-button data-mode="grid" data-name="grid_mode_opt">Grid</we-button>
+            <we-button data-mode="slideshow" data-name="slideshow_mode_opt">Slideshow</we-button>
         </we-select>
-        <we-select string="Slideshow speed">
+        <we-select string="Slideshow speed" data-dependencies="slideshow_mode_opt">
             <we-button data-interval="1000">1s</we-button>
             <we-button data-interval="2000">2s</we-button>
             <we-button data-interval="3000">3s</we-button>
@@ -1191,7 +1191,7 @@
             <we-button data-interval="10000">10s</we-button>
             <we-button data-interval="0">Disable autoplay</we-button>
         </we-select>
-        <we-select string="Columns">
+        <we-select string="Columns" data-dependencies="masonry_mode_opt, grid_mode_opt">
             <we-button data-columns="1">1</we-button>
             <we-button data-columns="2">2</we-button>
             <we-button data-columns="3">3</we-button>
@@ -1199,7 +1199,7 @@
             <we-button data-columns="6">6</we-button>
             <we-button data-columns="12">12</we-button>
         </we-select>
-        <we-select string="Images spacing" class="o_w_image_spacing_option">
+        <we-select string="Images spacing" data-dependencies="!slideshow_mode_opt">
             <we-button data-select-class="o_spc-none">None</we-button>
             <we-button data-select-class="o_spc-small">Small</we-button>
             <we-button data-select-class="o_spc-medium">Medium</we-button>
@@ -1282,12 +1282,12 @@
         <we-row>
             <we-select data-no-preview="true">
                 <we-button data-background-type="cover">Cover</we-button>
-                <we-button data-background-type="repeat-pattern">Repeat pattern</we-button>
+                <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
             </we-select>
             <we-button class="fa fa-fw fa-arrows" title="Background Position"
                        data-background-position-overlay="true" data-no-preview="true"/>
         </we-row>
-        <we-multi data-css-property="background-size">
+        <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
             <we-input string="Width" data-select-style="auto" data-unit="px"/>
             <we-input string="Height" data-select-style="auto" data-unit="px"/>
         </we-multi>
@@ -1338,12 +1338,14 @@
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <we-row string="Border" class="o_we_inline">
-            <we-colorpicker data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
-            <we-input class="o_we_inline"
+            <we-colorpicker data-dependencies="border_width_opt"
+                            data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
+            <we-input class="o_we_inline" data-name="border_width_opt"
                       data-select-style="0" data-css-property="border-width"
                       data-unit="px" data-extra-class="border"/>
         </we-row>
         <we-input string="Rounded" class="o_we_inline"
+                  data-dependencies="border_width_opt"
                   data-select-style="0" data-css-property="border-radius"
                   data-unit="px" data-extra-class="rounded"/>
         <we-checkbox string="Shadow" data-select-class="shadow"/>
@@ -1421,41 +1423,41 @@
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-button data-change="true" data-no-preview="true">Change Cover</we-button>
-        <we-button data-clear="true" data-no-preview="true">Remove Cover</we-button>
-        <we-select string="Size">
-            <we-button data-cover-opt="size" data-select-class="o_record_has_cover cover_full">Full Screen</we-button>
-            <we-button data-cover-opt="size" class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">Half Screen</we-button>
-            <we-button data-cover-opt="size" data-select-class="o_record_has_cover cover_auto">Fit text</we-button>
+        <we-button data-clear="true" data-no-preview="true" data-name="remove_cover_opt">Remove Cover</we-button>
+        <we-select string="Size" data-cover-opt-name="size">
+            <we-button data-select-class="o_record_has_cover cover_full">Full Screen</we-button>
+            <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">Half Screen</we-button>
+            <we-button data-select-class="o_record_has_cover cover_auto">Fit text</we-button>
         </we-select>
-        <we-select string="Filter Intensity">
-            <we-button data-cover-opt="filters" data-filter-value="0.0">None</we-button>
-            <we-button data-cover-opt="filters" data-filter-value="0.2">Low</we-button>
-            <we-button data-cover-opt="filters" data-filter-value="0.4">Medium</we-button>
-            <we-button data-cover-opt="filters" data-filter-value="0.6">High</we-button>
+        <we-select string="Filter Intensity" data-cover-opt-name="filters">
+            <we-button data-filter-value="0.0">None</we-button>
+            <we-button data-filter-value="0.2">Low</we-button>
+            <we-button data-filter-value="0.4">Medium</we-button>
+            <we-button data-filter-value="0.6">High</we-button>
         </we-select>
-        <we-select string="Filter Color">
-            <we-button data-cover-opt="filters" data-filter-color="oe_black">Black</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="oe_none">White</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="bg-primary">Primary</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="bg-secondary">Secondary</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="oe_blue">Blue</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="oe_yellow">Yellow</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="oe_red">Red</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="oe_purple">Purple</we-button>
-            <we-button data-cover-opt="filters" data-filter-color="oe_green">Green</we-button>
+        <we-select string="Filter Color" data-cover-opt-name="filters">
+            <we-button data-filter-color="oe_black">Black</we-button>
+            <we-button data-filter-color="oe_none">White</we-button>
+            <we-button data-filter-color="bg-primary">Primary</we-button>
+            <we-button data-filter-color="bg-secondary">Secondary</we-button>
+            <we-button data-filter-color="oe_blue">Blue</we-button>
+            <we-button data-filter-color="oe_yellow">Yellow</we-button>
+            <we-button data-filter-color="oe_red">Red</we-button>
+            <we-button data-filter-color="oe_purple">Purple</we-button>
+            <we-button data-filter-color="oe_green">Green</we-button>
         </we-select>
-        <we-select string="Text Size">
-            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_hero">Hero</we-button>
-            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_huge">Huge</we-button>
-            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_big">Big</we-button>
-            <we-button data-cover-opt="text_size" data-select-class="">Regular</we-button>
-            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_small">Small</we-button>
-            <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_tiny">Tiny</we-button>
+        <we-select string="Text Size" data-cover-opt-name="text_size">
+            <we-button data-select-class="o_record_cover_font_hero">Hero</we-button>
+            <we-button data-select-class="o_record_cover_font_huge">Huge</we-button>
+            <we-button data-select-class="o_record_cover_font_big">Big</we-button>
+            <we-button data-select-class="">Regular</we-button>
+            <we-button data-select-class="o_record_cover_font_small">Small</we-button>
+            <we-button data-select-class="o_record_cover_font_tiny">Tiny</we-button>
         </we-select>
-        <we-select string="Text Alignment">
-            <we-button data-cover-opt="text_align" data-select-class="">Left</we-button>
-            <we-button data-cover-opt="text_align" data-select-class="text-center">Centered</we-button>
-            <we-button data-cover-opt="text_align" data-select-class="text-right">Right</we-button>
+        <we-select string="Text Alignment" data-cover-opt-name="text_align">
+            <we-button data-select-class="">Left</we-button>
+            <we-button data-select-class="text-center">Centered</we-button>
+            <we-button data-select-class="text-right">Right</we-button>
         </we-select>
     </div>
 
@@ -1471,14 +1473,16 @@
         <we-datetimepicker string="Due Date" data-select-data-attribute="" data-attribute-name="endTime"/>
         <we-row>
             <we-select string="What should happen at the end?" data-no-preview="true">
-                <we-button data-end-action="nothing">Nothing</we-button>
-                <we-button data-end-action="redirect">Redirect</we-button>
+                <we-button data-end-action="nothing" data-name="no_end_action_opt">Nothing</we-button>
+                <we-button data-end-action="redirect" data-name="redirect_end_action_opt">Redirect</we-button>
                 <we-button data-end-action="message">Show Message</we-button>
             </we-select>
             <we-button class="far fa-edit fa-fw align-self-end toggle-edit-message" title="Edit Message"/>
         </we-row>
-        <we-checkbox string="Hide countdown at the end" data-select-class="hide-countdown"/>
-        <we-urlpicker string="URL" data-select-data-attribute="/my-awesome-page" data-attribute-name="redirectUrl"/>
+        <we-checkbox string="Hide countdown at the end" data-dependencies="!no_end_action_opt"
+                     data-select-class="hide-countdown"/>
+        <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt"
+                      data-select-data-attribute="/my-awesome-page" data-attribute-name="redirectUrl"/>
         <we-select string="Size" data-attribute-name="size">
             <we-button data-select-data-attribute="80">Small</we-button>
             <we-button data-select-data-attribute="120">Medium</we-button>
@@ -1491,27 +1495,29 @@
         </we-select>
         <we-colorpicker string="Text Color" data-attribute-name="textColor" data-select-data-attribute=""/>
         <we-select string="Layout">
-            <we-button data-layout="circle">Circle</we-button>
-            <we-button data-layout="boxes">Boxes</we-button>
+            <we-button data-layout="circle" data-name="circle_layout_opt">Circle</we-button>
+            <we-button data-layout="boxes" data-name="boxes_layout_opt">Boxes</we-button>
             <we-button data-layout="clean">Clean</we-button>
             <we-button data-layout="text">Text Inline</we-button>
         </we-select>
-        <we-select string="Layout Background" data-attribute-name="layoutBackground">
+        <we-select string="Layout Background" data-attribute-name="layoutBackground" data-dependencies="circle_layout_opt, boxes_layout_opt">
             <we-button data-select-data-attribute="inner">Inner</we-button>
             <we-button data-select-data-attribute="plain">Plain</we-button>
-            <we-button data-select-data-attribute="none">None</we-button>
+            <we-button data-select-data-attribute="none" data-name="no_background_layout_opt">None</we-button>
         </we-select>
-        <we-colorpicker string="Layout Background Color" data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
-        <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle">
+        <we-colorpicker string="Layout Background Color" data-dependencies="!no_background_layout_opt"
+                        data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
+        <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle" data-dependencies="circle_layout_opt, boxes_layout_opt">
             <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
             <we-button data-select-data-attribute="disappear">Disappearing</we-button>
-            <we-button data-select-data-attribute="none">None</we-button>
+            <we-button data-select-data-attribute="none" data-name="no_progressbar_style_opt">None</we-button>
         </we-select>
-        <we-select string="Progress Bar Weight" data-attribute-name="progressBarWeight">
+        <we-select string="Progress Bar Weight" data-attribute-name="progressBarWeight" data-dependencies="!no_progressbar_style_opt">
             <we-button data-select-data-attribute="thin">Thin</we-button>
             <we-button data-select-data-attribute="thick">Thick</we-button>
         </we-select>
-        <we-colorpicker string="Progress Bar Color" data-attribute-name="progressBarColor" data-select-data-attribute=""/>
+        <we-colorpicker string="Progress Bar Color" data-dependencies="!no_progressbar_style_opt"
+                        data-attribute-name="progressBarColor" data-select-data-attribute=""/>
     </div>
 
     <!-- Chart Inner -->
@@ -1522,14 +1528,15 @@
             data-css-property="background-color"
             data-color-prefix="bg-"/>
          <we-select string="Type" data-attribute-name="type" data-attribute-default-value="bar" data-no-preview="true">
-            <we-button data-select-data-attribute="bar">Bar Vertical</we-button>
-            <we-button data-select-data-attribute="horizontalBar">Bar Horizontal</we-button>
+            <we-button data-select-data-attribute="bar" data-name="bar_chart_opt">Bar Vertical</we-button>
+            <we-button data-select-data-attribute="horizontalBar" data-name="horizontal_bar_chart_opt">Bar Horizontal</we-button>
             <we-button data-select-data-attribute="line">Line</we-button>
             <we-button data-select-data-attribute="pie">Pie</we-button>
             <we-button data-select-data-attribute="doughnut">Doughnut</we-button>
             <we-button data-select-data-attribute="radar">Radar</we-button>
         </we-select>
-        <we-checkbox string="Stacked" data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
+        <we-checkbox string="Stacked" data-name="stacked_chart_opt" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt"
+                     data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
         <we-select string="Legend" data-attribute-name="legendPosition" data-attribute-default-value="top" data-no-preview="true">
             <we-button data-select-data-attribute="none">None</we-button>
             <we-button data-select-data-attribute="top">Top</we-button>
@@ -1549,11 +1556,11 @@
                 </tr>
             </table>
         </we-matrix>
-        <we-colorpicker string="Background"
+        <we-colorpicker string="Background" data-name="chart_bg_color_opt"
             data-color-change=""
             data-attribute-name="backgroundColor"
             data-no-preview="true"/>
-        <we-colorpicker string="Border"
+        <we-colorpicker string="Border" data-name="chart_border_color_opt"
             data-color-change=""
             data-attribute-name="borderColor"
             data-no-preview="true"/>
