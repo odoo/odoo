@@ -70,7 +70,8 @@ class account_payment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('id', 'in', _suitable_journal_ids)]")
+    _suitable_journal_ids = fields.Many2many('account.journal', compute='_compute_suitable_journal_ids')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -125,6 +126,21 @@ class account_payment(models.Model):
             'invoice_ids': [(6, 0, invoices.ids)],
         })
         return rec
+
+    @api.depends('amount', 'currency_id', 'payment_type', 'company_id', 'invoice_ids.company_id', )
+    def _compute_suitable_journal_ids(self):
+        for p in self:
+            domain = [('company_id', '=', p.invoice_ids[:1].company_id.id or p.company_id.id)]
+            if p.currency_id.is_zero(p.amount) and p.invoice_ids:
+                domain.append(('type', '=', 'general'))
+            else:
+                domain.append(('type', 'in', ['bank', 'cash']))
+                if p.payment_type == 'inbound':
+                    domain.append(('at_least_one_inbound', '=', True))
+                else:
+                    domain.append(('at_least_one_outbound', '=', True))
+
+            p._suitable_journal_ids = self.env['account.journal'].search(domain)
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -224,43 +240,23 @@ class account_payment(models.Model):
                 self.partner_type = 'supplier'
         elif self.payment_type not in ('inbound', 'outbound'):
             self.partner_type = False
-        # Set payment method domain
-        res = self._onchange_journal()
-        if not res.get('domain', {}):
-            res['domain'] = {}
-        jrnl_filters = self._compute_journal_domain_and_types()
-        journal_types = jrnl_filters['journal_types']
-        journal_types.update(['bank', 'cash'])
-        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
-        return res
-
-    def _compute_journal_domain_and_types(self):
-        journal_type = ['bank', 'cash']
-        domain = []
-        if self.invoice_ids:
-            domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        self._onchange_journal()
         if self.currency_id.is_zero(self.amount) and self.has_invoices:
-            # In case of payment with 0 amount, allow to select a journal of type 'general' like
-            # 'Miscellaneous Operations' and set this journal by default.
-            journal_type = ['general']
             self.payment_difference_handling = 'reconcile'
-        else:
-            if self.payment_type == 'inbound':
-                domain.append(('at_least_one_inbound', '=', True))
-            else:
-                domain.append(('at_least_one_outbound', '=', True))
-        return {'domain': domain, 'journal_types': set(journal_type)}
 
     @api.onchange('amount', 'currency_id')
     def _onchange_amount(self):
-        jrnl_filters = self._compute_journal_domain_and_types()
-        journal_types = jrnl_filters['journal_types']
-        domain_on_types = [('type', 'in', list(journal_types))]
+        journal_types = ['bank', 'cash']
+        if self.currency_id.is_zero(self.amount) and self.has_invoices:
+            # In case of payment with 0 amount, allow to select a journal of type 'general' like
+            # 'Miscellaneous Operations' and set this journal by default.
+            journal_types = ['general']
+            self.payment_difference_handling = 'reconcile'
+        domain_on_types = [('type', 'in', journal_types)]
         if self.invoice_ids:
             domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.journal_id.type not in journal_types or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
             self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
-        return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.onchange('currency_id')
     def _onchange_currency(self):
