@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import date, datetime
-
+from pytz import timezone, UTC
+from odoo.addons.resource.models.resource import float_to_time
 from odoo.tests.common import Form, tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
@@ -176,11 +177,18 @@ class TestAutomaticLeaveDates(TestHrHolidaysBase):
             leave_form.request_unit_half = True
             leave_form.request_date_from_period = 'am'
 
+            tz = self.env.user.tz if self.env.user.tz else 'UTC'
+
+            hour_from = float_to_time(calendar.attendance_ids.hour_from)
+            date_from = timezone(tz).localize(datetime.combine(leave_form.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+            
+            hour_to = float_to_time(calendar.attendance_ids.hour_to)
+            date_to = timezone(tz).localize(datetime.combine(leave_form.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
 
             self.assertEqual(leave_form.number_of_days_display, 0)
             self.assertEqual(leave_form.number_of_hours_display, 0)
-            self.assertEqual(leave_form.date_from, datetime(2019, 9, 2, 6, 0, 0))
-            self.assertEqual(leave_form.date_to, datetime(2019, 9, 2, 10, 0, 0))
+            self.assertEqual(leave_form.date_from, date_from)
+            self.assertEqual(leave_form.date_to, date_to)
 
     def test_attendance_previous_day(self):
         calendar = self.env['resource.calendar'].create({
@@ -205,8 +213,15 @@ class TestAutomaticLeaveDates(TestHrHolidaysBase):
             leave_form.request_unit_half = True
             leave_form.request_date_from_period = 'am'
 
+            tz = self.env.user.tz if self.env.user.tz else 'UTC'
+
+            hour_from = float_to_time(calendar.attendance_ids.hour_from)
+            date_from = timezone(tz).localize(datetime.combine(leave_form.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+            
+            hour_to = float_to_time(calendar.attendance_ids.hour_to)
+            date_to = timezone(tz).localize(datetime.combine(leave_form.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
 
             self.assertEqual(leave_form.number_of_days_display, 0)
             self.assertEqual(leave_form.number_of_hours_display, 0)
-            self.assertEqual(leave_form.date_from, datetime(2019, 9, 3, 6, 0, 0))
-            self.assertEqual(leave_form.date_to, datetime(2019, 9, 3, 10, 0, 0))
+            self.assertEqual(leave_form.date_from, date_from)
+            self.assertEqual(leave_form.date_to, date_to)
