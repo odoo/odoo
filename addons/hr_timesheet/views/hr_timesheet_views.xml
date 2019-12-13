@@ -27,7 +27,7 @@
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="is_timer_running" string="Timer" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
-                    <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
+                    <field name="unit_amount" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
                     <field name="timer_start" invisible="1"/>
                     <field name="display_timer" invisible="1"/>
@@ -91,8 +91,9 @@
                             </group>
                             <group>
                                 <field name="amount"/>
-                                <field name="unit_amount" widget="timesheet_uom"/>
+                                <field name="unit_amount" widget="timesheet_uom" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="timer_start" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
