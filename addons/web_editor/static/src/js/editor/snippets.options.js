@@ -1957,8 +1957,8 @@ registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         const resizeValues = this._getSize();
         _.each(resizeValues, (value, key) => {
             this.$handles.filter('.' + key).toggleClass('readonly', !value);
@@ -2097,11 +2097,11 @@ registry.background = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: function (previewMode, widgetValue, params) {
+    background: async function (previewMode, widgetValue, params) {
         if (previewMode === 'reset') {
             // No background has been selected and we want to reset back to the
             // original custom image
-            this._setCustomBackground(this.__customImageSrc); // FIXME this is async...
+            await this._setCustomBackground(this.__customImageSrc);
             return;
         }
 

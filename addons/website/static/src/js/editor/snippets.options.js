@@ -365,8 +365,8 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         const $items = this.$carousel.find('.carousel-item');
         const $activeSlide = $items.filter('.active');
         const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
@@ -490,13 +490,16 @@ options.registry.navTabs = options.Class.extend({
         var $activePane = this.$tabPanes.filter('.active');
 
         var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
-        $next.one('shown.bs.tab', function () {
-            $activeLink.parent().remove();
-            $activePane.remove();
-            self._findLinksAndPanes();
-            self.updateUI(); // TODO forced to do this because we do not return deferred for options
+
+        return new Promise(resolve => {
+            $next.one('shown.bs.tab', function () {
+                $activeLink.parent().remove();
+                $activePane.remove();
+                self._findLinksAndPanes();
+                resolve();
+            });
+            $next.tab('show');
         });
-        $next.tab('show');
     },
 
     //--------------------------------------------------------------------------
@@ -1109,24 +1112,25 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
-        var self = this;
         var $container = this.$('.container:first');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
-        dialog.on('save', this, function (attachments) {
-            for (var i = 0; i < attachments.length; i++) {
-                $('<img/>', {
-                    class: 'img img-fluid',
-                    src: attachments[i].image_src,
-                    'data-index': ++index,
-                }).appendTo($container);
-            }
-            this.mode('reset', this.getMode());
-            this.trigger_up('cover_update');
-            this.updateUI();
+        return new Promise(resolve => {
+            dialog.on('save', this, function (attachments) {
+                for (var i = 0; i < attachments.length; i++) {
+                    $('<img/>', {
+                        class: 'img img-fluid',
+                        src: attachments[i].image_src,
+                        'data-index': ++index,
+                    }).appendTo($container);
+                }
+                this.mode('reset', this.getMode());
+                this.trigger_up('cover_update');
+                resolve();
+            });
+            dialog.open();
         });
-        dialog.open();
     },
     /**
      * Allows to change the number of columns when displaying images with a
@@ -1523,8 +1527,8 @@ options.registry.countdown = options.Class.extend({
     /**
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         const dataset = this.$target[0].dataset;
 
         // End Action UI
@@ -1692,14 +1696,17 @@ options.registry.topMenuColor = options.Class.extend({
     /**
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
-        this.trigger_up('action_demand', {
-            actionName: 'get_page_option',
-            params: ['header_overlay'],
-            onSuccess: value => {
-                this.$el.toggleClass('d-none', !value);
-            },
+    updateUI: async function () {
+        await this._super(...arguments);
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'get_page_option',
+                params: ['header_overlay'],
+                onSuccess: value => {
+                    this.$el.toggleClass('d-none', !value);
+                    resolve();
+                },
+            });
         });
     },
 
@@ -1905,18 +1912,20 @@ options.registry.CoverProperties = options.Class.extend({
             $image.attr('src', background.match(/^url\(["']?(.+?)["']?\)$/)[1]);
         }
 
-        var editor = new weWidgets.MediaDialog(this, {
-            mediaWidth: 1920,
-            onlyImages: true,
-            firstFilters: ['background']
-        }, $image[0]).open();
-        editor.on('save', this, function (image) {
-            var src = image.src;
-            this.$image.css('background-image', src ? ('url(' + src + ')') : '');
-            if (!this.$target.hasClass('o_record_has_cover')) {
-                this.$el.find('.o_record_cover_opt_size_default[data-select-class]').click();
-            }
-            this.updateUI();
+        return new Promise(resolve => {
+            var editor = new weWidgets.MediaDialog(this, {
+                mediaWidth: 1920,
+                onlyImages: true,
+                firstFilters: ['background']
+            }, $image[0]).open();
+            editor.on('save', this, function (image) {
+                var src = image.src;
+                this.$image.css('background-image', src ? ('url(' + src + ')') : '');
+                if (!this.$target.hasClass('o_record_has_cover')) {
+                    this.$el.find('.o_record_cover_opt_size_default[data-select-class]').click();
+                }
+                resolve();
+            });
         });
     },
     /**
@@ -2080,7 +2089,7 @@ options.registry.InnerChart = options.Class.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.themeArray = ['alpha', 'beta', 'gamma', 'delta', 'epsilon'],
+        this.themeArray = ['alpha', 'beta', 'gamma', 'delta', 'epsilon'];
         this.style = window.getComputedStyle(document.documentElement);
     },
     /**
@@ -2115,13 +2124,13 @@ options.registry.InnerChart = options.Class.extend({
     /**
      * @override
      */
-    updateUI: function () {
+    updateUI: async function () {
         // Selected input might not be in dom anymore if col/row removed
         // Done before _super because _computeWidgetState of colorChange
         if (!this.lastEditableSelectedInput.closest('table') || this.colorPaletteSelectedInput && !this.colorPaletteSelectedInput.closest('table')) {
             this._setDefaultSelectedInput();
         }
-        this._super(...arguments);
+        await this._super(...arguments);
         // prevent the columns from becoming too small.
         this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
         this.el.querySelector('[data-attribute-name="stacked"]').classList.toggle('d-none', !this._isStackableChart() || this._getColumnCount() === 1);
