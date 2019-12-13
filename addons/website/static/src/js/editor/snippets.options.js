@@ -503,21 +503,18 @@ options.registry.navTabs = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Public
+    // Private
     //--------------------------------------------------------------------------
 
     /**
      * @override
      */
-    updateUI: async function () {
-        await this._super(...arguments);
-        this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
+    _computeWidgetVisibility: async function (widgetName, params) {
+        if (widgetName === 'remove_tab_opt') {
+            return (this.$tabPanes.length > 2);
+        }
+        return this._super(...arguments);
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      */
@@ -1359,21 +1356,6 @@ options.registry.gallery = options.Class.extend({
             this.mode('reset', this.getMode());
         }
     },
-    /**
-     * @override
-     */
-    updateUI: async function () {
-        await this._super(...arguments);
-
-        this.$el.find('[data-interval]').closest('we-select')[0]
-            .classList.toggle('d-none', this.activeMode !== 'slideshow');
-
-        this.$el.find('[data-columns]').closest('we-select')[0]
-            .classList.toggle('d-none', !(this.activeMode === 'grid' || this.activeMode === 'masonry'));
-
-        this.el.querySelector('.o_w_image_spacing_option')
-            .classList.toggle('d-none', this.activeMode === 'slideshow');
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1527,28 +1509,16 @@ options.registry.countdown = options.Class.extend({
     /**
      * @override
      */
-    updateUI: async function () {
+    updateUIVisibility: async function () {
         await this._super(...arguments);
         const dataset = this.$target[0].dataset;
 
         // End Action UI
-        this.$el.find('[data-attribute-name="redirectUrl"]')
-            .toggleClass('d-none', dataset.endAction !== 'redirect');
         this.$el.find('.toggle-edit-message')
             .toggleClass('d-none', dataset.endAction !== 'message');
-        this.$el.find('[data-toggle-class="hide-countdown"]')
-            .toggleClass('d-none', dataset.endAction === 'nothing');
 
         // End Message UI
         this.updateUIEndMessage();
-
-        // Styling UI
-        this.$el.find('[data-attribute-name="layoutBackground"], [data-attribute-name="progressBarStyle"]')
-            .toggleClass('d-none', dataset.layout === 'clean' || dataset.layout === 'text');
-        this.$el.find('[data-attribute-name="layoutBackgroundColor"]')
-            .toggleClass('d-none', dataset.layoutBackground === 'none');
-        this.$el.find('[data-attribute-name="progressBarWeight"], [data-attribute-name="progressBarColor"]')
-            .toggleClass('d-none', dataset.progressBarStyle === 'none');
     },
     /**
      * @see this.updateUI
@@ -1677,35 +1647,24 @@ options.registry.topMenuTransparency = options.Class.extend({
 });
 
 options.registry.topMenuColor = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
-        this.$target.on('snippet-option-change', function () {
-            self.onFocus();
-        });
-        return def;
-    },
 
     //--------------------------------------------------------------------------
-    // Public
+    // Private
     //--------------------------------------------------------------------------
 
     /**
      * @override
      */
-    updateUI: async function () {
-        await this._super(...arguments);
-        await new Promise(resolve => {
+    _computeVisibility: async function () {
+        const show = await this._super(...arguments);
+        if (!show) {
+            return false;
+        }
+        return new Promise(resolve => {
             this.trigger_up('action_demand', {
                 actionName: 'get_page_option',
                 params: ['header_overlay'],
-                onSuccess: value => {
-                    this.$el.toggleClass('d-none', !value);
-                    resolve();
-                },
+                onSuccess: value => resolve(!!value),
             });
         });
     },
@@ -1959,29 +1918,10 @@ options.registry.CoverProperties = options.Class.extend({
     updateUI: async function () {
         await this._super(...arguments);
 
-        // Only show options which are useful to the current cover
-        _.each(this.$el.children(), el => {
-            var $el = $(el);
-
-            if (!$el.is('[data-change]')) {
-                $el.removeClass('d-none');
-
-                ['size', 'filters', 'text_size', 'text_align'].forEach(optName => {
-                    var $opts = $el.find('[data-cover-opt="' + optName + '"]');
-                    var notAllowed = (this.$target.data('use_' + optName) !== 'True');
-
-                    if ($opts.length && (!this.$target.hasClass('o_record_has_cover') || notAllowed)) {
-                        $el.addClass('d-none');
-                    }
-                });
-            }
-        });
-        this.$el.find('[data-clear]').toggleClass('d-none', !this.$target.hasClass('o_record_has_cover'));
-
         // Update saving dataset
-        this.$target[0].dataset.coverClass = this.$el.find('.active[data-cover-opt="size"]').data('selectClass') || '';
-        this.$target[0].dataset.textSizeClass = this.$el.find('.active[data-cover-opt="text_size"]').data('selectClass') || '';
-        this.$target[0].dataset.textAlignClass = this.$el.find('.active[data-cover-opt="text_align"]').data('selectClass') || '';
+        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] .active').data('selectClass') || '';
+        this.$target[0].dataset.textSizeClass = this.$el.find('[data-cover-opt-name="text_size"] .active').data('selectClass') || '';
+        this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] .active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
         this.$target[0].dataset.filterColor = this.$filterColorOpts.filter('.active').data('filterColor') || '';
     },
@@ -2007,6 +1947,19 @@ options.registry.CoverProperties = options.Class.extend({
                 }
                 return '';
             }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility: function (widgetName, params) {
+        const hasCover = this.$target.hasClass('o_record_has_cover');
+        if (widgetName === 'remove_cover_opt') {
+            return hasCover;
+        } else if (params.coverOptName) {
+            var notAllowed = (this.$target.data(`use_${params.coverOptName}`) !== 'True');
+            return (hasCover && !notAllowed);
         }
         return this._super(...arguments);
     },
@@ -2096,9 +2049,8 @@ options.registry.InnerChart = options.Class.extend({
      * @override
      */
     start: function () {
-        // Get the 2 color pickers to hide in updateUI
-        this.backSelectEl = this.el.querySelector('we-select[data-attribute-name="backgroundColor"]');
-        this.borderSelectEl = this.el.querySelector('we-select[data-attribute-name="borderColor"]');
+        this.backSelectEl = this.el.querySelector('[data-name="chart_bg_color_opt"]');
+        this.borderSelectEl = this.el.querySelector('[data-name="chart_border_color_opt"]');
 
         // Build matrix content
         this.tableEl = this.el.querySelector('we-matrix table');
@@ -2130,16 +2082,15 @@ options.registry.InnerChart = options.Class.extend({
         if (!this.lastEditableSelectedInput.closest('table') || this.colorPaletteSelectedInput && !this.colorPaletteSelectedInput.closest('table')) {
             this._setDefaultSelectedInput();
         }
+
         await this._super(...arguments);
+
         // prevent the columns from becoming too small.
         this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
-        this.el.querySelector('[data-attribute-name="stacked"]').classList.toggle('d-none', !this._isStackableChart() || this._getColumnCount() === 1);
-        // Disable color on inputs that don't use them
-        const notDisplayed = !this.colorPaletteSelectedInput;
-        this.backSelectEl.classList.toggle('d-none', notDisplayed);
-        this.borderSelectEl.classList.toggle('d-none', notDisplayed);
+
         this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Background Color") : _t("Dataset Background Color");
         this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border Color") : _t("Dataset Border Color");
+
         // Dataset/Cell color
         this.tableEl.querySelectorAll('input').forEach(el => el.style.border = '');
         const selector = this._isPieChart() ? 'td input' : 'tr:first-child input';
@@ -2195,6 +2146,21 @@ options.registry.InnerChart = options.Class.extend({
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'colorChange') {
             return this.colorPaletteSelectedInput && this.colorPaletteSelectedInput.dataset[params.attributeName] || '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility: function (widgetName, params) {
+        switch (widgetName) {
+            case 'stacked_chart_opt': {
+                return this._getColumnCount() > 1;
+            }
+            case 'chart_bg_color_opt':
+            case 'chart_border_color_opt': {
+                return !!this.colorPaletteSelectedInput;
+            }
         }
         return this._super(...arguments);
     },
@@ -2364,13 +2330,6 @@ options.registry.InnerChart = options.Class.extend({
      */
     _isPieChart: function () {
         return ['pie', 'doughnut'].includes(this.$target[0].dataset.type);
-    },
-    /**
-     * @private
-     * @return {boolean}
-     */
-    _isStackableChart: function () {
-        return ['bar', 'horizontalBar'].includes(this.$target[0].dataset.type);
     },
     /**
      * Return the number of column minus header and button

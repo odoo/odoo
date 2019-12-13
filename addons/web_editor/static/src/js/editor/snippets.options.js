@@ -149,6 +149,22 @@ const UserValueWidget = Widget.extend({
         this._userValueWidgets.forEach(widget => widget.close());
     },
     /**
+     * @param {string} name
+     * @returns {UserValueWidget|null}
+     */
+    findWidget: function (name) {
+        for (const widget of this._userValueWidgets) {
+            if (widget.getName() === name) {
+                return widget;
+            }
+            const depWidget = widget.findWidget(name);
+            if (depWidget) {
+                return depWidget;
+            }
+        }
+        return null;
+    },
+    /**
      * Returns the value that the widget would hold if it was active, by default
      * the internal value it holds.
      *
@@ -168,6 +184,12 @@ const UserValueWidget = Widget.extend({
     getDefaultValue: function (methodName) {
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
         return possibleValues && possibleValues[0] || '';
+    },
+    /**
+     * @returns {string[]}
+     */
+    getDependencies: function () {
+        return this._dependencies;
     },
     /**
      * Returns the names of the option methods associated to the widget. Those
@@ -193,6 +215,12 @@ const UserValueWidget = Widget.extend({
             params.defaultValue = this.getDefaultValue(methodName);
         }
         return params;
+    },
+    /**
+     * @returns {string} empty string if no name is used by the widget
+     */
+    getName: function () {
+        return this._methodsParams.name || '';
     },
     /**
      * Returns the user value that the widget currently holds. The value is a
@@ -254,11 +282,14 @@ const UserValueWidget = Widget.extend({
         this._methodsNames = [];
         this._methodsParams = _.extend({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
+        this._dependencies = [];
 
         for (const key in this.el.dataset) {
             const dataValue = this.el.dataset[key].trim();
 
-            if (validMethodNames.includes(key)) {
+            if (key === 'dependencies') {
+                this._dependencies.push(...dataValue.split(/\s*,\s*/g));
+            } else if (validMethodNames.includes(key)) {
                 this._methodsNames.push(key);
                 this._methodsParams.optionsPossibleValues[key] = dataValue.split(/\s*\|\s*/g);
             } else {
@@ -312,6 +343,12 @@ const UserValueWidget = Widget.extend({
      */
     setValue: function (value, methodName) {
         this._value = value;
+    },
+    /**
+     * @param {boolean} show
+     */
+    toggleVisibility: function (show) {
+        this.el.classList.toggle('d-none', !show);
     },
     /**
      * Updates the UI to match the user value the widget currently holds, only
@@ -1428,6 +1465,22 @@ const SnippetOptionWidget = Widget.extend({
         this._userValueWidgets.forEach(widget => widget.close());
     },
     /**
+     * @param {string} name
+     * @returns {UserValueWidget|null}
+     */
+    findWidget: function (name) {
+        for (const widget of this._userValueWidgets) {
+            if (widget.getName() === name) {
+                return widget;
+            }
+            const depWidget = widget.findWidget(name);
+            if (depWidget) {
+                return depWidget;
+            }
+        }
+        return null;
+    },
+    /**
      * Sometimes, options may need to notify other options, even in parent
      * editors. This can be done thanks to the 'option_update' event, which
      * will then be handled by this function.
@@ -1453,16 +1506,18 @@ const SnippetOptionWidget = Widget.extend({
     setTarget: async function ($target) {
         this.$target = $target;
         await this.updateUI();
-        this.$target.trigger('snippet-option-change', [this]);
     },
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
      *
      * @param {UserValueWidget} [forced=null]
      *     Only non-previewed widgets are updated, except for the one given here
+     * @param {boolean} [noVisibility=false]
+     *     If true, only update widget values and their UI, not their visibility
+     *     -> @see updateUIVisibility for toggling visibility only
      * @returns {Promise}
      */
-    updateUI: async function (forced) {
+    updateUI: async function ({forced, noVisibility} = {}) {
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
@@ -1494,6 +1549,49 @@ const SnippetOptionWidget = Widget.extend({
             // hold have been updated).
             return widget.updateUI(widget === forced);
         });
+
+        if (!noVisibility) {
+            await this.updateUIVisibility();
+        }
+
+        return Promise.all(proms);
+    },
+    /**
+     * Updates the UI visibility - @see _computeVisibility. For widget update,
+     * @see _computeWidgetVisibility.
+     *
+     * @returns {Promise}
+     */
+    updateUIVisibility: async function () {
+        const proms = this._userValueWidgets.map(async widget => {
+            const params = widget.getMethodsParams();
+            const show = await this._computeWidgetVisibility(widget.getName(), params);
+            if (!show) {
+                widget.toggleVisibility(false);
+                return;
+            }
+
+            const dependencies = widget.getDependencies();
+            const dependenciesOK = !dependencies.length || dependencies.some(depName => {
+                const toBeActive = (depName[0] !== '!');
+                if (!toBeActive) {
+                    depName = depName.substr(1);
+                }
+
+                let widget = null;
+                this.trigger_up('user_value_widget_request', {
+                    name: depName,
+                    onSuccess: _widget => widget = _widget,
+                });
+                return widget && (widget.isActive() === toBeActive);
+            });
+
+            widget.toggleVisibility(dependenciesOK);
+        });
+
+        const showUI = await this._computeVisibility();
+        this.el.classList.toggle('d-none', !showUI);
+
         return Promise.all(proms);
     },
 
@@ -1501,6 +1599,13 @@ const SnippetOptionWidget = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @returns {Promise<boolean>|boolean}
+     */
+    _computeVisibility: async function () {
+        return true;
+    },
     /**
      * Returns the string value that should be hold by the widget which is
      * related to the given method name.
@@ -1567,6 +1672,15 @@ const SnippetOptionWidget = Widget.extend({
     },
     /**
      * @private
+     * @param {string} widgetName
+     * @param {Object} params
+     * @returns {Promise<boolean>|boolean}
+     */
+    _computeWidgetVisibility: async function (widgetName, params) {
+        return true;
+    },
+    /**
+     * @private
      * @param {HTMLElement} el
      * @returns {Object}
      */
@@ -1598,25 +1712,25 @@ const SnippetOptionWidget = Widget.extend({
                 return;
             }
 
+            // If it is not preview mode, the user selected the option for good
+            // (so record the action)
+            if (!previewMode) {
+                this.trigger_up('request_history_undo_record', {$target: this.$target});
+            }
+
             // Call widget option methods and update $target
             await this._select(previewMode, widget);
-
-            // Trigger the related events notifying snippet changes
-            let evName = 'snippet-option-reset';
-            if (previewMode === false) {
-                evName = 'snippet-option-change';
-            } else if (previewMode === true) {
-                evName = 'snippet-option-preview';
-            }
-            this.$target.trigger(evName, [this]);
             this.$target.trigger('content_changed');
 
-            // Update the UI of the correct widgets
-            if (!previewMode) {
-                await this.updateUI(widget);
-            } else {
-                await this.updateUI();
-            }
+            await new Promise(resolve => {
+                // Will update the UI of the correct widgets for all options
+                // related to the same $target/editor if necessary
+                this.trigger_up('snippet_option_update', {
+                    widget: widget,
+                    previewMode: previewMode,
+                    onSuccess: () => resolve(),
+                });
+            });
         }});
     },
     /**
@@ -1754,12 +1868,6 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise}
      */
     _select: async function (previewMode, widget) {
-        // If it is not preview mode, the user selected the option for good
-        // (so record the action)
-        if (!previewMode) {
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
-        }
-
         // Call each option method sequentially
         for (const methodName of widget.getMethodsNames()) {
             const widgetValue = widget.getValue(methodName);
@@ -2099,7 +2207,7 @@ registry.background = SnippetOptionWidget.extend({
         if (previewMode === 'reset') {
             // No background has been selected and we want to reset back to the
             // original custom image
-            await this._setCustomBackground(this.__customImageSrc);
+            await this._setCustomBackground(this.__customImageSrc, previewMode);
             return;
         }
 
@@ -2120,16 +2228,21 @@ registry.background = SnippetOptionWidget.extend({
         var options = this._getMediaDialogOptions();
         var media = this._getEditableMedia();
 
-        var _editor = new weWidgets.MediaDialog(this, options, media).open();
-        _editor.on('save', this, data => {
-            this._onSaveMediaDialog(data).then(() => {
-                this.$target.trigger('content_changed');
+        return new Promise(resolve => {
+            const _editor = new weWidgets.MediaDialog(this, options, media).open();
+            let _saving = false;
+            _editor.on('save', this, data => {
+                _saving = true;
+                this._onSaveMediaDialog(data).then(() => resolve());
             });
-        });
-        _editor.on('closed', this, () => {
-            if (media.classList.contains('o_we_fake_image')) {
-                media.parentNode.removeChild(media);
-            }
+            _editor.on('closed', this, () => {
+                if (media.classList.contains('o_we_fake_image')) {
+                    media.parentNode.removeChild(media);
+                }
+                if (!_saving) {
+                    resolve();
+                }
+            });
         });
     },
 
@@ -2163,13 +2276,20 @@ registry.background = SnippetOptionWidget.extend({
     updateUI: async function () {
         await this._super(...arguments);
         var src = this._getSrcFromCssValue();
-        this.removeBgWidget.el.classList.toggle('d-none', !src);
         if (src) {
             var split = src.split('/');
             this.editBgTextEl.textContent = split[split.length - 1];
         } else {
             this.editBgTextEl.textContent = this._getDefaultTextContent();
         }
+    },
+    /**
+     * @override
+     */
+    updateUIVisibility: async function () {
+        await this._super(...arguments);
+        var src = this._getSrcFromCssValue();
+        this.removeBgWidget.el.classList.toggle('d-none', !src);
     },
 
     //--------------------------------------------------------------------------
@@ -2267,12 +2387,18 @@ registry.background = SnippetOptionWidget.extend({
      * @param {string} value
      * @returns {Promise}
      */
-    _setCustomBackground: async function (value) {
+    _setCustomBackground: async function (value, previewMode) {
         this.__customImageSrc = value;
         this.background(false, this.__customImageSrc, {});
         this.$target.toggleClass('oe_custom_bg', !!value);
-        await this.updateUI();
-        this.$target.trigger('snippet-option-change', [this]);
+        await new Promise(resolve => {
+            // Will update the UI of the correct widgets for all options
+            // related to the same $target/editor
+            this.trigger_up('snippet_option_update', {
+                previewMode: previewMode,
+                onSuccess: () => resolve(),
+            });
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -2326,15 +2452,6 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this._super.apply(this, arguments);
 
         this._initOverlay();
-        this.img = document.createElement('img');
-        this.img.src = this._getSrcFromCssValue();
-
-        this.$target.on('snippet-option-change', () => {
-            // Hides option if the bg image is removed in favor of a bg color
-            this.updateUI();
-            // this.img is used to compute dragging speed
-            this.img.src = this._getSrcFromCssValue();
-        });
 
         // Resize overlay content on window resize because background images
         // change size, and on carousel slide because they sometimes take up
@@ -2369,7 +2486,14 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for params
      */
-    backgroundPositionOverlay: function (previewMode, widgetValue, params) {
+    backgroundPositionOverlay: async function (previewMode, widgetValue, params) {
+        // Updates the internal image
+        await new Promise(resolve => {
+            this.img = document.createElement('img');
+            this.img.addEventListener('load', () => resolve());
+            this.img.src = this._getSrcFromCssValue();
+        });
+
         const position = this.$target.css('background-position').split(' ').map(v => parseInt(v));
         // Convert % values to pixels (because mouse movement is in pixels)
         const delta = this._getBackgroundDelta();
@@ -2395,24 +2519,15 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-    /**
-     * Disables background position if no background image, disables size inputs
-     * in cover mode.
-     *
-     * @override
-     */
-    updateUI: async function () {
-        await this._super(...arguments);
-        this.$el.toggleClass('d-none', this.$target.css('background-image') === 'none');
-        this.$el.find('we-input').toggleClass('d-none', this.$target.css('background-repeat') !== 'repeat');
-    },
-
-    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _computeVisibility: function () {
+        return this._super(...arguments) && (this.$target.css('background-image') !== 'none');
+    },
     /**
      * @override
      */
