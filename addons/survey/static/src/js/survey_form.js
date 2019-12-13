@@ -10,6 +10,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
+        'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click button[type="submit"]': '_onSubmit',
         'click .o_survey_header .breadcrumb-item a': '_onBreadcrumbClick',
     },
@@ -98,12 +99,32 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             }
         }
 
+        var $matrixBtn = $target.parents('.o_survey_matrix_btn');
         if ($target.attr('type') === 'radio') {
-            $choiceItemGroup.find('label').toggleClass('o_survey_selected', false);
-            $target.closest('label').toggleClass('o_survey_selected', true);
-        } else { //  $target.attr('type') === 'checkbox'
-            var $label = $target.closest('label');
-            $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
+            if ($matrixBtn.length > 0) {
+                $matrixBtn.parents('tr').find('td').toggleClass('o_survey_selected', false);
+                $matrixBtn.toggleClass('o_survey_selected', true);
+            } else {
+                $choiceItemGroup.find('label').toggleClass('o_survey_selected', false);
+                $target.closest('label').toggleClass('o_survey_selected', true);
+            }
+        } else {  // $target.attr('type') === 'checkbox'
+            if ($matrixBtn.length > 0) {
+                $matrixBtn.toggleClass('o_survey_selected', !$matrixBtn.hasClass('o_survey_selected'));
+            } else {
+                var $label = $target.closest('label');
+                $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
+            }
+        }
+    },
+
+    _onMatrixBtnClick: function (event) {
+        var $target = $(event.currentTarget);
+        var $input = $target.find('input');
+        if ($input.attr('type') === 'radio') {
+            $input.prop("checked", true).trigger('change');
+        } else {
+            $input.prop("checked", !$input.prop("checked")).trigger('change');
         }
     },
 
@@ -493,8 +514,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _initChoiceItems: function() {
         var self = this;
         this.$("input[type='radio'],input[type='checkbox']").each(function () {
+            var matrixBtn = $(this).parents('.o_survey_matrix_btn');
             if ($(this).prop("checked")) {
-                $(this).closest('label').toggleClass('o_survey_selected', true);
+                var $target = matrixBtn.length > 0 ? matrixBtn : $(this).closest('label');
+                $target.toggleClass('o_survey_selected', true);
             }
         });
     },
