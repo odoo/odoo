@@ -36,15 +36,16 @@ if ! file_exists *raspbian*.img ; then
     unzip raspbian.img.zip
 fi
 
-cp -a *raspbian*.img iotbox.img
+RASPBIAN=$(echo *raspbian*.img)
+rsync -avh --progress "${RASPBIAN}" iotbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
 
-rm -rf "${CLONE_DIR}"
+rm -rfv "${CLONE_DIR}"
 
 if [ ! -d $CLONE_DIR ]; then
     echo "Clone Github repo"
-    mkdir -p "${CLONE_DIR}"
+    mkdir -pv "${CLONE_DIR}"
     git clone -b ${VERSION} --no-local --no-checkout --depth 1 ${REPO} "${CLONE_DIR}"
     cd "${CLONE_DIR}"
     git config core.sparsecheckout true
@@ -58,17 +59,17 @@ fi
 
 cd "${__dir}"
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
-mkdir -p "${USR_BIN}"
+mkdir -pv "${USR_BIN}"
 cd "/tmp"
 curl 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip' > ngrok.zip
 unzip ngrok.zip
-rm ngrok.zip
+rm -v ngrok.zip
 cd "${__dir}"
-mv /tmp/ngrok "${USR_BIN}"
+mv -v /tmp/ngrok "${USR_BIN}"
 
 # zero pad the image to be around 3.5 GiB, by default the image is only ~1.3 GiB
 echo "Enlarging the image..."
-dd if=/dev/zero bs=1M count=2048 >> iotbox.img
+dd if=/dev/zero bs=1M count=2048 status=progress >> iotbox.img
 
 # resize partition table
 echo "Fdisking"
@@ -102,30 +103,30 @@ mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 mount "${LOOP_MAPPER_BOOT}" "${MOUNT_POINT}/boot/"
 
 QEMU_ARM_STATIC="/usr/bin/qemu-arm-static"
-cp "${QEMU_ARM_STATIC}" "${MOUNT_POINT}/usr/bin/"
+cp -v "${QEMU_ARM_STATIC}" "${MOUNT_POINT}/usr/bin/"
 
 # 'overlay' the overwrite directory onto the mounted image filesystem
-cp -a "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
+cp -av "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
 chroot "${MOUNT_POINT}" /bin/bash -c "sudo /etc/init_posbox_image.sh"
 
 # get rid of the git clone
-rm -rf "${CLONE_DIR}"
+rm -rfv "${CLONE_DIR}"
 # and the ngrok usr/bin
-rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
+rm -rfv "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
 cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
     DIR=$(dirname "${iotpatch}")
     BASE=$(basename "${iotpatch%.iotpatch}")
     find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch"|while read file; do
-        patch -f "${file}" < "${iotpatch}"
+        patch -f --verbose "${file}" < "${iotpatch}"
     done
 done
 
 # cleanup
-umount -f "${MOUNT_POINT}"/boot/
-umount -f "${MOUNT_POINT}"
-rm -rf "${MOUNT_POINT}"
+umount -fv "${MOUNT_POINT}"/boot/
+umount -fv "${MOUNT_POINT}"/
+rm -rfv "${MOUNT_POINT}"
 
 echo "Running zerofree..."
 zerofree -v "${LOOP_MAPPER_PATH}" || true
