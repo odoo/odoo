@@ -230,11 +230,18 @@ const UserValueWidget = Widget.extend({
         return false;
     },
     /**
-     * Indicates if the widget is being previewed or not.
+     * Indicates if the widget is being previewed or not: the user is
+     * manipulating it. Base case: if an internal <input/> element is focused.
      *
      * @returns {boolean}
      */
     isPreviewed: function () {
+        const focusEl = document.activeElement;
+        if (focusEl && focusEl.tagName === 'INPUT'
+                && (this.el === focusEl || this.el.contains(focusEl))
+                && !this._validating) {
+            return true;
+        }
         return this.el.classList.contains('o_we_preview');
     },
     /**
@@ -315,10 +322,13 @@ const UserValueWidget = Widget.extend({
      * reasons or other ones) or if the widget is not one capable of holding
      * a value (but may have an UI which depends on other elements).
      *
+     * @todo if the UI cannot be updated, we do nothing while it should ideally
+     *       updates as soon as it can be.
+     * @param {boolean} [force=false]
      * @returns {Promise}
      */
-    updateUI: async function () {
-        if (this._canUpdateUI()) {
+    updateUI: async function (force) {
+        if (force || !this.isPreviewed()) {
             await this._updateUI();
         }
         this._validating = false;
@@ -328,22 +338,6 @@ const UserValueWidget = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Checks whether or not the UI can be updated. Base case: if an internal
-     * <input/> element is focused we prevent updating the UI.
-     *
-     * @private
-     * @param {*} previewMode
-     */
-    _canUpdateUI: function () {
-        const focusEl = document.activeElement;
-        if (focusEl && focusEl.tagName === 'INPUT'
-                && (this.el === focusEl || this.el.contains(focusEl))
-                && !this._validating) {
-            return false;
-        }
-        return true;
-    },
     /**
      * @private
      * @param {boolean} [previewMode=false]
@@ -395,7 +389,7 @@ const UserValueWidget = Widget.extend({
      */
     _updateUI: async function () {
         this.el.classList.remove('o_we_preview');
-        const proms = this._userValueWidgets.map(widget => widget.updateUI());
+        const proms = this._userValueWidgets.map(widget => widget.updateUI(true));
         return Promise.all(proms);
     },
 
@@ -597,6 +591,12 @@ const SelectUserValueWidget = UserValueWidget.extend({
      */
     isContainer: function () {
         return true;
+    },
+    /**
+     * @override
+     */
+    isPreviewed: function () {
+        return this._super(...arguments) || this.menuTogglerEl.classList.contains('active');
     },
     /**
      * @override
@@ -1081,17 +1081,17 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     isActive: function () {
         return true;
     },
+    /**
+     * @override
+     */
+    isPreviewed: function () {
+        return this._super(...arguments) || !!$(this.inputEl).data('datetimepicker').widget;
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _canUpdateUI: function () {
-        return this._super(...arguments) && !$(this.inputEl).data('datetimepicker').widget;
-    },
     /**
      * @override
      */
@@ -1458,18 +1458,16 @@ const SnippetOptionWidget = Widget.extend({
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
      *
-     * @param {function} [callback] - used to filter widgets to update
+     * @param {UserValueWidget} [forced=null]
+     *     Only non-previewed widgets are updated, except for the one given here
      * @returns {Promise}
      */
-    updateUI: async function (callback) {
+    updateUI: async function (forced) {
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
         const proms = this._userValueWidgets.map(async widget => {
-            if (callback && !callback(widget)) {
-                return;
-            }
-
+            // Update widget value (for each method)
             const methodsNames = widget.getMethodsNames();
             const proms = methodsNames.map(async methodName => {
                 const params = widget.getMethodsParams(methodName);
@@ -1494,7 +1492,7 @@ const SnippetOptionWidget = Widget.extend({
 
             // Refresh the UI of all widgets (after all the current values they
             // hold have been updated).
-            return widget.updateUI();
+            return widget.updateUI(widget === forced);
         });
         return Promise.all(proms);
     },
@@ -1615,9 +1613,9 @@ const SnippetOptionWidget = Widget.extend({
 
             // Update the UI of the correct widgets
             if (!previewMode) {
-                await this.updateUI(w => !w.isPreviewed() || w === widget);
+                await this.updateUI(widget);
             } else {
-                await this.updateUI(w => w !== widget && !w.isPreviewed());
+                await this.updateUI();
             }
         }});
     },
