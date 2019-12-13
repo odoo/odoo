@@ -25,6 +25,8 @@ var SnippetEditor = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     custom_events: {
         'option_update': '_onOptionUpdate',
+        'user_value_widget_request': '_onUserValueWidgetRequest',
+        'snippet_option_update': '_onSnippetOptionUpdate',
     },
 
     /**
@@ -675,6 +677,44 @@ var SnippetEditor = Widget.extend({
         ev.stopPropagation();
         this.trigger_up('request_history_undo_record', {$target: this.$target});
         this.removeSnippet();
+    },
+    /**
+     * @private
+     * @param {OdooEvent}
+     */
+    _onSnippetOptionUpdate: async function (ev) {
+        if (ev.data.previewMode) {
+            ev.data.onSuccess();
+            return;
+        }
+
+        const proms1 = Object.keys(this.styles).map(key => {
+            return this.styles[key].updateUI({
+                forced: ev.data.widget,
+                noVisibility: true,
+            });
+        });
+        await Promise.all(proms1);
+
+        const proms2 = Object.keys(this.styles).map(key => {
+            return this.styles[key].updateUIVisibility();
+        });
+        await Promise.all(proms2);
+
+        ev.data.onSuccess();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onUserValueWidgetRequest: function (ev) {
+        for (const key of Object.keys(this.styles)) {
+            const widget = this.styles[key].findWidget(ev.data.name);
+            if (widget) {
+                ev.data.onSuccess(widget);
+                return;
+            }
+        }
     },
 });
 
