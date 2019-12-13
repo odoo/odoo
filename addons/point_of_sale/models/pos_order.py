@@ -860,7 +860,7 @@ class ReportSaleDetails(models.AbstractModel):
         domain = [('state', 'in', ['paid','invoiced','done'])]
 
         if (session_ids):
-            AND([domain, [('session_id', 'in', session_ids)]])
+            domain = AND([domain, [('session_id', 'in', session_ids.ids)]])
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
@@ -879,13 +879,13 @@ class ReportSaleDetails(models.AbstractModel):
                 # stop by default today 23:59:59
                 date_stop = date_start + timedelta(days=1, seconds=-1)
 
-            AND([domain,
+            domain = AND([domain,
                 [('date_order', '>=', fields.Datetime.to_string(date_start)),
                 ('date_order', '<=', fields.Datetime.to_string(date_stop))]
             ])
 
             if config_ids:
-                AND([domain, [('config_id', 'in', config_ids)]])
+                domain = AND([domain, [('config_id', 'in', config_ids.ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
@@ -917,18 +917,16 @@ class ReportSaleDetails(models.AbstractModel):
                     taxes.setdefault(0, {'name': _('No Taxes'), 'tax_amount':0.0, 'base_amount':0.0})
                     taxes[0]['base_amount'] += line.price_subtotal_incl
 
-        st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
-        if st_line_ids:
+        payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
+        if payment_ids:
             self.env.cr.execute("""
-                SELECT aj.name, sum(amount) total
-                FROM account_bank_statement_line AS absl,
-                     account_bank_statement AS abs,
-                     account_journal AS aj
-                WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id
-                    AND absl.id IN %s
-                GROUP BY aj.name
-            """, (tuple(st_line_ids),))
+                SELECT method.name, sum(amount) total
+                FROM pos_payment AS payment,
+                     pos_payment_method AS method
+                WHERE payment.payment_method_id = method.id
+                    AND payment.id IN %s
+                GROUP BY method.name
+            """, (tuple(payment_ids),))
             payments = self.env.cr.dictfetchall()
         else:
             payments = []
