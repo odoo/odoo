@@ -76,7 +76,7 @@
                     <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate" digits="[12,6]"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
@@ -154,7 +154,7 @@
             <field name="res_model">res.currency</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
-            <field name="context">{'active_test': False, 'search_default_active': 1}</field>
+            <field name="context">{'active_test': False}</field>
         </record>
         <record id="action_currency_all_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>

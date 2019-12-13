@@ -1127,7 +1127,7 @@ action = model.setting_init_bank_account_action()
                     <field name="type_tax_use"/>
                     <field name="description"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
@@ -1284,7 +1284,7 @@ action = model.setting_init_bank_account_action()
             <field name="res_model">account.tax</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="False"/> <!-- Force empty -->
-            <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'search_default_active': True,'active_test': False}</field>
+            <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
             <field name="view_id" ref="view_tax_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
