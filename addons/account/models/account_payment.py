@@ -366,9 +366,13 @@ class account_payment(models.Model):
     def _compute_destination_account_id(self):
         for payment in self:
             if payment.invoice_ids:
-                payment.destination_account_id = payment.invoice_ids[0].mapped(
+                destination_account_id = payment.invoice_ids[0].mapped(
                     'line_ids.account_id').filtered(
-                        lambda account: account.user_type_id.type in ('receivable', 'payable'))[0]
+                        lambda account: account.user_type_id.type in ('receivable', 'payable'))
+                if destination_account_id:
+                    payment.destination_account_id = destination_account_id[0]
+                else:
+                    raise UserError(_('There is no Receivable or Payable Account defined in the invoice lines.\nPlease check that you are using the correct accounts and their configuration.'))
             elif payment.payment_type == 'transfer':
                 if not payment.company_id.transfer_account_id.id:
                     raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
