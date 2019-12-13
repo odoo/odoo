@@ -703,8 +703,9 @@ class payment_register(models.TransientModel):
     _description = 'Register Payment'
 
     payment_date = fields.Date(required=True, default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', required=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', invoice_company_id)]")
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True,
+                                        domain="[('id', 'in', available_payment_methods)]",
                                         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
                                         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
                                         "Check: Pay bill by check and print it from Odoo.\n"
@@ -712,6 +713,9 @@ class payment_register(models.TransientModel):
                                         "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
     invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel_transient', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     group_payment = fields.Boolean(help="Only one payment will be created by partner (bank)/ currency.")
+
+    invoice_company_id = fields.Many2one(related='invoice_ids.company_id')
+    available_payment_methods = fields.Many2many('account.payment.method', compute='_compute_available_payment_methods')
 
     @api.model
     def default_get(self, fields):
@@ -743,18 +747,16 @@ class payment_register(models.TransientModel):
             rec['payment_method_id'] = self.env['account.payment.method'].search(domain, limit=1).id
         return rec
 
-    @api.onchange('journal_id', 'invoice_ids')
-    def _onchange_journal(self):
-        active_ids = self._context.get('active_ids')
-        invoices = self.env['account.move'].browse(active_ids)
-        if self.journal_id and invoices:
-            if invoices[0].is_inbound():
-                domain_payment = [('payment_type', '=', 'inbound'), ('id', 'in', self.journal_id.inbound_payment_method_ids.ids)]
+    @api.depends('invoice_ids', 'journal_id.inbound_payment_method_ids', 'journal_id.outbound_payment_method_ids')
+    def _compute_available_payment_methods(self):
+        for p in self:
+            invoice = p.invoice_ids[:1]
+            if not invoice:
+                p.available_payment_methods = self.env['account.payment.method']
+            elif invoice.is_inbound():
+                p.available_payment_methods = self.journal_id.inbound_payment_method_ids._origin
             else:
-                domain_payment = [('payment_type', '=', 'outbound'), ('id', 'in', self.journal_id.outbound_payment_method_ids.ids)]
-            domain_journal = [('type', 'in', ('bank', 'cash')), ('company_id', '=', invoices[0].company_id.id)]
-            return {'domain': {'payment_method_id': domain_payment, 'journal_id': domain_journal}}
-        return {}
+                p.available_payment_methods = self.journal_id.outbound_payment_method_ids._origin
 
     def _prepare_payment_vals(self, invoices):
         '''Create the payment values.
