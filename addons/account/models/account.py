@@ -264,6 +264,22 @@ class AccountAccount(models.Model):
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
 
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        if not self:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_move_line line
+            JOIN account_account account ON account.id = line.account_id
+            WHERE line.account_id IN %s
+            AND line.company_id != account.company_id
+        ''', [tuple(self.ids)])
+        if self._cr.fetchone():
+            raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -788,6 +804,22 @@ class AccountJournal(models.Model):
                 if journal.bank_account_id.partner_id != journal.company_id.partner_id:
                     raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % journal.company_id.name)
 
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        if not self:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT move.id
+            FROM account_move move
+            JOIN account_journal journal ON journal.id = move.journal_id
+            WHERE move.journal_id IN %s
+            AND move.company_id != journal.company_id
+        ''', [tuple(self.ids)])
+        if self._cr.fetchone():
+            raise UserError(_("You can't change the company of your journal since there are some journal entries linked to it."))
+
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
         if not self.default_credit_account_id:
@@ -1270,7 +1302,32 @@ class AccountTax(models.Model):
             if not tax._check_m2m_recursion('children_tax_ids'):
                 raise ValidationError(_("Recursion found for tax '%s'.") % (tax.name,))
             if not all(child.type_tax_use in ('none', tax.type_tax_use) for child in tax.children_tax_ids):
-                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
+                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))\
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        if not self:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_move_line line
+            JOIN account_tax tax ON tax.id = line.tax_line_id
+            WHERE line.tax_line_id IN %s
+            AND line.company_id != tax.company_id
+            
+            UNION ALL
+            
+            SELECT line.id
+            FROM account_move_line_account_tax_rel tax_rel
+            JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
+            JOIN account_move_line line ON line.id = tax_rel.account_move_line_id
+            WHERE tax_rel.account_tax_id IN %s
+            AND line.company_id != tax.company_id
+        ''', [tuple(self.ids)] * 2)
+        if self._cr.fetchone():
+            raise UserError(_("You can't change the company of your tax since there are some journal items linked to it."))
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
