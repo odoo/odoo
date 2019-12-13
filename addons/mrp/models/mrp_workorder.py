@@ -457,6 +457,8 @@ class MrpWorkorder(models.Model):
         self._check_company()
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
+        if self.production_id.product_id.tracking != 'none' and not self.finished_lot_id and self.move_raw_ids:
+            raise UserError(_('You should provide a lot for the final product'))
         if 'check_ids' not in self:
             for line in self.raw_workorder_line_ids | self.finished_workorder_line_ids:
                 line._check_line_sn_uniqueness()
