@@ -46,7 +46,7 @@ var DocumentUploadMixin = {
         return this._rpc({
             model: 'hr.expense',
             method: 'create_expense_from_attachments',
-            args: ["", attachent_ids],
+            args: ["", attachent_ids, this.viewType],
             context: this.initialState.context,
         }).then(function(result) {
             self.do_action(result);
