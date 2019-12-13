@@ -163,7 +163,7 @@ class HrExpense(models.Model):
         if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
             raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.'))
 
-    def create_expense_from_attachments(self, attachment_ids=None):
+    def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
         ''' Create the expenses from files.
          :return: An action redirecting to hr.expense tree/form view.
         '''
@@ -200,7 +200,7 @@ class HrExpense(models.Model):
             'domain': [('id', 'in', expenses.ids)],
             'res_model': 'hr.expense',
             'type': 'ir.actions.act_window',
-            'views': [[False, "tree"], [False, "form"]],
+            'views': [[False, view_type], [False, "form"]],
         }
 
     # ----------------------------------------

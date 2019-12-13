@@ -1,8 +1,10 @@
 odoo.define('hr_expense.expenses.tree', function (require) {
 "use strict";
+    var DocumentUploadMixin = require('hr_expense.documents.upload.mixin');
+    var KanbanController = require('web.KanbanController');
+    var KanbanView = require('web.KanbanView');
     var ListController = require('web.ListController');
     var ListView = require('web.ListView');
-    var DocumentUploadMixin = require('hr_expense.documents.upload.mixin');
     var viewRegistry = require('web.view_registry');
 
     var ExpensesListController = ListController.extend(DocumentUploadMixin, {
@@ -19,5 +21,20 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
+    var ExpensesKanbanController = KanbanController.extend(DocumentUploadMixin, {
+        buttons_template: 'ExpensesKanbanView.buttons',
+        events: _.extend({}, KanbanController.prototype.events, {
+            'click .o_button_upload_expense': '_onUpload',
+            'change .o_expense_documents_upload .o_form_binary_form': '_onAddAttachment',
+        }),
+    });
+
+    var ExpensesKanbanView = KanbanView.extend({
+        config: _.extend({}, KanbanView.prototype.config, {
+            Controller: ExpensesKanbanController,
+        }),
+    });
+
     viewRegistry.add('hr_expense_tree', ExpensesListView);
+    viewRegistry.add('hr_expense_kanban', ExpensesKanbanView);
 });
