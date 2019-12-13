@@ -678,6 +678,7 @@
                                                optional="show"
                                                widget="many2many_tags"/>
                                         <field name="quantity"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>
@@ -722,6 +723,7 @@
                                         <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                         <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                         <field name="quantity"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" groups="uom.group_uom"/>
                                         <field name="price_unit"/>
                                         <field name="display_type"/>
@@ -794,6 +796,7 @@
                                     </kanban>
                                     <form>
                                         <sheet>
+                                            <field name="product_uom_category_id" invisible="1"/>
                                             <field name="display_type" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <group>
@@ -907,6 +910,7 @@
 
                                         <field name="product_id" invisible="1"/>
                                         <field name="quantity" invisible="1"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" invisible="1"/>
                                         <field name="price_unit" invisible="1"/>
                                         <field name="discount" invisible="1"/>
