@@ -14,7 +14,7 @@ from functools import partial
 
 import odoo
 from odoo import api, models
-from odoo import SUPERUSER_ID
+from odoo import registry, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
@@ -163,7 +163,11 @@ class Http(models.AbstractModel):
         """
         is_rerouting = hasattr(request, 'routing_iteration')
 
-        request.website_routing = request.env['website'].get_current_website().id
+        if request.session.db:
+            reg = registry(request.session.db)
+            with reg.cursor() as cr:
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                request.website_routing = env['website'].get_current_website().id
 
         response = super(Http, cls)._dispatch()
 
