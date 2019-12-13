@@ -497,8 +497,8 @@ options.registry.layout_column = options.Class.extend({
 
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
-            for (var i = 0 ; i < count ; i++) {
-                $lastColumn.clone().insertAfter($lastColumn);
+            for (var i = 0; i < count; i++) {
+                this.trigger_up('clone_snippet', {$snippet: $lastColumn});
             }
         } else {
             var self = this;

@@ -24,11 +24,6 @@ odoo.define('payment.payment_form', function (require) {
             this._super.apply(this, arguments);
             this.options = _.extend(options || {}, {
             });
-
-            // TODO simplify this using the 'async' keyword in the events
-            // property definition as soon as this widget is converted in
-            // frontend widget.
-            this.payEvent = dom.makeButtonHandler(this.payEvent);
         },
 
         start: function () {
@@ -151,6 +146,7 @@ odoo.define('payment.payment_form', function (require) {
                 }
                 // if the user is going to pay with a form payment, then
                 else if (this.isFormPaymentRadio(checked_radio)) {
+                    this.disableButton(button);
                     var $tx_url = this.$el.find('input[name="prepare_tx_url"]');
                     // if there's a prepare tx url set
                     if ($tx_url.length === 1) {
@@ -187,6 +183,7 @@ odoo.define('payment.payment_form', function (require) {
                                     _t('Server Error'),
                                     _t("We are not able to redirect you to the payment form.")
                                 );
+                                self.enableButton(button);
                             }
                         }).fail(function (error, event) {
                             self.displayError(
@@ -194,6 +191,7 @@ odoo.define('payment.payment_form', function (require) {
                                 _t("We are not able to redirect you to the payment form. ") +
                                    error.data.message
                             );
+                            self.enableButton(button);
                         });
                     }
                     else {
@@ -215,6 +213,7 @@ odoo.define('payment.payment_form', function (require) {
                     _t('No payment method selected'),
                     _t('Please select a payment method.')
                 );
+                this.enableButton(button);
             }
         },
         // event handler when clicking on the button to add a new payment method
