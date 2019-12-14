@@ -104,7 +104,7 @@ ADAMEquipmentProtocol = ScaleProtocol(
     newWeightDelay=5,  # AZExtra beeps every time you ask for a weight that was previously returned!
                        # Adding an extra delay gives the operator a chance to remove the products
                        # before the scale starts beeping. Could not find a way to disable the beeps.
-    weightCommand=b'P',
+    weightCommand=b'',
     zeroCommand=b'Z',
     tareCommand=b'T',
     clearCommand=None, # No clear command -> Tare again
