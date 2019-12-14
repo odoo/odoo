@@ -916,8 +916,8 @@ class IrModelFields(models.Model):
                     field = self._instanciate(field_data)
                     if field:
                         model._add_field(name, field)
-                except:
-                    type(self)._bad_fields[name] = name
+                except Exception:
+                    type(self)._bad_fields.add(name)
                     _logger.warning("Manual field '{}' : loading skipped".format(
                         field_data['name']))
 

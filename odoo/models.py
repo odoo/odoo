@@ -2357,7 +2357,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         if cls._setup_done:
             return
-        cls._bad_fields = dict()
+        cls._bad_fields = set()
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
         cls0 = cls.pool.model_cache.get(cls._model_cache_key)
@@ -2446,7 +2446,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         for name in bad_fields:
             if self.pool.loaded:
-                cls._bad_fields[name] = cls._fields[name]
+                cls._bad_fields.add(cls._fields[name])
             del cls._fields[name]
             delattr(cls, name)
 
