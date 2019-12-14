@@ -961,6 +961,7 @@ class MailThread(models.AbstractModel):
 
             # check it does not directly contact catchall
             if catchall_alias and catchall_alias in email_to_localpart:
+                _logger.info('email_from: %s; email_to_localpart: %s; catchall_alias: %s', email_from, email_to_localpart, catchall_alias)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
                 body = self.env.ref('mail.mail_bounce_catchall').render({
                     'message': message,
