@@ -75,32 +75,16 @@ class MaintenanceRequest(models.Model):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
-    department_id = fields.Many2one('hr.department', string='Department')
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
+    equipment_id = fields.Many2one(domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]")
 
-    @api.depends('employee_id', 'department_id')
+    @api.depends('employee_id')
     def _compute_owner(self):
         for r in self:
             if r.equipment_id.equipment_assign_to == 'employee':
                 r.owner_user_id = r.employee_id.user_id.id
-            elif r.equipment_id.equipment_assign_to == 'department':
-                r.owner_user_id = r.department_id.manager_id.user_id.id
             else:
                 r.owner_user_id = False
-
-    @api.onchange('employee_id', 'department_id')
-    def onchange_department_or_employee_id(self):
-        domain = []
-        if self.department_id:
-            domain = [('department_id', '=', self.department_id.id)]
-        if self.employee_id and self.department_id:
-            domain = ['|'] + domain
-        if self.employee_id:
-            domain = domain + ['|', ('employee_id', '=', self.employee_id.id), ('employee_id', '=', None)]
-        equipment = self.env['maintenance.equipment'].search(domain, limit=2)
-        if len(equipment) == 1:
-            self.equipment_id = equipment
-        return {'domain': {'equipment_id': domain}}
 
     @api.model
     def create(self, vals):

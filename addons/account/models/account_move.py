@@ -13,10 +13,6 @@ from json import dumps
 
 import json
 import re
-import logging
-import psycopg2
-
-_logger = logging.getLogger(__name__)
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -158,7 +154,8 @@ class AccountMove(models.Model):
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
         compute='_compute_amount', currency_field='company_currency_id')
     amount_by_group = fields.Binary(string="Tax amount by group",
-        compute='_compute_invoice_taxes_by_group')
+        compute='_compute_invoice_taxes_by_group',
+        help='Edit Tax amounts if you encounter rouding issues.')
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -236,7 +233,6 @@ class AccountMove(models.Model):
         help="Auto-complete from a past bill.")
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
-    invoice_partner_icon = fields.Char(compute='_compute_invoice_partner_display_info', store=False, compute_sudo=True)
 
     # ==== Cash rounding fields ====
     invoice_cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
@@ -332,13 +328,15 @@ class AccountMove(models.Model):
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
-        company_currency = self.company_id.currency_id
-        has_foreign_currency = self.currency_id and self.currency_id != company_currency
+        if self.is_invoice(include_receipts=True):
+            company_currency = self.company_id.currency_id
+            has_foreign_currency = self.currency_id and self.currency_id != company_currency
 
-        for line in self.line_ids:
-            new_currency = has_foreign_currency and self.currency_id
-            line.currency_id = new_currency
-            line._onchange_currency()
+            for line in self.line_ids:
+                new_currency = has_foreign_currency and self.currency_id
+                line.currency_id = new_currency
+
+        self.line_ids._onchange_currency()
         self._recompute_dynamic_lines()
 
     @api.onchange('invoice_payment_ref')
@@ -1088,13 +1086,9 @@ class AccountMove(models.Model):
             vendor_display_name = move.partner_id.name
             if not vendor_display_name:
                 if move.invoice_source_email:
-                    vendor_display_name = _('From: ') + move.invoice_source_email
-                    move.invoice_partner_icon = '@'
+                    vendor_display_name = _('@From: ') + move.invoice_source_email
                 else:
-                    vendor_display_name = _('Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
-                    move.invoice_partner_icon = '#'
-            else:
-                move.invoice_partner_icon = False
+                    vendor_display_name = _('#Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
             move.invoice_partner_display_name = vendor_display_name
 
     @api.depends('state', 'journal_id', 'invoice_date')
@@ -1763,7 +1757,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         journal = self.journal_id
-        if self.type in ('entry', 'out_invoice', 'in_invoice') or not journal.refund_sequence:
+        if self.type in ('entry', 'out_invoice', 'in_invoice', 'out_receipt', 'in_receipt') or not journal.refund_sequence:
             return journal.sequence_id
         if not journal.refund_sequence_id:
             return
@@ -2123,22 +2117,11 @@ class AccountMove(models.Model):
         for move in self:
             if not move.partner_id: continue
             if move.type.startswith('out_'):
-                field='customer_rank'
+                move.partner_id._increase_rank('customer_rank')
             elif move.type.startswith('in_'):
-                field='supplier_rank'
+                move.partner_id._increase_rank('supplier_rank')
             else:
                 continue
-            try:
-                with self.env.cr.savepoint():
-                    self.env.cr.execute("SELECT "+field+" FROM res_partner WHERE ID=%s FOR UPDATE NOWAIT", (move.partner_id.id,))
-                    self.env.cr.execute("UPDATE res_partner SET "+field+"="+field+"+1 WHERE ID=%s", (move.partner_id.id,))
-                    self.env.cache.remove(move.partner_id, move.partner_id._fields[field])
-            except psycopg2.DatabaseError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
-                    continue
-                else:
-                    raise e
 
     def action_reverse(self):
         action = self.env.ref('account.action_view_account_move_reversal').read()[0]
@@ -2875,6 +2858,7 @@ class AccountMoveLine(models.Model):
             if not line.currency_id:
                 continue
             if not line.move_id.is_invoice(include_receipts=True):
+                line._recompute_debit_credit_from_amount_currency()
                 continue
             line.update(line._get_fields_onchange_balance(
                 balance=line.amount_currency,
@@ -2895,7 +2879,19 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.move_id.is_invoice(include_receipts=True):
                 line._onchange_price_subtotal()
+            else:
+                line._recompute_debit_credit_from_amount_currency()
 
+    def _recompute_debit_credit_from_amount_currency(self):
+        for line in self:
+            # Recompute the debit/credit based on amount_currency/currency_id and date.
+
+            company_currency = line.account_id.company_id.currency_id
+            balance = line.amount_currency
+            if line.currency_id and company_currency and line.currency_id != company_currency:
+                balance = line.currency_id._convert(balance, company_currency, line.account_id.company_id, line.move_id.date or fields.Date.today())
+                line.debit = balance > 0 and balance or 0.0
+                line.credit = balance < 0 and -balance or 0.0
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -3397,7 +3393,7 @@ class AccountMoveLine(models.Model):
             }
 
     def _get_tracking_field_string(self, fields):
-        ARROW_RIGHT = '<span aria-label="Changed" class="fas fa-long-arrow-alt-right" role="img" title="Changed"></span>'
+        ARROW_RIGHT = '<span aria-label="Changed" class="fa fa-long-arrow-alt-right" role="img" title="Changed"></span>'
         msg = '<ul>'
         for field in fields:
             redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link

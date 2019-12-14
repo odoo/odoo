@@ -329,17 +329,17 @@ var SlideUploadDialog = Dialog.extend({
     _setup: function () {
         this.slide_type_data = {
             presentation: {
-                icon: 'fa-file-pdf',
+                icon: 'fa-file-pdf-o',
                 label: _t('Presentation'),
                 template: 'website.slide.upload.modal.presentation',
             },
             webpage: {
-                icon: 'fa-file-alt',
+                icon: 'fa-file-text',
                 label: _t('Web Page'),
                 template: 'website.slide.upload.modal.webpage',
             },
             video: {
-                icon: 'fa-video',
+                icon: 'fa-video-camera',
                 label: _t('Video'),
                 template: 'website.slide.upload.modal.video',
             },
@@ -358,6 +358,15 @@ var SlideUploadDialog = Dialog.extend({
         this.$('#o_wslides_js_slide_upload_left_column').removeClass('col').addClass('col-md-6');
         this.$('#o_wslides_js_slide_upload_preview_column').removeClass('d-none');
         this.$modal.find('.modal-dialog').addClass('modal-lg');
+    },
+    /**
+     * Hide the preview/right column and resize the modal
+     * @private
+     */
+    _hidePreviewColumn: function () {
+        this.$('#o_wslides_js_slide_upload_left_column').addClass('col').removeClass('col-md-6');
+        this.$('#o_wslides_js_slide_upload_preview_column').addClass('d-none');
+        this.$modal.find('.modal-dialog').removeClass('modal-lg');
     },
     /**
      * @private
@@ -416,6 +425,11 @@ var SlideUploadDialog = Dialog.extend({
         var preventOnchange = $input.data('preventOnchange');
 
         var file = ev.target.files[0];
+        if (!file) {
+            this.$('#slide-image').attr('src', '/website_slides/static/src/img/document.png');
+            this._hidePreviewColumn();
+            return;
+        }
         var isImage = /^image\/.*/.test(file.type);
         var loaded = false;
         this.file.name = file.name;
@@ -423,11 +437,13 @@ var SlideUploadDialog = Dialog.extend({
         if (!(isImage || this.file.type === 'application/pdf')) {
             this._alertDisplay(_t("Invalid file type. Please select pdf or image file"));
             this._fileReset();
+            this._hidePreviewColumn();
             return;
         }
         if (file.size / 1024 / 1024 > 25) {
             this._alertDisplay(_t("File is too big. File size cannot exceed 25MB"));
             this._fileReset();
+            this._hidePreviewColumn();
             return;
         }
 

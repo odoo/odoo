@@ -211,7 +211,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 15)
 
         # change cost from 10 to 15
-        self.product1._change_standard_price(15.0)
+        self.product1.standard_price = 15.0
 
         self.assertEqual(self.product1.value_svl, 75)
         self.assertEqual(self.product1.quantity_svl, 5)
@@ -587,14 +587,13 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 1)
 
     def test_dropship_1(self):
-        orig_standard_price = self.product1.standard_price
         move1 = self._make_in_move(self.product1, 1, unit_cost=10)
         move2 = self._make_in_move(self.product1, 1, unit_cost=20)
         move3 = self._make_dropship_move(self.product1, 1, unit_cost=10)
 
         self.assertEqual(self.product1.value_svl, 30)
         self.assertEqual(self.product1.quantity_svl, 2)
-        self.assertEqual(orig_standard_price, self.product1.standard_price)
+        self.assertAlmostEqual(self.product1.standard_price, 10)
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form
 
 
 class TestSaleMrpFlow(TransactionCase):
@@ -267,7 +268,7 @@ class TestSaleMrpFlow(TransactionCase):
         # Create a backorder for the missing componenents
         pick = po.picking_ids[0]
         res = pick.button_validate()
-        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check that a backorded is created
         self.assertEqual(len(po.picking_ids), 2)
@@ -287,7 +288,7 @@ class TestSaleMrpFlow(TransactionCase):
 
         # Create a backorder for the missing componenents
         res = backorder_1.button_validate()
-        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Only 1 kit_parent should be received at this point
         self.assertEqual(order_line.qty_received, 1)
@@ -326,7 +327,7 @@ class TestSaleMrpFlow(TransactionCase):
 
         # Create a backorder for the missing componenents
         res = backorder_2.button_validate()
-        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check that x3 kit_parents are indeed received
         self.assertEqual(order_line.qty_received, 3)
@@ -370,7 +371,7 @@ class TestSaleMrpFlow(TransactionCase):
 
         # Process all components and validate the picking
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
         # Now quantity received should be 3 again
@@ -393,7 +394,7 @@ class TestSaleMrpFlow(TransactionCase):
             })
 
         wiz_act = return_of_return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
         # As one of each component is missing, only 6 kit_parents should be received

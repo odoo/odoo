@@ -183,7 +183,7 @@ QUnit.module('Views', {
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
                         _.find(records, function (record) {
-                            return record.id === partnerID; 
+                            return record.id === partnerID;
                         }).active = false;
                     })
                     this.data.partner.records[0].active;
@@ -240,7 +240,7 @@ QUnit.module('Views', {
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
                         _.find(records, function (record) {
-                            return record.id === partnerID; 
+                            return record.id === partnerID;
                         }).active = false;
                     })
                     this.data.partner.records[0].active;
@@ -2335,7 +2335,7 @@ QUnit.module('Views', {
             'there should be only one tag in second record');
 
         // Write on the record using the priority widget to trigger a re-render in readonly
-        await testUtils.dom.click(kanban.$('.o_field_widget.o_priority a.o_priority_star.fa-star').first());
+        await testUtils.dom.click(kanban.$('.o_field_widget.o_priority a.o_priority_star.fa-star-o').first());
         assert.verifySteps([
             '/web/dataset/call_kw/partner/write',
             '/web/dataset/call_kw/partner/read',
@@ -2380,6 +2380,7 @@ QUnit.module('Views', {
                     throw new Error("should not switch view");
                 },
             },
+            doNotDisableAHref: true,
         });
 
         var $record = kanban.$('.o_kanban_record:not(.o_kanban_ghost)');
@@ -2392,10 +2393,6 @@ QUnit.module('Views', {
         assert.ok(!!$testLink[0].href,
             "link inside kanban record should have non-empty href");
 
-        // Mocked views prevent accessing a link with href. This is intented
-        // most of the time, but not in this test which specifically needs to
-        // let the browser access a link with href.
-        kanban.$el.off('click', 'a');
         // Prevent the browser default behaviour when clicking on anything.
         // This includes clicking on a `<a>` with `href`, so that it does not
         // change the URL in the address bar.
@@ -4944,7 +4941,7 @@ QUnit.module('Views', {
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
                         _.find(records, function (record) {
-                            return record.id === partnerID; 
+                            return record.id === partnerID;
                         }).active = false;
                     })
                     this.data.partner.records[0].active;
@@ -5001,7 +4998,7 @@ QUnit.module('Views', {
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
                         _.find(records, function (record) {
-                            return record.id === partnerID; 
+                            return record.id === partnerID;
                         }).active = false;
                     })
                     this.data.partner.records[0].active;

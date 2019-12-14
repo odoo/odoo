@@ -686,6 +686,7 @@ var SnippetsMenu = Widget.extend({
     cacheSnippetTemplate: {},
     events: {
         'click .o_install_btn': '_onInstallBtnClick',
+        'click .o_we_invisible_entry': '_onInvisibleEntryClick',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -696,7 +697,9 @@ var SnippetsMenu = Widget.extend({
         'drag_and_drop_stop': '_onDragAndDropStop',
         'go_to_parent': '_onGoToParent',
         'remove_snippet': '_onRemoveSnippet',
+        'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_removed': '_onSnippetRemoved',
+        'snippet_cloned': '_onSnippetCloned',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'update_customize_elements': '_onUpdateCustomizeElements',
         'hide_overlay': '_onHideOverlay',
@@ -734,6 +737,8 @@ var SnippetsMenu = Widget.extend({
         this._activateSnippetMutex = new concurrency.Mutex();
         this._enabledEditorHierarchy = [];
 
+        this._snippetEditionMutex = new concurrency.Mutex();
+
         this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
     },
     /**
@@ -754,6 +759,19 @@ var SnippetsMenu = Widget.extend({
             this.customizePanel = document.createElement('div');
             this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
             this.$el.append(this.customizePanel);
+
+            this.invisibleDOMPanelEl = document.createElement('div');
+            this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
+            this.invisibleDOMPanelEl.appendChild(
+                $('<div/>', {
+                    text: _t('Invisible'),
+                    class: 'o_panel_header',
+                }).prepend(
+                    $('<i/>', {class: 'fa fa-eye-slash'})
+                )[0]
+            );
+            this.$el.append(this.invisibleDOMPanelEl);
+            this._updateInvisibleDOM();
         }));
 
         // Prepare snippets editor environment
@@ -781,7 +799,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay').length) {
+            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay, .ui-autocomplete').length) {
                 return;
             }
             this._activateSnippet($target);
@@ -1072,6 +1090,28 @@ var SnippetsMenu = Widget.extend({
                 zone.remove();
             }
         });
+    },
+    /**
+     * Adds an entry for every invisible snippet in the left panel box.
+     * The entries will contains an 'Edit' button to activate their snippet.
+     *
+     * @private
+     */
+    _updateInvisibleDOM: function () {
+        this.invisibleDOMMap = new Map();
+        const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
+        $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
+        const $invisibleSnippets = this.getEditableArea().find('.o_snippet_invisible');
+
+        _.each($invisibleSnippets, el => {
+            const $invisEntry = $('<div/>', {
+                class: 'o_we_invisible_entry d-flex align-items-center',
+                text: _t(el.getAttribute('string')),
+            }).append($('<i/>', {class: 'fa fa-edit ml-2'}));
+            $invisibleDOMPanelEl.append($invisEntry);
+            this.invisibleDOMMap.set($invisEntry[0], el);
+        });
+        $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
     },
     /**
      * Disable the overlay editor of the active snippet and activate the new one
@@ -1613,6 +1653,8 @@ var SnippetsMenu = Widget.extend({
                         self.trigger_up('snippet_dropped', {$target: $target});
                         self._disableUndroppableSnippets();
 
+                        self._updateInvisibleDOM();
+
                         self._callForEachChildSnippet($target, function (editor, $snippet) {
                             editor.buildSnippet();
                         }).then(function () {
@@ -1794,6 +1836,21 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * @private
+     * @param {Event} ev
+     */
+    _onInvisibleEntryClick: function (ev) {
+        ev.preventDefault();
+        const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
+        let prom = null;
+        $snippet.trigger('invisible_snippet_activation', {
+            onSuccess: _prom => prom = _prom,
+        });
+        Promise.resolve(prom).then(() => {
+            return this._activateSnippet($snippet);
+        });
+    },
+    /**
+     * @private
      */
     _onBlockPreviewOverlays: function (ev) {
         this._blockPreviewOverlays = true;
@@ -1815,6 +1872,21 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {function} ev.data.exec
+     */
+    _onSnippetEditionRequest: function (ev) {
+        this._snippetEditionMutex.exec(ev.data.exec);
+    },
+    /**
+     * @private
+     */
+    _onSnippetCloned: function (ev) {
+        this._updateInvisibleDOM();
+    },
+    /**
      * Called when a snippet is removed -> checks if there is draggable snippets
      * to enable/disable as the DOM changed.
      *
@@ -1822,6 +1894,7 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetRemoved: function () {
         this._disableUndroppableSnippets();
+        this._updateInvisibleDOM();
     },
     /**
      * @private

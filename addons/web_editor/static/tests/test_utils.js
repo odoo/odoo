@@ -31,7 +31,7 @@ MockServer.include({
                         '        <button data-color="delta"></button>' +
                         '        <button data-color="epsilon"></button>' +
                         '    </div>' +
-                        '    <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="far fa-eye-slash">' +
+                        '    <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">' +
                         '        <button class="o_btn_transparent"></button>' +
                         '        <button data-color="black-25"></button>' +
                         '        <button data-color="black-50"></button>' +
@@ -82,7 +82,7 @@ MockServer.include({
                         '        <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>' +
                         '    </div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
-                        '       <we-button data-choose-image="true" data-no-preview="true"><i class="far fa-image"/> Background Image</we-button>' +
+                        '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
                         '        <we-select string="Alignment">' +
@@ -199,7 +199,7 @@ function wysiwygData(data) {
                         '        <button data-color="delta"></button>' +
                         '        <button data-color="epsilon"></button>' +
                         '    </div>' +
-                        '    <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="far fa-eye-slash">' +
+                        '    <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">' +
                         '        <button class="o_btn_transparent"></button>' +
                         '        <button data-color="black-25"></button>' +
                         '        <button data-color="black-50"></button>' +
@@ -251,7 +251,7 @@ function wysiwygData(data) {
                         '        <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>' +
                         '    </div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
-                        '       <we-button data-choose-image="true" data-no-preview="true"><i class="far fa-image"/> Background Image</we-button>' +
+                        '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
                         '        <we-select string="Alignment">' +

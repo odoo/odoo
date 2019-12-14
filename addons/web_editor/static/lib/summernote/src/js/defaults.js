@@ -70,15 +70,15 @@ define('summernote/defaults', function () {
           subscript: 'subscript'
         },
         image: {
-          image: 'image',
+          image: 'picture-o',
           floatLeft: 'align-left',
           floatRight: 'align-right',
           floatNone: 'align-justify',
           shapeRounded: 'square',
-          shapeCircle: 'circle',
-          shapeThumbnail: 'image',
+          shapeCircle: 'circle-o',
+          shapeThumbnail: 'picture-o',
           shapeNone: 'times',
-          remove: 'trash-alt'
+          remove: 'trash-o'
         },
         link: {
           link: 'link',
@@ -117,7 +117,7 @@ define('summernote/defaults', function () {
         },
         history: {
           undo: 'undo',
-          redo: 'redo'
+          redo: 'repeat'
         },
         misc: {
           check: 'check'

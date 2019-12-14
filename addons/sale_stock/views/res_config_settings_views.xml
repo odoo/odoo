@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='ups']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box">
+                <div class="col-12 col-lg-6 o_setting_box" id="display_incoterms_setting">
                     <div class="o_setting_left_pane">
                         <field name="group_display_incoterm"/>
                     </div>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="use_security_lead"/>
-                        <span class="far fa-lg fa-building" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
                         <div class="text-muted">
                             Schedule deliveries earlier to avoid delays
                         </div>

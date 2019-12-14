@@ -58,8 +58,8 @@
                                 <div class="o_setting_right_pane">
                                     <label for="use_mail_schedule"/>
                                     <div class="row mt16" attrs="{'invisible': [('use_mail_schedule', '=', False)]}">
-                                        <div class="col-lg-9">
-                                            <field name="event_type_mail_ids">
+                                        <div class="col-12">
+                                            <field name="event_type_mail_ids" style="width: 100%;">
                                                 <tree string="Communication" editable="bottom">
                                                     <field name="notification_type" invisible="1"/>
                                                     <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
@@ -205,7 +205,7 @@
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="Event Name"/></h1>
@@ -236,7 +236,7 @@
                                 <label for="date_begin" string="Date"/>
                                 <div class="o_row">
                                     <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
-                                    <i class="fas fa-long-arrow-alt-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
                                 <field name="date_tz"/>
@@ -340,7 +340,7 @@
                                     <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <b><i class="far fa-clock"/>
+                                        <b><i class="fa fa-clock-o"/>
                                         To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
                                     <h4>
@@ -467,7 +467,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="message_needaction" invisible="1"/>
                     <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
-                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down-alt text-success"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -517,7 +517,7 @@
             <field name="model">event.registration</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_event_attendee_kanban">
+                <kanban class="o_event_attendee_kanban" default_order="name, create_date desc">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="state"/>

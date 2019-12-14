@@ -10,14 +10,14 @@
                 <xpath expr="//div[hasclass('settings')]" position="inside" >
                     <div class="app_settings_block" data-string="Inventory" string="Inventory" data-key="stock" groups="stock.group_stock_manager">
                         <h2>Operations</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="operations_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="process_operations_barcodes">
                                 <div class="o_setting_left_pane">
                                     <field name="module_stock_barcode" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" id="barcode_settings">
                                     <label for="module_stock_barcode"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted" name="stock_barcode">
                                         Process operations faster with barcodes
                                     </div>
@@ -26,7 +26,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="Put your products in packs (e.g. parcels, boxes) and track them">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="product_packs_tracking"
+                                title="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_tracking_lot"/>
                                 </div>
@@ -37,7 +39,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="process_transfers">
                                 <div class="o_setting_left_pane">
                                     <field name="module_stock_picking_batch"/>
                                 </div>
@@ -61,14 +63,14 @@
                             </div>
                         </div>
                         <h2>Shipping</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="shipping_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="stock_move_email">
                                 <div class="o_setting_left_pane">
                                     <field name="stock_move_email_validation"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="stock_move_email_validation" string="Email Confirmation"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Send an automatic confirmation email when Delivery Orders are done
                                     </div>
@@ -78,13 +80,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="stock_sms">
                                 <div class="o_setting_left_pane">
                                     <field name="module_stock_sms"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_stock_sms"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Send an automatic confirmation SMS Text Message when Delivery Orders are done
                                     </div>
@@ -93,7 +95,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="signature_delivery_orders">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_sign_delivery"/>
                                 </div>
@@ -115,7 +117,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_ups">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_ups" widget="upgrade_boolean"/>
                                 </div>
@@ -129,7 +131,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_dhl">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_dhl" widget="upgrade_boolean"/>
                                 </div>
@@ -143,7 +145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_fedex">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_fedex" widget="upgrade_boolean"/>
                                 </div>
@@ -157,7 +159,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_usps">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_usps" widget="upgrade_boolean"/>
                                 </div>
@@ -171,7 +173,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_bpost">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_bpost" widget="upgrade_boolean"/>
                                 </div>
@@ -186,7 +188,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_easypost">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_easypost" widget="upgrade_boolean"/>
                                 </div>
@@ -202,8 +204,8 @@
                             </div>
                         </div>
                         <h2>Products</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="product_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="product_attributes">
                                 <div class="o_setting_left_pane">
                                     <field name="group_product_variant"/>
                                 </div>
@@ -219,7 +221,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="sell_purchase_uom">
                                 <div class="o_setting_left_pane">
                                     <field name="group_uom"/>
                                 </div>
@@ -235,7 +237,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="manage_product_packaging"
+                                title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_packaging"/>
                                 </div>
@@ -254,7 +258,7 @@
                         </div>
                         <h2>Traceability</h2>
                         <div class="row mt16 o_settings_container" id="production_lot_info">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="full_traceability">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_production_lot"/>
                                 </div>
@@ -265,7 +269,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="expiration_dates_serial_numbers"
+                                attrs="{'invisible': [('group_stock_production_lot', '=', False)]}"
+                                title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
                                 <div class="o_setting_left_pane">
                                     <field name="module_product_expiry"/>
                                 </div>
@@ -287,7 +294,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="owner_stored_products">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_tracking_owner"/>
                                 </div>
@@ -300,8 +307,10 @@
                             </div>
                         </div>
                         <h2 class="mt32">Warehouse</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
+                        <div class="row mt16 o_settings_container" name="warehouse_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="track_product_location"
+                                title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_multi_locations"/>
                                 </div>
@@ -318,7 +327,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="manage_several_warehouses">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_multi_warehouses"/>
                                 </div>
@@ -334,7 +343,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="use_own_routes"
+                                title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_adv_location"/>
                                 </div>

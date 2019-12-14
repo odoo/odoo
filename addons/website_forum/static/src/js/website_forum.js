@@ -394,8 +394,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this._rpc({
             route: $link.data('href'),
         }).then(function (data) {
-            $link.toggleClass('o_wforum_gold fas fa-star', data)
-                 .toggleClass('far fa-star text-muted', !data);
+            $link.toggleClass('o_wforum_gold fa-star', data)
+                 .toggleClass('fa-star-o text-muted', !data);
         });
     },
     /**

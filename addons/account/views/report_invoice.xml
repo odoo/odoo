@@ -70,7 +70,7 @@
                         <tbody class="invoice_tbody">
                             <t t-set="current_subtotal" t-value="0"/>
 
-                            <t t-foreach="o.invoice_line_ids" t-as="line">
+                            <t t-foreach="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)" t-as="line">
 
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
@@ -197,7 +197,7 @@
                 <t t-foreach="payments_vals" t-as="payment_vals">
                     <tr>
                         <td>
-                            <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']"/></i>
+                            <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
                         </td>
                         <td class="text-right">
                             <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>

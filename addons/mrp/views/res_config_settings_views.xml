@@ -10,7 +10,7 @@
                 <xpath expr="//div[hasclass('settings')]" position="inside">
                     <div class="app_settings_block" data-string="Manufacturing" string="Manufacturing" data-key="mrp" groups="mrp.group_mrp_manager">
                         <h2>Operations</h2>
-                        <div class="row mt16 o_settings_container">
+                        <div class="row mt16 o_settings_container" name="process_operations_setting_container">
                             <div class="col-lg-6 col-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required components.">
                                 <div class="o_setting_left_pane">
                                     <field name="group_mrp_routings"/>
@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Security Lead Time" for="use_manufacturing_lead"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Schedule manufacturing orders earlier to avoid delays
                                      </div>

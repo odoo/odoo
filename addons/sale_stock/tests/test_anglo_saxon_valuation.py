@@ -155,7 +155,7 @@ class TestAngloSaxonValuation(SavepointCase):
         """
         self.product.categ_id.property_cost_method = 'standard'
         self.product.invoice_policy = 'order'
-        self.product._change_standard_price(10.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 10.0
 
         # Put two items in stock.
         self._inv_adj_two_units()
@@ -164,7 +164,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order = self._so_and_confirm_two_units()
 
         # standard price to 14
-        self.product._change_standard_price(14.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 14.0
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -192,7 +192,7 @@ class TestAngloSaxonValuation(SavepointCase):
         The amounts used in Stock OUT and COGS should be 10 then 14."""
         self.product.categ_id.property_cost_method = 'standard'
         self.product.invoice_policy = 'order'
-        self.product._change_standard_price(10.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 10.0
 
         # Put two items in stock.
         sale_order = self._so_and_confirm_two_units()
@@ -203,7 +203,7 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # Invoice 1
@@ -231,14 +231,14 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(income_aml.credit, 12)
 
         # change the standard price to 14
-        self.product._change_standard_price(14.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 14.0
 
         # deliver the backorder
         sale_order.picking_ids[0].move_lines.quantity_done = 1
         sale_order.picking_ids[0].button_validate()
 
         # change the standard price to 16
-        self.product._change_standard_price(16.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 16.0
 
         # invoice 1
         invoice2 = sale_order._create_invoices()
@@ -275,11 +275,11 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # change the standard price to 14
-        self.product._change_standard_price(14.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 14.0
 
         # deliver the backorder
         sale_order.picking_ids.filtered('backorder_id').move_lines.quantity_done = 1
@@ -342,7 +342,7 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # Invoice 1
@@ -370,14 +370,14 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(income_aml.credit, 12)
 
         # change the standard price to 14
-        self.product._change_standard_price(14.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 14.0
 
         # deliver the backorder
         sale_order.picking_ids[0].move_lines.quantity_done = 1
         sale_order.picking_ids[0].button_validate()
 
         # change the standard price to 16
-        self.product._change_standard_price(16.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 16.0
 
         # invoice 1
         invoice2 = sale_order._create_invoices()
@@ -414,11 +414,11 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # change the standard price to 14
-        self.product._change_standard_price(14.0, counterpart_account_id=self.counterpart_account.id)
+        self.product.standard_price = 14.0
 
         # deliver the backorder
         sale_order.picking_ids.filtered('backorder_id').move_lines.quantity_done = 1
@@ -494,7 +494,7 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # Invoice the sale order.
@@ -588,7 +588,7 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # Invoice the sale order.
@@ -669,9 +669,9 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.stock_output_account)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 0)
+        self.assertAlmostEqual(stock_out_aml.credit, 16)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.expense_account)
-        self.assertEqual(cogs_aml.debit, 0)
+        self.assertAlmostEqual(cogs_aml.debit, 16)
         self.assertEqual(cogs_aml.credit, 0)
         receivable_aml = amls.filtered(lambda aml: aml.account_id == self.recv_account)
         self.assertEqual(receivable_aml.debit, 24)
@@ -694,7 +694,7 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # upate the standard price to 12
@@ -790,7 +790,7 @@ class TestAngloSaxonValuation(SavepointCase):
         # Deliver one.
         sale_order.picking_ids.move_lines.quantity_done = 1
         wiz = sale_order.picking_ids.button_validate()
-        wiz = self.env[wiz['res_model']].browse(wiz['res_id']).with_context(wiz['context'])
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
         wiz.process()
 
         # upate the standard price to 12

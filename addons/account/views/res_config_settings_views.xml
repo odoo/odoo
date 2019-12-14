@@ -20,12 +20,12 @@
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
                         <h2 attrs="{'invisible': [('has_accounting_entries','!=',False)]}">Fiscal Localization</h2>
-                        <div class="row mt16 o_settings_container">
+                        <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Fiscal Localization</span>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Taxes, fiscal positions, chart of accounts &amp; legal statements for your country
                                     </div>
@@ -42,12 +42,14 @@
                             </div>
                         </div>
                         <h2>Taxes</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box" title="These taxes are set in any new product created.">
+                        <div class="row mt16 o_settings_container" name="default_taxes_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="default_taxes"
+                                title="These taxes are set in any new product created.">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Default Taxes</span>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Default taxes applied to local transactions
                                     </div>
@@ -67,7 +69,7 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Rounding Method</span>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         How total tax amount is computed in orders and invoices
                                     </div>
@@ -98,13 +100,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation." groups="account.group_account_user">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="tax_exigibility"
+                                title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
+                                groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
                                     <field name="tax_exigibility"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="tax_exigibility"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Allow to configure taxes using cash basis
                                     </div>
@@ -118,12 +123,12 @@
                             </div>
                         </div>
                         <h2>Currencies</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="main_currency_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="main_currency">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Main Currency</span>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Main currency of your company
                                     </div>
@@ -135,7 +140,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="record_transactions">
                                 <div class="o_setting_left_pane">
                                     <field name="group_multi_currency"/>
                                 </div>
@@ -155,7 +160,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="update_exchange_rates"
+                                attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                 <div class="o_setting_left_pane">
                                     <field name="module_currency_rate_live" widget="upgrade_boolean"/>
                                 </div>
@@ -169,7 +176,7 @@
                         </div>
                         <h2>Customer Invoices</h2>
                         <div class="row mt16 o_settings_container" id="invoicing_settings">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="default_setting_options">
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -182,18 +189,18 @@
                                             <div class="row">
                                                 <field name="invoice_is_print" class="col-lg-1 ml16"/>
                                                 <label for="invoice_is_print"/>
-                                                <span class="far fa-lg fa-building" title="Values set here are company-specific."/>
+                                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
                                             </div>
                                             <div class="row">
                                                 <field name="invoice_is_email" class="col-lg-1 ml16"/>
                                                 <label for="invoice_is_email"/>
-                                                <span class="far fa-lg fa-building" title="Values set here are company-specific."/>
+                                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="send_invoices_followups">
                                 <div class="o_setting_left_pane">
                                     <field name="module_snailmail_account"/>
                                 </div>
@@ -204,7 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="line_subtotals">
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -219,13 +226,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="use_invoice_terms">
                                 <div class="o_setting_left_pane">
                                     <field name="use_invoice_terms"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="use_invoice_terms"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Show standard terms &amp; conditions on invoices/orders
                                     </div>
@@ -236,7 +243,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="get_invoice_warnings">
                                 <div class="o_setting_left_pane">
                                     <field name="group_warning_account"/>
                                 </div>
@@ -247,7 +254,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="smallest_coinage_currency">
                                 <div class="o_setting_left_pane">
                                     <field name="group_cash_rounding"/>
                                 </div>
@@ -263,7 +270,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" >
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="intrastat_statistics">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_intrastat" widget="upgrade_boolean"/>
                                 </div>
@@ -274,7 +281,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="default_incoterm">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Default Incoterm</span>
@@ -288,7 +295,7 @@
                             </div>
                         </div>
                         <h2>Customer Payments</h2>
-                        <div class="row mt16 o_settings_container">
+                        <div class="row mt16 o_settings_container" id="pay_invoice_online_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_payment"/>
@@ -300,7 +307,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" groups="account.group_account_user">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="account_batch_payment"
+                                groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_batch_payment" widget="upgrade_boolean"/>
                                 </div>
@@ -311,13 +320,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="If you check this box, you will be able to collect payments using SEPA Direct Debit mandates.">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="collect_customer_payment"
+                                title="If you check this box, you will be able to collect payments using SEPA Direct Debit mandates.">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_sepa_direct_debit" class="oe_inline" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_direct_debit_right_pane">
                                     <label string="SEPA Direct Debit (SDD)" for="module_account_sepa_direct_debit"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Collect customer payments in one-click using Euro SEPA Service
                                     </div>
@@ -328,13 +339,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Add an EPC QR code to your invoices so that your customers can pay instantly with their mobile banking application. EPC QR codes are used by many European banks to process SEPA payments.">
+                            <div class="col-xs-12 col-md-6 o_setting_box"
+                                id="qr_code_invoices"
+                                title="Add an EPC QR code to your invoices so that your customers can pay instantly with their mobile banking application. EPC QR codes are used by many European banks to process SEPA payments.">
                                 <div class="o_setting_left_pane">
                                     <field name="qr_code" class="oe_inline" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="qr_code_right_pane">
                                     <label string="SEPA QR Code" for="qr_code"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Add a payment QR code to your invoices
                                     </div>
@@ -361,26 +374,28 @@
                             </div>
                         </div>
                         <h2>Vendor Payments</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box" groups="account.group_account_user">
+                        <div class="row mt16 o_settings_container" id="print_vendor_checks_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="print_checks" groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_check_printing" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Checks" for="module_account_check_printing"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted" id="print_bills_payment">
                                         Print checks to pay your vendors
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="If you check this box, you will be able to register your payment using SEPA.">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="sepa_payments"
+                                title="If you check this box, you will be able to register your payment using SEPA.">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_sepa" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_right_pane">
                                     <label for="module_account_sepa"/>
-                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Pay your bills in one-click using Euro SEPA Service
                                     </div>
@@ -401,7 +416,9 @@
                                             <field name="account_bank_reconciliation_start"/>
                                         </div>
                                     </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="account_yodlee" title="Get your bank statements automatically imported every 4 hours, or in one-click, using Yodlee and Plaid services. Once installed, set “Bank Feeds” to “Bank Synchronization” in bank account settings. Then, click “Configure” on the online account to enter your bank credentials.">
+                                <div class="col-12 col-lg-6 o_setting_box" 
+                                    id="account_yodlee"
+                                    title="Get your bank statements automatically imported every 4 hours, or in one-click, using Yodlee and Plaid services. Once installed, set “Bank Feeds” to “Bank Synchronization” in bank account settings. Then, click “Configure” on the online account to enter your bank credentials.">
                                     <div class="o_setting_left_pane">
                                         <field name="module_account_yodlee" widget="upgrade_boolean"/>
                                     </div>
@@ -412,7 +429,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                    id="import_bank_statements_csv"
+                                    title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
                                     <div class="o_setting_left_pane">
                                         <field name="module_account_bank_statement_import_csv" widget="upgrade_boolean"/>
                                     </div>
@@ -445,7 +464,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                    id="import_bank_statement_camt"
+                                    title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
                                     <div class="o_setting_left_pane">
                                         <field name="module_account_bank_statement_import_camt" widget="upgrade_boolean"/>
                                     </div>
@@ -477,7 +498,10 @@
                         </t>
                         <h2>Analytics</h2>
                         <div class="row mt16 o_settings_container" id="analytic">
-                            <div class="col-12 col-lg-6 o_setting_box" title="Allows you to use the analytic accounting." groups="account.group_account_user">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="track_costs_revenues"
+                                title="Allows you to use the analytic accounting."
+                                groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
                                     <field name="group_analytic_accounting"/>
                                 </div>
@@ -488,7 +512,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" groups="account.group_account_user">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="tag_analytic_entries"
+                                groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
                                     <field name="group_analytic_tags"/>
                                 </div>
@@ -510,7 +536,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="monitor_product_margins">
                                 <div class="o_setting_left_pane">
                                     <field name="module_product_margin"/>
                                 </div>

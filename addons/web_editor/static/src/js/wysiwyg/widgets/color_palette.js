@@ -158,15 +158,31 @@ const ColorPaletteWidget = Widget.extend({
                 return ColorpickerDialog.normalizeCSSColor(el.style.backgroundColor);
             })
         ));
+        this.trigger_up('get_custom_colors', {
+            onSuccess: (colors) => {
+                colors.forEach(color => {
+                    this._addCustomColor(existingColors, color);
+                });
+            },
+        });
         _.each(this.options.$editable.find('[style*="color"]'), el => {
             for (const colorProp of ['color', 'backgroundColor']) {
-                const color = ColorpickerDialog.normalizeCSSColor(el.style[colorProp]);
-                if (color && !existingColors.has(color)) {
-                    this._addCustomColorButton(color);
-                    existingColors.add(color);
-                }
+                this._addCustomColor(existingColors, el.style[colorProp]);
             }
         });
+    },
+    /**
+     * Add the color to the custom color section if it is not in the existingColors.
+     *
+     * @param {string[]} existingColors Colors currently in the colorpicker
+     * @param {string} color Color to add to the cuustom colors
+     */
+    _addCustomColor: function (existingColors, color) {
+        const normColor = ColorpickerDialog.normalizeCSSColor(color);
+        if (color && !existingColors.has(normColor)) {
+            this._addCustomColorButton(normColor);
+            existingColors.add(normColor);
+        }
     },
     /**
      * Add a custom button in the coresponding section.

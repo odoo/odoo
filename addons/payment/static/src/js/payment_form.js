@@ -131,7 +131,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     disableButton: function (button) {
         $(button).attr('disabled', true);
         $(button).children('.fa-lock').removeClass('fa-lock');
-        $(button).prepend('<span class="o_loader"><i class="fas fa-sync fa-spin"></i>&nbsp;</span>');
+        $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
     },
 
     enableButton: function (button) {
@@ -386,7 +386,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             // We add a 'processing' icon into the 'add a new payment' button
             $(button).attr('disabled', true);
             $(button).children('.fa-plus-circle').removeClass('fa-plus-circle');
-            $(button).prepend('<span class="o_loader"><i class="fas fa-sync fa-spin"></i>&nbsp;</span>');
+            $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
             // do the call to the route stored in the 'data_set' input of the acquirer form, the data must be called 'create-route'
             this._rpc({

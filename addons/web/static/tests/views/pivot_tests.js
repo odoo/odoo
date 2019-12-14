@@ -3,6 +3,7 @@ odoo.define('web.pivot_tests', function (require) {
 
 var core = require('web.core');
 var PivotView = require('web.PivotView');
+var PivotRenderer = require('web.PivotRenderer');
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 
@@ -10,7 +11,7 @@ var _t = core._t;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
-
+const oldEnv = PivotRenderer.env;
 /**
  * Helper function that returns, given a pivot instance, the values of the
  * table, separated by ','.
@@ -108,7 +109,7 @@ QUnit.module('Views', {
                 }]
             },
         };
-    }
+    },
 }, function () {
     QUnit.module('PivotView');
 
@@ -336,21 +337,21 @@ QUnit.module('Views', {
 
         // check column highlighting
         // hover third measure
-        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseenter');
+        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseover');
         assert.containsN(pivot, '.o_cell_hover', 3);
         for (var i = 0; i < 3; i++) {
             assert.hasClass(pivot.$('tbody tr:nth(' + i + ') td:nth(2)'), 'o_cell_hover');
         }
-        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseleave');
+        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseout');
         assert.containsNone(pivot, '.o_cell_hover');
 
         // hover second cell, second row
-        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseenter');
+        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseover');
         assert.containsN(pivot, '.o_cell_hover', 3);
         for (i = 0; i < 3; i++) {
             assert.hasClass(pivot.$('tbody tr:nth(' + i + ') td:nth(1)'), 'o_cell_hover');
         }
-        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseleave');
+        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseout');
         assert.containsNone(pivot, '.o_cell_hover');
 
         pivot.destroy();
@@ -595,7 +596,6 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-
         assert.containsN(pivot, 'tbody tr', 3,
             "should have 3 rows: 1 for the opened header, and 2 for data");
 
@@ -608,9 +608,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
         assert.containsN(pivot, '.o_pivot_field_menu .dropdown-item[data-field="date"]', 6,
             "should have the date field as proposition (Date, Day, Week, Month, Quarter and Year)");
-        assert.containsOnce(pivot, '.o_field_selection .dropdown-item[data-field="product_id"]',
+        assert.containsOnce(pivot, '.o_pivot_field_menu .dropdown-item[data-field="product_id"]',
             "should have the product_id field as proposition");
-        assert.containsNone(pivot, '.o_field_selection .dropdown-item[data-field="non_stored_m2o"]:first',
+        assert.containsNone(pivot, '.o_pivot_field_menu .dropdown-item[data-field="non_stored_m2o"]',
             "should not have the non_stored_m2o field as proposition");
 
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first'));
@@ -641,7 +641,7 @@ QUnit.module('Views', {
         // click on date by day
         pivot.$('.dropdown-menu.show .o_inline_dropdown .dropdown-menu').toggle(); // unfold inline dropdown
         await testUtils.nextTick();
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][data-interval="day"]'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:contains("Day")'));
 
         // open dropdown to zoom into second row
         await testUtils.dom.clickLast(pivot.$('tbody th.o_pivot_header_cell_closed'));
@@ -1016,7 +1016,6 @@ QUnit.module('Views', {
 
         // expand on date:days, product
         await testUtils.pivot.reload(pivot, {groupBy: ['date:days', 'product_id']});
-
         assert.containsN(pivot, 'tbody tr', 8,
             "should have 7 rows (total + 3 for December and 2 for October and April)");
 
@@ -1030,12 +1029,14 @@ QUnit.module('Views', {
         // expand all
         def = testUtils.makeTestPromise();
         await testUtils.dom.click(pivot.$buttons.find('.o_pivot_expand_button'));
+        await testUtils.nextTick();
         def.resolve();
+        // await testUtils.returnAfterNextAnimationFrame();
         await testUtils.nextTick();
         assert.containsN(pivot, 'tbody tr', 8,
             "should have 8 rows again");
 
-        pivot.destroy();
+       pivot.destroy();
     });
 
     QUnit.test('can download a file', async function (assert) {
@@ -1312,8 +1313,8 @@ QUnit.module('Views', {
         });
 
         // Set a column groupby
-        pivot.$('thead .o_pivot_header_cell_closed').click();
-        await testUtils.dom.click(pivot.$('.o_field_selection .dropdown-item[data-field=customer]'));
+        await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=customer]'));
 
         // Set a domain
         await pivot.update({domain: [['product_id', '=', 37]], groupBy: [], context: {}});
@@ -1327,8 +1328,8 @@ QUnit.module('Views', {
             'Column groupby not lost after first reload');
 
         // Set a column groupby
-        pivot.$('thead .o_pivot_header_cell_closed').click();
-        await testUtils.dom.click(pivot.$('.o_field_selection .dropdown-item[data-field=product_id]'));
+        await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]'));
 
         // Set a domain
         await pivot.update({domain: [['product_id', '=', 41]], groupBy: [], context: {}});
@@ -1419,8 +1420,8 @@ QUnit.module('Views', {
         });
 
         // Set a column groupby
-        pivot.$('thead .o_pivot_header_cell_closed').click();
-        pivot.$('.o_field_selection .dropdown-item[data-field=customer]').click();
+        await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=customer]'));
 
         // Set a domain for empty results
         await pivot.update({domain: [['id', '=', false]]});
@@ -1701,7 +1702,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
         // click on date by month
         pivot.$('.dropdown-menu.show .o_inline_dropdown .dropdown-menu').toggle(); // unfold inline dropdown
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][data-interval="month"]'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:contains("Month")'));
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
             'should have loaded the proper data');
@@ -1765,7 +1766,7 @@ QUnit.module('Views', {
 
         // Set a column groupby
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_field_selection .dropdown-item[data-field=customer]:first'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=customer]:first'));
 
         // Set a Row groupby
         await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
@@ -1974,7 +1975,7 @@ QUnit.module('Views', {
 
         // with data, with row groupby
         await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_header_cell_closed').eq(2));
-        await testUtils.dom.click(pivot.$('.o_pivot .o_field_selection a[data-field="product_id"]'));
+        await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_field_menu a[data-field="product_id"]'));
         values = [
             "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%",
             "12", "0", "100%",                     "12", "0" , "100%",
@@ -2517,7 +2518,7 @@ QUnit.module('Views', {
             },
         });
 
-        await testUtils.dom.click($('td').eq(1));
+        await testUtils.dom.click($('div .o_value')[1]);
 
         unpatchDate();
         pivot.destroy();
@@ -2569,7 +2570,7 @@ QUnit.module('Views', {
     QUnit.test('group bys added via control panel and expand Header do not stack', async function (assert) {
         assert.expect(8);
 
-        delete this.data.partner.fields['date']
+        delete this.data.partner.fields['date'];
 
         var pivot = await createView({
             View: PivotView,
@@ -2620,7 +2621,7 @@ QUnit.module('Views', {
             ].join(''),
             "The row headers should be as expected"
         );
-        
+
         // Set a Row groupby
         await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed').eq(0));
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first'));
@@ -2668,6 +2669,32 @@ QUnit.module('Views', {
             ].join(''),
             "The row headers should be as expected"
         );
+
+        pivot.destroy();
+    });
+
+    QUnit.test('display only one dropdown menu', async function (assert) {
+        assert.expect(1);
+
+        var pivot = await createView({
+            View: PivotView,
+            model: 'partner',
+            data: this.data,
+            arch: '<pivot>' +
+                    '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        await testUtils.dom.clickFirst(pivot.$('th.o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first'));
+
+        // Click on the two dropdown
+        await testUtils.dom.click(pivot.$('th.o_pivot_header_cell_closed')[0]);
+        await testUtils.dom.click(pivot.$('th.o_pivot_header_cell_closed')[1]);
+
+        assert.containsOnce(pivot, '.o_pivot_field_menu', 'Only one dropdown should be displayed at a time');
 
         pivot.destroy();
     });

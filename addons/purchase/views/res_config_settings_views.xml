@@ -14,13 +14,13 @@
                     <field name="po_lock" invisible="1"/>
                     <h2>Orders</h2>
                     <div class="row mt16 o_settings_container" name="purchase_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="po_order_approval">
                             <div class="o_setting_left_pane">
                                 <field name="po_order_approval"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="po_order_approval"/>
-                                <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                 <div class="text-muted">
                                     Request managers to approve orders above a minimum amount
                                 </div>
@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="automatic_lock_confirmed_orders">
                             <div class="o_setting_left_pane">
                                 <field name="lock_confirmed_po"/>
                             </div>
@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="get_order_warnings">
                             <div class="o_setting_left_pane">
                                 <field name="group_warning_purchase"/>
                             </div>
@@ -54,7 +54,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="manage_purchase_agreements"
+                            title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
                             <div class="o_setting_left_pane">
                                 <field name="module_purchase_requisition"/>
                             </div>
@@ -70,8 +72,8 @@
                         </div>
                     </div>
                     <h2>Invoicing</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                    <div class="row mt16 o_settings_container" name="invoicing_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="quantities_billed_vendor" title="This default value is applied to any new product created. This can be changed in the product detail form.">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="default_purchase_method"/>
@@ -85,7 +87,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice.">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="three_way_matching"
+                            title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice.">
                             <div class="o_setting_left_pane">
                                 <field name="module_account_3way_match" string="3-way matching" widget="upgrade_boolean"/>
                             </div>
@@ -98,8 +102,10 @@
                         </div>
                     </div>
                     <h2>Products</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="If installed, the product variants will be added to purchase orders through a grid entry.">
+                    <div class="row mt16 o_settings_container" name="matrix_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="product_matrix"
+                            title="If installed, the product variants will be added to purchase orders through a grid entry.">
                             <div class="o_setting_left_pane">
                                 <field name="module_purchase_product_matrix"/>
                             </div>

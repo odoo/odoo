@@ -236,7 +236,7 @@ QUnit.module('web_editor', {}, function () {
             var pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 1);
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image)'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)'));
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
@@ -287,19 +287,19 @@ QUnit.module('web_editor', {}, function () {
             var pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 1);
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image)'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)'));
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
             await testUtils.dom.click($('.modal a[aria-controls="editor-media-icon"]'));
-            await testUtils.dom.click($('.modal #editor-media-icon .font-icons-icon.fa-glass-martini'));
+            await testUtils.dom.click($('.modal #editor-media-icon .font-icons-icon.fa-glass'));
             await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
 
             assert.strictEqual($editable.data('wysiwyg').getValue(),
-                '<p>t<span class="fa fa-glass-martini"></span>oto toto toto</p><p>tata</p>',
+                '<p>t<span class="fa fa-glass"></span>oto toto toto</p><p>tata</p>',
                 "should have the image in the dom");
 
             testUtils.mock.unpatch(MediaDialog);
@@ -377,26 +377,6 @@ QUnit.module('web_editor', {}, function () {
                 '<p>toto toto toto</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
-            form.destroy();
-        });
-
-        QUnit.test('save immediately before iframe is rendered in edit mode', async function (assert) {
-            assert.expect(1);
-
-            var form = await testUtils.createAsyncView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
-            await testUtils.form.clickSave(form);
-            await testUtils.nextTick();
-            assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
             form.destroy();
         });
 

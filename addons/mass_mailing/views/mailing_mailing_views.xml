@@ -101,9 +101,9 @@
                                 id="button_view_sent"
                                 type="object"
                                 context="{'search_default_filter_sent': True}"
-                                icon="far fa-envelope" class="oe_stat_button o_mass_mailing_button"
-                                attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft','test'))]}" >
-                                <field name="sent" string="Emails Sent" widget="statinfo"/>
+                                icon="fa-envelope-o" class="oe_stat_button"
+                                attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}" >
+                                <field name="sent" string="Sent" widget="statinfo"/>
                             </button>
                             <button name="action_view_delivered"
                                 type="object"
@@ -134,12 +134,12 @@
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                            <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                            <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis"/>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="row">
@@ -340,7 +340,7 @@
                                 </div>
                                 <div name="div_responsible_avatar">
                                     <span attrs="{'invisible': [('sent_date', '=', False)]}">
-                                        <span class="fa fa-clock text-muted mr-2" aria-label="Sent date"/>
+                                        <span class="fa fa-clock-o text-muted mr-2" aria-label="Sent date"/>
                                         <field name="sent_date" widget="date"/>
                                     </span>
                                     <span attrs="{'invisible': [('sent_date', '!=', False)]}" class="oe_clear text-muted">

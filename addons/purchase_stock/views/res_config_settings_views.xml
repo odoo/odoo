@@ -10,7 +10,7 @@
 			<xpath expr="//div[@data-key='purchase']" position="inside">
 				<field name="is_installed_sale" invisible="1"/>
 				<h2 attrs="{'invisible': [('is_installed_sale', '=', False)]}">Logistics</h2>
-				<div class="row mt16 o_settings_container">
+				<div class="row mt16 o_settings_container" name="request_vendor_setting_container">
 					<div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('is_installed_sale', '=', False)]}" title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse.">
 						<div class="o_setting_left_pane">
 							<field name="module_stock_dropshipping"/>
@@ -36,13 +36,15 @@
 				<attribute name="invisible">0</attribute>
 			</xpath>
 			<div id="purchase_po_lead" position="replace">
-				<div class="col-12 col-lg-6 o_setting_box" title="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.">
+				<div class="col-12 col-lg-6 o_setting_box"
+                                    title="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
+                                    name="schedule_receivings_setting_container">
 					<div class="o_setting_left_pane">
 						<field name="use_po_lead"/>
 					</div>
 					<div class="o_setting_right_pane">
 						<label for="use_po_lead"/>
-						<span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
+						<span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
 						<div class="text-muted">
 							Schedule receivings earlier to avoid delays
 						</div>

@@ -2,27 +2,16 @@ odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
 var core = require('web.core');
+const ColorpickerDialog = require('web.ColorpickerDialog');
 var Dialog = require('web.Dialog');
 var weWidgets = require('wysiwyg.widgets');
+const wUtils = require('website.utils');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-// TODO should we refresh public widgets for all option changes by default ?
 options.Class.include({
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    selectDataAttribute: function (previewMode, widgetValue, params) {
-        this._super(...arguments);
-        this._refreshPublicWidgets();
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -33,12 +22,28 @@ options.Class.include({
      *
      * @private
      * @param {jQuery} [$el=this.$target]
+     * @returns {Promise}
      */
     _refreshPublicWidgets: function ($el) {
-        this.trigger_up('widgets_start_request', {
-            editableMode: true,
-            $target: $el || this.$target,
+        return new Promise((resolve, reject) => {
+            this.trigger_up('widgets_start_request', {
+                editableMode: true,
+                $target: $el || this.$target,
+                onSuccess: resolve,
+                onFailure: reject,
+            });
         });
+    },
+    /**
+     * @override
+     */
+    _select: async function (previewMode, widget) {
+        await this._super(...arguments);
+
+        if (!widget.$el.closest('[data-no-widget-refresh="true"]').length) {
+            // TODO the flag should be retrieved through widget params somehow
+            await this._refreshPublicWidgets();
+        }
     },
 });
 
@@ -106,7 +111,7 @@ options.registry.background.include({
         } else {
             delete target.dataset.bgVideoSrc;
         }
-        this._refreshPublicWidgets();
+        await this._refreshPublicWidgets();
         await this.updateUI();
     },
     /**
@@ -360,8 +365,8 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         const $items = this.$carousel.find('.carousel-item');
         const $activeSlide = $items.filter('.active');
         const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
@@ -485,13 +490,16 @@ options.registry.navTabs = options.Class.extend({
         var $activePane = this.$tabPanes.filter('.active');
 
         var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
-        $next.one('shown.bs.tab', function () {
-            $activeLink.parent().remove();
-            $activePane.remove();
-            self._findLinksAndPanes();
-            self.updateUI(); // TODO forced to do this because we do not return deferred for options
+
+        return new Promise(resolve => {
+            $next.one('shown.bs.tab', function () {
+                $activeLink.parent().remove();
+                $activePane.remove();
+                self._findLinksAndPanes();
+                resolve();
+            });
+            $next.tab('show');
         });
-        $next.tab('show');
     },
 
     //--------------------------------------------------------------------------
@@ -682,16 +690,6 @@ options.registry.layout_column = options.Class.extend({
 });
 
 options.registry.parallax = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$target.on('snippet-option-change snippet-option-preview', function () {
-            self._refreshPublicWidgets();
-        });
-        return this._super.apply(this, arguments);
-    },
     /**
      * @override
      */
@@ -938,8 +936,8 @@ options.registry.ul = options.Class.extend({
     /**
      * @override
      */
-    selectClass: function () {
-        this._super.apply(this, arguments);
+    selectClass: async function () {
+        await this._super.apply(this, arguments);
 
         this.trigger_up('widgets_stop_request', {
             $target: this.$target,
@@ -962,7 +960,6 @@ options.registry.ul = options.Class.extend({
             .prepend('<a href="#" class="o_ul_toggle_next fa" />');
         $li.removeClass('o_open').next().addClass('o_close');
         this.$target.find('li').removeClass('o_open');
-        this._refreshPublicWidgets();
     },
 });
 
@@ -1115,24 +1112,25 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
-        var self = this;
         var $container = this.$('.container:first');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
-        dialog.on('save', this, function (attachments) {
-            for (var i = 0; i < attachments.length; i++) {
-                $('<img/>', {
-                    class: 'img img-fluid',
-                    src: attachments[i].image_src,
-                    'data-index': ++index,
-                }).appendTo($container);
-            }
-            this.mode('reset', this.getMode());
-            this.trigger_up('cover_update');
-            this.updateUI();
+        return new Promise(resolve => {
+            dialog.on('save', this, function (attachments) {
+                for (var i = 0; i < attachments.length; i++) {
+                    $('<img/>', {
+                        class: 'img img-fluid',
+                        src: attachments[i].image_src,
+                        'data-index': ++index,
+                    }).appendTo($container);
+                }
+                this.mode('reset', this.getMode());
+                this.trigger_up('cover_update');
+                resolve();
+            });
+            dialog.open();
         });
-        dialog.open();
     },
     /**
      * Allows to change the number of columns when displaying images with a
@@ -1307,7 +1305,6 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
-        this._refreshPublicWidgets();
     },
     /**
      * Allows to change the style of the individual images.
@@ -1467,6 +1464,134 @@ options.registry.gallery = options.Class.extend({
     },
 });
 
+options.registry.countdown = options.Class.extend({
+    events: _.extend({}, options.Class.prototype.events || {}, {
+        'click .toggle-edit-message': '_onToggleEndMessageClick',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the countdown action at zero.
+     *
+     * @see this.selectClass for parameters
+     */
+    endAction: function (previewMode, widgetValue, params) {
+        this.$target[0].dataset.endAction = widgetValue;
+        if (widgetValue === 'message') {
+            if (!this.$target.find('.s_countdown_end_message').length) {
+                const message = this.endMessage || qweb.render('website.s_countdown.end_message');
+                this.$target.find('.container').append(message);
+            }
+        } else {
+            const $message = this.$target.find('.s_countdown_end_message').detach();
+            if ($message.length) {
+                this.endMessage = $message[0].outerHTML;
+            }
+        }
+    },
+    /**
+    * Changes the countdown style.
+    *
+    * @see this.selectClass for parameters
+    */
+    layout: function (previewMode, widgetValue, params) {
+        switch (widgetValue) {
+            case 'circle':
+                this.$target[0].dataset.progressBarStyle = 'disappear';
+                this.$target[0].dataset.progressBarWeight = 'thin';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+            case 'boxes':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'plain';
+                break;
+            case 'clean':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+            case 'text':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+        }
+        this.$target[0].dataset.layout = widgetValue;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    updateUI: async function () {
+        await this._super(...arguments);
+        const dataset = this.$target[0].dataset;
+
+        // End Action UI
+        this.$el.find('[data-attribute-name="redirectUrl"]')
+            .toggleClass('d-none', dataset.endAction !== 'redirect');
+        this.$el.find('.toggle-edit-message')
+            .toggleClass('d-none', dataset.endAction !== 'message');
+        this.$el.find('[data-toggle-class="hide-countdown"]')
+            .toggleClass('d-none', dataset.endAction === 'nothing');
+
+        // End Message UI
+        this.updateUIEndMessage();
+
+        // Styling UI
+        this.$el.find('[data-attribute-name="layoutBackground"], [data-attribute-name="progressBarStyle"]')
+            .toggleClass('d-none', dataset.layout === 'clean' || dataset.layout === 'text');
+        this.$el.find('[data-attribute-name="layoutBackgroundColor"]')
+            .toggleClass('d-none', dataset.layoutBackground === 'none');
+        this.$el.find('[data-attribute-name="progressBarWeight"], [data-attribute-name="progressBarColor"]')
+            .toggleClass('d-none', dataset.progressBarStyle === 'none');
+    },
+    /**
+     * @see this.updateUI
+     */
+    updateUIEndMessage: function () {
+        this.$target.find('.s_countdown_canvas_wrapper')
+            .toggleClass("d-none", this.showEndMessage === true && this.$target.hasClass("hide-countdown"));
+        this.$target.find('.s_countdown_end_message')
+            .toggleClass("d-none", !this.showEndMessage);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'endAction':
+            case 'layout':
+                return this.$target[0].dataset[methodName];
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onToggleEndMessageClick: function () {
+        this.showEndMessage = !this.showEndMessage;
+        this.$el.find(".toggle-edit-message")
+            .toggleClass('text-primary', this.showEndMessage);
+        this.updateUIEndMessage();
+        this.trigger_up('cover_update');
+    },
+});
+
 options.registry.gallery_img = options.Class.extend({
     /**
      * Rebuilds the whole gallery when one image is removed.
@@ -1571,14 +1696,17 @@ options.registry.topMenuColor = options.Class.extend({
     /**
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
-        this.trigger_up('action_demand', {
-            actionName: 'get_page_option',
-            params: ['header_overlay'],
-            onSuccess: value => {
-                this.$el.toggleClass('d-none', !value);
-            },
+    updateUI: async function () {
+        await this._super(...arguments);
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'get_page_option',
+                params: ['header_overlay'],
+                onSuccess: value => {
+                    this.$el.toggleClass('d-none', !value);
+                    resolve();
+                },
+            });
         });
     },
 
@@ -1675,7 +1803,7 @@ options.registry.anchor = options.Class.extend({
             buttons.push({
                 text: _t("Remove"),
                 classes: 'btn-link ml-auto',
-                icon: 'fa-trash-alt',
+                icon: 'fa-trash',
                 close: true,
                 click: function () {
                     self._setAnchorName();
@@ -1784,18 +1912,20 @@ options.registry.CoverProperties = options.Class.extend({
             $image.attr('src', background.match(/^url\(["']?(.+?)["']?\)$/)[1]);
         }
 
-        var editor = new weWidgets.MediaDialog(this, {
-            mediaWidth: 1920,
-            onlyImages: true,
-            firstFilters: ['background']
-        }, $image[0]).open();
-        editor.on('save', this, function (image) {
-            var src = image.src;
-            this.$image.css('background-image', src ? ('url(' + src + ')') : '');
-            if (!this.$target.hasClass('o_record_has_cover')) {
-                this.$el.find('.o_record_cover_opt_size_default[data-select-class]').click();
-            }
-            this.updateUI();
+        return new Promise(resolve => {
+            var editor = new weWidgets.MediaDialog(this, {
+                mediaWidth: 1920,
+                onlyImages: true,
+                firstFilters: ['background']
+            }, $image[0]).open();
+            editor.on('save', this, function (image) {
+                var src = image.src;
+                this.$image.css('background-image', src ? ('url(' + src + ')') : '');
+                if (!this.$target.hasClass('o_record_has_cover')) {
+                    this.$el.find('.o_record_cover_opt_size_default[data-select-class]').click();
+                }
+                resolve();
+            });
         });
     },
     /**
@@ -1940,4 +2070,500 @@ options.registry.SnippetMove = options.Class.extend({
         }
     },
 });
+
+options.registry.InnerChart = options.Class.extend({
+    custom_events: _.extend({}, options.Class.prototype.custom_events, {
+        'get_custom_colors': '_onGetCustomColors',
+    }),
+    events: _.extend({}, options.Class.prototype.events, {
+        'click we-button.add_column': '_onAddColumnClick',
+        'click we-button.add_row': '_onAddRowClick',
+        'click we-button.o_we_matrix_remove_col': '_onRemoveColumnClick',
+        'click we-button.o_we_matrix_remove_row': '_onRemoveRowClick',
+        'blur we-matrix input': '_onMatrixInputFocusOut',
+        'focus we-matrix input': '_onMatrixInputFocus',
+    }),
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.themeArray = ['alpha', 'beta', 'gamma', 'delta', 'epsilon'];
+        this.style = window.getComputedStyle(document.documentElement);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        // Get the 2 color pickers to hide in updateUI
+        this.backSelectEl = this.el.querySelector('we-select[data-attribute-name="backgroundColor"]');
+        this.borderSelectEl = this.el.querySelector('we-select[data-attribute-name="borderColor"]');
+
+        // Build matrix content
+        this.tableEl = this.el.querySelector('we-matrix table');
+        const data = JSON.parse(this.$target[0].dataset.data);
+        data.labels.forEach(el => {
+            this._addRow(el);
+        });
+        data.datasets.forEach((el, i) => {
+            if (this._isPieChart()) {
+                // Add header colors in case the user changes the type of graph
+                const headerBackgroundColor = this.themeArray[i] || this._randomColor();
+                const headerBorderColor = this.themeArray[i] || this._randomColor();
+                this._addColumn(el.label, el.data, headerBackgroundColor, headerBorderColor, el.backgroundColor, el.borderColor);
+            } else {
+                this._addColumn(el.label, el.data, el.backgroundColor, el.borderColor);
+            }
+        });
+        this._displayRemoveColButton();
+        this._displayRemoveRowButton();
+        this._setDefaultSelectedInput();
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    updateUI: async function () {
+        // Selected input might not be in dom anymore if col/row removed
+        // Done before _super because _computeWidgetState of colorChange
+        if (!this.lastEditableSelectedInput.closest('table') || this.colorPaletteSelectedInput && !this.colorPaletteSelectedInput.closest('table')) {
+            this._setDefaultSelectedInput();
+        }
+        await this._super(...arguments);
+        // prevent the columns from becoming too small.
+        this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
+        this.el.querySelector('[data-attribute-name="stacked"]').classList.toggle('d-none', !this._isStackableChart() || this._getColumnCount() === 1);
+        // Disable color on inputs that don't use them
+        const notDisplayed = !this.colorPaletteSelectedInput;
+        this.backSelectEl.classList.toggle('d-none', notDisplayed);
+        this.borderSelectEl.classList.toggle('d-none', notDisplayed);
+        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Background Color") : _t("Dataset Background Color");
+        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border Color") : _t("Dataset Border Color");
+        // Dataset/Cell color
+        this.tableEl.querySelectorAll('input').forEach(el => el.style.border = '');
+        const selector = this._isPieChart() ? 'td input' : 'tr:first-child input';
+        this.tableEl.querySelectorAll(selector).forEach(el => {
+            const color = el.dataset.backgroundColor || el.dataset.borderColor;
+            if (color) {
+                el.style.border = '2px solid';
+                el.style.borderColor = ColorpickerDialog.isCSSColor(color) ? color : this.style.getPropertyValue(`--${color}`).trim();
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Set the color on the selected input.
+     */
+    colorChange: async function (previewMode, widgetValue, params) {
+        if (widgetValue) {
+            this.colorPaletteSelectedInput.dataset[params.attributeName] = widgetValue;
+        } else {
+            delete this.colorPaletteSelectedInput.dataset[params.attributeName];
+        }
+        await this._reloadGraph();
+        // To focus back the input that is edited we have to wait for the color
+        // picker to be fully reloaded.
+        await new Promise(resolve => setTimeout(() => {
+            this.lastEditableSelectedInput.focus();
+            resolve();
+        }));
+    },
+    /**
+     * @override
+     */
+    selectDataAttribute: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        // Data might change if going from or to a pieChart.
+        if (params.attributeName === 'type') {
+            this._setDefaultSelectedInput();
+            await this._reloadGraph();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'colorChange') {
+            return this.colorPaletteSelectedInput && this.colorPaletteSelectedInput.dataset[params.attributeName] || '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Sets and reloads the data on the canvas if it has changed.
+     * Used in matrix related method.
+     *
+     * @private
+     */
+    _reloadGraph: async function () {
+        const jsonValue = this._matrixToChartData();
+        if (this.$target[0].dataset.data !== jsonValue) {
+            this.$target[0].dataset.data = jsonValue;
+            await this._refreshPublicWidgets();
+        }
+    },
+    /**
+     * Return a stringifyed chart.js data object from the matrix
+     * Pie charts have one color per data while other charts have one color per dataset.
+     *
+     * @private
+     */
+    _matrixToChartData: function () {
+        const data = {
+            labels: [],
+            datasets: [],
+        };
+        this.tableEl.querySelectorAll('tr:first-child input').forEach(el => {
+            data.datasets.push({
+                label: el.value || '',
+                data: [],
+                backgroundColor: this._isPieChart() ? [] : el.dataset.backgroundColor || '',
+                borderColor: this._isPieChart() ? [] : el.dataset.borderColor || '',
+            });
+        });
+        this.tableEl.querySelectorAll('tr:not(:first-child):not(:last-child)').forEach((el) => {
+            const title = el.querySelector('th input').value || '';
+            data.labels.push(title);
+            el.querySelectorAll('td input').forEach((el, i) => {
+                data.datasets[i].data.push(el.value || 0);
+                if (this._isPieChart()) {
+                    data.datasets[i].backgroundColor.push(el.dataset.backgroundColor || '');
+                    data.datasets[i].borderColor.push(el.dataset.borderColor || '');
+                }
+            });
+        });
+        return JSON.stringify(data);
+    },
+    /**
+     * Return a td containing a we-button with minus icon
+     *
+     * @param  {...string} classes Classes to add to the we-button
+     * @returns {HTMLElement}
+     */
+    _makeDeleteButton: function (...classes) {
+        const rmbuttonEl = options.buildElement('we-button', null, {
+            classes: ['fa', 'fa-fw', 'fa-minus', ...classes],
+        });
+        const newEl = document.createElement('td');
+        newEl.appendChild(rmbuttonEl);
+        return newEl;
+    },
+    /**
+     * Add a column to the matrix
+     * The th (dataset label) of a column hold the colors for the entire dataset if the graph is not a pie chart
+     * If the graph is a pie chart the color of the td (data) are used.
+     *
+     * @private
+     * @param {String} title The title of the column
+     * @param {Array} values The values of the column input
+     * @param {String} heardeBackgroundColor The background color of the dataset
+     * @param {String} headerBorderColor The border color of the dataset
+     * @param {string[]} cellBackgroundColors The background colors of the datas inputs, random color if missing
+     * @param {string[]} cellBorderColors The border color of the datas inputs, no color if missing
+     */
+    _addColumn: function (title, values, heardeBackgroundColor, headerBorderColor, cellBackgroundColors = [], cellBorderColors = []) {
+        const firstRow = this.tableEl.querySelector('tr:first-child');
+        const headerInput = this._makeCell('th', title, heardeBackgroundColor, headerBorderColor);
+        firstRow.insertBefore(headerInput, firstRow.lastElementChild);
+
+        this.tableEl.querySelectorAll('tr:not(:first-child):not(:last-child)').forEach((el, i) => {
+            const newCell = this._makeCell('td', values ? values[i] : null, cellBackgroundColors[i] || this._randomColor(), cellBorderColors[i - 1]);
+            el.insertBefore(newCell, el.lastElementChild);
+        });
+
+        const lastRow = this.tableEl.querySelector('tr:last-child');
+        const removeButton = this._makeDeleteButton('o_we_matrix_remove_col');
+        lastRow.appendChild(removeButton);
+    },
+    /**
+     * Add a row to the matrix
+     * The background color of the datas are random
+     *
+     * @private
+     * @param {String} tilte The title of the row
+     */
+    _addRow: function (tilte) {
+        const trEl = document.createElement('tr');
+        trEl.appendChild(this._makeCell('th', tilte));
+        this.tableEl.querySelectorAll('tr:first-child input').forEach(() => {
+            trEl.appendChild(this._makeCell('td', null, this._randomColor()));
+        });
+        trEl.appendChild(this._makeDeleteButton('o_we_matrix_remove_row'));
+        const tbody = this.tableEl.querySelector('tbody');
+        tbody.insertBefore(trEl, tbody.lastElementChild);
+    },
+    /**
+     * @private
+     * @param {string} tag tag of the HTML Element (td/th)
+     * @param {string} value The current value of the cell input
+     * @param {string} backgroundColor The background Color of the data on the graph
+     * @param {string} borderColor The border Color of the the data on the graph
+     * @returns {HTMLElement}
+     */
+    _makeCell: function (tag, value, backgroundColor, borderColor) {
+        const newEl = document.createElement(tag);
+        const contentEl = document.createElement('input');
+        contentEl.type = 'text';
+        contentEl.value = value || '';
+        if (backgroundColor) {
+            contentEl.dataset.backgroundColor = backgroundColor;
+        }
+        if (borderColor) {
+            contentEl.dataset.borderColor = borderColor;
+        }
+        newEl.appendChild(contentEl);
+        return newEl;
+    },
+    /**
+     * Display the remove button coresponding to the colIndex
+     *
+     * @private
+     * @param {Int} colIndex Can be undefined, if so the last remove button of the column will be shown
+     */
+    _displayRemoveColButton: function (colIndex) {
+        if (this._getColumnCount() > 1) {
+            this._displayRemoveButton(colIndex, 'o_we_matrix_remove_col');
+        }
+    },
+    /**
+     * Display the remove button coresponding to the rowIndex
+     *
+     * @private
+     * @param {Int} rowIndex Can be undefined, if so the last remove button of the row will be shown
+     */
+    _displayRemoveRowButton: function (rowIndex) {
+        //Nbr of row minus header and button
+        const rowCount = this.tableEl.rows.length - 2;
+        if (rowCount > 1) {
+            this._displayRemoveButton(rowIndex, 'o_we_matrix_remove_row');
+        }
+    },
+    /**
+     * @private
+     * @param {Int} tdIndex Can be undefined, if so the last remove button will be shown
+     * @param {String} btnClass Either o_we_matrix_remove_col or o_we_matrix_remove_row
+     */
+    _displayRemoveButton: function (tdIndex, btnClass) {
+        const removeBtn = this.tableEl.querySelectorAll(`td we-button.${btnClass}`);
+        removeBtn.forEach(el => el.style.display = ''); //hide all
+        const index = tdIndex < removeBtn.length ? tdIndex : removeBtn.length - 1;
+        removeBtn[index].style.display = 'inline-block';
+    },
+    /**
+     * @private
+     * @return {boolean}
+     */
+    _isPieChart: function () {
+        return ['pie', 'doughnut'].includes(this.$target[0].dataset.type);
+    },
+    /**
+     * @private
+     * @return {boolean}
+     */
+    _isStackableChart: function () {
+        return ['bar', 'horizontalBar'].includes(this.$target[0].dataset.type);
+    },
+    /**
+     * Return the number of column minus header and button
+     * @private
+     * @return {integer}
+     */
+    _getColumnCount: function () {
+        return this.tableEl.rows[0].cells.length - 2;
+    },
+    /**
+     * Select the first data input
+     *
+     * @private
+     */
+    _setDefaultSelectedInput: function () {
+        this.lastEditableSelectedInput = this.tableEl.querySelector('td input');
+        if (this._isPieChart()) {
+            this.colorPaletteSelectedInput = this.lastEditableSelectedInput;
+        } else {
+            this.colorPaletteSelectedInput = this.tableEl.querySelector('th input');
+        }
+    },
+    /**
+     * Return a random hexadecimal color.
+     *
+     * @private
+     * @return {string}
+     */
+    _randomColor: function () {
+        return '#' + ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6).toUpperCase();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Used by colorPalette to retrieve the custom colors used on the chart
+     * Make an array with all the custom colors used on the chart
+     * and apply it to the onSuccess method provided by the trigger_up.
+     *
+     * @private
+     */
+    _onGetCustomColors: function (ev) {
+        const data = JSON.parse(this.$target[0].dataset.data || '');
+        let customColors = [];
+        data.datasets.forEach(el => {
+            if (this._isPieChart()) {
+                customColors = customColors.concat(el.backgroundColor).concat(el.borderColor);
+            } else {
+                customColors.push(el.backgroundColor);
+                customColors.push(el.borderColor);
+            }
+        });
+        customColors = customColors.filter((el, i, array) => {
+            return !this.style.getPropertyValue(`--${el}`) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
+        });
+        ev.data.onSuccess(customColors);
+    },
+    /**
+     * Add a row at the end of the matrix and display it's remove button
+     * Choose the color of the column from the theme array or a random color if they are already used
+     *
+     * @private
+     */
+    _onAddColumnClick: function () {
+        const usedColor = Array.from(this.tableEl.querySelectorAll('tr:first-child input')).map(el => el.dataset.backgroundColor);
+        const color = this.themeArray.filter(el => !usedColor.includes(el))[0] || this._randomColor();
+        this._addColumn(null, null, color, color);
+        this._reloadGraph().then(() => {
+            this._displayRemoveColButton();
+            this.updateUI();
+        });
+    },
+    /**
+     * Add a column at the end of the matrix and display it's remove button
+     *
+     * @private
+     */
+    _onAddRowClick: function () {
+        this._addRow();
+        this._reloadGraph().then(() => {
+            this._displayRemoveRowButton();
+            this.updateUI();
+        });
+    },
+    /**
+     * Remove the column and show the remove button of the next column or the last if no next.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveColumnClick: function (ev) {
+        const cell = ev.currentTarget.parentElement;
+        const cellIndex = cell.cellIndex;
+        this.tableEl.querySelectorAll('tr').forEach((el) => {
+            el.children[cellIndex].remove();
+        });
+        this._displayRemoveColButton(cellIndex - 1);
+        this._reloadGraph().then(() => {
+            this.updateUI();
+        });
+    },
+    /**
+     * Remove the row and show the remove button of the next row or the last if no next.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveRowClick: function (ev) {
+        const row = ev.currentTarget.parentElement.parentElement;
+        const rowIndex = row.rowIndex;
+        row.remove();
+        this._displayRemoveRowButton(rowIndex - 1);
+        this._reloadGraph().then(() => {
+            this.updateUI();
+        });
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMatrixInputFocusOut: function (ev) {
+        // Sometimes, an input is focusout for internal reason (like an undo
+        // recording) then focused again manually in the same JS stack
+        // execution. In that case, the blur should not trigger an option
+        // selection as the user did not leave the input. We thus defer the blur
+        // handling to then check that the target is indeed still blurred before
+        // executing the actual option selection.
+        setTimeout(() => {
+            if (ev.currentTarget === document.activeElement) {
+                return;
+            }
+            this._reloadGraph();
+        });
+    },
+    /**
+     * Set the selected cell/header and display the related remove button
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMatrixInputFocus: function (ev) {
+        this.lastEditableSelectedInput = ev.target;
+        const col = ev.target.parentElement.cellIndex;
+        const row = ev.target.parentElement.parentElement.rowIndex;
+        if (this._isPieChart()) {
+            this.colorPaletteSelectedInput = ev.target.parentNode.tagName === 'TD' ? ev.target : null;
+        } else {
+            this.colorPaletteSelectedInput = this.tableEl.querySelector(`tr:first-child th:nth-of-type(${col + 1}) input`);
+        }
+        if (col > 0) {
+            this._displayRemoveColButton(col - 1);
+        }
+        if (row > 0) {
+            this._displayRemoveRowButton(row - 1);
+        }
+        this.updateUI();
+    },
+});
+
+const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
+const UrlPickerUserValueWidget = InputUserValueWidget.extend({
+    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
+        website_url_chosen: '_onWebsiteURLChosen',
+    }),
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        $(this.inputEl).addClass('text-left');
+        wUtils.autocompleteWithPages(this, $(this.inputEl));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the autocomplete change the input value.
+     *
+     * @private
+     */
+    _onWebsiteURLChosen: function () {
+        $(this.inputEl).trigger('input');
+        this._notifyValueChange(false);
+    },
+});
+
+options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
+return {
+    UrlPickerUserValueWidget: UrlPickerUserValueWidget,
+};
 });

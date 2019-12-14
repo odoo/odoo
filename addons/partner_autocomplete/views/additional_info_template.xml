@@ -22,12 +22,12 @@
             <hr/>
 
             <p t-if="company_type">
-                <i class="far fa-fw mr-2 fa-building text-primary"/>
+                <i class="fa fa-fw mr-2 fa-building text-primary"/>
                 <b>Company type:</b>
                 <t t-esc="company_type"/>
             </p>
             <p t-if="founded_year">
-                <i class="far fa-fw mr-2 fa-calendar-alt text-primary"/>
+                <i class="fa fa-fw mr-2 fa-calendar text-primary"/>
                 <b>Founded:</b>
                 <t t-esc="founded_year"/>
             </p>
@@ -44,17 +44,17 @@
                 <t t-esc="employees"/>
             </p>
             <p t-if="annual_revenue">
-                <i class="far fa-fw mr-2 fa-money-bill-alt text-primary"/>
+                <i class="fa fa-fw mr-2 fa-money text-primary"/>
                 <b>Annual revenue:</b>
                 <t t-esc="annual_revenue"/>
             </p>
             <p t-if="estimated_annual_revenue">
-                <i class="far fa-fw mr-2 fa-money-bill-alt text-primary"/>
+                <i class="fa fa-fw mr-2 fa-money text-primary"/>
                 <b>Estimated annual revenue:</b>
                 <t t-esc="estimated_annual_revenue"/>
             </p>
             <p t-if="twitter_bio">
-                <i class="fab fa-fw mr-2 fa-twitter text-primary"/>
+                <i class="fa fa-fw mr-2 fa-twitter text-primary"/>
                 <b>
                     Twitter :
                     <span t-if="twitter_followers">(<t t-esc="twitter_followers"/> followers)</span>
@@ -64,7 +64,7 @@
             </p>
 
             <p t-if="timezone">
-                <i class="fa fa-fw mr-2 fa-globe-americas text-primary"/>
+                <i class="fa fa-fw mr-2 fa-globe text-primary"/>
                 <b>Timezone :</b>
                 <t t-esc="timezone"/>
                 <a target="_blank" t-att-href="timezone_url">(Time Now)</a>

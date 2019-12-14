@@ -397,7 +397,7 @@ class Manager(Thread):
         printer_devices = {}
         with cups_lock:
             devices = conn.getDevices()
-        for path in [printer_lo for printer_lo in devices if devices[printer_lo]['device-make-and-model'] != 'Unknown']:
+        for path in devices:
             if 'uuid=' in path:
                 serial = sub('[^a-zA-Z0-9 ]+', '', path.split('uuid=')[1])
             elif 'serial=' in path:
@@ -414,6 +414,7 @@ class Manager(Thread):
         """
         Thread that will check connected/disconnected device, load drivers if needed and contact the odoo server with the updates
         """
+        helpers.check_git_branch()
         helpers.check_certificate()
         updated_devices = {}
         self.send_alldevices()

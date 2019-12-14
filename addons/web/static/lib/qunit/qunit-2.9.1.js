@@ -1247,7 +1247,7 @@
 
   var LISTENERS = Object.create(null);
   var SUPPORTED_EVENTS = ["runStart", "suiteStart", "testStart", "assertion", "testEnd", "suiteEnd", "runEnd"];
-  SUPPORTED_EVENTS.push("OdooAfterTestHook"); // Odoo customization
+  SUPPORTED_EVENTS.push("OdooBeforeTestHook", "OdooAfterTestHook"); // Odoo customization
 
   /**
    * Emits an event with the specified data to all currently registered listeners.
@@ -3001,7 +3001,8 @@
   			_this.testEnvironment = extend({}, module.testEnvironment);
 
   			_this.started = now();
-  			emit("testStart", _this.testReport.start(true));
+			emit("testStart", _this.testReport.start(true));
+			emit("OdooBeforeTestHook"); // Odoo customization
   			return runLoggingCallbacks("testStart", {
   				name: _this.testName,
   				module: module.name,

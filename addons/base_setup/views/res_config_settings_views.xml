@@ -11,8 +11,8 @@
 
                         <div id="invite_users">
                             <h2>Users</h2>
-                            <div class="row mt16 o_settings_container">
-                                <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="row mt16 o_settings_container" name="users_setting_container">
+                                <div class="col-12 col-lg-6 o_setting_box" id="active_user_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="fa fa-lg fa-users" aria-label="Number of active users"/>
                                         <field name='active_user_count' class="w-auto pl-3 font-weight-bold"/>
@@ -28,7 +28,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="col-12 col-lg-6 o_setting_box" id="invite_users_setting">
                                     <div class="o_setting_right_pane">
                                         <widget name='res_config_invite_users'/>
                                     </div>
@@ -38,8 +38,8 @@
 
                         <div id="companies">
                             <h2>Companies</h2>
-                            <div class="row mt16 o_settings_container">
-                                <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="row mt16 o_settings_container" name="companies_setting_container">
+                                <div class="col-12 col-lg-6 o_setting_box" id="company_details_settings">
                                     <div class="o_setting_right_pane">
                                         <field name="company_name" class="font-weight-bold"/>
                                         <br/>
@@ -48,7 +48,7 @@
                                         <button name="open_company" icon="fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
                                     <div class="o_setting_right_pane">
                                         <field name='company_count' class="w-auto pl-1 font-weight-bold"/>
                                         <span class="o_form_label">
@@ -65,8 +65,8 @@
 
                         <div id="languages">
                             <h2>Languages</h2>
-                            <div class='row mt16 o_settings_container'>
-                                <div class='col-xs-12 col-md-6 o_setting_box'>
+                            <div class='row mt16 o_settings_container' name="languages_setting_container">
+                                <div class='col-xs-12 col-md-6 o_setting_box' id="languages_setting">
                                     <div class='o_setting_right_pane'>
                                         <!-- TODO This is not an ideal solution but it looks ok on the interface -->
                                         <div class="w-50">
@@ -85,11 +85,11 @@
 
                         <div id="business_documents">
                             <h2>Business Documents</h2>
-                            <div class="row mt16 o_settings_container">
-                                <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="row mt16 o_settings_container" name="business_documents_setting_container">
+                                <div class="col-12 col-lg-6 o_setting_box" id="paper_format_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="o_form_label">Format</span>
-                                        <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Set the paper format of printed documents
                                         </div>
@@ -101,10 +101,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="col-12 col-lg-6 o_setting_box" id="document_layout_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="o_form_label">Document Layout</span>
-                                        <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Choose the layout of your documents
                                         </div>
@@ -132,7 +132,7 @@
 
                         <div id="contacts_settings">
                             <h2>Contacts</h2>
-                            <div class="row mt16 o_settings_container">
+                            <div class="row mt16 o_settings_container" name="contacts_setting_container">
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="sms">
                                         <div class="o_setting_right_pane" id="sms_settings">
                                             <div class="o_form_label">Send SMS</div>
@@ -184,7 +184,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
+                        <div class="col-12 col-lg-6 o_setting_box" id="feedback_motivate_setting" groups="base.group_no_one">
                             <div class="o_setting_left_pane">
                                 <field name="show_effect"/>
                             </div>
@@ -199,14 +199,14 @@
                         <div id="multi_company" groups="base.group_multi_company">
                             <field name="company_id" invisible="1"/>
                             <h2>Multi-Company</h2>
-                            <div class="row mt16 o_settings_container" name="multi">
+                            <div class="row mt16 o_settings_container" name="multicompany_setting_container">
                                 <div class="col-12 col-lg-6 o_setting_box" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company." id="inter_company">
                                     <div class="o_setting_left_pane">
                                         <field name="module_inter_company_rules" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
                                         <label string="Inter-Company Transactions" for="module_inter_company_rules"/>
-                                        <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Automatically generate counterpart documents for orders/invoices between companies
                                         </div>
@@ -219,7 +219,7 @@
                         </div>
                         <h2>Integrations</h2>
                         <div class="row mt16 o_settings_container" name="integration">
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="external_pads_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_pad"/>
                                 </div>
@@ -233,7 +233,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="sync_google_calendar_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_google_calendar" />
                                 </div>
@@ -247,7 +247,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="google_drive_documents_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_google_drive" />
                                 </div>
@@ -261,7 +261,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="google_spreadsheet_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_google_spreadsheet" />
                                 </div>
@@ -346,7 +346,7 @@
                         <widget name='res_config_dev_tool'/>
                         <div id='about'>
                             <h2>About</h2>
-                            <div class="row mt16 o_settings_container">
+                            <div class="row mt16 o_settings_container" name="about_setting_container">
                                 <div class='col-12 col-lg-6 o_setting_box' id='appstore'>
                                     <div class="d-flex">
                                         <div class="o_setting_right_pane">

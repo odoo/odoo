@@ -84,7 +84,7 @@ class AccountTaxReport(models.Model):
 
         if 'country_id' in vals:
             tags_cache = {}
-            for record in self:
+            for record in self.filtered(lambda x: x.country_id.id != vals['country_id']):
                 for line in record.line_ids:
                     if line.tag_ids:
                         #The tags for this country may have been created by a previous line in this loop
@@ -95,7 +95,8 @@ class AccountTaxReport(models.Model):
                         new_tags = tags_cache[cache_key]
 
                         if new_tags:
-                            tags_to_unlink = line.tag_ids.filtered(lambda x: record in x.mapped('tax_report_line_ids.report_id'))
+                            tags_to_unlink = line.tag_ids.filtered(lambda x: record == x.mapped('tax_report_line_ids.report_id'))
+                            # == instead of in, as we only want tags_to_unlink to contain the tags that are not linked to any other report than the one we're considering
                             line.write({'tag_ids': [(6, 0, new_tags.ids)]})
                             self.env['account.tax.report.line']._delete_tags_from_taxes(tags_to_unlink.ids)
 
@@ -397,10 +398,10 @@ class AccountAccount(models.Model):
         self._cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
-            WHERE aml.account_id in (%s)
+            WHERE aml.account_id in %s
             AND EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id)
             AND NOT EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id AND account_journal_id = aml.journal_id)
-        """, tuple(self.ids))
+        """, [tuple(self.ids)])
         ids = self._cr.fetchall()
         if ids:
             raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))

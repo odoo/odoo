@@ -28,6 +28,19 @@ class AccountPayment(models.Model):
     check_number = fields.Char(string="Check Number", readonly=True, copy=False,
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
+    check_number_int = fields.Integer(string="Check Number Integer", store=True, compute='_compute_check_number')
+
+    @api.depends('check_number')
+    def _compute_check_number(self):
+        # store check number as int to avoid doing a lot of checks and transformations
+        # when calculating next_check_number
+        for record in self:
+            number = record.check_number
+            try:
+                number = int(number)
+            except Exception as e:
+                number = 0
+            record.check_number_int = number
 
     @api.onchange('amount', 'currency_id')
     def _onchange_amount(self):
@@ -74,8 +87,8 @@ class AccountPayment(models.Model):
             # so payments are attributed the number of the check the'll be printed on.
             last_printed_check = self.search([
                 ('journal_id', '=', self[0].journal_id.id),
-                ('check_number', '!=', "0")], order="check_number desc", limit=1)
-            next_check_number = last_printed_check and int(last_printed_check.check_number) + 1 or 1
+                ('check_number_int', '!=', 0)], order="check_number_int desc", limit=1)
+            next_check_number = last_printed_check and last_printed_check.check_number_int + 1 or 1
 
             return {
                 'name': _('Print Pre-numbered Checks'),
@@ -96,8 +109,14 @@ class AccountPayment(models.Model):
         self.write({'state': 'posted'})
 
     def do_print_checks(self):
-        """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
-        raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))
+        check_layout = self[0].company_id.account_check_printing_layout
+        if check_layout == 'disabled':
+            raise UserError(_("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."))
+        report_action = self.env.ref(check_layout, False)
+        if not report_action:
+            raise UserError(_("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."))
+        self.write({'state': 'sent'})
+        return report_action.report_action(self)
 
 
     def set_check_amount_in_words(self):

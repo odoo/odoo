@@ -241,7 +241,7 @@ var FieldMany2One = AbstractField.extend({
     _addAutocompleteSource: function (method, params) {
         this._autocompleteSources.push({
             method: method,
-            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin fa-pull-right"></i>' ,
+            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
             validation: params.validation,
             loading: false,
             order: params.order || 999
@@ -2756,13 +2756,6 @@ var FieldSelection = AbstractField.extend({
         var required = this.attrs.modifiersValue && this.attrs.modifiersValue.required;
         for (var i = 0 ; i < this.values.length ; i++) {
             var disabled = required && this.values[i][0] === false;
-            console.log(this.values);
-            console.log(i);
-            console.log(this.values[i])
-            // console.log(this.values[i][0])
-            if (this.values[i] == undefined) {
-                debugger
-            }
 
             this.$el.append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),

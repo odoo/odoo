@@ -44,10 +44,10 @@
               <td><span t-field="order.date_order"/></td>
               <td>
                 <t t-if="order.invoice_status == 'to invoice'">
-                  <span class="badge badge-info"><i class="fas fa-fw fa-file-alt"/> Waiting for Bill</span>
+                  <span class="badge badge-info"><i class="fa fa-fw fa-file-text"/> Waiting for Bill</span>
                 </t>
                 <t t-if="order.state == 'cancel'">
-                  <span class="badge badge-secondary"><i class="fas fa-fw fa-times"/> Cancelled</span>
+                  <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                 </t>
               </td>
               <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/></td>

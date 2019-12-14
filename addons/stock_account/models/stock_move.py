@@ -33,8 +33,8 @@ class StockMove(models.Model):
         self.ensure_one()
         price_unit = self.price_unit
         # If the move is a return, use the original move's price unit.
-        if self.origin_returned_move_id:
-            price_unit = self.origin_returned_move_id.price_unit
+        if self.origin_returned_move_id and self.origin_returned_move_id.stock_valuation_layer_ids:
+            price_unit = self.origin_returned_move_id.stock_valuation_layer_ids[-1].unit_cost
         return not self.company_id.currency_id.is_zero(price_unit) and price_unit or self.product_id.standard_price
 
     @api.model
@@ -325,8 +325,14 @@ class StockMove(models.Model):
 
             tmpl_dict[move.product_id.id] += qty_done
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': new_std_price})
+            move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
+
+        # adapt standard price on incomming moves if the product cost_method is 'fifo'
+        for move in self.filtered(lambda move:
+                                  move.with_company(move.company_id).product_id.cost_method == 'fifo'
+                                  and float_is_zero(move.product_id.quantity_svl, precision_rounding=move.product_id.uom_id.rounding)):
+            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': move._get_price_unit()})
 
     def _get_accounting_data_for_valuation(self):
         """ Return the accounts and journal to use to post Journal Entries for

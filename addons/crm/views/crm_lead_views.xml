@@ -64,7 +64,7 @@
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
-                                class="oe_stat_button" icon="far fa-calendar-alt"
+                                class="oe_stat_button" icon="fa-calendar"
                                 context="{'partner_id': partner_id, 'search_default_opportunity_id': active_id}"
                                 attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <div class="o_stat_info">
@@ -74,8 +74,8 @@
                                 </div>
                             </button>
                         </div>
-                        <widget name="web_ribbon" text="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
-                        <widget name="web_ribbon" text="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
+                        <widget name="web_ribbon" title="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                             <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
@@ -370,7 +370,7 @@
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class="oe_kanban_mail_new" title="Unread Messages"><i class="fas fa-comments" aria-label="Messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments" aria-label="Messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <div class="o_kanban_inline_block">
                                             <field name="activity_ids" widget="kanban_activity"/>
@@ -503,7 +503,7 @@
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
                                             <t t-if="record.message_needaction_counter.raw_value">
-                                                <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fas fa-comments' aria-label="Unread messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                                <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                             </t>
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
@@ -531,6 +531,7 @@
                     <field name="team_id"/>
                     <field name="country_id"/>
                     <field name="city"/>
+                    <field name="phone_mobile_search"/>
                     <field name="lang_id"/>
                     <field name="create_date"/>
                     <field name="source_id"/>
@@ -682,6 +683,7 @@
                     <field name="stage_id" domain="[]"/>
                     <field name="country_id"/>
                     <field name="city"/>
+                    <field name="phone_mobile_search"/>
                     <separator/>
                     <filter string="My Pipeline" name="assigned_to_me"
                         domain="[('user_id', '=', uid)]"
@@ -751,7 +753,7 @@
             <field name="arch" type="xml">
                 <form string="Channel">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name"/>

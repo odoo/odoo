@@ -406,7 +406,7 @@ class Project(models.Model):
         ts_form = self.env.ref('hr_timesheet.hr_timesheet_line_form')
         stat_buttons.append({
             'name': _('Timesheets'),
-            'icon': 'far fa-calendar-alt',
+            'icon': 'fa fa-calendar',
             'action': _to_action_data(
                 'account.analytic.line',
                 domain=[('project_id', 'in', self.ids)],
@@ -447,7 +447,7 @@ class Project(models.Model):
                 stat_buttons.append({
                     'name': _('Sales Orders'),
                     'count': len(sale_orders),
-                    'icon': 'fas fa-dollar-sign',
+                    'icon': 'fa fa-dollar',
                     'action': _to_action_data(
                         action=self.env.ref('sale.action_orders'),
                         domain=[('id', 'in', sale_orders.ids)],
@@ -464,7 +464,7 @@ class Project(models.Model):
                     stat_buttons.append({
                         'name': _('Invoices'),
                         'count': len(invoice_ids),
-                        'icon': 'fas fa-edit',
+                        'icon': 'fa fa-pencil-square-o',
                         'action': _to_action_data(
                             action=self.env.ref('account.action_move_out_invoice_type'),
                             domain=[('id', 'in', invoice_ids), ('type', '=', 'out_invoice')],

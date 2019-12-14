@@ -171,7 +171,7 @@
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active_partner" required="0" readonly="1" invisible="1"/>
                         <div class="alert alert-info text-center o_form_header"
                             attrs="{'invisible': [
@@ -220,7 +220,7 @@
                                             <button
                                                 type="action"
                                                 name="%(base.res_lang_act_window)d"
-                                                class="btn-sm btn-link mb4 fa fa-globe-americas"
+                                                class="btn-sm btn-link mb4 fa fa-globe"
                                                 aria-label="More languages"
                                                 title="More languages"/>
                                         </div>
@@ -273,13 +273,13 @@
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
-                                        <li class="text-success float-right mb4" t-if="record.active.raw_value"><i class="far fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
-                                        <li class="text-danger float-right mb4" t-if="!record.active.raw_value"><i class="far fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
+                                        <li class="text-success float-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
+                                        <li class="text-danger float-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>
                                         <li class="badge badge-pill float-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
-                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="far fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
+                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
                                     </ul>
                                 </div>
                             </div>
@@ -354,11 +354,11 @@
                         <group>
                             <label for="lang"/>
                             <div class="o_row">
-                                <field name="lang"/>
+                                <field name="lang" readonly="0"/>
                                 <button
                                     type="action"
                                     name="%(base.res_lang_act_window)d"
-                                    class="btn-sm btn-link mb4 fa fa-globe-americas"
+                                    class="btn-sm btn-link mb4 fa fa-globe"
                                     aria-label="More languages"
                                     groups="base.group_system"
                                     title="More languages"

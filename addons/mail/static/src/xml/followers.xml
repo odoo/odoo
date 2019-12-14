@@ -9,7 +9,7 @@
             <div class="o_followers_title_box btn-group">
                 <button class="btn btn-link" title="Dropdown menu - Followers"
                         data-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user" role="img" aria-label="Dropdown menu - Followers"></i>
+                    <i class="fa fa-user" role="img" aria-label="Dropdown menu - Followers"></i>
                     <span class="o_followers_count"/>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right o_followers_list" role="menu"/>
@@ -40,7 +40,7 @@
                 <t t-esc="record.name"/>
             </a>
             <button t-if="record.is_editable"
-                class="btn btn-icon fas fa-pencil-alt o_edit_subtype d-none"
+                class="btn btn-icon fa fa-pencil o_edit_subtype d-none"
                 title="Edit subscription"
                 aria-label="Edit subscription"
                 role="img"
@@ -48,7 +48,7 @@
                 t-att-data-oe-id="record.res_id"
                 t-att-data-oe-model="record.res_model"/>
             <button t-if="widget.isEditable"
-                class="btn btn-icon fas fa-times o_remove_follower"
+                class="btn btn-icon fa fa-remove o_remove_follower"
                 aria-label="Remove this follower"
                 role="img"
                 title="Remove this follower"/>
@@ -83,12 +83,12 @@
                     <t t-esc="record.name"/>
                 </label>
             </div>
-            <i t-if="display_warning" class="fas fa-exclamation-triangle text-warning" role="img" aria-label="Warning" title="Warning"/>
+            <i t-if="display_warning" class="fa fa-warning text-warning" role="img" aria-label="Warning" title="Warning"/>
         </div>
     </t>
     <t t-name="mail.Followers.subtypes.warning">
         <span class="text-warning">
-            <i class="fas fa-exclamation-triangle"/> Be careful with channels following internal notifications
+            <i class="fa fa-warning"/> Be careful with channels following internal notifications
         </span>
     </t>
 

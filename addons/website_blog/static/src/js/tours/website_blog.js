@@ -23,7 +23,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
         run: "text",
     }, {
-        trigger: "we-button:containsExact(" + _t("Change Cover") + "):visible",
+        trigger: "we-button:containsExactText(" + _t("Change Cover") + ")",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "right",

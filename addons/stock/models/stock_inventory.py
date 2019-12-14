@@ -58,6 +58,10 @@ class Inventory(models.Model):
         help="Allows to start with prefill counted quantity for each lines or "
         "with all counted quantity set to zero.", default='counted',
         selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
+    exhausted = fields.Boolean(
+        'Include Exhausted Products', readonly=True,
+        states={'draft': [('readonly', False)]},
+        help="Include also products with quantity of 0")
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -163,7 +167,7 @@ class Inventory(models.Model):
         self.ensure_one()
         action = {
             'type': 'ir.actions.act_window',
-            'views': [(self.env.ref('stock.stock_inventory_line_tree2').id, 'tree')],
+            'views': [(self.env.ref('stock.stock_inventory_line_tree').id, 'tree')],
             'view_mode': 'tree',
             'name': _('Inventory Lines'),
             'res_model': 'stock.inventory.line',
@@ -205,51 +209,100 @@ class Inventory(models.Model):
         }
         return action
 
-    def _get_inventory_lines_values(self):
-        # TDE CLEANME: is sql really necessary ? I don't think so
-        locations = self.env['stock.location']
+    def _get_quantities(self):
+        """Return quantities group by product_id, location_id, lot_id, package_id and owner_id
+
+        :return: a dict with keys as tuple of group by and quantity as value
+        :rtype: dict
+        """
+        self.ensure_one()
         if self.location_ids:
-            locations = self.env['stock.location'].search([('id', 'child_of', self.location_ids.ids)])
+            domain_loc = [('id', 'child_of', self.location_ids.ids)]
         else:
-            locations = self.env['stock.location'].search([('company_id', '=', self.company_id.id), ('usage', 'in', ['internal', 'transit'])])
-        domain = ' location_id in %s AND quantity != 0 AND active = TRUE'
-        args = (tuple(locations.ids),)
+            domain_loc = [('company_id', '=', self.company_id.id), ('usage', 'in', ['internal', 'transit'])]
+        locations_ids = [l['id'] for l in self.env['stock.location'].search_read(domain_loc, ['id'])]
+
+        domain = [('company_id', '=', self.company_id.id),
+                  ('quantity', '!=', '0'),
+                  ('product_id.active', '=', True),
+                  ('location_id', 'in', locations_ids)]
+
+        if self.product_ids:
+            domain = expression.AND([domain, [('product_id', 'in', self.product_ids.ids)]])
+
+        fields = ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id', 'quantity:sum']
+        group_by = ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+
+        quants = self.env['stock.quant'].read_group(domain, fields, group_by, lazy=False)
+        return {(
+            quant['product_id'] and quant['product_id'][0] or False,
+            quant['location_id'] and quant['location_id'][0] or False,
+            quant['lot_id'] and quant['lot_id'][0] or False,
+            quant['package_id'] and quant['package_id'][0] or False,
+            quant['owner_id'] and quant['owner_id'][0] or False):
+            quant['quantity'] for quant in quants
+        }
+
+    def _get_exhausted_inventory_lines_vals(self, non_exhausted_set):
+        """Return the values of the inventory lines to create if the user
+        wants to include exhausted products. Exhausted products are products
+        without quantities or quantity equal to 0.
+
+        :param non_exhausted_set: set of tuple (product_id, location_id) of non exhausted product-location
+        :return: a list containing the `stock.inventory.line` values to create
+        :rtype: list
+        """
+        self.ensure_one()
+        if self.product_ids:
+            product_ids = self.product_ids.ids
+        else:
+            product_ids = self.env['product.product'].search_read([
+                '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
+                ('type', '=', 'product'),
+                ('active', '=', True)], ['id'])
+            product_ids = [p['id'] for p in product_ids]
+
+        if self.location_ids:
+            location_ids = self.location_ids.ids
+        else:
+            location_ids = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)]).lot_stock_id.ids
 
         vals = []
-        Product = self.env['product.product']
-        # Empty recordset of products available in stock_quants
-        quant_products = self.env['product.product']
+        for product_id in product_ids:
+            for location_id in location_ids:
+                if ((product_id, location_id) not in non_exhausted_set):
+                    vals.append({
+                        'inventory_id': self.id,
+                        'product_id': product_id,
+                        'location_id': location_id,
+                        'theoretical_qty': 0
+                    })
+        return vals
 
-        # If inventory by company
-        if self.company_id:
-            domain += ' AND company_id = %s'
-            args += (self.company_id.id,)
-        if self.product_ids:
-            domain += ' AND product_id in %s'
-            args += (tuple(self.product_ids.ids),)
+    def _get_inventory_lines_values(self):
+        """Return the values of the inventory lines to create for this inventory.
 
-        self.env['stock.quant'].flush(['company_id', 'product_id', 'quantity', 'location_id', 'lot_id', 'package_id', 'owner_id'])
-        self.env['product.product'].flush(['active'])
-        self.env.cr.execute("""SELECT product_id, sum(quantity) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
-            FROM stock_quant
-            LEFT JOIN product_product
-            ON product_product.id = stock_quant.product_id
-            WHERE %s
-            GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
-
-        for product_data in self.env.cr.dictfetchall():
-            product_data['company_id'] = self.company_id.id
-            product_data['inventory_id'] = self.id
-            # replace the None the dictionary by False, because falsy values are tested later on
-            for void_field in [item[0] for item in product_data.items() if item[1] is None]:
-                product_data[void_field] = False
-            product_data['theoretical_qty'] = product_data['product_qty']
-            if self.prefill_counted_quantity == 'zero':
-                product_data['product_qty'] = 0
-            if product_data['product_id']:
-                product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
-                quant_products |= Product.browse(product_data['product_id'])
-            vals.append(product_data)
+        :return: a list containing the `stock.inventory.line` values to create
+        :rtype: list
+        """
+        self.ensure_one()
+        quants_groups = self._get_quantities()
+        vals = []
+        for (product_id, location_id, lot_id, package_id, owner_id), quantity in quants_groups.items():
+            line_values = {
+                'inventory_id': self.id,
+                'product_qty': 0 if self.prefill_counted_quantity == "zero" else quantity,
+                'theoretical_qty': quantity,
+                'prod_lot_id': lot_id,
+                'partner_id': owner_id,
+                'product_id': product_id,
+                'location_id': location_id,
+                'package_id': package_id
+            }
+            line_values['product_uom_id'] = self.env['product.product'].browse(product_id).uom_id.id
+            vals.append(line_values)
+        if self.exhausted:
+            vals += self._get_exhausted_inventory_lines_vals({(l['product_id'], l['location_id']) for l in vals})
         return vals
 
 
@@ -325,19 +378,7 @@ class InventoryLine(models.Model):
 
     @api.depends('inventory_date', 'product_id.stock_move_ids', 'theoretical_qty', 'product_uom_id.rounding')
     def _compute_outdated(self):
-        grouped_quants = self.env['stock.quant'].read_group(
-            [('product_id', 'in', self.product_id.ids), ('location_id', 'in', self.location_id.ids)],
-            ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id', 'quantity:sum'],
-            ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
-            lazy=False)
-        quants = {
-            (quant['product_id'][0],
-            quant['location_id'][0],
-            quant['lot_id'] and quant['lot_id'][0],
-            quant['package_id'] and quant['package_id'][0],
-            quant['owner_id'] and quant['owner_id'][0]): quant['quantity']
-            for quant in grouped_quants
-        }
+        quants = self.inventory_id._get_quantities()
         for line in self:
             if line.state == 'done' or not line.id:
                 line.outdated = False
@@ -347,8 +388,7 @@ class InventoryLine(models.Model):
                 line.location_id.id,
                 line.prod_lot_id.id,
                 line.package_id.id,
-                line.partner_id.id,
-                ), 0
+                line.partner_id.id), 0
             )
             if float_compare(qty, line.theoretical_qty, precision_rounding=line.product_uom_id.rounding) != 0:
                 line.outdated = True
@@ -357,7 +397,6 @@ class InventoryLine(models.Model):
 
     @api.onchange('product_id', 'location_id', 'product_uom_id', 'prod_lot_id', 'partner_id', 'package_id')
     def _onchange_quantity_context(self):
-        product_qty = False
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
         if self.product_id and self.location_id and self.product_id.uom_id.category_id == self.product_uom_id.category_id:  # TDE FIXME: last part added because crash

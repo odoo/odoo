@@ -37,13 +37,13 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fas fa-tachometer-alt"
+                            icon="fa-tachometer"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
                             help="show the odometer logs for this vehicle" >
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="model_id" class="oe_edit_only"/>

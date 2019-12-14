@@ -489,12 +489,16 @@ class PosOrder(models.Model):
                 'amount_paid': 0,
             })
             for line in order.lines:
+                PosOrderLineLot = self.env['pos.pack.operation.lot']
+                for pack_lot in line.pack_lot_ids:
+                    PosOrderLineLot += pack_lot.copy()
                 line.copy({
                     'name': line.name + _(' REFUND'),
                     'qty': -line.qty,
                     'order_id': refund_order.id,
                     'price_subtotal': -line.price_subtotal,
                     'price_subtotal_incl': -line.price_subtotal_incl,
+                    'pack_lot_ids': PosOrderLineLot,
                     })
             refund_orders |= refund_order
 
@@ -735,7 +739,7 @@ class ReportSaleDetails(models.AbstractModel):
         domain = [('state', 'in', ['paid','invoiced','done'])]
 
         if (session_ids):
-            AND([domain, [('session_id', 'in', session_ids)]])
+            domain = AND([domain, [('session_id', 'in', session_ids.ids)]])
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
@@ -754,13 +758,13 @@ class ReportSaleDetails(models.AbstractModel):
                 # stop by default today 23:59:59
                 date_stop = date_start + timedelta(days=1, seconds=-1)
 
-            AND([domain,
+            domain = AND([domain,
                 [('date_order', '>=', fields.Datetime.to_string(date_start)),
                 ('date_order', '<=', fields.Datetime.to_string(date_stop))]
             ])
 
             if config_ids:
-                AND([domain, [('config_id', 'in', config_ids)]])
+                domain = AND([domain, [('config_id', 'in', config_ids.ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
@@ -832,12 +836,12 @@ class ReportSaleDetails(models.AbstractModel):
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
         return data
 
-    class AccountCashRounding(models.Model):
-        _inherit = 'account.cash.rounding'
+class AccountCashRounding(models.Model):
+    _inherit = 'account.cash.rounding'
 
-        @api.constrains('rounding', 'rounding_method', 'strategy')
-        def _check_session_state(self):
-            open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
-            if open_session:
-                raise ValidationError(
-                    _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
+    @api.constrains('rounding', 'rounding_method', 'strategy')
+    def _check_session_state(self):
+        open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+        if open_session:
+            raise ValidationError(
+                _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

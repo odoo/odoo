@@ -142,6 +142,19 @@ var ActionMixin = {
         return this._title;
     },
     /**
+     * Returns a serializable state that will be pushed in the URL by
+     * the action manager, allowing the action to be restarted correctly
+     * upon refresh. This function should be overriden to add extra information.
+     * Note that some keys are reserved by the framework and will thus be
+     * ignored ('action', 'active_id', 'active_ids' and 'title', for all
+     * actions, and 'model' and 'view_type' for act_window actions).
+     *
+     * @returns {Object}
+     */
+    getState: function () {
+        return {};
+    },
+    /**
      * Gives the focus to the action
      */
     giveFocus: function () {

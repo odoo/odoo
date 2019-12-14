@@ -15,7 +15,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         'click .new_opp_confirm': '_onNewOppConfirm',
         'click .edit_opp_confirm': '_onEditOppConfirm',
         'change .edit_opp_form .next_activity': '_onChangeNextActivity',
-        'click div.input-group span.fa-calendar-alt': '_onCalendarIconClick',
+        'click div.input-group span.fa-calendar': '_onCalendarIconClick',
     },
 
     //--------------------------------------------------------------------------
@@ -254,8 +254,8 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         $(ev.currentTarget).closest('div.date').datetimepicker({
             format : time.getLangDateFormat(),
             icons: {
-                time: 'far fa-clock',
-                date: 'far fa-calendar-alt',
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down',
             },

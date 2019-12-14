@@ -60,15 +60,15 @@ var SwitchCompanyMenu = Widget.extend({
         var dropdownMenu = dropdownItem.parent();
         var companyID = dropdownItem.data('company-id');
         var allowed_company_ids = this.allowed_company_ids;
-        if (dropdownItem.find('.fa-square').length) {
+        if (dropdownItem.find('.fa-square-o').length) {
             // 1 enabled company: Stay in single company mode
             if (this.allowed_company_ids.length === 1) {
-                dropdownMenu.find('.fa-check-square').removeClass('fas fa-check-square').addClass('far fa-square');
-                dropdownItem.find('.fa-square').removeClass('far fa-square').addClass('fas fa-check-square');
+                dropdownMenu.find('.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o');
+                dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
                 allowed_company_ids = [companyID]
             } else { // Multi company mode
                 allowed_company_ids.push(companyID);
-                dropdownItem.find('.fa-square').removeClass('far fa-square').addClass('fas fa-check-square');
+                dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
             }
         }
         session.setCompanies(companyID, allowed_company_ids);
@@ -88,12 +88,12 @@ var SwitchCompanyMenu = Widget.extend({
         var companyID = dropdownItem.data('company-id');
         var allowed_company_ids = this.allowed_company_ids;
         var current_company_id = allowed_company_ids[0];
-        if (dropdownItem.find('.fa-square').length) {
+        if (dropdownItem.find('.fa-square-o').length) {
             allowed_company_ids.push(companyID);
-            dropdownItem.find('.fa-square').removeClass('far fa-square').addClass('fas fa-check-square');
+            dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
         } else {
             allowed_company_ids.splice(allowed_company_ids.indexOf(companyID), 1);
-            dropdownItem.find('.fa-check-square').addClass('far fa-square').removeClass('fas fa-check-square');
+            dropdownItem.find('.fa-check-square').addClass('fa-square-o').removeClass('fa-check-square');
         }
         session.setCompanies(current_company_id, allowed_company_ids);
     },

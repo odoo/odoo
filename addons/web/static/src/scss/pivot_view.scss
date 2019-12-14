@@ -1,5 +1,4 @@
 .o_pivot {
-    overflow: auto;
 
     .o_pivot_cell_value {
         font-size: 1em;
@@ -61,20 +60,18 @@
         .o_pivot_header_cell_closed {
             @include o-pivot-header-cell;
             &::before {
-                font-family: 'Font Awesome 5 Free';
-                content: "\f067";
+                font-family: FontAwesome;
+                content: "";
                 margin-right: 8px;
-                font-weight: 900;
             }
         }
 
         .o_pivot_header_cell_opened {
             @include o-pivot-header-cell;
             &::before {
-                font-family: 'Font Awesome 5 Free';
-                content: "\f068";
+                font-family: FontAwesome;
+                content: "";
                 margin-right: 8px;
-                font-weight: 900;
             }
         }
 
@@ -91,10 +88,6 @@
         .o_pivot_cell_value.o_cell_hover {
             background-color: $table-hover-bg;
         }
-    }
-
-    .o_field_selection {
-        position: absolute;
     }
 
     .o_pivot_field_selection::after {
