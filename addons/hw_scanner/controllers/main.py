@@ -40,6 +40,7 @@ class Scanner(Thread):
         self.input_dir = '/dev/input/by-id/'
         self.open_devices = []
         self.barcodes = Queue()
+        self.end_of_code_symbols = {evdev.ecodes.KEY_KPENTER, evdev.ecodes.KEY_ENTER}
         self.keymap = {
             2: ("1","!"),
             3: ("2","@"),
@@ -195,6 +196,7 @@ class Scanner(Thread):
                 while True: # keycode loop
                     r,w,x = select({dev.fd: dev for dev in [d.evdev for d in devices]},[],[],5)
                     if len(r) == 0: # timeout
+                        _logger.debug('timeout scan')
                         break
 
                     for fd in r:
@@ -218,7 +220,7 @@ class Scanner(Thread):
                                             device.barcode.append(self.keymap[event.code][0])
                                     elif event.code == 42 or event.code == 54: # SHIFT
                                         device.shift = True
-                                    elif event.code == 28: # ENTER, end of barcode
+                                    elif event.code in self.end_of_code_symbols: # ENTER, end of barcode
                                         _logger.debug('pushing barcode %s from %s', ''.join(device.barcode), str(device.evdev))
                                         self.barcodes.put( (time.time(),''.join(device.barcode)) )
                                         device.barcode = []
