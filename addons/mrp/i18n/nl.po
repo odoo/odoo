@@ -39,6 +39,13 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+"* Concept: de MO is nog niet bevestigd.\n"
+"* Bevestigd: de MO is bevestigd, de voorraadregels en aanvullen  van de componenten zijn geactiveerd.\n"
+"* Gepland: de WO is gepland.\n"
+"* In uitvoering: de productie is gestart (op de MO of op de WO).\n"
+"* Sluiten: de productie is voltooid, de MO moet worden gesloten\n"
+"* Klaar: de MO is gesloten, de voorraadbewegingen zijn geboekt.\n"
+"* Geannuleerd: de MO is geannuleerd, kan niet meer worden bevestigd."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -204,7 +211,7 @@ msgstr "<span class=\"o_stat_text\">OEE</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Performance</span>"
-msgstr "<span class=\"o_stat_text\">Performantie</span>"
+msgstr "<span class=\"o_stat_text\">Prestatie</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -498,7 +505,7 @@ msgstr "Toestaan om voorraad reserveringen te annuleren"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr "Alternatieve productieplaatsen"
+msgstr "Alternatieve werkplekken"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -1118,7 +1125,7 @@ msgstr "Maak een nieuwe werkplek aan"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_workcenter_report
 msgid "Create a new work orders performance"
-msgstr "Maak een nieuw werkorder performantie aan"
+msgstr "Maak een nieuw werkorder prestatie aan"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -2624,7 +2631,7 @@ msgstr "Originele productie hoeveelheid"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr ""
+msgstr "Overall Effective Efficiency doel in percentage"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -3582,6 +3589,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
+"Sommige van uw bijproducten worden getraceerd, u moet een productieorder "
+"opgeven om de juiste bijproducten op te halen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -4716,7 +4725,7 @@ msgstr "Werkorders afwijking"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr "Werkorder performantie"
+msgstr "Werkorder prestatie"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
@@ -4837,6 +4846,10 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"Het is niet toegestaan om een partij- of serienummer te maken of te bewerken"
+" voor de componenten met het bewerkingstype \"Productie\". Om dit te "
+"wijzigen, gaat u naar het bewerkingstype en vinkt u het vakje aan \"Nieuwe "
+"partijen / serienummers voor componenten maken\"."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type

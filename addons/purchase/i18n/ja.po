@@ -57,7 +57,7 @@ msgstr "行数"
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} 発注 (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} オーダ (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
@@ -97,6 +97,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"${object.partner_id.name} ${object.partner_id.title or \"様\"}\n"
+"% if object.partner_id.parent_id:\n"
+"(${object.partner_id.parent_id.name})\n"
+"% endif\n"
+"<br/><br/>\n"
+"${object.company_id.name}からの注文書 <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"参照: ${object.partner_ref}\n"
+"% endif\n"
+"(金額 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>)\n"
+"を添付いたします。\n"
+"<br/><br/>\n"
+"ご質問等ございましたらお知らせください。\n"
+"<br/><br/>\n"
+"よろしくお願いいたします。\n"
+"</p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -120,6 +139,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"${object.partner_id.name} ${object.partner_id.title or \"様\"}\n"
+"% if object.partner_id.parent_id:\n"
+"(${object.partner_id.parent_id.name})\n"
+"% endif\n"
+"<br/><br/>\n"
+"${object.company_id.name}からの見積依頼 <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"参照: ${object.partner_ref}\n"
+"% endif\n"
+"(金額 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>)\n"
+"を添付いたします。\n"
+"<br/><br/>\n"
+"ご質問等ございましたらお知らせください。\n"
+"<br/><br/>\n"
+"よろしくお願いいたします。\n"
+"</p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -1569,7 +1607,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send by Email"
-msgstr ""
+msgstr "Eメールで再送"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1725,7 +1763,7 @@ msgstr "セキュリティトークン"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "購買オーダまたは過去の請求書を選択"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
