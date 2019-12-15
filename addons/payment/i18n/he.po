@@ -7,7 +7,7 @@
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
 # Martin Trigaux, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
-# yacov mosbacher (‫יעקב מוסבכר‬‎) <ymosba@gmail.com>, 2019
+# yacov mosbacher <ymosba@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
@@ -153,13 +153,13 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "יש לציין יומן עבור כל שירות תשלומים מקוון %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "שירות תשלומים מקוון נדרש כדי ליצור עסקה."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -534,7 +534,7 @@ msgstr "איש קשר"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "מודול מקביל"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
@@ -768,7 +768,7 @@ msgstr "עמלות"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "חישוב עמלות נתמך"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -944,13 +944,13 @@ msgstr "שגיאת שרת פנימית"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "נמצא אסימון לא תקף ! אסימון ספק שירות תשלומים מקוון %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "נמצא אסימון לא תקף ! אסימון לקוח / ספק %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1260,7 +1260,7 @@ msgstr "שותף"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
-msgstr ""
+msgstr "שם לקוח / ספק"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__paypal
@@ -1395,7 +1395,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__payment_flow__s2s
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "תשלום מ Odoo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1413,7 +1413,7 @@ msgstr "תשלומים"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "תשלומים נכשלו"
 
 #. module: payment
 #. openerp-web
@@ -1482,7 +1482,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "אנא המתן..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1619,21 +1619,21 @@ msgstr "שגיאת שרת"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__server2server
 msgid "Server To Server"
-msgstr ""
+msgstr "שרת לשרת"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "שגיאת שרת"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "שגיאת שרת:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1643,7 +1643,7 @@ msgstr "הגדר תשלומים"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
 msgid "Short name"
-msgstr ""
+msgstr "שם קצר"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips

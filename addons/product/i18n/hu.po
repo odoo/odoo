@@ -121,6 +121,12 @@ msgid ""
 "                                          Extra Price\n"
 "                                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                      Extrák árai\n"
+"                                      </span>\n"
+"                                      <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                      Extra ára\n"
+"                                      </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -240,7 +246,7 @@ msgstr "Akusztikus blokk képernyők"
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "Akció szükséges"
+msgstr "Művelet szükséges"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -689,7 +695,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
 msgid "Cubic Meters"
-msgstr ""
+msgstr "Köbméter"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
@@ -856,7 +862,7 @@ msgstr "Időtartam"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "Dinamikusan"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1081,25 +1087,25 @@ msgstr "Kép"
 #: model:ir.model.fields,field_description:product.field_product_product__image_1024
 #: model:ir.model.fields,field_description:product.field_product_template__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "1024-es kép"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_128
 #: model:ir.model.fields,field_description:product.field_product_template__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "128-as kép"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_256
 #: model:ir.model.fields,field_description:product.field_product_template__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "256-os kép"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_512
 #: model:ir.model.fields,field_description:product.field_product_template__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "512-es kép"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1148,7 +1154,7 @@ msgstr "Egyedi munkatér"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "Azonnal"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1365,7 +1371,7 @@ msgstr "Min. mennyiség"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr ""
+msgstr "Több ár termékenként"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1869,7 +1875,7 @@ msgstr "Termékváltozatok"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Product: %s"
-msgstr ""
+msgstr "Termék: %s"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -1982,12 +1988,12 @@ msgstr "Hivatkozás"
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Related Products"
-msgstr ""
+msgstr "Hasonló termékek"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
-msgstr ""
+msgstr "Hasonló változatok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
@@ -2165,7 +2171,7 @@ msgstr ""
 #: model:product.template.attribute.value,name:product.product_11_attribute_1_value_1
 #: model:product.template.attribute.value,name:product.product_4_attribute_1_value_1
 msgid "Steel"
-msgstr "Fém"
+msgstr "Acél"
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -2449,7 +2455,7 @@ msgstr "Mértékegység név"
 #: model:product.template,uom_name:product.product_product_8_product_template
 #: model:product.template,uom_name:product.product_product_9_product_template
 msgid "Units"
-msgstr ""
+msgstr "Egység"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2564,7 +2570,7 @@ msgstr "Változat értékek"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Variant: %s"
-msgstr ""
+msgstr "Változat: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -2844,17 +2850,17 @@ msgstr "nap"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr "pld: Lámpák"
+msgstr "pl.: Lámpák"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr "pld: Odoo Enterprise feliratkozás"
+msgstr "pl.: Odoo Enterprise feliratkozás"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr "pld: USD Kiskereskedők"
+msgstr "pl.: USD Kiskereskedők"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view

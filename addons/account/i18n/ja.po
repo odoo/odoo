@@ -5,7 +5,6 @@
 # Translators:
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2019
 # Takuya Sawada <takuya@tuntunkun.com>, 2019
-# Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2019
 # Masayuki Takesue <m_takesue@nifty.com>, 2019
 # Manami Hashi <manami@roomsfor.hk>, 2019
 # ook rio <riokoko5@gmail.com>, 2019
@@ -19,13 +18,14 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
+# Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2019
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -1654,7 +1654,6 @@ msgstr "通貨金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
-#: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
@@ -1945,11 +1944,16 @@ msgid "April"
 msgstr "4月"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_incoterms_form
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_view_search
+#: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Archived"
 msgstr "アーカイブ済"
@@ -2020,7 +2024,7 @@ msgstr "メッセージの作成者。設定されない場合、email_fromは�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Auto-Complete"
-msgstr ""
+msgstr "参照更新"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
@@ -3212,6 +3216,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__country_id
@@ -3545,7 +3550,7 @@ msgstr "クレジットカード"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__refund_method
 msgid "Credit Method"
-msgstr ""
+msgstr "クレジット方法"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_move_id
@@ -3553,6 +3558,7 @@ msgid "Credit Move"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4518,11 +4524,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "Exception Activities"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Exchange Difference"
@@ -4711,6 +4712,7 @@ msgstr "会計期間"
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -4953,12 +4955,12 @@ msgstr "全消込"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__cancel
 msgid "Full Refund"
-msgstr ""
+msgstr "全返金"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__modify
 msgid "Full refund and new draft invoice"
-msgstr ""
+msgstr "全返金とドラフト請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -5442,6 +5444,7 @@ msgstr "銀行取引明細書をQIFでインポート"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__in_payment
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__in_payment
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In Payment"
 msgstr "支払中"
 
@@ -5672,12 +5675,14 @@ msgid "Invalid fiscal year last day"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, python-format
 msgid "Invoice"
 msgstr "請求書"
 
@@ -6937,6 +6942,11 @@ msgid "Move Reconciled"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
+msgid "Move Type"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
 msgstr "多通貨"
@@ -7229,7 +7239,6 @@ msgstr "日数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__number_entries
 msgid "Number of entries related to this model"
 msgstr ""
 
@@ -7351,13 +7360,6 @@ msgid "Only one payment will be created by partner (bank)/ currency."
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/account_move_reversal.py:0
-#, python-format
-msgid ""
-"Only posted journal entries being not already a refund can be reversed."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
 msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
@@ -7375,7 +7377,7 @@ msgstr "オープン"
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "Open Balance"
-msgstr ""
+msgstr "未消込残高"
 
 #. module: account
 #. openerp-web
@@ -7591,6 +7593,7 @@ msgstr "パッケージ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__paid
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "支払済"
@@ -7644,7 +7647,7 @@ msgstr "部分消込"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__refund
 msgid "Partial Refund"
-msgstr ""
+msgstr "部分返金"
 
 #. module: account
 #. openerp-web
@@ -7668,11 +7671,6 @@ msgstr "取引先"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
 msgid "Partner Company"
 msgstr "取引先会社"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
-msgid "Partner Company's Country"
-msgstr "取引先会社国"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -8716,6 +8714,7 @@ msgstr "新規にリセット"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
 #, python-format
 msgid "Residual"
 msgstr "残余"
@@ -8790,6 +8789,11 @@ msgid "Reversal date"
 msgstr "逆仕訳日"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
+msgid "Reversal of"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
@@ -8814,7 +8818,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Reverse"
-msgstr ""
+msgstr "リバース"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8832,11 +8836,6 @@ msgstr ""
 #, python-format
 msgid "Reverse Moves"
 msgstr "逆仕訳を生成"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
-msgid "Reverse entry"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -10357,6 +10356,14 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"The account selected on your journal entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "The accounting date is prior to the tax lock date which is set on %s. Then, "
 "this will be moved to the next available one during the invoice validation."
 msgstr ""
@@ -10474,7 +10481,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
-msgstr ""
+msgstr "クレジットノートは自動的に検証され、参照元の請求書と消し込まれます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -10482,12 +10489,15 @@ msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
+"クレジットノートは自動的に検証され、参照元の請求書と消し込まれます。\n"
+"\n"
+"それに加え、参照元の請求書がドラフトの状態で複製されます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
-msgstr ""
+msgstr "ドラフトのクレジットノートが作成され、発行前に編集することができます。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10886,6 +10896,12 @@ msgid "There are currently no invoices and payments for your account."
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "There are no journal items in the draft state to post."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -10899,12 +10915,6 @@ msgstr ""
 msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
-msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "There are no journal items in the draft state to post."
 msgstr ""
 
 #. module: account
@@ -11358,13 +11368,17 @@ msgstr "運送"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__message_type
 #: model:ir.model.fields,field_description:account.field_account_journal__type
 #: model:ir.model.fields,field_description:account.field_account_move__type
-#: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__rule_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__rule_type
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_type
 msgid "Type"
 msgstr "タイプ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__type_name
+msgid "Type Name"
+msgstr "タイプ名"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__activity_exception_decoration
@@ -11739,6 +11753,11 @@ msgstr ""
 #, python-format
 msgid "View"
 msgstr "照会"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "View accounts detail"
+msgstr "口座詳細を照会"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -12496,3 +12515,43 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ 件数"
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your account since there are some journal "
+"items linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your journal since there are some journal "
+"entries linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your tax since there are some journal items "
+"linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some journal items linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic tags since there are some"
+" journal items linked to it."
+msgstr ""

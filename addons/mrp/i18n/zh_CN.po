@@ -20,12 +20,12 @@
 # Jeanphy <hzh0292@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # keecome <7017511@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Martin Trigaux, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgstr "# 物料清单"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# BOM 使用的地方"
+msgstr "# BOM 使用"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
@@ -103,7 +103,7 @@ msgstr "# 工单"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# BOM 使用的地方"
+msgstr "# BOM 使用"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -192,7 +192,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">负载</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -289,7 +289,7 @@ msgstr "<strong class=\"mr8\">至</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Effectiveness Category: </strong>"
-msgstr "<strong>生效类别: </strong>"
+msgstr "<strong>有效性类别: </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -341,7 +341,7 @@ msgstr "<strong>开始日: </strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Stop Date: </strong>"
-msgstr ""
+msgstr "<strong>停止日期: </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -352,7 +352,7 @@ msgstr "<strong>工作中心</strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Workcenter: </strong>"
-msgstr ""
+msgstr "<strong>工作中心:</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -501,7 +501,7 @@ msgstr "允许取消预留库存"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "替代工作中心"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -572,7 +572,7 @@ msgstr "附件"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
 msgid "Attachments Count"
-msgstr ""
+msgstr "附件数"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
@@ -716,7 +716,7 @@ msgstr "过去一月阻塞的时数"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
 msgid "Blocking Reason"
-msgstr ""
+msgstr "阻塞原因"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -807,7 +807,7 @@ msgstr "副产品"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_id
 msgid "By-product"
-msgstr ""
+msgstr "副产品"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -822,7 +822,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "By-products"
-msgstr ""
+msgstr "副产品"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_byproduct
@@ -860,7 +860,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__capacity
 msgid "Capacity"
-msgstr "容量"
+msgstr "产能"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
@@ -975,7 +975,7 @@ msgstr "组件"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
 msgid "Components Location"
-msgstr ""
+msgstr "组件位置"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -995,7 +995,7 @@ msgstr "基础配置"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__confirm_cancel
 msgid "Confirm Cancel"
-msgstr ""
+msgstr "确认取消"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
@@ -1021,22 +1021,22 @@ msgstr "已投料"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
 msgid "Consumed Disassembly Lines"
-msgstr "拆卸单行"
+msgstr "消耗的拆卸明细行"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr "拆卸单"
+msgstr "消耗的拆卸单"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Consumed Products"
-msgstr "已投入产品"
+msgstr "消耗的产品"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
 msgid "Consumed in Operation"
-msgstr "投料作业"
+msgstr "消耗在作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__consumption
@@ -3066,7 +3066,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
 msgid "Propagate Rescheduling"
-msgstr ""
+msgstr "传导重新安排"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel
@@ -3244,7 +3244,7 @@ msgstr "需要序列号"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "Reschedule if Higher Than"
-msgstr ""
+msgstr "重新安排，如果高于"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_reserved

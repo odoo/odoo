@@ -28,6 +28,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Систем өөр гудамжны дэд талбаруудаас үндэслэн гудамжны бүтэн талбарыг "
+"тооцоолох зарчмыг өөрчлөх"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -67,6 +69,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Энэ улсад харьяалагдах хаягийн түгээмэл форматыг энд томьёолж болно.\n"
+"\n"
+"Та python загварыг хаягийн бүх талбаруудад ашиглах боломжтой. (жишээлбэл, гудамжны нэр харахыг хүсэж байгаа бол %(street_name)s%(street_number)s-ыг таслал болон байшингийн дугаарын хамт ашиглана)\n"
+"%(street_name)s: Гудамжны нэр\n"
+"%(street_number)s:  Байшингийн дугаар\n"
+"%(street_number2)s: Хаалганы дугаар"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -84,7 +92,7 @@ msgstr "Байшингийн дугаар"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Гудамжны формат"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
@@ -103,11 +111,11 @@ msgstr "Гудамжны нэр"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Гудамжны формат..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:64
 #: code:addons/base_address_extended/models/base_address_extended.py:112
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Гудамжны форматын танигдаагүй талбар %s"
