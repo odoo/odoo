@@ -109,7 +109,7 @@ ADAMEquipmentProtocol = ScaleProtocol(
     tareCommand=b'T',
     clearCommand=None, # No clear command -> Tare again
     emptyAnswerValid=True, # AZExtra does not answer unless a new non-zero weight has been detected
-    autoResetWeight=True,  # AZExtra will not return 0 after removing products
+    autoResetWeight=False,  # AZExtra will not return 0 after removing products
 )
 
 
