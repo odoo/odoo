@@ -44,6 +44,7 @@
 # 湘子 南 <1360857908@qq.com>, 2018
 # lttlsnk <lttlsnk@gmail.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 # F4NNIU <sparkamax+fanniu@gmail.com>, 2018
 # rejen he <251442037@qq.com>, 2018
 # keecome <7017511@qq.com>, 2018
@@ -51,13 +52,10 @@
 # jian liu <lj1989419@gmail.com>, 2018
 # John An <johnxan@163.com>, 2019
 # Maie <m@maie.name>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # 黎伟杰 <674416404@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # F4NNIU <sparkamax@gmail.com>, 2019
-# Jerry Pan <panjianyu@inspur.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # John Lin <linyinhuan@139.com>, 2019
@@ -65,18 +63,20 @@
 # Summer Xia <sxi@odoo.com>, 2019
 # Emily Jia <eji@odoo.com>, 2019
 # wangting <39181819@qq.com>, 2019
-# snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Martin Trigaux, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-14 08:02+0000\n"
+"POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -182,6 +182,93 @@ msgstr ""
 " - 匈牙利税\n"
 " - 匈牙利银行账户\n"
 " "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_dk
+msgid ""
+"\n"
+"\n"
+"Localization Module for Denmark\n"
+"===============================\n"
+"\n"
+"This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"        \n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -770,6 +857,15 @@ msgid ""
 msgstr ""
 "\n"
 "       安装两个模块时更正地址格式"
+
+#. module: base
+#: model:ir.module.module,description:base.module_product_unspsc
+msgid ""
+"\n"
+"        Countries like Colombia, Peru and Mexico need to be able to use the \n"
+"        UNSPSC code for their products and uoms.  \n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1636,6 +1732,15 @@ msgstr ""
 "\n"
 "克罗地亚会计报告\n"
 "================================"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_dk_reports
+msgid ""
+"\n"
+"Accounting reports for Denmark\n"
+"=================================\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et_reports
@@ -6487,7 +6592,7 @@ msgstr ""
 "\n"
 "此模块为您的电子商务商店添加了一个比较工具，以便您的购物者可以根据其属性轻松比较产品。它将大大加快他们的购买决策。\n"
 "\n"
-"要配置产品属性，请在网站设置中激活*属性和变量*。这将在产品表单中添加专用部分。在配置中，此模块将类别字段添加到产品属性，以便构建购物者的比较表。\n"
+"要配置产品属性，请在网站设置中激活*属性和变量*。这将在产品表单中添加专用章节。在配置中，此模块将类别字段添加到产品属性，以便构建购物者的比较表。\n"
 "\n"
 "最后，该模块附带一个选项，用于在产品网页中显示属性摘要表（可在“自定义”菜单中找到）。\n"
 "    "
@@ -6760,11 +6865,11 @@ msgstr ""
 "\n"
 "**公布合作伙伴**\n"
 "\n"
-"要发布合作伙伴，请在其联系表单中设置*级别*（在“合作伙伴分配”部分中），然后单击“发布*”按钮。\n"
+"要发布合作伙伴，请在其联系表单中设置*级别*（在“合作伙伴分配”章节中），然后单击“发布*”按钮。\n"
 "\n"
 "**线索**\n"
 "\n"
-"可以一次为一个或多个商机完成转发引线。该操作位于潜在客户/业务机会表单视图的* Assigned Partner *部分以及列表视图的* Action *菜单中。\n"
+"可以一次为一个或多个商机完成转发引线。该操作位于潜在客户/业务机会表单视图的* Assigned Partner *章节以及列表视图的* Action *菜单中。\n"
 "\n"
 "自动分配是从伙伴级别的权重和地理定位来计算的。合作伙伴得到他们周围的线索.\n"
 "\n"
@@ -11327,6 +11432,11 @@ msgid "Colombian Localization for EDI documents"
 msgstr "哥伦比亚的EDI文档本地化"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_co_edi_ubl_2_1
+msgid "Colombian Localization for EDI documents UBL 2.1"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__color
 #: model:ir.model.fields,field_description:base.field_res_partner__color
 #: model:ir.model.fields,field_description:base.field_res_partner_category__color
@@ -12307,7 +12417,7 @@ msgstr "当前行"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate
 msgid "Current Rate"
-msgstr "当前比率"
+msgstr "当前汇率"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -12732,6 +12842,16 @@ msgstr "刚果民主共和国"
 #: model:res.country,name:base.dk
 msgid "Denmark"
 msgstr "丹麦"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_dk
+msgid "Denmark - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_dk_reports
+msgid "Denmark - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -13597,8 +13717,13 @@ msgid "Electronic invoicing for Colombia with Carvajal"
 msgstr "Carvajal为哥伦比亚电子发票"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:619
-#: code:addons/base/models/ir_ui_view.py:700
+#: model:ir.module.module,shortdesc:base.module_l10n_co_edi_ubl_2_1
+msgid "Electronic invoicing for Colombia with Carvajal UBL 2.1"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_ui_view.py:629
+#: code:addons/base/models/ir_ui_view.py:720
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "元素 '%s' 在母级视图中没有找到"
@@ -14504,7 +14629,19 @@ msgid "File Size"
 msgstr "文件大小"
 
 #. module: base
-#: code:addons/base/wizard/base_import_language.py:44
+#: code:addons/base/wizard/base_import_language.py:45
+#, python-format
+msgid ""
+"File not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/wizard/base_import_language.py:51
 #, python-format
 msgid ""
 "File not imported due to format mismatch or a malformed file. (Valid formats are .csv, .po, .pot)\n"
@@ -21214,7 +21351,7 @@ msgstr "只有目标联系人可链接到现有日志项。如果你需要合并
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
-msgstr "只有以下访问等级的用户可才做这"
+msgstr "只有以下访问等级的用户才可以做"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -24541,6 +24678,11 @@ msgid "Studio"
 msgstr "在线开发工具"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_studio_customization
+msgid "Studio customizations"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
 msgid "Submenus"
 msgstr "子菜单"
@@ -26685,6 +26827,13 @@ msgid ""
 msgstr "此模块可确保在线计算交货价格，并使用TaxCloud计算税额时，税务计算在订单和交货时都能正确完成。"
 
 #. module: base
+#: model:ir.module.module,description:base.module_studio_customization
+msgid ""
+"This module has been generated by Odoo Studio.\n"
+"It contains the apps created with Studio and the customizations of existing apps."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "This module will trigger the uninstallation of below modules."
 msgstr "该模块将触发以下模块卸载。"
@@ -27167,6 +27316,12 @@ msgid "UK - Accounting Reports to HMRC"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_product_unspsc
+#: model:ir.module.module,summary:base.module_product_unspsc
+msgid "UNSPSC product codes"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping"
 msgstr "UPS 发货"
@@ -27323,9 +27478,11 @@ msgid "Units of measure"
 msgstr "计量单位"
 
 #. module: base
+#: code:addons/model.py:143 code:addons/model.py:152 code:addons/model.py:153
 #: model:ir.model,name:base.model__unknown
 #: selection:ir.module.module.dependency,state:0
 #: selection:ir.module.module.exclusion,state:0
+#, python-format
 msgid "Unknown"
 msgstr "未知"
 
@@ -28870,6 +29027,11 @@ msgid "selection"
 msgstr "选择项"
 
 #. module: base
+#: selection:ir.model.fields,ttype:0
+msgid "serialized"
+msgstr "序列化"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "snailmail_account"
 msgstr "snailmail_account"
@@ -28878,11 +29040,6 @@ msgstr "snailmail_account"
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "social_media"
 msgstr "social_media"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_stock
-msgid "stock"
-msgstr "库存"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_zebra
