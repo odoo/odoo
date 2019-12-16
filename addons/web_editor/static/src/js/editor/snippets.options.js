@@ -1290,6 +1290,22 @@ const SnippetOptionWidget = Widget.extend({
      */
     onRemove: function () {},
     /**
+     * Called when the target is shown, only meaningful if the target was hidden
+     * at some point (typically used for 'invisible' snippets).
+     *
+     * @abstract
+     * @returns {Promise|undefined}
+     */
+    onTargetShow: async function () {},
+    /**
+     * Called when the target is hidden (typically used for 'invisible'
+     * snippets).
+     *
+     * @abstract
+     * @returns {Promise|undefined}
+     */
+    onTargetHide: async function () {},
+    /**
      * Called when the template which contains the associated snippet is about
      * to be saved.
      *

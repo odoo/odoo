@@ -27,6 +27,7 @@ var SnippetEditor = Widget.extend({
         'option_update': '_onOptionUpdate',
         'user_value_widget_request': '_onUserValueWidgetRequest',
         'snippet_option_update': '_onSnippetOptionUpdate',
+        'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
     },
 
     /**
@@ -158,10 +159,11 @@ var SnippetEditor = Widget.extend({
      * Notifies all the associated snippet options that the snippet has just
      * been dropped in the page.
      */
-    buildSnippet: function () {
+    buildSnippet: async function () {
         for (var i in this.styles) {
             this.styles[i].onBuilt();
         }
+        await this.toggleTargetVisibility(true);
     },
     /**
      * Notifies all the associated snippet options that the template which
@@ -171,6 +173,7 @@ var SnippetEditor = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
+        await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
         const proms = _.map(this.styles, option => {
             return option.cleanForSave();
         });
@@ -211,6 +214,12 @@ var SnippetEditor = Widget.extend({
      */
     isShown: function () {
         return this.$el && this.$el.parent().length && this.$el.hasClass('oe_active');
+    },
+    /**
+     * @returns {boolean}
+     */
+    isTargetVisible: function () {
+        return (this.$target[0].dataset.invisible !== '1');
     },
     /**
      * Removes the associated snippet from the DOM and destroys the associated
@@ -328,6 +337,19 @@ var SnippetEditor = Widget.extend({
                 }
             });
         });
+    },
+    /**
+     * @param {boolean} [show]
+     * @returns {Promise<boolean>}
+     */
+    toggleTargetVisibility: async function (show) {
+        show = this._toggleVisibilityStatus(show);
+        var styles = _.values(this.styles);
+        const proms = _.sortBy(styles, '__order').map(style => {
+            return show ? style.onTargetShow() : style.onTargetHide();
+        });
+        await Promise.all(proms);
+        return show;
     },
     /**
      * @param {boolean} [isTextEdition=false]
@@ -481,6 +503,21 @@ var SnippetEditor = Widget.extend({
             });
             $optionsSection.toggleClass('d-none', options.length === 0);
         });
+    },
+    /**
+     * @private
+     * @param {boolean} [show]
+     */
+    _toggleVisibilityStatus: function (show) {
+        if (show === undefined) {
+            show = !this.isTargetVisible();
+        }
+        if (show) {
+            delete this.$target[0].dataset.invisible;
+        } else {
+            this.$target[0].dataset.invisible = '1';
+        }
+        return show;
     },
 
     //--------------------------------------------------------------------------
@@ -716,6 +753,13 @@ var SnippetEditor = Widget.extend({
     },
     /**
      * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetOptionVisibilityUpdate: function (ev) {
+        ev.data.show = this._toggleVisibilityStatus(ev.data.show);
+    },
+    /**
+     * @private
      * @param {Event} ev
      */
     _onUserValueWidgetRequest: function (ev) {
@@ -752,6 +796,7 @@ var SnippetsMenu = Widget.extend({
         'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_removed': '_onSnippetRemoved',
         'snippet_cloned': '_onSnippetCloned',
+        'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'update_customize_elements': '_onUpdateCustomizeElements',
         'hide_overlay': '_onHideOverlay',
@@ -834,7 +879,7 @@ var SnippetsMenu = Widget.extend({
                 )[0]
             );
             this.$el.append(this.invisibleDOMPanelEl);
-            this._updateInvisibleDOM();
+            return this._updateInvisibleDOM();
         }));
 
         // Prepare snippets editor environment
@@ -1157,22 +1202,28 @@ var SnippetsMenu = Widget.extend({
      * The entries will contains an 'Edit' button to activate their snippet.
      *
      * @private
+     * @returns {Promise}
      */
     _updateInvisibleDOM: function () {
-        this.invisibleDOMMap = new Map();
-        const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
-        $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
-        const $invisibleSnippets = this.getEditableArea().find('.o_snippet_invisible');
+        return this._mutex.exec(() => {
+            this.invisibleDOMMap = new Map();
+            const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
+            $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
+            const $invisibleSnippets = this.getEditableArea().find('.o_snippet_invisible');
 
-        _.each($invisibleSnippets, el => {
-            const $invisEntry = $('<div/>', {
-                class: 'o_we_invisible_entry d-flex align-items-center',
-                text: _t(el.getAttribute('string')),
-            }).append($('<i/>', {class: 'fa fa-edit ml-2'}));
-            $invisibleDOMPanelEl.append($invisEntry);
-            this.invisibleDOMMap.set($invisEntry[0], el);
+            $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
+
+            const proms = _.map($invisibleSnippets, async el => {
+                const editor = await this._createSnippetEditor($(el));
+                const $invisEntry = $('<div/>', {
+                    class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
+                    text: _t(el.getAttribute('string')),
+                }).append($('<i/>', {class: `fa ${editor.isTargetVisible() ? 'fa-eye' : 'fa-eye-slash'} ml-2`}));
+                $invisibleDOMPanelEl.append($invisEntry);
+                this.invisibleDOMMap.set($invisEntry[0], el);
+            });
+            return Promise.all(proms);
         });
-        $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
     },
     /**
      * Disable the overlay editor of the active snippet and activate the new one
@@ -1722,12 +1773,11 @@ var SnippetsMenu = Widget.extend({
                         self.trigger_up('snippet_dropped', {$target: $target});
                         self._disableUndroppableSnippets();
 
-                        self._updateInvisibleDOM();
-
                         self._callForEachChildSnippet($target, function (editor, $snippet) {
-                            editor.buildSnippet();
+                            return editor.buildSnippet();
                         }).then(function () {
                             $target.trigger('content_changed');
+                            return self._updateInvisibleDOM();
                         });
                     });
                 } else {
@@ -1911,16 +1961,17 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onInvisibleEntryClick: function (ev) {
+    _onInvisibleEntryClick: async function (ev) {
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
-        let prom = null;
-        $snippet.trigger('invisible_snippet_activation', {
-            onSuccess: _prom => prom = _prom,
+        const isVisible = await this._mutex.exec(async () => {
+            const editor = await this._createSnippetEditor($snippet);
+            return editor.toggleTargetVisibility();
         });
-        Promise.resolve(prom).then(() => {
-            return this._activateSnippet($snippet);
-        });
+        $(ev.currentTarget).find('.fa')
+            .toggleClass('fa-eye', isVisible)
+            .toggleClass('fa-eye-slash', !isVisible);
+        return this._activateSnippet(isVisible ? $snippet : false);
     },
     /**
      * @private
@@ -1968,6 +2019,16 @@ var SnippetsMenu = Widget.extend({
     _onSnippetRemoved: function () {
         this._disableUndroppableSnippets();
         this._updateInvisibleDOM();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetOptionVisibilityUpdate: async function (ev) {
+        if (!ev.data.show) {
+            await this._activateSnippet(false);
+        }
+        await this._updateInvisibleDOM(); // Re-render to update status
     },
     /**
      * @private
