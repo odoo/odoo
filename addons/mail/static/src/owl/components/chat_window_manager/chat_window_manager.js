@@ -3,6 +3,7 @@ odoo.define('mail.component.ChatWindowManager', function (require) {
 
 const ChatWindow = require('mail.component.ChatWindow');
 const HiddenMenu = require('mail.component.ChatWindowHiddenMenu');
+const useRefs = require('mail.hooks.useRefs');
 
 const { Component } = owl;
 const { useDispatch, useStore } = owl.hooks;
@@ -16,6 +17,7 @@ class ChatWindowManager extends Component {
     constructor(...args) {
         super(...args);
         this.TEXT_DIRECTION = this.env._t.database.parameters.direction;
+        this._getRefs = useRefs();
         this.storeDispatch = useDispatch();
         this.storeProps = useStore(state => {
             const {
@@ -106,7 +108,7 @@ class ChatWindowManager extends Component {
      * should be recovered.
      */
     saveChatWindowsScrollTops() {
-        const chatWindowsWithThreadRefs = Object.entries(this.__owl__.refs)
+        const chatWindowsWithThreadRefs = Object.entries(this._getRefs())
             .filter(([refId, ref]) => refId.startsWith('chatWindow_'))
             .map(([refId, ref]) => ref);
         for (const chatWindowRef of chatWindowsWithThreadRefs) {
@@ -126,7 +128,7 @@ class ChatWindowManager extends Component {
      * @return {mail.component.ChatWindow}
      */
     _getChatWindowRef(chatWindowLocalId) {
-        return this.__owl__.refs[`chatWindow_${chatWindowLocalId}`];
+        return this._getRefs()[`chatWindow_${chatWindowLocalId}`];
     }
 
     /**

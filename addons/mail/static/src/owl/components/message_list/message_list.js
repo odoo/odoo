@@ -2,6 +2,7 @@ odoo.define('mail.component.MessageList', function (require) {
 'use strict';
 
 const Message = require('mail.component.Message');
+const useRefs = require('mail.hooks.useRefs');
 
 const { Component } = owl;
 const { useDispatch, useRef, useStore } = owl.hooks;
@@ -14,6 +15,7 @@ class MessageList extends Component {
      */
     constructor(...args) {
         super(...args);
+        this._getRefs = useRefs();
         this.storeDispatch = useDispatch();
         this.storeProps = useStore((state, props) => {
             const threadCache = state.threadCaches[props.threadCacheLocalId];
@@ -159,7 +161,7 @@ class MessageList extends Component {
      * @return {mail.component.Message[]}
      */
     get messageRefs() {
-        return Object.entries(this.__owl__.refs)
+        return Object.entries(this._getRefs())
             .filter(([refId, ref]) => refId.indexOf('mail.message') !== -1)
             .map(([refId, ref]) => ref)
             .sort((ref1, ref2) => (ref1.storeProps.message.id < ref2.storeProps.message.id ? -1 : 1));
@@ -386,7 +388,7 @@ class MessageList extends Component {
      */
     async _scrollToMessage(messageLocalId) {
         this._isAutoLoadOnScrollActive = false;
-        await this.__owl__.refs[messageLocalId].scrollIntoView({
+        await this._getRefs()[messageLocalId].scrollIntoView({
             block: 'nearest',
         });
         if (!this.el) {
