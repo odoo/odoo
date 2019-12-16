@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:14+0000\n"
-"PO-Revision-Date: 2019-10-07 07:14+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2019-12-16 08:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -311,6 +311,24 @@ msgid "Created on"
 msgstr ""
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
 msgstr ""
@@ -342,7 +360,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_404
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Documents"
 msgstr ""
@@ -370,6 +387,13 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Employees Only"
 msgstr ""
 
 #. module: portal
@@ -465,11 +489,6 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_404
-msgid "Maybe you were looking for one of these popular pages ?"
 msgstr ""
 
 #. module: portal
@@ -757,11 +776,19 @@ msgid "VAT Number"
 msgstr ""
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Visible"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
@@ -794,6 +821,7 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_department__website_message_ids

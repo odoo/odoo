@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
-"PO-Revision-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2019-12-16 10:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -512,11 +512,12 @@ msgid "Alternative to a list of users"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__category
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__challenge_category
 msgid "Appears in"
 msgstr ""
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Archived"
 msgstr ""
@@ -736,6 +737,12 @@ msgid "Computation Mode"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__consolidated
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
+msgid "Consolidated"
+msgstr ""
+
+#. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
 msgstr ""
@@ -784,6 +791,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -797,6 +805,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
 msgstr ""
 
@@ -827,7 +836,7 @@ msgid "Date Field"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge__category
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr ""
 
@@ -882,6 +891,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1080,6 +1090,13 @@ msgid "Gamification: Goal Challenge Check"
 msgstr ""
 
 #. module: gamification
+#: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
+#: model:ir.cron,cron_name:gamification.ir_cron_consolidate_last_month
+#: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
+msgid "Gamification: Karma tracking consolidation"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
@@ -1192,6 +1209,7 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
@@ -1218,7 +1236,7 @@ msgid "How to compute the goal?"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__category__hr
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
 msgstr ""
 
@@ -1232,6 +1250,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__id
 msgid "ID"
 msgstr ""
 
@@ -1332,6 +1351,11 @@ msgid "Individual Goals"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_inherited_ids
+msgid "Inherited models"
+msgstr ""
+
+#. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
@@ -1349,6 +1373,11 @@ msgid "Karma"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
+msgid "Karma Changes"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard____last_update
@@ -1358,6 +1387,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1381,6 +1411,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1394,6 +1425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1543,6 +1575,11 @@ msgid "Never reminded if no value or zero is specified."
 msgstr ""
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
+msgid "New Karma Value"
+msgstr ""
+
+#. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
 msgid "New badge ${object.badge_id.name} granted"
 msgstr ""
@@ -1639,8 +1676,13 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count_distinct
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count
 msgid "Number of users"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
+msgid "Old Karma Value"
 msgstr ""
 
 #. module: gamification
@@ -1745,23 +1787,23 @@ msgid "Ranks List"
 msgstr ""
 
 #. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-msgid "Reach the next rank and gain a very magic wand !"
-msgstr ""
-
-#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-msgid "Reach the next rank and gain a very nice hat !"
-msgstr ""
-
-#. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-msgid "Reach the next rank and gain a very nice mug !"
+msgid "Reach the next rank and become a Master!"
 msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-msgid "Reach the next rank and gain a very nice unicorn !"
+msgid "Reach the next rank and become a powerful user!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
+msgid "Reach the next rank to improve your status!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
 msgstr ""
 
 #. module: gamification
@@ -1921,6 +1963,11 @@ msgid "Search Ranks"
 msgstr ""
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
+msgid "Search Trackings"
+msgstr ""
+
+#. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
@@ -1976,7 +2023,7 @@ msgid "Set your Timezone"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__category__other
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__other
 msgid "Settings / Gamification Tools"
 msgstr ""
 
@@ -2125,6 +2172,11 @@ msgid "The list of instances of this badge granted to users"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
+msgid "The list of models that extends the current model."
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
 msgstr ""
@@ -2187,7 +2239,7 @@ msgid "The number of time the current user has sent this badge this month."
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count_distinct
+#: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
 msgstr ""
 
@@ -2197,8 +2249,13 @@ msgid "The number of time this badge has been received this month."
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count
+#: model:ir.model.fields,help:gamification.field_gamification_badge__granted_count
 msgid "The number of time this badge has been received."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
+msgid "The required karma has to be above 0."
 msgstr ""
 
 #. module: gamification
@@ -2272,8 +2329,30 @@ msgid "To update"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_count
 msgid "Total"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_karma_tracking
+msgid "Track Karma Changes"
+msgstr ""
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
+msgid "Tracking"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__tracking_date
+msgid "Tracking Date"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
+#: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
+msgid "Trackings"
 msgstr ""
 
 #. module: gamification
@@ -2313,6 +2392,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__user_id
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
 msgstr ""
