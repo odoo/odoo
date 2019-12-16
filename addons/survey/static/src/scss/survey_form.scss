@@ -1,3 +1,39 @@
+.o_survey_question_text_box {
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 2px solid #00A09D;
+    background-color: transparent !important;
+    font-weight: bold;
+    color: #00A09D !important;
+    &:disabled {
+        border-color: grey;
+        color: black !important;
+        background-color: #e9ecef !important;
+        border-bottom: 2px solid grey;
+    }
+    &:focus {
+        border-color: #00A09D;
+    }
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: grey;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: white;
+    }
+}
+
+.o_survey_comment_container {
+    padding: 0rem 0.25rem;
+    &.col-lg-12 {
+        padding: 0rem 1.25rem;
+    }
+}
+
 .o_survey_choice_container {
     flex-wrap: wrap;
 }

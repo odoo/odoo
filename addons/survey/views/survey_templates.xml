@@ -206,17 +206,21 @@
     </template>
 
     <template id="question_text_box" name="Question: free text box">
-        <textarea class="form-control o_survey_question_text_box" rows="3" t-att-name="question.id"
-                  t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
+        <div class="o_survey_comment_container">
+            <textarea class="form-control o_survey_question_text_box" rows="3" t-att-name="question.id"
+                      t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
+        </div>
     </template>
 
     <template id="question_char_box" name="Question: text box">
-        <input t-att-type="'email' if question.validation_email else 'text'"
+        <div class="o_survey_comment_container">
+            <input t-att-type="'email' if question.validation_email else 'text'"
                class="form-control o_survey_question_text_box" t-att-name="question.id"
                t-att-value="answer_lines[0].value_char_box if answer_lines else None"
                t-att-data-question-type="question.question_type"
                t-att-data-validation-length-min="question.validation_length_min if question.validation_required else False"
                t-att-data-validation-length-max="question.validation_length_max if question.validation_required else False"/>
+        </div>
     </template>
 
     <template id="question_numerical_box" name="Question: numerical box">
@@ -296,12 +300,14 @@
                         <i class="fa fa-check float-right"></i>
                     </label>
                 </div>
-                <textarea type="text" class="form-control"
-                          t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                <div class="o_survey_comment_container">
+                    <textarea type="text" class="form-control o_survey_question_text_box"
+                              t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                </div>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container">
+                <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box"
+                          t-att-placeholder="question.comments_message"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
@@ -347,12 +353,14 @@
                         <i class="fa fa-check float-right"></i>
                     </label>
                 </div>
-                <textarea type="text" class="form-control"
-                          t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                <div class="o_survey_comment_container">
+                    <textarea type="text" class="form-control o_survey_question_text_box"
+                              t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                </div>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container">
+                <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box"
+                          t-att-placeholder="question.comments_message"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
@@ -395,8 +403,9 @@
             </tbody>
         </table>
         <div t-if='question.comments_allowed'>
-            <span t-field="question.comments_message"/>
-            <textarea type="text" class="form-control" t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+            <textarea type="text" class="form-control o_survey_question_text_box"
+                      t-att-placeholder="question.comments_message"
+                      t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
         </div>
     </template>
 

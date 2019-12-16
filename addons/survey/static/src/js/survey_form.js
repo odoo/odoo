@@ -5,6 +5,7 @@ var field_utils = require('web.field_utils');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
 var core = require('web.core');
+var dom = require('web.dom');
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
@@ -37,6 +38,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 self._onKeyPress(e);
             });
             self._initChoiceItems();
+            self._initTextArea();
         });
     },
 
@@ -53,7 +55,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var zIndex = 'z'.charCodeAt(0);
         var code = event.keyCode;
         // Handle Start / Next / Submit
-        if (code == 13) {  // Enter : go Next
+        if (code == 13 && !self.$("textarea").is(":focus")) {  // Enter : go Next
+            event.preventDefault();
             this.$("button.btn-primary").click();
         } else if (aIndex <= code < zIndex
                 && self.options.questionsLayout === 'page_per_question'
@@ -240,6 +243,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 self._initResultWidget();
             }
             self._initChoiceItems();
+            self._initTextArea();
             self.$('.o_survey_form_content').fadeIn(400);
             $("html, body").animate({ scrollTop: 0 }, "fast");
         }
@@ -510,6 +514,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
+
+    _initTextArea: function () {
+        var self = this;
+        this.$('textarea').each(function () {
+            dom.autoresize($(this));
+        });
+    },
 
     _initChoiceItems: function() {
         var self = this;
