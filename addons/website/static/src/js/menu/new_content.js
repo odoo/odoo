@@ -267,7 +267,10 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         }).last();
                     if ($finalPosition) {
                         $el.fadeTo(400, 0, function () {
-                            $el.insertAfter($finalPosition);
+                            // if once installed, button disapeear, don't need to move it.
+                            if (!$el.hasClass('o_new_content_element_once')) {
+                                $el.insertAfter($finalPosition);
+                            }
                             // change style to use spinner
                             $i.removeClass()
                                 .addClass('fa fa-spin fa-spinner fa-pulse');
@@ -278,7 +281,9 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }
 
                     self._install(moduleId).then(function () {
-                        window.location.href = window.location.origin + window.location.pathname + '?' + enableFlag;
+                        var origin = window.location.origin;
+                        var redirectURL = $el.find('a').data('url') || (window.location.pathname + '?' + enableFlag);
+                        window.location.href = origin + redirectURL;
                     }, function () {
                         $i.removeClass()
                             .addClass('fa fa-exclamation-triangle');
