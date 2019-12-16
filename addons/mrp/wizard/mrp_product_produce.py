@@ -126,7 +126,7 @@ class MrpProductProduce(models.TransientModel):
     @api.onchange('product_qty')
     def _onchange_product_qty(self):
         lines = []
-        qty_todo = self.product_uom_id._compute_quantity(self.product_qty, self.production_id.product_uom_id, round=False)
+        qty_todo = self.product_uom_id._compute_quantity(self.product_qty, self.production_id.bom_id.product_uom_id, round=False)
         for move in self.production_id.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.bom_line_id):
             qty_to_consume = float_round(qty_todo * move.unit_factor, precision_rounding=move.product_uom.rounding)
             for move_line in move.move_line_ids:
