@@ -1,38 +1,25 @@
 {% extends "layout.html" %}
-{% macro loading_block_ui(message) %}
-<div class="loading-block o_hide">
-    <div class="loading-message-block">
-        <div style="height: 50px">
-            <img src="/web/static/src/img/spin.png" style="animation: spin 4s infinite linear;" alt="Loading...">
-        </div>
-        <br>
-        <div class="loading-message">
-            <span class="message-title">Please wait..</span><br>
-            <span class="message-status">{{ message }}</span>
-        </div>
-    </div>
-</div>
-{% endmacro %}
+{% from "loading.html" import loading_block_ui %}
 {% block head %}
     <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
     <script>
-        $(function(){
+        $(function() {
             var upgrading = false;
-            $('#upgrade').click(function(){
-                if(!upgrading){
+            $('#upgrade').click(function() {
+                if (!upgrading) {
                     upgrading = true;
                     $('.loading-block').removeClass('o_hide');
                     $.ajax({
                         url:'/hw_proxy/perform_upgrade/'
-                    }).done(function(status){
+                    }).done(function() {
                         $('.message-title').text('Upgrade successful');
                         var cpt = 110;
-                        setInterval(function(){
+                        setInterval(function() {
                             --cpt;
-                            if(cpt==0){location.reload();}
+                            if (cpt === 0) {location.reload();}
                             $('.message-status').text('Restarting the IoTBox.  Available in ' + cpt);
                         } , 1000);
-                    }).fail(function(){
+                    }).fail(function() {
                         $('.error-message').text('Upgrade Failed');
                     });
                 }
