@@ -136,8 +136,7 @@ var SnippetEditor = Widget.extend({
      * @override
      */
     destroy: function () {
-        this.cleanForSave();
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         this.$target.removeData('snippet-editor');
         this.$target.off('.snippet_editor');
     },
@@ -168,13 +167,14 @@ var SnippetEditor = Widget.extend({
      * Notifies all the associated snippet options that the template which
      * contains the snippet is about to be saved.
      */
-    cleanForSave: function () {
+    cleanForSave: async function () {
         if (this.isDestroyed()) {
             return;
         }
-        _.each(this.styles, function (option) {
-            option.cleanForSave();
+        const proms = _.map(this.styles, option => {
+            return option.cleanForSave();
         });
+        await Promise.all(proms);
     },
     /**
      * Closes all widgets of all options.
@@ -858,7 +858,6 @@ var SnippetsMenu = Widget.extend({
         });
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
-        core.bus.on('snippet_editor_clean_for_save', this, this._onCleanForSaveDemand);
 
         // Adapt overlay covering when the window is resized / content changes
         var debouncedCoverUpdate = _.throttle(() => {
@@ -919,7 +918,6 @@ var SnippetsMenu = Widget.extend({
             this.$document.off('.snippets_menu');
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
-        core.bus.off('snippet_editor_clean_for_save', this, this._onCleanForSaveDemand);
         delete this.cacheSnippetTemplate[this.options.snippets];
     },
 
@@ -932,10 +930,10 @@ var SnippetsMenu = Widget.extend({
      * - Asks the snippet editors to clean their associated snippet
      * - Remove the 'contentEditable' attributes
      */
-    cleanForSave: function () {
-        this._activateSnippet(false);
+    cleanForSave: async function () {
+        await this._activateSnippet(false);
         this.trigger_up('ready_to_clean_for_save');
-        this._destroyEditors();
+        await this._destroyEditors();
 
         this.getEditableArea().find('[contentEditable]')
             .removeAttr('contentEditable')
@@ -1230,10 +1228,12 @@ var SnippetsMenu = Widget.extend({
     /**
      * @private
      */
-    _destroyEditors: function () {
-        _.each(this.snippetEditors, function (snippetEditor) {
+    _destroyEditors: async function () {
+        const proms = _.map(this.snippetEditors, async function (snippetEditor) {
+            await snippetEditor.cleanForSave();
             snippetEditor.destroy();
         });
+        await Promise.all(proms);
         this.snippetEditors.splice(0);
     },
     /**
@@ -1779,15 +1779,6 @@ var SnippetsMenu = Widget.extend({
         this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
     },
     /**
-     * Called when asked to clean the DOM for save. Should technically not be
-     * used but used by tests.
-     *
-     * @private
-     */
-    _onCleanForSaveDemand: function (ev) {
-        this.cleanForSave();
-    },
-    /**
      * Called when the overlay dimensions/positions should be recomputed.
      *
      * @private
@@ -1825,9 +1816,9 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onDragAndDropStop: function (ev) {
-        this._destroyEditors();
-        this._activateSnippet(ev.data.$snippet);
+    _onDragAndDropStop: async function (ev) {
+        await this._destroyEditors();
+        await this._activateSnippet(ev.data.$snippet);
     },
     /**
      * Called when a snippet editor asked to disable itself and to enable its

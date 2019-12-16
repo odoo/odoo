@@ -1294,8 +1294,9 @@ const SnippetOptionWidget = Widget.extend({
      * to be saved.
      *
      * @abstract
+     * @return {Promise|undefined}
      */
-    cleanForSave: function () {},
+    cleanForSave: async function () {},
 
     //--------------------------------------------------------------------------
     // Options
