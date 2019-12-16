@@ -786,10 +786,9 @@ var SnippetsMenu = Widget.extend({
             this.options.snippets = 'web_editor.snippets';
         }
         this.snippetEditors = [];
-        this._activateSnippetMutex = new concurrency.Mutex();
         this._enabledEditorHierarchy = [];
 
-        this._snippetEditionMutex = new concurrency.Mutex();
+        this._mutex = new concurrency.Mutex();
 
         this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
 
@@ -1195,7 +1194,7 @@ var SnippetsMenu = Widget.extend({
         if (this._blockPreviewOverlays && previewMode) {
             return Promise.resolve();
         }
-        return this._activateSnippetMutex.exec(() => {
+        return this._mutex.exec(() => {
             return new Promise(resolve => {
                 // Take the first parent of the provided DOM (or itself) which
                 // should have an associated snippet editor and create + enable it.
@@ -1952,7 +1951,7 @@ var SnippetsMenu = Widget.extend({
      * @param {function} ev.data.exec
      */
     _onSnippetEditionRequest: function (ev) {
-        this._snippetEditionMutex.exec(ev.data.exec);
+        this._mutex.exec(ev.data.exec);
     },
     /**
      * @private
