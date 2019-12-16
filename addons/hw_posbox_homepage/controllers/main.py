@@ -13,6 +13,7 @@ from odoo import http
 import os
 from odoo.tools import misc
 from pathlib import Path
+import threading
 
 from uuid import getnode as get_mac
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
@@ -46,8 +47,12 @@ remote_connect_template = jinja_env.get_template('remote_connect.html')
 configure_wizard_template = jinja_env.get_template('configure_wizard.html')
 six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.html')
 list_credential_template = jinja_env.get_template('list_credential.html')
+upgrade_page_template = jinja_env.get_template('upgrade_page.html')
 
 class IoTboxHomepage(web.Home):
+    def __init__(self):
+        super(IoTboxHomepage,self).__init__()
+        self.upgrading = threading.Lock()
 
     def get_six_terminal(self):
         terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
@@ -280,3 +285,20 @@ class IoTboxHomepage(web.Home):
         helpers.unlink_file('odoo-six-payment-terminal.conf')
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
+
+    @http.route('/hw_proxy/upgrade', type='http', auth='none', )
+    def upgrade(self):
+        commit = subprocess.check_output(["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
+        return upgrade_page_template.render({
+            'title': "Odoo's IoTBox - Software Upgrade",
+            'breadcrumb': 'IoT Box Software Upgrade',
+            'loading_message': 'Updating IoT box',
+            'commit': commit,
+        })
+
+    @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
+    def perform_upgrade(self):
+        self.upgrading.acquire()
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
+        self.upgrading.release()
+        return 'SUCCESS'
