@@ -7,22 +7,8 @@ odoo.define("website_forum.tour_forum", function (require) {
     var _t = core._t;
 
     tour.register("question", {
-        url: "/",
-    }, [tour.STEPS.WEBSITE_NEW_PAGE, {
-        trigger: "a[data-action=new_forum]",
-        extra_trigger: "body.o_new_content_open",
-        content: _t("Select this menu item to create a new forum."),
-        position: "bottom",
-    }, {
-        trigger: "#editor_new_forum input[type=text]",
-        content: _t("Enter a name for your new forum."),
-        position: "right",
-    }, {
-        trigger: "button.btn-primary",
-        extra_trigger: '.modal #editor_new_forum input[type=text]:not(:propValue(""))',
-        content: _t("Click <em>Continue</em> to create the forum."),
-        position: "right",
-    }, {
+        url: "/forum/1",
+    }, [{
         trigger: ".o_forum_ask_btn",
         position: "left",
         content: _t("Ask the question in this forum by clicking on the button."),
