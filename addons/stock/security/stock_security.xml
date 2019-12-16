@@ -111,14 +111,14 @@
          <field name="name">stock_move multi-company</field>
         <field name="model_id" search="[('model','=','stock.move')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('location_dest_id.company_id', '=', False)]</field>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), '&amp;', ('location_dest_id.company_id', '=', False), ('location_dest_id.usage', '=', 'transit')]</field>
      </record>
 
      <record model="ir.rule" id="stock_move_line_rule">
         <field name="name">stock_move_line multi-company</field>
         <field name="model_id" search="[('model','=','stock.move.line')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id', 'in', company_ids),('location_dest_id.company_id', '=', False)]</field>
+        <field name="domain_force">['|','|',('company_id','=',False),('company_id', 'in', company_ids),'&amp;',('location_dest_id.company_id', '=', False), ('location_dest_id.usage', '=', 'transit')]</field>
      </record>
 
     <record model="ir.rule" id="stock_quant_rule">
