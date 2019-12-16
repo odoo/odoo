@@ -149,15 +149,6 @@ class WebsiteSlides(WebsiteProfile):
             'sequence': channel.slide_ids[-1]['sequence'] + 1 if channel.slide_ids else 1,
         }
 
-    def _slide_remove_saved_answers(self, channel_id):
-        if 'slide_quiz_answers' not in request.session:
-            return
-        quiz_slides = request.env['slide.slide'].search([('channel_id', '=', channel_id), ('slide_type', '=', 'quiz')])
-        session_slide_quiz_answers = json.loads(request.session.get('slide_quiz_answers', '{}'))
-        for slide_id in quiz_slides.ids:
-            session_slide_quiz_answers.pop(str(slide_id), None)
-        request.session['slide_quiz_answers'] = json.dumps(session_slide_quiz_answers)
-
     # CHANNEL UTILITIES
     # --------------------------------------------------
 
@@ -246,6 +237,25 @@ class WebsiteSlides(WebsiteProfile):
         if my:
             domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
         return domain
+
+    def _channel_remove_session_answers(self, channel, slide=False):
+        """ Will remove the answers saved in the session for a specific channel / slide. """
+
+        if 'slide_answer_quiz' not in request.session:
+            return
+
+        slides_domain = [
+            ('channel_id', '=', channel.id),
+            ('slide_type', '=', 'quiz')
+        ]
+
+        if slide:
+            slides_domain = expression.AND([slides_domain, [('id', '=', slide.id)]])
+        slides = request.env['slide.slide'].search(slides_domain)
+        session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
+        for slide_id in slides.ids:
+            session_slide_answer_quiz.pop(str(slide_id), None)
+        request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     # --------------------------------------------------
     # SLIDE.CHANNEL MAIN / SEARCH
@@ -527,7 +537,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
-            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
+            return {'error': 'public_user'}
         success = request.env['slide.channel'].browse(channel_id).action_add_member()
         if not success:
             return {'error': 'join_done'}
@@ -535,8 +545,9 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
-        self._slide_remove_saved_answers(channel_id)
-        request.env['slide.channel'].browse(channel_id)._remove_membership(request.env.user.partner_id.ids)
+        channel = request.env['slide.channel'].browse(channel_id)
+        channel._remove_membership(request.env.user.partner_id.ids)
+        self._channel_remove_session_answers(channel)
         return True
 
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
@@ -803,7 +814,7 @@ class WebsiteSlides(WebsiteProfile):
         slide = fetch_res['slide']
 
         if slide.user_membership_id.sudo().completed:
-            self._slide_remove_saved_answers(slide.channel_id.id)
+            self._channel_remove_session_answers(slide.channel_id, slide)
             return {'error': 'slide_quiz_done'}
 
         all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
@@ -829,7 +840,7 @@ class WebsiteSlides(WebsiteProfile):
                 'last_rank': not request.env.user._get_next_rank(),
                 'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
             })
-        self._slide_remove_saved_answers(slide.channel_id.id)
+        self._channel_remove_session_answers(slide.channel_id, slide)
         return {
             'goodAnswers': user_good_answers.ids,
             'badAnswers': user_bad_answers.ids,
@@ -840,16 +851,13 @@ class WebsiteSlides(WebsiteProfile):
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
             'rankProgress': rank_progress,
         }
-    
-    @http.route(['/slides/slide/quiz/save_slide_answers'], type='json', auth='public', website=True)
-    def slide_save_answers(self, quiz_answers):
-        if 'slide_quiz_answers' not in request.session:
-            request.session['slide_quiz_answers'] = json.dumps({})
-        session_slide_quiz_answers = json.loads(request.session['slide_quiz_answers'])
-        session_slide_quiz_answers.update({
-            str(quiz_answers['slide_id']): quiz_answers['slide_answers']
-        })
-        request.session['slide_quiz_answers'] = json.dumps(session_slide_quiz_answers)
+
+    @http.route(['/slides/slide/quiz/save_session_answers'], type='json', auth='public', website=True)
+    def slide_save_session_answers(self, quiz_answers):
+        session_slide_answer_quiz = json.loads(request.session.get('slide_answer_quiz', '{}'))
+        slide_id = quiz_answers['slide_id']
+        session_slide_answer_quiz[str(slide_id)] = quiz_answers['slide_answers']
+        request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     def _get_rank_values(self, user):
         lower_bound = user.rank_id.karma_min or 0

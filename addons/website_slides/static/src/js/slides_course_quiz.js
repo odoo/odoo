@@ -28,7 +28,7 @@ odoo.define('website_slides.quiz', function (require) {
         xmlDependencies: ['/website_slides/static/src/xml/slide_quiz.xml'],
         events: {
             "click .o_wslides_quiz_answer": '_onAnswerClick',
-            "click .o_wslides_js_lesson_quiz_submit": '_onSubmitQuiz',
+            "click .o_wslides_js_lesson_quiz_submit": '_submitQuiz',
             "click .o_wslides_quiz_modal_btn": '_onClickNext',
             "click .o_wslides_quiz_continue": '_onClickNext',
             "click .o_wslides_js_lesson_quiz_reset": '_onClickReset',
@@ -82,10 +82,12 @@ odoo.define('website_slides.quiz', function (require) {
         },
 
         /**
+         * Overridden to add custom rendering behavior upon start of the widget.
+         *
+         * If the user has answered the quiz before having joined the course, we check
+         * his answers (saved into his session) here as well.
+         *
          * @override
-         * At the end we set self.slide.answers = false so that if you retry the quiz because it was wrongly answered
-         * _renderAnswersHighlighting correctly render the corrections. If self.slide.answers still contains value,
-         * those radiobuttons will be checked again as well as the new answers.
          */
         start: function () {
             var self = this;
@@ -98,31 +100,30 @@ odoo.define('website_slides.quiz', function (require) {
                 if (!self.isMember) {
                     self._renderJoinWidget();
                 } else if (!self.publicUser && self.slide.answers) {
-                    var values = self._getAnswers();
-                    self._submitQuiz(values);
+                    self._submitQuiz();
+                    // TODO awa: check if necessary
+                    // self.slide.answers = false;
                 }
-                self.slide.answers = false;
             });
         },
 
         //--------------------------------------------------------------------------
         // Private
         //--------------------------------------------------------------------------
-        /**
-         * @private
-         */
-        _alertShow: function (alert_code) {
+
+        _alertShow: function (alertCode) {
             var message = _t('There was an error validating this quiz.');
-            if (alert_code === 'slide_quiz_incomplete') {
+            if (alertCode === 'slide_quiz_incomplete') {
                 message = _t('All questions must be answered !');
-            } else if (alert_code === 'slide_quiz_done') {
+            } else if (alertCode === 'slide_quiz_done') {
                 message = _t('This quiz is already done. Retaking it is not possible.');
-            } else if (alert_code === 'public_user') {
+            } else if (alertCode === 'public_user') {
                 message = _t('You must be logged to submit the quiz.');
             }
+
             this.displayNotification({
                 type: 'warning',
-                title: _t('Something went wrong'),
+                title: _t('Quiz validation error'),
                 message: message,
                 sticky: true
             });
@@ -132,7 +133,7 @@ odoo.define('website_slides.quiz', function (require) {
          * Allows to reorder the questions
          * @private
          */
-        _bindSortable: function() {
+        _bindSortable: function () {
             this.$el.sortable({
                 handle: '.o_wslides_js_quiz_sequence_handler',
                 items: '.o_wslides_js_lesson_quiz_question',
@@ -217,7 +218,9 @@ odoo.define('website_slides.quiz', function (require) {
         _renderAnswers: function () {
             var self = this;
             this.$('input[type=radio]').each(function () {
-                $(this).prop('disabled', self.slide.completed);
+                $(this).prop('disabled', self.slide.readonly || self.slide.completed);
+                // TODO awa: check this and compare vs PKO's changes
+                // $(this).prop('disabled', self.slide.completed);
             });
         },
 
@@ -244,6 +247,7 @@ odoo.define('website_slides.quiz', function (require) {
                     $answer.find('input[type=radio]').prop('checked', true);
                 }
                 else if (!self.slide.completed) {
+                    // TODO awa: check this and compare vs PKO's changes
                     if (_.contains(self.slide.answers, answerId)) {
                         $answer.find('i.fa').addClass('d-none');
                         $answer.find('input[type=radio]').prop('checked', true);
@@ -381,27 +385,28 @@ odoo.define('website_slides.quiz', function (require) {
             );
         },
 
-        /*
+        /**
+         * Renders the button to join a course.
+         * If the user is logged in, the course is public, and the user has previously tried to
+         * submit answers, we automatically attempt to join the course.
+         *
          * @private
-         * render the button to join a course. If the user is logged in,
-         * the course is public, and the user has previously tried to submit
-         * answers, the course will be automatically joined.
          */
         _renderJoinWidget: function () {
-            var options = {
-                isQuiz: true,
-                channel: this.channel,
-                isMember: this.isMember,
-                publicUser: this.publicUser,
-                beforeJoin: this._saveQuizAnswers.bind(this),
-                afterJoin: this._afterJoin.bind(this),         
-            };
-            var courseJoinWidget = new CourseJoinWidget(this, options);
             var $widgetLocation = this.$(".o_wslides_join_course_widget");
             if ($widgetLocation.length !== 0) {
+                var courseJoinWidget = new CourseJoinWidget(this, {
+                    isQuiz: true,
+                    channel: this.channel,
+                    isMember: this.isMember,
+                    publicUser: this.publicUser,
+                    beforeJoin: this._saveSessionQuizAnswers.bind(this),
+                    afterJoin: this._afterJoin.bind(this),
+                });
+
                 courseJoinWidget.appendTo(this.$(".o_wslides_join_course_widget"));
                 if (!this.publicUser && courseJoinWidget.channel.channelEnroll === 'public' && this.slide.answers) {
-                        courseJoinWidget.joinChannel(this.channel.channelId);
+                    courseJoinWidget.joinChannel(this.channel.channelId);
                 }
             }
         },
@@ -417,18 +422,20 @@ odoo.define('website_slides.quiz', function (require) {
             }).get();
         },
 
-        /*
-         * Submit the given answer, and display the result
+        /**
+         * Submit a quiz and get the correction. It will display messages
+         * according to quiz result.
          *
-         * @param Array checkedAnswers: list of checked answers
+         * @private
          */
-        _submitQuiz: function (checkedAnswers) {
+        _submitQuiz: function () {
             var self = this;
+
             return this._rpc({
                 route: '/slides/slide/quiz/submit',
                 params: {
                     slide_id: self.slide.id,
-                    answer_ids: checkedAnswers,
+                    answer_ids: this._getAnswers(),
                 }
             }).then(function (data) {
                 if (data.error) {
@@ -494,7 +501,9 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _onAnswerClick: function (ev) {
             ev.preventDefault();
-            if (!this.slide.completed) {
+            // TODO awa: check this
+            // if (!this.slide.completed) {
+            if (! this.slide.readonly && ! this.slide.completed) {
                 $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
             }
         },
@@ -531,28 +540,16 @@ odoo.define('website_slides.quiz', function (require) {
             });
         },
         /**
-         * Submit a quiz and get the correction. It will display messages
-         * according to quiz result.
-         *
-         * @private
-         * @param
-         */
-        _onSubmitQuiz: function () {
-            var values = this._getAnswers();
-            this._submitQuiz(values);
-        },
-            
-        /**
          * Saves the answers from the user and redirect the user to the
          * specified url
          *
          * @private
          */
-        _saveQuizAnswers: function () {
+        _saveSessionQuizAnswers: function () {
             var quizAnswers = this._getAnswers();
             if (quizAnswers.length === this.quiz.questions.length) {
                 return this._rpc({
-                    route: '/slides/slide/quiz/save_slide_answers',
+                    route: '/slides/slide/quiz/save_session_answers',
                     params: {
                         'quiz_answers': {'slide_id': this.slide.id, 'slide_answers': quizAnswers},
                     }
@@ -562,15 +559,16 @@ odoo.define('website_slides.quiz', function (require) {
                 return Promise.resolve();
             }
         },
-        /* Submit a quiz and get the correction, after joining the course
+        /**
+        * After joining the course, we immediately submit the quiz and get the correction.
+        * This allows a smooth onboarding when the user is logged in and the course is public.
         *
         * @private
         */
        _afterJoin: function () {
             this.isMember = true;
             this._renderValidationInfo();
-            var values = this._getAnswers();
-            this._submitQuiz(values);
+            this._submitQuiz();
        },
 
         /**

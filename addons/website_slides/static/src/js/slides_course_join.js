@@ -12,48 +12,65 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_js_course_join_link': '_onClickJoin',
     },
-    
+
+    /**
+     *
+     * Overridden to add options parameters.
+     *
+     * @param {Object} parent
+     * @param {Object} options
+     * @param {Object} options.channel slide.channel information
+     * @param {boolean} options.isMember whether current user is member or not
+     * @param {boolean} options.publicUser whether current user is public or not
+     * @param {Promise} [options.beforeJoin] a promise to execute before we redirect to
+     *   another url within the join process (login / buy course / ...)
+     * @param {function} [options.afterJoin] a callback function called after the user has
+     *   joined the course
+     */
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.channel = options.channel;
         this.isMember = options.isMember;
         this.publicUser = options.publicUser;
-        this.beforeJoin = options.beforeJoin;
-        this.afterJoin = options.afterJoin || function () {location.reload();};
+        this.beforeJoin = options.beforeJoin || Promise.resolve();
+        this.afterJoin = options.afterJoin || function () {document.location.reload();};
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
      * @private
      * @param {MouseEvent} ev
      */
     _onClickJoin: function (ev) {
         ev.preventDefault();
+
         if (this.channel.channelEnroll === 'public') {
             if (this.publicUser) {
-                this._signInAndJoinCourse();
+                this.beforeJoin().then(this._redirectToLogin.bind(this));
             } else if (!this.isMember) {
                 this.joinChannel(this.channel.channelId);
             }
         }
     },
-    
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
+     * Builds a login page that then redirects to this slide page.
+     *
      * @private
      */
-    _createLoginRedirectUrl: function (url) {
-        var baseUrl = url || window.location.pathname;
-        var params = {};
-        if (window.location.href.indexOf("fullscreen") > -1) {
-            params.fullscreen = 1;
+    _redirectToLogin: function () {
+        var url = window.location.pathname;
+        if (document.location.href.indexOf("fullscreen") > -1) {
+            url += '?fullscreen=1';
         }
-        baseUrl = _.str.sprintf('%s?%s', baseUrl, $.param(params));
-        return _.str.sprintf('/web/login?redirect=%s', encodeURIComponent(baseUrl));
+        document.location = _.str.sprintf('/web/login?redirect=%s', encodeURIComponent(url));
     },
 
     /**
@@ -71,17 +88,6 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 return message;
             }
         }).popover('show');
-    },
-    /**
-     * @private
-     */
-    _signInAndJoinCourse: function () {
-        if (this.channel.channelEnroll === 'public') {
-            var self = this;
-            this.beforeJoin().then(function () {
-                window.location.href = self._createLoginRedirectUrl(); 
-            });
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -102,14 +108,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
             if (!data.error) {
                 self.afterJoin();
             } else {
-                if (data.error === 'public_user') {
-                    var message = _t('Please <a href="/web/login?redirect=%s">login</a> to join this course');
-                    var signupAllowed = data.error_signup_allowed || false;
-                    if (signupAllowed) {
-                        message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to join this course');
-                    }
-                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
-                } else if (data.error === 'join_done') {
+                if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {
                     self._popoverAlert(self.$el, _t('Unknown error'));
