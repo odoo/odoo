@@ -35,6 +35,6 @@ class Partner(models.Model):
 
     @api.model
     def _set_calendar_last_notif_ack(self):
-        partner = self.env['res.users'].browse(self.env.uid).partner_id
+        partner = self.env['res.users'].browse(self.env.context.get('uid',self.env.uid)).partner_id
         partner.write({'calendar_last_notif_ack': datetime.now()})
         return
