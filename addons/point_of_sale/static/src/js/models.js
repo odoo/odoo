@@ -2466,7 +2466,7 @@ exports.Order = Backbone.Model.extend({
             var mapped_included_taxes = [];
             _(taxes).each(function(tax) {
                 var line_taxes = line._map_tax_fiscal_position(tax);
-                if(tax.price_include && _.contains(line_taxes, tax)){
+                if(tax.price_include && !_.contains(line_taxes, tax)){
 
                     mapped_included_taxes.push(tax);
                 }
@@ -2492,6 +2492,7 @@ exports.Order = Backbone.Model.extend({
         attr.pos = this.pos;
         attr.order = this;
         var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
+        this.fix_tax_included_price(line);
 
         if(options.quantity !== undefined){
             line.set_quantity(options.quantity);
@@ -2499,10 +2500,8 @@ exports.Order = Backbone.Model.extend({
 
         if(options.price !== undefined){
             line.set_unit_price(options.price);
+            this.fix_tax_included_price(line);
         }
-
-        //To substract from the unit price the included taxes mapped by the fiscal position
-        this.fix_tax_included_price(line);
 
         if(options.discount !== undefined){
             line.set_discount(options.discount);
