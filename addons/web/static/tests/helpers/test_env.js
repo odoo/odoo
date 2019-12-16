@@ -47,6 +47,7 @@ odoo.define('web.test_env', async function (require) {
         const proxiedEnv = _proxify(env, 'env');
         const defaultEnv = {
             _t: env._t || (s => s),
+            _lt: env._lt || (s => s),
             bus: new Bus(),
             qweb: new owl.QWeb({ templates: session.owlTemplates }),
             services: Object.assign({
