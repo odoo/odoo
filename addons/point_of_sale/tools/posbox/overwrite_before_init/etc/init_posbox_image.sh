@@ -44,6 +44,7 @@ PKGS_TO_INSTALL="
     hostapd \
     git \
     rsync \
+    kpartx \
     swig \
     console-data \
     lightdm \

@@ -29,6 +29,7 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=13.0
+VERSION_IOTBOX=20.01
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspbian*.img ; then
@@ -129,6 +130,9 @@ cp -v "${QEMU_ARM_STATIC}" "${MOUNT_POINT}/usr/bin/"
 cp -av "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
 chroot "${MOUNT_POINT}" /bin/bash -c "sudo /etc/init_posbox_image.sh"
 
+# copy iotbox version
+echo "${VERSION_IOTBOX}" > "${MOUNT_POINT}"/home/pi/iotbox_version
+
 # get rid of the git clone
 rm -rfv "${CLONE_DIR}"
 # and the ngrok usr/bin
@@ -150,6 +154,8 @@ rm -rfv "${MOUNT_POINT}"
 
 echo "Running zerofree..."
 zerofree -v "${LOOP_IOT_ROOT}" || true
+
+sleep 10
 
 kpartx -dv "${LOOP_IOT_PATH}"
 kpartx -dv "${LOOP_RASPBIAN_PATH}"

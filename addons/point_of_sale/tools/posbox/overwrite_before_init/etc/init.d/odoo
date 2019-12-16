@@ -26,7 +26,7 @@ test -x $DAEMON || exit 0
 set -e
 
 function _start() {
-    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=web,hw_proxy,hw_posbox_homepage,hw_escpos,hw_blackbox_be,hw_drivers
+    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=web,hw_proxy,hw_posbox_homepage,hw_escpos,hw_blackbox_be,hw_drivers --limit-time-cpu=600 --limit-time-real=1200
 }
 
 function _stop() {

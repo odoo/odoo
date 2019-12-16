@@ -89,6 +89,33 @@ def check_git_branch():
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
 
+def check_image():
+    """
+    Check if the current image of IoT Box is up to date
+    """
+    url = 'http://nightly.odoo.com/master/posbox/iotbox/SHA1SUMS.txt'
+    urllib3.disable_warnings()
+    http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    response = http.request('GET', url)
+    checkFile = {}
+    valueActual = ''
+    for line in response.data.decode().split('\n'):
+        if line:
+            value, name = line.split('  ')
+            checkFile.update({value: name})
+            if name == 'iotbox-latest.zip':
+                valueLastest = value
+            elif name == get_img_name():
+                valueActual = value
+    if valueActual == valueLastest:
+        return False
+    version = checkFile.get(valueLastest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
+    return {'major': version[0], 'minor': version[1]}
+
+def get_img_name():
+    major, minor = get_version().split('.')
+    return 'iotboxv%s_%s.zip' % (major, minor)
+
 def get_ip():
     try:
         return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
@@ -113,7 +140,7 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return '19.12'
+    return subprocess.check_output(['cat', '/home/pi/iotbox_version']).decode().rstrip()
 
 def get_wifi_essid():
     wifi_options = []
