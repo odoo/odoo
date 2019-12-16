@@ -21,12 +21,12 @@ class AccountJournal(models.Model):
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """
         return [
-            ('II_IM', 'Pre-printed Invoice'),
-            ('RLI_RLM', 'Online Invoice'),
-            ('BFERCEL', 'Electronic Fiscal Bond - Online Invoice'),
-            ('FEERCELP', 'Export Voucher - Billing Plus'),
-            ('FEERCEL', 'Export Voucher - Online Invoice'),
-            ('CPERCEL', 'Product Coding - Online Voucher'),
+            ('II_IM', _('Pre-printed Invoice')),
+            ('RLI_RLM', _('Online Invoice')),
+            ('BFERCEL', _('Electronic Fiscal Bond - Online Invoice')),
+            ('FEERCELP', _('Export Voucher - Billing Plus')),
+            ('FEERCEL', _('Export Voucher - Online Invoice')),
+            ('CPERCEL', _('Product Coding - Online Voucher')),
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
