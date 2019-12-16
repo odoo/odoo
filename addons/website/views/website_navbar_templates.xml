@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- publish/unpublish button -->
+    <template id="website_publisher" name="Website Publisher">
+        <t groups="website.group_website_publisher" t-if="'website_published' in main_object.fields_get() and ('can_publish' not in main_object.fields_get() or main_object.can_publish)">
+            <li t-attf-class="js_publish_management #{extra_classes} #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
+                <label class="o_switch o_switch_danger js_publish_btn" for="id">
+                    <input type="checkbox" t-att-checked="main_object.website_published" id="id"/>
+                    <span/>
+                    <span class="css_publish">Unpublished</span>
+                    <span class="css_unpublish">Published</span>
+                </label>
+            </li>
+        </t>
+    </template>
+
     <!-- Front-end/Back-end integration -->
     <template id="user_navbar" inherit_id="website.layout" name="User Navbar">
         <xpath expr="//t[@t-set='html_data']" position="after">
@@ -54,22 +68,20 @@
                     </li>
                     <!-- Promote -->
                     <li class="dropdown" id="promote-menu">
-                        <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Promote</a>
+                        <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Promote</a>
                         <div class="dropdown-menu oe_promote_menu" role="menu">
                             <a role="menuitem" data-action="promote-current-page" href="#" title="Promote page on the web" class="dropdown-item">Optimize SEO</a>
                         </div>
                     </li>
+                    <t t-call="website.website_publisher">
+                        <t t-set="extra_classes" t-translation="off">d-block d-sm-block d-md-none</t>
+                    </t>
                 </ul>
 
                 <ul class="o_menu_systray d-none d-md-block" groups="website.group_website_publisher">
-                    <li t-if="'website_published' in main_object.fields_get() and ('can_publish' not in main_object.fields_get() or main_object.can_publish)" t-attf-class="js_publish_management #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-controller="publish_controller">
-                        <label class="o_switch o_switch_danger js_publish_btn" for="id">
-                            <input type="checkbox" t-att-checked="main_object.website_published" id="id"/>
-                            <span/>
-                            <span class="css_publish">Unpublished</span>
-                            <span class="css_unpublish">Published</span>
-                        </label>
-                    </li>
+                    <t t-call="website.website_publisher">
+                        <t t-set="extra_classes" t-value=""/>
+                    </t>
                     <!-- Mobile preview -->
                     <li class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
@@ -106,49 +118,55 @@
                                     <div groups="website.group_website_designer" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_page" aria-label="New page" title="New page">
                                             <i class="fa fa-file-o"/>
-                                            <p>New Page</p>
+                                            <p>Page</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_blog" t-att-data-module-id="env.ref('base.module_website_blog').id" t-att-data-module-shortdesc="env.ref('base.module_website_blog').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_blog_post">
                                             <i class="fa fa-rss"/>
-                                            <p>New Blog Post</p>
+                                            <p>Blog Post</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_event" t-att-data-module-id="env.ref('base.module_website_event').id" t-att-data-module-shortdesc="env.ref('base.module_website_event').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_event">
                                             <i class="fa fa-glass"/>
-                                            <p>New Event</p>
+                                            <p>Event</p>
                                         </a>
                                     </div>
-                                    <div groups="base.group_system" name="module_website_forum" t-att-data-module-id="env.ref('base.module_website_forum').id" t-att-data-module-shortdesc="env.ref('base.module_website_forum').shortdesc" class="col-md-4 mb8 o_new_content_element">
-                                        <a href="#" data-action="new_forum">
+                                    <div groups="base.group_system" name="module_website_forum"
+                                         t-att-data-module-id="env.ref('base.module_website_forum').id"
+                                         t-att-data-module-shortdesc="env.ref('base.module_website_forum').shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
+                                        <a href="#" data-url="/forum" data-action="new_forum">
                                             <i class="fa fa-comment"/>
-                                            <p>New Forum</p>
+                                            <p>Forum</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_hr_recruitment" t-att-data-module-id="env.ref('base.module_website_hr_recruitment').id" t-att-data-module-shortdesc="env.ref('base.module_website_hr_recruitment').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#">
                                             <i class="fa fa-briefcase"/>
-                                            <p>New Job Offer</p>
+                                            <p>Job Offer</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_sale" t-att-data-module-id="env.ref('base.module_website_sale').id" t-att-data-module-shortdesc="env.ref('base.module_website_sale').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_product">
                                             <i class="fa fa-shopping-cart"/>
-                                            <p>New Product</p>
+                                            <p>Product</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_slides" t-att-data-module-id="env.ref('base.module_website_slides').id" t-att-data-module-shortdesc="env.ref('base.module_website_slides').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_slide_channel">
                                             <i class="fa fa-graduation-cap"></i>
-                                            <p>New Course</p>
+                                            <p>Course</p>
                                         </a>
                                     </div>
-                                    <div groups="base.group_system" name="module_website_livechat" t-att-data-module-id="env.ref('base.module_website_livechat').id" t-att-data-module-shortdesc="env.ref('base.module_website_livechat').shortdesc" class="col-md-4 mb8 o_new_content_element">
-                                        <a href="#" data-action="new_channel">
+                                    <div groups="base.group_system" name="module_website_livechat"
+                                         t-att-data-module-id="env.ref('base.module_website_livechat').id"
+                                         t-att-data-module-shortdesc="env.ref('base.module_website_livechat').shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
+                                        <a href="#" data-url="/livechat" data-action="new_channel">
                                             <i class="fa fa-hashtag"/>
-                                            <p>New Livechat Channel</p>
+                                            <p>Livechat Widget</p>
                                         </a>
                                     </div>
                                 </div>

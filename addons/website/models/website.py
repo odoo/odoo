@@ -303,6 +303,7 @@ class Website(models.Model):
                 'url': page_url,
                 'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
+                'track': True,
             })
             result['view_id'] = view.id
         if add_menu:
