@@ -210,6 +210,20 @@ var SnippetEditor = Widget.extend({
         this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
     },
     /**
+     * DOMElements have a default name which appears in the overlay when they
+     * are being edited. This method retrieves this name; it can be defined
+     * directly in the DOM thanks to the `data-name` attribute.
+     */
+    getName: function () {
+        if (this.$target.data('name') !== undefined) {
+            return this.$target.data('name');
+        }
+        if (this.$target.parent('.row').length) {
+            return _t("Column");
+        }
+        return _t("Block");
+    },
+    /**
      * @return {boolean}
      */
     isShown: function () {
@@ -395,22 +409,6 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * DOMElements have a default name which appears in the overlay when they
-     * are being edited. This method retrieves this name; it can be defined
-     * directly in the DOM thanks to the `data-name` attribute.
-     *
-     * @private
-     */
-    _getName: function () {
-        if (this.$target.data('name') !== undefined) {
-            return this.$target.data('name');
-        }
-        if (this.$target.parent('.row').length) {
-            return _t("Column");
-        }
-        return _t("Block");
-    },
-    /**
      * Instantiates the snippet's options.
      *
      * @private
@@ -433,7 +431,7 @@ var SnippetEditor = Widget.extend({
         }
 
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
-            name: this._getName(),
+            name: this.getName(),
         })).data('editor', this);
         const $optionsSectionBtnGroup = $optionsSection.find('we-button-group');
         $optionsSectionBtnGroup.contents().each((i, node) => {
@@ -472,7 +470,7 @@ var SnippetEditor = Widget.extend({
                 this.$el,
                 _.extend({
                     optionName: optionName,
-                    snippetName: this._getName(),
+                    snippetName: this.getName(),
                 }, val.data),
                 this.options
             );
@@ -872,7 +870,7 @@ var SnippetsMenu = Widget.extend({
             this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
             this.invisibleDOMPanelEl.appendChild(
                 $('<div/>', {
-                    text: _t('Invisible'),
+                    text: _t('Invisible Elements'),
                     class: 'o_panel_header',
                 }).prepend(
                     $('<i/>', {class: 'fa fa-eye-slash'})
@@ -1217,7 +1215,7 @@ var SnippetsMenu = Widget.extend({
                 const editor = await this._createSnippetEditor($(el));
                 const $invisEntry = $('<div/>', {
                     class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
-                    text: _t(el.getAttribute('string')),
+                    text: editor.getName(),
                 }).append($('<i/>', {class: `fa ${editor.isTargetVisible() ? 'fa-eye' : 'fa-eye-slash'} ml-2`}));
                 $invisibleDOMPanelEl.append($invisEntry);
                 this.invisibleDOMMap.set($invisEntry[0], el);
