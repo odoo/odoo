@@ -5,6 +5,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -209,3 +210,14 @@ class Mailing(models.Model):
             composer._action_send_sms()
             mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
         return True
+
+    # --------------------------------------------------
+    # TOOLS
+    # --------------------------------------------------
+
+    def _get_default_mailing_domain(self):
+        mailing_domain = super(Mailing, self)._get_default_mailing_domain()
+        if self.mailing_type == 'sms' and 'phone_blacklisted' in self.env[self.mailing_model_name]._fields:
+            mailing_domain = expression.AND([mailing_domain, [('phone_blacklisted', '=', False)]])
+
+        return mailing_domain
