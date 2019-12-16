@@ -542,6 +542,37 @@ class TestExpression(TransactionCase):
         self.assertNotIn(helene, Company.search([('name','not ilike','Helene')]))
         self.assertNotIn(helene, Company.search([('name','not ilike','hélène')]))
 
+    def test_pure_function(self):
+        orig_false = expression.FALSE_DOMAIN.copy()
+        orig_true = expression.TRUE_DOMAIN.copy()
+        false = orig_false.copy()
+        true = orig_true.copy()
+
+        domain = expression.AND([])
+        domain += [('id', '=', 1)]
+        domain = expression.AND([])
+        self.assertEqual(domain, orig_true)
+
+        domain = expression.AND([false])
+        domain += [('id', '=', 1)]
+        domain = expression.AND([false])
+        self.assertEqual(domain, orig_false)
+
+        domain = expression.OR([])
+        domain += [('id', '=', 1)]
+        domain = expression.OR([])
+        self.assertEqual(domain, orig_false)
+
+        domain = expression.OR([true])
+        domain += [('id', '=', 1)]
+        domain = expression.OR([true])
+        self.assertEqual(domain, orig_true)
+
+        domain = expression.normalize_domain([])
+        domain += [('id', '=', 1)]
+        domain = expression.normalize_domain([])
+        self.assertEqual(domain, orig_true)
+
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
