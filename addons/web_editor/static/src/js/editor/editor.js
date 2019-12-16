@@ -163,22 +163,21 @@ var EditorMenuBar = Widget.extend({
      *        true if the page has to be reloaded after the save
      * @returns {Promise}
      */
-    save: function (reload) {
-        var self = this;
+    save: async function (reload) {
         var defs = [];
         this.trigger_up('ready_to_save', {defs: defs});
-        return Promise.all(defs).then(function () {
-            if (self.snippetsMenu) {
-                self.snippetsMenu.cleanForSave();
-            }
-            return self._saveCroppedImages();
-        }).then(function () {
-            return self.rte.save();
-        }).then(function () {
-            if (reload !== false) {
-                return self._reload();
-            }
-        });
+        await Promise.all(defs);
+
+        if (this.snippetsMenu) {
+            await this.snippetsMenu.cleanForSave();
+        }
+
+        await this._saveCroppedImages();
+        await this.rte.save();
+
+        if (reload !== false) {
+            return this._reload();
+        }
     },
 
     //--------------------------------------------------------------------------
