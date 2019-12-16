@@ -224,23 +224,10 @@ class MassMailing(models.Model):
     @api.depends('mailing_model_name', 'contact_list_ids')
     def _compute_mailing_domain(self):
         for mailing in self:
-            mailing_domain = literal_eval(mailing.mailing_domain) if mailing.mailing_domain else []
-            if mailing.mailing_model_name:
-                if mailing_domain:
-                    try:
-                        self.env[mailing.mailing_model_name].search(mailing_domain, limit=1)
-                    except:
-                        mailing_domain = []
-                if not mailing_domain:
-                    if mailing.mailing_model_name == 'mailing.list' and mailing.contact_list_ids:
-                        mailing_domain = [('list_ids', 'in', mailing.contact_list_ids.ids)]
-                    elif 'is_blacklisted' in self.env[mailing.mailing_model_name]._fields and not mailing.mailing_domain:
-                        mailing_domain = [('is_blacklisted', '=', False)]
-                    elif 'opt_out' in self.env[mailing.mailing_model_name]._fields and not mailing.mailing_domain:
-                        mailing_domain = [('opt_out', '=', False)]
+            if not mailing.mailing_model_name:
+                mailing.mailing_domain = ''
             else:
-                mailing_domain = []
-            mailing.mailing_domain = repr(mailing_domain)
+                mailing.mailing_domain = repr(mailing._get_default_mailing_domain())
 
     # ------------------------------------------------------
     # ORM
@@ -492,16 +479,17 @@ class MassMailing(models.Model):
         }
 
     def _get_recipients(self):
-        if self.mailing_domain:
-            domain = safe_eval(self.mailing_domain)
-            res_ids = self.env[self.mailing_model_real].search(domain).ids
-        else:
+        try:
+            mailing_domain = literal_eval(self.mailing_domain)
+        except:
             res_ids = []
-            domain = [('id', 'in', res_ids)]
+            mailing_domain = [('id', 'in', res_ids)]
+        else:
+            res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
         if self.contact_ab_pc < 100:
-            contact_nbr = self.env[self.mailing_model_real].search_count(domain)
+            contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
             topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
             if self.campaign_id and self.unique_ab_testing:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
@@ -591,6 +579,18 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------
+
+    def _get_default_mailing_domain(self):
+        mailing_domain = []
+        if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
+            mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+
+        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
+            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
+        if self.mailing_type == 'mail' and 'opt_out' in self.env[self.mailing_model_name]._fields:
+            mailing_domain = expression.AND([[('opt_out', '=', False)], mailing_domain])
+
+        return mailing_domain
 
     def _unsubscribe_token(self, res_id, email):
         """Generate a secure hash for this mailing list and parameters.
