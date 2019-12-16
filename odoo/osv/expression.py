@@ -191,7 +191,7 @@ def normalize_domain(domain):
     """
     assert isinstance(domain, (list, tuple)), "Domains to normalize must have a 'domain' form: a list or tuple of domain components"
     if not domain:
-        return TRUE_DOMAIN
+        return [TRUE_LEAF]
     result = []
     expected = 1                            # expected number of expressions
     op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
@@ -269,12 +269,12 @@ def combine(operator, unit, zero, domains):
 
 def AND(domains):
     """AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
-    return combine(AND_OPERATOR, TRUE_DOMAIN, FALSE_DOMAIN, domains)
+    return combine(AND_OPERATOR, [TRUE_LEAF], [FALSE_LEAF], domains)
 
 
 def OR(domains):
     """OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
-    return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
+    return combine(OR_OPERATOR, [FALSE_LEAF], [TRUE_LEAF], domains)
 
 
 def distribute_not(domain):
@@ -752,7 +752,7 @@ class expression(object):
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
-                return FALSE_DOMAIN
+                return [FALSE_LEAF]
             if left_model._parent_store:
                 doms = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
