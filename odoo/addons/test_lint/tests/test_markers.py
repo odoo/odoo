@@ -4,14 +4,15 @@
 import logging
 import os
 import odoo
-from odoo.tests.common import TransactionCase
+
+from . import lint_case
 
 _logger = logging.getLogger(__name__)
 MARKERS = [b'<' * 7, b'>' * 7]
 EXTENSIONS = ('.py', '.js', '.xml', '.less', '.sass')
 
 
-class TestConflictMarkers(TransactionCase):
+class TestConflictMarkers(lint_case.LintCase):
 
     def check_file(self, fullpath_name):
 

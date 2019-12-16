@@ -5894,6 +5894,10 @@ Record ids: %(records)s
                 res['value'].pop('id', None)
                 self.update({key: val for key, val in res['value'].items() if key in self._fields})
             if res.get('domain'):
+                _logger.warning(
+                    "onchange method %s returned a domain, this is deprecated",
+                    method.__qualname__
+                )
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):
                 result['warnings'].add((
