@@ -38,11 +38,20 @@ class AccountMove(models.Model):
         self._stock_account_anglo_saxon_reconcile_valuation()
         return res
 
+    def button_draft(self):
+        res = super(AccountMove, self).button_draft()
+
+        # Unlink the COGS lines generated during the 'post' method.
+        self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
+        return res
+
     def button_cancel(self):
         # OVERRIDE
         res = super(AccountMove, self).button_cancel()
 
         # Unlink the COGS lines generated during the 'post' method.
+        # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
+        # However, since it can be called in RPC, better be safe.
         self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
         return res
 
