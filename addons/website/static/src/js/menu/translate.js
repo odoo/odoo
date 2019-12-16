@@ -73,6 +73,13 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
 
         var translator = new TranslatorMenu(this);
+
+        // We don't want the BS dropdown to close
+        // when clicking in a element to translate
+        $('.dropdown-menu').on('click', '.o_editable', function (ev) {
+            ev.stopPropagation();
+        });
+
         return translator.prependTo(document.body);
     },
 });
