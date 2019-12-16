@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
-"PO-Revision-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2019-12-16 10:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,17 +51,6 @@ msgid "*Valid for following products:"
 msgstr ""
 
 #. module: sale_coupon
-#: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
-msgid "10% Discount"
-msgstr ""
-
-#. module: sale_coupon
-#: model:product.product,name:sale_coupon.product_product_10_percent_discount
-#: model:product.template,name:sale_coupon.product_product_10_percent_discount_product_template
-msgid "10.0% discount on total amount"
-msgstr ""
-
-#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form
 msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
@@ -87,6 +76,21 @@ msgstr ""
 msgid ""
 "<span> Orders</span>\n"
 "                    <span class=\"oe_grey\"> if 0, infinite use</span>"
+msgstr ""
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
+msgid "<span>Minimum purchase of</span>"
+msgstr ""
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
+msgid "<span>Valid for purchase above</span>"
+msgstr ""
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
+msgid "<span>products</span>"
 msgstr ""
 
 #. module: sale_coupon
@@ -301,6 +305,11 @@ msgid "Apply on First"
 msgstr ""
 
 #. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
+msgid "Archived"
+msgstr ""
+
+#. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:0
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
@@ -344,11 +353,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_coupon
-#: model:sale.coupon.program,name:sale_coupon.3_cabinets_plus_1_free
-msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
-
-#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "CODE:"
 msgstr ""
@@ -375,11 +379,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__code
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
 msgid "Code"
-msgstr ""
-
-#. module: sale_coupon
-#: model:sale.coupon.program,name:sale_coupon.10_percent_auto_applied
-msgid "Code for 10% on orders"
 msgstr ""
 
 #. module: sale_coupon
@@ -427,6 +426,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Coupon Program"
+msgstr ""
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form
+msgid "Coupon Program Name"
 msgstr ""
 
 #. module: sale_coupon
@@ -641,12 +645,6 @@ msgid "Free Product - %s"
 msgstr ""
 
 #. module: sale_coupon
-#: model:product.product,name:sale_coupon.product_product_free_large_cabinet
-#: model:product.template,name:sale_coupon.product_product_free_large_cabinet_product_template
-msgid "Free Product - Large Cabinet"
-msgstr ""
-
-#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_generate_view_form
 msgid "Generate"
 msgstr ""
@@ -783,11 +781,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_min_quantity
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_rule__rule_min_quantity
 msgid "Minimum Quantity"
-msgstr ""
-
-#. module: sale_coupon
-#: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
-msgid "Minimum purchase of"
 msgstr ""
 
 #. module: sale_coupon
@@ -949,11 +942,6 @@ msgid "Program"
 msgstr ""
 
 #. module: sale_coupon
-#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
-msgid "Program Name"
-msgstr ""
-
-#. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__program_type
 msgid "Program Type"
 msgstr ""
@@ -985,6 +973,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__promo_code
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
 msgid "Promotion Code"
+msgstr ""
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
+msgid "Promotion Program Name"
 msgstr ""
 
 #. module: sale_coupon
@@ -1292,14 +1285,6 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: sale_coupon
-#: model:product.product,uom_name:sale_coupon.product_product_10_percent_discount
-#: model:product.product,uom_name:sale_coupon.product_product_free_large_cabinet
-#: model:product.template,uom_name:sale_coupon.product_product_10_percent_discount_product_template
-#: model:product.template,uom_name:sale_coupon.product_product_free_large_cabinet_product_template
-msgid "Units"
-msgstr ""
-
-#. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
 msgstr ""
@@ -1312,11 +1297,6 @@ msgstr ""
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon__state__new
 msgid "Valid"
-msgstr ""
-
-#. module: sale_coupon
-#: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
-msgid "Valid for purchase above"
 msgstr ""
 
 #. module: sale_coupon
@@ -1381,9 +1361,4 @@ msgstr ""
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "limited to "
-msgstr ""
-
-#. module: sale_coupon
-#: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
-msgid "products"
 msgstr ""
