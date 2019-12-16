@@ -2012,5 +2012,112 @@ QUnit.test('out-of-office info on discuss', async function (assert) {
     discuss.destroy();
 });
 
+QUnit.test('display subject on messages from mailing channels', async function (assert) {
+    /**
+     * Mailing channels let posting messages with subject and body.
+     * Subject is displayed when it doesn't match channel name, this to
+     * avoid quite some noise.
+     */
+    assert.expect(8);
+
+    const messageData = [{
+        // message from mailing channel with appropriate subject
+        author_id: [5, 'User'],
+        body: '<p>body1</p>',
+        channel_ids: [1],
+        id: 101,
+        message_type: 'email',
+        model: 'mail.channel',
+        res_id: 1,
+        subject: 'some subject',
+    }, {
+        // message from mailing channel with no subject
+        author_id: [5, 'User'],
+        body: '<p>body2</p>',
+        channel_ids: [1],
+        id: 102,
+        message_type: 'email',
+        model: 'mail.channel',
+        res_id: 1,
+        subject: false,
+    }, {
+        // message from mailing channel with subject as channel name
+        author_id: [5, 'User'],
+        body: '<p>body3</p>',
+        channel_ids: [1],
+        id: 103,
+        message_type: 'email',
+        model: 'mail.channel',
+        res_id: 1,
+        subject: 'general',
+    }, {
+        // message from mailing channel with subject as 'Re: ' + channel name
+        // (default subject of a reply in the channel)
+        author_id: [5, 'User'],
+        body: '<p>body4</p>',
+        channel_ids: [1],
+        id: 104,
+        message_type: 'email',
+        model: 'mail.channel',
+        res_id: 1,
+        subject: 'Re: general',
+    }, {
+        // message from a non-channel with subject (channel is subscribed to
+        // this document).
+        author_id: [5, 'User'],
+        body: '<p>body5</p>',
+        channel_ids: [1],
+        id: 105,
+        message_type: 'email',
+        model: 'some.document',
+        record_name: 'Some document',
+        res_id: 10,
+        subject: 'general',
+    }];
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+                mass_mailing: true,
+            }],
+        },
+    };
+    this.data['mail.message'].records = messageData;
+    const discuss = await createDiscuss({
+        context: {},
+        data: this.data,
+        params: {},
+        services: this.services,
+    });
+
+    const $general = discuss.$('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($general);
+    assert.containsN(discuss, '.o_thread_message', 5,
+        "should display the 5 messages");
+    const $message1 = discuss.$('.o_thread_message[data-message-id="101"]');
+    const $message2 = discuss.$('.o_thread_message[data-message-id="102"]');
+    const $message3 = discuss.$('.o_thread_message[data-message-id="103"]');
+    const $message4 = discuss.$('.o_thread_message[data-message-id="104"]');
+    const $message5 = discuss.$('.o_thread_message[data-message-id="105"]');
+    assert.containsOnce($message1, '.o_mail_subject',
+        "message 1 should display subject");
+    assert.containsNone($message2, '.o_mail_subject',
+        "message 2 should not display subject (no subject)");
+    assert.containsNone($message3, '.o_mail_subject',
+        "message 3 should not display subject (= channel name)");
+    assert.containsNone($message4, '.o_mail_subject',
+        "message 4 should not display subject (= 'Re: ' + channel name)");
+    assert.containsOnce($message5, '.o_mail_subject',
+        "message 5 should display subject (from document)");
+    assert.strictEqual($message1.find('.o_mail_subject').text(), 'Subject: some subject',
+        "message 1 should display correct subject");
+    assert.strictEqual($message5.find('.o_mail_subject').text(), 'Subject: general',
+        "message 5 should display correct subject");
+
+    discuss.destroy();
+});
+
 });
 });

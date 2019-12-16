@@ -255,7 +255,7 @@ var AbstractThreadWindow = Widget.extend({
     render: function () {
         this.renderHeader();
         if (this.hasThread()) {
-            this._threadWidget.render(this._thread, { displayLoadMore: false });
+            this._threadWidget.render(this._thread, this._getThreadRenderOptions());
         }
     },
     /**
@@ -355,6 +355,15 @@ var AbstractThreadWindow = Widget.extend({
             return '_blank';
         }
         return this._thread.getID();
+    },
+    /**
+     * @private
+     * @return {Object}
+     */
+    _getThreadRenderOptions() {
+        return {
+            displayLoadMore: false,
+        };
     },
     /**
      * Tells whether there is focus on this thread. Note that a thread that has
