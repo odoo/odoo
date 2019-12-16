@@ -11,5 +11,9 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence">55</field>
         </record>
+
+        <record id="im_livechat.im_livechat_channel_data" model="im_livechat.channel">
+            <field name="is_published" eval="True"/>
+        </record>
      </data>
 </odoo>
