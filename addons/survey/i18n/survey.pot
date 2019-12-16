@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
-"PO-Revision-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2019-12-16 10:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid "%s challenge certificate"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
 msgid "&amp;times;"
 msgstr ""
 
@@ -38,43 +38,13 @@ msgid "'Certification - %s' % (object.survey_id.display_name)"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_header
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_main_header
 msgid "00:00"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_4
-msgid "100$"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_1
-msgid "20$"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_5
-msgid "200$"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_6
-msgid "300$"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "403: Forbidden"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_2
-msgid "50$"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_3
-msgid "80$"
 msgstr ""
 
 #. module: survey
@@ -109,7 +79,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "<b>Question </b>"
 msgstr ""
 
@@ -155,19 +125,19 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_matrix
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid ""
 "<i class=\"fa fa-bar-chart\"/>\n"
 "                    Graph"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Graph"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Pie Chart"
 msgstr ""
 
@@ -201,33 +171,33 @@ msgid "<i class=\"fa fa-dot-circle-o fa-lg\"/> answer"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
 "                                                Download certification"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    All Data"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_matrix
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    Data"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "<i class=\"fa fa-list-alt\"/> Data"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid ""
 "<i class=\"fa fa-list-ol\"/>\n"
 "                    Most Common"
@@ -246,7 +216,7 @@ msgid "<i class=\"fa fa-square-o fa-lg\"/> answer"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "<i class=\"fa fa-times\"/> Clear All Filters"
 msgstr ""
 
@@ -265,50 +235,50 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid ""
-"<span class=\"badge badge-primary only_left_radius filter-all\">All "
-"surveys</span><span class=\"badge badge-secondary only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<span class=\"badge badge-primary only_left_radius filter-all "
+"o_active_filter\">All surveys</span><span class=\"badge badge-secondary "
+"only_right_radius filter-finished\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid ""
 "<span class=\"badge badge-primary only_left_radius\"><i class=\"fa fa-"
 "filter\" role=\"img\" aria-label=\"Filter\" title=\"Filter\"/></span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid ""
 "<span class=\"badge badge-secondary only_left_radius filter-all\">All "
 "surveys</span><span class=\"badge badge-primary only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"finished o_active_filter\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Average </span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Maximum </span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Minimum </span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Sum </span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "<span class=\"fa fa-filter\"/>  Filters"
 msgstr ""
 
@@ -337,22 +307,22 @@ msgid "<span class=\"text-muted\">Success</span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "<span>Correct answer</span>:"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "<span>Correct answers</span>:"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.retake_survey_button
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "<span>Number of attemps left</span>:"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_init
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_start
 msgid "<span>Time limit for this survey: </span>"
 msgstr ""
 
@@ -369,16 +339,6 @@ msgid "A length must be positive!"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_4
-msgid "A little bit overpriced"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_5
-msgid "A lot overpriced"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_label__answer_score
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
@@ -386,19 +346,13 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
 msgid "A problem has occured"
 msgstr ""
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
 msgid "A token must be unique!"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p2
-#: model:survey.question,title:survey.survey_feedback_p2
-msgid "About our ecommerce"
 msgstr ""
 
 #. module: survey
@@ -480,11 +434,6 @@ msgid "Administrator"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_col3
-msgid "Agree"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
 msgid "All questions"
 msgstr ""
@@ -495,12 +444,12 @@ msgid "Allow Comments"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Answer Choices"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Answer Score"
 msgstr ""
 
@@ -516,7 +465,7 @@ msgid "Answer deadline"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Answered"
 msgstr ""
 
@@ -534,11 +483,12 @@ msgid "Anyone with the link"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_gamification_challenge__category
+#: model:ir.model.fields,field_description:survey.field_gamification_challenge__challenge_category
 msgid "Appears in"
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
 msgstr ""
@@ -617,8 +567,8 @@ msgid "Badge Name"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_3
-msgid "Cabinet with Doors"
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+msgid "CERTIFICATE"
 msgstr ""
 
 #. module: survey
@@ -672,8 +622,24 @@ msgid "Certification Document"
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "Certification Seal"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+msgid "Certification Template"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_give_badge_check
 msgid "Certification badge must be configured if Give Badge is set."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
+msgid "Certification template"
 msgstr ""
 
 #. module: survey
@@ -683,7 +649,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
-#: model:ir.model.fields.selection,name:survey.selection__gamification_challenge__category__certification
+#: model:ir.model.fields.selection,name:survey.selection__gamification_challenge__challenge_category__certification
 msgid "Certifications"
 msgstr ""
 
@@ -705,17 +671,7 @@ msgid "Certified"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view
-msgid "Certifies that"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_1
-msgid "Chair floor protection"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Chart"
 msgstr ""
 
@@ -731,14 +687,29 @@ msgid "Choices"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.simple_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_simple_choice
 msgid "Choose..."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.back
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
+msgid "Classic Blue"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_gold
+msgid "Classic Gold"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_purple
+msgid "Classic Purple"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
 msgid "Close"
 msgstr ""
 
@@ -749,7 +720,6 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
-#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_1
 msgid "Color"
 msgstr ""
 
@@ -764,7 +734,7 @@ msgid "Columns of the Matrix"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_comments
+#: model_terms:ir.ui.view,arch_db:survey.question_result_comments
 msgid "Comment"
 msgstr ""
 
@@ -796,12 +766,7 @@ msgid "Compose Email"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_3
-msgid "Conference chair"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "Congratulations, you have passed the test!"
 msgstr ""
 
@@ -821,18 +786,8 @@ msgid "Contents"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_1
-msgid "Corner Desk Right Sit"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_is_correct
 msgid "Correct"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_3
-msgid "Correctly priced"
 msgstr ""
 
 #. module: survey
@@ -903,29 +858,15 @@ msgid "Customers will receive the same token."
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_5
-msgid "Customizable Lamp"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__date
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "Date"
 msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_date
 msgid "Date answer"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view
-msgid "Date of Certification:"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view
-msgid "Date of Failure:"
 msgstr ""
 
 #. module: survey
@@ -950,7 +891,7 @@ msgid "Deadline"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_gamification_challenge__category
+#: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr ""
 
@@ -972,19 +913,9 @@ msgid "Design easily your survey, send invitations and analyze answers."
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_2
-msgid "Desk Combination"
-msgstr ""
-
-#. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input_line
 #: model:ir.ui.menu,name:survey.menu_survey_response_line_form
 msgid "Detailed Answers"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_col2
-msgid "Disagree"
 msgstr ""
 
 #. module: survey
@@ -1013,31 +944,8 @@ msgid "Display mode of simple choice questions."
 msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_1_question_1
-#: model:survey.question,title:survey.vendor_certification_page_1_question_1
-msgid "Do we sell Acoustic Bloc Screens?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p2_q3
-#: model:survey.question,title:survey.survey_feedback_p2_q3
-msgid "Do you have any other comments, questions, or concerns ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_1_question_5
-#: model:survey.question,title:survey.vendor_certification_page_1_question_5
-msgid "Do you think we have missing products in our catalog? (not rated)"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__draft
 msgid "Draft"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_4
-msgid "Drawer"
 msgstr ""
 
 #. module: survey
@@ -1056,12 +964,12 @@ msgid "Edit Survey"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.back
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "Edit Survey."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_void
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "Edit in backend"
 msgstr ""
 
@@ -1091,11 +999,6 @@ msgid "Except Test Entries"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Exception Activities"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_partner_ids
 msgid "Existing Partner"
 msgstr ""
@@ -1106,12 +1009,7 @@ msgid "Existing emails"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_2
-msgid "Fanta"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Filter question"
 msgstr ""
 
@@ -1161,12 +1059,6 @@ msgid "Gamification Challenge"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.survey_feedback_p1
-#: model:survey.question,title:survey.survey_feedback_p1
-msgid "General information"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__category__default
 msgid "Generic Survey"
 msgstr ""
@@ -1174,11 +1066,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
 msgid "Give Badge"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug4
-msgid "Good value for money"
 msgstr ""
 
 #. module: survey
@@ -1193,45 +1080,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Handle existing"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_2
-msgid "Height"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug1
-msgid "High quality"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p1_q3
-#: model:survey.question,title:survey.survey_feedback_p1_q3
-msgid "How frequently do you buy products online ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p1_q4
-#: model:survey.question,title:survey.survey_feedback_p1_q4
-msgid "How many times did you order products on our website ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_1_question_4
-#: model:survey.question,title:survey.vendor_certification_page_1_question_4
-msgid "How many versions of the Corner Desk do we have?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_2_question_1
-#: model:survey.question,title:survey.vendor_certification_page_2_question_1
-msgid "How much do we sell our Cable Management Box?"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_row5
-msgid "I have added products to my wishlist"
 msgstr ""
 
 #. module: survey
@@ -1285,25 +1133,6 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
-#: model:survey.question,comments_message:survey.survey_feedback_p1
-#: model:survey.question,comments_message:survey.survey_feedback_p1_q1
-#: model:survey.question,comments_message:survey.survey_feedback_p1_q2
-#: model:survey.question,comments_message:survey.survey_feedback_p1_q3
-#: model:survey.question,comments_message:survey.survey_feedback_p1_q4
-#: model:survey.question,comments_message:survey.survey_feedback_p2
-#: model:survey.question,comments_message:survey.survey_feedback_p2_q1
-#: model:survey.question,comments_message:survey.survey_feedback_p2_q2
-#: model:survey.question,comments_message:survey.survey_feedback_p2_q3
-#: model:survey.question,comments_message:survey.vendor_certification_page_1
-#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_1
-#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_2
-#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_3
-#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_4
-#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_5
-#: model:survey.question,comments_message:survey.vendor_certification_page_2
-#: model:survey.question,comments_message:survey.vendor_certification_page_2_question_1
-#: model:survey.question,comments_message:survey.vendor_certification_page_2_question_2
-#: model:survey.question,comments_message:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "If other, please specify:"
 msgstr ""
@@ -1317,23 +1146,13 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "If you wish, you can"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug6
-msgid "Impractical"
 msgstr ""
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__open
 msgid "In Progress"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug7
-msgid "Ineffective"
 msgstr ""
 
 #. module: survey
@@ -1388,11 +1207,6 @@ msgid "Is time limit reached?"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_row2
-msgid "It is easy to find the product that I want"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
 msgid "Label Sequence order"
 msgstr ""
@@ -1407,11 +1221,6 @@ msgstr ""
 msgid ""
 "Labels used for proposed choices: simple choice, multiple choice and columns"
 " of matrix"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_4
-msgid "Large Desk"
 msgstr ""
 
 #. module: survey
@@ -1460,11 +1269,6 @@ msgid "Layout"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_4
-msgid "Legs"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_attempts_limited
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_attempts_limited
 msgid "Limited number of attempts"
@@ -1477,7 +1281,7 @@ msgid "Login Required"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "Login required"
 msgstr ""
 
@@ -1508,7 +1312,7 @@ msgid "Matrix Type"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Matrix:"
 msgstr ""
 
@@ -1553,7 +1357,7 @@ msgid "Maximum value"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "Maybe you were looking for"
 msgstr ""
 
@@ -1594,6 +1398,21 @@ msgid "Missed"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_blue
+msgid "Modern Blue"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_gold
+msgid "Modern Gold"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_purple
+msgid "Modern Purple"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__free_text
 msgid "Multiple Lines Text Box"
 msgstr ""
@@ -1624,11 +1443,6 @@ msgid "Multiple choices per row"
 msgstr ""
 
 #. module: survey
-#: model:survey.survey,title:survey.vendor_certification
-msgid "MyCompany Vendor Certification"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
 msgstr ""
@@ -1651,21 +1465,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "Next page"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "Next question"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_1_choice_1
-msgid "No"
 msgstr ""
 
 #. module: survey
@@ -1727,11 +1526,6 @@ msgid "Number of columns"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_5
-msgid "Number of drawers"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
@@ -1762,33 +1556,8 @@ msgid "Numerical answer"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
 msgid "Occurence"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_5
-msgid "Office Chair Black"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p1_q3_sug1
-msgid "Once a day"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p1_q3_sug3
-msgid "Once a month"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p1_q3_sug2
-msgid "Once a week"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p1_q3_sug4
-msgid "Once a year"
 msgstr ""
 
 #. module: survey
@@ -1818,16 +1587,6 @@ msgid "Options"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug9
-msgid "Other"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p1_q3_sug5
-msgid "Other (answer in comment)"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
 msgid "Outgoing mail server"
 msgstr ""
@@ -1837,11 +1596,6 @@ msgstr ""
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Overall Performance %.2f%s"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug5
-msgid "Overpriced"
 msgstr ""
 
 #. module: survey
@@ -1901,15 +1655,10 @@ msgid "Please enter at least one valid recipient."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_void
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug8
-msgid "Poor quality"
 msgstr ""
 
 #. module: survey
@@ -1918,31 +1667,19 @@ msgid "Predefined Questions"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+msgid "Preview"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
 msgid "Previous page"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
-msgid "Previous question"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_2
-#: model:survey.question,title:survey.vendor_certification_page_2
-msgid "Prices"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Print"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_1
-#: model:survey.question,title:survey.vendor_certification_page_1
-msgid "Products"
 msgstr ""
 
 #. module: survey
@@ -2038,12 +1775,12 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Results Overview"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.retake_survey_button
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Retry"
 msgstr ""
 
@@ -2161,24 +1898,6 @@ msgid "See results"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_1_question_3
-#: model:survey.question,title:survey.vendor_certification_page_1_question_3
-msgid "Select all the available customizations for our Customizable Desk"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_1_question_2
-#: model:survey.question,title:survey.vendor_certification_page_1_question_2
-msgid "Select all the existing products"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_2_question_2
-#: model:survey.question,title:survey.vendor_certification_page_2_question_2
-msgid "Select all the the products that sell for 100$ or more"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
 #: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
 msgid "Selection"
@@ -2228,7 +1947,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__skipped
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Skipped"
 msgstr ""
 
@@ -2239,7 +1958,7 @@ msgid "Some emails you just entered are incorrect: %s"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
 msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
 "danger\">Your answers have probably not been recorded.</strong> Try "
@@ -2247,23 +1966,23 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Sorry, No one answered this question."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Sorry, no one answered this survey yet."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_init
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_start
 msgid "Start Certification"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_init
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_start
 msgid "Start Survey"
 msgstr ""
 
@@ -2302,7 +2021,7 @@ msgid "Subject..."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
 msgid "Submit Survey"
 msgstr ""
 
@@ -2317,18 +2036,8 @@ msgid "Success Ratio"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics
 msgid "Success rate:"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view
-msgid "Successfully achieved"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view
-msgid "Successfully failed"
 msgstr ""
 
 #. module: survey
@@ -2423,7 +2132,7 @@ msgid "Survey User inputs"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_matrix
+#: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "Survey filter"
 msgstr ""
 
@@ -2455,21 +2164,6 @@ msgid "Test Entry"
 msgstr ""
 
 #. module: survey
-#: model_terms:survey.question,description:survey.vendor_certification_page_2
-msgid "Test your knowledge of our prices."
-msgstr ""
-
-#. module: survey
-#: model_terms:survey.question,description:survey.vendor_certification_page_1
-msgid "Test your knowledge of your products!"
-msgstr ""
-
-#. module: survey
-#: model_terms:survey.survey,description:survey.vendor_certification
-msgid "Test your vendor skills!"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text
 msgid "Text"
 msgstr ""
@@ -2480,7 +2174,7 @@ msgid "Text answer"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "Thank you!"
 msgstr ""
 
@@ -2497,25 +2191,6 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p1
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q1
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q2
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q3
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q4
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p2
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p2_q1
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p2_q2
-#: model:survey.question,validation_error_msg:survey.survey_feedback_p2_q3
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_1
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_2
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_3
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_4
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_5
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_1
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_2
-#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "The answer you entered is not valid."
 msgstr ""
@@ -2530,11 +2205,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_row4
-msgid "The checkout process is clear and secure"
 msgstr ""
 
 #. module: survey
@@ -2566,12 +2236,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_row1
-msgid "The new layout and design is fresh and up-to-date"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "The page you were looking for could not be authorized."
 msgstr ""
 
@@ -2587,14 +2252,14 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_row3
-msgid "The tool to compare the products is useful to make a choice"
-msgstr ""
-
-#. module: survey
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The user has not succeeded the certification"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_content
+msgid "Their was an error during the validation of the survey."
 msgstr ""
 
 #. module: survey
@@ -2605,6 +2270,12 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "This Certificate is Presented to"
+msgstr ""
+
+#. module: survey
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/tests/test_survey.py:0
 #, python-format
@@ -2612,7 +2283,7 @@ msgid "This answer must be an email address"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.back
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "This is a test survey."
 msgstr ""
 
@@ -2650,46 +2321,8 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p1
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q1
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q2
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q3
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q4
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p2
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p2_q1
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p2_q2
-#: model:survey.question,constr_error_msg:survey.survey_feedback_p2_q3
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_1
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_2
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_3
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_4
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_5
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2_question_1
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2_question_2
-#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "This question requires an answer."
-msgstr ""
-
-#. module: survey
-#: model_terms:survey.question,description:survey.survey_feedback_p1
-msgid ""
-"This section is about general informations about you. Answering them helps "
-"qualifying your answers."
-msgstr ""
-
-#. module: survey
-#: model_terms:survey.question,description:survey.survey_feedback_p2
-msgid "This section is about our eCommerce experience itself."
-msgstr ""
-
-#. module: survey
-#: model_terms:survey.survey,description:survey.survey_feedback
-msgid ""
-"This survey allows you to give a feedback about your experience with our eCommerce solution.\n"
-"    Filling it helps us improving your experience."
 msgstr ""
 
 #. module: survey
@@ -2701,12 +2334,12 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_expired
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest !"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "This survey is open only to registered people. Please"
 msgstr ""
 
@@ -2728,16 +2361,6 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_col4
-msgid "Totally agree"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q2_col1
-msgid "Totally disagree"
 msgstr ""
 
 #. module: survey
@@ -2767,18 +2390,8 @@ msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_2
-msgid "Underpriced"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "Unfortunately, you have failed the test."
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug3
-msgid "Unique"
 msgstr ""
 
 #. module: survey
@@ -2814,18 +2427,8 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.survey_feedback_p2_q1_sug2
-msgid "Useful"
-msgstr ""
-
-#. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr ""
-
-#. module: survey
-#: model:survey.survey,title:survey.survey_feedback
-msgid "User Feedback Form"
 msgstr ""
 
 #. module: survey
@@ -2835,9 +2438,9 @@ msgid "User Input"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
-#: model_terms:ir.ui.view,arch_db:survey.result_number
-#: model_terms:ir.ui.view,arch_db:survey.result_text
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_number
+#: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "User Responses"
 msgstr ""
 
@@ -2872,12 +2475,7 @@ msgid "Validation Error message"
 msgstr ""
 
 #. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_1
-msgid "Very underpriced"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Vote"
 msgstr ""
 
@@ -2892,41 +2490,6 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,question:survey.vendor_certification_page_2_question_3
-#: model:survey.question,title:survey.vendor_certification_page_2_question_3
-msgid "What do you think about our prices (not rated)?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p2_q2
-#: model:survey.question,title:survey.survey_feedback_p2_q2
-msgid "What do your think about our new eCommerce ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p1_q2
-#: model:survey.question,title:survey.survey_feedback_p1_q2
-msgid "When is your date of birth ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p1_q1
-#: model:survey.question,title:survey.survey_feedback_p1_q1
-msgid "Where do you live ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,question:survey.survey_feedback_p2_q1
-#: model:survey.question,title:survey.survey_feedback_p2_q1
-msgid "Which of the following words would you use to describe our products ?"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_3
-msgid "Width"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD\n"
@@ -2938,11 +2501,6 @@ msgstr ""
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.vendor_certification_page_1_question_1_choice_2
-msgid "Yes"
 msgstr ""
 
 #. module: survey
@@ -2973,12 +2531,12 @@ msgid "You cannot send invitations for closed surveys."
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "You received the badge"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "You scored"
 msgstr ""
 
@@ -2993,26 +2551,42 @@ msgid "e.g. Satisfaction Survey"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+msgid "for graduating from"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "for gratuating from"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
+msgid "is proud to award this certificate to"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "log in"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_finished
 msgid "review your answers"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_expired
+#: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "survey expired"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_void
+#: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "survey is void"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.403
+#: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "this page"
 msgstr ""
