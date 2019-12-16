@@ -24,6 +24,7 @@ server {
     ssl_ciphers HIGH:!aNULL:!MD5;
 
     location / {
+     proxy_read_timeout 600s;
      proxy_pass http://127.0.0.1:8069;
     }
 
