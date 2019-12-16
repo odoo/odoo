@@ -237,3 +237,15 @@ class One2manyCase(TransactionCase):
         })
         a = parent.child_ids[0]
         parent.write({'child_ids': [(4, a.id), (0, 0, {'name': 'B'})]})
+
+    def test_one2many_create_order(self):
+        """Test that order is respected for one2many put in cache on creation"""
+        record = self.env["test_new_api.multi"].create({
+            "name": "with order",
+            "lines": [
+                (0, 0, {'sequence': 3}),
+                (0, 0, {'sequence': 1}),
+                (0, 0, {'sequence': 2}),
+            ]
+        })
+        self.assertEqual(record.lines.mapped('sequence'), [1, 2, 3])

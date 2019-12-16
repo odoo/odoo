@@ -240,11 +240,13 @@ class Multi(models.Model):
 class MultiLine(models.Model):
     _name = 'test_new_api.multi.line'
     _description = 'Test New API Multi Line'
+    _order = 'sequence, id'
 
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
     partner = fields.Many2one('res.partner')
     tags = fields.Many2many('test_new_api.multi.tag')
+    sequence = fields.Integer()
 
 
 class MultiLine2(models.Model):
