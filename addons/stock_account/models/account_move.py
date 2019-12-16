@@ -109,14 +109,6 @@ class AccountMove(models.Model):
                 sign = -1 if move.type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
-                if move.currency_id == move.company_id.currency_id:
-                    currency = False
-                    amount_currency = 0.0
-                else:
-                    currency = move.currency_id
-                    price_unit = currency._convert(
-                        price_unit, move.company_id.currency_id, move.company_id, move.invoice_date or move.date)
-                    amount_currency = sign * line.quantity * price_unit
 
                 # Add interim account line.
                 lines_vals_list.append({
@@ -126,11 +118,8 @@ class AccountMove(models.Model):
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': price_unit,
-                    'price_subtotal': amount_currency if currency else balance,
                     'debit': balance < 0.0 and -balance or 0.0,
                     'credit': balance > 0.0 and balance or 0.0,
-                    'currency_id': currency and currency.id,
-                    'amount_currency': -amount_currency,
                     'account_id': debit_interim_account.id,
                     'analytic_account_id': line.analytic_account_id.id,
                     'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
@@ -146,11 +135,8 @@ class AccountMove(models.Model):
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': -price_unit,
-                    'price_subtotal': -amount_currency if currency else -balance,
                     'debit': balance > 0.0 and balance or 0.0,
                     'credit': balance < 0.0 and -balance or 0.0,
-                    'currency_id': currency and currency.id,
-                    'amount_currency': amount_currency,
                     'account_id': credit_expense_account.id,
                     'analytic_account_id': line.analytic_account_id.id,
                     'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
