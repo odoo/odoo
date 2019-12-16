@@ -135,7 +135,7 @@ class TestAccessRights(TransactionCase):
         self.mass_mailing = mass_mailing.create({
             'name': 'One',
             'subject': 'One',
-            'mailing_model_id': self.env['ir.model']._get(mass_mailing_contacts).id,
+            'mailing_model_id': self.env['ir.model']._get('mailing.contact').id,
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id]
         self.mass_mailing.action_put_in_queue()
@@ -191,7 +191,7 @@ class TestAccessRights(TransactionCase):
         self.mass_mailing = mass_mailing.create({
             'name': 'One',
             'subject': 'One',
-            'mailing_model_id': self.env['ir.model']._get(mass_mailing_contacts).id,
+            'mailing_model_id': self.env['ir.model']._get('mailing.contact').id,
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id, mailing_list_2.id]
         self.mass_mailing.action_put_in_queue()
@@ -241,7 +241,7 @@ class TestAccessRights(TransactionCase):
         self.mass_mailing = mass_mailing.create({
             'name': 'One',
             'subject': 'One',
-            'mailing_model_id': self.env['ir.model']._get(mass_mailing_contacts).id,
+            'mailing_model_id': self.env['ir.model']._get('mailing.contact').id,
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id]
         self.mass_mailing.action_put_in_queue()
