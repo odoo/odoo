@@ -27,6 +27,7 @@ class ChangeProductionQty(models.TransientModel):
         return res
 
     @api.model
+<<<<<<< HEAD
     def _update_finished_moves(self, production, qty, old_qty):
         """ Update finished product and its byproducts. This method only update
         the finished moves not done or cancel and just increase or decrease
@@ -39,6 +40,20 @@ class ChangeProductionQty(models.TransientModel):
             modification[move] = (move.product_uom_qty - qty, move.product_uom_qty)
             move[0].write({'product_uom_qty': move.product_uom_qty - qty})
         return modification
+=======
+    def _update_product_to_produce(self, production, qty, old_qty):
+        production_move = production.move_finished_ids.filtered(lambda x: x.product_id.id == production.product_id.id and x.state not in ('done', 'cancel'))
+        if production_move:
+            production_move._decrease_reserved_quanity(qty)
+            production_move.with_context(do_not_unreserve=True).write({'product_uom_qty': qty})
+            production_move._recompute_state()
+            production_move._action_assign()
+        else:
+            production_move = production._generate_finished_moves()
+            production_move = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
+            production_move.write({'product_uom_qty': qty})
+        return {production_move: (qty, old_qty)}
+>>>>>>> 56b5fb3f027... temp
 
     @api.multi
     def change_prod_qty(self):
