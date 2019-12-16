@@ -210,6 +210,16 @@ var ThreadWindow = AbstractThreadWindow.extend({
         return options;
     },
     /**
+     * @override
+     * @private
+     * @return {Object}
+     */
+    _getThreadRenderOptions() {
+        return Object.assign({}, this._super(...arguments), {
+            displaySubjectOnMessages: this._thread && this._thread.isMassMailing(),
+        });
+    },
+    /**
      * Listen on thread widget events
      *
      * @private

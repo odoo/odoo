@@ -483,12 +483,34 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     /**
      * State whether this message should display the subject
      *
+     * @param {string} threadID id of thread this message is shown in.
      * @return {boolean}
      */
-    shouldDisplaySubject: function () {
-        return this.hasSubject() &&
-                this.getType() !== 'notification' &&
-                !this.originatesFromChannel();
+    shouldDisplaySubject(threadID) {
+        if (!this.hasSubject()) {
+            return false;
+        }
+        if (this.getType() === 'notification') {
+            return false;
+        }
+        if (['mailbox_inbox', 'mailbox_moderation', 'mailbox_history'].includes(threadID)) {
+            return true;
+        }
+        if (!this.originatesFromChannel()) {
+            return true;
+        }
+        const originChannel = this.call('mail_service', 'getChannel', this.getOriginChannelID());
+        if (!originChannel) {
+            return false;
+        }
+        if (!originChannel.isMassMailing()) {
+            return false;
+        }
+        const originChannelName = originChannel.getName();
+        if ([originChannelName, `Re: ${originChannelName}`].includes(this.getSubject())) {
+            return false;
+        }
+        return true;
     },
     /**
      * State whether this message should redirect to the author
