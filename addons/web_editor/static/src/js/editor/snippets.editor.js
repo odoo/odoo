@@ -691,7 +691,7 @@ var SnippetEditor = Widget.extend({
     },
     /**
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} ev
      */
     _onSnippetOptionUpdate: async function (ev) {
         if (ev.data.previewMode) {
@@ -792,6 +792,18 @@ var SnippetsMenu = Widget.extend({
         this._snippetEditionMutex = new concurrency.Mutex();
 
         this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
+
+        this._notActivableElementsSelector = [
+            '#web_editor-top-edit',
+            '#oe_snippets',
+            '#oe_manipulators',
+            '.o_technical_modal',
+            '.oe_drop_zone',
+            '.o_notification_manager',
+            '.o_we_no_overlay',
+            '.ui-autocomplete',
+            '.modal .close',
+        ].join(', ');
     },
     /**
      * @override
@@ -851,7 +863,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay, .ui-autocomplete').length) {
+            if ($target.closest(this._notActivableElementsSelector).length) {
                 return;
             }
             this._activateSnippet($target);
