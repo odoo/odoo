@@ -1358,7 +1358,12 @@ class StockMove(models.Model):
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
-        moves_todo.mapped('move_dest_ids')._action_assign()
+
+        move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
+        for move_dest in moves_todo.move_dest_ids:
+            move_dests_per_company[move_dest.company_id.id] |= move_dest
+        for company_id, move_dests in move_dests_per_company.items():
+            move_dests.sudo().with_company(company_id)._action_assign()
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
