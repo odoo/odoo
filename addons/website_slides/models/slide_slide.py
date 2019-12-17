@@ -140,10 +140,10 @@ class Slide(models.Model):
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
     questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
-    quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
-    quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
-    quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
-    quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
+    quiz_first_attempt_reward = fields.Integer("Reward: first attempt", default=10)
+    quiz_second_attempt_reward = fields.Integer("Reward: second attempt", default=7)
+    quiz_third_attempt_reward = fields.Integer("Reward: third attempt", default=5,)
+    quiz_fourth_attempt_reward = fields.Integer("Reward: every attempt after the third try", default=2)
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
