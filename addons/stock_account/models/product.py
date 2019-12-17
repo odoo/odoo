@@ -145,9 +145,56 @@ class ProductProduct(models.Model):
     def _prepare_out_svl_vals(self, quantity, company):
         """Prepare the values for a stock valuation layer created by a delivery.
 
+<<<<<<< HEAD
         :param quantity: the quantity to value, expressed in `self.uom_id`
         :return: values to use in a call to create
         :rtype: dict
+=======
+        prec = self.env['decimal.precision'].precision_get('Product Price')
+        for location in locations:
+            for product in self.with_context(location=location.id, compute_child=False).filtered(lambda r: r.valuation == 'real_time'):
+                diff = product.standard_price - new_price
+                if float_is_zero(diff, precision_digits=prec):
+                    raise UserError(_("No difference between the standard price and the new price."))
+                if not product_accounts[product.id].get('stock_valuation', False):
+                    raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+                qty_available = product.qty_available
+                if qty_available:
+                    # Accounting Entries
+                    if diff * qty_available > 0:
+                        debit_account_id = account_id
+                        credit_account_id = product_accounts[product.id]['stock_valuation'].id
+                    else:
+                        debit_account_id = product_accounts[product.id]['stock_valuation'].id
+                        credit_account_id = account_id
+
+                    move_vals = {
+                        'journal_id': product_accounts[product.id]['stock_journal'].id,
+                        'company_id': location.company_id.id,
+                        'ref': product.default_code,
+                        'line_ids': [(0, 0, {
+                            'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
+                            'account_id': debit_account_id,
+                            'debit': abs(diff * qty_available),
+                            'credit': 0,
+                            'product_id': product.id,
+                        }), (0, 0, {
+                            'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
+                            'account_id': credit_account_id,
+                            'debit': 0,
+                            'credit': abs(diff * qty_available),
+                            'product_id': product.id,
+                        })],
+                    }
+                    move = AccountMove.create(move_vals)
+                    move.post()
+
+        self.write({'standard_price': new_price})
+        return True
+
+    def _get_fifo_candidates_in_move(self):
+        """ Find IN moves that can be used to value OUT moves.
+>>>>>>> cbea1366c1f... temp
         """
         self.ensure_one()
         # Quantity is negative for out valuation layers.
