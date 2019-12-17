@@ -18,11 +18,10 @@ QUnit.module('ChatWindowManager', {
     beforeEach() {
         utilsBeforeEach(this);
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
             let { env, widget } = await utilsStart(Object.assign({}, params, {
                 data: this.data,
+                hasChatWindow: true,
+                hasMessagingMenu: true,
             }));
             this.env = env;
             this.widget = widget;

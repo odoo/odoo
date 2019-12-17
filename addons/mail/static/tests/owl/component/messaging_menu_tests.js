@@ -20,9 +20,11 @@ QUnit.module('MessagingMenu', {
             if (this.widget) {
                 this.widget.destroy();
             }
-            let { widget } = await utilsStart(Object.assign({}, params, {
+            let { discussWidget, widget } = await utilsStart(Object.assign({}, params, {
                 data: this.data,
+                hasMessagingMenu: true,
             }));
+            this.discussWidget = discussWidget;
             this.widget = widget;
         };
     },
@@ -336,6 +338,7 @@ QUnit.test('new message', async function (assert) {
     assert.expect(3);
 
     await this.start({
+        hasChatWindow: true,
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
@@ -369,6 +372,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
 
     await this.start({
         autoOpenDiscuss: true,
+        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
@@ -385,7 +389,8 @@ QUnit.test('no new message when discuss is open', async function (assert) {
         "should not have 'new message' when discuss is open"
     );
 
-    this.widget.closeDiscuss();
+    // simulate closing discuss app
+    this.discussWidget.on_detach_callback();
     await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
@@ -393,7 +398,8 @@ QUnit.test('no new message when discuss is open', async function (assert) {
         "should have 'new message' when discuss is closed"
     );
 
-    this.widget.openDiscuss();
+    // simulate opening discuss app
+    this.discussWidget.on_attach_callback();
     await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
@@ -677,6 +683,7 @@ QUnit.test('open chat window from preview', async function (assert) {
         },
     });
     await this.start({
+        hasChatWindow: true,
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];

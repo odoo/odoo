@@ -65,15 +65,23 @@ const MockMailService = Class.extend({
     notification() {
         return NotificationService;
     },
-    getServices(isDebug = false) {
-        return {
+    getServices({
+        hasChatWindow = false,
+        isDebug = false,
+    }) {
+        const services = {
             bus_service: this.bus_service(),
-            chat_window: this.chat_window(isDebug),
             dialog: this.dialog(isDebug),
             local_storage: this.local_storage(),
             messaging: this.messaging(),
             notification: this.notification(),
         };
+        if (hasChatWindow) {
+            Object.assign(services, {
+                chat_window: this.chat_window(isDebug),
+            });
+        }
+        return services;
     },
 });
 
@@ -94,15 +102,123 @@ function _createFakeDataTransfer(files) {
     };
 }
 
+/**
+ * @private
+ * @param {Object} callbacks
+ * @param {function[]} callbacks.init
+ * @param {function[]} callbacks.mount
+ * @param {function[]} callbacks.destroy
+ * @param {function[]} callbacks.return
+ * @return {Object} update callbacks
+ */
+function _useChatWindow(callbacks) {
+    const {
+        mount: prevMount,
+        destroy: prevDestroy,
+    } = callbacks;
+    return Object.assign({}, callbacks, {
+        mount: prevMount.concat(({ widget }) => {
+            // trigger mounting of chat window manager
+            widget.call('chat_window', '_onWebClientReady');
+        }),
+        destroy: prevDestroy.concat(({ widget }) => {
+            widget.call('chat_window', 'destroy');
+        }),
+    });
+}
+
+/**
+ * @private
+ * @param {Object} callbacks
+ * @param {function[]} callbacks.init
+ * @param {function[]} callbacks.mount
+ * @param {function[]} callbacks.destroy
+ * @param {function[]} callbacks.return
+ * @return {Object} update callbacks
+ */
+function _useDiscuss(callbacks) {
+    const {
+        init: prevInit,
+        mount: prevMount,
+        destroy: prevDestroy,
+        return: prevReturn,
+    } = callbacks;
+    let discussWidget;
+    const state = {
+        autoOpenDiscuss: false,
+        discussData: {},
+    };
+    return Object.assign({}, callbacks, {
+        init: prevInit.concat(params => {
+            const {
+                autoOpenDiscuss = state.autoOpenDiscuss,
+                discuss: discussData = state.discussData
+            } = params;
+            Object.assign(state, { autoOpenDiscuss, discussData });
+            delete params.autoOpenDiscuss;
+            delete params.discuss;
+        }),
+        mount: prevMount.concat(async params => {
+            const { selector, widget } = params;
+            DiscussWidget.prototype._pushStateActionManager = () => {};
+            discussWidget = new DiscussWidget(widget, state.discussData);
+            await discussWidget.appendTo($(selector));
+            if (state.autoOpenDiscuss) {
+                discussWidget.on_attach_callback();
+            }
+        }),
+        destroy: prevDestroy.concat(({ widget }) => {
+            widget.call('chat_window', 'destroy');
+        }),
+        return: prevReturn.concat(result => {
+            Object.assign(result, { discussWidget });
+        }),
+    });
+}
+
+/**
+ * @private
+ * @param {Object} callbacks
+ * @param {function[]} callbacks.init
+ * @param {function[]} callbacks.mount
+ * @param {function[]} callbacks.destroy
+ * @param {function[]} callbacks.return
+ * @return {Object} update callbacks
+ */
+function _useMessagingMenu(callbacks) {
+    const {
+        mount: prevMount,
+        destroy: prevDestroy,
+        return: prevReturn,
+    } = callbacks;
+    let messagingMenuWidget;
+    return Object.assign({}, callbacks, {
+        mount: prevMount.concat(async ({ selector, widget }) => {
+            messagingMenuWidget = new MessagingMenuWidget(widget, {});
+            await messagingMenuWidget.appendTo($(selector));
+            messagingMenuWidget.on_attach_callback();
+        }),
+        destroy: prevDestroy.concat(({ widget }) => {
+            widget.call('chat_window', 'destroy');
+        }),
+        return: prevReturn.concat(result => {
+            Object.assign(result, { messagingMenuWidget });
+        }),
+    });
+}
+
 //------------------------------------------------------------------------------
 // Public
 //------------------------------------------------------------------------------
 
 /**
- * @param {boolean} [isDebug=false]
+ * @param {Object} [param0={}]
+ * @param {boolean} [hasChatWindow]
+ * @param {boolean} [isDebug]
+ * @return {Object}
  */
-function getMailServices(isDebug = false) {
-    return new MockMailService().getServices(isDebug);
+function getServices({ hasChatWindow, isDebug } = {}) {
+    return new MockMailService().getServices({ hasChatWindow, isDebug });
 }
 
 //------------------------------------------------------------------------------
@@ -180,13 +296,7 @@ const afterNextRender = (function () {
 //------------------------------------------------------------------------------
 
 function beforeEach(self) {
-    // patch _.debounce and _.throttle to be fast and synchronous
-    self.underscoreDebounce = _.debounce;
-    self.underscoreThrottle = _.throttle;
-    _.debounce = _.identity;
-    _.throttle = _.identity;
-
-    self.data = {
+    const data = {
         initMessaging: {
             channel_slots: {},
             commands: [],
@@ -279,44 +389,83 @@ function beforeEach(self) {
         },
     };
 
-    self.ORIGINAL_ComposerTextInput__loadSummernote = ComposerTextInput.prototype._loadSummernote;
-    ComposerTextInput.prototype._loadSummernote = () => {};
+    const originals = {
+        '_.debounce': _.debounce,
+        '_.throttle': _.throttle,
+        'ComposerTestInput._loadSummernote': ComposerTextInput.prototype._loadSummernote,
+        'window.fetch': window.fetch,
+    };
 
-    self.ORIGINAL_WINDOW_FETCH = window.fetch;
-    let uploadedAttachmentsCount = 1;
-    window.fetch = async function (route, form) {
-        const formData = form.body;
-        return {
-            async text() {
-                const ufiles = formData.getAll('ufile');
-                const files = ufiles.map(ufile => JSON.stringify({
-                    filename: ufile.name,
-                    id: uploadedAttachmentsCount,
-                    mimetype: ufile.type,
-                    name: ufile.name,
-                }));
-                const callback = formData.get('callback');
-                uploadedAttachmentsCount++;
-                return `
-                    <script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger('${callback}', ${files.join(', ')});
-                    </script>`;
-            }
+    (function patch() {
+        // patch _.debounce and _.throttle to be fast and synchronous
+        _.debounce = _.identity;
+        _.throttle = _.identity;
+        ComposerTextInput.prototype._loadSummernote = () => {};
+        let uploadedAttachmentsCount = 1;
+        window.fetch = async function (route, form) {
+            const formData = form.body;
+            return {
+                async text() {
+                    const ufiles = formData.getAll('ufile');
+                    const files = ufiles.map(ufile => JSON.stringify({
+                        filename: ufile.name,
+                        id: uploadedAttachmentsCount,
+                        mimetype: ufile.type,
+                        name: ufile.name,
+                    }));
+                    const callback = formData.get('callback');
+                    uploadedAttachmentsCount++;
+                    return `
+                        <script language="javascript" type="text/javascript">
+                            var win = window.top.window;
+                            win.jQuery(win).trigger('${callback}', ${files.join(', ')});
+                        </script>`;
+                }
+            };
         };
+    })();
+
+    function unpatch() {
+        _.debounce = originals['_.debounce'];
+        _.throttle = originals['_.throttle'];
+        window.fetch = originals['window.fetch'];
+        ComposerTextInput.prototype._loadSummernote = originals['ComposerTestInput._loadSummernote'];
+    }
+
+    Object.assign(self, { data, unpatch });
+
+    return {
+        data,
+        unpatch,
     };
 }
 
+function afterEach(self) {
+    self.unpatch();
+}
+
+async function pause() {
+    await new Promise(() => {});
+}
+
 /**
- * Create chat window manager, discuss, and messaging menu with
- * messaging store
+ * Main function used to make a mocked environment with mocked messaging env.
  *
  * @param {Object} param0
  * @param {Object} [param0.archs]
- * @param {boolean} [param0.autoOpenDiscuss=false]
+ * @param {boolean} [param0.autoOpenDiscuss=false] makes only sense when
+ *   `param0.hasDiscuss` is set: determine whether mounted discuss should be
+ *   open initially.
  * @param {boolean} [param0.debug=false]
- * @param {Object} [param0.discuss={}]
+ * @param {Object} [param0.discuss={}] makes only sense when `param0.hasDiscuss`
+ *   is set: provide data that is passed to discuss widget (= client action) as
+ *   2nd positional argument.
  * @param {function} [param0.mockRPC]
+ * @param {boolean} [param0.hasChatWindow=false] if set, mount chat window
+ *   service.
+ * @param {boolean} [param0.hasDiscuss=false] if set, mount discuss app.
+ * @param {boolean} [param0.hasMessagingMenu=false] if set, mount messaging
+ *   menu.
  * @param {Object} [param0.services]
  * @param {Object} [param0.session={}]
  * @param {string} [param0.session.name="Admin"]
@@ -324,24 +473,50 @@ function beforeEach(self) {
  * @param {string} [param0.session.partner_display_name="Your Company, Admin"]
  * @param {integer} [param0.session.uid=2]
  * @param {...Object} [param0.kwargs]
- * @return {Promise}
+ * @return {Object}
  */
 async function start(param0) {
+    let callbacks = {
+        init: [],
+        mount: [],
+        destroy: [],
+        return: [],
+    };
+    const {
+        hasChatWindow = false,
+        hasDiscuss = false,
+        hasMessagingMenu = false,
+    } = param0;
+    delete param0.hasChatWindow;
+    delete param0.hasDiscuss;
+    delete param0.hasMessagingMenu;
+    if (hasChatWindow) {
+        callbacks = _useChatWindow(callbacks);
+    }
+    if (hasDiscuss) {
+        callbacks = _useDiscuss(callbacks);
+    }
+    if (hasMessagingMenu) {
+        callbacks = _useMessagingMenu(callbacks);
+    }
+    const {
+        init: initCallbacks,
+        mount: mountCallbacks,
+        destroy: destroyCallbacks,
+        return: returnCallbacks,
+    } = callbacks;
     const { debug = false } = param0;
     const {
-        autoOpenDiscuss = false,
-        discuss: discussData = {},
-        services = getMailServices(debug),
+        services = getServices({ hasChatWindow, debug }),
         session = {},
     } = param0;
+    initCallbacks.forEach(callback => callback(param0));
     const kwargs = Object.assign({
         archs: { 'mail.message,false,search': '<search/>' },
         debug,
         services,
         session,
     }, param0);
-    delete kwargs.autoOpenDiscuss;
-    delete kwargs.discuss;
     const Parent = Widget.extend({ do_push_state() {} });
     const parent = new Parent();
     _.defaults(session, {
@@ -381,62 +556,26 @@ async function start(param0) {
             },
         },
     });
-
     addMockEnvironment(parent, kwargs);
     const selector = debug ? 'body' : '#qunit-fixture';
     const widget = new Widget(parent);
     await widget.appendTo($(selector));
-    const discussWidget = new DiscussWidget(parent, discussData);
-    const menuWidget = new MessagingMenuWidget(parent, {});
-
     Object.assign(widget, {
-        closeDiscuss() {
-            discussWidget.on_detach_callback();
-        },
         destroy() {
             delete widget.destroy;
-            delete window.o_test_env;
-            widget.call('chat_window', 'destroy');
+            destroyCallbacks.forEach(callback => callback({ widget }));
             parent.destroy();
             unpatch(services.messaging);
         },
-        openDiscuss() {
-            return discussWidget.on_attach_callback();
-        },
     });
-
-    widget.call('chat_window', '_onWebClientReady'); // trigger mounting of chat window manager
-    await afterNextRender();
-
-    await menuWidget.appendTo($(selector));
-    menuWidget.on_attach_callback(); // trigger mounting of menu component
-    await afterNextRender();
-
-    await discussWidget.appendTo($(selector));
-
-    if (autoOpenDiscuss) {
-        await widget.openDiscuss();
+    await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
+    if (hasChatWindow || hasDiscuss || hasMessagingMenu) {
         await afterNextRender();
     }
-
     const env = widget.call('messaging', 'getMessagingEnv');
-
-    return { env, widget };
-}
-
-/**
- * @param {Object} self qunit test environment
- */
-function afterEach(self) {
-    // unpatch _.debounce and _.throttle
-    _.debounce = self.underscoreDebounce;
-    _.throttle = self.underscoreThrottle;
-    window.fetch = self.ORIGINAL_WINDOW_FETCH;
-    ComposerTextInput.prototype._loadSummernote = self.ORIGINAL_ComposerTextInput__loadSummernote;
-}
-
-async function pause() {
-    await new Promise(() => {});
+    const result = { env, widget };
+    returnCallbacks.forEach(callback => callback(result));
+    return result;
 }
 
 //------------------------------------------------------------------------------
@@ -524,7 +663,7 @@ return {
     beforeEach,
     dragenterFiles,
     dropFiles,
-    getMailServices,
+    getServices,
     inputFiles,
     nextAnimationFrame,
     pasteFiles,

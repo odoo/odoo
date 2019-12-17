@@ -5,7 +5,7 @@ const {
     afterEach: utilsAfterEach,
     afterNextRender,
     beforeEach: utilsBeforeEach,
-    getMailServices,
+    getServices,
     inputFiles,
     nextAnimationFrame,
     pause,
@@ -26,6 +26,7 @@ QUnit.module('Discuss', {
             let { env, widget } = await utilsStart(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
+                hasDiscuss: true,
             }));
             this.env = env;
             this.widget = widget;
@@ -3824,7 +3825,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
             }],
         },
     });
-    const services = getMailServices();
+    const services = getServices();
     services.bus_service = services.bus_service.extend({
         isOdooFocused: () => false,
     });
@@ -3894,7 +3895,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, chat)'
             }],
         },
     });
-    const services = getMailServices();
+    const services = getServices();
     services.bus_service = services.bus_service.extend({
         isOdooFocused: () => false,
     });
@@ -3971,7 +3972,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
             }],
         },
     });
-    const services = getMailServices();
+    const services = getServices();
     services.bus_service = services.bus_service.extend({
         isOdooFocused: () => false,
     });
