@@ -492,6 +492,10 @@ class StockMove(models.Model):
             initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
 
         res = super(StockMove, self).write(vals)
+        if vals.get('date_expected'):
+            for move in self:
+                if move.state not in ('done', 'cancel'):
+                    move.date = move.date_expected
 
         if track_pickings:
             pickings.message_track(pickings.fields_get(['state']), initial_values)
@@ -811,11 +815,6 @@ class StockMove(models.Model):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
-
-    @api.onchange('date_expected')
-    def onchange_date(self):
-        if self.date_expected:
-            self.date = self.date_expected
 
     @api.onchange('move_line_nosuggest_ids')
     def onchange_move_line_nosuggest_ids(self):
