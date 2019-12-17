@@ -26,7 +26,7 @@
         'views/assets.xml',
         'views/website_templates.xml',
         'views/website_navbar_templates.xml',
-        'views/snippets.xml',
+        'views/snippets/snippets.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
