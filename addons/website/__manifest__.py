@@ -23,6 +23,7 @@
         'data/website_visitor_cron.xml',
         'security/website_security.xml',
         'security/ir.model.access.csv',
+        'views/assets.xml',
         'views/website_templates.xml',
         'views/website_navbar_templates.xml',
         'views/snippets.xml',
