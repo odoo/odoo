@@ -354,7 +354,7 @@ class StockMove(models.Model):
             if move.state == 'done':
                 move.availability = move.product_qty
             else:
-                total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id)
+                total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
     def _compute_string_qty_information(self):
