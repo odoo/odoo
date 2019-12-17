@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- SALES lines -->
+
+    <record id="account_tax_report_line_out_base_title" model="account.tax.report.line">
+        <field name="name">VAT SALES (BASE)</field>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
     <record id="account_tax_report_line_out_base" model="account.tax.report.line">
         <field name="name">VAT SALES (BASE)</field>
         <field name="tag_name">VAT SALES (BASE)</field>
         <field name="code">ILTAX_OUT_BASE</field>
         <field name="sequence">1</field>
+        <field name="parent_id" ref="account_tax_report_line_out_base_title"/>
         <field name="country_id" ref="base.il"/>
     </record>
 
@@ -35,11 +43,18 @@
         <field name="country_id" ref="base.il"/>
     </record>
 
+    <record id="account_tax_report_line_out_base_exempt_title" model="account.tax.report.line">
+        <field name="name">VAT Exempt Sales (BASE)</field>
+        <field name="sequence">3</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
     <record id="account_tax_report_line_out_base_exempt" model="account.tax.report.line">
         <field name="name">VAT Exempt Sales (BASE)</field>
         <field name="tag_name">VAT Exempt Sales (BASE)</field>
         <field name="code">ILTAX_OUT_BASE_exempt</field>
         <field name="sequence">3</field>
+        <field name="parent_id" ref="account_tax_report_line_out_base_exempt_title"/>
         <field name="country_id" ref="base.il"/>
     </record>
 
@@ -88,11 +103,18 @@
         <field name="country_id" ref="base.il"/>
     </record>
 
+    <record id="account_tax_report_line_vat_in_fa_title" model="account.tax.report.line">
+        <field name="name">VAT INPUTS (fixed assets)</field>
+        <field name="sequence">5</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
     <record id="account_tax_report_line_vat_in_fa" model="account.tax.report.line">
         <field name="name">VAT INPUTS (fixed assets)</field>
         <field name="tag_name">VAT INPUTS (fixed assets)</field>
         <field name="code">ILTAX_VAT_IN_FA</field>
         <field name="sequence">5</field>
+        <field name="parent_id" ref="account_tax_report_line_vat_in_fa_title"/>
         <field name="country_id" ref="base.il"/>
     </record>
 
