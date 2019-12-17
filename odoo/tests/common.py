@@ -18,6 +18,7 @@ import re
 import requests
 import shutil
 import signal
+import socket
 import subprocess
 import tempfile
 import threading
@@ -519,7 +520,7 @@ class ChromeBrowser():
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        self.devtools_port = PORT + 2
+        self.devtools_port = None
         self.ws_url = ''  # WebSocketUrl
         self.ws = None  # websocket
         self.request_id = 0
@@ -601,6 +602,12 @@ class ChromeBrowser():
     def _chrome_start(self):
         if self.chrome_process is not None:
             return
+        with socket.socket() as s:
+            s.bind(('localhost', 0))
+            if hasattr(socket, 'SO_REUSEADDR'):
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            _, self.devtools_port = s.getsockname()
+
         switches = {
             '--headless': '',
             '--enable-logging': 'stderr',
