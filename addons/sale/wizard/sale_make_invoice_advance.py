@@ -18,11 +18,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _get_advance_payment_method(self):
-        if self._count() == 1:
-            sale_obj = self.env['sale.order']
-            order = sale_obj.browse(self._context.get('active_ids'))[0]
-            if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
-                return 'all'
+        if self._count() != 1:
+            return 'all'
+        sale_obj = self.env['sale.order']
+        order = sale_obj.browse(self._context.get('active_ids'))[0]
+        if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
+            return 'all'
         return 'delivered'
 
     @api.model
