@@ -546,7 +546,45 @@ class SaleOrder(models.Model):
         action['context'] = context
         return action
 
+<<<<<<< HEAD
     def _create_invoices(self, grouped=False, final=False):
+=======
+    def _finalize_invoices(self, invoices, references):
+        """
+        Invoked after creating invoices at the end of action_invoice_create.
+        :param invoices: {group_key: invoice}
+        :param references: {invoice: order}
+        """
+        for invoice in invoices.values():
+            invoice.compute_taxes()
+            if not invoice.invoice_line_ids:
+                raise UserError(_(
+                    'There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
+            # If invoice is negative, do a refund invoice instead
+            if invoice.amount_total < 0:
+                invoice.type = 'out_refund'
+                for line in invoice.invoice_line_ids:
+                    line.quantity = -line.quantity
+            # Use additional field helper function (for account extensions)
+            for line in invoice.invoice_line_ids:
+                line._set_additional_fields(invoice)
+            # Necessary to force computation of taxes. In account_invoice, they are triggered
+            # by onchanges, which are not triggered when doing a create.
+            invoice.compute_taxes()
+            # Idem for partner
+            so_payment_term_id = invoice.payment_term_id.id
+            fp_invoice = invoice.fiscal_position_id
+            invoice._onchange_partner_id()
+            invoice.fiscal_position_id = fp_invoice
+            # To keep the payment terms set on the SO
+            invoice.payment_term_id = so_payment_term_id
+            invoice.message_post_with_view('mail.message_origin_link',
+                values={'self': invoice, 'origin': references[invoice]},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
+    @api.multi
+    def action_invoice_create(self, grouped=False, final=False):
+>>>>>>> 32ad27e2307... temp
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
