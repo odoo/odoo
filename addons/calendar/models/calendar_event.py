@@ -118,6 +118,13 @@ class Meeting(models.Model):
         return {'start', 'stop', 'start_date', 'stop_date', 'start_datetime', 'stop_datetime'}
 
     @api.model
+    def _get_public_fields(self):
+        return self._get_recurrent_fields() | {
+            'id', 'active', 'allday', 'start', 'stop', 'display_start',
+            'display_stop', 'duration', 'user_id', 'state', 'interval',
+            'count', 'rrule', 'recurrence_id', 'show_as'}
+
+    @api.model
     def _get_display_time(self, start, stop, zduration, zallday):
         """ Return date and time (from to from) based on duration with timezone in string. Eg :
                 1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
@@ -705,8 +712,57 @@ class Meeting(models.Model):
                 self.env['calendar.alarm_manager']._notify_next_alarm(meeting.partner_ids.ids)
         return meeting
 
+    def read(self, fields=None, load='_classic_read'):
+        def hide(field, value):
+            """
+            :param field: field name
+            :param value: field value
+            :return: obfuscated field value
+            """
+            if field in {'name', 'display_name'}:
+                return _('Busy')
+            return [] if isinstance(value, list) else False
+
+        def split_privacy(events):
+            """
+            :param events: list of event values (dict)
+            :return: tuple(private events, public events)
+            """
+            private = [event for event in events if event.get('privacy') == 'private']
+            public = [event for event in events if event.get('privacy') != 'private']
+            return private, public
+
+        def my_events(events):
+            """
+            :param events: list of event values (dict)
+            :return: tuple(my events, other events)
+            """
+            my = [event for event in events if event.get('user_id') and event.get('user_id')[0] == self.env.uid]
+            others = [event for event in events if not event.get('user_id') or event.get('user_id')[0] != self.env.uid]
+            return my, others
+
+        def obfuscated(events):
+            """
+            :param events: list of event values (dict)
+            :return: events with private field values obfuscated
+            """
+            public_fields = self._get_public_fields()
+            return [{
+                field: hide(field, value) if field not in public_fields else value
+                for field, value in event.items()
+            } for event in events]
+
+        events = super().read(fields=fields + ['privacy', 'user_id'], load=load)
+        private_events, public_events = split_privacy(events)
+        my_private_events, others_private_events = my_events(private_events)
+
+        return public_events + my_private_events + obfuscated(others_private_events)
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        private_fields = set(groupby) - self._get_public_fields()
+        if not self.env.su and private_fields:
+            raise UserError(_("Grouping by %s is not allowed." % ', '.join([self._fields[field_name].string for field_name in private_fields])))
         if 'date' in groupby:
             raise UserError(_('Group by date is not supported, use the calendar view instead.'))
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
