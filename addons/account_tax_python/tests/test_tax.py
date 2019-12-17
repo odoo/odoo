@@ -9,7 +9,7 @@ class TestTaxPython(TestTaxCommon):
     @classmethod
     def setUpClass(cls):
         super(TestTaxPython, cls).setUpClass()
-        cls.python_tax = cls.tax_model.create({
+        cls.python_tax = cls.env['account.tax'].create({
             'name': 'Python TAx',
             'amount_type': 'code',
             'amount': 0.0,
