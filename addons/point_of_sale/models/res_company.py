@@ -13,7 +13,7 @@ class ResCompany(models.Model):
         would trigger an error message saying that the period has been locked when
         trying to close them.
         """
-        pos_session_model = self.env['pos.session']
+        pos_session_model = self.env['pos.session'].sudo()
         for record in self:
             sessions_in_period = pos_session_model.search([('state', '!=', 'closed'), '|', ('start_at', '<=', record.period_lock_date), ('start_at', '<=', record.fiscalyear_lock_date)])
             if sessions_in_period:
