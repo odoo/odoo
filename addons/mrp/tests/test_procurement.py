@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
+from odoo import fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
+
 
 class TestProcurement(TestMrpCommon):
 
@@ -177,6 +179,9 @@ class TestProcurement(TestMrpCommon):
             ('product_id', '=', product_1.id),
             ('state', '=', 'confirmed')
         ])
+
+        self.assertAlmostEqual(mo.move_finished_ids.date_expected, mo.move_raw_ids.date_expected + timedelta(hours=1))
+
         self.assertEqual(len(mo), 1, 'the manufacture order is not created')
 
         mo_form = Form(mo)
@@ -193,10 +198,12 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
 
         move_dest_scheduled_date = move_dest.date_expected
-        mo.date_planned_start += timedelta(days=5)
-        # Adding 5 days to the date planned start makes the next move's date 4 days and 23 hours
-        # later since the date planned start was set one hour before the date_planned_end.
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=4, hours=23), delta=timedelta(seconds=1), msg='date is not propagated')
+
+        mo_form = Form(mo)
+        mo_form.date_planned_start = fields.Datetime.to_datetime(mo_form.date_planned_start) + timedelta(days=5)
+        mo_form.save()
+
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
 
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
