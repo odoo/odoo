@@ -1,4 +1,4 @@
-.o_survey_question_text_box {
+.o_survey_question_text_box, .o_survey_question_date {
     border: 0px;
     border-radius: 0px;
     border-bottom: 2px solid #00A09D;
@@ -24,6 +24,18 @@
     }
     &::-webkit-scrollbar-thumb:hover {
       background: white;
+    }
+}
+
+.o_survey_form_date .input-group-append {
+    margin-left: -36px;
+    .input-group-text {
+        border: 0px;
+        background-color: transparent;
+        i {
+            color: #00A09D;
+            font-size: large;
+        }
     }
 }
 
