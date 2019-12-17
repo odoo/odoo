@@ -36,25 +36,27 @@ class EmojisButton extends Component {
     }
 
     async mounted() {
+        const self = this;
         Popover.env = this.env;
         this._popover = new Popover(null);
-        await this._popover.mount(document.createElement('div')).then(() => {
-            const self = this;
-            this._popover.el.outerHTML = this._popover.el;
-            this._$popover = $(this.el).popover({
-                boundary: 'viewport',
-                content() {
-                    const $this = $(this);
-                    self._popoverId = $this.attr('aria-describedby');
-                    self._popover.__owl__.isMounted = true;
-                    return self._popover.el;
-                },
-                html: true,
-                offset: '0, 1',
-                placement: 'top',
-                trigger: 'click',
-                animation: !this.env.disableAnimation,
-            });
+        await this._popover.mount(document.createElement('div'));
+        if (this.__owl__.isDestroyed) {
+            return;
+        }
+        this._popover.el.outerHTML = this._popover.el;
+        this._$popover = $(this.el).popover({
+            boundary: 'viewport',
+            content() {
+                const $this = $(this);
+                self._popoverId = $this.attr('aria-describedby');
+                self._popover.__owl__.isMounted = true;
+                return self._popover.el;
+            },
+            html: true,
+            offset: '0, 1',
+            placement: 'top',
+            trigger: 'click',
+            animation: !this.env.disableAnimation,
         });
         this._popover.el.addEventListener('o-emoji-selection', ev => this._onEmojiSelection(ev));
         document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -87,7 +89,9 @@ class EmojisButton extends Component {
      * @private
      */
     _hidePopover() {
-        this._$popover.popover('hide');
+        if (this._$popover) {
+            this._$popover.popover('hide');
+        }
         this._popoverId = undefined;
         this.state.isOpen = false;
     }
