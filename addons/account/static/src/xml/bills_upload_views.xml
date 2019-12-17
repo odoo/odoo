@@ -20,4 +20,12 @@
             </button>
         </t>
     </t>
+
+    <t t-extend="KanbanView.buttons" t-name="BillsKanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <button type="button" class="btn btn-secondary o_button_upload_bill">
+                Upload
+            </button>
+        </t>
+    </t>
 </templates>

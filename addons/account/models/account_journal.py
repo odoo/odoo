@@ -670,8 +670,8 @@ class AccountJournal(models.Model):
             })
         else:
             action_vals.update({
-                'views': [[False, "tree"], [False, "form"]],
-                'view_mode': 'tree,form',
+                'views': [[False, "tree"], [False, "kanban"], [False, "form"]],
+                'view_mode': 'tree, kanban, form',
             })
         return action_vals
 

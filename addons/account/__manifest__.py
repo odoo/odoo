@@ -84,7 +84,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "static/src/xml/account_payment.xml",
         'static/src/xml/account_resequence.xml',
         "static/src/xml/account_report_backend.xml",
-        "static/src/xml/bills_tree_upload_views.xml",
+        "static/src/xml/bills_upload_views.xml",
         'static/src/xml/account_journal_activity.xml',
         'static/src/xml/grouped_view_widget.xml',
         'static/src/xml/tax_group.xml',
