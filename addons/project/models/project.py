@@ -902,7 +902,7 @@ class Task(models.Model):
         action = self.env.ref('project.project_task_action_sub_task').read()[0]
 
         # display all subtasks of current task
-        action['domain'] = [('id', 'in', self._get_all_subtasks().ids)]
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
 
         # update context, with all default values as 'quick_create' does not contains all field in its view
         if self._context.get('default_project_id'):
