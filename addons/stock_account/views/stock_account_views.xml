@@ -77,6 +77,9 @@
                     <field name="product_tmpl_id" />
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand='0' string='Group by...'>
+                        <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
