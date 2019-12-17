@@ -95,11 +95,13 @@ class MrpProduction(models.Model):
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
         'Planned Date', copy=False, default=fields.Datetime.now,
+        compute='_compute_dates_planned', inverse='_set_date_planned_start',
         help="Date at which you plan to start the production.",
         index=True, required=True, store=True)
     date_planned_finished = fields.Datetime(
         'Planned End Date',
         default=_get_default_date_planned_finished,
+        compute='_compute_dates_planned', inverse='_set_date_planned_finished',
         help="Date at which you plan to finish the production.",
         copy=False, store=True)
     date_deadline = fields.Datetime(
@@ -220,6 +222,18 @@ class MrpProduction(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
+
+    @api.depends('move_raw_ids.date_expected', 'move_finished_ids.date_expected')
+    def _compute_dates_planned(self):
+        for production in self:
+            production.date_planned_start = max(production.mapped('move_raw_ids.date_expected') or [fields.Datetime.now()])
+            production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected') or [production.date_deadline or fields.Datetime.now()])
+
+    def _set_date_planned_start(self):
+        self.move_raw_ids.write({'date_expected': self.date_planned_start})
+
+    def _set_date_planned_finished(self):
+        self.move_finished_ids.write({'date_expected': self.date_planned_finished})
 
     @api.depends('move_raw_ids.state', 'move_finished_ids.state')
     def _compute_confirm_cancel(self):
@@ -428,10 +442,6 @@ class MrpProduction(models.Model):
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):
-        self.move_raw_ids.update({
-            'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
-        })
         if not self.routing_id:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
@@ -474,12 +484,7 @@ class MrpProduction(models.Model):
 
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
-        if 'date_planned_start' in vals:
-            moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
-                lambda r: r.state not in ['done', 'cancel'])
-            moves.write({
-                'date_expected': fields.Datetime.to_datetime(vals['date_planned_start']),
-            })
+
         for production in self:
             if 'date_planned_start' in vals:
                 if production.state in ['done', 'cancel']:
@@ -488,6 +493,10 @@ class MrpProduction(models.Model):
                     raise UserError(_('You cannot move a planned manufacturing order.'))
             if 'move_raw_ids' in vals and production.state != 'draft':
                 production.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
+            if not production.routing_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
+                new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
+                if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
+                    production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
         return res
 
     @api.model
