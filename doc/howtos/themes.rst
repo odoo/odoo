@@ -251,7 +251,7 @@ Open the ``__manifest__.py`` you created and copy/paste the following:
     'data': [
     ],
     'category': 'Theme/Creative',
-    'depends': ['website'],
+    'depends': ['website','website_theme_install'],
   }
 
 Replace the first four property’s values with anything you like.
@@ -267,7 +267,7 @@ The ``data`` property will contain the xml files list. Right now it’s empty, b
 .. code-block:: python
 
    ...
-   'depends': ['website', 'website_blog', 'sale'],
+   'depends': ['website','website_theme_install','website_blog', 'sale'],
    ...
 
 
@@ -337,7 +337,7 @@ code.
     </xpath>
 
     <!-- Add an element after the top menu  -->
-    <xpath expr="//div[@id='wrapwrap']/header/div" position="after">
+    <xpath expr="//div[@id='wrapwrap']/header/nav" position="after">
       <div class="container">
         <div class="alert alert-info mt16" role="alert">
           <strong>Welcome</strong> in our website!
