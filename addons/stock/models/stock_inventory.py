@@ -76,6 +76,15 @@ class Inventory(models.Model):
         name = _("%s (copy)") % (self.name)
         default = dict(default or {}, name=name)
         return super(Inventory, self).copy_data(default)
+    
+    def write(self, vals):
+        self._check_write()
+        return super(Inventory, self).write(vals)
+    
+    def _check_write(self):
+        for inventory in self:
+            if inventory.state == 'done':
+                raise UserError(_('You cannot modify a valided inventory : %s') % inventory.display_name)
 
     def unlink(self):
         for inventory in self:
@@ -456,6 +465,7 @@ class InventoryLine(models.Model):
     def write(self, vals):
         res = super(InventoryLine, self).write(vals)
         self._check_no_duplicate_line()
+        self.mapped('inventory_id')._check_write()
         return res
 
     def _check_no_duplicate_line(self):
