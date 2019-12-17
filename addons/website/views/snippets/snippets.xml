@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_alert" name="Alert">
-    <div class="s_alert s_alert_md alert-delta w-100 clearfix">
-        <i class="fa fa-2x fa-info-circle s_alert_icon"/>
-        <div class="s_alert_content">
-            <p>Explain the benefits you offer. <br/>Don't write about products or services here, write about solutions.</p>
-        </div>
-    </div>
-</template>
-
 <template id="s_card" name="Card">
     <div class="s_card card bg-white w-100">
         <h4 class="card-header">Feature Title</h4>
@@ -770,28 +761,12 @@
             data-color-prefix="bg-"/>
     </div>
 
-    <!-- COLOR | .s_alert -->
-    <div data-selector=".s_alert">
-        <we-colorpicker string="Color"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="alert-"/>
-    </div>
-
     <!-- H-ALIGN | .s_btn -->
     <div data-selector=".s_btn, .s_share">
         <we-select string="Alignment">
             <we-button data-select-class="text-left">Left</we-button>
             <we-button data-select-class="text-center">Center</we-button>
             <we-button data-select-class="text-right">Right</we-button>
-        </we-select>
-    </div>
-
-    <div data-selector=".s_alert">
-        <we-select string="Size">
-            <we-button data-select-class="s_alert_sm">Small</we-button>
-            <we-button data-select-class="s_alert_md">Medium</we-button>
-            <we-button data-select-class="s_alert_lg">Large</we-button>
         </we-select>
     </div>
 
