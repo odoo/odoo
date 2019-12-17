@@ -254,6 +254,7 @@
                         <group name="main_grp" colspan="2">
                             <group name="main_grp_col1">
                                 <field name="reference"/>
+                                <field name="picking_id" attrs="{'invisible':[('picking_id', '=', False)]}"/>
                                 <field name="location_id"/>
                                 <field name="location_dest_id"/>
                             </group>
