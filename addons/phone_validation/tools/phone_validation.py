@@ -9,6 +9,9 @@ import logging
 _logger = logging.getLogger(__name__)
 _phonenumbers_lib_warning = False
 
+class PhonenumbersLibraryMissing(Exception):
+    pass
+
 
 try:
     import phonenumbers
@@ -73,6 +76,8 @@ except ImportError:
                 "verified. Please install the `phonenumbers` Python module."
             )
             _phonenumbers_lib_warning = True
+        if raise_exception:
+            raise PhonenumbersLibraryMissing()
         return number
 
 
@@ -97,6 +102,8 @@ def phone_sanitize_numbers(numbers, country_code, country_phone_code, force_form
             sanitized = phone_format(
                 stripped, country_code, country_phone_code,
                 force_format=force_format, raise_exception=True)
+        except PhonenumbersLibraryMissing:
+            result[number] = {'sanitized': sanitized, 'code': 'missing_library', 'msg': False}
         except Exception as e:
             result[number] = {'sanitized': False, 'code': 'invalid', 'msg': str(e)}
         else:

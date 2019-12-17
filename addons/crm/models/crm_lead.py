@@ -54,7 +54,7 @@ class Lead(models.Model):
     _description = "Lead/Opportunity"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin',
-                'utm.mixin', 'format.address.mixin', 'phone.validation.mixin']
+                'utm.mixin', 'format.address.mixin', 'mail.thread.phone']
     _primary_email = 'email_from'
 
     def _auto_init(self):
@@ -108,12 +108,6 @@ class Lead(models.Model):
     probability = fields.Float('Probability', group_operator="avg", copy=False)
     automated_probability = fields.Float('Automated Probability', readonly=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
-    phone_state = fields.Selection([
-        ('correct', 'Correct'),
-        ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
-    email_state = fields.Selection([
-        ('correct', 'Correct'),
-        ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
 
     # Only used for type opportunity
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
@@ -215,31 +209,6 @@ class Lead(models.Model):
          when automated_probability is modified. """
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
-
-    @api.depends('phone', 'country_id.code')
-    def _compute_phone_state(self):
-        for lead in self:
-            phone_status = False
-            if lead.phone:
-                country_code = lead.country_id.code if lead.country_id and lead.country_id.code else None
-                try:
-                    if phone_validation.phone_parse(lead.phone, country_code):  # otherwise library not installed
-                        phone_status = 'correct'
-                except UserError:
-                    phone_status = 'incorrect'
-            lead.phone_state = phone_status
-
-    @api.depends('email_from')
-    def _compute_email_state(self):
-        for lead in self:
-            email_state = False
-            if lead.email_from:
-                email_state = 'incorrect'
-                for email in email_split(lead.email_from):
-                    if tools.email_normalize(email):
-                        email_state = 'correct'
-                        break
-            lead.email_state = email_state
 
     def _compute_meeting_count(self):
         meeting_data = self.env['calendar.event'].read_group([('opportunity_id', 'in', self.ids)], ['opportunity_id'], ['opportunity_id'])
@@ -392,12 +361,12 @@ class Lead(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self.phone_format(self.phone)
+            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='INTERNATIONAL') or self.phone
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self.phone_format(self.mobile)
+            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
 
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
@@ -1308,6 +1277,9 @@ class Lead(models.Model):
                     partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
                     break
         return result
+
+    def _phone_get_number_fields(self):
+        return ['mobile', 'phone']
 
     @api.model
     def get_import_templates(self):

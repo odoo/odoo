@@ -30,21 +30,36 @@ class PhoneMixin(models.AbstractModel):
     phone_sanitized = fields.Char(
         string='Sanitized Number', compute="_compute_phone_sanitized", compute_sudo=True, store=True,
         help="Field used to store sanitized phone number. Helps speeding up searches and comparisons.")
+    phone_state = fields.Selection([
+        ('ok', 'Correct'),
+        ('ko', 'Incorrect')], string='State of the phone number', compute="_compute_phone_sanitized", compute_sudo=True, store=True,
+        help="Used for processes that need to check the validity of the phone number (e.g: The blacklist /  The CRM predictive lead scoring)")
     phone_blacklisted = fields.Boolean(
         string='Phone Blacklisted', compute="_compute_phone_blacklisted", compute_sudo=True, store=False,
         search="_search_phone_blacklisted", groups="base.group_user",
         help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list")
 
-    @api.depends(lambda self: self._phone_get_number_fields())
+    @api.depends(lambda self: self._phone_sanitized_depends_fields())
     def _compute_phone_sanitized(self):
         self._assert_phone_field()
         number_fields = self._phone_get_number_fields()
         for record in self:
+            phone_sanitized = False
+            phone_state = False
             for fname in number_fields:
-                sanitized = record.phone_get_sanitized_number(number_fname=fname)
-                if sanitized:
-                    break
-            record.phone_sanitized = sanitized
+                sanitized_information = record._phone_get_sanitized_information(number_fname=fname)
+                if not phone_sanitized and sanitized_information['sanitized']:
+                    phone_sanitized = sanitized_information['sanitized']
+                if fname == self._get_phone_state_field():
+                    if not sanitized_information['code']:
+                        phone_state = 'ok'
+                    elif sanitized_information['code'] == 'invalid':
+                        phone_state = 'ko'
+                    elif sanitized_information['code'] == 'missing_library':  # for clarity
+                        phone_state = False
+
+            record.phone_sanitized = phone_sanitized
+            record.phone_state = phone_state
 
     @api.depends('phone_sanitized')
     def _compute_phone_blacklisted(self):
@@ -97,10 +112,23 @@ class PhoneMixin(models.AbstractModel):
         send an SMS on a record. """
         return []
 
+    def _get_phone_state_field(self):
+        """ This method returns the field on which the 'phone_state' field will depend. """
+        return 'phone'
+
     def _phone_get_country_field(self):
         if 'country_id' in self:
             return 'country_id'
         return False
+
+    def _phone_sanitized_depends_fields(self):
+        """ The phone_sanitized field depends on phone fields + the country field (if defined). """
+        depends_fields = self._phone_get_number_fields()
+        country_field = self._phone_get_country_field()
+        if country_field:
+            depends_fields += [country_field]
+
+        return depends_fields
 
     def phone_get_sanitized_numbers(self, number_fname='mobile', force_format='E164'):
         res = dict.fromkeys(self.ids, False)
@@ -111,10 +139,13 @@ class PhoneMixin(models.AbstractModel):
         return res
 
     def phone_get_sanitized_number(self, number_fname='mobile', force_format='E164'):
+        return self._phone_get_sanitized_information(number_fname, force_format)['sanitized']
+
+    def _phone_get_sanitized_information(self, number_fname='mobile', force_format='E164'):
         self.ensure_one()
         country_fname = self._phone_get_country_field()
         number = self[number_fname]
-        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
+        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])

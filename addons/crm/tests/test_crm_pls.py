@@ -25,15 +25,15 @@ class TestCRMPLS(TransactionCase):
                 We will use 3 different values for each possible variables:
                 country_id : 1,2,3
                 state_id: 1,2,3
-                email_state: correct, incorrect, None
-                phone_state: correct, incorrect, None
+                email_state: ok, ko, None
+                phone_state: ok, ko, None
                 source_id: 1,2,3
                 stage_id: 1,2,3 + the won stage
                 And we will compute all of this for 2 different team_id
             Note : We assume here that original bayes computation is correct
             as we don't compute manually the probabilities."""
         Lead = self.env['crm.lead']
-        state_values = ['correct', 'incorrect', None]
+        state_values = ['ok', 'ko', None]
         source_ids = self.env['utm.source'].search([], limit=3).ids
         state_ids = self.env['res.country.state'].search([], limit=3).ids
         country_ids = self.env['res.country'].search([], limit=3).ids
