@@ -1629,7 +1629,7 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
             "should have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'yop',
+        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://yop',
             "should have proper href link");
         assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'target', '_blank',
             "should have target attribute set to _blank");
@@ -1650,7 +1650,7 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickSave(form);
         assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
             "should still have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'limbo',
+        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://limbo',
             "should have proper new href link");
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'limbo',
             'the new value should be displayed');
@@ -1676,6 +1676,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('url widget: href attribute and website_path option', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.url1 = { string: "Url 1", type: "char", default: "www.url1.com" };
+        this.data.partner.fields.url2 = { string: "Url 2", type: "char", default: "www.url2.com" };
+        this.data.partner.fields.url3 = { string: "Url 3", type: "char", default: "http://www.url3.com" };
+        this.data.partner.fields.url4 = { string: "Url 4", type: "char", default: "https://url4.com" };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="url1" widget="url"/>
+                    <field name="url2" widget="url" options="{'website_path': True}"/>
+                    <field name="url3" widget="url"/>
+                    <field name="url4" widget="url"/>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('a[name="url1"]').attr('href'), 'http://www.url1.com');
+        assert.strictEqual(form.$('a[name="url2"]').attr('href'), 'www.url2.com');
+        assert.strictEqual(form.$('a[name="url3"]').attr('href'), 'http://www.url3.com');
+        assert.strictEqual(form.$('a[name="url4"]').attr('href'), 'https://url4.com');
+
+        form.destroy();
+    });
+
     QUnit.test('char field in editable list view', async function (assert) {
         assert.expect(10);
 
@@ -1690,7 +1720,7 @@ QUnit.module('basic_fields', {
             "should have 5 cells");
         assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
             "should have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'yop',
+        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://yop',
             "should have proper href link");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text");
@@ -1709,7 +1739,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
             "should still have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'brolo',
+        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://brolo',
             "should have proper new href link");
         assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().text(), 'brolo',
             "value should be properly updated");

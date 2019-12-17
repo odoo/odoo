@@ -1733,8 +1733,6 @@ order.
     This field displays an url (in readonly mode). The main reason to use it is
     that it is rendered as an anchor tag with the proper css classes and href.
 
-    - Supported field types: *char*
-
     Also, the text of the anchor tag can be customized with the *text* attribute
     (it won't change the href value).
 
@@ -1742,6 +1740,13 @@ order.
 
         <field name="foo" widget="url" text="Some URL"/>
 
+    Options:
+
+    - website_path: (default:false) by default, the widget forces (if not already
+    the case) the href value to begin with http:// except if this option is set
+    to true, thus allowing redirections to the database's own website.
+
+    - Supported field types: *char*
 
 - domain (FieldDomain)
     The "Domain" field allows the user to construct a technical-prefix domain
