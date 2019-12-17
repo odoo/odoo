@@ -53,15 +53,13 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin',
-                'utm.mixin', 'format.address.mixin', 'phone.validation.mixin']
+    _inherit = ['mail.thread.cc',
+                'mail.thread.blacklist',
+                'mail.activity.mixin',
+                'utm.mixin',
+                'format.address.mixin',
+                'phone.validation.mixin']
     _primary_email = 'email_from'
-
-    def _auto_init(self):
-        res = super(Lead, self)._auto_init()
-        tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
-                           self._table, ['create_date', 'team_id'])
-        return res
 
     def _default_team_id(self, user_id):
         domain = [('use_leads', '=', True)] if self._context.get('default_type') == "lead" or self.type == 'lead' else [('use_opportunities', '=', True)]
@@ -71,103 +69,92 @@ class Lead(models.Model):
         team = self._default_team_id(user_id=self.env.uid)
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
+    # Description
     name = fields.Char('Opportunity', required=True, index=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', tracking=10, index=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
-    active = fields.Boolean('Active', default=True, tracking=True)
-    date_action_last = fields.Datetime('Last Action', readonly=True)
-    email_from = fields.Char('Email', help="Email address of the contact", tracking=40, index=True)
-    website = fields.Char('Website', index=True, help="Website of the contact")
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=lambda self: self._default_team_id(self.env.uid),
-        index=True, tracking=True, help='When sending mails, the default email address is taken from the Sales Team.')
-    kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
-        string='Kanban State', compute='_compute_kanban_state')
+    user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
+    user_email = fields.Char('User Email', related='user_id.email', readonly=True)
+    user_login = fields.Char('User Login', related='user_id.login', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company.id)
+    referred = fields.Char('Referred By')
     description = fields.Text('Notes')
-    tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
-    contact_name = fields.Char('Contact Name', tracking=30)
-    partner_name = fields.Char("Company Name", tracking=20, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True, tracking=15,
+    active = fields.Boolean('Active', default=True, tracking=True)
+    type = fields.Selection([
+        ('lead', 'Lead'), ('opportunity', 'Opportunity')],
+        index=True, required=True, tracking=15,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
-    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
-    date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
-
-    stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', tracking=True, index=True, copy=False,
+    priority = fields.Selection(
+        crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True,
+        default=crm_stage.AVAILABLE_PRIORITIES[0][0])
+    team_id = fields.Many2one(
+        'crm.team', string='Sales Team', index=True, tracking=True,
+        default=lambda self: self._default_team_id(self.env.uid))
+    stage_id = fields.Many2one(
+        'crm.stage', string='Stage', ondelete='restrict',
+        copy=False, group_expand='_read_group_stage_ids', index=True, tracking=True,
         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
-        group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
-    referred = fields.Char('Referred By')
-
+        default=lambda self: self._default_stage_id())
+    kanban_state = fields.Selection([
+        ('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
+        string='Kanban State', compute='_compute_kanban_state')
+    tag_ids = fields.Many2many(
+        'crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags',
+        help="Classify and analyze your lead/opportunity categories like: Training, Service")
+    color = fields.Integer('Color Index', default=0)
+    # Opportunity specific
+    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
+    expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
+    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
+    # Dates
+    date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
+    date_action_last = fields.Datetime('Last Action', readonly=True)
     date_open = fields.Datetime('Assignation Date', readonly=True, default=fields.Datetime.now)
-    day_open = fields.Float(compute='_compute_day_open', string='Days to Assign', store=True)
-    day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
-    date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
+    day_open = fields.Float('Days to Assign', compute='_compute_day_open', store=True)
+    day_close = fields.Float('Days to Close', compute='_compute_day_close', store=True)
+    date_last_stage_update = fields.Datetime('Last Stage Update', index=True, default=fields.Datetime.now)
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
-
-    # Probability - Only used for type opportunity
-    probability = fields.Float('Probability', group_operator="avg", copy=False)
-    automated_probability = fields.Float('Automated Probability', readonly=True)
-    is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
+    date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
+    # Customer / contact
+    partner_id = fields.Many2one(
+        'res.partner', string='Customer', tracking=10, index=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
+    partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
+    partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
+    contact_name = fields.Char('Contact Name', tracking=30)
+    partner_name = fields.Char("Company Name", tracking=20, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    function = fields.Char('Job Position')
+    title = fields.Many2one('res.partner.title', string='Title')
+    email_from = fields.Char('Email', index=True, tracking=40)
+    phone = fields.Char('Phone', tracking=50)
+    mobile = fields.Char('Mobile')
+    phone_mobile_search = fields.Char('Phone/Mobile', store=False, search='_search_phone_mobile_search')
     phone_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
-
-    # Only used for type opportunity
-    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
-    expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
-    date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
-    color = fields.Integer('Color Index', default=0)
-    partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
-    partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
-    company_currency = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True, relation="res.currency")
-    user_email = fields.Char('User Email', related='user_id.email', readonly=True)
-    user_login = fields.Char('User Login', related='user_id.login', readonly=True)
-
-    # Fields for address, due to separation from crm and res.partner
+    website = fields.Char('Website', index=True, help="Website of the contact")
+    lang_id = fields.Many2one('res.lang', string='Language')
+    # Address fields
     street = fields.Char('Street')
     street2 = fields.Char('Street2')
     zip = fields.Char('Zip', change_default=True)
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country')
-    lang_id = fields.Many2one('res.lang', string='Language', help="Language of the lead.")
-    phone = fields.Char('Phone', tracking=50)
-    mobile = fields.Char('Mobile')
-    phone_mobile_search = fields.Char('Phone/Mobile', store=False, search='_search_phone_mobile_search')
-    function = fields.Char('Job Position')
-    title = fields.Many2one('res.partner.title')
-    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company.id)
+    # Probability (Opportunity only)
+    probability = fields.Float('Probability', group_operator="avg", copy=False)
+    automated_probability = fields.Float('Automated Probability', readonly=True)
+    is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
+    # External records
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
     lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
-
-    def _auto_init(self):
-        res = super(Lead, self)._auto_init()
-        tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',
-                           self._table, ['user_id', 'team_id', 'type'])
-        return res
-
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        # retrieve team_id from the context and write the domain
-        # - ('id', 'in', stages.ids): add columns that should be present
-        # - OR ('fold', '=', False): add default columns that are not folded
-        # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        team_id = self._context.get('default_team_id')
-        if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
-        else:
-            search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
-
-        # perform search
-        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
-        return stages.browse(stage_ids)
 
     def _compute_kanban_state(self):
         today = date.today()
@@ -387,8 +374,6 @@ class Lead(models.Model):
     def _onchange_lang_id(self):
         self._onchange_compute_probability(optional_field_name='lang_id')
 
-    # Phone Validation
-    # ----------------
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
@@ -399,9 +384,17 @@ class Lead(models.Model):
         if self.mobile:
             self.mobile = self.phone_format(self.mobile)
 
-    # ----------------------------------------
-    # ORM override (CRUD, fields_view_get, ...)
-    # ----------------------------------------
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
+
+    def _auto_init(self):
+        res = super(Lead, self)._auto_init()
+        tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',
+                           self._table, ['user_id', 'team_id', 'type'])
+        tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
+                           self._table, ['create_date', 'team_id'])
+        return res
 
     @api.model
     def create(self, vals):
@@ -496,9 +489,49 @@ class Lead(models.Model):
             res['arch'] = self._fields_view_get_address(res['arch'])
         return res
 
-    # ----------------------------------------
-    # Actions Methods
-    # ----------------------------------------
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        # retrieve team_id from the context and write the domain
+        # - ('id', 'in', stages.ids): add columns that should be present
+        # - OR ('fold', '=', False): add default columns that are not folded
+        # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
+        team_id = self._context.get('default_team_id')
+        if team_id:
+            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
+        else:
+            search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
+
+        # perform search
+        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
+
+    def _stage_find(self, team_id=False, domain=None, order='sequence'):
+        """ Determine the stage of the current lead with its teams, the given domain and the given team_id
+            :param team_id
+            :param domain : base search domain for stage
+            :returns crm.stage recordset
+        """
+        # collect all team_ids by adding given one, and the ones related to the current leads
+        team_ids = set()
+        if team_id:
+            team_ids.add(team_id)
+        for lead in self:
+            if lead.team_id:
+                team_ids.add(lead.team_id.id)
+        # generate the domain
+        if team_ids:
+            search_domain = ['|', ('team_id', '=', False), ('team_id', 'in', list(team_ids))]
+        else:
+            search_domain = [('team_id', '=', False)]
+        # AND with the domain in parameter
+        if domain:
+            search_domain += list(domain)
+        # perform search, return the first found
+        return self.env['crm.stage'].search(search_domain, order=order, limit=1)
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def toggle_active(self):
         super(Lead, self).toggle_active()
@@ -605,33 +638,24 @@ class Lead(models.Model):
         }
         return action
 
-    # ----------------------------------------
-    # Business Methods
-    # ----------------------------------------
+    # ------------------------------------------------------------
+    # BUSINESS
+    # ------------------------------------------------------------
 
-    def _stage_find(self, team_id=False, domain=None, order='sequence'):
-        """ Determine the stage of the current lead with its teams, the given domain and the given team_id
-            :param team_id
-            :param domain : base search domain for stage
-            :returns crm.stage recordset
-        """
-        # collect all team_ids by adding given one, and the ones related to the current leads
-        team_ids = set()
-        if team_id:
-            team_ids.add(team_id)
-        for lead in self:
-            if lead.team_id:
-                team_ids.add(lead.team_id.id)
-        # generate the domain
-        if team_ids:
-            search_domain = ['|', ('team_id', '=', False), ('team_id', 'in', list(team_ids))]
+    def log_meeting(self, meeting_subject, meeting_date, duration):
+        if not duration:
+            duration = _('unknown')
         else:
-            search_domain = [('team_id', '=', False)]
-        # AND with the domain in parameter
-        if domain:
-            search_domain += list(domain)
-        # perform search, return the first found
-        return self.env['crm.stage'].search(search_domain, order=order, limit=1)
+            duration = str(duration)
+        meet_date = fields.Datetime.from_string(meeting_date)
+        meeting_usertime = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, meet_date))
+        html_time = "<time datetime='%s+00:00'>%s</time>" % (meeting_date, meeting_usertime)
+        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours") % (html_time, meeting_subject, duration)
+        return self.message_post(body=message)
+
+    # ------------------------------------------------------------
+    # MERGE LEADS / OPPS
+    # ------------------------------------------------------------
 
     def _merge_get_result_type(self):
         """ Define the type of the result of the merge.  If at least one of the
@@ -1046,20 +1070,10 @@ class Lead(models.Model):
             sub_title = _('or send an email to %s') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
-    def log_meeting(self, meeting_subject, meeting_date, duration):
-        if not duration:
-            duration = _('unknown')
-        else:
-            duration = str(duration)
-        meet_date = fields.Datetime.from_string(meeting_date)
-        meeting_usertime = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, meet_date))
-        html_time = "<time datetime='%s+00:00'>%s</time>" % (meeting_date, meeting_usertime)
-        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours") % (html_time, meeting_subject, duration)
-        return self.message_post(body=message)
+    # ------------------------------------------------------------
+    # MAILING
+    # ------------------------------------------------------------
 
-    # ----------------------------------------
-    # Mail Gateway
-    # ----------------------------------------
     def _creation_subtype(self):
         return self.env.ref('crm.mt_lead_create')
 
@@ -1192,9 +1206,10 @@ class Lead(models.Model):
             'template': '/crm/static/xls/crm_lead.xls'
         }]
 
-    # ----------------------------------------
-    # Predictive Lead Scoring
-    # ----------------------------------------
+    # ------------------------------------------------------------
+    # PLS
+    # ------------------------------------------------------------
+
     def _pls_get_naive_bayes_probabilities(self, batch_mode=False):
         """
         In machine learning, naive Bayes classifiers (NBC) are a family of simple "probabilistic classifiers" based on
@@ -1587,24 +1602,3 @@ class Lead(models.Model):
             return 0, 0, 0
         stage_result = team_results['stage_id'][str(first_stage_id.id)]
         return stage_result['won'], stage_result['lost'], stage_result['won'] + stage_result['lost']
-
-
-class Tag(models.Model):
-
-    _name = "crm.lead.tag"
-    _description = "Lead Tag"
-
-    name = fields.Char('Tag Name', required=True, translate=True)
-    color = fields.Integer('Color Index')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
-
-class LostReason(models.Model):
-    _name = "crm.lost.reason"
-    _description = 'Opp. Lost Reason'
-
-    name = fields.Char('Description', required=True, translate=True)
-    active = fields.Boolean('Active', default=True)
