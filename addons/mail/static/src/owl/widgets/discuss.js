@@ -2,14 +2,12 @@ odoo.define('mail.widget.Discuss', function (require) {
 'use strict';
 
 const DiscussComponent = require('mail.component.Discuss');
-const messagingEnv = require('mail.messagingEnv');
 const InvitePartnerDialog = require('mail.widget.DiscussInvitePartnerDialog');
 
 const AbstractAction = require('web.AbstractAction');
 const { _t, action_registry, qweb } = require('web.core');
 
 const DiscussWidget = AbstractAction.extend({
-    env: messagingEnv,
     template: 'mail.widget.Discuss',
     hasControlPanel: true,
     loadControlPanel: true,
@@ -54,10 +52,13 @@ const DiscussWidget = AbstractAction.extend({
             (this.action.params && this.action.params.default_active_id) ||
             'mail.box_inbox';
         this._lastPushStateActiveThreadLocalId = null;
-
-        if (this.env.isDev) {
-            window.discuss_widget = this;
-        }
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        await this._super(...arguments);
+        this.env = this.call('messaging', 'getMessagingEnv');
     },
     /**
      * @override {web.AbstractAction}

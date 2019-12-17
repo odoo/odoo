@@ -2,25 +2,19 @@ odoo.define('mail.service.ChatWindow', function (require) {
 'use strict';
 
 const ChatWindowManager = require('mail.component.ChatWindowManager');
-const messagingEnv = require('mail.messagingEnv');
 
 const AbstractService = require('web.AbstractService');
 const { bus, serviceRegistry } = require('web.core');
 
 const ChatWindowService = AbstractService.extend({
-    env: messagingEnv,
-    init() {
-        this._super(...arguments);
-        this._webClientReady = false;
-        if (this.env.isDev) {
-            window.chat_windows_service = this;
-        }
-    },
+    dependencies: ['messaging'],
     /**
      * @override {web.AbstractService}
      */
     start() {
         this._super(...arguments);
+        this._webClientReady = false;
+        this.env = this.call('messaging', 'getMessagingEnv');
         if (!this.env.isTest) {
             bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
             bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));

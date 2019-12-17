@@ -2,7 +2,6 @@ odoo.define('mail.widget.MessagingMenu', function (require) {
 'use strict';
 
 const MessagingMenuComponent = require('mail.component.MessagingMenu');
-const messagingEnv = require('mail.messagingEnv');
 
 const SystrayMenu = require('web.SystrayMenu');
 const Widget = require('web.Widget');
@@ -11,7 +10,6 @@ const Widget = require('web.Widget');
  * Odoo Widget, necessary to instantiate a root OWL widget.
  */
 const MessagingMenu = Widget.extend({
-    env: messagingEnv,
     template: 'mail.widget.MessagingMenu',
     /**
      * @override
@@ -19,10 +17,13 @@ const MessagingMenu = Widget.extend({
     init() {
         this._super(...arguments);
         this.component = undefined;
-
-        if (this.env.isDev) {
-            window.systray_messaging_menu = this;
-        }
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        this._super(...arguments);
+        this.env = this.call('messaging', 'getMessagingEnv');
     },
     /**
      * @override

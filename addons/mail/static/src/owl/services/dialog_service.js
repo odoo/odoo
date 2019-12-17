@@ -2,28 +2,19 @@ odoo.define('mail.service.Dialog', function (require) {
 'use strict';
 
 const DialogManager = require('mail.component.DialogManager');
-const messagingEnv = require('mail.messagingEnv');
 
 const AbstractService = require('web.AbstractService');
 const { bus, serviceRegistry } = require('web.core');
 
 const DialogService = AbstractService.extend({
-    env: messagingEnv,
-    /**
-     * @override {web.AbstractService}
-     */
-    init() {
-        this._super(...arguments);
-        this._webClientReady = false;
-        if (this.env.isDev) {
-            window.dialog_service = this;
-        }
-    },
+    dependencies: ['messaging'],
     /**
      * @override {web.AbstractService}
      */
     start() {
         this._super(...arguments);
+        this.env = this.call('messaging', 'getMessagingEnv');
+        this._webClientReady = false;
         if (!this.env.isTest) {
             bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
             bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
@@ -50,6 +41,17 @@ const DialogService = AbstractService.extend({
 
     /**
      * @private
+     * @return {Node}
+     */
+    _getParentNode() {
+        if (this.env.isTest) {
+            return document.querySelector(this.env.TEST_SERVICE_TARGET);
+        } else {
+            return document.querySelector('body');
+        }
+    },
+    /**
+     * @private
      */
     async _mount() {
         if (this.component) {
@@ -58,12 +60,7 @@ const DialogService = AbstractService.extend({
         }
         DialogManager.env = this.env;
         this.component = new DialogManager(null);
-        let parentNode;
-        if (this.env.isTest) {
-            parentNode = document.querySelector(this.env.TEST_SERVICE_TARGET);
-        } else {
-            parentNode = document.querySelector('body');
-        }
+        const parentNode = this._getParentNode();
         await this.component.mount(parentNode);
     },
 

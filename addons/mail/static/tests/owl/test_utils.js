@@ -4,8 +4,8 @@ odoo.define('mail.owl.testUtils', function (require) {
 const BusService = require('bus.BusService');
 
 const ComposerTextInput = require('mail.component.ComposerTextInput');
-const makeMessagingTestEnvironment = require('mail.messagingTestEnv');
 const ChatWindowService = require('mail.service.ChatWindow');
+const MessagingService = require('mail.service.Messaging');
 const DiscussWidget = require('mail.widget.Discuss');
 const MessagingMenuWidget = require('mail.widget.MessagingMenu');
 
@@ -13,7 +13,15 @@ const AbstractStorageService = require('web.AbstractStorageService');
 const Class = require('web.Class');
 const NotificationService = require('web.NotificationService');
 const RamStorage = require('web.RamStorage');
-const { makeTestPromise, mock: { addMockEnvironment } } = require('web.test_utils');
+const makeTestEnvironment = require('web.test_env');
+const {
+    makeTestPromise,
+    mock: {
+        addMockEnvironment,
+        patch,
+        unpatch,
+    },
+} = require('web.test_utils');
 const Widget = require('web.Widget');
 
 //------------------------------------------------------------------------------
@@ -37,6 +45,9 @@ const MockMailService = Class.extend({
     local_storage() {
         return AbstractStorageService.extend({ storage: new RamStorage() });
     },
+    messaging() {
+        return MessagingService;
+    },
     notification() {
         return NotificationService;
     },
@@ -45,6 +56,7 @@ const MockMailService = Class.extend({
             bus_service: this.bus_service(),
             chat_window: this.chat_window(),
             local_storage: this.local_storage(),
+            messaging: this.messaging(),
             notification: this.notification(),
         };
     },
@@ -321,25 +333,49 @@ async function start(param0) {
         uid: 2,
     });
 
-    const widget = new Widget(parent);
-    const env = makeMessagingTestEnvironment(widget, {
-        debug,
-        providedRPC: param0.mockRPC,
-        session,
-        testServiceTarget: debug ? 'body' : '#qunit-fixture',
-    });
-    Object.assign(env.store.state, {
-        globalWindow: {
-            innerHeight: 1080,
-            innerWidth: 1920,
+    const _t = s => s;
+    _t.database = {
+        parameters: { direction: 'ltr' },
+    };
+    patch(services.messaging, {
+        registry: {
+            initialEnv: makeTestEnvironment({
+                _t,
+                session: Object.assign({
+                    is_bound: Promise.resolve(),
+                    name: 'Admin',
+                    partner_display_name: 'Mitchell Admin',
+                    partner_id: 3,
+                    url: s => s,
+                    userId: 2,
+                }, session),
+            }),
+            onMessagingStoreEnvCreated: messagingStoreEnv => {
+                Object.assign(messagingStoreEnv, {
+                    isTest: true,
+                    testServiceTarget: debug ? 'body' : '#qunit-fixture',
+                });
+            },
+            onMessagingEnvCreated: messagingEnv => {
+                Object.assign(messagingEnv.store.state, {
+                    globalWindow: {
+                        innerHeight: 1080,
+                        innerWidth: 1920,
+                    },
+                    isMobile: false,
+                });
+                messagingEnv.store.actions._fetchPartnerImStatus = () => {};
+                messagingEnv.store.actions._loopFetchPartnerImStatus = () => {};
+            },
         },
-        isMobile: false,
     });
+
     addMockEnvironment(parent, kwargs);
+    const selector = debug ? 'body' : '#qunit-fixture';
+    const widget = new Widget(parent);
+    await widget.appendTo($(selector));
     const discussWidget = new DiscussWidget(parent, discussData);
     const menuWidget = new MessagingMenuWidget(parent, {});
-    const selector = debug ? 'body' : '#qunit-fixture';
-    await widget.appendTo($(selector));
 
     Object.assign(widget, {
         closeDiscuss() {
@@ -350,15 +386,13 @@ async function start(param0) {
             delete window.o_test_env;
             widget.call('chat_window', 'destroy');
             parent.destroy();
+            unpatch(services.messaging);
         },
         openDiscuss() {
             return discussWidget.on_attach_callback();
         },
     });
 
-    if (debug) {
-        window.o_test_env = env;
-    }
     widget.call('chat_window', 'test:web_client_ready'); // trigger mounting of chat window manager
     await afterNextRender();
 
@@ -372,6 +406,8 @@ async function start(param0) {
         await widget.openDiscuss();
         await afterNextRender();
     }
+
+    const env = widget.call('messaging', 'getMessagingEnv');
 
     return { env, widget };
 }
