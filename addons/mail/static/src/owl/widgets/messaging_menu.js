@@ -7,7 +7,7 @@ const SystrayMenu = require('web.SystrayMenu');
 const Widget = require('web.Widget');
 
 /**
- * Odoo Widget, necessary to instantiate a root OWL widget.
+ * Odoo Widget, necessary to instantiate component.
  */
 const MessagingMenu = Widget.extend({
     template: 'mail.widget.MessagingMenu',

@@ -44,7 +44,6 @@ const DiscussWidget = AbstractAction.extend({
         this.controlPanelParams.modelName = 'mail.message';
         this.options = options;
 
-        // owl components
         this.component = undefined;
 
         this._initActiveThreadLocalId = this.options.active_id ||

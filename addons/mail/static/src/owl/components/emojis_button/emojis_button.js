@@ -23,7 +23,7 @@ class EmojisButton extends Component {
          */
         this._$popover = undefined;
         /**
-         * Node reference of the popover OWL component.
+         * Node reference of the popover component.
          */
         this._popover = undefined;
         /**

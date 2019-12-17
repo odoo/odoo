@@ -8,11 +8,11 @@ const {
     inputFiles,
     pause,
     start: utilsStart,
-} = require('mail.owl.testUtils');
+} = require('mail.messagingTestUtils');
 
 const { file: { createFile } } = require('web.test_utils');
 
-QUnit.module('mail.owl', {}, function () {
+QUnit.module('mail.messaging', {}, function () {
 QUnit.module('component', {}, function () {
 QUnit.module('ChatWindowManager', {
     beforeEach() {

@@ -1,4 +1,4 @@
-odoo.define('mail.owl.testUtils', function (require) {
+odoo.define('mail.messagingTestUtils', function (require) {
 'use strict';
 
 const BusService = require('bus.BusService');

@@ -5,9 +5,9 @@ const {
     afterEach: utilsAfterEach,
     beforeEach: utilsBeforeEach,
     start: utilsStart,
-} = require('mail.owl.testUtils');
+} = require('mail.messagingTestUtils');
 
-QUnit.module('mail.owl', {}, function () {
+QUnit.module('mail.messaging', {}, function () {
 QUnit.module('store', {}, function () {
 QUnit.module('State', {
     beforeEach() {
