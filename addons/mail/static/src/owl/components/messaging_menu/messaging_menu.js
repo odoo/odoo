@@ -44,9 +44,6 @@ class MessagingMenu extends Component {
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
 
-        if (this.env.isDev) {
-            window.messaging_menu = this;
-        }
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 

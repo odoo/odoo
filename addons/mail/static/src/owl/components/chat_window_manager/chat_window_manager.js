@@ -47,9 +47,6 @@ class ChatWindowManager extends Component {
          */
         this._lastAutofocusedCounter = 0;
         this._lastAutofocusedChatWindowLocalId = undefined;
-        if (this.env.isDev) {
-            window.chat_window_manager = this;
-        }
     }
 
     mounted() {

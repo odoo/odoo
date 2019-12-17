@@ -15,15 +15,7 @@ const DialogService = AbstractService.extend({
         this._super(...arguments);
         this.env = this.call('messaging', 'getMessagingEnv');
         this._webClientReady = false;
-        if (!this.env.isTest) {
-            bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
-            bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
-            bus.on('web_client_ready', this, this._onWebClientReady.bind(this));
-        } else {
-            this['test:hide_home_menu'] = this._onHideHomeMenu;
-            this['test:show_home_menu'] = this._onShowHomeMenu;
-            this['test:web_client_ready'] = this._onWebClientReady;
-        }
+        this._listenHomeMenu();
     },
     /**
      * @private
@@ -44,11 +36,15 @@ const DialogService = AbstractService.extend({
      * @return {Node}
      */
     _getParentNode() {
-        if (this.env.isTest) {
-            return document.querySelector(this.env.TEST_SERVICE_TARGET);
-        } else {
-            return document.querySelector('body');
-        }
+        return document.querySelector('body');
+    },
+    /**
+     * @private
+     */
+    _listenHomeMenu() {
+        bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
+        bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
+        bus.on('web_client_ready', this, this._onWebClientReady.bind(this));
     },
     /**
      * @private

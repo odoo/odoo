@@ -589,8 +589,8 @@ QUnit.test('chat window: state conservation on toggle home menu', async function
         "verify chat window composer initial attachment count"
     );
     // Hide home menu
-    await this.widget.call('chat_window', 'test:will_hide_home_menu');
-    await this.widget.call('chat_window', 'test:hide_home_menu');
+    await this.widget.call('chat_window', '_onWillHideHomeMenu');
+    await this.widget.call('chat_window', '_onHideHomeMenu');
     assert.strictEqual(
         document.querySelector(`.o_Thread_messageList`).scrollTop,
         142,
@@ -609,8 +609,8 @@ QUnit.test('chat window: state conservation on toggle home menu', async function
     );
 
     // Show home menu
-    await this.widget.call('chat_window', 'test:will_show_home_menu');
-    await this.widget.call('chat_window', 'test:show_home_menu');
+    await this.widget.call('chat_window', '_onWillShowHomeMenu');
+    await this.widget.call('chat_window', '_onShowHomeMenu');
     assert.strictEqual(
         document.querySelector(`.o_Thread_messageList`).scrollTop,
         142,

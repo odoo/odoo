@@ -17,9 +17,6 @@ class DialogManager extends Component {
         this.storeProps = useStore(state => {
             return Object.assign({}, state.dialogManager);
         });
-        if (this.env.isDev) {
-            window.dialog_manager = this;
-        }
     }
 
     mounted() {

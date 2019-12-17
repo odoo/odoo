@@ -5,6 +5,7 @@ const BusService = require('bus.BusService');
 
 const ComposerTextInput = require('mail.component.ComposerTextInput');
 const ChatWindowService = require('mail.service.ChatWindow');
+const DialogService = require('mail.service.Dialog');
 const MessagingService = require('mail.service.Messaging');
 const DiscussWidget = require('mail.widget.Discuss');
 const MessagingMenuWidget = require('mail.widget.MessagingMenu');
@@ -39,8 +40,21 @@ const MockMailService = Class.extend({
             updateOption() {},
         });
     },
-    chat_window() {
-        return ChatWindowService;
+    chat_window(isDebug = false) {
+        return ChatWindowService.extend({
+            _getParentNode() {
+                return document.querySelector(isDebug ? 'body' : '#qunit-fixture');
+            },
+            _listenHomeMenu: () => {},
+        });
+    },
+    dialog(isDebug = false) {
+        return DialogService.extend({
+            _getParentNode() {
+                return document.querySelector(isDebug ? 'body' : '#qunit-fixture');
+            },
+            _listenHomeMenu: () => {},
+        });
     },
     local_storage() {
         return AbstractStorageService.extend({ storage: new RamStorage() });
@@ -51,10 +65,11 @@ const MockMailService = Class.extend({
     notification() {
         return NotificationService;
     },
-    getServices() {
+    getServices(isDebug = false) {
         return {
             bus_service: this.bus_service(),
-            chat_window: this.chat_window(),
+            chat_window: this.chat_window(isDebug),
+            dialog: this.dialog(isDebug),
             local_storage: this.local_storage(),
             messaging: this.messaging(),
             notification: this.notification(),
@@ -83,8 +98,11 @@ function _createFakeDataTransfer(files) {
 // Public
 //------------------------------------------------------------------------------
 
-function getMailServices() {
-    return new MockMailService().getServices();
+/**
+ * @param {boolean} [isDebug=false]
+ */
+function getMailServices(isDebug = false) {
+    return new MockMailService().getServices(isDebug);
 }
 
 //------------------------------------------------------------------------------
@@ -309,11 +327,11 @@ function beforeEach(self) {
  * @return {Promise}
  */
 async function start(param0) {
+    const { debug = false } = param0;
     const {
         autoOpenDiscuss = false,
-        debug = false,
         discuss: discussData = {},
-        services = getMailServices(),
+        services = getMailServices(debug),
         session = {},
     } = param0;
     const kwargs = Object.assign({
@@ -350,12 +368,6 @@ async function start(param0) {
                     userId: 2,
                 }, session),
             }),
-            onMessagingStoreEnvCreated: messagingStoreEnv => {
-                Object.assign(messagingStoreEnv, {
-                    isTest: true,
-                    testServiceTarget: debug ? 'body' : '#qunit-fixture',
-                });
-            },
             onMessagingEnvCreated: messagingEnv => {
                 Object.assign(messagingEnv.store.state, {
                     globalWindow: {
@@ -393,7 +405,7 @@ async function start(param0) {
         },
     });
 
-    widget.call('chat_window', 'test:web_client_ready'); // trigger mounting of chat window manager
+    widget.call('chat_window', '_onWebClientReady'); // trigger mounting of chat window manager
     await afterNextRender();
 
     await menuWidget.appendTo($(selector));

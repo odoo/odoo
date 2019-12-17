@@ -37,9 +37,6 @@ const MessagingService = AbstractService.extend({
         let messagingStoreEnv = Object.create(initialEnv);
         Object.assign(messagingStoreEnv, {
             disableAnimation: false,
-            isDev: true,
-            isTest: false,
-            testServiceTarget: 'body',
             call: (...args) => this.call(...args),
             do_action: (...args) => this.do_action(...args),
             do_notify: (...args) => this.do_notify(...args),

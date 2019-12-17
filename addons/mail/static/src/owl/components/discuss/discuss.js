@@ -129,10 +129,6 @@ class Discuss extends Component {
         this._onAddChatAutocompleteSource = this._onAddChatAutocompleteSource.bind(this);
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
-
-        if (this.env.isDev) {
-            window.discuss = this;
-        }
     }
 
     mounted() {

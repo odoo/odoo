@@ -15,19 +15,7 @@ const ChatWindowService = AbstractService.extend({
         this._super(...arguments);
         this._webClientReady = false;
         this.env = this.call('messaging', 'getMessagingEnv');
-        if (!this.env.isTest) {
-            bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
-            bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
-            bus.on('web_client_ready', this, this._onWebClientReady.bind(this));
-            bus.on('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
-            bus.on('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
-        } else {
-            this['test:hide_home_menu'] = this._onHideHomeMenu;
-            this['test:show_home_menu'] = this._onShowHomeMenu;
-            this['test:web_client_ready'] = this._onWebClientReady;
-            this['test:will_hide_home_menu'] = this._onWillHideHomeMenu;
-            this['test:will_show_home_menu'] = this._onWillShowHomeMenu;
-        }
+        this._listenHomeMenu();
     },
     /**
      * @private
@@ -45,6 +33,23 @@ const ChatWindowService = AbstractService.extend({
 
     /**
      * @private
+     * @return {Node}
+     */
+    _getParentNode() {
+        return document.querySelector('body');
+    },
+    /**
+     * @private
+     */
+    _listenHomeMenu() {
+        bus.on('hide_home_menu', this, this._onHideHomeMenu.bind(this));
+        bus.on('show_home_menu', this, this._onShowHomeMenu.bind(this));
+        bus.on('web_client_ready', this, this._onWebClientReady.bind(this));
+        bus.on('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
+        bus.on('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
+    },
+    /**
+     * @private
      */
     async _mount() {
         if (this.component) {
@@ -53,12 +58,7 @@ const ChatWindowService = AbstractService.extend({
         }
         ChatWindowManager.env = this.env;
         this.component = new ChatWindowManager(null);
-        let parentNode;
-        if (this.env.isTest) {
-            parentNode = document.querySelector(this.env.testServiceTarget);
-        } else {
-            parentNode = document.querySelector('body');
-        }
+        const parentNode = this._getParentNode();
         await this.component.mount(parentNode);
     },
 
