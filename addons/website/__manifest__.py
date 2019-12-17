@@ -30,6 +30,7 @@
         'views/snippets/s_title.xml',
         'views/snippets/s_cover.xml',
         'views/snippets/s_text_image.xml',
+        'views/snippets/s_image_text.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
