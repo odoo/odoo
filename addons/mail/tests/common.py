@@ -102,17 +102,21 @@ class MockEmail(common.BaseCase):
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', '%s@%s' % (cls.alias_bounce, cls.alias_domain)))
 
     def format(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
-               extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
-               cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
-        return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+               email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', return_path='', cc='',
+               extra='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
+        return template.format(
+            subject=subject, to=to, cc=cc,
+            email_from=email_from, return_path=return_path,
+            extra=extra, msg_id=msg_id)
 
-    def format_and_process(self, template, email_from, to, subject='Frogs', extra='',  cc='', msg_id=False,
+    def format_and_process(self, template, email_from, to, subject='Frogs', cc='',
+                           return_path='', extra='',  msg_id=False,
                            model=None, target_model='mail.test.gateway', target_field='name'):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         if not msg_id:
             msg_id = "<%.7f-test@iron.sky>" % (time.time())
 
-        mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+        mail = self.format(template, to=to, subject=subject, cc=cc, return_path=return_path, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
