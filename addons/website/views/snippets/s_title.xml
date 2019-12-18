@@ -2,32 +2,11 @@
 <odoo>
 
 <template id="s_title" name="Title">
-    <section class="pt32 pb32">
+    <section class="pt32 pb32" data-vcss="001">
         <div class="container">
-            <div class="row s_nb_column_fixed">
-                <div class="col-lg-12 s_title pt16 pb16" style="text-align: center;">
-                    <h1 class="s_title_default"><font style="font-size: 62px;">Your Site Title</font></h1>
-                </div>
-            </div>
+            <h1 style="text-align: center;"><font style="font-size: 62px;">Your Site Title</font></h1>
         </div>
     </section>
-</template>
-
-<template id="s_title_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-selector=".s_title" data-target="[class*='s_title_']">
-            <we-select string="Typography">
-                <we-button data-select-class="s_title_boxed">Boxed</we-button>
-                <we-button data-select-class="s_title_lines">Line-On-Sides</we-button>
-                <we-button data-select-class="s_title_thin">Thin</we-button>
-                <we-button data-select-class="s_title_transparent">Transparent</we-button>
-                <we-button data-select-class="s_title_underlined">Underlined</we-button>
-                <we-button data-select-class="s_title_small_caps">Small Caps</we-button>
-                <we-divider/>
-                <we-button data-select-class="s_title_default">Default</we-button>
-            </we-select>
-        </div>
-    </xpath>
 </template>
 
 <template id="assets_snippet_s_title_css_000" inherit_id="website.assets_frontend">
