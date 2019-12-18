@@ -51,6 +51,7 @@ class ProjectTaskType(models.Model):
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
     is_closed = fields.Boolean('Closing Stage', help="Tasks in this stage are considered as closed.")
+    disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -81,6 +82,15 @@ class ProjectTaskType(models.Model):
         if 'active' in vals and not vals['active']:
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super(ProjectTaskType, self).write(vals)
+
+    @api.depends('project_ids', 'project_ids.rating_active')
+    def _compute_disabled_rating_warning(self):
+        for stage in self:
+            disabled_projects = stage.project_ids.filtered(lambda p: not p.rating_active)
+            if disabled_projects:
+                stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
+            else:
+                stage.disabled_rating_warning = False
 
 
 class Project(models.Model):
@@ -172,11 +182,6 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    def _get_default_rating_status(self):
-        if self.user_has_groups('project.group_project_rating'):
-            return 'stage'
-        return 'no'
-
     name = fields.Char("Name", index=True, required=True, tracking=True)
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -238,20 +243,22 @@ class Project(models.Model):
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([
-        ('stage', 'Rating when changing stage'),
-        ('periodic', 'Periodical Rating'),
-        ('no', 'No rating')], string='Customer Ratings', default=_get_default_rating_status, required=True,
+    rating_active = fields.Boolean('Customer Ratings', default=True)
+    rating_status = fields.Selection(
+        [('stage', 'Rating when changing stage'),
+         ('periodic', 'Periodical Rating')
+        ], 'Customer Ratings Status', default="stage", required=True,
         help="How to get customer feedback?\n"
-                 "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
-                 "- Periodical Rating: email will be sent periodically.\n\n"
-                 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
+             "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+             "- Periodical Rating: email will be sent periodically.\n\n"
+             "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
     rating_status_period = fields.Selection([
-        ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
-        ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
-    ], 'Rating Frequency')
-
-    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False)
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('bimonthly', 'Twice a Month'),
+        ('monthly', 'Once a Month'),
+        ('quarterly', 'Quarterly'),
+        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -452,14 +459,7 @@ class Project(models.Model):
         return action
 
     def action_view_all_rating(self):
-        """ return the action to see all the rating of the project, and activate default filters """
-        if self.portal_show_rating:
-            return {
-                'type': 'ir.actions.act_url',
-                'name': "Redirect to the Website Projcet Rating Page",
-                'target': 'self',
-                'url': "/project/rating/%s" % (self.id,)
-            }
+        """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
         action['name'] = _('Ratings of %s') % (self.name,)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}

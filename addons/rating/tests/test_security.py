@@ -51,14 +51,14 @@ class TestAccessRating(common.SavepointCase):
                 'res_model_id': self.env['ir.model'].sudo().search([('model', '=', 'res.partner')], limit=1).id,
                 'res_model': 'res.partner',
                 'res_id': self.partner_to_rate.id,
-                'rating': 2
+                'rating': 1
             })
         with self.assertRaises(AccessError):
             self.env['rating.rating'].with_user(self.user_public).create({
                 'res_model_id': self.env['ir.model'].sudo().search([('model', '=', 'res.partner')], limit=1).id,
                 'res_model': 'res.partner',
                 'res_id': self.partner_to_rate.id,
-                'rating': 5
+                'rating': 3
             })
 
         # No error with employee
@@ -66,7 +66,7 @@ class TestAccessRating(common.SavepointCase):
             'res_model_id': self.env['ir.model'].sudo().search([('model', '=', 'res.partner')], limit=1).id,
             'res_model': 'res.partner',
             'res_id': self.partner_to_rate.id,
-            'rating': 5
+            'rating': 3
         })
 
         with self.assertRaises(AccessError):
