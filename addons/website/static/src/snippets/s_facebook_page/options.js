@@ -1,116 +1,8 @@
 odoo.define('website.s_facebook_page_options', function (require) {
 'use strict';
 
-const core = require('web.core');
-const weWidgets = require('wysiwyg.widgets');
 const options = require('web_editor.snippets.options');
 
-const _t = core._t;
-
-const FacebookPageDialog = weWidgets.Dialog.extend({
-    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/website.facebook_page.xml']
-    ),
-    template: 'website.facebook_page_dialog',
-    events: _.extend({}, weWidgets.Dialog.prototype.events || {}, {
-        'change': '_onOptionChange',
-    }),
-
-    /**
-     * @constructor
-     */
-    init: function (parent, fbData, options) {
-        this._super(parent, _.extend({
-            title: _t("Facebook Page"),
-        }, options || {}));
-
-        this.fbData = $.extend(true, {}, fbData);
-        this.final_data = this.fbData;
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this.$previewPage = this.$('.o_facebook_page');
-        this.opened().then(this._renderPreview.bind(this));
-        return this._super.apply(this, arguments);
-    },
-
-    //------------------------------------------------------------------
-    // Private
-    //------------------------------------------------------------------
-
-    /**
-     * Manages Facebook page preview. Also verifies if the page exists on
-     * Facebook or not.
-     *
-     * @private
-     */
-    _renderPreview: function () {
-        var self = this;
-        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[/?# ])/);
-        if (match) {
-            // Check if the page exists on Facebook or not
-            $.ajax({
-                url: 'https://graph.facebook.com/' + (match[2] || match[1]) + '/picture',
-                statusCode: {
-                    200: function () {
-                        self._toggleWarning(true);
-
-                        // Managing height based on options
-                        if (self.fbData.tabs) {
-                            self.fbData.height = self.fbData.tabs === 'events' ? 300 : 500;
-                        } else if (self.fbData.small_header) {
-                            self.fbData.height = self.fbData.show_facepile ? 165 : 70;
-                        } else if (!self.fbData.small_header) {
-                            self.fbData.height = self.fbData.show_facepile ? 225 : 150;
-                        }
-                        options.registry.facebookPage.prototype.markFbElement(self.getParent(), self.$previewPage, self.fbData);
-                    },
-                    404: function () {
-                        self._toggleWarning(false);
-                    },
-                },
-            });
-        } else {
-            this._toggleWarning(false);
-        }
-    },
-    /**
-     * Toggles the warning message and save button and destroy iframe preview.
-     *
-     * @private
-     * @param {boolean} toggle
-     */
-    _toggleWarning: function (toggle) {
-        this.trigger_up('widgets_stop_request', {
-            $target: this.$previewPage,
-        });
-        this.$('.facebook_page_warning').toggleClass('d-none', toggle);
-        this.$footer.find('.btn-primary').prop('disabled', !toggle);
-    },
-
-    //------------------------------------------------------------------
-    // Handlers
-    //------------------------------------------------------------------
-
-    /**
-     * Called when a facebook option is changed -> adapt the preview and saved
-     * data.
-     *
-     * @private
-     */
-    _onOptionChange: function () {
-        var self = this;
-        // Update values in fbData
-        this.fbData.tabs = _.map(this.$('.o_facebook_tabs input:checked'), tab => tab.name).join(',');
-        this.fbData.href = this.$('.o_facebook_page_url').val();
-        _.each(this.$('.o_facebook_options input'), function (el) {
-            self.fbData[el.name] = $(el).prop('checked');
-        });
-        this._renderPreview();
-    },
-});
 options.registry.facebookPage = options.Class.extend({
     /**
      * Initializes the required facebook page data to create the iframe.
@@ -121,12 +13,12 @@ options.registry.facebookPage = options.Class.extend({
         var defs = [this._super.apply(this, arguments)];
 
         var defaults = {
-            href: false,
+            href: '',
             height: 215,
             width: 350,
             tabs: '',
-            small_header: false,
-            hide_cover: false,
+            small_header: true,
+            hide_cover: true,
             show_facepile: false,
         };
         this.fbData = _.defaults(_.pick(this.$target.data(), _.keys(defaults)), defaults);
@@ -141,30 +33,12 @@ options.registry.facebookPage = options.Class.extend({
                 limit: 1,
             }).then(function (res) {
                 if (res) {
-                    self.fbData.href = res[0].social_facebook || 'https://www.facebook.com/Odoo';
+                    self.fbData.href = res[0].social_facebook || '';
                 }
             }));
         }
 
-        return Promise.all(defs);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$target.on('click.facebook_page_option', '.o_add_facebook_page', function (ev) {
-            ev.preventDefault();
-            self.fbPageOptions();
-        });
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-        this.$target.off('.facebook_page_option');
+        return Promise.all(defs).then(() => this._markFbElement()).then(() => this._refreshPublicWidgets());
     },
 
     //--------------------------------------------------------------------------
@@ -172,32 +46,112 @@ options.registry.facebookPage = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Opens a dialog to configure the facebook page options.
+     * Toggles a checkbox option.
+     *
+     * @see this.selectClass for parameters
+     * @param {String} optionName the name of the option to toggle
+     */
+    toggleOption: function (previewMode, widgetValue, params) {
+        let optionName = params.optionName;
+        if (optionName.startsWith('tab.')) {
+            optionName = optionName.replace('tab.', '');
+            if (widgetValue) {
+                this.fbData.tabs = this.fbData.tabs
+                    .split(',')
+                    .filter(t => t !== '')
+                    .concat([optionName])
+                    .join(',');
+            } else {
+                this.fbData.tabs = this.fbData.tabs
+                    .split(',')
+                    .filter(t => t !== optionName)
+                    .join(',');
+            }
+        } else {
+            if (optionName === 'show_cover') {
+                this.fbData.hide_cover = !widgetValue;
+            } else {
+                this.fbData[optionName] = widgetValue;
+            }
+        }
+        return this._markFbElement();
+    },
+    /**
+     * Sets the facebook page's URL.
      *
      * @see this.selectClass for parameters
      */
-    fbPageOptions: function () {
-        var dialog = new FacebookPageDialog(this, this.fbData).open();
-        dialog.on('save', this, function (fbData) {
-            this.$target.empty();
-            this.fbData = fbData;
-            options.registry.facebookPage.prototype.markFbElement(this, this.$target, this.fbData);
-        });
+    pageUrl: function (previewMode, widgetValue, params) {
+        this.fbData.href = widgetValue;
+        return this._markFbElement();
     },
 
     //--------------------------------------------------------------------------
-    // Static
+    // Private
     //--------------------------------------------------------------------------
 
     /**
-     * @static
+     * Sets the correct dataAttributes on the facebook iframe and refreshes it.
+     *
+     * @see this.selectClass for parameters
      */
-    markFbElement: function (self, $el, fbData) {
-        _.each(fbData, function (value, key) {
-            $el.attr('data-' + key, value);
-            $el.data(key, value);
+    _markFbElement: function () {
+        return this._checkURL().then(() => {
+            // Managing height based on options
+            if (this.fbData.tabs) {
+                this.fbData.height = this.fbData.tabs === 'events' ? 300 : 500;
+            } else if (this.fbData.small_header) {
+                this.fbData.height = this.fbData.show_facepile ? 165 : 70;
+            } else {
+                this.fbData.height = this.fbData.show_facepile ? 225 : 150;
+            }
+            _.each(this.fbData, (value, key) => {
+                this.$target.attr('data-' + key, value);
+                this.$target.data(key, value);
+            });
         });
-        self._refreshPublicWidgets($el);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        const optionName = params.optionName;
+        switch (methodName) {
+            case 'toggleOption': {
+                if (optionName.startsWith('tab.')) {
+                    return this.fbData.tabs.split(',').includes(optionName.replace(/^tab./, ''));
+                } else {
+                    if (optionName === 'show_cover') {
+                        return !this.fbData.hide_cover;
+                    }
+                    return this.fbData[optionName];
+                }
+            }
+            case 'pageUrl': {
+                return this._checkURL().then(() => this.fbData.href);
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    _checkURL: function () {
+        const defaultURL = 'https://www.facebook.com/Odoo';
+        const match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[/?# ])/);
+        if (match) {
+            // Check if the page exists on Facebook or not
+            return new Promise((resolve, reject) => $.ajax({
+                url: 'https://graph.facebook.com/' + (match[2] || match[1]) + '/picture',
+                success: () => resolve(),
+                error: () => {
+                    this.fbData.href = defaultURL;
+                    resolve();
+                },
+            }));
+        }
+        this.fbData.href = defaultURL;
+        return Promise.resolve();
     },
 });
 });
