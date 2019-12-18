@@ -42,6 +42,7 @@
         'views/snippets/s_share.xml',
         'views/snippets/s_rating.xml',
         'views/snippets/s_btn.xml',
+        'views/snippets/s_hr.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
