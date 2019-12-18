@@ -908,11 +908,22 @@ registry.anchorSlide = publicWidget.Widget.extend({
     /**
      * @private
      * @param {jQuery} $el the element to scroll to.
+     * @param {string} [scrollValue='true'] scroll value
      */
-    _scrollTo: function ($el) {
+    _scrollTo: function ($el, scrollValue = 'true') {
+        const headerHeight = this._computeHeaderHeight();
         $('html, body').animate({
-            scrollTop: $el.offset().top,
-        }, 500);
+            scrollTop: $el.offset().top - headerHeight,
+        }, scrollValue === 'true' ? 500 : 0);
+    },
+    /**
+     * @private
+     */
+    _computeHeaderHeight: function () {
+        let headerHeight = 0;
+        const $navbarFixed = $('.o_top_fixed_element');
+        _.each($navbarFixed, el => headerHeight += $(el).outerHeight());
+        return headerHeight;
     },
 
     //--------------------------------------------------------------------------
@@ -931,11 +942,12 @@ registry.anchorSlide = publicWidget.Widget.extend({
             return;
         }
         var $anchor = $(hash);
-        if (!$anchor.length || !$anchor.attr('data-anchor')) {
+        const scrollValue = $anchor.attr('data-anchor');
+        if (!$anchor.length || !scrollValue) {
             return;
         }
         ev.preventDefault();
-        this._scrollTo($anchor);
+        this._scrollTo($anchor, scrollValue);
     },
 });
 
