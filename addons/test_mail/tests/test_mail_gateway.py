@@ -235,6 +235,32 @@ class TestMailgateway(TestMailCommon):
     # Alias configuration
     # --------------------------------------------------
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_message_process_alias_config_bounced_content(self):
+        """ Custom bounced message for the alias => Received this custom message """
+        self.alias.write({
+            'alias_contact': 'partners',
+            'alias_bounced_content': '<p>What Is Dead May Never Die</p>'
+        })
+
+        # Test: custom bounced content
+        with self.mock_mail_gateway():
+            record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
+        self.assertFalse(record, 'message_process: should have bounced')
+        self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='<p>What Is Dead May Never Die</p>')
+
+        self.alias.write({
+            'alias_contact': 'partners',
+            'alias_bounced_content': '<p></br></p>'
+        })
+
+        # Test: with "empty" bounced content (simulate view, putting always '<p></br></p>' in html field)
+        with self.mock_mail_gateway():
+            record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
+        self.assertFalse(record, 'message_process: should have bounced')
+        # Check if default (hardcoded) value is in the mail content
+        self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='The following email sent to')
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_user_id(self):
         """ Test alias ownership """

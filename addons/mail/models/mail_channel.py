@@ -383,9 +383,7 @@ class Channel(models.Model):
         if alias.alias_contact == 'followers' and self.ids:
             author = self.env['res.partner'].browse(message_dict.get('author_id', False))
             if not author or author not in self.channel_partner_ids:
-                return {
-                    'error_message': _('restricted to channel members'),
-                }
+                return _('restricted to channel members')
             return True
         return super(Channel, self)._alias_check_contact(message, message_dict, alias)
 
