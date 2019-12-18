@@ -2,24 +2,23 @@
 <odoo>
 
 <template id="s_hr" name="Separator">
-    <div class="s_hr text-left pt32 pb32">
-        <hr class="s_hr_1px s_hr_solid border-600 w-100 mx-auto"/>
+    <div class="s_hr text-left pt32 pb32" data-vcss="001">
+        <hr class="s_hr_solid border-600 w-100 mx-auto" style="border-top-width: 1px;"/>
     </div>
 </template>
 
 <template id="s_hr_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-selector=".s_hr" data-target="hr">
-            <we-colorpicker string="Color"
-                data-select-style="true"
-                data-css-property="border-color"
-                data-color-prefix="border-"
-                data-excluded="transparent_grayscale"/>
-            <we-select string="Thickness">
-                <t t-foreach="range(1,6)" t-as="s_hr_thickness">
-                    <we-button t-attf-data-select-class="s_hr_{{s_hr_thickness}}px"><t t-esc="s_hr_thickness"/>px</we-button>
-                </t>
-            </we-select>
+            <we-row string="Thickness" class="o_we_inline">
+                <we-colorpicker
+                    data-select-style="true"
+                    data-css-property="border-color"
+                    data-color-prefix="border-"
+                    data-excluded="transparent_grayscale"/>
+                <we-input data-unit="px" data-select-style="1px"
+                          data-css-property="border-top-width"/>
+            </we-row>
             <we-select string="Style">
                 <we-button data-select-class="s_hr_solid">Solid</we-button>
                 <we-button data-select-class="s_hr_dashed">Dashed</we-button>
@@ -44,6 +43,12 @@
 <template id="assets_snippet_s_hr_css_000" inherit_id="website.assets_frontend">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_hr/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_hr_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_hr/001.scss"/>
     </xpath>
 </template>
 
