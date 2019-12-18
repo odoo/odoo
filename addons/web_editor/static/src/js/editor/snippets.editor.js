@@ -1263,6 +1263,12 @@ var SnippetsMenu = Widget.extend({
         return Promise.all(defs);
     },
     /**
+     * @private
+     */
+    _closeWidgets: function () {
+        this.snippetEditors.forEach(editor => editor.closeWidgets());
+    },
+    /**
      * Creates and returns a set of helper functions which can help finding
      * snippets in the DOM which match some parameters (typically parameters
      * given by a snippet option). The functions are:
@@ -1966,6 +1972,7 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onUpdateCustomizeElements: function (ev) {
+        this._closeWidgets();
         while (this.customizePanel.firstChild) {
             this.customizePanel.removeChild(this.customizePanel.firstChild);
         }
@@ -1983,7 +1990,7 @@ var SnippetsMenu = Widget.extend({
      * user value widgets of all editors.
      */
     _onUserValueWidgetOpening: function () {
-        this.snippetEditors.forEach(editor => editor.closeWidgets());
+        this._closeWidgets();
     },
 });
 
