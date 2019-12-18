@@ -177,10 +177,17 @@ class StockMove(models.Model):
 
     @api.model
     def create(self, values):
+        if values.get('raw_material_production_id'):
+            mo = self.env['mrp.production'].browse(values['raw_material_production_id'])
+            values.update({
+                'group_id': mo.procurement_group_id.id,
+                'unit_factor': values.get('product_uom_qty', 1) / mo.product_qty,
+                'reference': mo.name
+            })
         res = super().create(values)
-        # Compute the unit factor for newly created raw moves
-        if res.raw_material_production_id and not res.bom_line_id:
-            res.unit_factor = res.product_uom_qty / res.raw_material_production_id.product_qty
+        if res.raw_material_production_id and res.raw_material_production_id.state == 'confirmed' and not res.bom_line_id:
+            res._adjust_procure_method()
+            res._action_confirm()
         return res
 
     def _action_assign(self):
