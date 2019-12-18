@@ -31,7 +31,7 @@ class Event(models.Model):
 
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_blue", "opacity": "0.4", "resize_class": "cover_mid"}')
+        default='{"background-image": "none", "background-color": "oe_blue", "opacity": "0.4", "resize_class": "o_half_screen_height"}')
 
     website_menu = fields.Boolean('Dedicated Menu',
         help="Creates menus Introduction, Location and Register on the page "

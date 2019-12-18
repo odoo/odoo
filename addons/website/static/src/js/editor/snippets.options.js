@@ -1224,6 +1224,82 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     },
 });
 
+options.registry.ScrollButton = options.Class.extend({
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        this.$button = this.$('.o_scroll_button');
+    },
+    /**
+     * Removes button if the option is not displayed (for example in "fit
+     * content" height).
+     *
+     * @override
+     */
+    updateUIVisibility: async function () {
+        await this._super(...arguments);
+        if (this.$button.length && this.el.offsetParent === null) {
+            this.$button.detach();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggles the scroll down button.
+     */
+    toggleButton: function (previewMode, widgetValue, params) {
+        if (widgetValue) {
+            if (!this.$button.length) {
+                const anchor = document.createElement('a');
+                anchor.classList.add(
+                    'o_scroll_button',
+                    'rounded-circle',
+                    'align-items-center',
+                    'justify-content-center',
+                    'mx-auto',
+                    'bg-primary',
+                );
+                anchor.href = '#';
+                anchor.contentEditable = "false";
+                anchor.title = _t("Scroll down to next section");
+                const arrow = document.createElement('i');
+                arrow.classList.add('fa', 'fa-angle-down', 'fa-3x');
+                anchor.appendChild(arrow);
+                this.$button = $(anchor);
+            }
+            this.$target.append(this.$button);
+        } else {
+            this.$button.detach();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'toggleButton':
+                return !!this.$button.parent().length;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeVisibility: function () {
+        return this.$target.is('.o_full_screen_height, .o_half_screen_height');
+    },
+});
+
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,

@@ -372,8 +372,8 @@
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-imagepicker class="o_we_inline" string="Cover" data-background="" data-first-filters="cover"/>
         <we-select string="Size" data-cover-opt-name="size">
-            <we-button data-select-class="o_record_has_cover cover_full">Full Screen</we-button>
-            <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">Half Screen</we-button>
+            <we-button data-select-class="o_record_has_cover o_full_screen_height">Full Screen</we-button>
+            <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover o_half_screen_height">Half Screen</we-button>
             <we-button data-select-class="o_record_has_cover cover_auto">Fit text</we-button>
         </we-select>
         <we-select string="Filter Intensity" data-cover-opt-name="filters">
@@ -416,6 +416,34 @@
             <we-button data-select-class="container">Regular</we-button>
             <we-button data-select-class="o_container_small">Small</we-button>
         </we-select>
+    </div>
+
+    <!-- Min height of section -->
+    <div data-selector="section">
+        <we-select string="Height" class="o_we_inline">
+            <we-button data-select-class="">Fit content</we-button>
+            <we-button data-select-class="o_half_screen_height">Half screen</we-button>
+            <we-button data-select-class="o_full_screen_height">Full screen</we-button>
+        </we-select>
+    </div>
+    <!-- Scroll to next section button (only for full height) -->
+    <div data-js="ScrollButton" data-selector="section">
+        <we-row string="Scroll down button" class="o_we_inline o_scroll_button_opt">
+            <we-colorpicker data-select-style="true"
+                data-css-property="color"
+                data-color-prefix="text-"
+                data-apply-to=".o_scroll_button"
+                data-dependencies="scroll_button_opt"/>
+            <we-colorpicker
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="bg-"
+                data-apply-to=".o_scroll_button"
+                data-dependencies="scroll_button_opt"/>
+            <we-checkbox data-toggle-button="true"
+                data-no-preview="true"
+                data-name="scroll_button_opt"/>
+        </we-row>
     </div>
 </template>
 </odoo>
