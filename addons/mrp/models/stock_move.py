@@ -146,6 +146,31 @@ class StockMove(models.Model):
                 defaults['additional'] = True
         return defaults
 
+    def write(self, values):
+        if 'product_uom_qty' in values:
+            old_quantities = {move: move.product_uom_qty for move in self}
+        res = super().write(values)
+        if 'product_uom_qty' in values:
+            procurement_requests = []
+            for move in self:
+                mo = move.raw_material_production_id
+                qty_diff = float_compare(move.product_uom_qty, old_quantities[move], precision_rounding=move.product_uom.rounding)
+                if mo and mo.state == 'confirmed' and qty_diff != 0:
+                    new_qty = move.product_uom_qty - old_quantities[move]
+                    values = move._prepare_procurement_values()
+                    origin = (
+                        move.group_id and
+                        move.group_id.name or
+                        (move.origin or move.picking_id.name or "/")
+                    )
+                    procurement_requests.append(self.env['procurement.group'].Procurement(
+                        move.product_id, new_qty, move.product_uom,
+                        move.location_id, move.rule_id and move.rule_id.name or "/",
+                        origin, move.company_id, values
+                    ))
+            self.env['procurement.group'].run(procurement_requests)
+        return res
+
     def _action_assign(self):
         res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):

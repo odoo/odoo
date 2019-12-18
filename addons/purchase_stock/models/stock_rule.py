@@ -7,6 +7,7 @@ from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class StockRule(models.Model):
@@ -42,6 +43,10 @@ class StockRule(models.Model):
         procurements_by_po_domain = defaultdict(list)
         for procurement, rule in procurements:
 
+            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                # we don't want to update or create purchase orders in case of
+                # negative quantities.
+                continue
             # Get the schedule date in order to find a valid seller
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
             schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))

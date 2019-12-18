@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
@@ -766,6 +766,7 @@ class StockMove(models.Model):
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
         moves_to_merge = []
+        propagate_errors = self.env['stock.move']
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
             candidate_moves = candidate_moves.with_context(prefetch_fields=False)
@@ -774,6 +775,12 @@ class StockMove(models.Model):
                 # If we have multiple records we will merge then in a single one.
                 if len(moves) > 1:
                     moves_to_merge.append(moves)
+                else:
+                    for move in moves:
+                        if move.product_uom_qty < 0:
+                            propagate_errors |= move
+        if propagate_errors:
+            raise PropagateException(propagate_errors)
 
         # second step merge its move lines, initial demand, ...
         for moves in moves_to_merge:
@@ -1073,7 +1080,17 @@ class StockMove(models.Model):
         self._push_apply()
         self._check_company()
         if merge:
-            return self._merge_moves(merge_into=merge_into)
+            try:
+                with self._cr.savepoint():
+                    self._merge_moves(merge_into=merge_into)
+            except PropagateException as error:
+                for picking in error.propagate_exceptions.picking_id:
+                    picking.activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        date.today(),
+                        note='Move negatif',
+                        user_id=picking.user_id or SUPERUSER_ID
+                    )
         return self
 
     def _prepare_procurement_values(self):
@@ -1613,3 +1630,8 @@ class StockMove(models.Model):
                 move.procure_method = rules.procure_method
             else:
                 move.procure_method = 'make_to_stock'
+
+
+class PropagateException(Exception):
+    def __init__(self, propagate_exceptions):
+        self.propagate_exceptions = propagate_exceptions or []
