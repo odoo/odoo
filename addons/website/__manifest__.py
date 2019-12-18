@@ -54,6 +54,7 @@
         'views/snippets/s_features_grid.xml',
         'views/snippets/s_tabs.xml',
         'views/snippets/s_chart.xml',
+        'views/snippets/s_parallax.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
