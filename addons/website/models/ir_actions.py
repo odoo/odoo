@@ -5,6 +5,7 @@ from werkzeug import urls
 from odoo import api, fields, models
 from odoo.http import request
 
+import werkzeug
 
 class ServerAction(models.Model):
     """ Add website option in server actions. """
@@ -48,6 +49,7 @@ class ServerAction(models.Model):
         eval_context = super(ServerAction, self)._get_eval_context(action)
         if action.state == 'code':
             eval_context['request'] = request
+            eval_context['Response'] = werkzeug.wrappers.Response
         return eval_context
 
     @api.model
