@@ -212,9 +212,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
-            self._initTimer();
             self._updateBreadcrumb();
-            if ($target.val() === 'finish') {
+            if ($target.val() === 'start') {
+                self._initTimer();
+            } else if ($target.val() === 'finish') {
                 self._initResultWidget();
             }
             self._initChoiceItems();
