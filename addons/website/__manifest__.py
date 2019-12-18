@@ -48,6 +48,7 @@
         'views/snippets/s_countdown.xml',
         'views/snippets/s_comparisons.xml',
         'views/snippets/s_company_team.xml',
+        'views/snippets/s_call_to_action.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
