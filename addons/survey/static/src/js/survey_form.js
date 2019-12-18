@@ -13,7 +13,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
         'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click button[type="submit"]': '_onSubmit',
-        'click .o_survey_header .breadcrumb-item a': '_onBreadcrumbClick',
+        'click .o_survey_nav .breadcrumb-item a': '_onBreadcrumbClick',
     },
 
     //--------------------------------------------------------------------------
