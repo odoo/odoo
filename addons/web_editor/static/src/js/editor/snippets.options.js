@@ -1565,7 +1565,18 @@ const SnippetOptionWidget = Widget.extend({
     updateUIVisibility: async function () {
         const proms = this._userValueWidgets.map(async widget => {
             const params = widget.getMethodsParams();
-            const show = await this._computeWidgetVisibility(widget.getName(), params);
+
+            let obj = this;
+            if (params.applyTo) {
+                const $firstSubTarget = this.$(params.applyTo).eq(0);
+                if (!$firstSubTarget.length) {
+                    widget.toggleVisibility(false);
+                    return;
+                }
+                obj = createPropertyProxy(this, '$target', $firstSubTarget);
+            }
+
+            const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
             if (!show) {
                 widget.toggleVisibility(false);
                 return;
