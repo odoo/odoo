@@ -366,6 +366,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise
     except odoo.exceptions.MissingError:
         raise
+    except ZeroDivisionError:
+        raise
     except Exception as e:
         raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
 def test_python_expr(expr, mode="eval"):
