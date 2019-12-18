@@ -230,3 +230,82 @@ class TestInvoiceTaxes(AccountingTestCase):
         self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == ref_base_line.account_id).balance), 4.2, "Refund tax line on base account should amount to 4.2 (10% of 42)")
         self.assertAlmostEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, 2, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
         self.assertEqual(ref_tax_lines.mapped('tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")
+
+    def test_fiscal_position_included_tax(self):
+
+        self.percent_tax_1_sale_incl = self.env['account.tax'].create({
+            'name': '21% incl A',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 21,
+            'price_include': True,
+            'include_base_amount': True,
+            'sequence': 20,
+        })
+
+        self.percent_tax_2_purchase_incl = self.env['account.tax'].create({
+            'name': '21% incl A',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 21,
+            'price_include': True,
+            'include_base_amount': True,
+            'sequence': 20,
+        })
+
+        self.percent_tax_3_sale_excl = self.env['account.tax'].create({
+            'name': '0% excl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 0,
+            'sequence': 20,
+        })
+
+        self.percent_tax_4_purchase_excl = self.env['account.tax'].create({
+            'name': '0% excl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 0,
+            'sequence': 20,
+        })
+
+        self.fp_map = self.env['account.fiscal.position'].create({
+            'name': "FP-INCL2EXCL",
+            'tax_ids': [
+                (0,0,{
+                    'tax_src_id': self.percent_tax_1_sale_incl.id,
+                    'tax_dest_id': self.percent_tax_3_sale_excl.id
+                }),
+                (0,0,{
+                    'tax_src_id': self.percent_tax_2_purchase_incl.id,
+                    'tax_dest_id': self.percent_tax_4_purchase_excl.id
+                }),
+            ]
+        })
+
+        self.product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 121.0,
+            'standard_price': 121.0,
+            'taxes_id': [(6, 0, self.percent_tax_1_sale_incl.ids)],
+            'supplier_taxes_id': [(6, 0, self.percent_tax_2_purchase_incl.ids)],
+        })
+
+        self_ctx = self.env['account.move'].with_context(default_type='out_invoice')
+        move_form = Form(self_ctx)
+        move_form.partner_id = self.env.ref('base.partner_demo')
+        move_form.fiscal_position_id = self.fp_map
+        with move_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.product_id = self.product_a
+        move = move_form.save()
+        self.assertEquals(move.line_ids[0].price_unit, 100, 'The sale included tax must be substracted from the price_unit.')
+
+        self_ctx = self.env['account.move'].with_context(default_type='in_invoice')
+        move_form = Form(self_ctx)
+        move_form.partner_id = self.env.ref('base.partner_demo')
+        move_form.fiscal_position_id = self.fp_map
+        with move_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.product_id = self.product_a
+        move = move_form.save()
+        self.assertEquals(move.line_ids[0].price_unit, 100, 'The purchase included tax must be substracted from the price_unit.')

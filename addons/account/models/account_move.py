@@ -2575,11 +2575,25 @@ class AccountMoveLine(models.Model):
         if self.product_uom_id != self.product_id.uom_id:
             price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
 
+        if self.move_id.is_sale_document(include_receipts=True) and self.product_id.taxes_id:
+            prod_taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
+            price_unit = self._fix_tax_included_price(price_unit, prod_taxes, self.tax_ids)
+        elif self.move_id.is_purchase_document(include_receipts=True) and self.product_id.supplier_taxes_id:
+            prod_taxes = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
+            price_unit = self._fix_tax_included_price(price_unit, prod_taxes, self.tax_ids)
+
         company = self.move_id.company_id
         if self.move_id.currency_id != company.currency_id:
             price_unit = company.currency_id._convert(
                 price_unit, self.move_id.currency_id, company, self.move_id.date)
         return price_unit
+
+    @api.model
+    def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
+        incl_tax = prod_taxes.filtered(lambda tax: tax not in line_taxes and tax.price_include)
+        if incl_tax:
+            return incl_tax.compute_all(price)['total_excluded']
+        return price
 
     def _get_computed_account(self):
         self.ensure_one()
