@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_hr" name="Separator">
-    <div class="s_hr text-left pt32 pb32">
-        <hr class="s_hr_1px s_hr_solid border-600 w-100 mx-auto"/>
-    </div>
-</template>
-
 <template id="s_facebook_page" name="Facebook Page">
     <div class="o_facebook_page">
         <div class="o_facebook_alert alert alert-info" role="status">
@@ -693,16 +687,6 @@
             data-color-prefix="bg-"/>
     </div>
 
-    <!-- COLOR | .s_hr -->
-    <div data-selector=".s_hr"
-         data-target="hr">
-        <we-colorpicker string="Color"
-            data-select-style="true"
-            data-css-property="border-color"
-            data-color-prefix="border-"
-            data-excluded="transparent_grayscale"/>
-    </div>
-
     <!-- COLOR | .s_cards -->
     <div data-selector=".s_card, .accordion .card">
         <we-colorpicker string="Color"
@@ -726,32 +710,6 @@
             <we-button data-select-class="w-50">50%</we-button>
             <we-button data-select-class="w-75">75%</we-button>
             <we-button data-select-class="w-100">100%</we-button>
-        </we-select>
-    </div>
-
-    <!-- STYLES | .s_hr -->
-    <div data-selector=".s_hr" data-target="hr">
-        <we-select string="Thickness">
-            <t t-foreach="range(1,6)" t-as="s_hr_thickness">
-                <we-button t-attf-data-select-class="s_hr_{{s_hr_thickness}}px"><t t-esc="s_hr_thickness"/>px</we-button>
-            </t>
-        </we-select>
-        <we-select string="Style">
-            <we-button data-select-class="s_hr_solid">Solid</we-button>
-            <we-button data-select-class="s_hr_dashed">Dashed</we-button>
-            <we-button data-select-class="s_hr_dotted">Dotted</we-button>
-            <we-button data-select-class="s_hr_double">Double</we-button>
-        </we-select>
-        <we-select string="Width">
-            <we-button data-select-class="w-25">25%</we-button>
-            <we-button data-select-class="w-50">50%</we-button>
-            <we-button data-select-class="w-75">75%</we-button>
-            <we-button data-select-class="w-100">100%</we-button>
-        </we-select>
-        <we-select string="Alignment">
-            <we-button data-select-class="mr-auto">Left</we-button>
-            <we-button data-select-class="mx-auto">Center</we-button>
-            <we-button data-select-class="ml-auto">Right</we-button>
         </we-select>
     </div>
 
