@@ -80,7 +80,7 @@
                                             <div class="col-lg-4 d-flex justify-content-end flex-column">
                                                 <div class="card bg-success text-white" t-attf-style="height: #{160 + int(percentage['great'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_10.png" style="height:40px" alt="Happy face"/>
+                                                        <img src="/rating/static/src/img/rating_5.png" style="height:40px" alt="Happy face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -95,7 +95,7 @@
                                             <div class="col-lg-4 d-flex justify-content-end flex-column">
                                                 <div class="card bg-warning text-white" t-attf-style="height: #{160 + int(percentage['okay'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_5.png" style="height:40px" alt="Neutral face"/>
+                                                        <img src="/rating/static/src/img/rating_3.png" style="height:40px" alt="Neutral face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -131,7 +131,7 @@
                                         <div>
                                             <t t-foreach="ratings" t-as="rating">
                                                 <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" width="48px" height="48px"/>
-                                                <t t-if="(rating_index+1) % 10 == 0">
+                                                <t t-if="(rating_index+1) % 5 == 0">
                                                     <br/>
                                                 </t>
                                             </t>
@@ -161,11 +161,11 @@
                                             <div class="row">
                                                 <t t-if="user.partner_id.id in ratings_per_user">
                                                     <div class="col-lg-4 pl-0 pr-0">
-                                                        <img t-attf-src='/rating/static/src/img/rating_10.png' alt="Great" width="16px" height="16px"/>
+                                                        <img t-attf-src='/rating/static/src/img/rating_5.png' alt="Great" width="16px" height="16px"/>
                                                         <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['great']"/>%</span>
                                                     </div>
                                                     <div class="col-lg-4 pl-0 pr-0">
-                                                        <img t-attf-src='/rating/static/src/img/rating_5.png' alt="Okay" width="16px" height="16px"/>
+                                                        <img t-attf-src='/rating/static/src/img/rating_3.png' alt="Okay" width="16px" height="16px"/>
                                                         <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['okay']"/>%</span>
                                                     </div>
                                                     <div class="col-lg-4 pl-0 pr-0">

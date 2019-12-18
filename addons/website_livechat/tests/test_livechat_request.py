@@ -13,7 +13,7 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
         # Send first chat request - Open chat from operator side
         channel_1 = self._common_chat_request_flow()
         # Visitor Rates the conversation (Good)
-        self._send_rating(channel_1, self.visitor, 10)
+        self._send_rating(channel_1, self.visitor, 5)
 
         # Operator Re-Send a chat request
         channel_2 = self._common_chat_request_flow()

@@ -31,7 +31,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_0')], 10)" model="mail.channel" name="rating_apply"/>
+        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_0')], 5)" model="mail.channel" name="rating_apply"/>
         <record id="im_livechat_mail_message_5_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_0"/>
@@ -92,7 +92,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_1')], 10)" model="mail.channel" name="rating_apply"/>
+        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_1')], 5)" model="mail.channel" name="rating_apply"/>
         <record id="im_livechat_mail_message_10_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_1"/>
@@ -205,7 +205,7 @@
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_3')], 10)" model="mail.channel" name="rating_apply"/>
+        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_3')], 5)" model="mail.channel" name="rating_apply"/>
         <record id="im_livechat_mail_message_17_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_3"/>
@@ -300,7 +300,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_5')], 10)" model="mail.channel" name="rating_apply"/>
+        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_5')], 5)" model="mail.channel" name="rating_apply"/>
         <record id="im_livechat_mail_message_25_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
@@ -352,7 +352,7 @@
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_6')], 10)" model="mail.channel" name="rating_apply"/>
+        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_6')], 5)" model="mail.channel" name="rating_apply"/>
         <record id="im_livechat_mail_message_29_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
@@ -404,7 +404,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_7')], 10)" model="mail.channel" name="rating_apply"/>
+        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_7')], 5)" model="mail.channel" name="rating_apply"/>
         <record id="im_livechat_mail_message_33_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_7"/>
@@ -514,7 +514,7 @@
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
-            <field name="rating" eval="10"/>
+            <field name="rating" eval="5"/>
             <field name="consumed" eval="True"/>
         </record>
 

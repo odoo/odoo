@@ -324,8 +324,8 @@ Send it ASAP, its urgent.</field>
             <field name="rating_template_id" ref="rating_project_request_email_template"/>
         </record>
 
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 10)"/>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 5)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 5)"/>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 1)"/>
     </data>
 </odoo>

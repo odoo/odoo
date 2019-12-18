@@ -260,7 +260,7 @@ class Channel(models.Model):
     def _compute_rating_stats(self):
         super(Channel, self)._compute_rating_stats()
         for record in self:
-            record.rating_avg_stars = record.rating_avg / 2
+            record.rating_avg_stars = record.rating_avg
 
     @api.depends('slide_partner_ids', 'total_slides')
     @api.depends_context('uid')
