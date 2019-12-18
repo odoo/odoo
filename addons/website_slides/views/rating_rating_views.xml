@@ -12,7 +12,7 @@
                 <field name="partner_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="val_stars" t-value="record.rating.raw_value / 2"/>
+                        <t t-set="val_stars" t-value="record.rating.raw_value"/>
                         <t t-set="val_integer" t-value="Math.floor(val_stars)"/>
                         <t t-set="val_decimal" t-value="val_stars - val_integer"/>
                         <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>

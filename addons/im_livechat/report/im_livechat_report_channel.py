@@ -72,14 +72,14 @@ class ImLivechatReportChannel(models.Model):
                     END as is_anonymous,
                     C.country_id,
                     CASE 
-                        WHEN rate.rating = 10 THEN 1
+                        WHEN rate.rating = 5 THEN 1
                         ELSE 0
                     END as is_happy,
                     Rate.rating as rating,
                     CASE
                         WHEN Rate.rating = 1 THEN 'Unhappy'
-                        WHEN Rate.rating = 10 THEN 'Happy'
-                        WHEN Rate.rating = 5 THEN 'Neutral'
+                        WHEN Rate.rating = 5 THEN 'Happy'
+                        WHEN Rate.rating = 3 THEN 'Neutral'
                         ELSE null
                     END as rating_text,
                     CASE 

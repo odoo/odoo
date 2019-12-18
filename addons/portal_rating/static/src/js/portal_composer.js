@@ -8,8 +8,6 @@ var _t = core._t;
 
 var PortalComposer = portalComposer.PortalComposer;
 
-var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db rating range (1-10)
-
 /**
  * PortalComposer
  *
@@ -31,7 +29,7 @@ PortalComposer.include({
 
         // apply ratio to default rating value
         if (options.default_rating_value) {
-            options.default_rating_value = parseFloat(options.default_rating_value) / STAR_RATING_RATIO;
+            options.default_rating_value = parseFloat(options.default_rating_value);
         }
 
         // default options
@@ -66,7 +64,7 @@ PortalComposer.include({
 
             // set the default value to trigger the display of star widget and update the hidden input value.
             self.set("star_value", self.options.default_rating_value); 
-            self.$input.val(self.options.default_rating_value * STAR_RATING_RATIO);
+            self.$input.val(self.options.default_rating_value);
         });
     },
 
@@ -97,7 +95,7 @@ PortalComposer.include({
         var index = this.$('.stars i').index(ev.currentTarget);
         this.set("star_value", index + 1);
         this.user_click = true;
-        this.$input.val(this.get("star_value") * STAR_RATING_RATIO);
+        this.$input.val(this.get("star_value"));
     },
     /**
      * @private

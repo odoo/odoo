@@ -199,9 +199,9 @@ class RatingMixin(models.AbstractModel):
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
-                if rating.rating > 5:
+                if rating.rating > 2:
                     self.write({'kanban_state': 'done'})
-                if rating.rating < 5:
+                else:
                     self.write({'kanban_state': 'blocked'})
         return rating
 
@@ -222,7 +222,7 @@ class RatingMixin(models.AbstractModel):
             base_domain += domain
         data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
         # init dict with all posible rate value, except 0 (no value for the rating)
-        values = dict.fromkeys(range(1, 11), 0)
+        values = dict.fromkeys(range(1, 6), 0)
         values.update((d['rating'], d['rating_count']) for d in data)
         # add other stats
         if add_stats:

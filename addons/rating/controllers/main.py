@@ -11,13 +11,13 @@ class Rating(http.Controller):
 
     @http.route('/rating/<string:token>/<int:rate>', type='http', auth="public", website=True)
     def open_rating(self, token, rate, **kwargs):
-        assert rate in (1, 5, 10), "Incorrect rating"
+        assert rate in (1, 3, 5), "Incorrect rating"
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:
             return request.not_found()
         rate_names = {
-            10: _("satisfied"),
-            5: _("not satisfied"),
+            5: _("satisfied"),
+            3: _("not satisfied"),
             1: _("highly dissatisfied")
         }
         rating.write({'rating': rate, 'consumed': True})
@@ -30,7 +30,7 @@ class Rating(http.Controller):
     @http.route(['/rating/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
     def submit_rating(self, token, **kwargs):
         rate = int(kwargs.get('rate'))
-        assert rate in (1, 5, 10), "Incorrect rating"
+        assert rate in (1, 3, 5), "Incorrect rating"
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:
             return request.not_found()

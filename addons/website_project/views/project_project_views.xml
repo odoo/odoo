@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="project_project_view_form" model="ir.ui.view">
+        <field name="name">project.project.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="is_published"
+                       widget="website_redirect_button"
+                       groups="project.group_project_rating"
+                       attrs="{'invisible': [('rating_active', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

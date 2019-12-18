@@ -525,7 +525,7 @@ var Feedback = Widget.extend({
         this.$('.o_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
 
         // only display textearea if bad smiley selected
-        if (this.rating !== 10) {
+        if (this.rating !== 5) {
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
