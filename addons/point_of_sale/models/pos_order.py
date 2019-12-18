@@ -600,6 +600,7 @@ class PosOrderLine(models.Model):
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    is_discount_line = fields.Boolean('Used for global discounts and loyalty discounts', default=False)
 
     @api.model
     def _prepare_refund_data(self, refund_order_id):

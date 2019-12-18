@@ -1448,6 +1448,7 @@ exports.Orderline = Backbone.Model.extend({
         this.selected = false;
         this.id = orderline_id++;
         this.price_manually_set = false;
+        this.is_discount_line = options.is_discount_line || false;
 
         if (options.price) {
             this.set_unit_price(options.price);
@@ -1455,13 +1456,17 @@ exports.Orderline = Backbone.Model.extend({
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
         }
     },
+    set_product(id) {
+        this.product = this.pos.db.get_product_by_id(id);
+    },
     init_from_JSON: function(json) {
-        this.product = this.pos.db.get_product_by_id(json.product_id);
+        this.set_product(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
         this.id = json.id ? json.id : orderline_id++;
+        this.is_discount_line = json.is_discount_line;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
@@ -1484,6 +1489,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.price = this.price;
         orderline.selected = false;
         orderline.price_manually_set = this.price_manually_set;
+        orderline.is_discount_line = this.is_discount_line;
         return orderline;
     },
     set_product_lot: function(product){
@@ -1654,7 +1660,8 @@ exports.Orderline = Backbone.Model.extend({
             product_id: this.get_product().id,
             tax_ids: [[6, false, _.map(this.get_applicable_taxes(), function(tax){ return tax.id; })]],
             id: this.id,
-            pack_lot_ids: pack_lot_ids
+            pack_lot_ids: pack_lot_ids,
+            is_discount_line: this.is_discount_line
         };
     },
     //used to create a json of the ticket, to be sent to the printer
@@ -2538,14 +2545,16 @@ exports.Order = Backbone.Model.extend({
         }
     },
     /* ---- Order Lines --- */
-    add_orderline: function(line){
+    add_orderline: function(line, select){
         this.assert_editable();
         if(line.order){
-            line.order.remove_orderline(line);
+            line.order.remove_orderline(line, false);
         }
         line.order = this;
         this.orderlines.add(line);
-        this.select_orderline(this.get_last_orderline());
+        if (select !== false) {
+            this.select_orderline(this.get_last_orderline());
+        }
     },
     get_orderline: function(id){
         var orderlines = this.orderlines.models;
@@ -2616,10 +2625,12 @@ exports.Order = Backbone.Model.extend({
         });
         this.trigger('change');
     },
-    remove_orderline: function( line ){
+    remove_orderline: function(line, select){
         this.assert_editable();
         this.orderlines.remove(line);
-        this.select_orderline(this.get_last_orderline());
+        if (select !== false) {
+            this.select_orderline(this.get_last_orderline());
+        }
     },
 
     fix_tax_included_price: function(line){
@@ -2654,7 +2665,12 @@ exports.Order = Backbone.Model.extend({
         var attr = JSON.parse(JSON.stringify(product));
         attr.pos = this.pos;
         attr.order = this;
-        var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
+        var line = new exports.Orderline({}, {
+            pos: this.pos, 
+            order: this, 
+            product: product, 
+            is_discount_line: options.is_discount_line
+        });
 
         if(options.quantity !== undefined){
             line.set_quantity(options.quantity);
@@ -2691,8 +2707,7 @@ exports.Order = Backbone.Model.extend({
             to_merge_orderline.merge(line);
             this.select_orderline(to_merge_orderline);
         } else {
-            this.orderlines.add(line);
-            this.select_orderline(this.get_last_orderline());
+            this.add_orderline(line, options.select !== false);
         }
 
         if(line.has_product_lot){
@@ -2701,6 +2716,7 @@ exports.Order = Backbone.Model.extend({
         if (this.pos.config.iface_customer_facing_display) {
             this.pos.send_current_order_to_customer_facing_display();
         }
+        return line;
     },
     get_selected_orderline: function(){
         return this.selected_orderline;
@@ -2708,11 +2724,11 @@ exports.Order = Backbone.Model.extend({
     select_orderline: function(line){
         if(line){
             if(line !== this.selected_orderline){
+                line.set_selected(true);
                 if(this.selected_orderline){
                     this.selected_orderline.set_selected(false);
                 }
                 this.selected_orderline = line;
-                this.selected_orderline.set_selected(true);
             }
         }else{
             this.selected_orderline = undefined;
@@ -2835,13 +2851,20 @@ exports.Order = Backbone.Model.extend({
         }), 0), this.pos.currency.rounding);
     },
     get_total_discount: function() {
-        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
+        var total_discount = round_pr(this.orderlines.reduce((function(sum, orderLine) {
             sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             if (orderLine.display_discount_policy() === 'without_discount'){
                 sum += ((orderLine.get_lst_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
             }
             return sum;
         }), 0), this.pos.currency.rounding);
+
+        this.get_orderlines().forEach(function(line){
+            if (line.is_discount_line) {
+                total_discount -= line.get_display_price();
+            }
+        });
+        return total_discount;
     },
     get_total_tax: function() {
         if (this.pos.company.tax_calculation_rounding_method === "round_globally") {

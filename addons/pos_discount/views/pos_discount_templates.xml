@@ -4,6 +4,15 @@
           <xpath expr="." position="inside">
               <script type="text/javascript" src="/pos_discount/static/src/js/discount.js"></script>
           </xpath>
+          <xpath expr="//link[@id='pos-stylesheet']" position="after">
+              <link rel="stylesheet" href="/pos_discount/static/src/css/discount.css"/>
+          </xpath>
+        </template>
+
+        <template id="assets_backend" name="pos discount assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_discount/static/src/js/tours/global_discount.js"></script>
+            </xpath>
         </template>
 
 </odoo>
