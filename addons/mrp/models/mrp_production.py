@@ -704,6 +704,11 @@ class MrpProduction(models.Model):
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
         for order in orders_to_plan:
             order.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
+            # `propagate_date` enables the automatic rescheduling which could lead to hard to
+            # understand behavior if a manufacturing order is planned, i.e. if the work orders do
+            # have their leaves booked in the workcenter calendar. We thus disable the
+            # automatic rescheduling in this scenario.
+            order.move_raw_ids.write({'propagate_date': False})
             quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id) / order.bom_id.product_qty
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)
