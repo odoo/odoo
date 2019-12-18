@@ -11,8 +11,8 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    @staticmethod
-    def _l10n_ar_get_document_number_parts(document_number, document_type_code):
+    @api.model
+    def _l10n_ar_get_document_number_parts(self, document_number, document_type_code):
         # import shipments
         if document_type_code in ['66', '67']:
             pos = invoice_number = '0'
