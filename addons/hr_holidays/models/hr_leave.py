@@ -847,7 +847,6 @@ class HolidaysRequest(models.Model):
             'start': self.date_from,
             'stop': self.date_to,
             'allday': False,
-            'state': 'open',  # to block that meeting date in the calendar
             'privacy': 'confidential',
             'event_tz': self.user_id.tz,
             'activity_ids': [(5, 0, 0)],
