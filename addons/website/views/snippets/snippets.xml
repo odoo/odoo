@@ -102,16 +102,32 @@
     </xpath>
 </template>
 
+<template id="website.snippet_options_border">
+    <we-row string="Border" class="o_we_inline">
+        <we-colorpicker data-dependencies="border_width_opt"
+                        data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
+        <we-input class="o_we_inline" data-name="border_width_opt"
+                  data-select-style="0" data-css-property="border-width"
+                  data-unit="px" data-extra-class="border"/>
+    </we-row>
+    <we-input string="Rounded" class="o_we_inline"
+              data-dependencies="border_width_opt"
+              data-select-style="0" data-css-property="border-radius"
+              data-unit="px" data-extra-class="rounded"/>
+</template>
+
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
-    <!-- COLOR | .s_three_columns | .s_comparisons -->
+    <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
     <div data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
          data-target=".card">
-        <we-colorpicker string="Color"
+        <we-colorpicker string="Background Color"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
+        <t t-call="website.snippet_options_border"/>
+        <we-checkbox string="Shadow" data-select-class="shadow"/>
     </div>
 
     <!-- COLOR | .s_cards -->
@@ -232,7 +248,7 @@
                 <we-button data-background-type="cover">Cover</we-button>
                 <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
             </we-select>
-            <we-button class="fa fa-fw fa-arrows" title="Background Position"
+            <we-button class="fa fa-fw fa-crosshairs" title="Background Position"
                        data-background-position-overlay="true" data-no-preview="true"/>
         </we-row>
         <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
@@ -255,10 +271,10 @@
         </we-select>
     </div>
 
-    <!-- Color | Section -->
+    <!-- Background Color -->
     <div id="so_main_colorpicker"
-         data-selector="section, .carousel-item"
-         data-exclude=".parallax, .o_gallery .carousel-item">
+         data-selector="section, .carousel-item, section .row > div"
+         data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <we-colorpicker string="Background Color"
             data-select-style="true"
             data-css-property="background-color"
@@ -274,28 +290,10 @@
             data-excluded="common, theme, custom"/>
     </div>
 
-    <!-- Color | Columns -->
-    <div data-selector="section .row > div"
-         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-colorpicker string="Background Color"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"/>
-    </div>
-
+    <!-- Border | Columns -->
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-row string="Border" class="o_we_inline">
-            <we-colorpicker data-dependencies="border_width_opt"
-                            data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
-            <we-input class="o_we_inline" data-name="border_width_opt"
-                      data-select-style="0" data-css-property="border-width"
-                      data-unit="px" data-extra-class="border"/>
-        </we-row>
-        <we-input string="Rounded" class="o_we_inline"
-                  data-dependencies="border_width_opt"
-                  data-select-style="0" data-css-property="border-radius"
-                  data-unit="px" data-extra-class="rounded"/>
+        <t t-call="website.snippet_options_border"/>
         <we-checkbox string="Shadow" data-select-class="shadow"/>
     </div>
 
@@ -316,7 +314,7 @@
     <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
-        t-attf-data-drop-near="p, h1, h2, h3, #{so_content_addition_selector}"
+        t-attf-data-drop-near="p, h1, h2, h3, .row > div > img, #{so_content_addition_selector}"
         data-drop-in=".content, nav"/>
 
     <div data-js="SnippetSave"
