@@ -35,7 +35,7 @@ class CrmTeam(models.Model):
             ('team_id', 'in', self.ids),
             ('state', 'in', ['draft', 'sent']),
         ])
-        self.env['sale.order']._apply_ir_rules(query, 'read')
+        query = self.env['sale.order']._apply_ir_rules(query, 'read')
         _, where_clause, where_clause_args = query.get_sql()
         select_query = """
             SELECT team_id, count(*), sum(amount_total /

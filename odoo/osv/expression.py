@@ -913,6 +913,7 @@ class expression(object):
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
                 not_null_leafs = get_not_null_leafs(leaf, path[0], operator)
+                leaf.add_join_context(comodel, 'id', field.inverse_name, path[0], 'LEFT JOIN')
                 domain = field.get_domain_list(model)
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
                 if domain:

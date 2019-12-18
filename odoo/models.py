@@ -3269,15 +3269,17 @@ Record ids: %(records)s
         if not query.where_clause:
             return self
         table = '"%s"' % self._table
+        query = query & Query([table], [table + '.id IN %s'])  # leave out ids parameter
+        from_clause, where_clause, params = query.get_sql()
         # detemine ids in database that satisfy ir.rules
         # TODO: we should add a flush here, based on domain's arguments
         valid_ids = set()
-        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
-            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
-        )
         self._flush_search([])
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query, [sub_ids] + where_params)
+            self.env.cr.execute(
+                "SELECT DISTINCT({table}.id) FROM {from_clause} WHERE {where_clause}".format(
+                    table=table, from_clause=from_clause, where_clause=where_clause),
+                params + [sub_ids])
             valid_ids.update(row[0] for row in self._cr.fetchall())
 
         # return new ids without origin and ids with origin in valid_ids
