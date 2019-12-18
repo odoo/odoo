@@ -199,6 +199,12 @@ font[class*='bg-'] {
         border-top-left-radius: $size;
         border-bottom-right-radius: $size;
     }
+    &.rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * $border-width);
+        border-style: solid;
+        background: transparent;
+    }
 }
 // Smaller container
 .o_container_small {
