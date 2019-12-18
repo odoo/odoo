@@ -57,6 +57,7 @@
         'views/snippets/s_parallax.xml',
         'views/snippets/s_quotes_carousel.xml',
         'views/snippets/s_mega_menu_multi_menus.xml',
+        'views/snippets/s_mega_menu_menu_image_menu.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
