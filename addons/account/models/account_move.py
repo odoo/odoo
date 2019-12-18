@@ -900,8 +900,8 @@ class AccountMove(models.Model):
         replacements = {'out_invoice': _('Invoice'), 'out_refund': _('Credit Note')}
 
         for record in self:
-            name = type_name_mapping[self.type]
-            record.type_name = replacements.get(self.type, name)
+            name = type_name_mapping[record.type]
+            record.type_name = replacements.get(record.type, name)
 
     @api.depends('type')
     def _compute_invoice_filter_type_domain(self):
