@@ -254,6 +254,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 # HTML/Text management
 #----------------------------------------------------------
 
+
 def is_html_empty(html_content):
     """Check if a html content is empty. If there are only formatting tags or
     a void content return True. Famous use case if a '<p><br></p>' added by

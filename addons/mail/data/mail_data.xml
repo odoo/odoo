@@ -363,6 +363,12 @@
 <blockquote><t t-esc="message['body']"/></blockquote>
         </template>
 
+        <!-- Mail bounce alias mail template -->
+        <template id="mail_bounce_alias_security">
+<div><t t-raw="body"/></div>
+<blockquote><t t-raw="message['body']"/></blockquote>
+        </template>
+
         <!-- Channel and moderation related data -->
         <template id="mail_channel_notify_moderation">
 <div>
