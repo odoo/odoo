@@ -664,8 +664,14 @@ registry.backgroundVideo = publicWidget.Widget.extend({
             this.videoSrc = this.videoSrc + "&enablejsapi=1";
 
             if (!window.YT) {
+                var oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
                 proms.push(new Promise(resolve => {
-                    window.onYouTubeIframeAPIReady = () => resolve();
+                    window.onYouTubeIframeAPIReady = () => {
+                        if (oldOnYoutubeIframeAPIReady) {
+                            oldOnYoutubeIframeAPIReady();
+                        }
+                        return resolve();
+                    };
                 }));
                 $('<script/>', {
                     src: 'https://www.youtube.com/iframe_api',
@@ -713,6 +719,10 @@ registry.backgroundVideo = publicWidget.Widget.extend({
      * @private
      */
     _adjustIframe: function () {
+        if (!this.$iframe) {
+            return;
+        }
+
         this.$iframe.removeClass('show');
 
         // Adjust the iframe
