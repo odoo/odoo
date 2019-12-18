@@ -15,7 +15,7 @@ class Meeting(models.Model):
         recurrent_fields = self._get_recurrent_fields()
         return recurrent_fields | {'name', 'description', 'allday', 'start', 'date_end', 'stop',
                                    'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active',
-                                   'start_date', 'start_datetime', 'stop_date', 'stop_datetime'}
+                                   'start_date', 'stop_date'}
 
     def write(self, values):
         sync_fields = set(self.get_fields_need_update_google())

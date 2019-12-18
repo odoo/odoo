@@ -27,20 +27,6 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'name': 'Technical Presentation'
         })
 
-    def test_calender_simple_event(self):
-        m = self.CalendarEvent.create({
-            'name': "Test compute",
-            'start': '2017-07-12 14:30:00',
-            'allday': False,
-            'stop': '2017-07-12 15:00:00',
-        })
-
-        self.assertEqual(
-            (str(m.start_datetime), str(m.stop_datetime)),
-            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
-            "Sanity check"
-        )
-
     def test_event_order(self):
         """ check the ordering of events when searching """
         def create_event(name, date):
@@ -48,7 +34,6 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 'name': name,
                 'start': date + ' 12:00:00',
                 'stop': date + ' 14:00:00',
-                'duration': 2.0,
             })
         foo1 = create_event('foo', '2011-04-01')
         foo2 = create_event('foo', '2011-06-01')
@@ -162,13 +147,11 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'name': 'All Day',
             'start': "2018-10-16 00:00:00",
             'start_date': "2018-10-16",
-            'start_datetime': False,
             'stop': "2018-10-18 00:00:00",
             'stop_date': "2018-10-18",
-            'stop_datetime': False,
             'allday': True,
         })
-
+        event.invalidate_cache()
         self.assertEqual(str(event.start), '2018-10-16 08:00:00')
         self.assertEqual(str(event.stop), '2018-10-18 18:00:00')
 
@@ -243,10 +226,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'name': 'All Day',
             'start': "2018-10-16 00:00:00",
             'start_date': "2018-10-16",
-            'start_datetime': False,
             'stop': "2018-10-18 00:00:00",
             'stop_date': "2018-10-18",
-            'stop_datetime': False,
             'allday': True,
             'activity_ids': [(6, False, activity_id.ids)],
         })
