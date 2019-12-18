@@ -55,6 +55,7 @@
         'views/snippets/s_tabs.xml',
         'views/snippets/s_chart.xml',
         'views/snippets/s_parallax.xml',
+        'views/snippets/s_quotes_carousel.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
