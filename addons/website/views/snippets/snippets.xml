@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_facebook_page" name="Facebook Page">
-    <div class="o_facebook_page">
-        <div class="o_facebook_alert alert alert-info" role="status">
-            <span class="o_add_facebook_page">
-                <i class="fa fa-plus-circle"/> Add Facebook Page
-            </span>
-        </div>
-    </div>
-</template>
-
 <template id="s_image_gallery" name="Image Gallery">
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
@@ -797,11 +787,6 @@
             <we-button data-position="next">Move to next</we-button>
             <we-button data-position="last">Move to last</we-button>
         </div>
-    </div>
-
-    <!-- Facebook Page -->
-    <div data-js="facebookPage" data-selector=".o_facebook_page">
-        <we-button data-fb-page-options="true" data-no-preview="true">Facebook Options</we-button>
     </div>
 
     <!-- Accordion -->
