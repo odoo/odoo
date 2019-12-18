@@ -703,6 +703,8 @@ const InputUserValueWidget = UserValueWidget.extend({
 
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
+        this.inputEl.classList.toggle('text-left', !unit);
+        this.inputEl.classList.toggle('text-right', !!unit);
         this.containerEl.appendChild(this.inputEl);
 
         var unitEl = document.createElement('span');
