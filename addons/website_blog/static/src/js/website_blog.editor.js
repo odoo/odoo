@@ -114,8 +114,8 @@ options.registry.CoverProperties.include({
     updateUI: async function () {
         await this._super(...arguments);
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
-        var $coverFull = this.$el.find('[data-select-class*="cover_full"]');
-        var $coverMid = this.$el.find('[data-select-class*="cover_mid"]');
+        var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');
+        var $coverMid = this.$el.find('[data-select-class*="o_half_screen_height"]');
         var $coverAuto = this.$el.find('[data-select-class*="cover_auto"]');
         this._coverFullOriginalLabel = this._coverFullOriginalLabel || $coverFull.text();
         this._coverMidOriginalLabel = this._coverMidOriginalLabel || $coverMid.text();
