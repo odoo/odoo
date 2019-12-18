@@ -200,7 +200,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             tabsize: 0,
             height: 180,
             generateOptions: function (options) {
-                var para = _.find(options.toolbar, function (item) {
+                var toolbar = options.toolbar || options.airPopover || {};
+                var para = _.find(toolbar, function (item) {
                     return item[0] === 'para';
                 });
                 if (para && para[1] && para[1].indexOf('checklist') === -1) {
@@ -208,7 +209,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 }
                 if (config.isDebug()) {
                     options.codeview = true;
-                    var view = _.find(options.toolbar, function (item) {
+                    var view = _.find(toolbar, function (item) {
                         return item[0] === 'view';
                     });
                     if (view) {
@@ -216,7 +217,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                             view[1].splice(-1, 0, 'codeview');
                         }
                     } else {
-                        options.toolbar.splice(-1, 0, ['view', ['codeview']]);
+                        toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
                 options.prettifyHtml = false;
