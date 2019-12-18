@@ -10,16 +10,36 @@
     > a + a {
         margin-left: .4rem;
     }
-    .s_share_facebook {
-        &, &:hover, &:focus { color: #3b5998; }
-    }
-    .s_share_twitter {
-        &, &:hover, &:focus { color: #1da1f2; }
-    }
-    .s_share_linkedin {
-        &, &:hover, &:focus { color: #0077b5; }
-    }
-    .s_share_google {
-        &, &:hover, &:focus { color: #db4437; }
+    &:not(.no_icon_color) {
+        .s_share_facebook {
+            &, &:hover, &:focus {
+                @extend .text-facebook;
+            }
+        }
+        .s_share_twitter {
+            &, &:hover, &:focus {
+                @extend .text-twitter;
+            }
+        }
+        .s_share_linkedin {
+            &, &:hover, &:focus {
+                @extend .text-linkedin;
+            }
+        }
+        .s_share_google {
+            &, &:hover, &:focus {
+                @extend .text-google-plus;
+            }
+        }
+        .s_share_whatsapp {
+            &, &:hover, &:focus {
+                @extend .text-whatsapp;
+            }
+        }
+        .s_share_pinterest {
+            &, &:hover, &:focus {
+                @extend .text-pinterest;
+            }
+        }
     }
 }
