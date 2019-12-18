@@ -39,6 +39,7 @@
         'views/snippets/s_carousel.xml',
         'views/snippets/s_alert.xml',
         'views/snippets/s_card.xml',
+        'views/snippets/s_share.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
