@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 import logging
 import werkzeug
@@ -8,7 +9,7 @@ import werkzeug
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, http, _
+from odoo import fields, http, modules, tools, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
@@ -583,3 +584,30 @@ class Survey(http.Controller):
         user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
 
         return user_input_lines, search_filters
+
+    @http.route('/survey/background/<int:survey_id>', type='http', auth="public", website=True, sitemap=False)
+    def survey_get_background(self, survey_id):
+        survey = request.env['survey.survey'].sudo().browse(survey_id).exists()
+        if not survey:
+            raise werkzeug.exceptions.NotFound()
+
+        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
+            model='survey.survey', id=survey.id, field='image',
+            default_mimetype='image/png')
+        if status == 301:
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+
+        if not image_base64:
+            img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+            with open(img_path, 'rb') as f:
+                image_base64 = base64.b64encode(f.read())
+
+        image_base64 = tools.image_process(image_base64)
+
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
+        response.status_code = status
+        return response

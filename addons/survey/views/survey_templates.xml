@@ -3,6 +3,9 @@
 <data>
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-att-style" add="('height: 100%; overflow: overlay; background: url(' + '/survey/background/%s' % survey.id + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey.image else 'height: 100%;    overflow: overlay;'"/>
+        </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
         </xpath>
@@ -12,6 +15,12 @@
         </xpath>
         <xpath expr="//header" position="after">
             <div id="wrap" class="oe_structure oe_empty"/>
+        </xpath>
+        <xpath expr="//header" position="attributes">
+            <attribute name="class" add="o_survey_header" separator=" "/>
+        </xpath>
+        <xpath expr="//main" position="attributes">
+            <attribute name="class">o_survey_main</attribute>
         </xpath>
     </template>
 
@@ -97,7 +106,7 @@
 
             <div class="row">
                 <div class="col-3"></div>
-                <div class="col-6 text-center mt16 mb256">
+                <div class="col-6 text-center mt16 mb128">
                     <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
                             name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
                     <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
@@ -126,7 +135,7 @@
                 <p>There was an error during the validation of the survey.</p>
             </div>
 
-            <div class="o_survey_form_content">
+            <div t-att-class="'o_survey_form_content' + (' mt128 ' if survey.questions_layout == 'page_per_question' else '')">
                 <t t-if="page == 0" t-call="survey.survey_page_start"/>
                 <t t-elif="finished" t-call="survey.survey_closed_finished" />
                 <t t-else="" t-call="survey.survey_form_content"/>
@@ -149,7 +158,7 @@
     </template>
 
     <template id="survey_page_main_header" name="Survey: main page header">
-        <div class="o_page_header o_survey_header">
+        <div class="o_page_header o_survey_nav">
             <div class="container m-0 p-0">
                 <div class="row">
                     <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>

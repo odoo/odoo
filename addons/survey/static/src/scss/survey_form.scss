@@ -1,3 +1,11 @@
+.o_survey_header {
+    height: 50px;
+}
+.o_survey_main {
+    min-height: calc(100% - 105px);
+    padding-top: 16px;
+}
+
 .o_survey_question_text_box,
 .o_survey_question_date,
 .o_survey_question_datetime,
@@ -11,7 +19,6 @@
     &:disabled {
         border-color: grey;
         color: black !important;
-        background-color: #e9ecef !important;
         border-bottom: 2px solid grey;
     }
     &:focus {
@@ -107,6 +114,7 @@
     td {
         color: #00A09D;
         background-color: rgba(0, 160, 157, 0.2);
+        min-width: 100px;
         &:hover {
             background-color: rgba(0, 160, 157, 0.5);
             .o_survey_choice_key span.o_survey_key {
