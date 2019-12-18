@@ -142,6 +142,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
                 dom.initAutoMoreMenu(self.$el, {unfoldable: '.divider, .divider ~ li'});
             }
             self.$el.removeClass('o_menu_loading');
+            self.$el.trigger('menu_loaded');
         });
     },
     /**
