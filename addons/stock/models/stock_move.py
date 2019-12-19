@@ -135,6 +135,7 @@ class StockMove(models.Model):
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated')
     delay_alert = fields.Boolean('Alert if Delay')
+    delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
@@ -275,7 +276,7 @@ class StockMove(models.Model):
                 move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
 
     def _get_move_lines(self):
-        """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
+        """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
         self.ensure_one()
         return self.move_line_ids or self.move_line_nosuggest_ids
@@ -338,7 +339,7 @@ class StockMove(models.Model):
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        result = {data['move_id'][0]: data['product_qty'] for data in 
+        result = {data['move_id'][0]: data['product_qty'] for data in
             self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
         for rec in self:
             rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
@@ -466,15 +467,13 @@ class StockMove(models.Model):
             new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
             for move in self:
                 move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                if not move_dest_ids:
-                    continue
                 delta_days = (new_date - move.date_expected).total_seconds() / 86400
-                if not move.propagate_date or abs(delta_days) < move.propagate_date_minimum_delta:
-                    move_dest_ids._delay_alert_log_activity('manual', move)
-                    continue
-                for move_dest in move_dest_ids:
-                    move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
-                move_dest_ids._delay_alert_log_activity('auto', move)
+                if move.propagate_date and abs(delta_days) >= move.propagate_date_minimum_delta and move_dest_ids:
+                    for move_dest in move_dest_ids:
+                        move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
+                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_activity(move)
+                if move.delay_alert:
+                    move._delay_alert_check(new_date)
 
         # Manual tracking of the `state` field for the stock.picking records.
         track_pickings = (
@@ -514,25 +513,18 @@ class StockMove(models.Model):
         """
         return list(self.mapped('picking_id'))
 
-    def _delay_alert_log_activity(self, mode, move_orig):
+    def _propagate_date_log_activity(self, move_orig):
         """Post a delay alert next activity on the documents linked to `self`. If the delay alert
         is already present on the document, it isn't posted twice.
 
-        :param mode: 'auto' or 'manual' as a string
         :param move_orig: the stock move triggering the delay alert on the next document
         """
-        assert mode in ('auto', 'manual')
-
         doc_orig = move_orig._delay_alert_get_documents()
-        documents = self.filtered(lambda m: m.delay_alert)._delay_alert_get_documents()
+        documents = self._delay_alert_get_documents()
         if not documents or not doc_orig:
             return
 
-        if mode == 'auto':
-            msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
-        else:
-            msg = _("The scheduled date should be updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
-
+        msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
         # write the message on each document
         for doc in documents:
             if doc.activity_ids.filtered(lambda a: a.automated and doc_orig[0].name in a.note):
@@ -543,6 +535,53 @@ class StockMove(models.Model):
                 note=msg,
                 user_id=doc.user_id.id or SUPERUSER_ID
             )
+
+    def _delay_alert_check(self, new_date):
+        """Set an alert on late moves by using the `delay_alert_date` field.
+        The alert is always on the move that cannot be done because its preceding moves are late.
+
+        :param new_date: the new expected date, to set when calling this method before `create` or `write`
+        :param new_date: datetime, optional
+        """
+        self.ensure_one()
+        if self.state in ('done', 'cancel'):
+            return
+
+        # Check if `self` is scheduled after the next moves. If so, the next moves are late.
+        next_done_moves = self.browse()
+        next_nondone_moves = self.browse()
+        next_moves_dates = []
+        for move in self.move_dest_ids:
+            if move.state == 'done':
+                next_done_moves |= move
+            elif move.state != 'cancel':
+                next_nondone_moves |= move
+        next_moves_dates += next_done_moves.mapped('date')
+        next_moves_dates += next_nondone_moves.mapped('date_expected')
+        if next_moves_dates:
+            next_moves_date = min(next_moves_dates)
+            if new_date > next_moves_date:
+                next_nondone_moves.write({'delay_alert_date': new_date})
+            else:
+                next_nondone_moves.write({'delay_alert_date': False})
+
+        # Check if `self` is scheduled before the previous moves. If so, `self` if late.
+        previous_done_moves = self.browse()
+        previous_nondone_moves = self.browse()
+        previous_moves_dates = []
+        for move in self.move_orig_ids:
+            if move.state == 'done':
+                previous_done_moves |= move
+            elif move.state != 'cancel':
+                previous_nondone_moves |= move
+        previous_moves_dates += previous_done_moves.mapped('date')
+        previous_moves_dates += previous_nondone_moves.mapped('date_expected')
+        if previous_moves_dates:
+            previous_moves_date = max(previous_moves_dates)
+            if new_date < previous_moves_date:
+                self.write({'delay_alert_date': previous_moves_date})
+            else:
+                self.write({'delay_alert_date': False})
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
@@ -1311,7 +1350,7 @@ class StockMove(models.Model):
         """ If the quantity done on a move exceeds its quantity todo, this method will create an
         extra move attached to a (potentially split) move line. If the previous condition is not
         met, it'll return an empty recordset.
-        
+
         The rationale for the creation of an extra move is the application of a potential push
         rule that will handle the extra quantities.
         """
