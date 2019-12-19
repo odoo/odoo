@@ -188,7 +188,6 @@ class Meeting(models.Model):
 
     name = fields.Char('Meeting Subject', required=True)
 
-    is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     display_time = fields.Char('Event Time', compute='_compute_display_time')
     start = fields.Datetime('Start', required=True, tracking=True, default=fields.Date.today, help="Start date of an event, without time for full days events")
@@ -206,6 +205,7 @@ class Meeting(models.Model):
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
     # linked document
+    # LUL TODO use fields.Reference ?
     res_id = fields.Integer('Document ID')
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
     res_model = fields.Char('Document Model Name', related='res_model_id.model', readonly=True, store=True)
@@ -272,7 +272,6 @@ class Meeting(models.Model):
     def _compute_attendee(self):
         for meeting in self:
             attendee = meeting._find_my_attendee()
-            meeting.is_attendee = bool(attendee)
             meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
     def _compute_display_time(self):
