@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="project_task_create_sale_order_view_form" model="ir.ui.view">
+        <field name="name">project.task.create.sale.order.wizard.form</field>
+        <field name="model">project.task.create.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Create a Sales Order">
+                <group>
+                    <group>
+                        <field name="task_id" readonly="1"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <group>
+                        <field name="product_id" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet'}"/>
+                        <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'required': True}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" type="object" class="btn btn-secondary oe_inline"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_task_action_multi_create_sale_order" model="ir.actions.act_window">
+        <field name="name">Create a Sales Order</field>
+        <field name="res_model">project.task.create.sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_task_create_sale_order_view_form"/>
+        <field name="target">new</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+</odoo>

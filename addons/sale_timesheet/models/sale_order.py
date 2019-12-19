@@ -66,13 +66,15 @@ class SaleOrder(models.Model):
     def _compute_timesheet_total_duration(self):
         for sale_order in self:
             duration_list = []
-            for timesheet in sale_order.timesheet_ids:
+            timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
+            for timesheet in timesheets:
                 timesheet_uom = timesheet.product_uom_id or timesheet.company_id.project_time_mode_id
                 if timesheet_uom != sale_order.timesheet_encode_uom_id and timesheet_uom.category_id == sale_order.timesheet_encode_uom_id.category_id:
                     duration_list.append(timesheet_uom._compute_quantity(timesheet.unit_amount, sale_order.timesheet_encode_uom_id))
                 else:
                     duration_list.append(timesheet.unit_amount)
             sale_order.timesheet_total_duration = sum(duration_list)
+
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -148,6 +150,15 @@ class SaleOrder(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
+    def _create_invoices(self, grouped=False, final=False, date=None):
+        """ Override the _create_invoice method in sale.order model in sale module
+            Add new parameter in this method, to invoice sale.order with a date. This date is used in sale_make_invoice_advance_inv into this module.
+            :param date
+            :return {account.move}: the invoices created
+        """
+        moves = super(SaleOrder, self)._create_invoices(grouped, final)
+        moves._link_timesheets_to_invoice(date)
+        return moves
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -389,3 +400,23 @@ class SaleOrderLine(models.Model):
                         project = map_so_project[so_line.order_id.id]
                 if not so_line.task_id:
                     so_line._timesheet_create_task(project=project)
+
+    def _recompute_qty_to_invoice(self, date):
+        """ Recompute the qty_to_invoice field for product containing timesheets
+
+            Search the existed timesheets up the given date in parameter.
+            Retrieve the unit_amount of this timesheet and then recompute
+            the qty_to_invoice for each current product.
+
+            :param date: date to search timesheets before this date.
+        """
+        lines_by_timesheet = self.filtered(lambda sol: sol.product_id._is_delivered_timesheet())
+        domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
+        domain = expression.AND([domain, [
+            ('date', '<=', date),
+            ('timesheet_invoice_id', '=', False)]])
+        mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
+
+        for line in lines_by_timesheet:
+            if line.product_id._is_delivered_timesheet():
+                line.qty_to_invoice = mapping.get(line.id, 0.0)

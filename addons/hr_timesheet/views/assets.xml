@@ -2,8 +2,14 @@
 <odoo>
     <template id="assets_backend" name="timesheet assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_uom.js"></script>
+            <link type="text/scss" href="/hr_timesheet/static/src/scss/timer_button.scss" rel="stylesheet"/>
             <script type="text/javascript" src="/hr_timesheet/static/src/js/task_with_hours.js"></script>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timer.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/Timer.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_uom.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timer_toggle_button.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_list_view.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_kanban_view.js"/>
         </xpath>
     </template>
 </odoo>

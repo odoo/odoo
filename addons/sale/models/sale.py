@@ -572,7 +572,7 @@ class SaleOrder(models.Model):
         action['context'] = context
         return action
 
-    def _create_invoices(self, grouped=False, final=False):
+    def _create_invoices(self, grouped=False, final=False, date=None):
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by

@@ -25,6 +25,7 @@ class Project(models.Model):
     sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', "Sale line/Employee map", copy=False,
         help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
         "By extension, it defines the rate at which an employee's time on the project is billed.")
+    allow_billable = fields.Boolean("Bill from Tasks")
 
     _sql_constraints = [
         ('sale_order_required_if_sale_line', "CHECK((sale_line_id IS NOT NULL AND sale_order_id IS NOT NULL) OR (sale_line_id IS NULL))", 'The Project should be linked to a Sale Order to select an Sale Order Items.'),
@@ -49,6 +50,15 @@ class Project(models.Model):
         else:
             if self.billable_type == 'no':
                 self.sale_line_employee_ids = False
+
+    @api.onchange('allow_billable')
+    def _onchange_allow_billable(self):
+        """ In order to keep task billable type as 'task_rate' using sale_timesheet usual flow.
+            (see _compute_billable_type method in sale_timesheet)
+        """
+        if self.allow_billable:
+            self.sale_order_id = False
+            self.sale_line_employee_ids = False
 
     @api.constrains('sale_line_id', 'billable_type')
     def _check_sale_line_type(self):
@@ -134,6 +144,7 @@ class ProjectTask(models.Model):
         ('no', 'No Billable')
     ], string="Billable Type", compute='_compute_billable_type', compute_sudo=True, store=True)
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
+    allow_billable = fields.Boolean(related="project_id.allow_billable")
 
     @api.depends('sale_line_id', 'project_id', 'billable_type')
     def _compute_sale_order_id(self):
@@ -228,3 +239,17 @@ class ProjectTask(models.Model):
         if partner:
             return partner
         return super(ProjectTask, self).rating_get_partner_id()
+
+    def action_make_billable(self):
+        return {
+            "name": _("Create Sales Order"),
+            "type": 'ir.actions.act_window',
+            "res_model": 'project.task.create.sale.order',
+            "views": [[False, "form"]],
+            "target": 'new',
+            "context": {
+                'active_id': self.id,
+                'active_model': 'project.task',
+                'form_view_initial_mode': 'edit',
+            },
+        }
