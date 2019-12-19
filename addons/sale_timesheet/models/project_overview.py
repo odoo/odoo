@@ -102,7 +102,8 @@ class Project(models.Model):
         aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
         employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
 
-        employees = self.env['hr.employee'].sudo().browse(employee_ids)
+        # Retrieve the employees for which the current user can see theirs timesheets
+        employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(self.env['account.analytic.line']._domain_employee_id())
         repartition_domain = [('project_id', 'in', self.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         # repartition data, without timesheet on cancelled so
         repartition_data = self.env['account.analytic.line'].read_group(repartition_domain + ['|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')], ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
@@ -146,12 +147,12 @@ class Project(models.Model):
         #
         # Table grouped by SO / SOL / Employees
         #
-        timesheet_forecast_table_rows = self._table_get_line_values()
+        timesheet_forecast_table_rows = self._table_get_line_values(employees)
         if timesheet_forecast_table_rows:
             values['timesheet_forecast_table'] = timesheet_forecast_table_rows
         return values
 
-    def _table_get_line_values(self):
+    def _table_get_line_values(self, employees=None):
         """ return the header and the rows informations of the table """
         if not self:
             return False
@@ -193,9 +194,11 @@ class Project(models.Model):
             if not is_milestone:
                 rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
 
+        rows_sale_line_all_data = {}
+        if not employees:
+            employees = self.env['hr.employee'].sudo().search(self.env['account.analytic.line']._domain_employee_id())
         for row_key, row_employee in rows_employee.items():
-            sale_line_id = row_key[1]
-            sale_order_id = row_key[0]
+            sale_order_id, sale_line_id, employee_id = row_key
             # sale line row
             sale_line_row_key = (sale_order_id, sale_line_id)
             if sale_line_row_key not in rows_sale_line:
@@ -205,35 +208,26 @@ class Project(models.Model):
                 if not is_milestone:
                     rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
 
-            for index in range(len(rows_employee[row_key])):
-                if index != 0:
-                    rows_sale_line[sale_line_row_key][index] += rows_employee[row_key][index]
-                    if not rows_sale_line[sale_line_row_key][0].get('is_milestone'):
-                        rows_sale_line[sale_line_row_key][-1] = rows_sale_line[sale_line_row_key][-2] - rows_sale_line[sale_line_row_key][5]
-                    else:
-                        rows_sale_line[sale_line_row_key][-1] = 0
+            if sale_line_row_key not in rows_sale_line_all_data:
+                rows_sale_line_all_data[sale_line_row_key] = [0] * len(row_employee)
+            for index in range(1, len(row_employee)):
+                if employee_id in employees.ids:
+                    rows_sale_line[sale_line_row_key][index] += row_employee[index]
+                rows_sale_line_all_data[sale_line_row_key][index] += row_employee[index]
+            if not rows_sale_line[sale_line_row_key][0].get('is_milestone'):
+                rows_sale_line[sale_line_row_key][-1] = rows_sale_line[sale_line_row_key][-2] - rows_sale_line_all_data[sale_line_row_key][5]
+            else:
+                rows_sale_line[sale_line_row_key][-1] = 0
 
         rows_sale_order = {}  # so -> [INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted]
-        rows_sale_order_done_sold = {key : dict(sold=0.0, done=0.0) for key in set(map_sol_so.values()) | set([None])}  # SO id -> {'sold':0.0, 'done': 0.0}
         for row_key, row_sale_line in rows_sale_line.items():
             sale_order_id = row_key[0]
             # sale order row
             if sale_order_id not in rows_sale_order:
                 rows_sale_order[sale_order_id] = [{'label': map_so_names.get(sale_order_id, _('No Sales Order')), 'canceled': map_so_cancel.get(sale_order_id, False), 'res_id': sale_order_id, 'res_model': 'sale.order', 'type': 'sale_order'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
 
-            for index in range(len(rows_sale_line[row_key])):
-                if index != 0:
-                    rows_sale_order[sale_order_id][index] += rows_sale_line[row_key][index]
-
-            # do not sum the milestone SO line for sold and done (for remaining computation)
-            if not rows_sale_line[row_key][0].get('is_milestone'):
-                rows_sale_order_done_sold[sale_order_id]['sold'] += rows_sale_line[row_key][-2]
-                rows_sale_order_done_sold[sale_order_id]['done'] += rows_sale_line[row_key][5]
-
-        # remaining computation of SO row, as Sold - Done (timesheet total)
-        for sale_order_id, done_sold_vals in rows_sale_order_done_sold.items():
-            if sale_order_id in rows_sale_order:
-                rows_sale_order[sale_order_id][-1] = done_sold_vals['sold'] - done_sold_vals['done']
+            for index in range(1, len(row_sale_line)):
+                rows_sale_order[sale_order_id][index] += row_sale_line[index]
 
         # group rows SO, SOL and their related employee rows.
         timesheet_forecast_table_rows = []
@@ -243,7 +237,7 @@ class Project(models.Model):
                 if sale_order_id == sale_line_row_key[0]:
                     timesheet_forecast_table_rows.append(sale_line_row)
                     for employee_row_key, employee_row in rows_employee.items():
-                        if sale_order_id == employee_row_key[0] and sale_line_row_key[1] == employee_row_key[1]:
+                        if sale_order_id == employee_row_key[0] and sale_line_row_key[1] == employee_row_key[1] and employee_row_key[2] in employees.ids:
                             timesheet_forecast_table_rows.append(employee_row)
 
         # complete table data

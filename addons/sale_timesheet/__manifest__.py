@@ -29,6 +29,8 @@ have real delivered quantities in sales orders.
         'data/sale_timesheet_filters.xml',
         'wizard/project_create_sale_order_views.xml',
         'wizard/project_create_invoice_views.xml',
+        'wizard/sale_make_invoice_advance_views.xml',
+        'wizard/project_task_create_sale_order_views.xml'
     ],
     'demo': [
         'data/sale_service_demo.xml',

@@ -21,13 +21,17 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities">
+                <tree editable="top" string="Timesheet Activities" js_class="timesheet_tree">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
-                    <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
+                    <field name="is_timer_running" string="Timer" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
+                    <field name="unit_amount" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="timer_start" invisible="1"/>
+                    <field name="display_timer" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -41,8 +45,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="employee_id" required="1" options='{"no_open": True}'/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -89,8 +91,9 @@
                             </group>
                             <group>
                                 <field name="amount"/>
-                                <field name="unit_amount" widget="timesheet_uom"/>
+                                <field name="unit_amount" widget="timesheet_uom" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="timer_start" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -139,13 +142,15 @@
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" js_class="timesheet_kanban_view">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
-                    <field name="unit_amount"/>
+                    <field name="unit_amount" widget="timesheet_uom"/>
+                    <field name="timer_start" invisible="1"/>
+                    <field name="display_timer" invisible="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -161,6 +166,9 @@
                                             <span>
                                                 <t t-esc="record.name.value"/>
                                             </span>
+                                            <div class="float-right">
+                                                <field name="is_timer_running" widget="timer_toggle_button" attrs="{ 'invisible': [('display_timer', '=', False)] }" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -188,6 +196,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
+                "my_timesheet_display_timer": True,
                 "search_default_week":1,
             }</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
@@ -239,6 +248,15 @@
                 'search_default_groupby_project':1,
                 'search_default_groupby_task':1,
             }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new activity
+                </p><p>
+                    You can register and track your workings hours by project every
+                    day. Every time spent on a project will become a cost and can be re-invoiced to
+                    customers if required.
+                </p>
+            </field>
         </record>
 
         <record id="timesheet_action_view_all_tree" model="ir.actions.act_window.view">
@@ -255,10 +273,18 @@
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 
+        <record id="timesheet_action_view_all_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="6"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
         <menuitem id="timesheet_menu_activity_all"
             name="All Timesheets"
             parent="menu_hr_time_tracking"
-            action="timesheet_action_all"/>
+            action="timesheet_action_all"
+            groups="hr_timesheet.group_hr_timesheet_approver"/>
 
     </data>
 </odoo>

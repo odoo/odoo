@@ -28,6 +28,29 @@
         </field>
     </record>
 
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='timesheet_settings']/.." position="after">
+                <div class="row mt16 o_settings_container">
+                    <div class="col-lg-6 o_setting_box" id="allow_billable_container" attrs="{'invisible': [('billable_type', '=', 'employee_rate')]}">
+                        <div class="o_setting_left_pane">
+                            <field name="allow_billable"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_billable"/>
+                            <div class="text-muted" id="allow_billable_setting">
+                                Invoice your time and material from tasks
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_tree_inherit_sale_timesheet" model="ir.ui.view">
         <field name="name">project.project.tree.inherit.sale.timesheet</field>
         <field name="model">project.project</field>
@@ -61,6 +84,10 @@
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
+                <xpath expr="//header" position='inside'>
+                    <field name="allow_billable" invisible="1"/>
+                    <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': ['|', '|', '|', '|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('billable_type', '=', 'employee_rate'), ('partner_id', '=', False), ('sale_order_id', '!=', False), '&amp;', ('display_timesheet_timer', '=', True), ('timer_start', '!=', False)]}" groups="sales_team.group_sale_salesman"/>
+                </xpath>
                 <div name="button_box" position="inside">
                     <button class="d-none d-md-inline oe_stat_button"
                             type="object" name="action_view_so" icon="fa-dollar"
