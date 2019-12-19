@@ -391,6 +391,7 @@ class Picking(models.Model):
     @api.one
     def _set_scheduled_date(self):
         self.move_lines.write({'date_expected': self.scheduled_date})
+        self.move_lines.filtered(lambda ml: ml.state != 'done').write({'date': self.scheduled_date})
 
     @api.one
     def _has_scrap_move(self):
