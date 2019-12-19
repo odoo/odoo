@@ -2137,6 +2137,12 @@ Relational fields
 
     Options:
 
+    - create: domain determining whether or not new tags can be created (default: True).
+
+    .. code-block:: xml
+
+        <field name="category_id" widget="many2many_tags" options="{'create': [['some_other_field', '>', 24]]}"/>
+
     - color_field: the name of a numeric field, which should be present in the
       view.  A color will be chosen depending on its value.
 
@@ -2175,6 +2181,14 @@ Relational fields
     - Supported field types: *one2many*
 
     Options:
+
+    - create: domain determining whether or not related records can be created (default: True).
+
+    - delete: domain determining whether or not related records can be deleted (default: True).
+
+    .. code-block:: xml
+
+        <field name="turtles" options="{'create': [['some_other_field', '>', 24]]}"/>
 
     - create_text: a string that is used to customize the 'Add' label/text.
 

@@ -22,6 +22,7 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
 var dom = require('web.dom');
+const Domain = require('web.Domain');
 var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
@@ -117,21 +118,24 @@ var FieldMany2One = AbstractField.extend({
      * @override
      * @param {boolean} [options.noOpen=false] if true, there is no external
      *   button to open the related record in a dialog
+     * @param {boolean} [options.noCreate=false] if true, the many2one does not
+     *   allow to create records
      */
     init: function (parent, name, record, options) {
+        options = options || {};
         this._super.apply(this, arguments);
         this.limit = 7;
         this.orderer = new concurrency.DropMisordered();
 
-        // should normally also be set, except in standalone M20
-        this.can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true) &&
-            !this.nodeOptions.no_create;
+        // should normally be set, except in standalone M20
+        const canCreate = 'can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true;
+        this.can_create = canCreate && !this.nodeOptions.no_create && !options.noCreate;
         this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
 
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
-        this.noOpen = 'noOpen' in (options || {}) ? options.noOpen : this.nodeOptions.no_open;
+        this.noOpen = 'noOpen' in options ? options.noOpen : this.nodeOptions.no_open;
         this.m2o_value = this._formatValue(this.value);
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
@@ -591,10 +595,9 @@ var FieldMany2One = AbstractField.extend({
                 if (values.length > self.limit) {
                     values = self._manageSearchMore(values, search_val, domain, context);
                 }
-                var create_enabled = self.can_create && !self.nodeOptions.no_create;
                 // quick create
                 var raw_result = _.map(result, function (x) { return x[1]; });
-                if (create_enabled && !self.nodeOptions.no_quick_create &&
+                if (self.can_create && !self.nodeOptions.no_quick_create &&
                     search_val.length > 0 && !_.contains(raw_result, search_val)) {
                     values.push({
                         label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
@@ -604,7 +607,7 @@ var FieldMany2One = AbstractField.extend({
                     });
                 }
                 // create and edit ...
-                if (create_enabled && !self.nodeOptions.no_create_edit) {
+                if (self.can_create && !self.nodeOptions.no_create_edit) {
                     var createAndEditAction = function () {
                         // Clear the value in case the user clicks on discard
                         self.$('input').val('');
@@ -1012,6 +1015,7 @@ var FieldX2Many = AbstractField.extend({
                                             true;
             this.editable = arch.attrs.editable;
         }
+        this._computeAvailableActions(record);
         if (this.attrs.columnInvisibleFields) {
             this._processColumnInvisibleFields();
         }
@@ -1079,15 +1083,21 @@ var FieldX2Many = AbstractField.extend({
      * @returns {Promise}
      */
     reset: function (record, ev, fieldChanged) {
+        // re-evaluate available actions
+        const oldCanCreate = this.canCreate;
+        const oldCanDelete = this.canDelete;
+        this._computeAvailableActions(record);
+        const actionsChanged = this.canCreate !== oldCanCreate || this.canDelete !== oldCanDelete;
+
         // If 'fieldChanged' is false, it means that the reset was triggered by
-        // the 'resetOnAnyFieldChange' mechanism. If it is the case the
-        // modifiers are evaluated and if there is no change in the modifiers
-        // values, the reset is skipped.
-        if (!fieldChanged) {
-           var newEval = this._evalColumnInvisibleFields();
-           if (_.isEqual(this.currentColInvisibleFields, newEval)) {
-               return Promise.resolve();
-           }
+        // the 'resetOnAnyFieldChange' mechanism. If it is the case, if neither
+        // the modifiers (so the visible columns) nor the available actions
+        // changed, the reset is skipped.
+        if (!fieldChanged && !actionsChanged) {
+            var newEval = this._evalColumnInvisibleFields();
+            if (_.isEqual(this.currentColInvisibleFields, newEval)) {
+                return Promise.resolve();
+            }
         } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
             // Here, we only consider 'UPDATE' commands with data, which occur
@@ -1104,7 +1114,9 @@ var FieldX2Many = AbstractField.extend({
                 return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
             }
         }
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(() => {
+            this._updateControlPanel();
+        });
     },
 
     /**
@@ -1142,6 +1154,19 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @param {Object} record
+     */
+    _computeAvailableActions: function (record) {
+        const evalContext = record.evalContext;
+        this.canCreate = 'create' in this.nodeOptions ?
+            new Domain(this.nodeOptions.create, evalContext).compute(evalContext) :
+            true;
+        this.canDelete = 'delete' in this.nodeOptions ?
+            new Domain(this.nodeOptions.delete, evalContext).compute(evalContext) :
+            true;
+    },
+    /**
      * Evaluates the 'column_invisible' modifier for the parent record.
      *
      * @return {Object} Object containing fieldName as key and the evaluated
@@ -1154,6 +1179,18 @@ var FieldX2Many = AbstractField.extend({
                 column_invisible: domains,
              }).column_invisible;
         });
+    },
+    /**
+     * Returns qweb context to render buttons.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getButtonsRenderingContext() {
+        return {
+            btnClass: 'btn-secondary',
+            create_text: this.nodeOptions.create_text,
+        };
     },
     /**
      * Computes the default renderer to use depending on the view type.
@@ -1172,6 +1209,20 @@ var FieldX2Many = AbstractField.extend({
         }
     },
     /**
+     * @private
+     * @returns {boolean} true iff the list should contain a 'create' line.
+     */
+    _hasCreateLine: function () {
+        return !this.isReadonly && this.activeActions.create && (this.isMany2Many || this.canCreate);
+    },
+    /**
+     * @private
+     * @returns {boolean} true iff the list should add a trash icon on each row.
+     */
+    _hasTrashIcon: function () {
+        return !this.isReadonly && this.activeActions.delete && (this.isMany2Many || this.canDelete);
+    },
+    /**
      * Instanciates or updates the adequate renderer.
      *
      * @override
@@ -1183,9 +1234,12 @@ var FieldX2Many = AbstractField.extend({
         if (!this.view) {
             return this._super();
         }
+
         if (this.renderer) {
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             return this.renderer.updateState(this.value, {
+                addCreateLine: this._hasCreateLine(),
+                addTrashIcon: this._hasTrashIcon(),
                 columnInvisibleFields: this.currentColInvisibleFields,
                 keepWidths: true,
             }).then(function () {
@@ -1203,8 +1257,8 @@ var FieldX2Many = AbstractField.extend({
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             _.extend(rendererParams, {
                 editable: this.mode === 'edit' && arch.attrs.editable,
-                addCreateLine: !this.isReadonly && this.activeActions.create,
-                addTrashIcon: !this.isReadonly && this.activeActions.delete,
+                addCreateLine: this._hasCreateLine(),
+                addTrashIcon: this._hasTrashIcon(),
                 isMany2Many: this.isMany2Many,
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
@@ -1301,10 +1355,8 @@ var FieldX2Many = AbstractField.extend({
      */
     _renderButtons: function () {
         if (!this.isReadonly && this.view.arch.tag === 'kanban') {
-            this.$buttons = $(qweb.render('KanbanView.buttons', {
-                btnClass: 'btn-secondary',
-                create_text: this.nodeOptions.create_text,
-            }));
+            const renderingContext = this._getButtonsRenderingContext();
+            this.$buttons = $(qweb.render('KanbanView.buttons', renderingContext));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));
         }
     },
@@ -1346,6 +1398,23 @@ var FieldX2Many = AbstractField.extend({
                 });
             }
         });
+    },
+    /**
+     * Re-renders buttons and updates the control panel. This method is called
+     * when the widget is reset, as the available buttons might have changed.
+     *
+     * @private
+     */
+    _updateControlPanel: function () {
+        if (this._controlPanel) {
+            this._renderButtons();
+            const params = {
+                cp_content: {
+                    $buttons: this.$buttons,
+                }
+            };
+            this._controlPanel.updateContents(params, { clear: false });
+        }
     },
     /**
      * Parses the 'columnInvisibleFields' attribute to search for the domains
@@ -1730,6 +1799,15 @@ var FieldOne2Many = FieldX2Many.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @private
+     */
+    _getButtonsRenderingContext() {
+        const renderingContext = this._super(...arguments);
+        renderingContext.noCreate = !this.canCreate;
+        return renderingContext;
+    },
+    /**
       * @override
       * @private
       */
@@ -1769,7 +1847,7 @@ var FieldOne2Many = FieldX2Many.extend({
             fields_view: this.attrs.views && this.attrs.views.form,
             parentID: this.value.id,
             viewInfo: this.view,
-            deletable: this.activeActions.delete && params.deletable,
+            deletable: this.activeActions.delete && params.deletable && this.canDelete,
         }));
     },
 
@@ -1874,7 +1952,7 @@ var FieldOne2Many = FieldX2Many.extend({
             on_remove: function () {
                 self._setValue({operation: 'DELETE', ids: [id]});
             },
-            deletable: this.activeActions.delete && this.view.arch.tag !== 'tree',
+            deletable: this.activeActions.delete && this.view.arch.tag !== 'tree' && this.canDelete,
             readonly: this.mode === 'readonly',
         });
     },
@@ -1900,7 +1978,7 @@ var FieldMany2Many = FieldX2Many.extend({
             domain: domain.concat(["!", ["id", "in", this.value.res_ids]]),
             context: this.record.getContext(this.recordParams),
             title: _t("Add: ") + this.string,
-            no_create: this.nodeOptions.no_create || !this.activeActions.create,
+            no_create: this.nodeOptions.no_create || !this.activeActions.create || !this.canCreate,
             fields_view: this.attrs.views.form,
             kanban_view_ref: this.attrs.kanban_view_ref,
             on_selected: function (records) {
@@ -1960,7 +2038,7 @@ var FieldMany2Many = FieldX2Many.extend({
                 self._setValue({operation: 'FORGET', ids: [ev.data.id]});
             },
             readonly: this.mode === 'readonly',
-            deletable: this.activeActions.delete && this.view.arch.tag !== 'tree',
+            deletable: this.activeActions.delete && this.view.arch.tag !== 'tree' && this.canDelete,
             string: this.string,
         });
     },
@@ -2195,6 +2273,10 @@ var FieldMany2ManyTags = AbstractField.extend({
 
         this.colorField = this.nodeOptions.color_field;
         this.hasDropdown = false;
+
+        this._computeAvailableActions(this.record);
+        // have listen to react to other fields changes to re-evaluate 'create' option
+        this.resetOnAnyFieldChange = this.resetOnAnyFieldChange || 'create' in this.nodeOptions;
     },
 
     //--------------------------------------------------------------------------
@@ -2228,7 +2310,8 @@ var FieldMany2ManyTags = AbstractField.extend({
      */
     reset: function (record, event) {
         var self = this;
-        return this._super.apply(this, arguments).then(function(){
+        this._computeAvailableActions(record);
+        return this._super.apply(this, arguments).then(function () {
             if (event && event.target === self) {
                 self.activate();
             }
@@ -2250,6 +2333,16 @@ var FieldMany2ManyTags = AbstractField.extend({
                 ids: data
             });
         }
+    },
+    /**
+     * @private
+     * @param {Object} record
+     */
+    _computeAvailableActions: function (record) {
+        const evalContext = record.evalContext;
+        this.canCreate = 'create' in this.nodeOptions ?
+            new Domain(this.nodeOptions.create, evalContext).compute(evalContext) :
+            true;
     },
     /**
      * Get the QWeb rendering context used by the tag template; this computation
@@ -2290,6 +2383,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         this.many2one = new FieldMany2One(this, this.name, this.record, {
             mode: 'edit',
             noOpen: true,
+            noCreate: !this.canCreate,
             viewType: this.viewType,
             attrs: this.attrs,
         });

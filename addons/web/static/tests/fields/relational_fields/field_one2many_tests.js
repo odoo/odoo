@@ -2142,6 +2142,46 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('one2many list: conditional create/delete actions', async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.records[0].p = [2, 4];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // bar is true -> create and delete action are available
+            assert.containsOnce(form, '.o_field_x2many_list_row_add',
+                '"Add an item" link should be available');
+            assert.hasClass(form.$('td.o_list_record_remove button').first(), 'fa fa-trash-o',
+                "should have trash bin icons");
+
+            // set bar to false -> create and delete action are no longer available
+            await testUtils.dom.click(form.$('.o_field_widget[name="bar"] input').first());
+
+            assert.containsNone(form, '.o_field_x2many_list_row_add',
+                '"Add an item" link should not be available if bar field is False');
+            assert.containsNone(form, 'td.o_list_record_remove button',
+                "should not have trash bin icons if bar field is False");
+
+            form.destroy();
+        });
+
         QUnit.test('one2many list: unlink two records', async function (assert) {
             assert.expect(8);
             this.data.partner.records[0].p = [1, 2, 4];
@@ -2438,6 +2478,65 @@ QUnit.module('fields', {}, function () {
                 '"Add" button should not be available in edit');
             assert.ok(form.$('.o_kanban_view .delete_icon').length,
                 'delete icon should be visible in edit');
+            form.destroy();
+        });
+
+        QUnit.test('one2many kanban: conditional create/delete actions', async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.records[0].p = [2, 4];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
+                            <kanban>
+                                <field name="display_name"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click">
+                                            <span><t t-esc="record.display_name.value"/></span>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form>
+                                <field name="display_name"/>
+                                <field name="foo"/>
+                            </form>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // bar is initially true -> create and delete actions are available
+            assert.containsOnce(form, '.o-kanban-button-new', '"Add" button should be available');
+
+            await testUtils.dom.click(form.$('.oe_kanban_global_click').first());
+
+            assert.containsOnce(document.body, '.modal .modal-footer .o_btn_remove',
+                'There should be a Remove Button inside modal');
+
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // set bar false -> create and delete actions are no longer available
+            await testUtils.dom.click(form.$('.o_field_widget[name="bar"] input').first());
+
+            assert.containsNone(form, '.o-kanban-button-new',
+                '"Add" button should not be available as bar is False');
+
+            await testUtils.dom.click(form.$('.oe_kanban_global_click').first());
+
+            assert.containsNone(document.body, '.modal .modal-footer .o_btn_remove',
+                'There should not be a Remove Button as bar field is False');
+
             form.destroy();
         });
 

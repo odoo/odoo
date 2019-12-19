@@ -2,7 +2,7 @@
 
 <t t-name="KanbanView.buttons">
     <div>
-        <button type="button" t-attf-class="btn #{btnClass} o-kanban-button-new" accesskey="c">
+        <button t-if="!noCreate" type="button" t-attf-class="btn #{btnClass} o-kanban-button-new" accesskey="c">
             <t t-esc="create_text || _t('Create')"/>
         </button>
     </div>
