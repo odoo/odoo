@@ -194,7 +194,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Jelenlét kezelés</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -204,16 +204,19 @@ msgid ""
 "                                        Not Connected\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Nincs belépve\n"
+"                                      </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "<span class=\"o_stat_text\">Connected Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Belépve</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span class=\"o_stat_text\">Present Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Jelenlét</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -746,7 +749,7 @@ msgstr "Létrehozás dátuma"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr "Új részleg"
+msgstr "Új részleg létrehozása"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -974,7 +977,7 @@ msgstr "Alkalmazott jegyzék"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Edition"
-msgstr "Alkalmazott szerkesztése"
+msgstr "Alkalmazott szerkesztés"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -996,7 +999,7 @@ msgstr "Alkalmazott címke"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Employee Update Rights"
-msgstr ""
+msgstr "Alkalmazott hozzáférések firssítése"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
@@ -1236,7 +1239,7 @@ msgstr "Felvett munkavállalók"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "Jelenlét állapot"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1282,7 +1285,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
-msgstr "Személyi igazolvány száma"
+msgstr "Szem. ig. száma"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
@@ -1454,7 +1457,7 @@ msgstr "Utolsó tevékenység"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 #: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
 msgid "Last Activity Time"
-msgstr ""
+msgstr "Utolsó tevékenység ideje"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -1636,7 +1639,7 @@ msgstr "Név"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
-msgstr "Állampolgárság (Ország)"
+msgstr "Állampolgárság"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1841,6 +1844,8 @@ msgstr "PIN kód"
 #: model:ir.model.fields,help:hr.field_res_users__pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"A PIN kód a belépés/kilépéshez van használva Kioszk módban (ha engedélyezve "
+"van a konfigurációban)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2328,7 +2333,7 @@ msgstr "Sporttevékenység"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr "Házastárs születésnapja"
+msgstr "Házastárs sz.napja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
@@ -2412,6 +2417,8 @@ msgid ""
 "The\n"
 "                            founder’s story"
 msgstr ""
+"Az\n"
+"                     alapító története"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -2749,6 +2756,8 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other informations."
 msgstr ""
+"Ön csak a saját beállításait módosíthatja. Egyéb adatai módosításához lépjen"
+" kapcsolatba egy személyügyessel!"
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
@@ -2767,6 +2776,8 @@ msgstr "Rekurzív részlegek nem hozhatóak létre."
 msgid ""
 "You develop an <b>Open Source</b> Software and interact with the community"
 msgstr ""
+"Ön <b>nyílt forráskódú</b> szoftvert fejleszt, és együttműködik a "
+"közösséggel"
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
