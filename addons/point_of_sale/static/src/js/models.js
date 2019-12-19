@@ -2066,6 +2066,23 @@ exports.Orderline = Backbone.Model.extend({
       this.product.lst_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
       this.trigger('change',this);
     },
+    get_lot_errors: function () {
+        var errors = this.pos.db.load("lot_errors", {});
+        return errors[this.product.id] || {};
+    },
+    set_lot_errors: function (lot_errors) {
+        var errors = this.pos.db.load("lot_errors", {});
+        errors[this.product.id] = lot_errors;
+        return this.pos.db.save("lot_errors", errors);
+    },
+    remove_lot_error: function (cid) {
+        var errors = {};
+        if (cid) {
+            errors = this.get_lot_errors();
+            delete errors[cid];
+        }
+        this.set_lot_errors(errors);
+    },
 });
 
 var OrderlineCollection = Backbone.Collection.extend({
@@ -2657,6 +2674,7 @@ exports.Order = Backbone.Model.extend({
     },
     remove_orderline: function( line ){
         this.assert_editable();
+        line.remove_lot_error();
         this.orderlines.remove(line);
         this.select_orderline(this.get_last_orderline());
     },

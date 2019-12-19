@@ -1275,7 +1275,7 @@
             <div class="popup popup-text">
                 <header class="title"><t t-esc=" widget.options.title || '' " /></header>
                 <main class='packlot-lines'>
-                    <t t-set="errors" t-value="widget.lot_errors or {}"/>
+                    <t t-set="errors" t-value="widget.options.order_line and widget.options.order_line.get_lot_errors() or {}"/>
                     <t t-if="widget.options.pack_lot_lines">
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>

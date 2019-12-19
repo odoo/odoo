@@ -235,9 +235,10 @@ var PackLotLinePopupWidget = PopupWidget.extend({
     click_confirm: function(){
         var self = this;
         var lots = [];
+        var lot_errors = {};
         var pack_lot_lines = this.options.pack_lot_lines;
+        var order_line = pack_lot_lines.order_line;
         var existing_lots = this.options.order.get_existing_lots();
-        this.lot_errors = {};
 
         this.$('.packlot-line-input').each(function(index, el) {
             var cid = $(el).attr('cid');
@@ -253,7 +254,7 @@ var PackLotLinePopupWidget = PopupWidget.extend({
         rpc.query({
             model: "product.product",
             method: "get_lots_quantity",
-            args: [pack_lot_lines.order_line.product.id, lots],
+            args: [order_line.product.id, lots],
         }).then(function (result) {
             var tracking_type = self.options.order_line.product.tracking;
             var line_qty = self.options.order_line.quantity;
@@ -272,14 +273,16 @@ var PackLotLinePopupWidget = PopupWidget.extend({
                 lot_quantity[unique_lot_name] = available_qty;
                 self.pos.db.save("lot_quantity", lot_quantity);
                 if (tracking_type == 'serial' && available_qty <= 0) {
-                    self.lot_errors[lot.cid] = _("This Lot/Serial number has already been sold.");
+                    lot_errors[lot.cid] = _("This Lot/Serial number has already been sold.");
                 } else if (tracking_type == 'lot' && line_qty > available_qty - existing_qty) {
-                    self.lot_errors[lot.cid] = _("This Lot/Serial has a too low available quantity.");
+                    lot_errors[lot.cid] = _("This Lot/Serial has a too low available quantity.");
                 }
             });
-            if (_.isEmpty(self.lot_errors) ) {
+            if (_.isEmpty(lot_errors) ) {
+                order_line.remove_lot_error();
                 self.process_lots();
             } else {
+                order_line.set_lot_errors(lot_errors);
                 self.renderElement();
                 self.focus();
             }
@@ -326,7 +329,7 @@ var PackLotLinePopupWidget = PopupWidget.extend({
         var lot_model = pack_lot_lines.get({cid: cid});
         lot_model.remove();
         pack_lot_lines.set_quantity_by_lot();
-        if (this.lot_errors) delete this.lot_errors[cid];
+        pack_lot_lines.order_line.remove_lot_error(cid);
         this.renderElement();
     },
 

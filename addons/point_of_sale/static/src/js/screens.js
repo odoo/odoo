@@ -494,6 +494,7 @@ var ActionpadWidget = PosBaseWidget.extend({
                     'title': _t('Empty Lot/Serial Number'),
                     'body':  _t('One or more product(s) required Lot/Serial number.'),
                     confirm: function(){
+                        self.pos.db.save("lot_errors", {});
                         self.gui.show_screen('payment');
                     },
                 });
