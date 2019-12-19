@@ -42,7 +42,6 @@ ListRenderer.include({
      * @param {boolean} params.isMultiEditable
      */
     init: function (parent, state, params) {
-        var self = this;
         this._super.apply(this, arguments);
 
         this.editable = params.editable;
@@ -62,33 +61,27 @@ ListRenderer.include({
 
         // The following code will browse the arch to find
         // all the <create> that are inside <control>
-
-        if (this.addCreateLine) {
-            this.creates = [];
-
-            _.each(this.arch.children, function (child) {
-                if (child.tag !== 'control') {
+        this.creates = [];
+        this.arch.children.forEach(child => {
+            if (child.tag !== 'control') {
+                return;
+            }
+            child.children.forEach(child => {
+                if (child.tag !== 'create' || child.attrs.invisible) {
                     return;
                 }
-
-                _.each(child.children, function (child) {
-                    if (child.tag !== 'create' || child.attrs.invisible) {
-                        return;
-                    }
-
-                    self.creates.push({
-                        context: child.attrs.context,
-                        string: child.attrs.string,
-                    });
+                this.creates.push({
+                    context: child.attrs.context,
+                    string: child.attrs.string,
                 });
             });
+        });
 
-            // Add the default button if we didn't find any custom button.
-            if (this.creates.length === 0) {
-                this.creates.push({
-                    string: _t("Add a line"),
-                });
-            }
+        // Add the default button if we didn't find any custom button.
+        if (this.creates.length === 0) {
+            this.creates.push({
+                string: _t("Add a line"),
+            });
         }
 
         // if addTrashIcon is true, there will be a small trash icon at the end
@@ -531,6 +524,15 @@ ListRenderer.include({
             // remove computed modifiers data (as they are obsolete) to force
             // them to be recomputed at next (sub-)rendering
             this.allModifiersData = [];
+        }
+        if ('addTrashIcon' in params) {
+            if (this.addTrashIcon !== params.addTrashIcon) {
+                this.columnWidths = false; // columns changed, so forget stored widths
+            }
+            this.addTrashIcon = params.addTrashIcon;
+        }
+        if ('addCreateLine' in params) {
+            this.addCreateLine = params.addCreateLine;
         }
         return this._super.apply(this, arguments);
     },
@@ -1200,15 +1202,17 @@ ListRenderer.include({
             $tr.append($td);
             $rows.push($tr);
 
-            _.each(this.creates, function (create, index) {
-                var $a = $('<a href="#" role="button">')
-                    .attr('data-context', create.context)
-                    .text(create.string);
-                if (index > 0) {
-                    $a.addClass('ml16');
-                }
-                $td.append($a);
-            });
+            if (this.addCreateLine) {
+                _.each(this.creates, function (create, index) {
+                    var $a = $('<a href="#" role="button">')
+                        .attr('data-context', create.context)
+                        .text(create.string);
+                    if (index > 0) {
+                        $a.addClass('ml16');
+                    }
+                    $td.append($a);
+                });
+            }
         }
         return $rows;
     },
