@@ -2,12 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, http, _
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 from odoo.osv import expression
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class CustomerPortal(CustomerPortal):
@@ -203,7 +206,14 @@ class CustomerPortal(CustomerPortal):
             return {'error': _('Signature is missing.')}
 
         if not order_sudo.has_to_be_paid():
-            order_sudo.action_confirm()
+            try:
+                order_sudo.action_confirm()
+            except UserError as e:
+                # Without the rollback, the sale order might have been set in 'sale' status, preventing the customer to further sign it.
+                order_sudo.env.cr.rollback()
+                # Display the real error in the logs
+                _logger.warning(str(e))
+                return {'error': _('An error occurred, please contact the administrator.')}
 
         order_sudo.signature = signature
         order_sudo.signed_by = partner_name
