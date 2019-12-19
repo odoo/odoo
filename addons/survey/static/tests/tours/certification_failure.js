@@ -13,43 +13,43 @@ var failSteps = [{ // Page-1
     trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
 }, { // Question: Do we sell Acoustic Bloc Screens?
     content: "Selecting answer 'No'",
-    trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") label:contains("No") input',
+    trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") label:contains("No")',
 }, { // Question: Select all the existing products
     content: "Ticking answer 'Fanta'",
-    trigger: 'div.js_question-wrapper:contains("Select all the existing products") label:contains("Fanta") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the existing products") label:contains("Fanta")'
 }, {
     content: "Ticking answer 'Drawer'",
-    trigger: 'div.js_question-wrapper:contains("Select all the existing products") label:contains("Drawer") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the existing products") label:contains("Drawer")'
 }, {
     content: "Ticking answer 'Conference chair'",
-    trigger: 'div.js_question-wrapper:contains("Select all the existing products") label:contains("Conference chair") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the existing products") label:contains("Conference chair")'
 }, { // Question: Select all the available customizations for our Customizable Desk
     content: "Ticking answer 'Color'",
-    trigger: 'div.js_question-wrapper:contains("Select all the available customizations for our Customizable Desk") label:contains("Color") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the available customizations for our Customizable Desk") label:contains("Color")'
 }, {
     content: "Ticking answer 'Height'",
-    trigger: 'div.js_question-wrapper:contains("Select all the available customizations for our Customizable Desk") label:contains("Height") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the available customizations for our Customizable Desk") label:contains("Height")'
 }, { // Question: How many versions of the Corner Desk do we have?
     content: "Selecting answer '2'",
-    trigger: 'div.js_question-wrapper:contains("How many versions of the Corner Desk do we have") label:contains("2") input',
+    trigger: 'div.js_question-wrapper:contains("How many versions of the Corner Desk do we have") label:contains("2")',
 }, { // Question: Do you think we have missing products in our catalog? (not rated)
     content: "Missing products",
     trigger: 'div.js_question-wrapper:contains("Do you think we have missing products in our catalog") textarea',
     run: "text I don't know products enough to be able to answer that",
 }, { // Page-2 Question: How much do we sell our Cable Management Box?
     content: "Selecting answer '80$'",
-    trigger: 'div.js_question-wrapper:contains("How much do we sell our Cable Management Box") label:contains("80$") input',
+    trigger: 'div.js_question-wrapper:contains("How much do we sell our Cable Management Box") label:contains("80$")',
 }, { // Question: Select all the the products that sell for 100$ or more
     content: "Ticking answer 'Corner Desk Right Sit'",
-    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Corner Desk Right Sit") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Corner Desk Right Sit")'
 }, {
     content: "Ticking answer 'Desk Combination'",
-    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Desk Combination") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Desk Combination")'
 }, {
     content: "Ticking answer 'Office Chair Black'",
-    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Office Chair Black") input'
+    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Office Chair Black")'
 }, { // Question: What do you think about our prices (not rated)?
-    trigger: 'div.js_question-wrapper:contains("What do you think about our prices") label:contains("Correctly priced") input',
+    trigger: 'div.js_question-wrapper:contains("What do you think about our prices") label:contains("Correctly priced")',
 }, {
     content: "Finish Survey",
     trigger: 'button[type="submit"]',
