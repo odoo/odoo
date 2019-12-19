@@ -41,10 +41,11 @@ class AccountMove(models.Model):
                 domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
         return domain
 
-    @api.constrains('type', 'l10n_latam_document_type_id')
+    @api.constrains('state', 'type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
         super()._check_invoice_type_document_type()
-        for rec in self.filtered(lambda r: r.company_id.country_id == self.env.ref('base.cl')):
+        for rec in self.filtered(lambda r: r.company_id.country_id == self.env.ref('base.cl') and
+                                           r.state in ['posted']):
             tax_payer_type = rec.partner_id.l10n_cl_sii_taxpayer_type
             vat = rec.partner_id.vat
             country_id = rec.partner_id.country_id
