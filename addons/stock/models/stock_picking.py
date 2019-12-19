@@ -6,10 +6,11 @@ from datetime import date
 from itertools import groupby
 from operator import itemgetter
 import time
+import json
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -294,6 +295,8 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Creation Date, usually the time of the order")
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
+    delay_alert_date = fields.Datetime('Delay Alert Date', compute='_compute_delay_alert_date', search='_search_delay_alert_date')
+    json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
@@ -377,6 +380,13 @@ class Picking(models.Model):
         for picking in self:
             picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_lines)
 
+    @api.depends('move_lines.delay_alert_date')
+    def _compute_delay_alert_date(self):
+        delay_alert_date_data = self.env['stock.move'].read_group([('id', 'in', self.move_lines.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'picking_id')
+        delay_alert_date_data = {data['picking_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
+        for picking in self:
+            picking.delay_alert_date = delay_alert_date_data.get(picking.id, False)
+
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
         for picking in self:
@@ -402,6 +412,19 @@ class Picking(models.Model):
                 picking.show_lots_text = True
             else:
                 picking.show_lots_text = False
+
+    def _compute_json_popover(self):
+        for picking in self:
+            picking.json_popover = json.dumps({
+                'popoverTemplate': 'stock.PopoverStockRescheduling',
+                'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False) if picking.delay_alert_date else False,
+                'late_elements': [{
+                        'id': late_move.id,
+                        'name': late_move.display_name,
+                        'model': late_move._name,
+                    } for late_move in picking.move_lines.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
+                ]
+            })
 
     @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
     def _compute_state(self):
@@ -509,6 +532,11 @@ class Picking(models.Model):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
+
+    @api.model
+    def _search_delay_alert_date(self, operator, value):
+        late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
+        return [('move_lines', 'in', late_stock_moves.ids)]
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
@@ -1265,3 +1293,4 @@ class Picking(models.Model):
             body=message,
         )
         return True
+

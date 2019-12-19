@@ -25,6 +25,10 @@
                     <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
+                <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
+                    <field name="show_json_popover" invisible="1"/>
+                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                </xpath>
                 <xpath expr="//group[@name='sale_shipping']" position="inside">
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
                 </xpath>
