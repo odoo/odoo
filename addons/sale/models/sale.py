@@ -1659,11 +1659,12 @@ class SaleOrderLine(models.Model):
 
         name = "\n"
 
-        custom_values = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
+        custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
+        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
 
         # display the no_variant attributes, except those that are also
-        # displayed by a custom (avoid duplicate)
-        for ptav in (self.product_no_variant_attribute_value_ids - custom_values):
+        # displayed by a custom (avoid duplicate description)
+        for ptav in (no_variant_ptavs - custom_ptavs):
             name += "\n" + ptav.display_name
 
         # display the is_custom values
