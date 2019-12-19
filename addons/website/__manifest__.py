@@ -50,6 +50,7 @@
         'views/snippets/s_company_team.xml',
         'views/snippets/s_call_to_action.xml',
         'views/snippets/s_references.xml',
+        'views/snippets/s_popup.xml',
         'views/snippets/s_faq_collapse.xml',
         'views/snippets/s_features_grid.xml',
         'views/snippets/s_tabs.xml',
