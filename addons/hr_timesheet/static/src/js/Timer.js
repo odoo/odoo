@@ -2,8 +2,8 @@ odoo.define('hr_timesheet.Timer', function (require) {
 "use strict";
 
     /**
-     * This class allow to facilitate to display the timer
-     * in unit_amount field of account.analytic.line.
+     * This class improves the timer display using the
+     * unit_amount field on account.analytic.line.
      */
     class Timer {
         constructor(hours, minutes, seconds) {

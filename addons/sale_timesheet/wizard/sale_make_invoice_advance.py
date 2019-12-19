@@ -6,18 +6,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_invoicing_timesheet_enabled(self):
-        product_ids = None
-        if self._context.get('active_id', False):
-            sale_order = self.env['sale.order'].browse(self._context.get('active_id'))
-            product_ids = sale_order.order_line.filtered(lambda sol: sol.invoice_status == 'to invoice').mapped('product_id')
-        elif self._context.get('active_ids', []):
-            sale_orders = self.env['sale.order'].browse(self._context.get('active_ids'))
-            order_lines = sale_orders.mapped('order_line').filtered(lambda sol: sol.invoice_status == 'to invoice')
-            product_ids = order_lines.mapped('product_id')
-
-        if product_ids:
-            return any(product._is_delivered_timesheet() for product in product_ids)
-        return False
+        if 'active_id' not in self._context and 'active_ids' not in self._context:
+            return False
+        sale_orders = self.env['sale.order'].browse(self._context.get('active_id') or self._context.get('active_ids'))
+        order_lines = sale_orders.mapped('order_line').filtered(lambda sol: sol.invoice_status == 'to invoice')
+        product_ids = order_lines.mapped('product_id').filtered(lambda p: p._is_delivered_timesheet())
+        return bool(product_ids)
 
     date_invoice_timesheet = fields.Date(
         string='Invoice Timesheets Up To This Date',

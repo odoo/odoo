@@ -20,15 +20,12 @@ class Project(models.Model):
     allow_timesheet_timer = fields.Boolean('Timesheet Timer', default=False, help="Use a timer to record timesheets on tasks")
 
     _sql_constraints = [
-        ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheet.'),
+        ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
     ]
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        domain = []
-        if self.partner_id:
-            domain = [('partner_id', '=', self.partner_id.id)]
-        return {'domain': {'analytic_account_id': domain}}
+        return {'domain': {'analytic_account_id': [('partner_id', '=', self.partner_id.id)] if self.partner_id else []}}
 
     @api.onchange('analytic_account_id')
     def _onchange_analytic_account(self):
@@ -74,15 +71,11 @@ class Project(models.Model):
                     project._create_analytic_account()
         result = super(Project, self).write(values)
         if 'allow_timesheet_timer' in values and not values.get('allow_timesheet_timer'):
-            self.env['project.task'].with_context(active_test=False).search([('project_id', 'in', self.ids)]).write({
+            self.with_context(active_test=False).mapped('task_ids').write({
                 'timer_start': False,
                 'timer_pause': False,
             })
         return result
-
-    # ---------------------------------------------------
-    #  Business Methods
-    # ---------------------------------------------------
 
     @api.model
     def _init_data_analytic_account(self):
@@ -102,8 +95,9 @@ class Task(models.Model):
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
-    timer_start = fields.Datetime("Timesheet Timer Start", default=None)
+    timer_start = fields.Datetime("Timesheet Timer Start")
     timer_pause = fields.Datetime("Timesheet Timer Last Pause")
+    # YTI FIXME: Those field seems quite useless
     timesheet_timer_first_start = fields.Datetime("Timesheet Timer First Use", readonly=True)
     timesheet_timer_last_stop = fields.Datetime("Timesheet Timer Last Use", readonly=True)
     display_timesheet_timer = fields.Boolean("Display Timesheet Time", compute='_compute_display_timesheet_timer')
@@ -145,10 +139,6 @@ class Task(models.Model):
         for task in self:
             task.display_timesheet_timer = task.allow_timesheets and task.project_id.allow_timesheet_timer and task.analytic_account_active
 
-    # ---------------------------------------------------------
-    # ORM
-    # ---------------------------------------------------------
-
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
         if 'project_id' in values and self and not values.get('project_id'):
@@ -172,10 +162,6 @@ class Task(models.Model):
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
         return result
-
-    # ---------------------------------------------------------
-    # Timer Methods
-    # ---------------------------------------------------------
 
     def action_timer_start(self):
         self.ensure_one()
@@ -201,7 +187,7 @@ class Task(models.Model):
 
     def _action_create_timesheet(self, time_spent):
         return {
-            "name": _("Confirm Time Spent"),
+            "name": _("Validate Spent Time"),
             "type": 'ir.actions.act_window',
             "res_model": 'project.task.create.timesheet',
             "views": [[False, "form"]],
