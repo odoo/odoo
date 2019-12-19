@@ -48,12 +48,9 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True, domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
-
-    # Timer Fields
     display_timer = fields.Boolean(
         compute='_compute_display_timer',
-        help="used to display the timer if the encoding unit is 'Hours'"
-    )
+        help="Technical field used to display the timer if the encoding unit is 'Hours'.")
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
@@ -81,10 +78,6 @@ class AccountAnalyticLine(models.Model):
     def _compute_department_id(self):
         for line in self:
             line.department_id = line.employee_id.department_id
-
-    # ----------------------------------------------------
-    # ORM overrides
-    # ----------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -133,10 +126,6 @@ class AccountAnalyticLine(models.Model):
         for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
             node.set('string', _('Duration (%s)') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
         return etree.tostring(doc, encoding='unicode')
-
-    # ----------------------------------------------------
-    # Business Methods
-    # ----------------------------------------------------
 
     def _timesheet_get_portal_domain(self):
         return ['|', '&',
@@ -207,51 +196,37 @@ class AccountAnalyticLine(models.Model):
                 })
         return result
 
-    # ----------------------------------------------------
-    # Timer Methods
-    # ----------------------------------------------------
     def _compute_display_timer(self):
-        """ Check if the encoding unit is 'Hours',
-
-            if yes then the timer button is displayed
-        """
+        uom_hour = self.env.ref('uom.product_uom_hour')
         for analytic_line in self:
-            analytic_line.display_timer = analytic_line.encoding_uom_id.id == self.env.ref('uom.product_uom_hour').id
+            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour
 
     def action_timer_start(self):
-        """ Action start the timer of the current timesheet.
-
-            Start timer and search if another timer hasn't been launched.
+        """ Start timer and search if another timer hasn't been launched.
             If yes, then stop the timer before launch this timer.
         """
-        self.ensure_one()
         if not self.timer_start and self.display_timer:
             self._stop_running_timers()
             super().action_timer_start()
 
     def _stop_running_timers(self):
         """ Search if a timesheet has a timer activated and stop the timer.
-
             Check if a timer is activated for another timesheet
             if yes, then update unit_amount field and stop timer,
             otherwise, do nothing.
         """
         analytic_line = self.search([('timer_start', '!=', False), ('user_id', '=', self.env.uid)])
-
         if analytic_line:
             analytic_line.action_timer_stop()
 
     def action_timer_stop(self):
         """ Action stop the timer of the current timesheet.
-
             When the timer must be stopped, we must calculate the new
             unit_amount based on the timer and the previous value of
             unit_amount for the current timesheet.
         """
-        self.ensure_one()
         if self.timer_start and self.display_timer:
             minutes_spent = self._get_minutes_spent()
-
             if self.unit_amount == 0 and minutes_spent < 1:
                 # Check if unit_amount equals 0 and minutes_spent is less than 1 minute,
                 # if yes, then remove the timesheet
@@ -261,7 +236,5 @@ class AccountAnalyticLine(models.Model):
                     amount = self.unit_amount
                 else:
                     amount = self.unit_amount + minutes_spent * 60 / 3600
-
                 self.write({'unit_amount': amount})
-
                 super().action_timer_stop()

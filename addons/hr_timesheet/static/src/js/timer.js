@@ -19,6 +19,7 @@ var TimerFieldWidget = AbstractField.extend({
      * @private
      */
     _render: function () {
+        this._super.apply(this, arguments);
         this._startTimeCounter();
     },
     /**
@@ -52,7 +53,7 @@ var TimerFieldWidget = AbstractField.extend({
         return this._rpc({
             model: 'account.analytic.line',
             method: 'get_server_time',
-            args: [false]
+            args: []
         });
     }
 });

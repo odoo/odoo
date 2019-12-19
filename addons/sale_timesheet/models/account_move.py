@@ -59,7 +59,7 @@ class AccountMove(models.Model):
                 domain = line._timesheet_domain_get_invoiced_lines(sale_line_delivery)
                 if date:
                     domain = expression.AND([domain, [('date', '<=', date)]])
-                timesheets = self.env['account.analytic.line'].search(domain).sudo()
+                timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
 
 
@@ -73,9 +73,7 @@ class AccountMoveLine(models.Model):
             :return a normalized domain
         """
         return [
-            '&',
             ('so_line', 'in', sale_line_delivery.ids),
-            '&',
             ('timesheet_invoice_id', '=', False),
             ('project_id', '!=', False)
         ]
