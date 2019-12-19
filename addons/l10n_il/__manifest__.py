@@ -23,7 +23,6 @@ This module consists:
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_templates_data.xml',
         'data/account_chart_template_post_data.xml',
-        'data/account_chart_template_configure_data.xml',
-        'views/res_partner_view.xml'
+        'data/account_chart_template_configure_data.xml'
     ],
 }

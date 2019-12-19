@@ -113,6 +113,39 @@
         ]"/>
     </record>
 
+    <record id="il_vat_self_inv_sale" model="account.tax.template">
+        <field name="sequence">10</field>
+        <field name="description">17%</field>
+        <field name="name">Self Invoice 17%</field>
+        <field name="amount">17</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('account_tax_report_line_self_invoice')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_line_ids': [ref('account_tax_report_line_self_invoice')]
+            }),
+        ]"/>
+    </record>
+
     <!-- Purchase Taxes -->
     <record id="il_vat_inputs_17" model="account.tax.template">
         <field name="sequence">2</field>
@@ -321,4 +354,5 @@
             }),
         ]"/>
     </record>
+
 </odoo>
