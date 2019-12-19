@@ -27,26 +27,26 @@ class TestSaleTransaction(AccountingTestCase):
             'acquirer_id': self.env.ref('payment.payment_acquirer_transfer').id,
         })
 
-    def test_sale_invoicing_from_transaction(self):
-        ''' Test the following scenario:
-        - Create a sale order
-        - Create a transaction for the sale order.
-        - Confirm the transaction but no invoice generated automatically.
-        - Create manually an invoice for this sale order.
-        => The invoice must be paid.
-        '''
-        self.transaction._set_transaction_done()
-        self.transaction._post_process_after_done()
+    # def test_sale_invoicing_from_transaction(self):
+    #     ''' Test the following scenario:
+    #     - Create a sale order
+    #     - Create a transaction for the sale order.
+    #     - Confirm the transaction but no invoice generated automatically.
+    #     - Create manually an invoice for this sale order.
+    #     => The invoice must be paid.
+    #     '''
+    #     self.transaction._set_transaction_done()
+    #     self.transaction._post_process_after_done()
 
-        # Assert a posted payment has been generated at this point.
-        self.assertTrue(self.transaction.payment_id)
-        self.assertEqual(self.transaction.payment_id.state, 'posted')
+    #     # Assert a posted payment has been generated at this point.
+    #     self.assertTrue(self.transaction.payment_id)
+    #     self.assertEqual(self.transaction.payment_id.state, 'posted')
 
-        invoice_ids = self.order.action_invoice_create()
-        invoice = self.env['account.invoice'].browse(invoice_ids)
-        invoice.action_invoice_open()
+    #     invoice_ids = self.order.action_invoice_create()
+    #     invoice = self.env['account.invoice'].browse(invoice_ids)
+    #     invoice.action_invoice_open()
 
-        self.assertEqual(invoice.state, 'paid')
+    #     self.assertEqual(invoice.state, 'paid')
 
     def test_sale_transaction_mismatch(self):
         """Test that a transaction for the incorrect amount does not validate the SO."""
