@@ -1932,7 +1932,7 @@ class AccountMove(models.Model):
                         account_id = line_vals['account_id']
                     else:
                         tax = invoice_repartition_line.invoice_tax_id
-                        base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids)[0]
+                        base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids.flatten_taxes_hierarchy())[0]
                         account_id = base_line.account_id.id
 
                 line_vals.update({
@@ -3159,8 +3159,9 @@ class AccountMoveLine(models.Model):
                 tax = repartition_line.invoice_tax_id or repartition_line.refund_tax_id
                 vals['tax_exigible'] = tax.tax_exigibility == 'on_invoice'
             elif vals.get('tax_ids'):
-                taxes = self.resolve_2many_commands('tax_ids', vals['tax_ids'])
-                vals['tax_exigible'] = not any([tax['tax_exigibility'] == 'on_payment' for tax in taxes])
+                tax_ids = [v['id'] for v in self.resolve_2many_commands('tax_ids', vals['tax_ids'], fields=['id'])]
+                taxes = self.env['account.tax'].browse(tax_ids).flatten_taxes_hierarchy()
+                vals['tax_exigible'] = not any(tax.tax_exigibility == 'on_payment' for tax in taxes)
 
         lines = super(AccountMoveLine, self).create(vals_list)
 
@@ -4105,11 +4106,12 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
 
-                    if any([tax.tax_exigibility == 'on_payment' for tax in line.tax_ids]):
+                    taxes_payment_exigible = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.tax_exigibility == 'on_payment')
+                    if taxes_payment_exigible:
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
-                        for tax in line.tax_ids.filtered(lambda t: t.tax_exigibility == 'on_payment'):
+                        for tax in taxes_payment_exigible:
                             account_id = self._get_tax_cash_basis_base_account(line, tax)
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
