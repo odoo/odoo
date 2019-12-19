@@ -1074,7 +1074,11 @@ class Field(MetaField('DummyField', (object,), {})):
             records = records.sudo()
         fields = records._field_computed[self]
 
-        # just in case the compute method does not assign a value
+        # Just in case the compute method does not assign a value, we already
+        # mark the computation as done. This is also necessary if the compute
+        # method accesses the old value of the field: the field will be fetched
+        # with _read(), which will flush() it. If the field is still to compute,
+        # the latter flush() will recursively compute this field!
         for field in fields:
             env.remove_to_compute(field, records)
 
