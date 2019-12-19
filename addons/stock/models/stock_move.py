@@ -809,6 +809,11 @@ class StockMove(models.Model):
 
     @api.onchange('move_line_ids', 'move_line_nosuggest_ids')
     def onchange_move_line_ids(self):
+        if not self.picking_type_id.use_create_lots:
+            # This onchange manages the creation of multiple lot name. We don't
+            # need that if the picking type disallows the creation of new lots.
+            return
+
         breaking_char = '\n'
         if self.picking_type_id.show_reserved:
             move_lines = self.move_line_ids
