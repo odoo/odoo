@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -40,6 +41,8 @@ class SaleOrder(models.Model):
                                           "the order lines in case of Service products. In case of shipping, the shipping policy of "
                                           "the order will be taken into account to either use the minimum or maximum lead time of "
                                           "the order lines.")
+    json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
+    show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -87,6 +90,20 @@ class SaleOrder(models.Model):
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
                     order._log_decrease_ordered_quantity(documents)
         return res
+
+    def _compute_json_popover(self):
+        for order in self:
+            late_stock_picking = order.picking_ids.filtered(lambda p: p.delay_alert_date)
+            order.json_popover = json.dumps({
+                'popoverTemplate': 'sale_stock.DelayAlertWidget',
+                'late_elements': [{
+                        'id': late_move.id,
+                        'name': late_move.display_name,
+                        'model': 'stock.picking',
+                    } for late_move in late_stock_picking
+                ]
+            })
+            order.show_json_popover = bool(late_stock_picking)
 
     def _action_confirm(self):
         self.order_line._action_launch_stock_rule()
