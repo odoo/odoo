@@ -380,24 +380,6 @@
         </record>
 
         <!-- Actions to list themes with custom kanban (launched on module installation) -->
-        <record id="theme_install_todo_action" model="ir.actions.server">
-            <field name="name">Config: Choose Your Theme</field>
-            <field name="model_id" ref="model_ir_module_module"/>
-            <field name="state">code</field>
-            <field name="code">
-model.update_list()
-action = {
-    'type': 'ir.actions.act_url',
-    'url': '/web?reload#action=website.theme_install_kanban_action', # the ?reload option is there to fool the webclient into thinking it is a different location and so to force a reload
-    'target': 'self',
-}
-            </field>
-        </record>
-        <record id="theme_install_todo" model="ir.actions.todo">
-            <field name="action_id" ref="theme_install_todo_action"/>
-            <field name="sequence">0</field>
-        </record>
-
         <record id="theme_view_form_preview" model="ir.ui.view">
             <field name="name">website.form</field>
             <field name="model">ir.module.module</field>
@@ -428,6 +410,17 @@ action = {
                 ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]),
                 '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
             ]"/>
+        </record>
+
+        <record id="theme_install_act_url" model="ir.actions.act_url">
+            <field name="name">Website</field>
+            <field name="url">/web?reload#action=website.theme_install_kanban_action</field>
+            <field name="target">self</field>
+        </record>
+
+        <record id="theme_install_todo" model="ir.actions.todo">
+            <field name="action_id" ref="theme_install_act_url"/>
+            <field name="sequence">0</field>
         </record>
 
         <!-- ONBOARDING -->
