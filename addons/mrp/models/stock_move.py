@@ -251,7 +251,7 @@ class StockMove(models.Model):
 
     def _delay_alert_get_documents(self):
         res = super(StockMove, self)._delay_alert_get_documents()
-        productions = self.mapped('raw_material_production_id')
+        productions = self.raw_material_production_id | self.production_id
         return res + list(productions)
 
     def _should_be_assigned(self):
