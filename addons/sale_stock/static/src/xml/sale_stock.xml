@@ -42,4 +42,12 @@
             View Forecast
         </button>
     </div>
+
+    <div t-name="sale_stock.DelayAlertWidget">
+        <p>The deliveries
+            <t t-foreach="late_elements" t-as="late_element">
+                <a t-esc="late_element.name" href="#" t-att-element-id="late_element.id" t-att-element-model="model"/>,
+            </t> will be late.
+        </p>
+    </div>
 </templates>
