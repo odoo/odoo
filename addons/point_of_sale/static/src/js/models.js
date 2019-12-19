@@ -1781,6 +1781,10 @@ exports.Orderline = Backbone.Model.extend({
         }
     },
 
+    get_lot_lines: function() {
+        return this.pack_lot_lines.models;
+    },
+
     get_required_number_of_lots: function(){
         var lots_required = 1;
 
@@ -1897,6 +1901,7 @@ exports.Orderline = Backbone.Model.extend({
             tax:                this.get_tax(),
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
+            pack_lot_lines:      this.get_lot_lines()
         };
     },
     generate_wrapped_product_name: function() {
