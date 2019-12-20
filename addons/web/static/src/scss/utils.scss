@@ -279,6 +279,9 @@
 }
 @mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
     margin: -1px -1px auto auto; // compensate border
+    @include media-breakpoint-down(md) {
+        margin: 0 0 auto auto;
+    }
     padding: $padding-base/2 $padding-base;
     border: 1px solid transparent;
     border-bottom: none;
