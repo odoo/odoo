@@ -443,7 +443,13 @@ class StockMove(models.Model):
             to_track_picking_ids = list(to_track_picking_ids)
             pickings = Picking.browse(to_track_picking_ids)
             initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
+
         res = super(StockMove, self).write(vals)
+        if vals.get('date_expected'):
+            for move in self:
+                if move.state not in ('done', 'cancel'):
+                    move.date = move.date_expected
+
         if track_pickings:
             pickings.message_track(pickings.fields_get(['state']), initial_values)
         if receipt_moves_to_reassign:
@@ -661,11 +667,6 @@ class StockMove(models.Model):
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
-
-    @api.onchange('date_expected')
-    def onchange_date(self):
-        if self.date_expected:
-            self.date = self.date_expected
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):
