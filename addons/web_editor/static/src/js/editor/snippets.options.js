@@ -721,21 +721,20 @@ const InputUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getValue: function (methodName) {
-        const widgetValue = this._super(...arguments);
+    getActiveValue: function (methodName) {
+        const activeValue = this._super(...arguments);
 
-        const params = this.getMethodsParams(methodName);
+        const params = this._methodsParams;
         if (!params.unit) {
-            return widgetValue;
+            return activeValue;
         }
 
-        let defaultVal = weUtils.convertValueToUnit(params.defaultValue, params.saveUnit, params.cssProperty, this.$target);
-        defaultVal = isNaN(defaultVal) ? params.defaultValue : `${parseFloat(defaultVal.toFixed(3))}${params.saveUnit}`;
+        const defaultValue = this.getDefaultValue(methodName, false);
 
-        return widgetValue.split(/\s+/g).map(v => {
+        return activeValue.split(/\s+/g).map(v => {
             const numValue = parseFloat(v);
             if (isNaN(numValue)) {
-                return defaultVal;
+                return defaultValue;
             } else {
                 const value = weUtils.convertNumericToUnit(numValue, params.unit, params.saveUnit, params.cssProperty, this.$target);
                 return `${parseFloat(value.toFixed(3))}${params.saveUnit}`;
@@ -744,29 +743,48 @@ const InputUserValueWidget = UserValueWidget.extend({
     },
     /**
      * @override
+     * @param {boolean} [useInputUnit=false]
+     */
+    getDefaultValue: function (methodName, useInputUnit) {
+        const defaultValue = this._super(...arguments);
+
+        const params = this._methodsParams;
+        if (!params.unit) {
+            return defaultValue;
+        }
+
+        const unit = useInputUnit ? params.unit : params.saveUnit;
+        const numValue = weUtils.convertValueToUnit(defaultValue, unit, params.cssProperty, this.$target);
+        if (isNaN(numValue)) {
+            return defaultValue;
+        }
+        return `${parseFloat(numValue.toFixed(3))}${unit}`;
+    },
+    /**
+     * @override
      */
     loadMethodsData: function () {
         this._super(...arguments);
-        let defaultVal = '';
+        let placeholder = '';
         for (const methodName of this._methodsNames) {
-            const params = this.getMethodsParams(methodName);
-            if (params.defaultValue && params.defaultValue !== 'true') {
-                defaultVal = weUtils.convertValueToUnit(params.defaultValue, params.saveUnit, params.cssProperty, this.$target);
-                defaultVal = isNaN(defaultVal) ? params.defaultValue : `${parseFloat(defaultVal.toFixed(3))}`;
+            const defaultValue = this.getDefaultValue(methodName, true);
+            if (defaultValue && defaultValue !== 'true') {
+                placeholder = parseFloat(defaultValue);
+                break;
             }
         }
-        this.inputEl.setAttribute('placeholder', defaultVal);
+        this.inputEl.setAttribute('placeholder', placeholder);
     },
     /**
      * @override
      */
     setValue: function (value, methodName) {
-        const params = this.getMethodsParams(methodName);
+        const params = this._methodsParams;
         if (!params.unit) {
             return this._super(value, methodName);
         }
 
-        const defaultValNum = weUtils.convertValueToUnit(params.defaultValue, params.unit, params.cssProperty, this.$target);
+        const defaultValNum = parseFloat(this.getDefaultValue(methodName, true));
 
         value = value.split(' ').map(v => {
             const numValue = weUtils.convertValueToUnit(v, params.unit, params.cssProperty, this.$target);
