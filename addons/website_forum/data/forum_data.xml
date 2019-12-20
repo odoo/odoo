@@ -5,7 +5,7 @@
             <field name="name">Help</field>
         </record>
 
-        <record id="menu_questions" model="website.menu">
+        <record id="menu_questions" model="website.menu" forcecreate="False">
             <field name="name">Forum</field>
             <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
             <field name="parent_id" ref="website.main_menu"/>
