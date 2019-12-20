@@ -131,7 +131,8 @@ class Scanner(Thread):
             new_devices = [device for device in listdir(self.input_dir)
                            if join(self.input_dir, device) not in [dev.evdev.fn for dev in self.open_devices]]
             scanners = [device for device in new_devices
-                        if (('kbd' in device) and ('keyboard' not in device.lower()))
+                        if 'rapoo' not in device.lower()  
+                        or (('kbd' in device) and ('keyboard' not in device.lower()))
                         or ('barcode' in device.lower()) or ('scanner' in device.lower())]
 
             for device in scanners:
