@@ -67,13 +67,13 @@ PaymentForm.include({
                         window.location.reload();
                     }
                 } else {
-                    self.$el.find('input[name="save_token"]').prop('checked', self.$('#o_payment_save_token_acq_' + acquirerID).find('#o_payment_save_token').prop('checked'));
+                    var transaction_type =  self.$('#o_payment_save_token_acq_' + acquirerID).find('#o_payment_save_token').prop('checked') ? 'save_token': 'server2server';
+                    self.$el.append($('<input>', {'name': 'transaction_type', 'value': transaction_type}));
                     $checkedRadio.val(data.id);
                     self.el.submit();
                 }
             }).guardedCatch(function (error) {
                 // if the rpc fails, pretty obvious
-                error.event.preventDefault();
                 acquirerForm.removeClass('d-none');
                 self.enableButton(button);
                 self.displayError(

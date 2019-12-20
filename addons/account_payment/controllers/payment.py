@@ -12,7 +12,7 @@ from odoo.http import request, route
 class PaymentPortal(http.Controller):
 
     @route('/invoice/pay/<int:invoice_id>/form_tx', type='json', auth="public", website=True)
-    def invoice_pay_form(self, acquirer_id, invoice_id, save_token=False, access_token=None, **kwargs):
+    def invoice_pay_form(self, acquirer_id, invoice_id, transaction_type='form', access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button on the payment
         form.
@@ -29,7 +29,7 @@ class PaymentPortal(http.Controller):
             return False
 
         if request.env.user._is_public():
-            save_token = False # we avoid to create a token for the public user
+            transaction_type = 'form'  # we avoid to create a token for the public user
 
         success_url = kwargs.get(
             'success_url', "%s?%s" % (invoice_sudo.access_url, url_encode({'access_token': access_token}) if access_token else '')
@@ -37,10 +37,8 @@ class PaymentPortal(http.Controller):
         vals = {
             'acquirer_id': acquirer_id,
             'return_url': success_url,
+            'type': transaction_type
         }
-
-        if save_token:
-            vals['type'] = 'save_token'
 
         transaction = invoice_sudo._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(transaction)
@@ -49,7 +47,7 @@ class PaymentPortal(http.Controller):
             invoice_sudo,
             submit_txt=_('Pay & Confirm'),
             render_values={
-                'type': 'save_token' if save_token else 'form',
+                'type': transaction_type,
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
             }
         )
@@ -82,7 +80,7 @@ class PaymentPortal(http.Controller):
 
         vals = {
             'payment_token_id': token.id,
-            'type': 'save_token' if kwargs.get('save_token') else 'server2server',
+            'type': kwargs.get('transaction_type'),
             'return_url': _build_url_w_params(success_url, params),
         }
 
