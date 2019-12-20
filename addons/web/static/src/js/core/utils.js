@@ -320,6 +320,8 @@ var utils = {
      * @returns {string}
      */
     human_number: function (number, decimals, minDigits, formatterCallback) {
+        var sign = Math.sign(number);
+        number = Math.abs(number);
         number = Math.round(number);
         decimals = decimals | 0;
         minDigits = minDigits || 1;
@@ -342,6 +344,7 @@ var utils = {
             var s = Math.pow(10, i * 3);
             if (s <= number / Math.pow(10, minDigits - 1)) {
                 number = Math.round(number * d2 / s) / d2;
+                number = sign * number;
                 symbol = val[i - 1];
                 break;
             }
