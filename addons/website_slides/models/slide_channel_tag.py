@@ -29,4 +29,4 @@ class SlideChannelTag(models.Model):
     group_sequence = fields.Integer(
         'Group sequence', related='group_id.sequence',
         index=True, readonly=True, store=True)
-    channel_ids = fields.Many2many('slide.channel.tag', 'slide_channel_tag_rel', 'tag_id', 'channel_id', string='Channels')
+    channel_ids = fields.Many2many('slide.channel', 'slide_channel_tag_rel', 'tag_id', 'channel_id', string='Channels')
