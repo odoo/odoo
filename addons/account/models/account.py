@@ -333,7 +333,7 @@ class AccountTaxReportLine(models.Model):
 class AccountAccount(models.Model):
     _name = "account.account"
     _description = "Account"
-    _order = "code"
+    _order = "code, company_id"
 
     @api.constrains('internal_type', 'reconcile')
     def _check_reconcile(self):
