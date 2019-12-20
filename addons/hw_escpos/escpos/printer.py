@@ -94,7 +94,7 @@ class Usb(Escpos):
             maxiterate += 1
             if maxiterate > 10000:
                 raise NoStatusError()
-            r = self.device.read(self.in_ep, 20, self.interface).tolist()
+            r = self.device.read(self.out_ep, 20, self.interface).tolist()
             while len(r):
                 rep = r.pop()
         return rep
