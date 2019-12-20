@@ -45,7 +45,7 @@ msgstr "<span>דוחות</span>"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
-msgstr "<span>הצג</span>"
+msgstr "<span>צפייה</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
@@ -68,6 +68,8 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
+"הוסף חברים כדי להקצות אוטומטית את המסמכים שלהם לצוות מכירות זה. אתה יכול "
+"להיות חבר בצוות אחד בלבד."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -83,17 +85,17 @@ msgstr "אמריקה "
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Archived"
-msgstr "התווסף לארכיון"
+msgstr "בארכיון"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
 msgid "Attachment Count"
-msgstr "ספירת קבצים מצורפים"
+msgstr "כמות קבצים מצורפים"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Avatar"
-msgstr "אווטר"
+msgstr "אווטאר"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -105,7 +107,7 @@ msgstr "כפתור גדול ויפה :)"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "לא ניתן למחוק את צוות ברירת המחדל \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
@@ -115,7 +117,7 @@ msgstr "חברי הערוץ"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
 msgid "Color Index"
-msgstr "מפתח צבעים"
+msgstr "אינדקס צבעים"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
@@ -135,7 +137,7 @@ msgstr "איש קשר"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
-msgstr "נוצר על-ידי"
+msgstr "נוצר ע\"י"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
@@ -162,12 +164,12 @@ msgstr "נתוני גרף לוח בקרה"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new sales team"
-msgstr ""
+msgstr "הגדר צוות מכירות חדש"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
-msgstr "הצג שם"
+msgstr "השם המוצג"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -183,14 +185,15 @@ msgstr "חברים מועדפים"
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
-msgstr "צוותים מועדפים להציג אותם בלוח הבקרה ולגשת אליהם בקלות."
+msgstr "צוותים מועדפים להצגה בלוח הבקרה וגישה קלה אליהם."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr "צוות המכירות של המשתמש"
+msgstr ""
+"עקוב אחר צוות זה כדי לעקוב אוטומטית אחר האירועים המשויכים למשתמשים בצוות זה."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -215,18 +218,18 @@ msgstr "קבץ לפי..."
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "אם מסומן, אז הודעה חדשה דורשת התייחסותכם."
+msgstr "אם מסומן, הודעה חדשה דורשת את תשומת לבך."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "אם סומן, בחלק מההודעות קיימת שגיאת משלוח."
+msgstr "אם מסומן, בחלק מההודעות קיימת שגיאת משלוח."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
@@ -234,7 +237,7 @@ msgstr "אם סומן, בחלק מההודעות קיימת שגיאת משלו�
 msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
-msgstr "אם יוגדר, צוות המכירות הזה ישמש למכירות והקצאות הקשורות לשותף זה"
+msgstr "אם מוגדר, צוות המכירות הזה ישמש למכירות והקצאות הקשורות לשותף זה"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -248,7 +251,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 msgid "Is Follower"
-msgstr "האם עוקב"
+msgstr "עוקב"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
@@ -258,7 +261,7 @@ msgstr "שינוי אחרון ב"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
-msgstr "עודכן לאחרונה על-ידי"
+msgstr "עודכן לאחרונה ע\"י"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
@@ -323,7 +326,7 @@ msgstr "צוות מכירות"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales Team name..."
-msgstr ""
+msgstr "שם צוות מכירות..."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
@@ -395,7 +398,7 @@ msgstr "הודעות שלא נקראו"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "מספר הודעות שלא נקראו"
+msgstr "מונה הודעות שלא נקראו"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
@@ -405,6 +408,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each team will work with a separate pipeline."
 msgstr ""
+"השתמש בצוותי מכירות כדי לארגן את מחלקות המכירות שלך.\n"
+"                    כל צוות יעבוד עם צינור נפרד."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -429,19 +434,19 @@ msgstr "משתמשים"
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
-msgstr "אתר"
+msgstr "אתר אינטרנט"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr "למשתמש תהיה גישה לכל הרשומות של כל מי שנמצא ביישום המכירות."
+msgstr "למשתמש תהיה גישה לרשומות של כל המשתמשים ביישום המכירות."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman

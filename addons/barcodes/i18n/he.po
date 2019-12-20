@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
@@ -26,25 +25,25 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr "'*' אינו ביטוי תקין של תבנית ברקוד. האם התכוונת '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid ": a rule can only contain one pair of braces."
-msgstr ": כלל יכול להכיל זוג סוגריים אחד בלבד."
+msgstr "כלל יכול להכיל זוג סוגריים אחד בלבד:"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid ": braces can only contain N's followed by D's."
-msgstr ":סוגרים מסולסלים יכולים להכיל רק N-ים בא אחריהן D-ים"
+msgstr "סוגרים מסולסלים יכולים להכיל רק N-ים בא אחריהן D-ים:"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid ": empty braces."
-msgstr ":סוגרים מסולסלים ריקות"
+msgstr "סוגריים ריקים:"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -84,12 +83,12 @@ msgstr "תמיד"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr "זיהוי פנימי עבור כלל נומנקלטורת ברקוד זה "
+msgstr "מזהה פנימי עבור כלל מונח ברקוד זה "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr "זיהוי פנימי של נומנקלטורת ברקוד"
+msgstr "מזהה פנימי של מונחי הברקוד"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -107,18 +106,18 @@ msgstr "ערבוב אירועי ברקוד"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "נומנקלטורת ברקוד"
+msgstr "מונחי ברקוד"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "שיוך מונחים לבר-קוד "
+msgstr "מונחי ברקוד"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr "דפוס ברקוד"
+msgstr "תבנית ברקוד"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
@@ -129,7 +128,7 @@ msgstr "כלל ברקוד"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr "ברקוד סרוק"
+msgstr "ברקוד נסרק"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -140,7 +139,7 @@ msgstr "חברות"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
 msgid "Created by"
-msgstr "נוצר על-ידי"
+msgstr "נוצר ע\"י"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
@@ -160,7 +159,7 @@ msgstr "בטל"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 msgid "Display Name"
-msgstr "הצג שם"
+msgstr "השם המוצג"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
@@ -223,7 +222,7 @@ msgstr "ניתוב HTTP"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
@@ -236,7 +235,7 @@ msgstr "שינוי אחרון ב"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
 msgid "Last Updated by"
-msgstr "עודכן לאחרונה על-ידי"
+msgstr "עודכן לאחרונה ע\"י"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
@@ -302,7 +301,7 @@ msgstr "טבלאות"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr "דפוס ההתאמה ברקוד"
+msgstr "תבנית התאמת ברקוד"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
