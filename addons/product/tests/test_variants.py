@@ -233,6 +233,33 @@ class TestVariants(common.TestProductCommon):
             one_variant_template.with_company(company_b).standard_price
         )
 
+    def test_archive_variant(self):
+        template = self.env['product.template'].create({
+            'name': 'template'
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [(0, False, {
+                'attribute_id': self.size_attr.id,
+                'value_ids': [
+                    (4, self.size_attr.value_ids[0].id, self.size_attr_value_s),
+                    (4, self.size_attr.value_ids[1].id, self.size_attr_value_m)
+                ],
+            })]
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        variant_1 = template.product_variant_ids[0]
+        variant_1.toggle_active()
+        self.assertFalse(variant_1.active)
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertEqual(len(template.with_context(
+            active_test=False).product_variant_ids), 2)
+        variant_1.toggle_active()
+        self.assertTrue(variant_1.active)
+        self.assertTrue(template.active)
+
+
 class TestVariantsNoCreate(common.TestProductCommon):
 
     def setUp(self):
