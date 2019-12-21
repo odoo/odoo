@@ -1,11 +1,11 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment_authorize
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
@@ -14,10 +14,10 @@ msgstr ""
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
 "Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_authorize
@@ -27,6 +27,8 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
+"Если у вас нет ни одного аккаунта, попросите у поставщика добавить доступ к "
+"порталу."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -36,7 +38,7 @@ msgstr "API логина Id"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "Ключ подписи API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -96,7 +98,7 @@ msgstr "Истекает (ММ / ГГ)"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Как получить оплату с помощью Authorize.Net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:292
@@ -105,6 +107,8 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Найденный неприемлем токен: отсутствует профиль авторизации. Пожалуйста, "
+"убедитесь, что токен имеет действительный справочный номер покупателя."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -145,13 +149,13 @@ msgstr "Paypal"
 #: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Пожалуйста, заполните ваш профиль."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Войдите, чтобы завершить платеж."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -162,7 +166,7 @@ msgstr "Провайдер"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "сохранить карточки"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -187,6 +191,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Транзакцию невозможно обработать, поскольку некоторые контактные данные "
+"отсутствуют или недействительны:"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -205,6 +211,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Эта опция позволяет клиентам сохранять свою кредитную карточку как токен "
+"платежа и повторно использовать ее для дальнейшей покупки. Если вы "
+"управляете подписками (повторяющиеся счета-фактуры), вам нужно автоматически"
+" взимать плату за клиента, когда вы выдаете счет-фактуру."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0

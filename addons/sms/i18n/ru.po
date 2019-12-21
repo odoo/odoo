@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sms
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 msgid ""
@@ -12,10 +12,10 @@ msgstr ""
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sms
@@ -23,7 +23,7 @@ msgstr ""
 #: code:addons/sms/static/src/js/sms_widget.js:93
 #, python-format
 msgid "%s chars, fits in %s SMS (%s) "
-msgstr ""
+msgstr "% S символы, подходит% s SMS (% s)"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -66,7 +66,7 @@ msgstr "Номер"
 #: code:addons/sms/models/mail_thread.py:53
 #, python-format
 msgid "Insufficient credit, unable to send SMS message: %s"
-msgstr ""
+msgstr "Недостаточность кредита, не удается отправить SMS-сообщение:% s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api____last_update
@@ -93,13 +93,15 @@ msgstr "Сообщение"
 #: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
-msgstr ""
+msgstr "Отсутствует мобильный номер для% s."
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:55
 #, python-format
 msgid "No mobile number defined, unable to send SMS message: %s"
 msgstr ""
+"Не определено номер мобильного телефона, не удается отправить SMS-"
+"сообщение:% s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
@@ -109,20 +111,20 @@ msgstr "Получатели"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "SMS API"
-msgstr ""
+msgstr "SMS API"
 
 #. module: sms
 #. openerp-web
 #: code:addons/sms/static/src/xml/sms_widget.xml:4
 #, python-format
 msgid "SMS Pricing"
-msgstr ""
+msgstr "Цена SMS"
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
-msgstr ""
+msgstr "SMS сообщение отправлено:% s"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -135,9 +137,9 @@ msgstr "Отправить"
 #: model:ir.model,name:sms.model_sms_send_sms
 #: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
-msgstr ""
+msgstr "Отправить SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "Отправить SMS"
