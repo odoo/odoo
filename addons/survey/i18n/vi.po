@@ -286,6 +286,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_attempts_limited', '=', False)]}\"> "
 "attempts</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_attempts_limited', '=', False)]}\"> "
+"thử lại</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -293,6 +295,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
 "minutes</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
+"phút</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -396,7 +400,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "<span>Time limit for this survey: </span>"
-msgstr ""
+msgstr "<span>Giới hạn thời gian cho khảo sát này: </span>"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -449,7 +453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
 msgid "Access Mode"
-msgstr ""
+msgstr "Chế độ truy cập"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_token
@@ -459,7 +463,7 @@ msgstr "Token truy cập"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_access_token_unique
 msgid "Access token should be unique"
-msgstr ""
+msgstr "Token truy cập phải là duy nhất"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
@@ -504,7 +508,7 @@ msgstr "Thêm một khảo sát mới"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Add a question"
-msgstr ""
+msgstr "Thêm một câu hỏi"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -578,7 +582,7 @@ msgstr "Bản trả lời"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__public
 msgid "Anyone with the link"
-msgstr ""
+msgstr "Bất kỳ ai có link"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_challenge__category
@@ -610,12 +614,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_done_count
 msgid "Attempts"
-msgstr ""
+msgstr "Thử lại"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Attempts Limit"
-msgstr ""
+msgstr "Giới hạn số lần thử lại"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
@@ -697,27 +701,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certificate
 #: model_terms:ir.ui.view,arch_db:survey.survey_tree
 msgid "Certificate"
-msgstr "Chứng chỉ"
+msgstr "Chứng nhận"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Certification"
-msgstr ""
+msgstr "Chứng nhận"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
 msgid "Certification Badge"
-msgstr ""
+msgstr "Huy chương Chứng nhận"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id_dummy
 msgid "Certification Badge "
-msgstr ""
+msgstr "Huy chương Chứng nhận "
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
 msgid "Certification Document"
-msgstr ""
+msgstr "Tài liệu Chứng nhận"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_give_badge_check
@@ -727,7 +731,7 @@ msgstr ""
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: ${object.survey_id.display_name}"
-msgstr ""
+msgstr "Chứng nhận: ${object.survey_id.display_name}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -969,7 +973,7 @@ msgstr "Ngày trả lời"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
 msgid "Date of Certification:"
-msgstr ""
+msgstr "Ngày chứng nhận:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
@@ -980,7 +984,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__datetime
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__datetime
 msgid "Datetime"
-msgstr ""
+msgstr "Ngày giờ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
@@ -1017,7 +1021,7 @@ msgstr "Miêu tả"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Design easily your survey, send invitations and analyze answers."
-msgstr ""
+msgstr "Thiết kế khảo sát dễ dàng, gửi thư mời và phân tích câu trả lời."
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_2
@@ -1028,7 +1032,7 @@ msgstr "Bàn làm việc kết hợp"
 #: model:ir.actions.act_window,name:survey.action_survey_user_input_line
 #: model:ir.ui.menu,name:survey.menu_survey_response_line_form
 msgid "Detailed Answers"
-msgstr ""
+msgstr "Trả lời chi tiết"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_col2
@@ -1207,17 +1211,17 @@ msgstr "Thử thách Gamification"
 #: model:survey.question,question:survey.survey_feedback_p1
 #: model:survey.question,title:survey.survey_feedback_p1
 msgid "General information"
-msgstr ""
+msgstr "Thông tin tổng quát"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__category__default
 msgid "Generic Survey"
-msgstr ""
+msgstr "Khảo sát tổng quát"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
 msgid "Give Badge"
-msgstr ""
+msgstr "Trao Huy chương"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q1_sug4
@@ -1246,7 +1250,7 @@ msgstr "Chiều cao"
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q1_sug1
 msgid "High quality"
-msgstr ""
+msgstr "Chất lượng cao"
 
 #. module: survey
 #: model:survey.question,question:survey.survey_feedback_p1_q3
@@ -1423,12 +1427,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_page
 msgid "Is a page?"
-msgstr ""
+msgstr "Là một trang?"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_time_limit_reached
 msgid "Is time limit reached?"
-msgstr ""
+msgstr "Đã hết giờ?"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row2
@@ -1517,12 +1521,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
 msgid "Login Required"
-msgstr ""
+msgstr "Yêu cầu đăng nhập"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
-msgstr "Yêu cầu phải đăng nhập"
+msgstr "Yêu cầu đăng nhập"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
@@ -1583,7 +1587,7 @@ msgstr "Ngày lớn nhất"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_datetime
 msgid "Maximum Datetime"
-msgstr ""
+msgstr "Ngày giờ tối đa"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_max
@@ -1613,12 +1617,12 @@ msgstr "Thông điệp"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_date
 msgid "Minimum Date"
-msgstr "Ngày nhỏ nhất"
+msgstr "Ngày tối thiểu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_datetime
 msgid "Minimum Datetime"
-msgstr ""
+msgstr "Ngày giờ tối thiểu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
@@ -1842,17 +1846,17 @@ msgstr "Một lựa chọn mỗi dòng"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_question
 msgid "One page per question"
-msgstr ""
+msgstr "Mỗi trang một câu hỏi"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_section
 msgid "One page per section"
-msgstr ""
+msgstr "Mỗi trang một khu vực"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__one_page
 msgid "One page with all the questions"
-msgstr ""
+msgstr "Một trang chứa toàn bộ các câu hỏi"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1868,7 +1872,7 @@ msgstr "Khác"
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p1_q3_sug5
 msgid "Other (answer in comment)"
-msgstr ""
+msgstr "Khác (câu trả lời ở phần bình luận)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
@@ -1880,7 +1884,7 @@ msgstr "Máy chủ gửi email"
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Overall Performance %.2f%s"
-msgstr ""
+msgstr "Năng suất tổng thể %.2f%s"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q1_sug5
@@ -1910,14 +1914,14 @@ msgstr "Hoàn thiện một phần"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to ${object.survey_id.title} survey"
-msgstr ""
+msgstr "Tham gia khảo sát ${object.survey_id.title}"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 #: model:ir.ui.menu,name:survey.survey_menu_user_inputs
 msgid "Participations"
-msgstr ""
+msgstr "Tham dự"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
@@ -1935,7 +1939,7 @@ msgstr "Đã đạt"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__passing_score
 msgid "Passing score (%)"
-msgstr ""
+msgstr "Điểm đạt (%)"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:0
@@ -2047,7 +2051,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
 msgid "Randomized per section"
-msgstr ""
+msgstr "Ngẫu nhiên theo mỗi khu vực"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -2150,22 +2154,22 @@ msgstr "Số điểm cho lựa chọn này"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_type
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Scoring"
-msgstr ""
+msgstr "Chấm điểm"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
 msgid "Scoring Type"
-msgstr ""
+msgstr "Kiểu chấm điểm"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
 msgid "Scoring with answers at the end"
-msgstr ""
+msgstr "Chấm điểm có câu trả lời khi hoàn thành"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
 msgid "Scoring without answers at the end"
-msgstr ""
+msgstr "Chấm điểm không có câu trả lời khi hoàn thành"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_search
@@ -2764,12 +2768,12 @@ msgstr "Khảo sát này chỉ mở đối với những người đã đăng k�
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Time Limit"
-msgstr ""
+msgstr "Giới hạn thời gian"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__time_limit
 msgid "Time limit (minutes)"
-msgstr ""
+msgstr "Giới hạn thời gian (phút)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
@@ -3032,7 +3036,7 @@ msgstr "Bạn không thể gửi lời mời cho các khảo sát đã bị đó
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "You received the badge"
-msgstr ""
+msgstr "Bạn đã nhận huy chương"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -3047,7 +3051,7 @@ msgstr "ans"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "e.g. Satisfaction Survey"
-msgstr ""
+msgstr "vd: Khảo sát mức độ hài lòng"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
@@ -3062,12 +3066,12 @@ msgstr "xem lại câu trả lời của bạn"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_expired
 msgid "survey expired"
-msgstr ""
+msgstr "khảo sát hết hạn"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void
 msgid "survey is void"
-msgstr ""
+msgstr "khảo sát rỗng"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
