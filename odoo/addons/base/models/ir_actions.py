@@ -444,6 +444,7 @@ class IrActionsServer(models.Model):
         safe_eval(action.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
+        return False
 
     @api.model
     def run_action_multi(self, action, eval_context=None):
