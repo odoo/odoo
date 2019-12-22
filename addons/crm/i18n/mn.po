@@ -10,6 +10,8 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
+# Minj P <pminj322@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
+"Last-Translator: Minj P <pminj322@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +54,8 @@ msgid ""
 "<b>Choose a name</b> for your opportunity, example: <i>'Need a new "
 "website'</i>"
 msgstr ""
+"Та энэ боломжийнхоо <b>нэрээ сонгоно уу,</b> жишээ нь <i>\"Шинэ вэбсайт "
+"хийлгэх\"</i>"
 
 #. module: crm
 #. openerp-web
@@ -82,6 +86,10 @@ msgid ""
 "attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
 "('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
+"('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -91,6 +99,10 @@ msgid ""
 "attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
 "('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
+"('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -108,7 +120,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
 msgid "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -257,7 +269,7 @@ msgstr "Хаяг"
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Alias"
-msgstr "Хуурмаг нэр"
+msgstr "Ерөнхий нэр"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -829,7 +841,7 @@ msgstr "Имэйл"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "Хуурмаг имэйл"
+msgstr "Ерөнхий имэйл"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_from
@@ -851,6 +863,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
+"Энэхүү хаягт ирүүлсэн имэйлүүдээс аль нэг борлуулалтын багт хуваарилагдаагүй"
+" шинэ сэжим үүснэ. Системд автоматаар үүссэн сэжмийг боломж болгон хувиргах "
+"үед борлуулалтын багт хуваарилах боломжтой. Ирж буй мэйлүүдийг автоматаар "
+"борлуулалтын багуудад хуваарилах боломжтой. Үүний тулд борлуулалтын багт "
+"ерөнхий имэйл тохируулах шаардлагатай. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1348,7 +1365,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Lost"
-msgstr "Ялагдсан"
+msgstr "Амжилтгүй"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -1359,13 +1376,13 @@ msgstr "Ялагдсан"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr "Ялагдсан Шалтгаан"
+msgstr "Амжилтгүй болсон шалтгаан"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Ялагдсан Шалтгаан"
+msgstr "Амжилтгүй болсон шалтгаанууд"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1405,12 +1422,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
-msgstr "Ялагдсанаар Тэмдэглэх"
+msgstr "Амжилтгүй болсноор Тэмдэглэх"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
-msgstr "Ялснаар Тэмдэглэх"
+msgstr "Амжилтгүй болсноор Тэмдэглэх"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1420,7 +1437,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
-msgstr "Ялагдсанаар тэмдэглэх"
+msgstr "Амжилтгүй болсноор тэмдэглэх"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1763,7 +1780,7 @@ msgstr ""
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr "Боломж ялагдсан"
+msgstr "Боломж амжилгүй"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
@@ -1779,7 +1796,7 @@ msgstr "Боломжийн Гарчиг"
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr "Боломж Ялсан"
+msgstr "Боломж амжилттай"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
@@ -1789,12 +1806,12 @@ msgstr ""
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr "Боломж ялагдсан"
+msgstr "Боломж амжилтгүй"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr "Боломж ялсан"
+msgstr "Боломж амжилттай"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor8
@@ -2598,6 +2615,7 @@ msgstr ""
 msgid ""
 "When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
+"Имэйл илгээх тохиолдолд, Борлуулалтын багийн имэйлээс автоматаар илгээгдэнэ."
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
