@@ -3,25 +3,24 @@
 # 	* website_form
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Buket Şeker <buket_skr@hotmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
-# Martin Trigaux, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
-# Buket Şeker <buket_skr@hotmail.com>, 2019
-# ANIL TAN SAĞIR <anils@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: ANIL TAN SAĞIR <anils@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,27 +36,20 @@ msgstr "&amp;kere;"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:238
+#: code:addons/website_form/static/src/js/website_form.js:0
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' doğru bir tarih değildir"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:233
+#: code:addons/website_form/static/src/js/website_form.js:0
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' geçerli bir tarih saat biçimi değildir"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:232
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Ekli dosyalar : </p>"
@@ -86,10 +78,19 @@ msgstr "Forumlarda kullanmaya izinli"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "An error has occured, the form has not been sent."
 msgstr "Hata oluştu, form gönderilmedi."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid ""
+"Are you sure you want to change the parameters of your form? All the current"
+" fields will be discarded."
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
@@ -102,6 +103,13 @@ msgid "Blacklisted in web forms"
 msgstr "Web formlarında kara listelenmiş"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Change Form Parameters"
 msgstr "Form Parametrelerini Değiştirin"
@@ -110,13 +118,6 @@ msgstr "Form Parametrelerini Değiştirin"
 #: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Checkbox"
 msgstr "Onay Kutusu"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
-#, python-format
-msgid "Close"
-msgstr "Kapat"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
@@ -140,8 +141,21 @@ msgstr "Ondalık Sayı"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:44
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Discard"
+msgstr "Vazgeç"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Display"
+msgstr "Ekran"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 #, python-format
 msgid "Email"
 msgstr "Eposta"
@@ -158,8 +172,8 @@ msgstr "Bu model için form oluşturma özelliğini aktif et."
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -194,6 +208,11 @@ msgid "Hidden"
 msgstr "Gizli"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Horizontal"
+msgstr "Yatay"
+
+#. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr "Form aksiyonu için etiket"
@@ -204,7 +223,7 @@ msgid "Long Text"
 msgstr "Uzun Metin"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Metadata"
 msgstr "Metadata"
@@ -221,7 +240,7 @@ msgstr "Birden Çok Onay Kutusu"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "No matching record !"
 msgstr "Eşleşen kayıt yok !"
@@ -232,14 +251,21 @@ msgid "Number"
 msgstr "Numara"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:180
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Ok"
+msgstr "Tamam"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:36
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Phone Number"
@@ -247,10 +273,10 @@ msgstr "Telefon Numarası"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr "Lütfen formu eksiksiz doldurunuz."
+msgstr "Lütfen formu doğru doldurun."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.snippet_options
@@ -259,7 +285,7 @@ msgstr "Radyo Düğmeleri"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
 msgstr ""
@@ -271,7 +297,7 @@ msgstr "Zorunlu"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
 #, python-format
 msgid "Save"
 msgstr "Kaydet"
@@ -296,7 +322,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:60
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Subject"
@@ -304,7 +330,7 @@ msgstr "Konu"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Success"
 msgstr "Başarılı"
@@ -328,13 +354,13 @@ msgstr "Teşekkürler!"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
 msgstr "Form başarılı şekilde gönderildi."
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:182
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "This message has been posted on your website!"
 msgstr ""
@@ -350,6 +376,18 @@ msgid "Used in FormBuilder Registry"
 msgstr ""
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Vertical"
+msgstr "Dikey"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Warning"
+msgstr "Uyarı"
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "We will get back to you shortly."
@@ -358,7 +396,7 @@ msgstr "Size en kısa sürede dönüş yapacağız."
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
-msgstr "Websitesi"
+msgstr "Web Sitesi"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
@@ -378,7 +416,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:52
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Your Company"
@@ -386,7 +424,7 @@ msgstr "Şirketiniz"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:28
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Your Name"
@@ -394,7 +432,7 @@ msgstr "Adınız"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:68
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Your Question"

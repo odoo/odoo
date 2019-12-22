@@ -3,27 +3,64 @@
 # 	* project
 # 
 # Translators:
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
+# David Perez <david@closemarketing.es>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Rafael Blasco <rafabn@antiun.com>, 2016
+# Roberto Lizana <robertolizana@trey.es>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# juani_aizean <juani@aizean.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Jairo Llopis <yajo.sk8@gmail.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
+# Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
+# Janire Olagibel <janire.olaguibel@es.gt.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2017
+# Miquel Torner <miq@odoo.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
+# Alejandro Die Sanchis <marketing@domatix.com>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# Antonio Trueba, 2017
+# Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Sergio Flores <vitavitae1@gmail.com>, 2018
+# Gustavo Valverde, 2018
+# Ana Juaristi <ajuaristio@gmail.com>, 2018
+# Manuel Vázquez Acosta <mva.led@gmail.com>, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# Javier Ramirez <elbomba887@gmail.com>, 2018
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2018
+# 966ff43e6966712895a590e7320ca288, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Diego de cos <diegodecos@hotmail.com>, 2018
 # Katerina Katapodi <katerinakatapodi@gmail.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
-# Carlos Lopez <celm1990@hotmail.com>, 2019
-# Diego de cos <diegodecos@hotmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Harald Panten <harald.panten@qubiq.es>, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Dany Daniel Roche <ddanielroche@gmail.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
-# Mariana Santos Romo <msn@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Carlos Lopez <celm1990@hotmail.com>, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Mariana Santos Romo <msn@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:48+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2019-12-16 10:05+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +146,7 @@ msgid ""
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Hello ${partner.name},<br/>\n"
+"            Hello ${partner.name},<br/><br/>\n"
 "            Please take a moment to rate our services related to the task \"<strong>${object.name}</strong>\"\n"
 "            % if object.rating_get_rated_partner_id().name:\n"
 "                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
@@ -471,7 +508,9 @@ msgstr ""
 "ingresos de su proyecto."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "Archivado"
@@ -614,6 +653,13 @@ msgid "By Responsible"
 msgstr "Por responsable"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_task__partner_is_company
+msgid "Check if the contact is a company, otherwise it is a person"
+msgstr ""
+"Marque esta casilla si el contacto es una compañía. En caso contrario, es "
+"una persona."
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
@@ -670,6 +716,11 @@ msgstr "Clic en este botón para modificar la tarea."
 #: model:ir.model.fields,field_description:project.field_project_task__color
 msgid "Color Index"
 msgstr "Índice de Colores"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__commercial_partner_id
+msgid "Commercial Entity"
+msgstr "Entidad comercial"
 
 #. module: project
 #. openerp-web
@@ -770,6 +821,7 @@ msgid "Create a new tag"
 msgstr "Crear una nueva etiqueta"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.action_view_all_task
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 msgid "Create a new task"
 msgstr "Crear una tarea"
@@ -834,6 +886,7 @@ msgstr "Cliente"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__partner_email
 #, python-format
 msgid "Customer Email"
 msgstr "Correo electrónico del cliente"
@@ -843,7 +896,7 @@ msgstr "Correo electrónico del cliente"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr "Opinión de los Clientes"
+msgstr "Opinión de los clientes"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -854,6 +907,7 @@ msgstr "URL del portal de cliente"
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
+#: model:ir.model.fields,field_description:project.field_project_project__rating_status
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -871,11 +925,6 @@ msgstr ""
 "cambie su configuración del proyecto para activarlo."
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__rating_status
-msgid "Customer(s) Ratings"
-msgstr "Valoración de cliente(s)"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -887,13 +936,18 @@ msgid ""
 msgstr ""
 "Los clientes proponen comentarios por correo electrónico; Odoo crea tareas "
 "automáticamente, y usted puede comunicarse directamente sobre la tarea. Sus "
-"gerentes deciden qué feedback es aceptado %s y qué feedback es movido a la "
+"gerentes deciden qué feedback es aceptado y qué feedback es movido a la "
 "columna \"Rechazado\"."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
 msgstr "Diariamente"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
+msgid "Date Deadline Formatted"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -903,6 +957,7 @@ msgstr "Días"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Deadline"
 msgstr "Fecha límite"
 
@@ -992,7 +1047,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: project
 #: code:addons/project/models/digest.py:0
@@ -1048,7 +1103,7 @@ msgid ""
 "want to activate the rating."
 msgstr ""
 "Edite las etapas del proyecto y establezca una plantilla de correo "
-"electrónico sobre las etapas en las que desea activar la calificación."
+"electrónico sobre las etapas en las que desea activar la clasificación."
 
 #. module: project
 #. openerp-web
@@ -1059,6 +1114,7 @@ msgstr "Editando"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Email"
 msgstr "Correo electrónico"
 
@@ -1113,11 +1169,6 @@ msgstr ""
 "Todo el mundo puede proponer ideas, y el Editor marca las mejores como %s. "
 "Adjunte todos los documentos o enlaces a la tarea directamente, para tener "
 "toda la información sobre una investigación centralizada."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Exception Activities"
-msgstr "Actividades de Excepción"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1427,7 +1478,7 @@ msgstr "Importante"
 #: model:project.task.type,legend_normal:project.project_stage_data_2
 #, python-format
 msgid "In Progress"
-msgstr "En progreso"
+msgstr "En proceso"
 
 #. module: project
 #. openerp-web
@@ -1464,6 +1515,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
 msgstr "Es un seguidor"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__partner_is_company
+msgid "Is a Company"
+msgstr "Es una compañia"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -1551,7 +1607,7 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "última actualización de la fase"
+msgstr "última actualización de la etapa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -1726,8 +1782,8 @@ msgstr "Cara neutral"
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:project.task.type,name:project.project_stage_data_0
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #, python-format
 msgid "New"
 msgstr "Nuevo"
@@ -1863,6 +1919,7 @@ msgid "Number of unread messages"
 msgstr "Número de mensajes no leidos"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.action_view_all_task
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
@@ -1975,10 +2032,7 @@ msgid "Parent Record Thread ID"
 msgstr "ID del hilo del registro padre"
 
 #. module: project
-#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
-#, python-format
 msgid "Parent Task"
 msgstr "Tarea padre"
 
@@ -2011,6 +2065,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodical Rating"
 msgstr "Valoración periódica"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__partner_phone
+msgid "Phone"
+msgstr "Teléfono"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -2319,7 +2378,7 @@ msgstr "Etiqueta Kanban roja"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Ref"
-msgstr "Ref."
+msgstr "Ref"
 
 #. module: project
 #. openerp-web
@@ -2331,7 +2390,7 @@ msgstr "Rechazado"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "Informes"
+msgstr "Informando"
 
 #. module: project
 #. openerp-web
@@ -2454,7 +2513,7 @@ msgstr "Configurar plantillas de email para etapas"
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Settings"
-msgstr "Ajustes"
+msgstr "Configuración"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
@@ -2603,7 +2662,7 @@ msgstr "¡El nombre de la etiqueta ya existe!"
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
-msgstr "Categorías"
+msgstr "Etiquetas"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -2616,7 +2675,7 @@ msgstr "Tarea"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr "La tarea %s no puede tener varios niveles de subtareas."
+msgstr "La tarea no puede tener varios niveles de subtareas."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2709,6 +2768,7 @@ msgstr "Tarea lista para la siguiente etapa"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
+#: model:ir.actions.act_window,name:project.action_view_all_task
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 #: model:ir.model.fields,field_description:project.field_project_project__task_ids
@@ -2828,14 +2888,14 @@ msgid "There are no projects."
 msgstr "No hay proyectos."
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
+msgid "There are no ratings for this object at the moment"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
 msgstr "No hay tareas."
-
-#. module: project
-#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
-msgid "There is no rating for this object at the moment"
-msgstr "No hay ninguna calificación para este objeto en este momento."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -2847,14 +2907,14 @@ msgstr "Estas personas recibirán correo electronico."
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Month"
-msgstr "Este mes"
+msgstr "Este Mes"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Week"
-msgstr "Esta semana"
+msgstr "Esta Semana"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -2976,7 +3036,7 @@ msgstr "Cuenta Analítica Desconocida"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes por leer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread_counter
@@ -3139,21 +3199,9 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot create recursive tasks."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Your task must be in the same company as its project."
 msgstr ""
 
 #. module: project

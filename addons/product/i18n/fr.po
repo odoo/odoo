@@ -3,31 +3,62 @@
 # 	* product
 # 
 # Translators:
-# Loic <loic.richard2@gmail.com>, 2019
-# Nathan Noël <nathan070@me.com>, 2019
-# Pierrick Brun <brun.pierrick@protonmail.com>, 2019
-# Thomas Dobbelsteyn <tdo@odoo.com>, 2019
-# JEK Odoo <jek@odoo.com>, 2019
-# Moka Tourisme <hello@mokatourisme.fr>, 2019
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
+# Fabri Yohann <psn@fabri.pw>, 2016
+# Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
+# Sylvain LE GAL <sylvain.legal@grap.coop>, 2016
+# Simon CARRIER <carrier.sim@gmail.com>, 2016
+# zoe <yann.hoareau@migs.re>, 2016
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2016
+# Lionel Sausin <ls@numerigraphe.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Fabien Bourgeois <fabien@yaltik.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Simon Maillard <simon@ogesta.fr>, 2017
+# Florian Hatat, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
+# e2f <projects@e2f.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
+# 31c77b784710e4a287a92d851a40e039, 2018
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2018
+# Lucas Deliege <lud@openerp.com>, 2018
+# 6534c450c77b2549e41c52e2051f5839, 2018
+# Olivier Dony <odo@odoo.com>, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Nancy Bolognesi <nb@microcom.ca>, 2018
+# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2019
 # Bertrand LATOUR <divoir@gmail.com>, 2019
+# Thomas Dobbelsteyn <tdo@odoo.com>, 2019
+# Marie Willemyns <mwi@odoo.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
-# Olivier ANDRE <frsw194@gmail.com>, 2019
-# Celia Tydgat <cty@odoo.com>, 2019
-# thomas quertinmont <tqu@odoo.com>, 2019
+# JEK Odoo <jek@odoo.com>, 2019
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
+# Oriane Malburny <oma@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Loic <loic.richard2@gmail.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Nathan Noël <nathan070@me.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
+# Celia Tydgat <cty@odoo.com>, 2019
+# thomas quertinmont <tqu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: gdp Odoo <gdp@odoo.com>, 2019\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: thomas quertinmont <tqu@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +151,11 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "<span class=\"o_form_label\">New Price =</span>"
+msgstr "<span class=\"o_form_label\">Nouveau Prix =</span>"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
 msgstr "<span class=\"o_stat_text\"> Articles</span>"
@@ -143,7 +179,7 @@ msgstr "<span>m³</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr "<strong>Devise</strong> :<br/>"
+msgstr "<strong>Devise</strong>:<br/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
@@ -181,7 +217,7 @@ msgstr "<strong/>"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
 msgid "A barcode can only be assigned to one product !"
-msgstr "Un code-barre ne peut être assigné qu'à un seul produit !"
+msgstr "Un code-barre ne peut être assigné qu'à un seul produit!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -230,7 +266,7 @@ msgstr "Nécessite une action"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -248,7 +284,7 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
-msgstr "Status de l'activité"
+msgstr "Status de l'Activité"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -295,9 +331,12 @@ msgstr "Appliqué sur"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
 msgstr "Archivé"
 
@@ -318,7 +357,7 @@ msgstr "Compte des pièces jointes"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Caractéristique"
+msgstr "Attribut"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
@@ -365,7 +404,7 @@ msgstr "Disponibilité"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "Barcode"
-msgstr "Code-barres"
+msgstr "Code Barre"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
@@ -720,7 +759,7 @@ msgstr "Remises"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom affiché"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -747,11 +786,6 @@ msgstr "Date de fin pour ce prix fournisseur"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr "Fin de validité pour cet élément de la liste de prix"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-msgid "Exception Activities"
-msgstr "Activités d'Exception"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -842,7 +876,7 @@ msgstr "Accéder aux catégories internes"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Group By"
-msgstr "Regrouper par"
+msgstr "Grouper par"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
@@ -1005,7 +1039,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "Stock"
+msgstr "Inventaire"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
@@ -1050,7 +1084,7 @@ msgstr "Kilogramme"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value____last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -1200,15 +1234,10 @@ msgid "Never"
 msgstr "Jamais"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "New Price ="
-msgstr "Nouveau prix ="
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'activité à venir"
+msgstr "Date limite de l'Activité à Venir"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
@@ -1220,7 +1249,7 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr "Type d'activités à venir"
+msgstr "Type d'Activités à Venir"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1499,7 +1528,7 @@ msgstr "Article"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "Caractéristique de l'article"
+msgstr "Attribut de l'article"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
@@ -1783,15 +1812,9 @@ msgid "Rounding Method"
 msgstr "Méthode d'arrondi"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__list_price
-#: model:ir.model.fields,field_description:product.field_product_template__list_price
-msgid "Sale Price"
-msgstr "Prix de vente"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
-msgstr "Vente"
+msgstr "Ventes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_sale
@@ -1806,9 +1829,10 @@ msgid "Sales Grid Entry"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__list_price
+#: model:ir.model.fields,field_description:product.field_product_template__list_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__list_price
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Sales Price"
 msgstr "Prix de vente"
@@ -1856,7 +1880,7 @@ msgstr ""
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Montrez toutes les enregistrements pour lesquelles la date des prochaines "
-"actions est pour aujourd'hui ou avant"
+"actions est pour aujourd'hui ou avant. "
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
@@ -2083,13 +2107,13 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "This note is only for internal purposes."
-msgstr "Cette note est pour usage interne seulement."
+msgid "This note is added to sales orders and invoices."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "This note will show up on sales orders & invoices."
-msgstr "Cette note apparaitra sur les commandes d'achat et les factures."
+msgid "This note is only for internal purposes."
+msgstr "Cette note est pour usage interne seulement."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -2214,7 +2238,7 @@ msgstr "Image de la variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
-msgid "Variant Image 1204"
+msgid "Variant Image 1024"
 msgstr ""
 
 #. module: product
@@ -2282,7 +2306,7 @@ msgstr "Fournisseur"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendor Bills"
-msgstr "Factures fournisseurs"
+msgstr "Factures fournisseur"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2333,6 +2357,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
 msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Warnings"
+msgstr "Avertissements"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -2476,6 +2505,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Vous devez définir un article pour tout ce que vous vendez ou achetez,\n"
+"                que ce soit un article stockable, consommable ou un service."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

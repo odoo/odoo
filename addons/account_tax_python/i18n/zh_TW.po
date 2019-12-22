@@ -3,7 +3,6 @@
 # 	* account_tax_python
 # 
 # Translators:
-# Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
@@ -11,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +33,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - 稅收組：稅收是一組子稅。\n"
+"    - 固定: 無論價格如何，稅額都保持不變。\n"
+"    - 價格百分比：稅額是價格的百分比：\n"
+"       例如100 * 10％= 110（不含價格）\n"
+"       例如110 /（1 + 10％）= 100（含價格）\n"
+"    - 含稅價格的百分比：含稅金額除以價格:\n"
+"       例如180 /（1 - 10％）= 200（不含價格）\n"
+"       例如200 *（1 - 10％）= 180（含價格）\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -130,13 +139,13 @@ msgstr "Python 代碼"
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr "稅金"
+msgstr "稅"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr "稅金計算"
+msgstr "稅計算"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template

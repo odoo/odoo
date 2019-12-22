@@ -3,20 +3,20 @@
 # 	* website_form
 # 
 # Translators:
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # Martin Trigaux, 2019
 # Bole <bole@dajmi5.com>, 2019
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # Tina Milas, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: Tina Milas, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -33,27 +33,20 @@ msgstr "&amp;puta;"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:238
+#: code:addons/website_form/static/src/js/website_form.js:0
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' nije ispravan datum"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:233
+#: code:addons/website_form/static/src/js/website_form.js:0
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' nije ispravan datum i vrijeme"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:232
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Priložene datoteke : </p>"
@@ -82,10 +75,19 @@ msgstr "Dozvoljeno koristiti na formama"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "An error has occured, the form has not been sent."
 msgstr "Došlo je do pogreške, obrazac nije poslan."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid ""
+"Are you sure you want to change the parameters of your form? All the current"
+" fields will be discarded."
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
@@ -98,6 +100,13 @@ msgid "Blacklisted in web forms"
 msgstr "Zabranjeno u webformama"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Odustani"
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Change Form Parameters"
 msgstr "Promijeni iz parametara"
@@ -106,13 +115,6 @@ msgstr "Promijeni iz parametara"
 #: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Checkbox"
 msgstr ""
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
-#, python-format
-msgid "Close"
-msgstr "Zatvori"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
@@ -136,8 +138,21 @@ msgstr "Decimalni broj"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:44
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Discard"
+msgstr "Odbaci"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Display"
+msgstr "Prikaži"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 #, python-format
 msgid "Email"
 msgstr "E-pošta"
@@ -154,8 +169,8 @@ msgstr "Omogući izradu formi za ovaj model."
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Error"
 msgstr "Greška"
@@ -190,6 +205,11 @@ msgid "Hidden"
 msgstr "Skriveno"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Horizontal"
+msgstr "Horizontalno"
+
+#. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr "Natpis za akciju forme"
@@ -200,7 +220,7 @@ msgid "Long Text"
 msgstr "Dugi tekst"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Metadata"
 msgstr "Metapodaci"
@@ -217,7 +237,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "No matching record !"
 msgstr "Nema odgovarajućeg zapisa ! "
@@ -228,14 +248,21 @@ msgid "Number"
 msgstr "Broj"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:180
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Ok"
+msgstr "U redu"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:36
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Phone Number"
@@ -243,7 +270,7 @@ msgstr "Broj telefona"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Please fill in the form correctly."
 msgstr "Molimo ispunite formu ispravno."
@@ -255,7 +282,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
 msgstr ""
@@ -267,7 +294,7 @@ msgstr "Obavezno"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
 #, python-format
 msgid "Save"
 msgstr "Spremi"
@@ -291,7 +318,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:60
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Subject"
@@ -299,7 +326,7 @@ msgstr "Predmet"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Success"
 msgstr "Uspjeh"
@@ -323,13 +350,13 @@ msgstr "Hvala!"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
 msgstr "Obrazac uspješno poslan."
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:182
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "This message has been posted on your website!"
 msgstr ""
@@ -343,6 +370,18 @@ msgstr ""
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
 msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Vertical"
+msgstr "Vertikalno"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -373,7 +412,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:52
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Your Company"
@@ -381,7 +420,7 @@ msgstr "Vaša tvrtka"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:28
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Your Name"
@@ -389,7 +428,7 @@ msgstr "Vaše ime ..."
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:68
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
 msgid "Your Question"

@@ -3,22 +3,22 @@
 # 	* base
 # 
 # Translators:
-# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2019
-# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2019
+# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018
+# Andy Schønhaug <odoo@cypodgroup.com>, 2018
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
+# Viktor Basso <viktor@voit.no>, 2018
 # Aleksander, 2019
-# nle_odoo, 2019
-# Andy Schønhaug <odoo@cypodgroup.com>, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
 # Martin Trigaux, 2019
 # Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:22+0000\n"
-"PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jorunn D. Newth, 2019\n"
+"POT-Creation-Date: 2019-10-07 07:34+0000\n"
+"PO-Revision-Date: 2016-08-05 12:54+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1157,6 +1157,19 @@ msgstr ""
 "\n"
 "Regnskapsrapporter for India\n"
 "================================\n"
+"    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lu_reports
+msgid ""
+"\n"
+"Accounting reports for Luxembourg\n"
+"=================================\n"
+"    "
+msgstr ""
+"\n"
+"Regnskapsrapporter for  Luxembourg\n"
+"=================================\n"
 "    "
 
 #. module: base
@@ -6688,6 +6701,11 @@ msgid "Address"
 msgstr "Adresse"
 
 #. module: base
+#: model:ir.model,name:base.model_format_address_mixin
+msgid "Address Format"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__type
 #: model:ir.model.fields,field_description:base.field_res_users__type
 msgid "Address Type"
@@ -7100,7 +7118,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Analytisk regnskap"
+msgstr "Analytisk bokføring"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
@@ -8239,7 +8257,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Kanseller"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -8547,7 +8565,7 @@ msgstr "Christmasøya"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
-msgstr "Sted"
+msgstr "By"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
@@ -9016,6 +9034,11 @@ msgid "Construction"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_8
+msgid "Consulting Services"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_partner__child_ids
 #: model:ir.model.fields,field_description:base.field_res_users__child_ids
@@ -9199,7 +9222,7 @@ msgstr "Landkode"
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr "Landegruppe"
+msgstr "Land-gruppe"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
@@ -9559,7 +9582,7 @@ msgstr "Opprettelse"
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Creation Date"
-msgstr "Opprettelsesdato"
+msgstr "Opprettet Dato"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -10141,6 +10164,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
 msgstr "Design, send og spor epostmeldinger"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Desk Manufacturers"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
@@ -10798,6 +10826,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources_employees
 #: model:ir.module.module,shortdesc:base.module_hr
+#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Ansatte"
 
@@ -10805,7 +10834,7 @@ msgstr "Ansatte"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Empty dependency in %r"
-msgstr "Tom avhengighet i %r"
+msgstr "Tom avhengighet i %R"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -11644,11 +11673,6 @@ msgstr "Flyttall"
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27 210 x 330 mm"
-
-#. module: base
-#: model:ir.model,name:base.model_format_address_mixin
-msgid "Fomat Address"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__font
@@ -12842,7 +12866,7 @@ msgstr "IBAN bankkonti"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
-msgstr "ID"
+msgstr "IDID"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
@@ -13046,7 +13070,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "If you wish to cancel the process, press the cancel button below"
-msgstr "For å avbryte prosessen, klikk Avbryt-knappen nedenfor"
+msgstr "For å kansellere prosessen, klikk Avbryt-knappen nedenfor"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_1920
@@ -13645,7 +13669,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_operations_inventory
 #: model:ir.module.module,shortdesc:base.module_stock
 msgid "Inventory"
-msgstr "Lager"
+msgstr "Lagerbeholdning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
@@ -14650,6 +14674,11 @@ msgid "Luxembourg - Accounting"
 msgstr "Luxembourg - Regnskap"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lu_reports
+msgid "Luxembourg - Accounting Reports"
+msgstr "Luxembourg - Regnskapsrapporter"
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
 msgid "M PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 msgstr ""
@@ -15033,7 +15062,7 @@ msgstr "Markedsføring"
 #: model:ir.module.category,name:base.module_category_marketing_marketing_automation
 #: model:ir.module.module,shortdesc:base.module_marketing_automation
 msgid "Marketing Automation"
-msgstr "Markedsføring"
+msgstr "Markedsføringsautomatisering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_marketing_automation
@@ -15341,7 +15370,7 @@ msgstr "Minutter"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr "Diverse"
+msgstr "Div"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -17283,9 +17312,14 @@ msgid "OdooBot for livechat"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Office Supplies"
+msgstr "Kontorutstyr"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -17933,7 +17967,7 @@ msgstr "Tilhører applikasjon"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "Overordnet kategori"
+msgstr "Underkategori av"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -18315,7 +18349,7 @@ msgstr "Kasseløsning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "Kasse"
+msgstr "Salgssted/Point of Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -18706,6 +18740,11 @@ msgid ""
 msgstr ""
 "Egenskaper til grunnleggende felt kan ikke endres på denne måten! Vennligst "
 "modifiser dem via Python kode, helst gjennom en egen modul!"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "Prospects"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
@@ -19136,6 +19175,12 @@ msgid "Recruitment resumés and letters from documents"
 msgstr ""
 
 #. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid "Recursion Detected."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
@@ -19145,12 +19190,6 @@ msgstr "Feil grunnet rekursjon i modulavhengigheter !"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Recursion found in child server actions"
-msgstr ""
-
-#. module: base
-#: code:addons/models.py:0
-#, python-format
-msgid "Recursion Detected."
 msgstr ""
 
 #. module: base
@@ -20264,6 +20303,11 @@ msgstr "Handlinger på server"
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
 msgid "Server action"
 msgstr "Handling på server"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_11
+msgid "Services"
+msgstr "Tjenester"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
@@ -21676,6 +21720,12 @@ msgid ""
 "User: %(user)s\n"
 "Fields:\n"
 "%(fields_list)s"
+msgstr ""
+
+#. module: base
+#: code:addons/api.py:0
+#, python-format
+msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
@@ -23150,6 +23200,11 @@ msgid "Vat Label"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Vendor"
+msgstr "Leverandør"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
 msgstr ""
@@ -23948,7 +24003,7 @@ msgstr "og"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "at"
-msgstr "á"
+msgstr "ved"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary

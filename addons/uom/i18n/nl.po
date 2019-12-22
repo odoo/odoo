@@ -3,8 +3,9 @@
 # 	* uom
 # 
 # Translators:
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2018
 # Martin Trigaux, 2019
-# Cas Vissers <casvissers@brahoo.nl>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +30,9 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey\">\n"
+"                                   bijvoorbeeld: 1*(referentie eenheidà=ratio*(deze eenheid)\n"
+"                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -37,6 +41,9 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey\">\n"
+"                                    bijvoorbeeld: 1*(this unit)=ratio*(reference unit)\n"
+"                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -51,7 +58,7 @@ msgstr "Voeg een nieuwe maateenheid toe"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "Voeg een nieuwe maateenheidcategorie toe"
+msgstr "Voeg een nieuwe maateenheid categorie toe"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -102,38 +109,38 @@ msgstr "Dagen"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
 msgid "Default Length"
-msgstr ""
+msgstr "Standaard lengte"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
 msgid "Default Units"
-msgstr ""
+msgstr "Standaard eenheden"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
 msgid "Default Volume"
-msgstr ""
+msgstr "Standaard volume"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__weight
 msgid "Default Weight"
-msgstr ""
+msgstr "Standaard gewicht"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__working_time
 msgid "Default Working Time"
-msgstr ""
+msgstr "Standaard werktijd"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
-msgstr ""
+msgstr "Dozijnen"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -191,7 +198,7 @@ msgstr "Lengte / Afstand"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_litre
 msgid "Liters"
-msgstr ""
+msgstr "Liters"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
@@ -206,7 +213,7 @@ msgstr "Maateenheid product"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Product maateenheidcategorieën"
+msgstr "Product UoS categorieën"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -226,7 +233,7 @@ msgstr "Afronding"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr ""
+msgstr "Zoek maateenheid"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -274,7 +281,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
-msgstr "Soort"
+msgstr "Type"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
@@ -312,25 +319,25 @@ msgstr "Maateenheidcategorie"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Stuks"
+msgstr "Eenheden"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "Maateenheid"
+msgstr "Maateenheden"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Maateenheid categorieën"
+msgstr "Maateenheidcategorieën"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "Maateenheidcategorieën"
+msgstr "Maateenheden categorieën"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -386,9 +393,7 @@ msgstr "U kan slechts één categorie hebben per maateenheid."
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
-"U kunt deze maateenheid niet verwijderen omdat deze door het systeem wordt "
-"gebruikt."
+msgstr "U kunt deze maateenheid niet verwijderen omdat deze door het systeem."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -427,12 +432,12 @@ msgstr "foot(ft)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gals"
-msgstr ""
+msgstr "gals"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "inches"
-msgstr ""
+msgstr "Inch(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -447,17 +452,17 @@ msgstr "km"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lbs"
-msgstr ""
+msgstr "lbs"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "miles"
-msgstr ""
+msgstr "mijlen"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "ozs"
-msgstr ""
+msgstr "ozs"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt

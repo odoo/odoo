@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_coupon
+# 	* website_sale_coupon
 # 
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2019
@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1+e\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 08:13+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
 "PO-Revision-Date: 2017-02-15 11:47+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
@@ -21,8 +21,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_coupon
-#: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
-msgid "<span class=\"float-left\">Invalid or expired promo code</span>"
+#: model:ir.model,name:website_sale_coupon.model_ir_autovacuum
+msgid "Automatic Vacuum"
 msgstr ""
 
 #. module: website_sale_coupon
@@ -42,6 +42,11 @@ msgid "Discounted amount"
 msgstr ""
 
 #. module: website_sale_coupon
+#: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
+msgid "Invalid or expired promo code."
+msgstr ""
+
+#. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.res_config_settings_view_form
 msgid "Promotion Programs"
@@ -58,7 +63,7 @@ msgid "Sales Order"
 msgstr "Παραγγελία"
 
 #. module: website_sale_coupon
-#: code:addons/website_sale_coupon/models/sale_coupon_program.py:23
+#: code:addons/website_sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "The program code must be unique by website!"
 msgstr ""

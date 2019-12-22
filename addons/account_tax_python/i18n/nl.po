@@ -3,7 +3,8 @@
 # 	* account_tax_python
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Groep van BTW's: Erf is een set van sub BTW's.\n"
+"    - Vast: Het BTW bedrag is gelijk ongeacht de prijs.\n"
+"    - Percentage van prijs: Het BTW bedrag is een percentage van de prijs:\n"
+"        Bijv. 100 * 10% = 110 (exclusief BTW)\n"
+"        Bijv. 110 / (1 + 10%) = 100 (inclusief BTW)\n"
+"    - Percentage van de prijs is inclusief BTW: Het BTW bedrag is een gedeelte van de prijs:\n"
+"        Bijv. 180 / (1 - 10%) = 200 (exclusief BTW)\n"
+"        Bijv. 200 * (1 - 10%) = 180 (inclusief BTW)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -92,7 +103,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Bepaal of de BTW zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
+"Bepaal of de belasting zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -110,7 +121,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Bepaal of de BTW zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
+"Bepaal of de belasting zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -128,7 +139,7 @@ msgstr "Python Code"
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr "BTW"
+msgstr "Belasting"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
@@ -139,4 +150,4 @@ msgstr "BTW berekening"
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "Sjablonen voor BTW"
+msgstr "Sjablonen voor belastingen"

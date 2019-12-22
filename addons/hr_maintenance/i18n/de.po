@@ -3,16 +3,20 @@
 # 	* hr_maintenance
 # 
 # Translators:
+# Wolfgang Taferner, 2017
+# Tom, 2017
+# Dejan Dinic, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2018
 # Martin Trigaux, 2019
-# Jan Meyer, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -32,10 +36,15 @@ msgid "Assigned Employee"
 msgstr ""
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
+msgid "Assigned Equipments"
+msgstr ""
+
+#. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "Created By"
-msgstr "Erstellt von"
+msgstr "Angelegt von"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__owner_user_id
@@ -62,13 +71,12 @@ msgid "Employee"
 msgstr "Mitarbeiter"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
 msgid "Equipment"
 msgstr "Inventar"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
-#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
 msgid "Equipments"
 msgstr "Inventar"
 
@@ -81,6 +89,11 @@ msgstr "Wartungsausrüstung"
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
 msgid "Maintenance Request"
 msgstr "Wartungsanfrage"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
+msgid "Managed Equipments"
+msgstr ""
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr

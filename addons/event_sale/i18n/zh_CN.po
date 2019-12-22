@@ -3,21 +3,26 @@
 # 	* event_sale
 # 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Parco Yau <pya@odoo.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# Martin Trigaux, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,14 +65,14 @@ msgstr "取消日期"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "选择一个活动将会自动创建一个该活动的登记。"
+msgstr "选择活动"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "选择一个活动入场券将会自动创建一个该入场券的登记。"
+msgstr "选译活动入券场，它将自动生成该活动的入场券"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__company_id
@@ -85,7 +90,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
@@ -101,7 +106,7 @@ msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "定义可用入场券的数量。如果注册人数超出入场券数量，你将无法继续售卖入场券。如果设置为0，则上述规则无效。"
+msgstr "定义可用入场券的数量。如果太多人来注册，超过设置数量就卖不出去。如果设置为0，就是忽略这条规则当成无限制"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
@@ -129,7 +134,7 @@ msgstr "编辑"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
 msgid "Email"
-msgstr "EMail"
+msgstr "Email"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
@@ -190,7 +195,6 @@ msgstr "活动的入场券"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
-#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "活动"
 
@@ -232,7 +236,7 @@ msgstr "是一张活动票吗？"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_move
 msgid "Journal Entries"
-msgstr "日记账分录"
+msgstr "凭证录入"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator____last_update
@@ -240,7 +244,7 @@ msgstr "日记账分录"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改日"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
@@ -248,7 +252,7 @@ msgstr "最后更改日"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
@@ -256,7 +260,7 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
+msgstr "最后更新时间"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__limited
@@ -301,7 +305,7 @@ msgstr "该入场券没有可用座位"
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "No more available seats for this ticket type."
-msgstr "该类入场券没有可用座位。"
+msgstr "该入场券没有可用座位。"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:0
@@ -328,7 +332,7 @@ msgstr "原始登记"
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Paid"
-msgstr "已支付"
+msgstr "已付款"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:0
@@ -414,7 +418,7 @@ msgstr "销售订单"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "销售订单分录"
+msgstr "销售订单行"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
@@ -470,7 +474,7 @@ msgstr "这是链接源，例如，搜索引擎、其他域名或EMail列表名�
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Ticket"
-msgstr "门票"
+msgstr "服务单"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -482,7 +486,7 @@ msgstr "入场券类型"
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Ticket cannot belong to both the event category and the event itself."
-msgstr "入场券既不能属于事件类别，也不能属于事件本身。"
+msgstr "票不能属于事件类别和事件自身。"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
@@ -494,7 +498,7 @@ msgstr "出票"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr "服务单"
+msgstr "入场券"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:0
@@ -511,7 +515,7 @@ msgstr "未确认的席位预订"
 #: model:product.product,uom_name:event_sale.product_product_event
 #: model:product.template,uom_name:event_sale.product_product_event_product_template
 msgid "Units"
-msgstr "单位"
+msgstr "件"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__unlimited

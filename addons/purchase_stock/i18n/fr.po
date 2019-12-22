@@ -3,22 +3,35 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2019
-# Martin Trigaux, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
-# Laura Piraux <lap@odoo.com>, 2019
-# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2019
+# e2f <projects@e2f.com>, 2018
+# 6534c450c77b2549e41c52e2051f5839, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
+# Lionel Sausin <ls@numerigraphe.com>, 2018
+# Fabrice Henrion, 2018
+# Clo <clo@odoo.com>, 2018
+# Lucas Deliege <lud@odoo.com>, 2018
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2018
+# Nancy Bolognesi <nb@microcom.ca>, 2018
+# Melanie Bernard <mbe@odoo.com>, 2018
+# Shark McGnark <peculiarcheese@gmail.com>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2018
+# f5f0a0dac17dde787a1d812a6989680e, 2018
+# Mohammed SK <medkamar@blutec.ma>, 2018
+# Bertrand LATOUR <divoir@gmail.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2019
-# a270031086f2a0d3514bc0cb507b48f6, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2019
 # Oriane Malburny <oma@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2018-08-02 11:17+0000\n"
 "Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -54,6 +67,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Selon la configuration du produit, la quantité reçue peut être automatiquement calculée :\n"
+"  - Manuel: la quantité est indiquée manuellement sur la ligne\n"
+"  - Mouvements de stock: la quantité provient de transferts confirmés\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -63,8 +79,8 @@ msgstr "Action"
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
 #: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
-#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #, python-format
 msgid "Buy"
 msgstr "Acheter"
@@ -252,7 +268,7 @@ msgstr "Ligne de commande d'achat"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
-msgstr "Bons de commande"
+msgstr "Bon de commande"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
@@ -303,7 +319,7 @@ msgstr "Réservation"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retour à la cueillette"
+msgstr "Retour de marchandise"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
@@ -319,7 +335,7 @@ msgstr "Planifier les réceptions plus tôt pour éviter les délais"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Stock déplacer"
+msgstr "Mouvement de stock"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
@@ -354,10 +370,8 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
-"ask for a refund. "
+"ask for a refund."
 msgstr ""
-"Les quantités indiquées sur votre bon de commande sont inférieures à celles "
-"facturées. Vous devriez demander un remboursement. "
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date

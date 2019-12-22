@@ -3,16 +3,16 @@
 # 	* website_event_questions
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -20,11 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: website_event_questions
-#: model_terms:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Questions</strong>"
-msgstr "<strong>問題</strong>"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__name
@@ -50,14 +45,14 @@ msgstr "要求每個參加者"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "創建者"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__display_name
@@ -89,12 +84,12 @@ msgstr "活動類別"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "活動問券"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_report
 msgid "Event Question Report"
-msgstr ""
+msgstr "活動問券"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -105,7 +100,7 @@ msgstr "活動登記"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "活動問券回應"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -115,7 +110,7 @@ msgstr "活動類型"
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Exclude cancelled registrations"
-msgstr ""
+msgstr "排除已取消的報名登記"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
@@ -125,7 +120,7 @@ msgstr "一般性問題"
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__id
@@ -148,21 +143,21 @@ msgstr "如果是真的，這個問題將向每一位預訂的與會者問起。
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report____last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後修改時間"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__write_uid
 msgid "Last Updated by"
-msgstr "最後更新者"
+msgstr "最後更新人"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__question_id
@@ -177,7 +172,7 @@ msgstr "疑問"
 #: code:addons/website_event_questions/models/event.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
-msgstr ""
+msgstr "問券內容不能同時屬於活動類別和自身。"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -210,7 +205,7 @@ msgstr "登記"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__sequence
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids

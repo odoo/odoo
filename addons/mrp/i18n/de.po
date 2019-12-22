@@ -3,23 +3,54 @@
 # 	* mrp
 # 
 # Translators:
-# Gab_Odoo <gab@odoo.com>, 2019
-# Katharina Moritz <kmo@e2f.com>, 2019
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Pascal <paesce@gentlemansclub.de>, 2017
+# Mathias Neef <mn@copado.de>, 2017
+# Martin K <martinkuenz@gmail.com>, 2017
+# Christian Körner <fipes.de@gmail.com>, 2017
+# key six <mobile.umts@gmail.com>, 2017
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# ba566f9f7abd166f8f1f032649ec3e69, 2017
+# Renzo Meister, 2017
+# Constantin Ehrenstein <transifex@skiller.eu>, 2017
+# Christopher Bendlin <inactive+cbeodoo@transifex.com>, 2017
+# Gab_Odoo <gab@odoo.com>, 2017
+# Niki Waibel, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Andi, 2017
+# brokemeister <work@maltejansen.de>, 2017
+# 4e7311735ad180fde514b5b19202d965, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# DE T1 <e2f8846@yahoo.com>, 2018
+# Thorsten Brandt <thorsten.brandt@web.de>, 2018
+# Alexander Klockhaus <a.klockhaus@gmail.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Felix Schubert <felix.schubert@go-erp.com>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# Tom, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2018
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2019
 # Wolfgang Taferner, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
+# Katharina Moritz <kmo@e2f.com>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Bettina Pfeifer <betzilla@web.de>, 2019
-# Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Philip Kuß <philip.kuss@gmx.de>, 2019
+# Martin Trigaux, 2019
+# Bettina Pfeifer <betzilla@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -531,7 +562,10 @@ msgid "Approve"
 msgstr "Genehmigen"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
@@ -628,7 +662,6 @@ msgid "BOM lines of the referred bom"
 msgstr "Stücklistenzeilen der bezeichneten Stückliste"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
 msgstr "Strichcode"
@@ -794,11 +827,6 @@ msgstr ""
 "eine Zeile mit Attributen (%s) haben."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
-msgid "BoM details"
-msgstr "Stücklisten-Details"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
@@ -952,6 +980,7 @@ msgstr "Unternehmen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_id
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component"
@@ -996,7 +1025,7 @@ msgstr "Echtzeit-basiert berechnen"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurationseinstellungen"
+msgstr "Konfiguration "
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1062,7 +1091,7 @@ msgstr "Verbrauch"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Continue"
-msgstr "Weitermachen"
+msgstr "Weiter"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -1076,9 +1105,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
-"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
-"Kennzahlen."
+"Eine Umrechnung zwischen Mengeneinheit ist nur möglich, wenn beide Einheiten"
+" einer Kategorie angehören. Die Umrechnung erfolgt dann auf der Basis der "
+"definierten Relationen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1414,14 +1443,6 @@ msgstr ""
 "Lager sicher."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-msgid "Exception Activities"
-msgstr "Ausnahmeaktivitäten"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
 msgstr "Bei den Fertigungsaufträgen sind Ausnahmen aufgetreten:"
@@ -1485,7 +1506,7 @@ msgstr "Fertiggestellte Fertigungslose vorhanden"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr "Abgeschlossene Vorgänge"
+msgstr "Abgeschlossene Schritte"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
@@ -1721,7 +1742,9 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
+msgstr ""
+"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
+"angekreuzt ist."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -1770,6 +1793,11 @@ msgstr "Bild Src"
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
 msgstr "Bildbreite"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Image is a link"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1844,6 +1872,11 @@ msgstr ""
 "scannen müssen"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_finished_lines_editable
+msgid "Is Finished Lines Editable"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_is_follower
@@ -1916,7 +1949,7 @@ msgstr "Bausatz"
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure____last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
@@ -1938,7 +1971,7 @@ msgstr "Letzte Änderung am"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__write_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert von"
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_date
@@ -2125,8 +2158,8 @@ msgstr "Manuelle Dauer"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
 #: model:ir.model.fields.selection,name:mrp.selection__stock_rule__action__manufacture
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #, python-format
 msgid "Manufacture"
 msgstr "Fertigung"
@@ -2299,7 +2332,7 @@ msgstr "Materialverfügbarkeit"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Error beim senden der Nachricht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -2545,6 +2578,7 @@ msgstr "Sobald einige Produkte verarbeitet sind"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__operation_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Operation"
 msgstr "Vorgang"
 
@@ -2921,7 +2955,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__product_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3159,7 +3192,7 @@ msgstr "Zu fertigende Menge"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Quantity in Production"
-msgstr ""
+msgstr "Menge in Produktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__batch_size
@@ -3169,7 +3202,6 @@ msgstr "Zu verarbeitende Menge"
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #, python-format
 msgid "Quantity:"
 msgstr "Menge:"
@@ -3463,7 +3495,7 @@ msgstr "Sicherheitstage für jede Position in Arbeitsaufträgen"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__sequence
 msgid "Sequence"
-msgstr "Sequenz"
+msgstr "Reihenfolge"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3564,7 +3596,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
 msgid "Source"
-msgstr "Herkunft"
+msgstr "Referenz"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
@@ -3605,7 +3637,7 @@ msgstr "Starten Sie einen neuen Arbeitsauftrag"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "State"
-msgstr "Status"
+msgstr "Bundesland"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -3873,6 +3905,18 @@ msgstr ""
 "Ausführung des Fertigungsauftrags geändert wird."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "The serial number %s used for byproduct %s has already been produced"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "The serial number %s used for component %s has already been consumed"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -3938,6 +3982,12 @@ msgstr "Dies sind die auf dem Produkt definierten Kosten."
 msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "This serial number for product %s has already been produced"
 msgstr ""
 
 #. module: mrp
@@ -4253,7 +4303,7 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_unread_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Anzahl ungelesener Nachrichten"
+msgstr "Zähler der ungelesenen Nachrichten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4298,8 +4348,8 @@ msgstr "Verwendet bei"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
-#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:res.groups,name:mrp.group_mrp_user
+#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "User"
 msgstr "Benutzer"
 
@@ -4381,6 +4431,11 @@ msgstr ""
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Warnings"
+msgstr "Warnungen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
@@ -4725,14 +4780,18 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
-"You cannot consume the same serial number twice. Please correct the serial "
-"numbers encoded."
+"You cannot consume additional component as the consumption defined on the "
+"Bill of Material is set to \"strict\""
 msgstr ""
-"Sie können dieselbe Seriennummer nicht zweimal verwenden. Bitte korrigieren "
-"Sie die verschlüsselten Seriennummern."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0

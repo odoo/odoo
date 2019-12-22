@@ -3,19 +3,35 @@
 # 	* mrp
 # 
 # Translators:
+# Andrey Skabelin, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Mekan Bash <tmbashimov@gmail.com>, 2017
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Denis Baranov <baranov@itlibertas.com>, 2017
+# Ꚁemetron <d.v.selitsky@gmail.com>, 2017
+# Андрей Ландау <zaebokkunwow@gmail.com>, 2017
+# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
+# Владимир Куряев <istercul@gmail.com>, 2017
+# Andrey Samorukov <andrey.samorukov@me.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Alex Puchkov <ap@alteco.co>, 2018
+# Denis Trepalin <zekarious@gmail.com>, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Collex100, 2019
-# Андрей Гусев <gaussgss@gmail.com>, 2019
 # Sergey Vilizhanin, 2019
+# Андрей Гусев <gaussgss@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"POT-Creation-Date: 2019-12-16 10:06+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -164,7 +180,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Lost</span>"
-msgstr "<span class=\"o_stat_text\">Потери</span>"
+msgstr "<span class=\"o_stat_text\">Потериt</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -498,7 +514,10 @@ msgid "Approve"
 msgstr "Одобрить"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
@@ -590,7 +609,6 @@ msgid "BOM lines of the referred bom"
 msgstr "Строки ВМ в связанной ВМ"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
 msgstr "Штрих-код"
@@ -749,11 +767,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
-msgid "BoM details"
-msgstr "Перечень ВМ"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
@@ -901,6 +914,7 @@ msgstr "Компания"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_id
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component"
@@ -1354,14 +1368,6 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
 msgstr ""
@@ -1564,7 +1570,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -1673,7 +1679,7 @@ msgid ""
 msgstr ""
 "Если отмечено, когда предыдущее движение движения (которое было произведено "
 "следующей закупкой) отменено или разделено, движение будет также "
-"сгенерированно этим движением"
+"сгенерированно этим движением "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__active
@@ -1715,6 +1721,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Image is a link"
 msgstr ""
 
 #. module: mrp
@@ -1781,7 +1792,12 @@ msgstr "Перемещения"
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
-"Перемещения, для которых нужно отсканировать номер партии для этого задания"
+"Перемещения, для которых нужно отсканировать номер партии для этого задания."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_finished_lines_editable
+msgid "Is Finished Lines Editable"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
@@ -1937,7 +1953,7 @@ msgid ""
 "consume in them. "
 msgstr ""
 "Строки нужно удалить, но это невозможно  сделать пока есть части, отмеченные"
-" к потреблению. "
+" к потреблению."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
@@ -2063,8 +2079,8 @@ msgstr "Продолжительность ручная"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
 #: model:ir.model.fields.selection,name:mrp.selection__stock_rule__action__manufacture
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #, python-format
 msgid "Manufacture"
 msgstr "Изготовление"
@@ -2479,6 +2495,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__operation_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Operation"
 msgstr "Операция"
 
@@ -2853,7 +2870,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__product_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3101,7 +3117,6 @@ msgstr "Количество на процесс"
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #, python-format
 msgid "Quantity:"
 msgstr "Количество:"
@@ -3309,7 +3324,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Scheduled Date"
-msgstr "Запланированная дата"
+msgstr "Плановая дата"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_finished
@@ -3647,7 +3662,7 @@ msgstr "Поле для движения заказов"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
 msgid "Technical field indicating whether the current user is working. "
-msgstr "Поле, отображающее место работы пользователя. "
+msgstr "Поле, отображающее место работы пользователя."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__post_visible
@@ -3662,7 +3677,7 @@ msgstr "Technical field to check when we can unreserve"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
 msgid "Technical: used in views and domains only."
-msgstr "Техническое: используется в видах и доменах."
+msgstr "Техническое: используется в видах и доменах"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__working_state
@@ -3754,7 +3769,7 @@ msgid ""
 msgstr ""
 "Производственные операции этой ВМ. После описания карт заявки на "
 "производство будут преобразованы в производственные задания, иначе нужно "
-"руководствоваться заявкой на производство. "
+"руководствоваться заявкой на производство."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -3791,6 +3806,18 @@ msgid ""
 "The routing contains all the Work Centers used and for how long. This will "
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "The serial number %s used for byproduct %s has already been produced"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "The serial number %s used for component %s has already been consumed"
 msgstr ""
 
 #. module: mrp
@@ -3861,6 +3888,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "This serial number for product %s has already been produced"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_location_id
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
@@ -3894,7 +3927,7 @@ msgstr "Трекер времени"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Time Tracking: "
-msgstr "Трекер времени: "
+msgstr "Трекер времени:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
@@ -4217,8 +4250,8 @@ msgstr "Использовано в"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
-#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:res.groups,name:mrp.group_mrp_user
+#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "User"
 msgstr "Пользователь"
 
@@ -4300,6 +4333,11 @@ msgstr ""
 #, python-format
 msgid "Warning"
 msgstr "Предупреждение"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Warnings"
+msgstr "Предупреждения"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
@@ -4554,7 +4592,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr "Кликните для разблокировки участка."
+msgstr "Кликните для разблокировки участка. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
@@ -4638,12 +4676,18 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
-"You cannot consume the same serial number twice. Please correct the serial "
-"numbers encoded."
-msgstr "Вы не можете использовать один и тот же серийный номер дважды!"
+"You cannot consume additional component as the consumption defined on the "
+"Bill of Material is set to \"strict\""
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -4724,7 +4768,7 @@ msgid ""
 msgstr ""
 "Необходимо определить хотя бы одну потерю продуктивности в категории "
 "«Выполнение». Создайте её из меню производственного приложения: Настройки / "
-"Потери продуктивности."
+"Потери продуктивности"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4736,7 +4780,7 @@ msgid ""
 msgstr ""
 "Необходимо определить хотя бы одну потерю продуктивности в категории "
 "«Выполнение». Создайте её из меню производственного приложения: Настройки / "
-"Потери продуктивности."
+"Потери продуктивности"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4748,7 +4792,7 @@ msgid ""
 msgstr ""
 "Необходимо определить хотя бы одну неактивную потерю продуктивности в "
 "категории «Выполнение». Создайте её из меню производственного приложения: "
-"Настройки / Потери продуктивности."
+"Настройки / Потери продуктивности"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4840,4 +4884,4 @@ msgstr "для"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "производственные задания"
+msgstr "Производственные задания"

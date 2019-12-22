@@ -3,22 +3,22 @@
 # 	* web
 # 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2019
-# wilcobergacker <wilcobergacker@gmail.com>, 2019
-# Melroy van den Berg <webmaster1989@gmail.com>, 2019
-# Volluta <volluta@tutanota.com>, 2019
-# Martin Trigaux, 2019
+# Volluta <volluta@tutanota.com>, 2016
+# wilcobergacker <wilcobergacker@gmail.com>, 2017
+# Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -142,7 +142,7 @@ msgstr "'%s' is geen correcte datum"
 #: code:addons/web/static/src/js/core/time.js:0
 #, python-format
 msgid "'%s' is not a correct date, datetime nor time"
-msgstr "'%s' is is geen correcte datum, datum/tijd en/of tijd."
+msgstr "'%s' is is geen correcte datum, datum/tijd of tijd."
 
 #. module: web
 #. openerp-web
@@ -193,7 +193,7 @@ msgstr "(wijzig)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(count)"
-msgstr "(aantal)"
+msgstr "(count)"
 
 #. module: web
 #. openerp-web
@@ -303,7 +303,7 @@ msgstr "Toegangsfout"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Access to all Enterprise Apps"
-msgstr "Toegang tot alle Enterprise apps"
+msgstr "Toegang tot alle enterprise apps"
 
 #. module: web
 #. openerp-web
@@ -380,7 +380,7 @@ msgstr "Kolom toevoegen"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add a condition"
-msgstr "Toevoegen"
+msgstr "Conditie toevoegen"
 
 #. module: web
 #. openerp-web
@@ -399,6 +399,7 @@ msgstr "Branch toevoegen"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
@@ -455,14 +456,14 @@ msgstr "Toevoegen: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/signature.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
 msgstr "Uw eigen handtekening"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/signature.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt and Sign"
 msgstr "Adopteer en teken"
@@ -567,7 +568,7 @@ msgstr "En meer"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Any"
-msgstr "één"
+msgstr "Elke"
 
 #. module: web
 #. openerp-web
@@ -820,17 +821,17 @@ msgstr "Agenda weergave heeft een niet gedefinieerde 'date_start' eigenschap."
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
-#: code:addons/web/static/src/js/fields/signature.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: web
 #. openerp-web
@@ -1099,7 +1100,7 @@ msgstr "Aanmaken"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "Create "
-msgstr "Aanmaken"
+msgstr "Maken"
 
 #. module: web
 #. openerp-web
@@ -1127,7 +1128,7 @@ msgstr "Maak een nieuw record aan"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Create and Edit..."
-msgstr "Aanmaken en bewerken..."
+msgstr "Aanmaken en beweren..."
 
 #. module: web
 #. openerp-web
@@ -1169,7 +1170,7 @@ msgstr "Aanmaakdatum:"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Creation User:"
-msgstr "Aangemaakt door:"
+msgstr "Gebruiker aanmaken:"
 
 #. module: web
 #. openerp-web
@@ -1313,7 +1314,7 @@ msgstr "Negeer een record wijziging"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Do you really want to delete this export template?"
-msgstr "Wilt u echt dit exportsjabloon verwijderen?"
+msgstr "Wilt u echt dit exporteer sjabloon verwijderen?"
 
 #. module: web
 #. openerp-web
@@ -1397,14 +1398,14 @@ msgstr "Dupliceer"
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Bewerken"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit Action"
-msgstr "Actie bewerken"
+msgstr "Bewerkingsactie"
 
 #. module: web
 #. openerp-web
@@ -1510,7 +1511,7 @@ msgstr "Alles uitvouwen"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Export"
-msgstr "Export"
+msgstr "Exporteren"
 
 #. module: web
 #. openerp-web
@@ -1652,7 +1653,7 @@ msgstr "Filters"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Flip axis"
-msgstr "Wisselen assen"
+msgstr "Wissen assen"
 
 #. module: web
 #. openerp-web
@@ -1868,7 +1869,7 @@ msgstr "Geheel getal"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Invalid data"
-msgstr "Ongeldige gegevens"
+msgstr "Invalide data"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0 code:addons/web/controllers/main.py:0
@@ -2174,7 +2175,7 @@ msgstr "Many2one"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match"
-msgstr "Match"
+msgstr "Overeenkomst"
 
 #. module: web
 #. openerp-web
@@ -2204,7 +2205,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
-msgstr "Meetwaarden"
+msgstr "Eenheden"
 
 #. module: web
 #. openerp-web
@@ -2265,6 +2266,8 @@ msgid ""
 "Module %s not loaded or inexistent, or templates of addon being loaded (%s) "
 "are misordered"
 msgstr ""
+"Module %s niet geladen of niet aanwezig, of sjablonen van add-on die worden "
+"geladen (%s) zijn verkeerd geordend"
 
 #. module: web
 #. openerp-web
@@ -2396,7 +2399,7 @@ msgstr "Geen data"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "No data to display"
-msgstr "Geen gegevens om te tonen"
+msgstr "Geen data om te tonen"
 
 #. module: web
 #. openerp-web
@@ -2438,6 +2441,7 @@ msgstr "Geen resultaten om te tonen..."
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
 msgstr ""
+"Geen sjabloon gevonden om van over te erven. Module %s en sjabloonnaam %s"
 
 #. module: web
 #. openerp-web
@@ -2446,6 +2450,13 @@ msgstr ""
 #, python-format
 msgid "No valid record to save"
 msgstr "Geen geldig record om te bewaren"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/core/utils.js:0
+#, python-format
+msgid "Node [%s] is not a JSONified XML node"
+msgstr "Node [%s] is geen JSONified XML node"
 
 #. module: web
 #. openerp-web
@@ -2582,7 +2593,7 @@ msgstr "Alleen gehele waardes of getallen zijn geldig."
 msgid ""
 "Only employee can access this database. Please contact the administrator."
 msgstr ""
-"Enkel werknemers kunnen aan deze database. U dient de administrator te "
+"Enkel werknemers kunnen aan deze database. Gelieve de administrator te "
 "contacteren."
 
 #. module: web
@@ -2695,11 +2706,7 @@ msgid ""
 "                    <span class=\"page\"/>\n"
 "                    of\n"
 "                    <span class=\"topage\"/>"
-msgstr ""
-"Pagina:\n"
-"                    <span class=\"page\"/>\n"
-"                    van\n"
-"                    <span class=\"topage\"/>"
+msgstr "Pagina : <span class=\"page\"/>van <span class=\"topage\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
@@ -2779,7 +2786,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/pivot/pivot_view.js:0
 #, python-format
 msgid "Pivot"
-msgstr "Draaitabel"
+msgstr "Pivot"
 
 #. module: web
 #. openerp-web
@@ -2787,7 +2794,7 @@ msgstr "Draaitabel"
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Please click on the \"save\" button first."
-msgstr "U dient eerst op de \"Opslaan\" knop te klikken."
+msgstr "Gelieve eerst op de \"Opslaan\" knop te klikken."
 
 #. module: web
 #. openerp-web
@@ -2815,7 +2822,7 @@ msgstr "Selecteer velden voor opslaan export lijst..."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Please update translations of :"
-msgstr "U dient de vertalingen te updaten van:"
+msgstr "Gelieve de vertalingen te updaten van:"
 
 #. module: web
 #. openerp-web
@@ -2824,7 +2831,7 @@ msgstr "U dient de vertalingen te updaten van:"
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr ""
-"U dient de kopieer knop te gebruiken om de fout te melden aan support."
+"Gelieve de kopieer knop te gebruiken om de fout te melden aan support."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -2879,6 +2886,7 @@ msgstr "Vorig jaar"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/sidebar.js:0
+#: code:addons/web/static/src/xml/report.xml:0
 #: code:addons/web/static/src/xml/report.xml:0
 #, python-format
 msgid "Print"
@@ -3067,7 +3075,7 @@ msgstr "Verwijder deze favoriet van de lijst"
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #, python-format
 msgid "Report"
-msgstr "Rapport"
+msgstr "Rapportage"
 
 #. module: web
 #. openerp-web
@@ -3223,7 +3231,7 @@ msgstr "Zoek meer..."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Search..."
-msgstr "Zoek..."
+msgstr "Zoeken..."
 
 #. module: web
 #. openerp-web
@@ -3256,7 +3264,7 @@ msgstr "Zie voorbeelden"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select"
-msgstr "Selecteren"
+msgstr "Selecteer"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -3490,7 +3498,7 @@ msgstr "Labels"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr ""
-"Neem een minuutje om koffie te halen,<br />want Odoo is aan het laden..."
+"Neem een minuutje om koffie te halen,<br />want het is aan het laden..."
 
 #. module: web
 #. openerp-web
@@ -3539,6 +3547,8 @@ msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
+"De inhoud van deze cel is te lang voor een XLSX-bestand (meer dan %s "
+"tekens). Gebruik de CSV-indeling voor deze export."
 
 #. module: web
 #. openerp-web
@@ -3546,7 +3556,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "The domain you entered is not properly formed"
-msgstr "Het ingegeven domein is niet correct geformatteerd"
+msgstr "Het ingegegevn domein is niet correct opgebouwd"
 
 #. module: web
 #. openerp-web
@@ -3643,6 +3653,8 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"Er zijn te veel rijen (%s rijen, limiet: %s) om te exporteren als Excel "
+"2007-2013 (.xlsx) -indeling. Overweeg de export te splitsen."
 
 #. module: web
 #. openerp-web
@@ -3749,6 +3761,8 @@ msgid ""
 "Timezone Mismatch : This timezone is different from that of your browser.\n"
 "Please, set the same timezone as your browser's to avoid time discrepancies in your system."
 msgstr ""
+"Tijdzone komt niet overeen: deze tijdzone verschilt van die van uw browser.\n"
+"Stel alsjeblieft dezelfde tijdzone in als je browser om tijdafwijkingen in je systeem te voorkomen."
 
 #. module: web
 #. openerp-web
@@ -3771,7 +3785,7 @@ msgstr "Schakelen"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Toggle Timelines"
-msgstr "Wissel tijden"
+msgstr "Wissel tijdlijnen"
 
 #. module: web
 #. openerp-web
@@ -3812,6 +3826,8 @@ msgid ""
 "Try to add some records, or make sure that there is at least one measure and"
 " no active filter in the search bar."
 msgstr ""
+"Probeer enkele records toe te voegen of zorg ervoor dat er ten minste één "
+"meetwaarde en geen actief filter in de zoekbalk staat."
 
 #. module: web
 #. openerp-web
@@ -3821,6 +3837,8 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                active filter in the search bar."
 msgstr ""
+"Probeer enkele records toe te voegen of zorg ervoor dat er geen\n"
+"actief filter is in de zoekbalk."
 
 #. module: web
 #. openerp-web
@@ -4089,7 +4107,7 @@ msgstr "Web mobiel testen"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
-msgstr "Web testen"
+msgstr "Web Tests"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
@@ -4185,7 +4203,7 @@ msgstr "Gisteren"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "You are back online"
-msgstr "U bent weer online"
+msgstr "U bent terug online"
 
 #. module: web
 #. openerp-web
@@ -4200,7 +4218,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:0
 #, python-format
 msgid "You cannot follow relations for this field chain construction"
-msgstr "U kunt de relaties niet volgen voor deze gekoppelde veld constructie."
+msgstr "U kunt de relaties niet volgen voor deze veld keten constructie."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4215,8 +4233,8 @@ msgstr "Het is niet toegestaan om de wachtwoord velden leeg te laten."
 msgid ""
 "You may not believe it,<br />but the application is actually loading..."
 msgstr ""
-"Je zou het haast niet geloven,<br />maar Odoo is wel degelijk aan het "
-"laden..."
+"Je zou het haast niet geloven,<br />maar de applicatie is wel degelijk aan "
+"het laden..."
 
 #. module: web
 #. openerp-web
@@ -4226,6 +4244,8 @@ msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
 msgstr ""
+"U moet dit nieuwe record opslaan voordat u de vertaling bewerkt. Wilt u "
+"doorgaan?"
 
 #. module: web
 #. openerp-web
@@ -4235,7 +4255,7 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
-"U moet Odoo starten met minimaal twee werkers om een PDF versie van de "
+"U moet Odoo starten met minimaal twee workers om een PDF versie van de "
 "rapporten te kunnen afdrukken."
 
 #. module: web
@@ -4278,19 +4298,6 @@ msgid "Your name"
 msgstr "Uw naam"
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
-#, python-format
-msgid ""
-"Your password is the default (admin)! If this system is exposed to untrusted"
-" users it is important to change it immediately for security reasons. I will"
-" keep nagging you about it!"
-msgstr ""
-"Uw wachtwoord is het standaard (admin)! Als dit systeem wordt blootgesteld "
-"aan niet-vertrouwde gebruikers, is het belangrijk om het om "
-"veiligheidsredenen onmiddellijk te wijzigen. Ik zal je er blijven over "
-"zeuren ;-) !"
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
@@ -4330,7 +4337,7 @@ msgstr "ongeveer 1 jaar geleden"
 #: code:addons/web/static/src/js/core/translation.js:0
 #, python-format
 msgid "about an hour ago"
-msgstr "ongeveer een uur geleden"
+msgstr "ongeveer 1 uur geleden"
 
 #. module: web
 #. openerp-web
@@ -4414,7 +4421,7 @@ msgstr "is"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after"
-msgstr "Is na"
+msgstr "is na"
 
 #. module: web
 #. openerp-web
@@ -4430,7 +4437,7 @@ msgstr "is na of gelijk aan"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before"
-msgstr "Is voor"
+msgstr "is voor"
 
 #. module: web
 #. openerp-web
@@ -4457,7 +4464,7 @@ msgstr "Is tussen"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is equal to"
-msgstr "is gelijk aan"
+msgstr "Is gelijk aan"
 
 #. module: web
 #. openerp-web
@@ -4595,7 +4602,7 @@ msgstr "niet ingesteld (onwaar)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "of the following rules:"
-msgstr "van de volgende regels:"
+msgstr "in de volgende regels:"
 
 #. module: web
 #. openerp-web
@@ -4659,7 +4666,7 @@ msgstr "geselecteerde records,"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "set"
-msgstr "ingesteld"
+msgstr "instellen"
 
 #. module: web
 #. openerp-web
