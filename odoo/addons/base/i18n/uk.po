@@ -215,6 +215,88 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Данії\n"
+"===============================\n"
+"\n"
+"Це модуль для упраління **планом рахунків для Данії**. Охоплюйте як приватний бізнес, так і I/S, IVS, ApS та A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"        \n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -854,6 +936,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Такі країни, як Колумбія, Перу та Мексика повинні могти користуватися\n"
+"        кодом UNSPSC для їхніх товарів та одиниць вимірювання.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1744,6 +1830,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Данії\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et_reports
@@ -11665,7 +11755,7 @@ msgstr "Колумбійська локалізація для документ�
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_edi_ubl_2_1
 msgid "Colombian Localization for EDI documents UBL 2.1"
-msgstr ""
+msgstr "Колумбійська локалізація для документів EDI UBL 2.1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__color
@@ -13102,12 +13192,12 @@ msgstr "Данія"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk
 msgid "Denmark - Accounting"
-msgstr ""
+msgstr "Данія - Бухоблік"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_reports
 msgid "Denmark - Accounting Reports"
-msgstr ""
+msgstr "Данія - Бухгалтерські звіти"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -14148,7 +14238,7 @@ msgstr "Електронне виставлення рахунків для Ко
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi_ubl_2_1
 msgid "Electronic invoicing for Colombia with Carvajal UBL 2.1"
-msgstr ""
+msgstr "Електронне виставлення рахунків для Колумбії через Carvajal UBL 2.1"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:629
@@ -15219,6 +15309,12 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"Файл не імпортується через неправильно сформований файл.\n"
+"\n"
+"Ця проблема може бути викликана дублікатами записів, які посилаються на те саме поле. Перевірте вміст файлу, який ви намагаєтеся імпортувати.\n"
+"\n"
+"Технічні деталі:\n"
+"%s"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:51
@@ -25522,7 +25618,7 @@ msgstr "Студія"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_studio_customization
 msgid "Studio customizations"
-msgstr ""
+msgstr "Налаштування Студії"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -27742,6 +27838,8 @@ msgid ""
 "This module has been generated by Odoo Studio.\n"
 "It contains the apps created with Studio and the customizations of existing apps."
 msgstr ""
+"Цей модуль створено через Odoo Studio.\n"
+"Він містить модулі, створені за допомогою Студії та налаштуванням існуючих модулей."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -28245,7 +28343,7 @@ msgstr "UK - Бухгалтерські звіти до HMRC"
 #: model:ir.module.module,shortdesc:base.module_product_unspsc
 #: model:ir.module.module,summary:base.module_product_unspsc
 msgid "UNSPSC product codes"
-msgstr ""
+msgstr "Коди товару UNSPSC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
