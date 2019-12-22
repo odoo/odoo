@@ -2998,6 +2998,9 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"Modificarea numărului de TVA nu este permisă odată ce au fost emise facturi "
+"pentru contul dvs. Vă rugăm să ne contactați direct pentru această "
+"operațiune."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:149
@@ -4306,6 +4309,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:235
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Direct connection to your bank"
 msgstr ""
@@ -5113,7 +5122,7 @@ msgstr "Să începem"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr ""
+msgstr "Obțineți avertizări la facturarea anumitor clienți"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6597,7 +6606,7 @@ msgstr "Note legale..."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Mențiuni legale care trebuie tipărite pe facturi."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:216
@@ -8552,7 +8561,7 @@ msgstr "Referință / Descriere"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_ids
 msgid "Refund Invoices"
-msgstr ""
+msgstr "Facturi de retur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_filter_refund
