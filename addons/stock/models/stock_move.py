@@ -468,7 +468,7 @@ class StockMove(models.Model):
                 if not move_dest_ids:
                     continue
                 delta_days = (new_date - move.date_expected).total_seconds() / 86400
-                if not move.propagate_date or abs(delta_days) < move.propagate_date_minimum_delta:
+                if move.propagate_date and abs(delta_days) > move.propagate_date_minimum_delta:
                     move_dest_ids._delay_alert_log_activity('manual', move)
                     continue
                 for move_dest in move_dest_ids:
