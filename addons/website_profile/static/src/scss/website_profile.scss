@@ -56,9 +56,13 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             line-height: $line-height-base;
             @include o-hover-text-color(rgba(white, 0.8), white);
 
-            &, &:hover {
-                border-color: #875A7B;
-                background: transparent;
+            & {
+                border-color: transparent;
+            }
+    
+            &:hover {
+                border-color: transparent;
+                background: #3d2938;
             }
 
             &.active {

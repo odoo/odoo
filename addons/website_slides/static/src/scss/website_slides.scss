@@ -210,7 +210,7 @@ $o-wslides-fs-side-width: 300px;
 }
 
 @mixin o-wslides-tabs($tab-active-color: $o-wslides-color-bg) {
-    margin-top: ($o-wslides-tabs-height * -1) + 0.05rem;
+    margin-top: ($o-wslides-tabs-height * -1);
     border-bottom: 0;
 
     .nav-link {
@@ -219,9 +219,12 @@ $o-wslides-fs-side-width: 300px;
         line-height: $line-height-base;
         @include o-hover-text-color(rgba(white, 0.8), white);
 
-        &, &:hover {
-            border-color: #875A7B;
-            background: transparent;
+        & {
+            border-color: transparent;
+        }
+
+        &:hover {
+            background: #3d2938;
         }
 
         &.active {

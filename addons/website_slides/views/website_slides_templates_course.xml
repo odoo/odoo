@@ -175,18 +175,18 @@
                         <!-- Training Content -->
                         <div class="col-12 col-md-8 col-lg-9">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
-                                <li class="nav-item o_wslides_course_header_nav_home_training">
-                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')" 
-                                        id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" 
+                                <li class="nav-item">
+                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
+                                        id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home"
                                         t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
                                         <i class="fa fa-home"/> Course
                                     </a>
                                 </li>
-                                <li t-if="channel.allow_comment" class="nav-item">
-                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')" 
-                                        id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" 
+                                <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review_training">
+                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
+                                        id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review"
                                         t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
-                                        Review
+                                        Reviews<t t-if="rating_count"> (<t t-esc="rating_count"/>)</t>
                                     </a>
                                 </li>
                             </ul>
@@ -215,7 +215,7 @@
                         <div class="row">
                             <div class="col-12 col-md-8 offset-md-4 col-lg-9 offset-lg-3">
                                 <ul class="nav nav-tabs o_wslides_nav_tabs o_wslides_doc_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
-                                    <li class="nav-item o_wslides_course_header_nav_home_documentation">
+                                    <li class="nav-item">
                                         <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
                                             id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home"
                                             t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
@@ -223,11 +223,11 @@
                                             Course
                                         </a>
                                     </li>
-                                    <li t-if="channel.allow_comment" class="nav-item">
+                                    <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review_documentation">
                                         <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
                                             id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review"
                                             t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
-                                            Review
+                                            Reviews<t t-if="rating_count"> (<t t-esc="rating_count"/>)</t>
                                         </a>
                                     </li>
                                 </ul>
@@ -420,6 +420,9 @@
         </div>
 
         <div class="d-flex flex-row">
+            <a name="o_wslides_list_slide_add_quizz" t-if="channel.can_upload and not slide.question_ids" t-attf-href="/slides/slide/#{slug(slide)}?quiz_quick_create">
+                <span class="badge badge-light badge-hide border font-weight-normal px-2 py-1 m-1"><i class="fa fa-plus mr-1"/>Add Quiz</span>
+            </a>
             <a t-if="channel.can_upload" href="#">
                 <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'badge-success py-1' if slide.is_preview else 'badge-light badge-hide border'} font-weight-normal px-2 m-1">Free preview</span>
             </a>
@@ -431,9 +434,6 @@
                 <i t-attf-class="fa fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
-            <a name="o_wslides_list_slide_add_quizz" t-if="channel.can_upload and not slide.question_ids" t-attf-href="/slides/slide/#{slug(slide)}?quiz_quick_create">
-                <span class="badge badge-light badge-hide border font-weight-normal px-2 py-1 m-1"><i class="fa fa-plus mr-1"/>Add Quiz</span>
-            </a>
             <span class="badge badge-danger font-weight-normal px-2 py-1 m-1" t-if="not slide.website_published">Unpublished</span>
         </div>
 

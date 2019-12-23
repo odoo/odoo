@@ -11,9 +11,6 @@
                     <t t-set="val" t-value="widget.rating_avg || 0"/>
                     <t t-set="inline_mode" t-value="true"/>
                 </t>
-                <t t-if="widget.rating_total">
-                   <small>(<t t-esc="widget.rating_total"/> ratings)</small>
-                </t>
             </div>
             <button t-if="widget.options['display_composer']" type="button" class="btn btn-sm btn-primary mx-3" data-toggle="modal" data-target="#ratingpopupcomposer">
                 <t t-if="widget.options['display_composer']">
