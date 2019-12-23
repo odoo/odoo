@@ -11,14 +11,14 @@
                                     t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
                                     <i class="fa fa-home"/> Course</a>
                             </li>
-                            <li class="nav-item">
-                                <a t-att-href="'/forum/%s' % (slug(forum))" t-att-class="'nav-link active o_wprofile_navlink'" style="border-left: 0px">Forum</a>
-                            </li>
                             <li t-if="forum.slide_channel_id.allow_comment" class="nav-item">
                                 <a t-att-href="'/slides/%s?active_tab=review' % (slug(forum.slide_channel_id))"
                                     t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
-                                    Review
+                                    Reviews<t t-if="forum.slide_channel_id.rating_count"> (<t t-esc="forum.slide_channel_id.rating_count"/>)</t>
                                 </a>
+                            </li>
+                            <li class="nav-item">
+                                <a t-att-href="'/forum/%s' % (slug(forum))" t-att-class="'nav-link active o_wprofile_navlink'" style="border-left: 0px">Forum</a>
                             </li>
                         </ul>
                     </div>

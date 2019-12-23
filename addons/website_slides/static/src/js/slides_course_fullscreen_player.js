@@ -441,9 +441,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         start: function (){
             var self = this;
             this.on('change:slide', this, this._onChangeSlide);
-            if  (config.device.size_class > config.device.SIZES.MD) {
-                this._toggleSidebar();
-            }
+            this._toggleSidebar();
             return this._super.apply(this, arguments).then(function () {
                 return self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
             });
@@ -605,10 +603,12 @@ odoo.define('website_slides.fullscreen', function (require) {
         // Handlers
         //--------------------------------------------------------------------------
         /**
-         * Method called whenever the user changes slides.
-         * When the current slide is changed, it will autoimatically update the widget
-         * and allow it to fetch the content if needs be, render it, update the url and set the
-         * slide as "completed" if its type makes it necessary
+         * Triggered whenever the user changes slides.
+         * When the current slide is changed, widget will be automatically updated
+         * and allowed to: fetch the content if needed, render it, update the url,
+         * and set slide as "completed" according to its type requirements. In
+         * mobile case (i.e. limited screensize), sidebar will be toggled since 
+         * sidebar will block most or all of new slide visibility.
          *
          * @private
          */
@@ -619,6 +619,9 @@ odoo.define('website_slides.fullscreen', function (require) {
             return this._fetchSlideContent().then(function() { // render content
                 var websiteName = document.title.split(" | ")[1]; // get the website name from title
                 document.title =  (websiteName) ? slide.name + ' | ' + websiteName : slide.name;
+                if  (config.device.size_class < config.device.SIZES.MD) {
+                    self._toggleSidebar(); // hide sidebar when small device screen
+                }
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
