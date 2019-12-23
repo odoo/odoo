@@ -47,13 +47,15 @@
                         </group>
                         <notebook>
                             <page name="options" string="Options">
-                              <group string="Order" name="group_order">
-                                <field name="default_order"/>
-                                <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
-                                <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
-                                    (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
-                                </div>
-                              </group>
+                                <group>
+                                    <group string="Order" name="group_order">
+                                        <field name="default_order"/>
+                                        <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
+                                        <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
+                                            (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
+                                        </div>
+                                    </group>
+                                </group>
                             </page>
                             <page name="karma_gains" string="Karma Gains">
                                 <group name="karma_gain_details">
