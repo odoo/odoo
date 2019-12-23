@@ -110,11 +110,6 @@ class MrpProduction(models.Model):
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
-    date_start_wo = fields.Datetime(
-        'Plan From', copy=False, readonly=True,
-        help="Work orders will be planned based on the availability of the work centers\
-              starting from this date. If empty, the work orders will be planned as soon as possible.",
-    )
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -721,7 +716,7 @@ class MrpProduction(models.Model):
         return True
 
     def _get_start_date(self):
-        return self.date_start_wo or datetime.datetime.now()
+        return self.date_planned_start or datetime.datetime.now()
 
     def _plan_workorders(self, replan=False):
         """ Plan all the production's workorders depending on the workcenters
