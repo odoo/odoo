@@ -14,6 +14,9 @@ class IrHttp(models.AbstractModel):
     def _set_utm(cls, response):
         if isinstance(response, Exception):
             return response
+        # the parent dispatch might destroy the session
+        if not request.db:
+            return response
 
         domain = cls.get_utm_domain_cookies()
         for var, dummy, cook in request.env['utm.mixin'].tracking_fields():
