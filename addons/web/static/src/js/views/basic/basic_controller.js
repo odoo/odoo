@@ -562,7 +562,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     _onDeletedRecords: function (ids) {
         this.update({});
     },
-    _onOpenProperty: function (ev) {
+    _onOpenProperty(ev) {
         ev.stopPropagation();
         var self = this;
         var record = this.model.get(ev.data.id, {raw: true});
@@ -570,7 +570,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             route: '/web/dataset/call_button',
             params: {
                 model: 'ir.property',
-                method: 'get_values_action',
+                method: 'action_view_property',
                 args: [record.model, record.res_id, ev.data.fieldName],
                 kwargs: {context: record.getContext()},
             }

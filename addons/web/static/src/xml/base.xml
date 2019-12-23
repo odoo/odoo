@@ -731,7 +731,7 @@
         <a t-if="!widget.noOpen" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
         <span t-if="widget.noOpen"/>
     </t>
-    <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
+    <div t-if="widget.mode === 'edit'" t-attf-class="o_field_widget o_field_many2one {{widget.field.company_dependent ? 'o_field_many2one_property' : ''}}" aria-atomic="true">
         <div class="o_input_dropdown">
             <input type="text" class="o_input"
                 t-att-barcode_events="widget.nodeOptions.barcode_events"

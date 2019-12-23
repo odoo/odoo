@@ -30,6 +30,7 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
+var config = require('web.config');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
@@ -42,13 +43,12 @@ var PropertyFieldMixin = {
      * @private
      * @returns {jQuery}
      */
-    _renderPropertyButton: function () {
-        if (this.field.company_dependent === true) {
+    _renderPropertyButton() {
+        if (config.isDebug() && this.field.company_dependent === true && this.$el && !this.$('.o_field_property').length) {
             return $('<button>', {
-                    type: 'button',
-                    'class': 'o_field_property fa fa-th-list btn btn-link',
-                })
-                .on('click', this._propertyButtonClick.bind(this));
+                type: 'button',
+                class: 'o_field_property fa fa-th-list btn btn-link',
+            }).on('click', this._propertyButtonClick.bind(this));
         }
         return $();
     },
@@ -58,11 +58,11 @@ var PropertyFieldMixin = {
     //--------------------------------------------------------------------------
 
     /**
-     * open the translation view for the current field
+     * open the property view for the current field
      *
      * @private
      */
-    _propertyButtonClick: function () {
+    _propertyButtonClick() {
         this.trigger_up('open_property', {fieldName: this.name, id: this.dataPointID});
     },
 };

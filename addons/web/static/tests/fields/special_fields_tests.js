@@ -32,6 +32,8 @@ QUnit.module('special_fields', {
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     user_id: {string: "User", type: 'many2one', relation: 'user'},
+                    company_product_id: {string: "Company Depedent Product", type: "many2one", relation: 'product', company_dependent: true},
+                    company_foo: {string: "Company Depedent Foo", type: "char", default: "My little Foo Value", company_dependent: true},
                 },
                 records: [{
                     id: 1,
@@ -255,6 +257,56 @@ QUnit.module('special_fields', {
 
         assert.notOk($timezoneMismatch.children().length,
             'The mismatch element should not have children');
+        form.destroy();
+    });
+
+    QUnit.module('FieldCompanyDependent');
+
+    QUnit.test('company dependent field in a form view', async function (assert) {
+        assert.expect(10);
+        this.data.partner.records[0].company_foo = 'Company Depedent';
+        this.data.partner.records[0].product_id = 37;
+
+        const initialDebugMode = odoo.debug;
+        odoo.debug = true;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            debug: true,
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="company_foo"/>' +
+                    '<field name="company_product_id"/>' +
+                    '<field name="product_id"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'action_view_property') {
+                    assert.deepEqual(args.model, 'ir.property', "Model should be ir.property");
+                    assert.deepEqual(args.args, ['partner', 1, 'company_product_id'], "Model should be ir.property");
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // readonly mode
+        assert.containsOnce(form, 'span[name=company_foo] .o_field_property', 'Character company dependent field should contains property button.');
+        assert.containsOnce(form, 'a[name=company_product_id] .o_field_property', 'Many2one company dependent field should contains property button.');
+        assert.containsNone(form, 'span[name=foo] .o_field_property', 'Normal character field should not contains property button.');
+        assert.containsNone(form, 'a[name=product_id] .o_field_property', 'Normal many2one field should not contains property button.');
+
+        // edit mode
+        await testUtils.form.clickEdit(form);
+        assert.containsOnce(form, 'input[name=company_foo] .o_field_property', "Character company dependent field should contains property button");
+        assert.containsOnce(form, 'div[name=company_product_id] .o_field_property', "Many2one company dependent field should contains property button.");
+        assert.containsNone(form, 'input[name=foo] .o_field_property', 'Normal character field should not contains property button.');
+        assert.containsNone(form, 'div[name=product_id] .o_field_property', 'Normal many2one field should not contains property button.');
+        await testUtils.dom.click(form.$("div[name=company_product_id] .o_field_property"));
+
+        odoo.debug = initialDebugMode;
+
         form.destroy();
     });
 

@@ -52,6 +52,12 @@
                     <field name="fields_id"/>
                     <field name="res_id"/>
                     <field name="type"/>
+                    <field name="value_integer" string="Value" invisible="not context.get('value_integer')"/>
+                    <field name="value_float" string="Value" invisible="not context.get('value_float')"/>
+                    <field name="value_datetime" string="Value" invisible="not context.get('value_datetime')"/>
+                    <field name="value_text" string="Value" invisible="not context.get('value_text')"/>
+                    <field name="value_reference" string="Value" invisible="not context.get('value_reference')"/>
+                    <field name="value_binary" string="Value" invisible="not context.get('value_binary')"/>
                 </tree>
             </field>
         </record>
