@@ -2353,45 +2353,18 @@ registry.background = SnippetOptionWidget.extend({
      */
     background: async function (previewMode, widgetValue, params) {
         if (previewMode === 'reset') {
-            // No background has been selected and we want to reset back to the
-            // original custom image
-            await this._setCustomBackground(this.__customImageSrc, previewMode);
-            return;
+            return this._setCustomBackground(this.__customImageSrc, previewMode);
         }
-
+        if (!previewMode) {
+            this.__customImageSrc = widgetValue;
+        }
         if (widgetValue) {
-            this.$target.css('background-image', 'url(\'' + widgetValue + '\')');
+            this.$target.css('background-image', `url('${widgetValue}')`);
             this.$target.removeClass('oe_custom_bg').addClass('oe_img_bg');
         } else {
             this.$target.css('background-image', '');
             this.$target.removeClass('oe_img_bg oe_custom_bg');
         }
-    },
-    /**
-     * Opens a media dialog to add a custom background image.
-     *
-     * @see this.selectClass for parameters
-     */
-    chooseImage: function (previewMode, widgetValue, params) {
-        var options = this._getMediaDialogOptions();
-        var media = this._getEditableMedia();
-
-        return new Promise(resolve => {
-            const _editor = new weWidgets.MediaDialog(this, options, media).open();
-            let _saving = false;
-            _editor.on('save', this, data => {
-                _saving = true;
-                this._onSaveMediaDialog(data).then(() => resolve());
-            });
-            _editor.on('closed', this, () => {
-                if (media.classList.contains('o_we_fake_image')) {
-                    media.parentNode.removeChild(media);
-                }
-                if (!_saving) {
-                    resolve();
-                }
-            });
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -2418,70 +2391,11 @@ registry.background = SnippetOptionWidget.extend({
         this.bindBackgroundEvents();
         this.__customImageSrc = this._getSrcFromCssValue();
     },
-    /**
-     * @override
-     */
-    updateUI: async function () {
-        await this._super(...arguments);
-        var src = this._getSrcFromCssValue();
-        if (src) {
-            var split = src.split('/');
-            this.editBgTextEl.textContent = split[split.length - 1];
-        } else {
-            this.editBgTextEl.textContent = this._getDefaultTextContent();
-        }
-    },
-    /**
-     * @override
-     */
-    updateUIVisibility: async function () {
-        await this._super(...arguments);
-        var src = this._getSrcFromCssValue();
-        this.removeBgWidget.el.classList.toggle('d-none', !src);
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @returns {string}
-     */
-    _getDefaultTextContent: function () {
-        return _t("Choose a picture");
-    },
-    /**
-     * Returns a media element the media dialog will be able to edit to use
-     * the result as the snippet's background somehow.
-     *
-     * @private
-     * @returns {HTMLElement}
-     */
-    _getEditableMedia: function () {
-        var $image = $('<img/>', {
-            class: 'd-none o_we_fake_image',
-        }).appendTo(this.$target);
-        return $image[0];
-    },
-    /**
-     * Returns the options to be given to the MediaDialog instance when choosing
-     * a snippet's background.
-     *
-     * @private
-     * @returns {Object}
-     */
-    _getMediaDialogOptions: function () {
-        var $editable = this.$target.closest('.o_editable');
-        return {
-            noDocuments: true,
-            noIcons: true,
-            noVideos: true,
-            firstFilters: ['background'],
-            res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),
-        };
-    },
     /**
      * Returns the src value from a css value related to a background image
      * (e.g. "url('blabla')" => "blabla" / "none" => "").
@@ -2496,37 +2410,6 @@ registry.background = SnippetOptionWidget.extend({
         }
         var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
         return value && value.replace(srcValueWrapper, '') || '';
-    },
-    /**
-     * @override
-     */
-    _renderCustomWidgets: async function (uiFragment) {
-        // Build option UI controls
-        this.editBgTextEl = document.createElement('span');
-        const iconEl = document.createElement('i');
-        iconEl.classList.add('fa', 'fa-fw', 'fa-edit');
-        const editBgWidget = this._registerUserValueWidget('we-button', this, '', {
-            dataAttributes: {
-                chooseImage: 'true',
-                noPreview: 'true',
-            },
-            childNodes: [this.editBgTextEl, iconEl],
-        });
-        await editBgWidget.appendTo(document.createDocumentFragment());
-
-        this.removeBgWidget = this._registerUserValueWidget('we-button', this, '', {
-            classes: ['fa', 'fa-fw', 'fa-times'],
-            dataAttributes: {
-                background: '',
-                noPreview: 'true',
-            },
-        });
-        await this.removeBgWidget.appendTo(document.createDocumentFragment());
-        this.removeBgWidget.el.title = _t("Remove the background");
-
-        return uiFragment.appendChild(_buildRowElement(this.data.string, {
-            childNodes: [editBgWidget.el, this.removeBgWidget.el],
-        }));
     },
     /**
      * Sets the given value as custom background image.
@@ -2548,6 +2431,16 @@ registry.background = SnippetOptionWidget.extend({
             });
         });
     },
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName) {
+        switch (methodName) {
+            case 'background':
+                return this._getSrcFromCssValue();
+        }
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2563,7 +2456,7 @@ registry.background = SnippetOptionWidget.extend({
      * @returns {boolean} true if the color has been applied (removing the
      *                    background)
      */
-    _onBackgroundColorUpdate: function (ev, previewMode) {
+    _onBackgroundColorUpdate: async function (ev, previewMode) {
         ev.stopPropagation();
         if (ev.currentTarget !== ev.target) {
             return false;
@@ -2571,7 +2464,7 @@ registry.background = SnippetOptionWidget.extend({
         if (previewMode === false) {
             this.__customImageSrc = undefined;
         }
-        this.background(previewMode);
+        await this.background(previewMode, '', {});
         return true;
     },
     /**

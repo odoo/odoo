@@ -47,6 +47,18 @@ options.Class.include({
 });
 
 options.registry.background.include({
+    background: async function (previewMode, widgetValue, params) {
+        if (previewMode === 'reset' && this.videoSrc) {
+            return this._setBgVideo(false, this.videoSrc);
+        }
+
+        const _super = this._super.bind(this);
+        if (!params.isVideo) {
+            await this._setBgVideo(previewMode, '');
+            return _super(...arguments);
+        }
+        return this._setBgVideo(previewMode, widgetValue);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -55,37 +67,9 @@ options.registry.background.include({
     /**
      * @override
      */
-    _getDefaultTextContent: function () {
-        if (this._getMediaDialogOptions().noVideos) {
-            return this._super(...arguments);
-        }
-        return _t("Choose a picture or a video");
-    },
-    /**
-     * @override
-     */
-    _getEditableMedia: function () {
-        if (!this._hasBgvideo()) {
-            return this._super(...arguments);
-        }
-        return this.$('.o_bg_video_iframe')[0];
-    },
-    /**
-     * @override
-     */
-    _getMediaDialogOptions: function () {
-        return _.extend(this._super(...arguments), {
-            // For now, disable the possibility to have a parallax video bg
-            noVideos: this.$target.is('.parallax, .s_parallax_bg'),
-            isForBgVideo: true,
-        });
-    },
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        if (methodName === 'chooseImage') {
-            return this._hasBgvideo() ? 'true' : '';
+    _computeWidgetState: function (methodName) {
+        if (methodName === 'background' && this.$target[0].classList.contains('o_background_video')) {
+            return this.$('> .o_bg_video_container iframe').attr('src');
         }
         return this._super(...arguments);
     },
@@ -103,6 +87,7 @@ options.registry.background.include({
             return;
         }
 
+        this.videoSrc = value;
         var target = this.$target[0];
         target.classList.toggle('o_background_video', !!(value && value.length));
         if (value && value.length) {
@@ -111,16 +96,6 @@ options.registry.background.include({
             delete target.dataset.bgVideoSrc;
         }
         await this._refreshPublicWidgets();
-        await this.updateUI();
-    },
-    /**
-     * Returns whether the current target has a background video or not.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _hasBgvideo: function () {
-        return this.$target[0].classList.contains('o_background_video');
     },
 
     //--------------------------------------------------------------------------
@@ -130,26 +105,12 @@ options.registry.background.include({
     /**
      * @override
      */
-     _onBackgroundColorUpdate: function (ev, previewMode) {
-        var ret = this._super(...arguments);
+     _onBackgroundColorUpdate: async function (ev, previewMode) {
+        const ret = await this._super(...arguments);
         if (ret) {
-            this._setBgVideo(previewMode);
+            this._setBgVideo(previewMode, '');
         }
         return ret;
-    },
-    /**
-     * @override
-     */
-    _onSaveMediaDialog: async function (data) {
-        if (!data.bgVideoSrc) {
-            const _super = this._super.bind(this);
-            const args = arguments;
-            await this._setBgVideo(false);
-            return _super(...args);
-        }
-        // if the user chose a video, only add the video without removing the
-        // background
-        await this._setBgVideo(false, data.bgVideoSrc);
     },
 });
 
@@ -1098,37 +1059,20 @@ options.registry.CoverProperties = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Handles a background change.
+     *
      * @see this.selectClass for parameters
      */
-    clear: function (previewMode, widgetValue, params) {
-        this.$target.removeClass('o_record_has_cover');
-        this.$image.css('background-image', '');
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    change: function (previewMode, widgetValue, params) {
-        var $image = $('<img/>');
-        var background = this.$image.css('background-image');
-        if (background && background !== 'none') {
-            $image.attr('src', background.match(/^url\(["']?(.+?)["']?\)$/)[1]);
+    background: async function (previewMode, widgetValue, params) {
+        if (widgetValue === '') {
+            this.$image.css('background-image', '');
+            this.$target.removeClass('o_record_has_cover');
+        } else {
+            this.$image.css('background-image', `url('${widgetValue}')`);
+            const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
+            $defaultSizeBtn.click();
+            $defaultSizeBtn.closest('we-select').click();
         }
-
-        return new Promise(resolve => {
-            var editor = new weWidgets.MediaDialog(this, {
-                mediaWidth: 1920,
-                onlyImages: true,
-                firstFilters: ['background']
-            }, $image[0]).open();
-            editor.on('save', this, function (image) {
-                var src = image.src;
-                this.$image.css('background-image', src ? ('url(' + src + ')') : '');
-                if (!this.$target.hasClass('o_record_has_cover')) {
-                    this.$el.find('.o_record_cover_opt_size_default[data-select-class]').click();
-                }
-                resolve();
-            });
-        });
     },
     /**
      * @see this.selectClass for parameters
@@ -1190,6 +1134,13 @@ options.registry.CoverProperties = options.Class.extend({
                 }
                 return '';
             }
+            case 'background': {
+                const background = this.$image.css('background-image');
+                if (background && background !== 'none') {
+                    return background.match(/^url\(["']?(.+?)["']?\)$/)[1];
+                }
+                return '';
+            }
         }
         return this._super(...arguments);
     },
@@ -1198,9 +1149,7 @@ options.registry.CoverProperties = options.Class.extend({
      */
     _computeWidgetVisibility: function (widgetName, params) {
         const hasCover = this.$target.hasClass('o_record_has_cover');
-        if (widgetName === 'remove_cover_opt') {
-            return hasCover;
-        } else if (params.coverOptName) {
+        if (params.coverOptName) {
             var notAllowed = (this.$target.data(`use_${params.coverOptName}`) !== 'True');
             return (hasCover && !notAllowed);
         }
