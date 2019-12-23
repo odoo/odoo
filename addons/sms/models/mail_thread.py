@@ -161,6 +161,8 @@ class MailThread(models.AbstractModel):
             body = template._render_template(template_w_lang.body, self._name, self.ids)[self.id]
         else:
             body = self.env['sms.template']._render_template(template_fallback, self._name, self.ids)[self.id]
+        if type(partner_ids) is not list:
+            partner_ids = [partner_ids]
         return self._message_sms(body, partner_ids=partner_ids, **kwargs)
 
     def _message_sms(self, body, subtype_id=False, partner_ids=False, number_field=False,
