@@ -62,6 +62,7 @@
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
