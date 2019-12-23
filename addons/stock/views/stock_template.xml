@@ -12,6 +12,7 @@
             <script type="text/javascript" src="/stock/static/src/js/stock_traceability_report_backend.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/stock_traceability_report_widgets.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/stock_location_hierarchy.js"></script>
+            <script type="text/javascript" src="/stock/static/src/js/popover_widget.js"></script>
             <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_traceability_report.scss"/>
             <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_location_hierarchy.scss"/>
         </xpath>
@@ -20,6 +21,7 @@
     <template id="qunit_suite" name="stock tests" inherit_id="web.qunit_suite">
         <xpath expr="//t[@t-set='head']" position="inside">
             <script type="text/javascript" src="/stock/static/tests/singleton_list_tests.js"/>
+            <script type="text/javascript" src="/stock/static/tests/popover_widget_tests.js"/>
         </xpath>
     </template>
 
