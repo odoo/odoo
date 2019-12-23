@@ -48,7 +48,8 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         tax_datas = {}
         Tag = self.env['account.account.tag']
-        repart_field = '%s_repartition_line_ids' % 'invoice' if self.type in ('in_invoice', 'out_invoice') else 'refund'
+        repart_field = '%s_repartition_line_ids' % ('invoice' if self.type in ('in_invoice', 'out_invoice') else 'refund')
+
         for line in self.mapped('invoice_line_ids'):
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             tax_lines = line.invoice_line_tax_ids.compute_all(price_unit, line.invoice_id.currency_id, line.quantity, line.product_id, line.invoice_id.partner_id, self.type in ('in_refund', 'out_refund'))['taxes']
