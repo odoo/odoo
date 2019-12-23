@@ -85,7 +85,9 @@ var RunningTourActionHelper = core.Class.extend({
                 .trigger({ type: 'keydown', key: text[text.length - 1] })
                 .val(text)
                 .trigger({ type: 'keyup', key: text[text.length - 1] });
-            values.$element[0].dispatchEvent(new InputEvent('input'));
+            values.$element[0].dispatchEvent(new InputEvent('input', {
+                bubbles: true,
+            }));
         } else if (values.$element.is("select")) {
             var $options = values.$element.children("option");
             $options.prop("selected", false).removeProp("selected");
