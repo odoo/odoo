@@ -354,7 +354,7 @@ class StockMove(models.Model):
             if move.state == 'done':
                 move.availability = move.product_qty
             else:
-                total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id)
+                total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
     def _compute_string_qty_information(self):
@@ -1353,11 +1353,16 @@ class StockMove(models.Model):
         for result_package in moves_todo\
                 .mapped('move_line_ids.result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
-            if len(result_package.quant_ids.filtered(lambda q: float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
+            if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
-        moves_todo.mapped('move_dest_ids')._action_assign()
+
+        move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
+        for move_dest in moves_todo.move_dest_ids:
+            move_dests_per_company[move_dest.company_id.id] |= move_dest
+        for company_id, move_dests in move_dests_per_company.items():
+            move_dests.sudo().with_context(force_company=company_id)._action_assign()
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master

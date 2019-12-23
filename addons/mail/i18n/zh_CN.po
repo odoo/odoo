@@ -20,7 +20,6 @@
 # bower Guo <124358678@qq.com>, 2019
 # Youfu Sheng <wdmsyf@sina.com>, 2019
 # Martin Trigaux, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # aishiby Ail <15287995117@189.cn>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
@@ -38,6 +37,8 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Shiping Lv <lvshiping@sina.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -45,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
+"Last-Translator: Shiping Lv <lvshiping@sina.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +108,7 @@ msgstr "%s (副本)"
 #: code:addons/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js:0
 #, python-format
 msgid "%s and %s are typing..."
-msgstr "%s and %s are typing..."
+msgstr "%s 和 %s 在输入..."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -329,7 +330,7 @@ msgstr ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">选定的记录</span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">当前搜索筛选器</span>.\n"
 "                            </span>\n"
-"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">文档的关注者和</span>"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">单据的关注者和</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -469,7 +470,7 @@ msgstr "同意 |"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__accepted
 msgid "Accepted"
-msgstr "已接收"
+msgstr "已同意"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -510,7 +511,7 @@ msgstr "动作执行"
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
-msgstr "操作可能触发特定的行为，如打开日历视图或在上传文档时自动标记"
+msgstr "操作可能触发特定的行为，如打开日历视图或在上传单据时自动标记"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -874,7 +875,7 @@ msgstr "分派给"
 msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
-msgstr "指定用户 %s 对文档无权限，无法处理这个活动 。"
+msgstr "指定用户 %s 对单据无权限，无法处理这个活动 。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -916,7 +917,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
-msgstr "附件通过模型/ReSIDID与文档链接，并通过该字段与消息链接。"
+msgstr "附件通过模型/ReSIDID与单据链接，并通过该字段与消息链接。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
@@ -1813,19 +1814,19 @@ msgstr "显示名称"
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
-msgstr "显示一个关联文档的选项 ，用该模版打开撰写向导"
+msgstr "显示一个关联单据的选项 ，用该模版打开撰写向导"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__res_name
 msgid "Display name of the related document."
-msgstr "相关文档的显示名称"
+msgstr "相关单据的显示名称"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete_message
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
-msgstr "不要在文档通信历史中保存EMail副本（仅限群发邮件）"
+msgstr "不要在单据通信历史中保存EMail副本（仅限群发邮件）"
 
 #. module: mail
 #. openerp-web
@@ -1837,22 +1838,22 @@ msgstr "您确认要删除%s吗?"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
-msgstr "文档"
+msgstr "单据"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "文档关注者"
+msgstr "单据关注者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
 msgid "Document Model"
-msgstr "文档模型"
+msgstr "单据模型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
-msgstr "文档名称"
+msgstr "单据名称"
 
 #. module: mail
 #. openerp-web
@@ -2305,7 +2306,7 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
-"字段用于在使用相关文档的自动订阅时将相关模型链接到子类型模型。该字段用于计算GETAFTR（RelabyDo.DeffixFieldFieldfield）。"
+"字段用于在使用相关单据的自动订阅时将相关模型链接到子类型模型。该字段用于计算GETAFTR（RelabyDo.DeffixFieldFieldfield）。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -2652,7 +2653,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr "如果勾选此项，业务伙伴将收到邮件提醒他们已经被添加为文档的关注者。"
+msgstr "如果勾选此项，业务伙伴将收到邮件提醒他们已经被添加为单据的关注者。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__user_signature
@@ -2707,7 +2708,7 @@ msgstr "如果你设置了EMail域名重定向到这个Odoo服务器，请在这
 msgid ""
 "If you remove a follower, he won't be notified of any email or discussion on"
 " this document. Do you really want to remove %s?"
-msgstr "如果您删除了一个追随者，他将不会被通知任何关于此文档的电子邮件或讨论。你真的想删除吗 %s?"
+msgstr "如果您删除了一个追随者，他将不会被通知任何关于此单据的电子邮件或讨论。你真的想删除吗 %s?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -3073,13 +3074,13 @@ msgstr "收到的邮件里的抄送列表。"
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
 msgid ""
 "List of channels that will be added as listeners of the current document."
-msgstr "列表中的业务伙伴将添加至当前文档的关注者。"
+msgstr "列表中的业务伙伴将添加至当前单据的关注者。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr "列表中的业务伙伴将添加至当前文档的关注者。"
+msgstr "列表中的业务伙伴将添加至当前单据的关注者。"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -3681,7 +3682,7 @@ msgstr "名称"
 #: model:ir.model.fields,help:mail.field_mail_mail__record_name
 #: model:ir.model.fields,help:mail.field_mail_message__record_name
 msgid "Name get of the related document."
-msgstr "获得相关文档的名称"
+msgstr "获得相关单据的名称"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__report_name
@@ -3993,7 +3994,7 @@ msgstr "通知关注者"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr "通知此文档的关注者(只用于批量发送)"
+msgstr "通知此单据的关注者(只用于批量发送)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -4164,12 +4165,12 @@ msgstr "打开频道进行讨论"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr "打开文档"
+msgstr "打开单据"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr "打开上级文档"
+msgstr "打开上级单据"
 
 #. module: mail
 #. openerp-web
@@ -4183,7 +4184,7 @@ msgstr "打开聊天"
 #: code:addons/mail/static/src/js/thread_windows/thread_window.js:0
 #, python-format
 msgid "Open document"
-msgstr "打开文档"
+msgstr "打开单据"
 
 #. module: mail
 #. openerp-web
@@ -4465,7 +4466,7 @@ msgstr "请稍等"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Please wait..."
-msgstr ""
+msgstr "请等待......"
 
 #. module: mail
 #. openerp-web
@@ -4496,10 +4497,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"政策是通过邮件网关在文档上提交一个消息\n"
+"政策是通过邮件网关在单据上提交一个消息\n"
 "- everyone: 任何人都可以提交\n"
 "- partners: 只有认证过的合作伙伴\n"
-"- followers: 只有相关文档或下列频道成员的跟随者\n"
+"- followers: 只有相关单据或下列频道成员的跟随者\n"
 
 #. module: mail
 #. openerp-web
@@ -4747,7 +4748,7 @@ msgstr "已拒绝"
 #: model:ir.model.fields,field_description:mail.field_mail_message__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_id
 msgid "Related Document ID"
-msgstr "相关文档编号"
+msgstr "相关单据编号"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__model
@@ -4758,12 +4759,12 @@ msgstr "相关文档编号"
 #: model:ir.model.fields,field_description:mail.field_mail_template__model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_model
 msgid "Related Document Model"
-msgstr "相关的文档模型"
+msgstr "相关的单据模型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
 msgid "Related Document Model Name"
-msgstr "相关的文档模型名称"
+msgstr "相关的单据模型名称"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4797,7 +4798,7 @@ msgstr "移除没有注释的消息"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
-msgstr "移除上下文动作，使用相关文档的模板。"
+msgstr "移除上下文动作，使用相关单据的模板。"
 
 #. module: mail
 #. openerp-web
@@ -4924,7 +4925,7 @@ msgstr "销售员"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__res_id
 msgid "Sample Document"
-msgstr "示例文档"
+msgstr "示例单据"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -5051,7 +5052,7 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
-"从相关文档模型中选择目标字段。\n"
+"从相关单据模型中选择目标字段。\n"
 "如果这是个关系型字段，您可以选择关系型字段的目标字段。"
 
 #. module: mail
@@ -5231,7 +5232,7 @@ msgstr "边栏操作"
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
-msgstr "用于在相关文档上调用此模版的边栏按钮"
+msgstr "用于在相关单据上调用此模版的边栏按钮"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -5454,7 +5455,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"相应于这个别名对应的模型(Odoo文档种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -5488,7 +5489,7 @@ msgid ""
 msgstr ""
 "由于安全限制，请求的操作无法完成。请联系您的系统管理员。\n"
 "\n"
-"(文档类型: %s, 操作: %s)"
+"(单据类型: %s, 操作: %s)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
@@ -5499,7 +5500,7 @@ msgstr "在聊天消息中，必须替换掉的快捷方式"
 #: model:ir.model.fields,help:mail.field_email_template_preview__model_id
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 msgid "The type of document this template can be used with"
-msgstr "该模板可使用的文档类型"
+msgstr "该模板可使用的单据类型"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -5836,7 +5837,7 @@ msgstr "审核状态不受支持的搜索过滤器"
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr "上传文档"
+msgstr "上传单据"
 
 #. module: mail
 #. openerp-web
@@ -6022,7 +6023,7 @@ msgstr "周"
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr "如果首先选择了一个关系型字段，这个字段可用于选择目标文档模型的目标字段。"
+msgstr "如果首先选择了一个关系型字段，这个字段可用于选择目标单据模型的目标字段。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__sub_object
@@ -6030,7 +6031,7 @@ msgstr "如果首先选择了一个关系型字段，这个字段可用于选择
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr "如果关系型字段被选为第一个字段，这个字段显示这个关系指向的文档模型。"
+msgstr "如果关系型字段被选为第一个字段，这个字段显示这个关系指向的单据模型。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__is_log
@@ -6360,7 +6361,7 @@ msgstr "天数"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "document"
-msgstr "文档"
+msgstr "单据"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -6432,7 +6433,7 @@ msgstr "较少"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr "模型 %s 不接受文档创建"
+msgstr "模型 %s 不接受单据创建"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -6508,7 +6509,7 @@ msgstr "记录："
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on document creation"
-msgstr "回复丢失的文档 (%s,%s), 返回文档创建"
+msgstr "回复丢失的单据 (%s,%s), 返回单据创建"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6516,7 +6517,7 @@ msgstr "回复丢失的文档 (%s,%s), 返回文档创建"
 msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
-msgstr "回复模型 %s 不接受文档更新文档创建"
+msgstr "回复模型 %s 不接受单据更新单据创建"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6557,7 +6558,7 @@ msgstr "团队."
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "this document"
-msgstr "此文档"
+msgstr "此单据"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned

@@ -11,8 +11,8 @@
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,7 +403,7 @@ msgstr "Activiteitsfase"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Actual in Cash"
-msgstr ""
+msgstr "In kas"
 
 #. module: point_of_sale
 #. openerp-web
@@ -497,7 +497,7 @@ msgstr "Sta globale kortingen op orders toe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
 msgid "Allowed Pricelists"
-msgstr ""
+msgstr "Toegestane prijslijsten"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -631,7 +631,7 @@ msgstr "Backspace"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Balance control"
-msgstr ""
+msgstr "Saldocontrole"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -1152,7 +1152,7 @@ msgstr "Conversie ratio"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
+msgstr "Conversie ratio van bedrijfsvaluta naar order valuta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2653,7 +2653,7 @@ msgstr "Open kassa menu"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "Open kassasessies die deze betaalmethode gebruiken."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2717,7 +2717,7 @@ msgstr "Order"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Order %s"
-msgstr ""
+msgstr "Order %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3213,7 +3213,7 @@ msgstr "Kassa factuur rapport"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Kassa maak betaling wizard"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -3708,7 +3708,7 @@ msgstr "Beperk het aanpassen van prijzen tot managers"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "CV"
+msgstr "Hervatten"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4823,6 +4823,7 @@ msgstr "Om nieuwe orders te registreren moet u een nieuwe sessie starten."
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
 msgstr ""
+"Om producten te retourneren moet u een kassasessie openen in de kassa %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -4843,7 +4844,7 @@ msgstr "Totale korting"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Totaalbedrag betalingen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -5199,6 +5200,7 @@ msgstr ""
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
 msgstr ""
+"U kan geen sessie aanmaken voor de boekhoudkundige vergrendelingsdatum."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5218,6 +5220,8 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr ""
+"U kan geen contacten verwijderen die zich in actieve kassa sessies bevinden."
+" Gelieve de sessie(s) %s eerst te sluiten."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0

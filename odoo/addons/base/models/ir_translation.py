@@ -437,7 +437,10 @@ class IrTranslation(models.Model):
                 elif (src, translation.lang) in done:
                     discarded += translation
                 else:
-                    translation.write({'src': src, 'state': translation.state})
+                    vals = {'src': src, 'state': translation.state}
+                    if translation.lang == 'en_US':
+                        vals['value'] = src
+                    translation.write(vals)
                     done.add((src, translation.lang))
 
         # process outdated and discarded translations

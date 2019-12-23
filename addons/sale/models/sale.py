@@ -625,6 +625,13 @@ class SaleOrder(models.Model):
         else:
             out_invoice_vals_list = invoice_vals_list
 
+        if invoice_vals['type'] in self.env['account.move'].get_outbound_types():
+            invoice_bank_id = self.partner_id.bank_ids[:1]
+        else:
+            invoice_bank_id = self.company_id.partner_id.bank_ids[:1]
+
+        invoice_vals['invoice_partner_bank_id'] = invoice_bank_id
+
         # Create invoices.
         moves = self.env['account.move'].with_context(default_type='out_invoice').create(out_invoice_vals_list)
         moves += self.env['account.move'].with_context(default_type='out_refund').create(refund_invoice_vals_list)
@@ -1652,11 +1659,12 @@ class SaleOrderLine(models.Model):
 
         name = "\n"
 
-        custom_values = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
+        custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
+        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
 
         # display the no_variant attributes, except those that are also
-        # displayed by a custom (avoid duplicate)
-        for ptav in (self.product_no_variant_attribute_value_ids - custom_values):
+        # displayed by a custom (avoid duplicate description)
+        for ptav in (no_variant_ptavs - custom_ptavs):
             name += "\n" + ptav.display_name
 
         # display the is_custom values

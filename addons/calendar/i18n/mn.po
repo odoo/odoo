@@ -7,6 +7,7 @@
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
+# nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019\n"
+"Last-Translator: nurbahyt baha <nurbahyt.kh@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -358,7 +359,7 @@ msgstr "Бүтэн өдөр , %s"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "An user cannot have twice the same contact."
-msgstr ""
+msgstr "Хэрэглэгч нэг хаягийг хоёр дахин ашиглах боломжгүй"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -428,12 +429,12 @@ msgstr "Цаглабарын Сэрүүлэг"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr ""
+msgstr "Календарийн оролцогчийн мэдээлэл"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "Calendar Contacts"
-msgstr ""
+msgstr "Календарийн хаягууд"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -448,14 +449,14 @@ msgstr "Цаглабарын Урилга"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr ""
+msgstr "Уулзалт"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "Календарь: Арга хэмжээ сануулга"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -580,7 +581,7 @@ msgstr "Баримтын модель"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "Баримтын моделийн нэр"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -654,7 +655,7 @@ msgstr "Арга хэмжээний анхааруулгын Менежер"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr ""
+msgstr "Арга хэмжээ төрөлтэй уулзалт"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -670,7 +671,7 @@ msgstr "Бүгд"
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: "
-msgstr ""
+msgstr "Санал хүсэлт:"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__5
@@ -805,7 +806,7 @@ msgstr "Урилга"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to ${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name} - ийн урилга"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -908,7 +909,7 @@ msgstr "Уулзалт"
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
-msgstr ""
+msgstr "Уулзалт '%s' -д эхэлж '%s'-д дуусна"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1083,7 +1084,7 @@ msgstr "Зөвхөн би"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr ""
+msgstr "Календарь нээх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1161,7 +1162,7 @@ msgstr "Давтагдах журам"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
-msgstr ""
+msgstr "Өмнө сануулах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1212,7 +1213,7 @@ msgstr "Бямба"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Schedule a new meeting"
-msgstr ""
+msgstr "Шинэ уулзалт товлох"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1338,6 +1339,8 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
+"Ажиллагаа нь уулзалттай холбогдсон байна. Ажиллагааг устгаснаар уулзалтыг "
+"мөн адил устгана. Үргэлжлүүлэхийг хүсэж байна уу?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1346,19 +1349,23 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"Календарь нь ажилчдын дунд хуваалцаж хэрэглэгдэх ба \n"
+"\n"
+"амралт чөлөө, CRM зэрэг модулиудтай \n"
+"бүрэн уялдаж ажиллана."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
-msgstr ""
+msgstr "Дуусах цаг, огноо эхлэх цаг, огнооноос өмнө байх боломжгүй."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr ""
+msgstr "Дуусах огноо эхлэх огнооноос өмнө байх боломжгүй."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
@@ -1401,7 +1408,7 @@ msgstr "Цагийн бүс"
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
-msgstr ""
+msgstr "Өнөөдрийн уулзалтууд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tu

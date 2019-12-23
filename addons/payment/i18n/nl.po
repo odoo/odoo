@@ -6,8 +6,8 @@
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
@@ -155,6 +155,9 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>Begin direct met verkopen zonder een account; Er wordt een e-mail "
+"verzonden door Paypal om uw nieuwe account te maken en uw betalingen te "
+"innen.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -447,7 +450,7 @@ msgstr "Geannuleerde betalingen"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot setup the payment"
-msgstr ""
+msgstr "Kan de betaling niet opzetten"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -895,7 +898,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "If not defined, the acquirer name will be used."
-msgstr ""
+msgstr "Indien niet gedefinieerd, wordt de provider-naam gebruikt."
 
 #. module: payment
 #. openerp-web
@@ -923,6 +926,10 @@ msgid ""
 "             acquirer. Watch out, test and production modes require\n"
 "             different credentials."
 msgstr ""
+"In de testmodus wordt een nepbetaling verwerkt via een test\n"
+"betalingsinterface. Deze modus wordt aanbevolen bij het instellen van de\n"
+"betaalprovider. Kijk uit, test- en productiemodi vereisen\n"
+"verschillende inloggegevens."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -989,7 +996,7 @@ msgstr "Boekingen"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "Journal where the successful transactions will be posted"
-msgstr ""
+msgstr "Dagboek waar de succesvolle transacties worden geboekt"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
@@ -1816,6 +1823,8 @@ msgid ""
 "This Transaction was automatically processed & refunded in order to validate"
 " a new credit card."
 msgstr ""
+"Deze transactie is automatisch verwerkt en terugbetaald om een nieuwe "
+"creditcard te valideren."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1883,6 +1892,8 @@ msgid ""
 "Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.\n"
 "        Without this check, the validity will be verified at the very first transaction."
 msgstr ""
+"Activeer een transactie van 1 valuta-eenheid en de terugbetaling ervan om de geldigheid van nieuwe creditcards te controleren die in het klantenportaal zijn ingevoerd.\n"
+"         Zonder deze controle wordt de geldigheid bij de allereerste transactie geverifieerd."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -2136,7 +2147,7 @@ msgstr "Uw betaling is ontvangen maar moet handmatig bevestigd worden."
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
+msgstr "Uw betaling is succesvol verwerkt maar wacht op goedkeuring."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0

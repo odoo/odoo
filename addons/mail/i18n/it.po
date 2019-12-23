@@ -351,8 +351,8 @@ msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this mail again to the recipients you did not select."
 msgstr ""
-"Attenzione: non sarà più possibile inviare questa e-mail ai destinatari non "
-"selezionati."
+"<span class=\"fa fa-info-circle\"/> Attenzione: impossibile inviare "
+"nuovamente questa e-mail ai destinatari non selezionati."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3360,14 +3360,14 @@ msgstr "Imposta a completata"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Mark all as read"
-msgstr "Segna tutto come letto"
+msgstr "Segna tutti come già letti"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Mark all read"
-msgstr "Segna tutto come letto"
+msgstr "Segna tutti come letti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -5523,7 +5523,7 @@ msgstr "Anteprima modello"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__preview_lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Lingua anteprima modello"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -5800,7 +5800,7 @@ msgstr "Tipo"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr ""
+msgstr "Tipologia ritardo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -5815,6 +5815,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Tipologia azione server. Sono disponibili i seguenti valori:\n"
+"- \"Esegui codice Python\": esegue un blocco di codice Python\n"
+"- \"Crea\": crea un nuovo record con nuovi valori\n"
+"- \"Aggiorna record\": aggiorna i valori di un record\n"
+"- \"Esegui alcune azioni\": definisce un'azione che attiva diverse altre azioni server\n"
+"- \"Invia e-mail\": invia una e-mail in modo automatico (Comunicazioni)\n"
+"- \"Aggiungi follower\": aggiunge follower a un record (Comunicazioni)\n"
+"- \"Crea prossima attività\": crea un'attività (Comunicazioni)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -5879,7 +5887,7 @@ msgstr "Unità"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
 msgid "Unit of delay"
-msgstr ""
+msgstr "Unità di ritardo"
 
 #. module: mail
 #: code:addons/mail/models/mail_notification.py:0
@@ -6270,8 +6278,8 @@ msgid ""
 "You are going to send the guidelines to all the subscribers. Do you confirm "
 "the action?"
 msgstr ""
-"Stai per inviare le linee guida a tutti gli abbonati. Vuoi confermare questa"
-" azione? "
+"Le linee guida stanno per essere inviate a tutti gli iscritti. Confermare "
+"l'azione?"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

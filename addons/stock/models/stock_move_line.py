@@ -524,7 +524,7 @@ class StockMoveLine(models.Model):
             # We now have to find the move lines that reserved our now unavailable quantity. We
             # take care to exclude ourselves and the move lines were work had already been done.
             outdated_move_lines_domain = [
-                ('move_id.state', 'not in', ['done', 'cancel']),
+                ('state', 'not in', ['done', 'cancel']),
                 ('product_id', '=', product_id.id),
                 ('lot_id', '=', lot_id.id if lot_id else False),
                 ('location_id', '=', location_id.id),
