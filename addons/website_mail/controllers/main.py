@@ -18,7 +18,7 @@ class WebsiteMail(http.Controller):
             partner_ids = request.env.user.partner_id.ids
         else:
             # mail_thread method
-            partner_ids = [p.id for p in self.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=record.sudo(), check_followers=True) if p]
+            partner_ids = [p.id for p in request.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=record.sudo(), check_followers=True) if p]
             if not partner_ids or not partner_ids[0]:
                 name = email.split('@')[0]
                 partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
