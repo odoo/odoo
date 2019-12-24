@@ -19,6 +19,7 @@ except ImportError:
     import xmlrpclib
 
 from collections import namedtuple
+from email import message_from_string
 from email.message import Message
 from lxml import etree
 from werkzeug import url_encode
@@ -1067,7 +1068,7 @@ class MailThread(models.AbstractModel):
             if bounce_match:
                 bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
 
-                email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+                email_part = next((part for part in message.walk() if part.get_content_type() in {'message/rfc822', 'text/rfc822-headers'}), None)
                 dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
                 partners, partner_address = self.env['res.partner'], False
@@ -1082,7 +1083,11 @@ class MailThread(models.AbstractModel):
 
                 mail_message = self.env['mail.message']
                 if email_part:
-                    email = email_part.get_payload()[0]
+                    if email_part.get_content_type() == 'text/rfc822-headers':
+                        # Convert the message body into a message itself
+                        email = message_from_string(email_part.get_payload())
+                    else:
+                        email = email_part.get_payload()[0]
                     bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
                     mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
 
@@ -1097,8 +1102,8 @@ class MailThread(models.AbstractModel):
                 if bounced_model in self.env and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
                     self.env[bounced_model].browse(int(bounced_thread_id)).message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
 
-                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
+                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s), bounced_message_id: %s',
+                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners, mail_message.id)
                 return []
 
         # 0. First check if this is a bounce message or not.
