@@ -25,7 +25,7 @@ class SurveyUserInput(models.Model):
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
     state = fields.Selection([
         ('new', 'Not started yet'),
-        ('skip', 'Partially completed'),
+        ('in_progress', 'In Progress'),
         ('done', 'Completed')], string='Status', default='new', readonly=True)
     test_entry = fields.Boolean(readonly=True)
     last_displayed_page_id = fields.Many2one('survey.question', string='Last displayed question/page')
