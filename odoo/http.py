@@ -686,7 +686,8 @@ def serialize_exception(e):
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": e.args,
-        "exception_type": "internal_error"
+        "exception_type": "internal_error",
+        "context": getattr(e, 'context', {}),
     }
     if isinstance(e, odoo.exceptions.UserError):
         tmp["exception_type"] = "user_error"
