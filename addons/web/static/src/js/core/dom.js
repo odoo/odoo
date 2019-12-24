@@ -75,7 +75,11 @@ var dom = {
         var minHeight;
 
         function resize() {
-            $fixedTextarea.insertAfter($textarea);
+            if (options.target) {
+                $fixedTextarea.insertAfter(options.target);
+            } else {
+                $fixedTextarea.insertAfter($textarea);
+            }
             var heightOffset = 0;
             var style = window.getComputedStyle($textarea[0], null);
             if (style.boxSizing === 'border-box') {

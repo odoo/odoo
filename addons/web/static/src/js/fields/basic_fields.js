@@ -1337,11 +1337,15 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     start: function () {
         if (this.mode === 'edit') {
-            dom.autoresize(this.$el, this.autoResizeOptions);
             if (this.field.translate) {
                 this.$el = this.$el.add(this._renderTranslateButton());
                 this.$el.addClass('o_field_translate');
-            }
+                const $span = this.$el.filter('span');
+                if ($span.length) {
+                    this.autoResizeOptions['target'] = $span;
+                }
+             }
+            dom.autoresize(this.$el, this.autoResizeOptions);
         }
         return this._super();
     },
