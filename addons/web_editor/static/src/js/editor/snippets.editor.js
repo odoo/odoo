@@ -183,7 +183,7 @@ var SnippetEditor = Widget.extend({
      * Closes all widgets of all options.
      */
     closeWidgets: function () {
-        if (!this.areOptionsShown()) {
+        if (!this.styles || !this.areOptionsShown()) {
             return;
         }
         Object.keys(this.styles).forEach(key => {
@@ -651,6 +651,9 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onOptionsSectionMouseOver: function (ev) {
+        if (!this.$target.is(':visible')) {
+            return;
+        }
         this.trigger_up('activate_snippet', {
             $snippet: this.$target,
             previewMode: true,
@@ -798,6 +801,7 @@ var SnippetsMenu = Widget.extend({
         'snippet_cloned': '_onSnippetCloned',
         'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
+        'request_save': '_onSaveRequest',
         'update_customize_elements': '_onUpdateCustomizeElements',
         'hide_overlay': '_onHideOverlay',
         'block_preview_overlays': '_onBlockPreviewOverlays',
@@ -1245,9 +1249,12 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise<SnippetEditor>}
      *          (might be async when an editor must be created)
      */
-    _activateSnippet: function ($snippet, previewMode, ifInactiveOptions) {
+    _activateSnippet: async function ($snippet, previewMode, ifInactiveOptions) {
         if (this._blockPreviewOverlays && previewMode) {
-            return Promise.resolve();
+            return;
+        }
+        if ($snippet && !$snippet.is(':visible')) {
+            return;
         }
         return this._mutex.exec(() => {
             return new Promise(resolve => {
@@ -1986,10 +1993,8 @@ var SnippetsMenu = Widget.extend({
                         args: [[moduleID]],
                     }).then(() => {
                         self.trigger_up('request_save', {
-                            reload: false,
-                            onSuccess: function () {
-                                window.location.href = window.location.origin + window.location.pathname + '?enable_editor=1';
-                            },
+                            reloadEditor: true,
+                            _toMutex: true,
                         });
                     }).guardedCatch(reason => {
                         reason.event.preventDefault();
@@ -2095,6 +2100,33 @@ var SnippetsMenu = Widget.extend({
         ev.stopPropagation();
         this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
             editor.removeSnippet();
+        });
+    },
+    /**
+     * Saving will destroy all editors since they need to clean their DOM.
+     * This has thus to be done when they are all finished doing their work.
+     *
+     * @private
+     */
+    _onSaveRequest: function (ev) {
+        const data = ev.data;
+        if (ev.target === this && !data._toMutex) {
+            return;
+        }
+        delete data._toMutex;
+        ev.stopPropagation();
+        this._mutex.exec(() => {
+            if (data.reloadEditor) {
+                data.reload = false;
+                const oldOnSuccess = data.onSuccess;
+                data.onSuccess = async function () {
+                    if (oldOnSuccess) {
+                        await oldOnSuccess.call(this, ...arguments);
+                    }
+                    window.location.href = window.location.origin + window.location.pathname + '?enable_editor=1';
+                };
+            }
+            this.trigger_up('request_save', data);
         });
     },
     /**
