@@ -2,7 +2,9 @@ odoo.define('website.snippet.editor', function (require) {
 'use strict';
 
 const weSnippetEditor = require('web_editor.snippet.editor');
-const ThemeCustomizationMenu = require('website.theme');
+const wSnippetOptions = require('website.editor.snippets.options');
+
+const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
 weSnippetEditor.Class.include({
     events: _.extend({}, weSnippetEditor.Class.prototype.events, {
@@ -12,20 +14,22 @@ weSnippetEditor.Class.include({
         THEME: 'theme',
     }),
 
-    /**
-     * @override
-     */
-    start: function () {
-        const prom1 = this._super(...arguments);
-        this.themeCustomizationMenu = new ThemeCustomizationMenu(this);
-        const prom2 = this.themeCustomizationMenu.appendTo(document.createDocumentFragment());
-        return Promise.all([prom1, prom2]);
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _computeSnippetTemplates: function (html) {
+        const $html = $(html);
+        const fontVariables = _.map($html.find('we-fontfamilypicker[data-variable]'), el => {
+            return el.dataset.variable;
+        });
+        FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
+
+        return this._super(...arguments);
+    },
     /**
      * @override
      */
@@ -41,10 +45,24 @@ weSnippetEditor.Class.include({
     /**
      * @private
      */
-    _onThemeTabClick: function (ev) {
-        this._activateSnippet(false);
+    _onThemeTabClick: async function (ev) {
+        if (!this.fakeThemeEl) {
+            this.fakeThemeEl = document.createElement('theme');
+            this.fakeThemeEl.dataset.name = "";
+            this.el.appendChild(this.fakeThemeEl);
+        }
+
+        await this._activateSnippet($(this.fakeThemeEl));
+
+        if (!this.themeCustomizationMenuEl) {
+            this.themeCustomizationMenuEl = document.createElement('div');
+            for (const node of this.customizePanel.childNodes) {
+                this.themeCustomizationMenuEl.appendChild(node);
+            }
+        }
+
         this._updateLeftPanelContent({
-            content: this.themeCustomizationMenu.el,
+            content: this.themeCustomizationMenuEl,
             tab: this.tabs.THEME,
         });
     },
