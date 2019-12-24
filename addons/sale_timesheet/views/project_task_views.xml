@@ -4,7 +4,7 @@
     <record id="project_project_view_form" model="ir.ui.view">
         <field name="name">project.project.form.inherit</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>
@@ -26,29 +26,36 @@
                     </field>
                 </page>
             </xpath>
-        </field>
-    </record>
-
-    <record id="project_view_form_inherit" model="ir.ui.view">
-        <field name="name">project.view.form.inherit</field>
-        <field name="model">project.project</field>
-        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
-        <field name="arch" type="xml">
             <xpath expr="//div[@id='timesheet_settings']/.." position="after">
                 <div class="row mt16 o_settings_container">
                     <div class="col-lg-6 o_setting_box" id="allow_billable_container" attrs="{'invisible': [('billable_type', '=', 'employee_rate')]}">
                         <div class="o_setting_left_pane">
-                            <field name="allow_billable"/>
+                            <field name="allow_billable" attrs="{'readonly': [('sale_order_id', '!=', False)]}"/>
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="allow_billable"/>
                             <div class="text-muted" id="allow_billable_setting">
                                 Invoice your time and material from tasks
                             </div>
+                            <field name="timesheet_product_id" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}"/>
                         </div>
                     </div>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit"/>
+        <field name="arch" type="xml">
+            <field name="allow_timesheet_timer" position="after">
+                <field name="billable_type" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="allow_billable" attrs="{'invisible': [('billable_type', '=', 'employee_rate')]}"/>
+                <field name="timesheet_product_id" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}"/>
+            </field>
         </field>
     </record>
 

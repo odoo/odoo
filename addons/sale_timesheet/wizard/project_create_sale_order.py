@@ -23,7 +23,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
             if project.billable_type != 'no':
                 raise UserError(_("The project is already billable."))
             result['project_id'] = active_id
-            result['partner_id'] = project.partner_id.id
+            if not result.get('partner_id', False):
+                result['partner_id'] = project.partner_id.id
         return result
 
     project_id = fields.Many2one('project.project', "Project", domain=[('sale_line_id', '=', False)], help="Project for which we are creating a sales order", required=True)
