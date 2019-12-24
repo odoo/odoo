@@ -5817,7 +5817,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var list = await createView({
             View: ListView,
@@ -5850,6 +5850,8 @@ QUnit.module('Views', {
         assert.strictEqual(modalText,
             "Among the 4 selected records, 2 are valid for this update. Are you sure you want to " +
             "perform the following update on those 2 records ? Field: int_field Update to: 666");
+        assert.strictEqual(document.querySelector('.modal .o_modal_changes .o_field_widget').style.pointerEvents, 'none',
+            "pointer events should be deactivated on the demo widget");
 
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "1yop666",
