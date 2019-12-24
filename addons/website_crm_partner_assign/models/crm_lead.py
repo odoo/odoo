@@ -30,14 +30,11 @@ class CrmLead(models.Model):
 
     @api.onchange("partner_assigned_id")
     def _compute_date_partner_assign(self):
-        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
-        """
         for lead in self:
             if not lead.partner_assigned_id:
                 lead.date_partner_assign = False
             else:
                 lead.date_assign = fields.Date.context_today(lead)
-            # self.user_id = partner_assigned.user_id
 
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
