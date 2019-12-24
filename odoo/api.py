@@ -613,7 +613,8 @@ class Environment(Mapping):
         """
         # Since the company/companies lazy properties can contain data that is no longer valid,
         # (e.g. company created during a test or a failed ORM operation), reset these lazy properties
-        lazy_property.reset_all(self.all)
+        for env in list(self.all):
+            lazy_property.reset_all(env)
         self.cache.invalidate()
         self.all.tocompute.clear()
         self.all.towrite.clear()
