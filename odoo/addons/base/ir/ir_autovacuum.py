@@ -14,14 +14,22 @@ class AutoVacuum(models.AbstractModel):
     _name = 'ir.autovacuum'
 
     @api.model
-    def _gc_transient_models(self):
+    def _gc_transient_models(self, autocommit=False):
+        if autocommit:
+            self.env.cr.commit()
         for mname in self.env:
             model = self.env[mname]
             if model.is_transient():
                 try:
-                    with self._cr.savepoint():
-                        model._transient_vacuum(force=True)
+                    if autocommit:
+                        model._transient_vacuum(force=True, autocommit=autocommit)
+                        self.env.cr.commit()
+                    else:
+                        with self._cr.savepoint():
+                            model._transient_vacuum(force=True, autocommit=autocommit)
                 except Exception as e:
+                    if autocommit:
+                        self._cr.rollback()
                     _logger.warning("Failed to clean transient model %s\n%s", model, str(e))
 
     @api.model
@@ -40,6 +48,6 @@ class AutoVacuum(models.AbstractModel):
         if not self.env.user._is_admin():
             raise AccessDenied()
         self.env['ir.attachment']._file_gc()
-        self._gc_transient_models()
+        self._gc_transient_models(autocommit=True)
         self._gc_user_logs()
         return True

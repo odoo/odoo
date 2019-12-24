@@ -4145,7 +4145,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return cls._transient
 
     @api.model_cr
-    def _transient_clean_rows_older_than(self, seconds):
+    def _transient_clean_rows_older_than(self, seconds, autocommit=False):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
@@ -4161,18 +4161,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             self._cr.execute(query, ("%s seconds" % seconds, PREFETCH_MAX))
             ids = [x[0] for x in self._cr.fetchall()]
             self.sudo().browse(ids).unlink()
+            if autocommit:
+                self._cr.commit()
 
     @api.model_cr
-    def _transient_clean_old_rows(self, max_count):
+    def _transient_clean_old_rows(self, max_count, autocommit=False):
         # Check how many rows we have in the table
         self._cr.execute("SELECT count(*) AS row_count FROM " + self._table)
         res = self._cr.fetchall()
         if res[0][0] <= max_count:
             return  # max not reached, nothing to do
-        self._transient_clean_rows_older_than(300)
+        self._transient_clean_rows_older_than(300, autocommit)
 
     @api.model
-    def _transient_vacuum(self, force=False):
+    def _transient_vacuum(self, force=False, autocommit=False):
         """Clean the transient records.
 
         This unlinks old records from the transient model tables whenever the
@@ -4199,11 +4201,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # Age-based expiration
         if self._transient_max_hours:
-            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
+            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60, autocommit)
 
         # Count-based expiration
         if self._transient_max_count:
-            self._transient_clean_old_rows(self._transient_max_count)
+            self._transient_clean_old_rows(self._transient_max_count, autocommit)
 
         return True
 
