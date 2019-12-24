@@ -127,7 +127,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 ['table', ['table']],
             ];
             if (hasFullEdit) {
-                toolbar.push(['insert', ['linkPlugin', 'mediaPlugin']]);
+                toolbar.push(['insert', ['linkPlugin']]);
             }
             toolbar.push(['history', ['undo', 'redo']]);
 
