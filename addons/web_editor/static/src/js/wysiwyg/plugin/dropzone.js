@@ -89,7 +89,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
                         // Make the HTML
                         var image = self.document.createElement('img');
                         image.setAttribute('style', 'width: 100%;');
-                        image.src = '/web/content/' + attachment.id + '/' + attachment.name;
+                        image.src = '/web/content/' + attachment.id + '/' + encodeURIComponent(attachment.name) + '?access_token=' + (attachment.access_token || '');
                         image.alt = attachment.name;
                         $(spinner).replaceWith(image);
                         images.push(image);

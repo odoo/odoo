@@ -162,8 +162,7 @@ class Web_Editor(http.Controller):
         attachment = self._image_to_attachment(res_model, res_id, data, filename, filename, disable_optimization=disable_optimization)
         return attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])[0]
 
-    def _image_to_attachment(self, res_model, res_id, data, name, datas_fname, disable_optimization=None):
-        Attachments = request.env['ir.attachment']
+    def _check_image_to_attachment(self, data, disable_optimization):
         try:
             image = Image.open(io.BytesIO(data))
             w, h = image.size
@@ -172,9 +171,13 @@ class Web_Editor(http.Controller):
                     u"Image size excessive, uploaded images must be smaller "
                     u"than 42 million pixel")
             if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                data = tools.image_save_for_web(image)
+                return tools.image_save_for_web(image)
         except IOError:
             pass
+
+    def _image_to_attachment(self, res_model, res_id, data, name, datas_fname, disable_optimization=None):
+        Attachments = request.env['ir.attachment']
+        data = self._check_image_to_attachment(data, disable_optimization) or data
         attachment = Attachments.create({
             'name': name,
             'datas_fname': datas_fname,

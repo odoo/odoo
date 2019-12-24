@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import json
 import lxml
 import requests
@@ -14,6 +15,7 @@ from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo.addons.web_editor.controllers.main import Web_Editor
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -677,3 +679,21 @@ class WebsiteForum(WebsiteProfile):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         return post.unlink_comment(comment.id)[0]
+
+class Web_Editor(Web_Editor):
+    def _image_to_attachment(self, res_model, res_id, data, name, datas_fname, disable_optimization=None):
+        if (res_model == 'forum.post' and request.env.user.share):
+            Attachments = request.env['ir.attachment'].sudo().with_context(binary_field_real_user=request.env.user)
+        else:
+            Attachments = request.env['ir.attachment']
+        data = self._check_image_to_attachment(data, disable_optimization) or data
+        attachment = Attachments.create({
+            'name': name,
+            'datas_fname': datas_fname,
+            'datas': base64.b64encode(data),
+            'public': res_model == 'ir.ui.view',
+            'res_id': res_id,
+            'res_model': res_model,
+        })
+        attachment.generate_access_token()
+        return attachment
