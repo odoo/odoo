@@ -978,8 +978,8 @@ class Field(MetaField('DummyField', (object,), {})):
             value = env.cache.get(record, self)
 
         except KeyError:
-            # real record
-            if record.id and self.store:
+            if self.store and record.id:
+                # fetch from database
                 recs = record._in_cache_without(self)
                 try:
                     recs._fetch_field(self)
@@ -992,7 +992,13 @@ class Field(MetaField('DummyField', (object,), {})):
                     ]))
                 value = env.cache.get(record, self)
 
+            elif self.store and record._origin:
+                # fetch from origin
+                value = self.convert_to_cache(record._origin[self.name], record)
+                env.cache.set(record, self, value)
+
             elif self.compute:
+                # compute the field unless protected
                 if env.is_protected(self, record):
                     value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
@@ -1004,10 +1010,6 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
-            elif (not record.id) and record._origin:
-                value = self.convert_to_cache(record._origin[self.name], record)
-                env.cache.set(record, self, value)
-
             elif (not record.id) and self.type == 'many2one' and self.delegate:
                 # special case: parent records are new as well
                 parent = record.env[self.comodel_name].new()
@@ -1015,6 +1017,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 env.cache.set(record, self, value)
 
             else:
+                # default value
                 value = self.convert_to_cache(False, record, validate=False)
                 env.cache.set(record, self, value)
                 defaults = record.default_get([self.name])
