@@ -7,7 +7,7 @@
         <record id="fleet_group_user" model="res.groups">
             <field name="name">User</field>
             <field name="category_id" ref="base.module_category_human_resources_fleet"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('base.group_private_addresses'))]"/>
         </record>
         <record id="fleet_group_manager" model="res.groups">
             <field name="name">Administrator</field>

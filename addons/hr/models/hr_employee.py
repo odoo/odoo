@@ -44,11 +44,14 @@ class HrEmployeePrivate(models.Model):
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
         groups="hr.group_hr_user", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    is_address_home_a_company = fields.Boolean(
-        'The employee address has a company linked',
-        compute='_compute_is_address_home_a_company',
-    )
-    private_email = fields.Char(related='address_home_id.email', string="Private Email", groups="hr.group_hr_user")
+    private_street = fields.Char(compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_street2 = fields.Char(compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_zip = fields.Char(compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_city = fields.Char(compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_state_id = fields.Many2one('res.country.state', compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_country_id = fields.Many2one('res.country', compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_email = fields.Char(compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
+    private_phone = fields.Char(compute='_compute_private_fields', readonly=False, groups="hr.group_hr_user")
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
@@ -95,7 +98,6 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
     image_1920 = fields.Image(default=_default_image)
-    phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
@@ -189,6 +191,15 @@ class HrEmployeePrivate(models.Model):
 
         return res
 
+    def _get_private_fields(self):
+        return {'street', 'street2', 'zip', 'city', 'state_id', 'country_id', 'email', 'phone'}
+
+    @api.depends(lambda self: ['private_%s' % field for field in self._get_private_fields()])
+    def _compute_private_fields(self):
+        private_fields = self._get_private_fields()
+        for employee in self:
+            employee.update({'private_%s' % field: employee.address_home_id[field] for field in private_fields})
+
     @api.constrains('pin')
     def _verify_pin(self):
         for employee in self:
@@ -238,11 +249,20 @@ class HrEmployeePrivate(models.Model):
 
     @api.model
     def create(self, vals):
+        private_fields = self._get_private_fields()
+        private_fields_vals = {field: vals.pop('private_%s' % field) for field in private_fields if 'private_%s' % field in vals}
         if vals.get('user_id'):
             user = self.env['res.users'].browse(vals['user_id'])
             vals.update(self._sync_user(user))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
+        if not employee.address_home_id:
+            employee.address_home_id = self.env['res.partner'].sudo().create({
+                **private_fields_vals,
+                **{'name': '%s (private)' % employee.name, 'type': 'private'}
+            })
+        else:
+            employee.address_home_id.sudo().write(private_fields_vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
         employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         if employee.department_id:
@@ -252,6 +272,8 @@ class HrEmployeePrivate(models.Model):
         return employee
 
     def write(self, vals):
+        private_fields = self._get_private_fields()
+        private_fields_vals = {field: vals.pop('private_%s' % field) for field in private_fields if 'private_%s' % field in vals}
         if 'address_home_id' in vals:
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
             if account_id:
@@ -259,6 +281,14 @@ class HrEmployeePrivate(models.Model):
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         res = super(HrEmployeePrivate, self).write(vals)
+        for employee in self:
+            if not employee.address_home_id:
+                employee.address_home_id = self.env['res.partner'].sudo().create({
+                    **private_fields_vals,
+                    **{'name': '%s (private)' % employee.name, 'type': 'private'}
+                })
+            else:
+                employee.address_home_id.sudo().write(private_fields_vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
@@ -297,16 +327,6 @@ class HrEmployeePrivate(models.Model):
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
-
-    @api.depends('address_home_id.parent_id')
-    def _compute_is_address_home_a_company(self):
-        """Checks that chosen address (res.partner) is not linked to a company.
-        """
-        for employee in self:
-            try:
-                employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
-            except AccessError:
-                employee.is_address_home_a_company = False
 
     # ---------------------------------------------------------
     # Business Methods

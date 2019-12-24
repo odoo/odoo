@@ -4,6 +4,7 @@
 from collections import OrderedDict
 from itertools import chain
 
+from odoo import models
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
@@ -133,8 +134,12 @@ class TestSelfAccessRights(TestHrCommon):
     # Write res.users #
     def testWriteSelfUserEmployeeSettingFalse(self):
         for f, v in self.self_protected_fields_user.items():
-            with self.assertRaises(AccessError):
-                self.richard.with_user(self.richard).write({f: 'dummy'})
+            with self.assertRaises(AccessError, msg='AccessError not raised on field %s' % f):
+                if isinstance(self.richard.with_user(self.richard)[f], models.BaseModel):
+                    self.richard.with_user(self.richard).write({f: 1})
+                else:
+                    self.richard.with_user(self.richard).write({f: 'dummy'})
+
 
     def testWriteSelfUserEmployee(self):
         self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', True)

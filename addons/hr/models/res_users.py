@@ -16,7 +16,6 @@ class User(models.Model):
     job_title = fields.Char(related='employee_id.job_title', readonly=False)
     work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
-    employee_phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
@@ -25,8 +24,14 @@ class User(models.Model):
     employee_parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
-    is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
-    private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False)
+    private_street = fields.Char(related='employee_id.private_street', readonly=False, related_sudo=False)
+    private_street2 = fields.Char(related='employee_id.private_street2', readonly=False, related_sudo=False)
+    private_zip = fields.Char(related='employee_id.private_zip', readonly=False, related_sudo=False)
+    private_city = fields.Char(related='employee_id.private_city', readonly=False, related_sudo=False)
+    private_state_id = fields.Many2one(related='employee_id.private_state_id', readonly=False, related_sudo=False)
+    private_country_id = fields.Many2one(related='employee_id.private_country_id', readonly=False, related_sudo=False)
+    private_email = fields.Char(related='employee_id.private_email', readonly=False, related_sudo=False)
+    private_phone = fields.Char(related='employee_id.private_phone', readonly=False, related_sudo=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
     employee_bank_account_id = fields.Many2one(related='employee_id.bank_account_id', string="Employee's Bank Account Number", related_sudo=False, readonly=False)
@@ -88,8 +93,8 @@ class User(models.Model):
 
         hr_writable_fields = [
             'additional_note',
-            'address_home_id',
             'address_id',
+            'address_home_id',
             'barcode',
             'birthday',
             'category_ids',
@@ -104,9 +109,7 @@ class User(models.Model):
             'employee_country_id',
             'gender',
             'identification_id',
-            'is_address_home_a_company',
             'job_title',
-            'private_email',
             'km_home_work',
             'marital',
             'mobile_phone',
@@ -114,7 +117,14 @@ class User(models.Model):
             'employee_parent_id',
             'passport_id',
             'permit_no',
-            'employee_phone',
+            'private_email',
+            'private_phone',
+            'private_street',
+            'private_street2',
+            'private_zip',
+            'private_city',
+            'private_state_id',
+            'private_country_id',
             'pin',
             'place_of_birth',
             'spouse_birthdate',
