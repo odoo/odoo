@@ -133,9 +133,6 @@ class ProductTemplate(models.Model):
                 return [{
                     'label': _('Import Template for Products'),
                     'template': '/product/static/xls/product_template.xls'
-                }, {
-                    'label': _('Import Template for Products (with several prices)'),
-                    'template': '/sale/static/xls/product_pricelist_several.xls'
                 }]
         return res
 
