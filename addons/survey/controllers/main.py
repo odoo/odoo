@@ -276,7 +276,7 @@ class Survey(http.Controller):
             return request.render('survey.survey_page_main', data)
         elif answer_sudo.state == 'done':  # Display success message
             return request.render('survey.survey_closed_finished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
-        elif answer_sudo.state == 'skip':
+        elif answer_sudo.state == 'in_progress':
             page_or_question_id, is_last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id)
             previous_id = survey_sudo._previous_page_or_question_id(answer_sudo, page_or_question_id.id)
 
@@ -345,7 +345,7 @@ class Survey(http.Controller):
             if next_page is None:
                 answer_sudo._mark_done()
             else:
-                vals.update({'state': 'skip'})
+                vals.update({'state': 'in_progress'})
 
             answer_sudo.write(vals)
 
