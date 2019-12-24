@@ -611,6 +611,9 @@ class Environment(Mapping):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
+        # Since the company/companies lazy properties can contain data that is no longer valid,
+        # (e.g. company created during a test or a failed ORM operation), reset these lazy properties
+        lazy_property.reset_all(self.all)
         self.cache.invalidate()
         self.all.tocompute.clear()
         self.all.towrite.clear()
