@@ -40,8 +40,7 @@ class WebsiteVisitor(models.Model):
             mapped_data[result['visitor_id']] = visitor_info
 
         for visitor in self:
-            email = mapped_data.get(visitor.id, {}).get('email')
-            visitor.email = email[:-1] if email else False
+            visitor.email = mapped_data.get(visitor.id, {}).get('email')
             visitor.mobile = mapped_data.get(visitor.id, {}).get('mobile')
 
     def _prepare_visitor_send_mail_values(self):
