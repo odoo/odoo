@@ -60,6 +60,20 @@ class TestEmailParsing(TestMailCommon):
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
         self.env['mail.thread'].message_parse(self.from_string(mail))
 
+    def test_message_parse_eml_bounce_headers(self):
+        # Test Text/RFC822-Headers MIME content-type
+        msg_id = '<861878175823148.1577183525.736005783081055-openerp-19177-account.invoice@mycompany.example.com>'
+        mail = self.format(
+            test_mail_data.MAIL_EML_ATTACHMENT_BOUNCE_HEADERS,
+            email_from='MAILER-DAEMON@example.com (Mail Delivery System)',
+            to='test_bounce+82240-account.invoice-19177@mycompany.example.com',
+            # msg_id goes to the attachment's Message-Id header
+            msg_id=msg_id,
+        )
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertEqual(res['bounced_msg_id'], [msg_id], "Message-Id is not extracted from Text/RFC822-Headers attachment")
+
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
