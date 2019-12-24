@@ -384,6 +384,22 @@ var NumericField = InputField.extend({
     },
 
     /**
+     * Parse numerical value (integer or float)
+     *
+     * Note: We have to overwrite this method to skip the format if we are into
+     * edit mode on a input type number.
+     *
+     * @override
+     * @private
+     */
+    _parseValue: function (value) {
+        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+            return Number(value);
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
