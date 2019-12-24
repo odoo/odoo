@@ -4149,12 +4149,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
-        query = ("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
-            " < ((now() at time zone 'UTC') - interval %s)")
-        self._cr.execute(query, ("%s seconds" % seconds,))
-        ids = [x[0] for x in self._cr.fetchall()]
-        self.sudo().browse(ids).unlink()
+        ids = True
+        while ids:
+            query = """
+                SELECT id
+                  FROM {}
+                 WHERE COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
+                        < ((now() at time zone 'UTC') - interval %s)
+                 LIMIT %s
+            """.format(self._table)
+            self._cr.execute(query, ("%s seconds" % seconds, PREFETCH_MAX))
+            ids = [x[0] for x in self._cr.fetchall()]
+            self.sudo().browse(ids).unlink()
 
     @api.model_cr
     def _transient_clean_old_rows(self, max_count):
