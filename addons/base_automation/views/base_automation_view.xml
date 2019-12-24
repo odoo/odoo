@@ -86,4 +86,16 @@
         <menuitem id="menu_base_automation_form"
             parent="base.menu_automation" action="base_automation_act" sequence="1"/>
 
+        <template id="assets_backend" name="base_automation assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_automation/static/src/js/base_automation_error_dialog.js"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="base_automation_tests" inherit_id="web.qunit_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/base_automation/static/tests/base_automation_error_dialog.js"/>
+            </xpath>
+        </template>
+
 </odoo>
