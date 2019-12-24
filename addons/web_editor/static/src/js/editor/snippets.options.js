@@ -2360,10 +2360,10 @@ registry.background = SnippetOptionWidget.extend({
         }
         if (widgetValue) {
             this.$target.css('background-image', `url('${widgetValue}')`);
-            this.$target.removeClass('oe_custom_bg').addClass('oe_img_bg');
+            this.$target.addClass('oe_img_bg');
         } else {
             this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg oe_custom_bg');
+            this.$target.removeClass('oe_img_bg');
         }
     },
 
@@ -2421,7 +2421,6 @@ registry.background = SnippetOptionWidget.extend({
     _setCustomBackground: async function (value, previewMode) {
         this.__customImageSrc = value;
         this.background(false, this.__customImageSrc, {});
-        this.$target.toggleClass('oe_custom_bg', !!value);
         await new Promise(resolve => {
             // Will update the UI of the correct widgets for all options
             // related to the same $target/editor
