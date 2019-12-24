@@ -355,7 +355,12 @@ const UserValueWidget = Widget.extend({
         // mutex. So, during test tours, we would notify both 'preview' and
         // 'reset' before the 'preview' handling is done: and so the widget
         // would not be considered in preview during that 'preview' handling.
-        if (previewMode === true) {
+        if (previewMode === true || previewMode === false) {
+            // Note: the widgets need to be considered in preview mode during
+            // non-preview handling (a previewed checkbox is considered having
+            // an inverted state)... but if, for example, a modal opens before
+            // handling that non-preview, a 'reset' will be thrown thus removing
+            // the preview class. So we force it in non-preview too.
             data.prepare = () => this.el.classList.add('o_we_preview');
         } else if (previewMode === 'reset') {
             data.prepare = () => this.el.classList.remove('o_we_preview');
@@ -515,7 +520,8 @@ const UserValueWidget = Widget.extend({
 const ButtonUserValueWidget = UserValueWidget.extend({
     tagName: 'we-button',
     events: {
-        'click': '_onUserValueChange',
+        'click': '_onButtonClick',
+        'click [role="button"]': '_onInnerButtonClick',
         'mouseenter': '_onUserValuePreview',
         'mouseleave': '_onUserValueReset',
     },
@@ -572,6 +578,27 @@ const ButtonUserValueWidget = UserValueWidget.extend({
             active = (this.getActiveValue(methodName) === value);
         }
         this.el.classList.toggle('active', active);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onButtonClick: function (ev) {
+        if (!ev._innerButtonClicked) {
+            this._onUserValueChange(ev);
+        }
+    },
+    /**
+     * @private
+     */
+    _onInnerButtonClick: function (ev) {
+        // Cannot just stop propagation as the click needs to be propagated to
+        // potential parent widgets for event delegation on those inner buttons.
+        ev._innerButtonClicked = true;
     },
 });
 
@@ -1749,11 +1776,7 @@ const SnippetOptionWidget = Widget.extend({
                     depName = depName.substr(1);
                 }
 
-                let widget = null;
-                this.trigger_up('user_value_widget_request', {
-                    name: depName,
-                    onSuccess: _widget => widget = _widget,
-                });
+                const widget = this._requestUserValueWidgets(depName)[0];
                 if (widget) {
                     dependenciesData.push({
                         widget: widget,
@@ -1979,6 +2002,25 @@ const SnippetOptionWidget = Widget.extend({
     },
     /**
      * @private
+     * @param {...string} widgetNames
+     * @returns {UserValueWidget[]}
+     */
+    _requestUserValueWidgets: function (...widgetNames) {
+        const widgets = [];
+        for (const widgetName of widgetNames) {
+            let widget = null;
+            this.trigger_up('user_value_widget_request', {
+                name: widgetName,
+                onSuccess: _widget => widget = _widget,
+            });
+            if (widget) {
+                widgets.push(widget);
+            }
+        }
+        return widgets;
+    },
+    /**
+     * @private
      * @param {function<Promise<jQuery>>} [callback]
      * @returns {Promise}
      */
@@ -2037,7 +2079,7 @@ const SnippetOptionWidget = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onUserValueUpdate: function (ev) {
+    _onUserValueUpdate: async function (ev) {
         ev.stopPropagation();
         const widget = ev.data.widget;
         const previewMode = ev.data.previewMode;
@@ -2075,36 +2117,41 @@ const SnippetOptionWidget = Widget.extend({
             });
         }});
 
+        if (ev.data.isSimulatedEvent) {
+            // If the user value update was simulated through a trigger, we
+            // prevent triggering further widgets. This could be allowed at some
+            // point but does not work correctly in complex website cases (see
+            // customizeWebsite).
+            return;
+        }
+
         // Check linked widgets: force their value and simulate a notification
-        const triggerWidgetsNames = ev.data.triggerWidgetsNames;
+        const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+        if (linkedWidgets.length !== ev.data.triggerWidgetsNames.length) {
+            console.warn('Missing widget to trigger');
+            return;
+        }
+        let i = 0;
         const triggerWidgetsValues = ev.data.triggerWidgetsValues;
-        for (let i = 0, l = triggerWidgetsNames.length; i < l; i++) {
-            const widgetName = triggerWidgetsNames[i];
+        for (const linkedWidget of linkedWidgets) {
             const widgetValue = triggerWidgetsValues[i];
-
-            let linkedWidget = null;
-            this.trigger_up('user_value_widget_request', {
-                name: widgetName,
-                onSuccess: _widget => linkedWidget = _widget,
-            });
-            if (linkedWidget) {
-                if (widgetValue !== undefined) {
-                    // FIXME right now only make this work supposing it is a
-                    // colorpicker widget with big big hacks, this should be
-                    // improved a lot
-                    const normValue = this._normalizeWidgetValue(widgetValue);
-                    if (previewMode === true) {
-                        linkedWidget._previewColor = normValue;
-                    } else if (previewMode === false) {
-                        linkedWidget._previewColor = false;
-                        linkedWidget._value = normValue;
-                    } else {
-                        linkedWidget._previewColor = false;
-                    }
+            if (widgetValue !== undefined) {
+                // FIXME right now only make this work supposing it is a
+                // colorpicker widget with big big hacks, this should be
+                // improved a lot
+                const normValue = this._normalizeWidgetValue(widgetValue);
+                if (previewMode === true) {
+                    linkedWidget._previewColor = normValue;
+                } else if (previewMode === false) {
+                    linkedWidget._previewColor = false;
+                    linkedWidget._value = normValue;
+                } else {
+                    linkedWidget._previewColor = false;
                 }
-
-                linkedWidget.notifyValueChange(previewMode, true);
             }
+
+            linkedWidget.notifyValueChange(previewMode, true);
+            i++;
         }
     },
 });

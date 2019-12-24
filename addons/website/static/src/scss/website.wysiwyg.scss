@@ -1,3 +1,10 @@
+
+@each $url in $o-theme-font-urls {
+    @if $url {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    }
+}
+
 // Override css variables to influence the default style of the editor without
 // duplicating the css.
 :root {
@@ -95,6 +102,22 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     &.o_dirty {
         background: rgba($o-we-translated-content-color, 0.25) !important;
     }
+}
+
+// SNIPPET PANEL
+$i: 1;
+@each $font in $o-theme-fonts {
+    we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
+        font-family: if($font, $font, $font-family-base);
+
+        &::before {
+            content: nth($o-theme-font-names, $i);
+        }
+    }
+    $i: $i + 1;
+}
+.o_we_add_google_font_btn {
+    border-top: 1px solid currentColor !important;
 }
 
 // SNIPPET OPTIONS

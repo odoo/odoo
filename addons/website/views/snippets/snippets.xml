@@ -362,20 +362,42 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
+    <div id="so_header_theme"
+         data-selector="#wrapwrap > header"
+         data-no-check="true">
+        <we-checkbox string="Show Sign In" data-customize-website="portal.portal_show_sign_in" data-reload="/"/>
+        <we-checkbox string="Fixed Top Menu" data-customize-website="website.affix_top_menu" data-reload="/"/>
+        <we-colorpicker string="Background Color" data-customize-website="" data-color="menu"/>
+        <we-select string="Logo" data-reload="/">
+            <we-button data-customize-website="">Text</we-button>
+            <we-button data-customize-website="website.layout_logo_show">Image</we-button>
+        </we-select>
+        <we-input string="Logo Height" data-customize-website="null" data-variable="logo-height" data-unit="px" data-save-unit="rem"/>
+        <we-row string="Font">
+            <we-fontfamilypicker data-variable="navbar-font-number"/>
+            <we-input data-customize-website="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
+        </we-row>
+    </div>
+
     <div data-js="topMenuTransparency"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <we-checkbox string="Transparent" data-transparent="true" data-no-preview="true"/>
+        <we-checkbox string="Transparent on this page" data-transparent="true" data-no-preview="true"/>
     </div>
 
     <div data-js="topMenuColor"
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
-        <we-colorpicker string="Background Color"
+        <we-colorpicker string="Transparent color"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"
             data-excluded="theme, common, custom"/>
+    </div>
+
+    <div data-selector="#wrapwrap > footer"
+         data-no-check="true">
+        <we-colorpicker string="Background" data-customize-website="" data-color="footer"/>
     </div>
 
     <!-- Anchor Name -->
@@ -463,6 +485,59 @@
             <we-button data-select-class="o_cookies_discrete" data-select-layout="discrete" data-trigger="position_bottom,s_popup_size_full">Discrete</we-button>
             <we-button data-select-class="o_cookies_classic" data-select-layout="classic" data-trigger="position_bottom,s_popup_size_full">Classic</we-button>
             <we-button data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_centered,s_popup_size_md">Popup</we-button>
+        </we-select>
+    </div>
+
+    <!-- Theme options -->
+    <div data-js="Theme" data-selector="theme" data-no-check="true">
+        <we-button class="o_we_primary_btn" data-switch-theme="" data-no-preview="true">Switch Theme</we-button>
+        <we-row string="Main Colors">
+            <we-colorpicker data-name="primary_color_opt" title="Primary" data-customize-website="" data-color-type="theme" data-color="primary"/>
+            <we-colorpicker data-name="secondary_color_opt" title="Secondary" data-customize-website="" data-color-type="theme" data-color="secondary"/>
+            <we-colorpicker data-name="alpha_as_primary_color_opt" title="Primary" data-customize-website="" data-color-type="theme" data-color="alpha"/>
+            <we-colorpicker data-name="beta_as_secondary_color_opt" title="Secondary" data-customize-website="" data-color-type="theme" data-color="beta"/>
+        </we-row>
+        <we-row string="Extra Colors">
+            <we-colorpicker data-name="alpha_as_extra_color_opt" data-customize-website="" data-color-type="theme" data-color="alpha"/>
+            <we-colorpicker data-name="beta_as_extra_color_opt" data-customize-website="" data-color-type="theme" data-color="beta"/>
+            <we-colorpicker data-customize-website="" data-color-type="theme" data-color="gamma"/>
+            <we-colorpicker data-customize-website="" data-color-type="theme" data-color="delta"/>
+            <we-colorpicker data-customize-website="" data-color-type="theme" data-color="epsilon"/>
+        </we-row>
+        <we-row string="Status Colors">
+            <we-colorpicker title="Success" data-customize-website="" data-color-type="theme" data-color="success"/>
+            <we-colorpicker title="Info" data-customize-website="" data-color-type="theme" data-color="info"/>
+            <we-colorpicker title="Warning" data-customize-website="" data-color-type="theme" data-color="warning"/>
+            <we-colorpicker title="Error" data-customize-website="" data-color-type="theme" data-color="danger"/>
+        </we-row>
+        <we-row string="Texts">
+            <we-colorpicker data-customize-website="" data-color="text"/>
+            <we-fontfamilypicker data-variable="font-number"/>
+        </we-row>
+        <we-row string="Headings">
+            <we-colorpicker data-customize-website="" data-color="h1"/>
+            <we-fontfamilypicker data-variable="headings-font-number"/>
+        </we-row>
+        <we-row string="Sub-Headings">
+            <we-colorpicker title="Headings 2" data-customize-website="" data-color="h2"/>
+            <we-colorpicker title="Headings 3" data-customize-website="" data-color="h3"/>
+            <we-colorpicker title="Headings 4" data-customize-website="" data-color="h4"/>
+            <we-colorpicker title="Headings 5" data-customize-website="" data-color="h5"/>
+            <we-colorpicker title="Headings 6" data-customize-website="" data-color="h6"/>
+        </we-row>
+        <we-fontfamilypicker string="Buttons" data-variable="buttons-font-number"/>
+        <we-row string="Background">
+            <we-colorpicker title="Body" data-customize-website="" data-color="body"/>
+            <we-select>
+                <we-button data-name="no_background_opt" data-customize-website="">None</we-button>
+                <we-button data-customize-website="website.option_custom_body_image">Image</we-button>
+                <we-button data-customize-website="website.option_custom_body_image, website.option_custom_body_pattern">Pattern</we-button>
+            </we-select>
+            <we-imagepicker data-dependencies="!no_background_opt" data-customize-body-bg="" data-first-filters="background"/>
+        </we-row>
+        <we-select string="Layout">
+            <we-button data-customize-website="">Full</we-button>
+            <we-button data-customize-website="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
         </we-select>
     </div>
 </template>
