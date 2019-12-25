@@ -9,12 +9,11 @@ import random
 import re
 import threading
 from ast import literal_eval
-from base64 import b64encode
-from datetime import datetime
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools.misc import format_date, format_time
 
 _logger = logging.getLogger(__name__)
 
@@ -233,7 +232,9 @@ class MassMailing(models.Model):
     @api.model
     def create(self, values):
         if values.get('subject') and not values.get('name'):
-            values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
+            timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+            dt_value = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.datetime.now())
+            values['name'] = "%s %s %s" % (values['subject'], format_date(self.env, dt_value), format_time(self.env, dt_value, time_format=False))
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         return super(MassMailing, self).create(values)
