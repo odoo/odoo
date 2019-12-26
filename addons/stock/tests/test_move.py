@@ -2203,6 +2203,61 @@ class StockMove(SavepointCase):
         self.assertAlmostEqual(move_pack_cust.reserved_availability, 1.0)
         self.assertEqual(move_pack_cust.state, 'partially_available')
 
+    def test_link_assign_11(self):
+        """Test the following:
+
+        move1 (3/3)---> move2 (2/3)
+                   \--> move3 (0/1)
+        move1 is done
+        move2 is partially reserved
+        move3 is not reserved
+        -> reserve move2 and 3 in batch.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 3.0)
+        self.env['stock.quant']._update_available_quantity(self.product, self.pack_location, 3.0)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_link_assign_11',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 3.0,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'test_link_assign_11',
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 3,
+        })
+        move3 = self.env['stock.move'].create({
+            'name': 'test_link_assign_11',
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+        })
+        move1.write({'move_dest_ids': [(4, move2.id, 0)]})
+        move1.write({'move_dest_ids': [(4, move3.id, 0)]})
+
+        (move1 + move2 + move3)._action_confirm()
+        move1._action_assign()
+        move1.quantity_done = 3
+        move1._action_done()
+
+        (move2 + move3)._do_unreserve()
+
+        move2.product_uom_qty = 2
+        move2._action_assign()
+        move2.product_uom_qty = 3
+        self.assertEqual(move2.state, 'partially_available')
+
+        (move2 + move3)._action_assign()
+        self.assertEqual(move2.state, 'assigned')
+        self.assertEqual(move3.state, 'confirmed')
+
     def test_use_reserved_move_line_1(self):
         """ Test that _free_reservation work when quantity is only available on
         reserved move lines.

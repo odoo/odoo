@@ -511,13 +511,14 @@ class StockMoveLine(models.Model):
             'lot_id': lot.id
         })
 
-    def _reservation_is_updatable(self, quantity, reserved_quant):
-        self.ensure_one()
-        if (self.product_id.tracking != 'serial' and
-                self.location_id.id == reserved_quant.location_id.id and
-                self.lot_id.id == reserved_quant.lot_id.id and
-                self.package_id.id == reserved_quant.package_id.id and
-                self.owner_id.id == reserved_quant.owner_id.id):
+    @api.model
+    def _reservation_is_updatable(self, move_line, quantity, reserved_quant):
+        tracking = self.env['product.product'].browse(move_line['product_id']).tracking
+        if (tracking != 'serial' and
+                move_line['location_id'] == reserved_quant.location_id.id and
+                move_line['lot_id'] == reserved_quant.lot_id.id and
+                move_line['package_id'] == reserved_quant.package_id.id and
+                move_line['owner_id'] == reserved_quant.owner_id.id):
             return True
         return False
 
