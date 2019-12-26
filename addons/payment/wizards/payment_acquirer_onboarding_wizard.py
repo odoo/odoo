@@ -148,7 +148,7 @@ class PaymentWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _set_payment_acquirer_onboarding_step_done(self):
-        self.env.company.set_onboarding_step_done('payment_acquirer_onboarding_state')
+        self.env.company.sudo().set_onboarding_step_done('payment_acquirer_onboarding_state')
 
     def action_onboarding_other_payment_acquirer(self):
         self._set_payment_acquirer_onboarding_step_done()
