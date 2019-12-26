@@ -414,6 +414,7 @@ class MailActivity(models.Model):
         return messages.ids and messages.ids[0] or False
 
     def action_feedback(self, feedback=False, attachment_ids=None):
+        self = self.with_context(clean_context(self.env.context))
         messages, next_activities = self._action_done(feedback=feedback, attachment_ids=attachment_ids)
         return messages.ids and messages.ids[0] or False
 
