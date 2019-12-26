@@ -292,7 +292,7 @@ class LandedCostLine(models.Model):
         if not self.product_id:
             self.quantity = 0.0
         self.name = self.product_id.name or ''
-        self.split_method = 'equal'
+        self.split_method = self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
         self.account_id = accounts_data['stock_input']
