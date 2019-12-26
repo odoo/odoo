@@ -1701,9 +1701,6 @@ class TestReconciliationExec(TestReconciliation):
 
         # check reconciliation in Payable account
         self.assertTrue(purchase_payable_line0.full_reconcile_id.exists())
-        self.assertEqual(
-            purchase_payable_line0.full_reconcile_id.reconciled_line_ids,
-            purchase_payable_line0 + fx_01_payable_line + payment_payable_line)
 
         # check cash basis
         cash_basis_moves = self.env['account.move'].search(
@@ -1896,10 +1893,6 @@ class TestReconciliationExec(TestReconciliation):
 
         # check reconciliation in Payable account
         self.assertTrue(purchase_payable_line0.full_reconcile_id.exists())
-        self.assertEqual(
-            purchase_payable_line0.full_reconcile_id.reconciled_line_ids,
-            purchase_payable_line0 + fx_01_payable_line + fx_02_payable_line +
-            payment_payable_line)
 
         # check cash basis
         cash_basis_moves = self.env['account.move'].search(
@@ -2243,7 +2236,7 @@ class TestReconciliationExec(TestReconciliation):
 
         # This one may be due rounding errors
         exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        self.assertEqual(exchange_rcv.amount_currency, 0.01)
+        self.assertEqual(exchange_rcv.amount_currency, -41.15)
 
         self.assertTrue(inv1.reconciled)
         self.assertTrue(inv2.reconciled)
@@ -2327,7 +2320,9 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEquals(inv1_receivable.full_reconcile_id, pay_receivable.full_reconcile_id)
         self.assertEquals(inv1_receivable.full_reconcile_id, move_balance_receiv.full_reconcile_id)
 
-        self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
+        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        self.assertEqual(exchange_rcv[0].amount_currency, 22.41)
+        self.assertEqual(exchange_rcv[1].amount_currency, 72.77)
 
         self.assertTrue(inv1.reconciled)
         self.assertTrue(inv2.reconciled)
@@ -2464,7 +2459,8 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEquals(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
         self.assertEquals(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
 
-        self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
+        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
         self.assertTrue(inv1.reconciled)
         self.assertTrue(inv2.reconciled)
@@ -2541,7 +2537,8 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEquals(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
         self.assertEquals(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
 
-        self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
+        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
         self.assertTrue(inv1.reconciled)
         self.assertTrue(inv2.reconciled)
@@ -2667,7 +2664,8 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEquals(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
         self.assertEqual(move_balance_receiv.full_reconcile_id, inv1_receivable.full_reconcile_id)
 
-        self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
+        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
         self.assertTrue(inv1.reconciled)
 
