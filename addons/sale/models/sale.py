@@ -701,7 +701,7 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-            self.env.company.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+            self.env.company.sudo().set_onboarding_step_done('sale_onboarding_sample_quotation_state')
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     def _send_order_confirmation_mail(self):

@@ -286,7 +286,7 @@ class ResCompany(models.Model):
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
         company = self.env.company
-        company.set_onboarding_step_done('account_setup_coa_state')
+        company.sudo().set_onboarding_step_done('account_setup_coa_state')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
