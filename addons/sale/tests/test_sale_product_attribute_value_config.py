@@ -65,13 +65,13 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
         discount = 10
 
-        pricelist = self.env['product.pricelist'].create({
+        pricelist = self.env['product.pricelist'].with_context(**self.context_no_mail).create({
             'name': 'test pl',
             'currency_id': to_currency.id,
             'company_id': self.computer.company_id.id,
         })
 
-        pricelist_item = self.env['product.pricelist.item'].create({
+        pricelist_item = self.env['product.pricelist.item'].with_context(**self.context_no_mail).create({
             'min_quantity': 2,
             'compute_price': 'percentage',
             'percent_price': discount,
@@ -105,14 +105,14 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             # Create a dummy SO to prevent the variant from being deleted by
             # _create_variant_ids() because the variant is a related field that
             # is required on the SO line
-            so = self.env['sale.order'].create({'partner_id': 1})
-            self.env['sale.order.line'].create({
+            so = self.env['sale.order'].with_context(**self.context_no_mail).create({'partner_id': 1})
+            self.env['sale.order.line'].with_context(**self.context_no_mail).create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant.id
             })
             # additional variant to test correct ignoring when mismatch values
-            self.env['sale.order.line'].create({
+            self.env['sale.order.line'].with_context(**self.context_no_mail).create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant2.id
@@ -148,7 +148,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             self.computer_ssd_attribute_lines.unlink()
 
             variant4 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
-            self.env['sale.order.line'].create({
+            self.env['sale.order.line'].with_context(**self.context_no_mail).create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant4.id
@@ -165,7 +165,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             computer_hdd_2 = self._get_product_template_attribute_value(self.hdd_2)
 
             variant5 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
-            self.env['sale.order.line'].create({
+            self.env['sale.order.line'].with_context(**self.context_no_mail).create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant5.id
@@ -180,7 +180,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
         do_test(self)
 
         # CASE: add back the removed attribute and try everything again
-        self.computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.computer_ssd_attribute_lines = self.env['product.template.attribute.line'].with_context(**self.context_no_mail).create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.ssd_attribute.id,
             'value_ids': [(6, 0, [self.ssd_256.id, self.ssd_512.id])],
@@ -376,22 +376,22 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
         self.assertEqual(variant, self.computer._create_product_variant(combination))
 
     def _add_keyboard_attribute(self):
-        self.keyboard_attribute = self.env['product.attribute'].create({
+        self.keyboard_attribute = self.env['product.attribute'].with_context(**self.context_no_mail).create({
             'name': 'Keyboard',
             'sequence': 6,
             'create_variant': 'dynamic',
         })
-        self.keyboard_included = self.env['product.attribute.value'].create({
+        self.keyboard_included = self.env['product.attribute.value'].with_context(**self.context_no_mail).create({
             'name': 'Included',
             'attribute_id': self.keyboard_attribute.id,
             'sequence': 1,
         })
-        self.keyboard_excluded = self.env['product.attribute.value'].create({
+        self.keyboard_excluded = self.env['product.attribute.value'].with_context(**self.context_no_mail).create({
             'name': 'Excluded',
             'attribute_id': self.keyboard_attribute.id,
             'sequence': 2,
         })
-        self.computer_keyboard_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.computer_keyboard_attribute_lines = self.env['product.template.attribute.line'].with_context(**self.context_no_mail).create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.keyboard_attribute.id,
             'value_ids': [(6, 0, [self.keyboard_included.id, self.keyboard_excluded.id])],

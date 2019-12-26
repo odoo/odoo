@@ -14,8 +14,9 @@ class TestProductAttributeValueCommon(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestProductAttributeValueCommon, cls).setUpClass()
+        cls.context_no_mail = {'no_reset_password': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True}
 
-        cls.computer = cls.env['product.template'].create({
+        cls.computer = cls.env['product.template'].with_context(**cls.context_no_mail).create({
             'name': 'Super Computer',
             'price': 2000,
         })
@@ -24,7 +25,7 @@ class TestProductAttributeValueCommon(SavepointCase):
         cls._add_ram_attribute()
         cls._add_hdd_attribute()
 
-        cls.computer_case = cls.env['product.template'].create({
+        cls.computer_case = cls.env['product.template'].with_context(**cls.context_no_mail).create({
             'name': 'Super Computer Case'
         })
 
@@ -32,13 +33,13 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     @classmethod
     def _add_ssd_attribute(cls):
-        cls.ssd_attribute = cls.env['product.attribute'].create({'name': 'Memory', 'sequence': 1})
-        cls.ssd_256 = cls.env['product.attribute.value'].create({
+        cls.ssd_attribute = cls.env['product.attribute'].with_context(**cls.context_no_mail).create({'name': 'Memory', 'sequence': 1})
+        cls.ssd_256 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '256 GB',
             'attribute_id': cls.ssd_attribute.id,
             'sequence': 1,
         })
-        cls.ssd_512 = cls.env['product.attribute.value'].create({
+        cls.ssd_512 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '512 GB',
             'attribute_id': cls.ssd_attribute.id,
             'sequence': 2,
@@ -48,7 +49,7 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     @classmethod
     def _add_ssd_attribute_line(cls):
-        cls.computer_ssd_attribute_lines = cls.env['product.template.attribute.line'].create({
+        cls.computer_ssd_attribute_lines = cls.env['product.template.attribute.line'].with_context(**cls.context_no_mail).create({
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.ssd_attribute.id,
             'value_ids': [(6, 0, [cls.ssd_256.id, cls.ssd_512.id])],
@@ -58,23 +59,23 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     @classmethod
     def _add_ram_attribute(cls):
-        cls.ram_attribute = cls.env['product.attribute'].create({'name': 'RAM', 'sequence': 2})
-        cls.ram_8 = cls.env['product.attribute.value'].create({
+        cls.ram_attribute = cls.env['product.attribute'].with_context(**cls.context_no_mail).create({'name': 'RAM', 'sequence': 2})
+        cls.ram_8 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '8 GB',
             'attribute_id': cls.ram_attribute.id,
             'sequence': 1,
         })
-        cls.ram_16 = cls.env['product.attribute.value'].create({
+        cls.ram_16 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '16 GB',
             'attribute_id': cls.ram_attribute.id,
             'sequence': 2,
         })
-        cls.ram_32 = cls.env['product.attribute.value'].create({
+        cls.ram_32 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '32 GB',
             'attribute_id': cls.ram_attribute.id,
             'sequence': 3,
         })
-        cls.computer_ram_attribute_lines = cls.env['product.template.attribute.line'].create({
+        cls.computer_ram_attribute_lines = cls.env['product.template.attribute.line'].with_context(**cls.context_no_mail).create({
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.ram_attribute.id,
             'value_ids': [(6, 0, [cls.ram_8.id, cls.ram_16.id, cls.ram_32.id])],
@@ -85,18 +86,18 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     @classmethod
     def _add_hdd_attribute(cls):
-        cls.hdd_attribute = cls.env['product.attribute'].create({'name': 'HDD', 'sequence': 3})
-        cls.hdd_1 = cls.env['product.attribute.value'].create({
+        cls.hdd_attribute = cls.env['product.attribute'].with_context(**cls.context_no_mail).create({'name': 'HDD', 'sequence': 3})
+        cls.hdd_1 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '1 To',
             'attribute_id': cls.hdd_attribute.id,
             'sequence': 1,
         })
-        cls.hdd_2 = cls.env['product.attribute.value'].create({
+        cls.hdd_2 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '2 To',
             'attribute_id': cls.hdd_attribute.id,
             'sequence': 2,
         })
-        cls.hdd_4 = cls.env['product.attribute.value'].create({
+        cls.hdd_4 = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': '4 To',
             'attribute_id': cls.hdd_attribute.id,
             'sequence': 3,
@@ -106,7 +107,7 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     @classmethod
     def _add_hdd_attribute_line(cls):
-        cls.computer_hdd_attribute_lines = cls.env['product.template.attribute.line'].create({
+        cls.computer_hdd_attribute_lines = cls.env['product.template.attribute.line'].with_context(**cls.context_no_mail).create({
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.hdd_attribute.id,
             'value_ids': [(6, 0, [cls.hdd_1.id, cls.hdd_2.id, cls.hdd_4.id])],
@@ -125,23 +126,23 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     @classmethod
     def _add_size_attribute(cls):
-        cls.size_attribute = cls.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
-        cls.size_m = cls.env['product.attribute.value'].create({
+        cls.size_attribute = cls.env['product.attribute'].with_context(**cls.context_no_mail).create({'name': 'Size', 'sequence': 4})
+        cls.size_m = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': 'M',
             'attribute_id': cls.size_attribute.id,
             'sequence': 1,
         })
-        cls.size_l = cls.env['product.attribute.value'].create({
+        cls.size_l = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': 'L',
             'attribute_id': cls.size_attribute.id,
             'sequence': 2,
         })
-        cls.size_xl = cls.env['product.attribute.value'].create({
+        cls.size_xl = cls.env['product.attribute.value'].with_context(**cls.context_no_mail).create({
             'name': 'XL',
             'attribute_id': cls.size_attribute.id,
             'sequence': 3,
         })
-        cls.computer_case_size_attribute_lines = cls.env['product.template.attribute.line'].create({
+        cls.computer_case_size_attribute_lines = cls.env['product.template.attribute.line'].with_context(**cls.context_no_mail).create({
             'product_tmpl_id': cls.computer_case.id,
             'attribute_id': cls.size_attribute.id,
             'value_ids': [(6, 0, [cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
@@ -265,20 +266,20 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_16))
 
         # CASE: no combination, no variant, just return the only variant
-        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        mouse = self.env['product.template'].with_context(**self.context_no_mail).create({'name': 'Mouse'})
         self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
 
         # prep work for the last part of the test
-        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
-        color_red = self.env['product.attribute.value'].create({
+        color_attribute = self.env['product.attribute'].with_context(**self.context_no_mail).create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].with_context(**self.context_no_mail).create({
             'name': 'Red',
             'attribute_id': color_attribute.id,
         })
-        color_green = self.env['product.attribute.value'].create({
+        color_green = self.env['product.attribute.value'].with_context(**self.context_no_mail).create({
             'name': 'Green',
             'attribute_id': color_attribute.id,
         })
-        self.env['product.template.attribute.line'].create({
+        self.env['product.template.attribute.line'].with_context(**self.context_no_mail).create({
             'product_tmpl_id': mouse.id,
             'attribute_id': color_attribute.id,
             'value_ids': [(6, 0, [color_red.id, color_green.id])],
@@ -311,12 +312,12 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         # CASE: if multiple variants exist for the same combination and at least
         # one of them is not archived, the combination is possible
         combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
-        self.env['product.product'].create({
+        self.env['product.product'].with_context(**self.context_no_mail).create({
             'product_tmpl_id': self.computer.id,
             'product_template_attribute_value_ids': [(6, 0, combination.ids)],
             'active': False,
         })
-        self.env['product.product'].create({
+        self.env['product.product'].with_context(**self.context_no_mail).create({
             'product_tmpl_id': self.computer.id,
             'product_template_attribute_value_ids': [(6, 0, combination.ids)],
             'active': True,
@@ -437,13 +438,13 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             computer_ssd_256 + computer_ram_8 + computer_hdd_4)
 
         # Make sure this is not extremely slow:
-        product_template = self.env['product.template'].create({
+        product_template = self.env['product.template'].with_context(**self.context_no_mail).create({
             'name': 'many combinations',
         })
 
         for i in range(10):
             # create the attributes
-            product_attribute = self.env['product.attribute'].create({
+            product_attribute = self.env['product.attribute'].with_context(**self.context_no_mail).create({
                 'name': "att %s" % i,
                 'create_variant': 'dynamic',
                 'sequence': i,
@@ -494,7 +495,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertFalse(self.computer._get_variant_for_combination(combination))
 
         # CASE: clear_caches in product.product create
-        variant = self.env['product.product'].create({
+        variant = self.env['product.product'].with_context(**self.context_no_mail).create({
             'product_tmpl_id': self.computer.id,
             'product_template_attribute_value_ids': [(6, 0, combination.ids)],
         })
@@ -519,14 +520,14 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             self.ram_32.unlink()
 
         with self.assertRaises(ValidationError, msg="can't have attribute without value on product"):
-            self.env['product.template.attribute.line'].create({
+            self.env['product.template.attribute.line'].with_context(**self.context_no_mail).create({
                 'product_tmpl_id': self.computer_case.id,
                 'attribute_id': self.hdd_attribute.id,
                 'value_ids': [(6, 0, [])],
             })
 
         with self.assertRaises(ValidationError, msg="value attribute must match line attribute"):
-            self.env['product.template.attribute.line'].create({
+            self.env['product.template.attribute.line'].with_context(**self.context_no_mail).create({
                 'product_tmpl_id': self.computer_case.id,
                 'attribute_id': self.ram_attribute.id,
                 'value_ids': [(6, 0, [self.ssd_256.id])],
@@ -545,7 +546,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             self.computer_ram_attribute_lines.product_template_value_ids[0].product_tmpl_id = self.computer_case.id
 
         with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError, msg="can't have two values with the same name for the same attribute"):
-            self.env['product.attribute.value'].create({
+            self.env['product.attribute.value'].with_context(**self.context_no_mail).create({
                 'name': '32 GB',
                 'attribute_id': self.ram_attribute.id,
             })
