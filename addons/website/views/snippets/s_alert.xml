@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_alert" name="Alert">
+    <div class="s_alert s_alert_md alert-delta w-100 clearfix">
+        <i class="fa fa-2x fa-info-circle s_alert_icon"/>
+        <div class="s_alert_content">
+            <p>Explain the benefits you offer. <br/>Don't write about products or services here, write about solutions.</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_alert_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_alert">
+            <we-colorpicker string="Color"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="alert-"/>
+        </div>
+
+        <div data-selector=".s_alert">
+            <we-select string="Size">
+                <we-button data-select-class="s_alert_sm">Small</we-button>
+                <we-button data-select-class="s_alert_md">Medium</we-button>
+                <we-button data-select-class="s_alert_lg">Large</we-button>
+            </we-select>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_alert_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_alert/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

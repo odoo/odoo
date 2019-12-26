@@ -107,6 +107,8 @@ class Website(models.Model):
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
 
+    robots_txt = fields.Text('Robots.txt', translate=False, groups='website.group_website_designer')
+
     def _default_favicon(self):
         img_path = get_resource_path('web', 'static/src/img/favicon.ico')
         with tools.file_open(img_path, 'rb') as f:

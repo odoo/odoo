@@ -198,6 +198,14 @@ class StockMove(models.Model):
         self.sudo().unlink()
         return processed_moves
 
+    def _action_cancel(self):
+        res = super(StockMove, self)._action_cancel()
+        for production in self.mapped('raw_material_production_id'):
+            if production.state != 'cancel':
+                continue
+            production._action_cancel()
+        return res
+
     def _decrease_reserved_quanity(self, quantity):
         """ Decrease the reservation on move lines but keeps the
         all other data.
@@ -243,7 +251,7 @@ class StockMove(models.Model):
 
     def _delay_alert_get_documents(self):
         res = super(StockMove, self)._delay_alert_get_documents()
-        productions = self.mapped('raw_material_production_id')
+        productions = self.raw_material_production_id | self.production_id
         return res + list(productions)
 
     def _should_be_assigned(self):

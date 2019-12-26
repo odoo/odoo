@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    margin = fields.Float(compute='_compute_margin', digits='Product Price', store=True)
-    purchase_price = fields.Float(string='Cost', compute="_compute_purchase_price", digits='Product Price', store=True, readonly=False)
+    margin = fields.Float(
+        "Profit", compute='_compute_margin',
+        digits='Product Price', store=True, groups="base.group_user")
+    margin_percent = fields.Float(
+        'Margin', compute='_compute_margin', store=True, groups="base.group_user")
+    purchase_price = fields.Float(
+        string='Cost', compute="_compute_purchase_price",
+        digits='Product Price', store=True, readonly=False,
+        groups="base.group_user")
 
     @api.depends('product_id', 'company_id', 'currency_id', 'product_uom')
     def _compute_purchase_price(self):
@@ -37,15 +43,17 @@ class SaleOrderLine(models.Model):
     def _compute_margin(self):
         for line in self:
             line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)
+            line.margin_percent = line.price_subtotal  and line.margin/line.price_subtotal
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    margin = fields.Monetary(compute='_compute_margin', store=True)
+    margin = fields.Monetary("Profit", compute='_compute_margin', store=True)
+    margin_percent = fields.Float("Margin", compute='_compute_margin', store=True)
 
-    @api.depends('order_line.margin')
+    @api.depends('order_line.margin', 'amount_untaxed')
     def _compute_margin(self):
         for order in self:
-            order.margin = 0 if order.state == 'cancel' else \
-                sum(order.order_line.mapped('margin'))
+            order.margin = sum(order.order_line.mapped('margin'))
+            order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed

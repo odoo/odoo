@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_rating" name="Rating">
+    <div class="s_rating row">
+        <div class="col-lg-12 s_rating_stars s_rating_3 s_rating_1x pt16 pb16">
+            <h4>Quality</h4>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <div class="s_rating_bar"/>
+        </div>
+    </div>
+</template>
+
+<template id="s_rating_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_rating > div">
+            <we-select string="Icon">
+                <we-button data-select-class="s_rating_stars"><i class="fa fa-fw fa-star"/> Stars</we-button>
+                <we-button data-select-class="s_rating_squares"><i class="fa fa-fw fa-square"/> Squares</we-button>
+                <we-button data-select-class="s_rating_hearts"><i class="fa fa-fw fa-heart"/> Hearts</we-button>
+                <we-button data-select-class="s_rating_bar"><i class="fa fa-fw fa-tasks"/> Progress Bar</we-button>
+            </we-select>
+            <we-select string="Value">
+                <we-button data-select-class="">0</we-button>
+                <we-button data-select-class="s_rating_1">1/5</we-button>
+                <we-button data-select-class="s_rating_2">2/5</we-button>
+                <we-button data-select-class="s_rating_3">3/5</we-button>
+                <we-button data-select-class="s_rating_4">4/5</we-button>
+                <we-button data-select-class="s_rating_5">5/5</we-button>
+            </we-select>
+            <we-select string="Size">
+                <we-button data-select-class="s_rating_1x">Small</we-button>
+                <we-button data-select-class="s_rating_2x">Medium</we-button>
+                <we-button data-select-class="s_rating_3x">Big</we-button>
+            </we-select>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_rating_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_rating/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

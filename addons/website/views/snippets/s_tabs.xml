@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_tabs" name="Tabs">
+    <section class="s_tabs">
+        <div class="container">
+            <div class="row s_col_no_bgcolor">
+                <div class="col-lg-8 offset-lg-2 pt48 pb48">
+                    <div class="card bg-white">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active"
+                                        id="nav_tabs_link_1"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_1"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_1"
+                                        aria-selected="true">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                        id="nav_tabs_link_2"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_2"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_2"
+                                        aria-selected="false">Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                        id="nav_tabs_link_3"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_3"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_3"
+                                        aria-selected="false">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body tab-content">
+                            <div class="tab-pane fade show active"
+                                id="nav_tabs_content_1"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_1">
+                                <h3>Details</h3>
+                                <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                            </div>
+                            <div class="tab-pane fade"
+                                id="nav_tabs_content_2"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_2">
+                                <h3>Shipping</h3>
+                                <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
+                            </div>
+                            <div class="tab-pane fade"
+                                id="nav_tabs_content_3"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_3">
+                                <h3>Review</h3>
+                                <blockquote>
+                                    <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                    <footer>— Jane DOE, CEO of <b>MyCompany</b></footer>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

@@ -21,7 +21,7 @@
                                 attrs="{'readonly': [('parent_state', '=', 'posted')]}"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Information">
+                            <page string="Information" name="information">
                                 <group>
                                     <group string="Amount">
                                         <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
@@ -76,7 +76,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
+                            <page string="Analytic Lines" name="analytic_lines" groups="analytic.group_analytic_accounting">
                                 <field name="date" invisible="1"/>
                                 <field name="analytic_line_ids" context="{'tree_view_ref':'analytic.view_account_analytic_line_tree', 'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                             </page>
@@ -678,6 +678,7 @@
                                                optional="show"
                                                widget="many2many_tags"/>
                                         <field name="quantity"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>
@@ -722,6 +723,7 @@
                                         <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                         <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                         <field name="quantity"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" groups="uom.group_uom"/>
                                         <field name="price_unit"/>
                                         <field name="display_type"/>
@@ -794,6 +796,7 @@
                                     </kanban>
                                     <form>
                                         <sheet>
+                                            <field name="product_uom_category_id" invisible="1"/>
                                             <field name="display_type" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <group>
@@ -907,6 +910,7 @@
 
                                         <field name="product_id" invisible="1"/>
                                         <field name="quantity" invisible="1"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" invisible="1"/>
                                         <field name="price_unit" invisible="1"/>
                                         <field name="discount" invisible="1"/>

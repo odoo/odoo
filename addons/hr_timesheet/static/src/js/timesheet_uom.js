@@ -1,24 +1,25 @@
 odoo.define('hr_timesheet.timesheet_uom', function (require) {
 'use strict';
 
-var AbstractField = require('web.AbstractField');
-var basicFields = require('web.basic_fields');
-var fieldUtils = require('web.field_utils');
+const basicFields = require('web.basic_fields');
+const fieldUtils = require('web.field_utils');
 
-var fieldRegistry = require('web.field_registry');
+const fieldRegistry = require('web.field_registry');
+
+const Timer = require('hr_timesheet.Timer');
 
 // We need the field registry to be populated, as we bind the
 // timesheet_uom widget on existing field widgets.
 require('web._field_registry');
 
-var session = require('web.session');
+const session = require('web.session');
 
 /**
  * Extend the float factor widget to set default value for timesheet
  * use case. The 'factor' is forced to be the UoM timesheet
  * conversion from the session info.
  **/
-var FieldTimesheetFactor = basicFields.FieldFloatFactor.extend({
+const FieldTimesheetFactor = basicFields.FieldFloatFactor.extend({
     formatType: 'float_factor',
     /**
      * Override init to tweak options depending on the session_info
@@ -44,7 +45,7 @@ var FieldTimesheetFactor = basicFields.FieldFloatFactor.extend({
  * native widget, and the 'factor' is forced to be the UoM timesheet
  * conversion.
  **/
-var FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
+const FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
     formatType: 'float_factor',
     /**
      * Override init to tweak options depending on the session_info
@@ -73,6 +74,61 @@ var FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
 
 
 /**
+ * Extend float time widget to add the using of a timer for duration
+ * (unit_amount) field.
+ */
+const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (session.timesheet_uom_factor) {
+            this.nodeOptions.factor = session.timesheet_uom_factor;
+            this.parseOptions.factor = session.timesheet_uom_factor;
+        }
+    },
+    _render: async function () {
+        this._super.apply(this, arguments);
+
+        // Check if the timer_start exists and it's not false
+        // In other word, when user clicks on play button, this button
+        // launches the "action_timer_start".
+        if (this.recordData.timer_start) {
+            const time = await this._rpc({
+                model: this.model,
+                method: 'get_server_time',
+                args: []
+            });
+            this.time = Timer.createTimer(this.recordData.unit_amount, this.recordData.timer_start, time);
+            return this._startTimeCounter();
+        } else if (this.mode === "edit") {
+            return this._renderEdit();
+        } else if (this.mode === 'readonly') {
+            return this._renderReadonly();
+        }
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        clearTimeout(this.timer);
+    },
+    _startTimeCounter: function () {
+        if (this.time) {
+            this.timer = setInterval(() => {
+                this.time.addSecond();
+                this.$el.text(this.time.toString());
+                this.$el.addClass('font-weight-bold text-danger');
+            }, 1000);
+        } else {
+            clearTimeout(this.timer);
+            this.$el.removeClass('font-weight-bold text-danger');
+        }
+    },
+});
+
+
+/**
  * Binding depending on Company Preference
  *
  * determine wich widget will be the timesheet one.
@@ -80,22 +136,27 @@ var FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
  * implementation (float_time, float_toggle, ...). The default
  * value will be 'float_factor'.
 **/
-var widgetName = 'timesheet_uom' in session ?
+const widgetName = 'timesheet_uom' in session ?
          session.timesheet_uom.timesheet_widget : 'float_factor';
-var FieldTimesheetUom = widgetName === 'float_toggle' ? FieldTimesheetToggle
-        : (
-            (
-                fieldRegistry.get(widgetName) &&
-                fieldRegistry.get(widgetName).extend({})
-            ) ||
-            FieldTimesheetFactor
-        );
+
+let FieldTimesheetUom = null;
+
+if (widgetName === 'float_toggle') {
+    FieldTimesheetUom = FieldTimesheetToggle;
+} else if (widgetName === 'float_time') {
+    FieldTimesheetUom = FieldTimesheetTime;
+} else {
+    FieldTimesheetUom = (
+            fieldRegistry.get(widgetName) &&
+            fieldRegistry.get(widgetName).extend({})
+        ) || FieldTimesheetFactor;
+}
 
 fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 
 
 // bind the formatter and parser method, and tweak the options
-var _tweak_options = function(options) {
+const _tweak_options = function(options) {
     if (!_.contains(options, 'factor')) {
         options.factor = session.timesheet_uom_factor;
     }
@@ -104,15 +165,21 @@ var _tweak_options = function(options) {
 
 fieldUtils.format.timesheet_uom = function(value, field, options) {
     options = _tweak_options(options || {});
-    var formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+    const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
     return formatter(value, field, options);
 };
 
 fieldUtils.parse.timesheet_uom = function(value, field, options) {
     options = _tweak_options(options || {});
-    var parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+    const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
     return parser(value, field, options);
 };
 
-return FieldTimesheetUom;
+return {
+    FieldTimesheetUom,
+    FieldTimesheetFactor,
+    FieldTimesheetTime,
+    FieldTimesheetToggle
+};
+
 });

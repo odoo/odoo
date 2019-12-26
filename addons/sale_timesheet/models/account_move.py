@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.osv import expression
 
 
 class AccountMove(models.Model):
@@ -43,29 +43,28 @@ class AccountMove(models.Model):
             }
         }
 
+    def _link_timesheets_to_invoice(self, date=None):
+        """ Search timesheets and link this timesheets to the invoice
+
+            When we create an invoice from a sale order, we need to
+            link the timesheets in this sale order to the invoice.
+            Then, we can know which timesheets are invoiced in the sale order.
+
+            :param date: All timesheets on task before or equals this date
+                        in the sale order are invoiced.
+        """
+        for line in self.filtered(lambda i: i.type == 'out_invoice' and i.state == 'draft').invoice_line_ids:
+            sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
+            if sale_line_delivery:
+                domain = line._timesheet_domain_get_invoiced_lines(sale_line_delivery)
+                if date:
+                    domain = expression.AND([domain, [('date', '<=', date)]])
+                timesheets = self.env['account.analytic.line'].sudo().search(domain)
+                timesheets.write({'timesheet_invoice_id': line.move_id.id})
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        # OVERRIDE
-        # Link the timesheet from the SO lines to the corresponding draft invoice.
-        # NOTE: Only the timesheets linked to an Sale Line with a product invoiced on delivered quantity
-        # are concerned, since in ordered quantity, the timesheet quantity is not invoiced, but is simply
-        # to compute the delivered one (for reporting).
-        lines = super(AccountMoveLine, self).create(vals_list)
-        lines_to_process = lines.filtered(lambda line: line.move_id.type == 'out_invoice'
-                                                       and line.move_id.state == 'draft')
-        for line in lines_to_process:
-            sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
-            if sale_line_delivery:
-                domain = self._timesheet_domain_get_invoiced_lines(sale_line_delivery)
-                timesheets = self.env['account.analytic.line'].search(domain).sudo()
-                timesheets.write({
-                    'timesheet_invoice_id': line.move_id.id,
-                })
-        return lines
 
     @api.model
     def _timesheet_domain_get_invoiced_lines(self, sale_line_delivery):
@@ -74,9 +73,7 @@ class AccountMoveLine(models.Model):
             :return a normalized domain
         """
         return [
-            '&',
             ('so_line', 'in', sale_line_delivery.ids),
-            '&',
             ('timesheet_invoice_id', '=', False),
             ('project_id', '!=', False)
         ]

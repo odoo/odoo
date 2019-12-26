@@ -105,16 +105,137 @@
                                     <div class="mt8">
                                         <field name="website_domain" placeholder="www.odoo.com"/>
                                     </div>
-                                    <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
-                                        Once the selection of available websites by domain is done, you can filter by country group.
+                                    <div groups="base.group_no_one">
+                                        <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
+                                            Once the selection of available websites by domain is done, you can filter by country group.
+                                        </div>
+                                        <div class="mt8">
+                                            <field name="website_country_group_ids" widget="many2many_tags"/>
+                                        </div>
                                     </div>
-                                    <div class="mt8">
-                                        <field name="website_country_group_ids" widget="many2many_tags"/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="specific_user_account_setting" groups="website.group_multi_website">
+                                <div class="o_setting_left_pane">
+                                    <field name="specific_user_account"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="specific_user_account"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Force your user to create an account per website
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
+                                <div class="o_setting_left_pane">
+                                    <field name="cdn_activated"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="cdn_activated"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Use a CDN to optimize the availability of your website's content
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" for="cdn_url"/>
+                                            <field name="cdn_url"
+                                                   attrs="{'required': [('cdn_activated', '=', True)]}"
+                                                   placeholder="//mycompany.mycdn.com/"
+                                                   t-translation="off"/>
+                                        </div>
+                                        <div class="row" >
+                                            <label class="col-lg-3 o_light_label" for="cdn_filters"/>
+                                            <field name="cdn_filters" class="oe_inline"
+                                                   attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="social_media_settings">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_social_network"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Social Media" for="has_social_network"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Add links to social media on your website
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_social_network', '=', False)]}">
+                                        <div class="row">
+                                            <label for="social_twitter" string="Twitter" class="col-md-3 o_light_label"/>
+                                            <field name="social_twitter"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="social_facebook" string="Facebook" class="col-md-3 o_light_label"/>
+                                            <field name="social_facebook"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="social_github" string="GitHub" class="col-md-3 o_light_label"/>
+                                            <field name="social_github"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="social_linkedin" string="LinkedIn" class="col-md-3 o_light_label"/>
+                                            <field name="social_linkedin"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="social_youtube" string="YouTube" class="col-md-3 o_light_label"/>
+                                            <field name="social_youtube"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="social_instagram" string="Instagram" class="col-md-3 o_light_label"/>
+                                            <field name="social_instagram"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="social_default_image_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_default_share_image"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Default Social Share Image" for="has_default_share_image"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted" attrs="{'invisible': [('has_default_share_image', '=', False)]}">
+                                        If set, replaces the company logo as the default social share image.
+                                    </div>
+                                    <field name="social_default_image" widget="image" class="w-25 mt-2" attrs="{'invisible': [('has_default_share_image', '=', False)]}"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <h2>Features</h2>
+                        <div class="row mt16 o_settings_container" id="webmaster_settings">
+                            <div class="col-12 col-lg-6 o_setting_box" id="google_maps_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_google_maps"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_google_maps"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Use Google Map on your website (<a href="/contactus">Contact Us</a> page, snippets, ...)
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
+                                            <field name="google_maps_api_key" attrs="{'required': [('has_google_maps', '=', True)]}" />
+                                        </div>
+                                    </div>
+                                    <div class="mt8" attrs="{'invisible': [('has_google_maps', '=', False)]}">
+                                        <a role="button" class="btn-link" target="_blank"
+                                           href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
+                                            <i class="fa fa-arrow-right"/>
+                                            Create a Google Project and Get a Key
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="auth_signup_uninvited_setting"
-                                title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*.">
+                            title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*.">
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -131,16 +252,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="website_logo_setting">
-                                <div class="o_setting_right_pane">
-                                    <label for="website_logo"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Display this logo on the website.
-                                    </div>
-                                    <field name="website_logo" widget="image" class="w-25 mt-2"/>
-                                </div>
-                            </div>
+                        </div>
+
+                        <h2>SEO</h2>
+                        <div class="row mt16 o_settings_container" id="seo_settings">
                             <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_analytics_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="has_google_analytics"/>
@@ -220,144 +335,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="force_account_per_website_setting"
-                                groups="website.group_multi_website">
-                                <div class="o_setting_left_pane">
-                                    <field name="specific_user_account"/>
-                                </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
                                 <div class="o_setting_right_pane">
-                                    <label for="specific_user_account"/>
+                                    <span class="o_form_label">Robots.txt</span>
                                     <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
-                                        Force your user to create an account per website
+                                        Robots.txt: This file tells to search engine crawlers which pages or files they can or can't request from your site.<br/>
+                                    </div>
+                                    <div class="mt4">
+                                        <button type="object" name="action_open_robots" string="Edit robots.txt" class="btn-link" icon="fa-android"/>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Sitemap</span>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted mt8">
+                                        Sitemap.xml: Help search engine crawlers to find out what pages are present and which have recently changed, and to crawl your site accordingly. This file is automatically generated by Odoo.
+                                    </div>
+                                    <div class="mt4">
+                                        <button type="object" name="action_ping_sitemap" string="Submit sitemap to Google" class='btn-link' icon="fa-google"/>
+                                    </div>
 
-                            <div class="col-12 col-lg-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
-                                <div class="o_setting_left_pane">
-                                    <field name="cdn_activated"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="cdn_activated"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Use a CDN to optimize the availability of your website's content
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" for="cdn_url"/>
-                                            <field name="cdn_url"
-                                                   attrs="{'required': [('cdn_activated', '=', True)]}"
-                                                   placeholder="//mycompany.mycdn.com/"
-                                                   t-translation="off"/>
-                                        </div>
-                                        <div class="row" >
-                                            <label class="col-lg-3 o_light_label" for="cdn_filters"/>
-                                            <field name="cdn_filters" class="oe_inline"
-                                                   attrs="{'required': [('cdn_activated', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="social_media_settings">
-                                <div class="o_setting_left_pane">
-                                    <field name="has_social_network"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Social Media" for="has_social_network"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Add links to social media on your website
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('has_social_network', '=', False)]}">
-                                        <div class="row">
-                                            <label for="social_twitter" string="Twitter" class="col-md-3 o_light_label"/>
-                                            <field name="social_twitter"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="social_facebook" string="Facebook" class="col-md-3 o_light_label"/>
-                                            <field name="social_facebook"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="social_github" string="GitHub" class="col-md-3 o_light_label"/>
-                                            <field name="social_github"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="social_linkedin" string="LinkedIn" class="col-md-3 o_light_label"/>
-                                            <field name="social_linkedin"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="social_youtube" string="YouTube" class="col-md-3 o_light_label"/>
-                                            <field name="social_youtube"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="social_instagram" string="Instagram" class="col-md-3 o_light_label"/>
-                                            <field name="social_instagram"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="social_default_image_setting">
-                                <div class="o_setting_right_pane">
-                                    <label string="Default Social Share Image" for="social_default_image"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        If set, replaces the company logo as the default social share image.
-                                    </div>
-                                    <field name="social_default_image" widget="image" class="w-25 mt-2"/>
-                                </div>
-                            </div>
-
-                        </div>
-                        <h2>Features</h2>
-                        <div class="row mt16 o_settings_container" id="webmaster_settings">
-                            <div id="multi_website" class="col-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_multi_website"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Multi-Website" for="group_multi_website"/>
-                                    <div class="text-muted">
-                                        Manage multiple websites
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="google_maps_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="has_google_maps"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="has_google_maps"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Use Google Map on your website (<a href="/contactus">Contact Us</a> page, snippets, ...)
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
-                                            <field name="google_maps_api_key" attrs="{'required': [('has_google_maps', '=', True)]}" />
-                                        </div>
-                                    </div>
-                                    <div class="mt8" attrs="{'invisible': [('has_google_maps', '=', False)]}">
-                                        <a role="button" class="btn-link" target="_blank"
-                                           href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
-                                            <i class="fa fa-arrow-right"/>
-                                            Create a Google Project and Get a Key
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="utm_tracker_settings" title="Analyze the efficiency of your marketing campaigns by using trackable UTM trackers (campaigns, medium, sources). Create trackers and follow clicks from the Promote menu of your website. Those trackers can be used in Google Analytics or in Odoo reports where you can see the opportunities and sales revenue generated thanks to your links.">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_website_links"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_website_links"/>
-                                    <div class="text-muted">
-                                        Track clicks on UTM links
-                                    </div>
                                 </div>
                             </div>
                         </div>

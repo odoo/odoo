@@ -4,6 +4,8 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.tools.translate import _
 
 
 class ResConfigSettings(models.TransientModel):
@@ -35,10 +37,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_activated = fields.Boolean(related='website_id.cdn_activated', readonly=False)
     cdn_url = fields.Char(related='website_id.cdn_url', readonly=False)
     cdn_filters = fields.Text(related='website_id.cdn_filters', readonly=False)
-    module_website_version = fields.Boolean("A/B Testing")
-    module_website_links = fields.Boolean("Link Trackers")
-    auth_signup_uninvited = fields.Selection(compute="_compute_auth_signup",
-        inverse="_set_auth_signup")
+    auth_signup_uninvited = fields.Selection(compute="_compute_auth_signup", inverse="_set_auth_signup")
 
     social_twitter = fields.Char(related='website_id.social_twitter', readonly=False)
     social_facebook = fields.Char(related='website_id.social_facebook', readonly=False)
@@ -91,6 +90,10 @@ class ResConfigSettings(models.TransientModel):
         self.has_google_maps = bool(self.google_maps_api_key)
 
     @api.depends('website_id')
+    def has_default_share_image(self):
+        self.has_default_share_image = bool(self.social_default_image)
+
+    @api.depends('website_id')
     def has_google_search_console(self):
         self.has_google_search_console = bool(self.google_search_console)
 
@@ -112,10 +115,15 @@ class ResConfigSettings(models.TransientModel):
         if not self.has_google_search_console:
             self.google_search_console = False
 
+    def inverse_has_default_share_image(self):
+        if not self.has_default_share_image:
+            self.social_default_image = False
+
     has_google_analytics = fields.Boolean("Google Analytics", compute=has_google_analytics, inverse=inverse_has_google_analytics)
     has_google_analytics_dashboard = fields.Boolean("Google Analytics Dashboard", compute=has_google_analytics_dashboard, inverse=inverse_has_google_analytics_dashboard)
     has_google_maps = fields.Boolean("Google Maps", compute=has_google_maps, inverse=inverse_has_google_maps)
     has_google_search_console = fields.Boolean("Console Google Search", compute=has_google_search_console, inverse=inverse_has_google_search_console)
+    has_default_share_image = fields.Boolean("Use a image by default for sharing", compute=has_default_share_image, inverse=inverse_has_default_share_image)
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
@@ -157,6 +165,26 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': False,
+        }
+
+    def action_open_robots(self):
+        return {
+            'name': _("Robots.txt"),
+            'view_mode': 'form',
+            'res_model': 'website.robots',
+            'type': 'ir.actions.act_window',
+            "views": [[False, "form"]],
+            'target': 'new',
+        }
+
+    def action_ping_sitemap(self):
+        if not self.website_id._get_http_domain():
+            raise UserError(_("You haven't defined your domain"))
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': 'http://www.google.com/ping?sitemap=%s/sitemap.xml' % self.website_id._get_http_domain(),
+            'target': 'new',
         }
 
     def install_theme_on_current_website(self):

@@ -59,20 +59,20 @@
                         <field name="share"/>
                     </group>
                     <notebook>
-                        <page string="Users">
+                        <page string="Users" name="users">
                             <field name="users" context="{'search_default_no_share':1}"/>
                         </page>
-                        <page string="Inherited">
+                        <page string="Inherited" name="inherit_groups">
                             <label for="implied_ids" string="Users added to this group are automatically added in the following groups."/>
                             <field name="implied_ids"/>
                         </page>
-                        <page string="Menus">
+                        <page string="Menus" name="menus">
                             <field name="menu_access"/>
                         </page>
-                        <page string="Views">
+                        <page string="Views" name="views">
                             <field name="view_access"/>
                         </page>
-                        <page string="Access Rights">
+                        <page string="Access Rights" name="access_rights">
                             <field name="model_access">
                                 <tree string="Access Rights" editable="top">
                                     <field name="name"/>
@@ -84,7 +84,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Record Rules">
+                        <page string="Record Rules" name="record_rules">
                             <field name="rule_groups">
                                 <tree string="Record Rules" editable="top">
                                     <field name="name"/>
@@ -96,7 +96,7 @@
                                     <field name="perm_unlink"/>
                                 </tree>
                             </field>
-                        </page><page string="Notes">
+                        </page><page string="Notes" name="notes">
                             <field name="comment"/>
                         </page>
                     </notebook>
@@ -210,7 +210,7 @@
                                 </group>
                                 <field name="groups_id"/>
                             </page>
-                            <page string="Preferences">
+                            <page string="Preferences" name="references">
                                 <group>
                                     <group string="Localization" name="preferences">
                                         <field name="active" invisible="1"/>

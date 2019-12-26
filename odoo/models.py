@@ -325,6 +325,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     on the records of the current model using the ``child_of`` and
     ``parent_of`` domain operators.
     """
+    _active_name = None         #: field to use for active records
     _date_name = 'date'         #: field to use for default calendar view
     _fold_name = 'fold'         #: field to determine folded groups in kanban views
 
@@ -2590,6 +2591,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # a model's base structure depends on its mro (without registry classes)
         cls._model_cache_key = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
 
+        # reset those attributes on the model's class for _setup_fields() below
+        for attr in ('_rec_name', '_active_name'):
+            try:
+                delattr(cls, attr)
+            except AttributeError:
+                pass
+
     @api.model
     def _setup_base(self):
         """ Determine the inherited and custom fields of the model. """
@@ -2656,11 +2664,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # 5. determine and validate rec_name
         if cls._rec_name:
             assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+                "Invalid _rec_name=%r for model %r" % (cls._rec_name, cls._name)
         elif 'name' in cls._fields:
             cls._rec_name = 'name'
         elif 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
+
+        # 6. determine and validate active_name
+        if cls._active_name:
+            assert (cls._active_name in cls._fields
+                    and cls._active_name in ('active', 'x_active')), \
+                ("Invalid _active_name=%r for model %r; only 'active' and "
+                "'x_active' are supported and the field must be present on "
+                "the model") % (cls._active_name, cls._name)
+        elif 'active' in cls._fields:
+            cls._active_name = 'active'
+        elif 'x_active' in cls._fields:
+            cls._active_name = 'x_active'
 
     @api.model
     def _setup_fields(self):
@@ -2673,7 +2693,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             try:
                 field.setup_full(self)
             except Exception:
-                if not self.pool.loaded and field.base_field.manual:
+                if field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
@@ -4073,13 +4093,13 @@ Record ids: %(records)s
         :return: the query expressing the given domain as provided in domain
         :rtype: osv.query.Query
         """
-        # if the object has a field named 'active', filter out all inactive
-        # records unless they were explicitely asked for
-        if 'active' in self._fields and active_test and self._context.get('active_test', True):
+        # if the object has an active field ('active', 'x_active'), filter out all
+        # inactive records unless they were explicitely asked for
+        if self._active_name and active_test and self._context.get('active_test', True):
             # the item[0] trick below works for domain items and '&'/'|'/'!'
             # operators too
-            if not any(item[0] == 'active' for item in domain):
-                domain = [('active', '=', 1)] + domain
+            if not any(item[0] == self._active_name for item in domain):
+                domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
             e = expression.expression(domain, self)
@@ -4316,8 +4336,8 @@ Record ids: %(records)s
             if order_field in self._fields:
                 to_flush[self._name].add(order_field)
 
-        if 'active' in self:
-            to_flush[self._name].add('active')
+        if self._active_name:
+            to_flush[self._name].add(self._active_name)
 
         for model_name, field_names in to_flush.items():
             self.env[model_name].flush(field_names)
@@ -4825,23 +4845,21 @@ Record ids: %(records)s
         return [index[record.id] for record in records if record.id in index]
 
     def toggle_active(self):
-        """ Inverse the value of the field ``active`` on the records in ``self``. """
+        """ Inverse the value of the field ``(x_)active`` on the records in ``self``. """
         for record in self:
-            record.active = not record.active
+            record[self._active_name] = not record[self._active_name]
 
     def action_archive(self):
+        """ Set (x_)active=False on a recordset, by calling toggle_active to
+            take the corresponding actions according to the model
         """
-            Set active=False on a recordset, by calling toggle_active to take the
-            corresponding actions according to the model
-        """
-        return self.filtered(lambda record: record.active).toggle_active()
+        return self.filtered(lambda record: record[self._active_name]).toggle_active()
 
     def action_unarchive(self):
+        """ Set (x_)active=True on a recordset, by calling toggle_active to
+            take the corresponding actions according to the model
         """
-            Set active=True on a recordset, by calling toggle_active to take the
-            corresponding actions according to the model
-        """
-        return self.filtered(lambda record: not record.active).toggle_active()
+        return self.filtered(lambda record: not record[self._active_name]).toggle_active()
 
     def _register_hook(self):
         """ stuff to do right after the registry is built """
@@ -5789,7 +5807,8 @@ Record ids: %(records)s
                     # mark the field as computed on missing records, otherwise
                     # they remain forever in the todo list, and lead to an
                     # infinite loop...
-                    self.env.remove_to_compute(field, recs - existing)
+                    for f in recs._field_computed[field]:
+                        self.env.remove_to_compute(f, recs - existing)
             else:
                 self.env.cache.invalidate([(field, recs._ids)])
                 self.env.remove_to_compute(field, recs)

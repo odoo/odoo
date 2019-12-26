@@ -40,7 +40,7 @@
                                 <group name="acquirer">
                                 </group>
                             </page>
-                            <page string="Configuration">
+                            <page string="Configuration" name="configuration">
                                 <group name="acquirer_config">
                                     <group string="Payment Form" name="payment_form">
                                         <field name="display_as" placeholder="If not defined, the acquirer name will be used."/>
@@ -62,7 +62,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Fees" attrs="{'invisible': [('fees_implemented', '=', False)]}">
+                            <page string="Fees" name="fees" attrs="{'invisible': [('fees_implemented', '=', False)]}">
                                 <group name="payment_fees">
                                     <field name="fees_active"/>
                                     <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
@@ -71,7 +71,9 @@
                                     <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                 </group>
                             </page>
-                            <page string="Messages" attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
+                            <page string="Messages"
+                                name="messages"
+                                attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
                                 <group>
                                     <field name="pre_msg"/>
                                     <field name="auth_msg" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
@@ -405,7 +407,7 @@
                             <h1><field name="name" placeholder="Name"/></h1>
                         </div>
                         <notebook>
-                            <page string="Acquirers list">
+                            <page string="Acquirers list" name="acquirers">
                                 <field nolabel="1" name="acquirer_ids"/>
                             </page>
                         </notebook>

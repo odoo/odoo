@@ -157,10 +157,13 @@
                             </group>
                             <group>
                                 <field name="amount" invisible="1"/>
+                                <field name="_suitable_journal_ids" invisible="1"/>
                                 <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
+                                <field name="_payment_methods" invisible="1"/>
                                 <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
+                                <field name="possible_bank_partner_ids" invisible="1"/>
                                 <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('require_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
                                 <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="require_partner_bank_account" invisible="1"/>
@@ -205,6 +208,8 @@
             <field name="model">account.payment.register</field>
             <field name="arch" type="xml">
                 <form string="Register Payment">
+                    <field name="invoice_company_id" invisible="1"/>
+                    <field name="available_payment_methods" invisible="1"/>
                     <group>
                         <group>
                             <field name="payment_method_id" widget="radio"/>

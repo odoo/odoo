@@ -54,7 +54,12 @@ class account_payment(models.Model):
 
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    _payment_methods = fields.Many2many('account.payment.method', compute='_compute_payment_methods')
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
+        domain="""[
+            ('payment_type', '=', ('inbound' if payment_type == 'inbound' else 'outbound')),
+            ('id', 'in', _payment_methods),
+        ]""",
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
         "Check: Pay bill by check and print it from Odoo.\n"\
@@ -70,7 +75,8 @@ class account_payment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('id', 'in', _suitable_journal_ids)]")
+    _suitable_journal_ids = fields.Many2many('account.journal', compute='_compute_suitable_journal_ids')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -84,7 +90,8 @@ class account_payment(models.Model):
         string='Journal Item Label',
         help='Change label of the counterpart that will hold the payment difference',
         default='Write-Off')
-    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id), ('partner_id', 'in', possible_bank_partner_ids)]")
+    possible_bank_partner_ids = fields.Many2many('res.partner', compute='_compute_possible_bank_partners')
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
@@ -125,6 +132,39 @@ class account_payment(models.Model):
             'invoice_ids': [(6, 0, invoices.ids)],
         })
         return rec
+
+    @api.depends('amount', 'currency_id', 'payment_type', 'company_id', 'invoice_ids.company_id', )
+    def _compute_suitable_journal_ids(self):
+        for p in self:
+            domain = [('company_id', '=', p.invoice_ids[:1].company_id.id or p.company_id.id)]
+            if p.currency_id.is_zero(p.amount) and p.invoice_ids:
+                domain.append(('type', '=', 'general'))
+            else:
+                domain.append(('type', 'in', ['bank', 'cash']))
+                if p.payment_type == 'inbound':
+                    domain.append(('at_least_one_inbound', '=', True))
+                else:
+                    domain.append(('at_least_one_outbound', '=', True))
+
+            p._suitable_journal_ids = self.env['account.journal'].search(domain)
+
+    @api.depends('partner_id.commercial_partner_id')
+    def _compute_possible_bank_partners(self):
+        for r in self:
+            r.possible_bank_partner_ids = \
+                r.partner_id | r.partner_id.commercial_partner_id
+
+    @api.depends('payment_type', 'journal_id.inbound_payment_method_ids', 'journal_id.outbound_payment_method_ids')
+    @api.depends_context('default_payment_method_id')
+    def _compute_payment_methods(self):
+        # Ensure the domain will accept the provided default value
+        self._payment_methods = default = self.env['account.payment.method'].browse(self.env.context.get('default_payment_method_id'))
+        for p in self.filtered(lambda p: p.journal_id):
+            if p.payment_type == 'inbound':
+                payment_methods = p.journal_id.inbound_payment_method_ids
+            else:
+                payment_methods = p.journal_id.outbound_payment_method_ids
+            p._payment_methods = default | payment_methods
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -169,33 +209,19 @@ class account_payment(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
-        if self.journal_id:
-            if self.journal_id.currency_id:
-                self.currency_id = self.journal_id.currency_id
+        if not self.journal_id:
+            return
 
-            # Set default payment method (we consider the first to be the default one)
-            payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
-            payment_methods_list = payment_methods.ids
+        if self.journal_id.currency_id:
+            self.currency_id = self.journal_id.currency_id
 
-            default_payment_method_id = self.env.context.get('default_payment_method_id')
-            if default_payment_method_id:
-                # Ensure the domain will accept the provided default value
-                payment_methods_list.append(default_payment_method_id)
-            else:
-                self.payment_method_id = payment_methods and payment_methods[0] or False
+        if self.payment_method_id not in self._payment_methods._origin:
+            self.payment_method_id = self._payment_methods[:1]._origin
 
-            # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
-            payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
-
-            domain = {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}
-
-            if self.env.context.get('active_model') == 'account.move':
-                active_ids = self._context.get('active_ids')
-                invoices = self.env['account.move'].browse(active_ids)
-                self.amount = abs(self._compute_payment_amount(invoices, self.currency_id, self.journal_id, self.payment_date))
-
-            return {'domain': domain}
-        return {}
+        if self.env.context.get('active_model') == 'account.move':
+            active_ids = self._context.get('active_ids')
+            invoices = self.env['account.move'].browse(active_ids)
+            self.amount = abs(self._compute_payment_amount(invoices, self.currency_id, self.journal_id, self.payment_date))
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -212,7 +238,6 @@ class account_payment(models.Model):
                 self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
             else:
                 self.partner_bank_account_id = False
-        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
@@ -224,43 +249,23 @@ class account_payment(models.Model):
                 self.partner_type = 'supplier'
         elif self.payment_type not in ('inbound', 'outbound'):
             self.partner_type = False
-        # Set payment method domain
-        res = self._onchange_journal()
-        if not res.get('domain', {}):
-            res['domain'] = {}
-        jrnl_filters = self._compute_journal_domain_and_types()
-        journal_types = jrnl_filters['journal_types']
-        journal_types.update(['bank', 'cash'])
-        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
-        return res
-
-    def _compute_journal_domain_and_types(self):
-        journal_type = ['bank', 'cash']
-        domain = []
-        if self.invoice_ids:
-            domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        self._onchange_journal()
         if self.currency_id.is_zero(self.amount) and self.has_invoices:
-            # In case of payment with 0 amount, allow to select a journal of type 'general' like
-            # 'Miscellaneous Operations' and set this journal by default.
-            journal_type = ['general']
             self.payment_difference_handling = 'reconcile'
-        else:
-            if self.payment_type == 'inbound':
-                domain.append(('at_least_one_inbound', '=', True))
-            else:
-                domain.append(('at_least_one_outbound', '=', True))
-        return {'domain': domain, 'journal_types': set(journal_type)}
 
     @api.onchange('amount', 'currency_id')
     def _onchange_amount(self):
-        jrnl_filters = self._compute_journal_domain_and_types()
-        journal_types = jrnl_filters['journal_types']
-        domain_on_types = [('type', 'in', list(journal_types))]
+        journal_types = ['bank', 'cash']
+        if self.currency_id.is_zero(self.amount) and self.has_invoices:
+            # In case of payment with 0 amount, allow to select a journal of type 'general' like
+            # 'Miscellaneous Operations' and set this journal by default.
+            journal_types = ['general']
+            self.payment_difference_handling = 'reconcile'
+        domain_on_types = [('type', 'in', journal_types)]
         if self.invoice_ids:
             domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.journal_id.type not in journal_types or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
             self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
-        return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.onchange('currency_id')
     def _onchange_currency(self):
@@ -707,8 +712,9 @@ class payment_register(models.TransientModel):
     _description = 'Register Payment'
 
     payment_date = fields.Date(required=True, default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', required=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', invoice_company_id)]")
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True,
+                                        domain="[('id', 'in', available_payment_methods)]",
                                         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
                                         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
                                         "Check: Pay bill by check and print it from Odoo.\n"
@@ -716,6 +722,9 @@ class payment_register(models.TransientModel):
                                         "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
     invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel_transient', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     group_payment = fields.Boolean(help="Only one payment will be created by partner (bank)/ currency.")
+
+    invoice_company_id = fields.Many2one(related='invoice_ids.company_id')
+    available_payment_methods = fields.Many2many('account.payment.method', compute='_compute_available_payment_methods')
 
     @api.model
     def default_get(self, fields):
@@ -747,18 +756,16 @@ class payment_register(models.TransientModel):
             rec['payment_method_id'] = self.env['account.payment.method'].search(domain, limit=1).id
         return rec
 
-    @api.onchange('journal_id', 'invoice_ids')
-    def _onchange_journal(self):
-        active_ids = self._context.get('active_ids')
-        invoices = self.env['account.move'].browse(active_ids)
-        if self.journal_id and invoices:
-            if invoices[0].is_inbound():
-                domain_payment = [('payment_type', '=', 'inbound'), ('id', 'in', self.journal_id.inbound_payment_method_ids.ids)]
+    @api.depends('invoice_ids', 'journal_id.inbound_payment_method_ids', 'journal_id.outbound_payment_method_ids')
+    def _compute_available_payment_methods(self):
+        for p in self:
+            invoice = p.invoice_ids[:1]
+            if not invoice:
+                p.available_payment_methods = self.env['account.payment.method']
+            elif invoice.is_inbound():
+                p.available_payment_methods = self.journal_id.inbound_payment_method_ids._origin
             else:
-                domain_payment = [('payment_type', '=', 'outbound'), ('id', 'in', self.journal_id.outbound_payment_method_ids.ids)]
-            domain_journal = [('type', 'in', ('bank', 'cash')), ('company_id', '=', invoices[0].company_id.id)]
-            return {'domain': {'payment_method_id': domain_payment, 'journal_id': domain_journal}}
-        return {}
+                p.available_payment_methods = self.journal_id.outbound_payment_method_ids._origin
 
     def _prepare_payment_vals(self, invoices):
         '''Create the payment values.

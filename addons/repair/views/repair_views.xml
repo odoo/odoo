@@ -67,7 +67,7 @@
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty"/>
+                                <field name="product_qty" attrs="{'readonly':[('tracking', 'in', ['serial'])]}"/>
                                 <field name="product_uom" groups="uom.group_uom"/>
                             </div>
                             <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot" attrs="{'required':[('tracking', 'in', ['serial', 'lot'])], 'invisible': [('tracking', 'not in', ['serial', 'lot'])], 'readonly': [('state', '=', 'done')]}"/>
@@ -86,7 +86,7 @@
                         </group>
                     </group>
                 <notebook>
-                    <page string="Parts">
+                    <page string="Parts" name="parts">
                         <field name="operations" context="{'default_product_uom_qty': product_qty, 'default_company_id': company_id}">
                             <form string="Operations">
                                 <group>
@@ -145,7 +145,7 @@
                         </group>
                         <div class="oe_clear"/>
                     </page>
-                    <page string="Operations">
+                    <page string="Operations" name="operations">
                         <field name="fees_lines" context="{'default_company_id': company_id}">
                             <form string="Fees">
                                 <group>
@@ -176,7 +176,7 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Extra Info" groups="base.group_no_one">
+                    <page string="Extra Info" name="extra_info" groups="base.group_no_one">
                         <group>
                             <group>
                                 <field name="move_id"/>
@@ -187,7 +187,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Notes">
+                    <page string="Notes" name="notes">
                         <field name="internal_notes" placeholder="Add internal notes..."/>
                         <field name="quotation_notes" placeholder="Add quotation notes..."/>
                     </page>

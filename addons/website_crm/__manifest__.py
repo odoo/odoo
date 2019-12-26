@@ -13,6 +13,7 @@ This form can be customized thanks to the *Form Builder* module (available in Od
 This module includes contact phone and mobile numbers validation.""",
     'depends': ['website_form', 'crm'],
     'data': [
+        'security/ir.model.access.csv',
         'data/website_crm_data.xml',
         'views/website_crm_lead_views.xml',
         'views/website_crm_templates.xml',

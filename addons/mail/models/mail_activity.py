@@ -701,7 +701,7 @@ class MailActivityMixin(models.AbstractModel):
         """ Before archiving the record we should also remove its ongoing
         activities. Otherwise they stay in the systray and concerning archived
         records it makes no sense. """
-        record_to_deactivate = self.filtered(lambda rec: rec.active)
+        record_to_deactivate = self.filtered(lambda rec: rec[rec._active_name])
         if record_to_deactivate:
             # use a sudo to bypass every access rights; all activities should be removed
             self.env['mail.activity'].sudo().search([

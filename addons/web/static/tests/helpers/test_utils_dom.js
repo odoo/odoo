@@ -13,19 +13,17 @@ var concurrency = require('web.concurrency');
  */
 
 /**
- * Returns a promise that will be resolved after the tick after the
- * nextAnimationFrame
+ * Returns a promise that will be resolved after the nextAnimationFrame after
+ * the next tick
  *
  * This is useful to guarantee that OWL has had the time to render
  *
  * @returns {Promise}
  */
 function returnAfterNextAnimationFrame() {
-    return new Promise((resolve) => {
-        window.requestAnimationFrame(async () => {
-            await concurrency.delay(0);
-            resolve();
-        });
+    return new Promise(async resolve => {
+        await concurrency.delay(0);
+        window.requestAnimationFrame(resolve);
     });
 }
 

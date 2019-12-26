@@ -7,6 +7,7 @@ import io
 import re
 import requests
 import PyPDF2
+import json
 
 from dateutil.relativedelta import relativedelta
 from PIL import Image
@@ -60,6 +61,15 @@ class SlideLink(models.Model):
     slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
     name = fields.Char('Title', required=True)
     link = fields.Char('Link', required=True)
+
+
+class SlideResource(models.Model):
+    _name = 'slide.slide.resource'
+    _description = "Additional resource for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
+    name = fields.Char('Name', required=True)
+    data = fields.Binary('Resource')
 
 
 class EmbeddedSlide(models.Model):
@@ -140,10 +150,10 @@ class Slide(models.Model):
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
     questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
-    quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
-    quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
-    quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
-    quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
+    quiz_first_attempt_reward = fields.Integer("Reward: first attempt", default=10)
+    quiz_second_attempt_reward = fields.Integer("Reward: second attempt", default=7)
+    quiz_third_attempt_reward = fields.Integer("Reward: third attempt", default=5,)
+    quiz_fourth_attempt_reward = fields.Integer("Reward: every attempt after the third try", default=2)
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
@@ -159,6 +169,8 @@ class Slide(models.Model):
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
+    slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
+    slide_resource_downloadable = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
@@ -288,13 +300,14 @@ class Slide(models.Model):
         """ Compute statistics based on all existing slide types """
         slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
         keys = ['nbr_%s' % slide_type for slide_type in slide_types]
-        result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
+        result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['category_id'][0]
-            result[cid]['total_slides'] = 0
-            for slide_type in slide_types:
-                result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
-                result[cid]['total_slides'] += result[cid]['nbr_%s' % slide_type]
+            slide_type = res_group.get('slide_type')
+            if slide_type:
+                slide_type_count = res_group.get('__count', 0)
+                result[cid]['nbr_%s' % slide_type] = slide_type_count
+                result[cid]['total_slides'] += slide_type_count
         return result
 
     @api.depends('slide_partner_ids.partner_id')
@@ -336,7 +349,7 @@ class Slide(models.Model):
         if self.url:
             res = self._parse_document_url(self.url)
             if res.get('error'):
-                raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
+                raise Warning(res.get('error'))
             values = res['values']
             if not values.get('document_id'):
                 raise Warning(_('Please enter valid Youtube or Google Doc URL'))
@@ -345,12 +358,20 @@ class Slide(models.Model):
 
     @api.onchange('datas')
     def _on_change_datas(self):
-        """ For PDFs, we assume that it takes 5 minutes to read a page. """
+        """ For PDFs, we assume that it takes 5 minutes to read a page.
+            If the selected file is not a PDF, it is an image (You can
+            only upload PDF or Image file) then the slide_type is changed
+            into infographic and the uploaded dataS is transfered to the
+            image field. (It avoids the infinite loading in PDF viewer)"""
         if self.datas:
             data = base64.b64decode(self.datas)
             if data.startswith(b'%PDF-'):
                 pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
                 self.completion_time = (5 * len(pdf.pages)) / 60
+            else:
+                self.slide_type = 'infographic'
+                self.image_1920 = self.datas
+                self.datas = None
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
@@ -719,7 +740,7 @@ class Slide(models.Model):
         key = self.env['website'].get_current_website().website_slide_google_app_key
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
-            return fetch_res
+            return {'error': self._extract_google_error_message(fetch_res.get('error'))}
 
         values = {'slide_type': 'video', 'document_id': document_id}
         items = fetch_res['values'].get('items')
@@ -753,6 +774,22 @@ class Slide(models.Model):
             })
         return {'values': values}
 
+    def _extract_google_error_message(self, error):
+        """
+        See here for Google error format
+        https://developers.google.com/drive/api/v3/handle-errors
+        """
+        try:
+            error = json.loads(error)
+            error = (error.get('error', {}).get('errors', []) or [{}])[0].get('reason')
+        except json.decoder.JSONDecodeError:
+            error = str(error)
+
+        if error == 'keyInvalid':
+            return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
+
+        return _('Could not fetch data from url. Document or access right not available:\n%s') % error
+
     @api.model
     def _parse_google_document(self, document_id, only_preview_fields):
         def get_slide_type(vals):
@@ -780,7 +817,7 @@ class Slide(models.Model):
 
         fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):
-            return fetch_res
+            return {'error': self._extract_google_error_message(fetch_res.get('error'))}
 
         google_values = fetch_res['values']
         if only_preview_fields:
