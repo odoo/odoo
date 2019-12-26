@@ -7,16 +7,19 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group>
-                            <field name="plan_id"/>
+                        <group id="info" string="Departure Info">
                             <field name="employee_id" invisible="1"/>
                             <field name="departure_reason"/>
                             <field name="departure_description"/>
+                            <field name="archive_private_address"/>
+                        </group>
+                        <group id="date" string="Departure Date">
+                            <field name="departure_date" />
                         </group>
                     </sheet>
                     <footer>
                         <button name="action_register_departure" string="Save" type="object" class="oe_highlight"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Only Employee" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
