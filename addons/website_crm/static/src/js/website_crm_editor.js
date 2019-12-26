@@ -14,8 +14,8 @@ FormEditorRegistry.add('create_lead', {
         type: 'many2one',
         relation: 'crm.team',
         domain: [['use_opportunities', '=', true]],
-        string: _t('Sales Channel'),
-        title: _t('Assign leads/opportunities to a sales channel.'),
+        string: _t('Sales Team'),
+        title: _t('Assign leads/opportunities to a sales team.'),
     }, {
         name: 'user_id',
         type: 'many2one',
