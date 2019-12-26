@@ -13,6 +13,10 @@ const FacebookPageWidget = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
+        if (this.$target.children('iframe').length) {
+            // There already is an <iframe/>, do nothing
+            return def;
+        }
 
         var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
         if (!params.href) {
