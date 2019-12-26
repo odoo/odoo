@@ -241,13 +241,12 @@ const UserValueWidget = Widget.extend({
         return this.getDefaultValue(methodName);
     },
     /**
-     * Returns whether or not the widget is active: holds a value which is
-     * not the default one.
+     * Returns whether or not the widget is active (holds a value).
      *
      * @returns {boolean}
      */
     isActive: function () {
-        return this._value && this._value !== this.getDefaultValue();
+        return !!this._value;
     },
     /**
      * Indicates if the widget can contain sub user value widgets or not.
@@ -703,6 +702,7 @@ const InputUserValueWidget = UserValueWidget.extend({
 
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
+        this.inputEl.setAttribute('placeholder', this.el.dataset.placeholder || '');
         this.inputEl.classList.toggle('text-left', !unit);
         this.inputEl.classList.toggle('text-right', !!unit);
         this.containerEl.appendChild(this.inputEl);
@@ -754,7 +754,7 @@ const InputUserValueWidget = UserValueWidget.extend({
         }
 
         const unit = useInputUnit ? params.unit : params.saveUnit;
-        const numValue = weUtils.convertValueToUnit(defaultValue, unit, params.cssProperty, this.$target);
+        const numValue = weUtils.convertValueToUnit(defaultValue || '0', unit, params.cssProperty, this.$target);
         if (isNaN(numValue)) {
             return defaultValue;
         }
@@ -763,17 +763,13 @@ const InputUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    loadMethodsData: function () {
-        this._super(...arguments);
-        let placeholder = '';
-        for (const methodName of this._methodsNames) {
-            const defaultValue = this.getDefaultValue(methodName, true);
-            if (defaultValue && defaultValue !== 'true') {
-                placeholder = parseFloat(defaultValue);
-                break;
-            }
+    isActive: function () {
+        const isSuperActive = this._super(...arguments);
+        const params = this._methodsParams;
+        if (!params.unit) {
+            return isSuperActive;
         }
-        this.inputEl.setAttribute('placeholder', placeholder);
+        return isSuperActive && parseInt(this._value) !== 0;
     },
     /**
      * @override
@@ -784,12 +780,10 @@ const InputUserValueWidget = UserValueWidget.extend({
             return this._super(value, methodName);
         }
 
-        const defaultValNum = parseFloat(this.getDefaultValue(methodName, true));
-
         value = value.split(' ').map(v => {
             const numValue = weUtils.convertValueToUnit(v, params.unit, params.cssProperty, this.$target);
-            if (isNaN(numValue) || Math.abs(numValue - defaultValNum) < Number.EPSILON) {
-                return ''; // Either equal to the default value and we don't want to display it, or something not supported
+            if (isNaN(numValue)) {
+                return ''; // Something not supported
             }
             return `${parseFloat(numValue.toFixed(3))}`;
         }).join(' ');
@@ -853,11 +847,15 @@ const InputUserValueWidget = UserValueWidget.extend({
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN: {
                 const input = ev.currentTarget;
+                const params = this._methodsParams;
+                if (!params.unit && !params.step) {
+                    break;
+                }
                 let value = parseFloat(input.value || input.placeholder);
                 if (isNaN(value)) {
-                    return;
+                    value = 0.0;
                 }
-                let step = parseFloat(input.parentNode.dataset.step);
+                let step = parseFloat(params.step);
                 if (isNaN(step)) {
                     step = 1.0;
                 }
@@ -1132,12 +1130,6 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    isActive: function () {
-        return true;
-    },
     /**
      * @override
      */
