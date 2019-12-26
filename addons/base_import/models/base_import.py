@@ -719,6 +719,16 @@ class Import(models.TransientModel):
             if not line[index]:
                 continue
             thousand_separator, decimal_separator = self._infer_separators(line[index], options)
+
+            if 'E' in line[index] or 'e' in line[index]:
+                tmp_value = line[index].replace(thousand_separator, '.')
+                try:
+                    tmp_value = '{:f}'.format(float(tmp_value))
+                    line[index] = tmp_value
+                    thousand_separator = ' '
+                except Exception:
+                    pass
+
             line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
