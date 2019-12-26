@@ -1586,12 +1586,11 @@ const SnippetOptionWidget = Widget.extend({
             // hold have been updated).
             return widget.updateUI(widget === forced);
         });
+        await Promise.all(proms);
 
         if (!noVisibility) {
             await this.updateUIVisibility();
         }
-
-        return Promise.all(proms);
     },
     /**
      * Updates the UI visibility - @see _computeVisibility. For widget update,
