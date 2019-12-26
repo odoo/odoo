@@ -128,7 +128,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
             # CASE: OK after attribute line removed
-            self.computer_hdd_attribute_lines.write({'active': False})
+            self.computer_hdd_attribute_lines.unlink()
             self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8))
 
             # CASE: not archived (with no_variant)
@@ -145,7 +145,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
             # CASE: archived combination has different attributes (including no_variant)
-            self.computer_ssd_attribute_lines.write({'active': False})
+            self.computer_ssd_attribute_lines.unlink()
 
             variant4 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
             self.env['sale.order.line'].create({
@@ -156,7 +156,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             self.assertTrue(self.computer._is_combination_possible(computer_ram_8 + computer_hdd_1))
 
             # CASE: archived combination has different attributes (without no_variant)
-            self.computer_hdd_attribute_lines.write({'active': False})
+            self.computer_hdd_attribute_lines.unlink()
             self.hdd_attribute.create_variant = 'always'
             self._add_hdd_attribute_line()
             computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
