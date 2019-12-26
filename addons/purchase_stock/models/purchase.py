@@ -236,6 +236,7 @@ class PurchaseOrderLine(models.Model):
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+    delay_alert = fields.Boolean(string='Delay alert')
     propagate_date = fields.Boolean(string="Propagate Rescheduling", help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than', help='The change must be higher than this value to be propagated')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
@@ -375,6 +376,7 @@ class PurchaseOrderLine(models.Model):
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': self.product_id._get_description(self.order_id.picking_type_id),
             'propagate_cancel': self.propagate_cancel,
+            'delay_alert': self.delay_alert,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
         }
@@ -395,6 +397,7 @@ class PurchaseOrderLine(models.Model):
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
+        res['delay_alert'] = values.get('delay_alert')
         res['propagate_date'] = values.get('propagate_date')
         res['propagate_date_minimum_delta'] = values.get('propagate_date_minimum_delta')
         return res
