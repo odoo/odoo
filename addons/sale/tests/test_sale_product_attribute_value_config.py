@@ -128,10 +128,12 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
             # CASE: OK after attribute line removed
+            self.computer_hdd_attribute_lines.flush()
             self.computer_hdd_attribute_lines.unlink()
             self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8))
 
             # CASE: not archived (with no_variant)
+            self.hdd_attribute.flush()
             self.hdd_attribute.create_variant = 'no_variant'
             self._add_hdd_attribute_line()
             computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
@@ -156,7 +158,9 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
             self.assertTrue(self.computer._is_combination_possible(computer_ram_8 + computer_hdd_1))
 
             # CASE: archived combination has different attributes (without no_variant)
+            self.computer_hdd_attribute_lines.flush()
             self.computer_hdd_attribute_lines.unlink()
+            self.computer_hdd_attribute_lines.flush()
             self.hdd_attribute.create_variant = 'always'
             self._add_hdd_attribute_line()
             computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
