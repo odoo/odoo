@@ -16,7 +16,7 @@
             <div class="oe_snippet_body js_follow_alias"
                       data-id="0"
                       data-object="mail.channel"
-                      data-follow="off">
+                      data-follow="off" data-name="Discussion Group">
                 <div class="input-group js_mg_follow_form">
                     <input
                           type="email"
@@ -44,7 +44,13 @@
         <div data-js='subscribe'
              data-selector=".js_follow_alias"
              data-drop-near="p, h1, h2, h3, blockquote, .card">
-            <we-button data-select_mailing_list="" data-no-preview="true">Change Discussion List</we-button>
+            <we-row>
+                <we-select class="select_discussion_list" data-attribute-name="id" data-no-preview="true">
+                    <!-- 'we-button' added programmatically with DB data -->
+                </we-select>
+                <we-button class="fa fa-fw fa-plus" title="Create a public discussion group in your backend"
+                           data-create-channel="" data-no-preview="true"/>
+            </we-row>
         </div>
     </xpath>
 
