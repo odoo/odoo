@@ -21,7 +21,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, collections, lazy_property
+from odoo.tools import partition, collections, frozendict, lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -577,10 +577,10 @@ class Users(models.Model):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
         values = user.read(list(name_to_key), load=False)[0]
-        return {
+        return frozendict({
             key: values[name]
             for name, key in name_to_key.items()
-        }
+        })
 
     @api.model
     def action_get(self):
