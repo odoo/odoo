@@ -549,6 +549,12 @@
             t-att-data-can-publish="channel.can_publish">
             <i class="fa fa-cloud-upload mr-1"/>Upload new content
         </a>
+        <a class="btn btn-secondary py-1 o_wslides_js_slide_section_add"
+            title="Add Section" role="button"
+            aria-label="Add Section" href="#"
+            t-att-channel_id="channel.id">
+            <i class="fa fa-folder-o mr-1"/>Add a section
+        </a>
     </div>
     <!-- Featured lesson  -->
     <div t-if="not search and not search_slide_type and slide_promoted" class="container py-1 mb-2">
@@ -592,11 +598,14 @@
 
         <t t-foreach="category_data" t-as="category">
             <div class="mb-2" t-if="(category['slides'] or channel.can_publish) and (search_category and search_category.id == category['id'] or not search_category)">
-                <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="category['name'] != 'Uncategorized'">
-                    <t t-set="is_empty_editable" t-value="not category['slides'] and channel.can_publish"/>
+                <t t-set="is_empty_editable" t-value="not category['slides'] and channel.can_publish"/>
+                <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="category['id'] and query_string != '?search_uncategorized=1'">
                     <h5 t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
                     <a t-if="category['id'] and not is_empty_editable" t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])">View all</a>
-                    <a t-elif="not is_empty_editable" t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))">View all</a>
+                </div>
+                <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="not category['id'] and len(category['slides']) > 0">
+                    <h5 t-if="len(category_data) > 1" t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
+                    <a t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))">View all</a>
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
@@ -609,14 +618,8 @@
         <div class="row">
             <div class="col" t-field="channel.description_html"/>
         </div>
-
-        <t t-if="search_category">
-            <div class="form-inline justify-content-center">
-                <t t-call="website_profile.pager_nobox"></t>
-            </div>
-        </t>
     </div>
-    <t t-if="search_category">
+    <t t-if="search_category or search_uncategorized">
         <div class="form-inline justify-content-center pb-5">
             <t t-call="website_profile.pager_nobox"></t>
         </div>
