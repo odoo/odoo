@@ -465,7 +465,7 @@ class QuantPackage(models.Model):
                     ('product_qty', '!=', 0),
                 ])
                 move_line_to_modify.write({'package_id': False})
-                package.mapped('quant_ids').write({'package_id': False})
+                package.mapped('quant_ids').sudo().write({'package_id': False})
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
