@@ -85,12 +85,13 @@ const ColorPaletteWidget = Widget.extend({
             this.$('.o_colorpicker_reset').removeClass('d-none');
         }
 
-        // Remove excluded palettes
+        // Remove excluded palettes (note: only hide them to still be able
+        // to remove their related colors on the DOM target)
         _.each(this.options.excluded, function (exc) {
-            $wrapper.find('[data-name="' + exc + '"]').remove();
+            $wrapper.find('[data-name="' + exc + '"]').addClass('d-none');
         });
         if (this.options.excludeSectionOf) {
-            $wrapper.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').remove();
+            $wrapper.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').addClass('d-none');
         }
 
         // Render common colors
@@ -110,14 +111,7 @@ const ColorPaletteWidget = Widget.extend({
         // Render custom colors
         this._buildCustomColors();
 
-        // TODO refactor in master
-        // The primary and secondary are hardcoded here (but marked as hidden)
-        // so they can be removed from snippets when selecting another color.
-        // Normally, the chosable colors do not contain them, which prevents
-        // them to be removed. Indeed, normally, the 'alpha' and 'beta' colors
-        // (which are the same) are displayed instead... but not for all themes.
-        this.$el.append($('<button/>', {'class': 'd-none', 'data-color': 'primary'}));
-        this.$el.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
+        this._addCompatibilityColors(['primary', 'secondary', 'success', 'info', 'warning', 'danger']);
 
         // Compute class colors
         this.colorNames = [];
@@ -146,6 +140,24 @@ const ColorPaletteWidget = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Hardcode some existing colors (but make them hidden in the colorpicker)
+     * so they can be removed from snippets when selecting another color.
+     * Normally, the chosable colors do not contain them, which prevents them to
+     * be removed. For example, normally, the 'alpha' and 'beta' color (which
+     * are the same as primary and secondary) are displayed instead of their
+     * duplicates... but not for all themes.
+     *
+     * @private
+     * @param {string[]} colorNames
+     */
+    _addCompatibilityColors: function (colorNames) {
+        for (const colorName of colorNames) {
+            if (!this.$('button[data-color="' + colorName + '"]').length) {
+                this.$el.append($('<button/>', {'class': 'd-none', 'data-color': colorName}));
+            }
+        }
+    },
     /**
      * @private
      */
