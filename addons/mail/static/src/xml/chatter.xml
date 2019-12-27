@@ -122,28 +122,13 @@
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
         <t t-if="!disableAttachmentBox">
-            <t t-call="mail.chatter.Attachment.Button">
-                <t t-set="displayCounter" t-value="displayCounter"/>
-                <t t-set="count" t-value="count"/>
-            </t>
-        </t>
-    </t>
-
-    <!--
-        Chatter attachment paperclip button.
-
-        @param {boolean} [displayCounter]
-        @param {integer} [count]
-    -->
-    <t t-name="mail.chatter.Attachment.Button">
-        <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record">
-            <span>
-                <i class="fa fa-paperclip"/>
-                <span t-if="displayCounter" class="o_chatter_attachment_button_count">
-                    <t t-esc="count"/>
+            <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record">
+                <span>
+                    <i class="fa fa-paperclip"/>
+                    <span class="o_chatter_attachment_button_count" t-esc="count"/>
                 </span>
-            </span>
-        </button>
+            </button>
+        </t>
     </t>
 
     <!--
