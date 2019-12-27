@@ -320,7 +320,6 @@ var Chatter = Widget.extend({
             var $anchor = this.$('.o_chatter_topbar');
         }
         this.fields.attachments.insertAfter($anchor);
-        this.$el.addClass('o_chatter_composer_active');
         this.$('.o_chatter_button_attachment').addClass('o_active_attach');
 
         this._isAttachmentBoxOpen = true;
@@ -406,7 +405,7 @@ var Chatter = Widget.extend({
         if (this._isAttachmentBoxOpen) {
             this._fetchAttachments().then(this._openAttachmentBox.bind(this));
         }
-        if (this.fields.thread) {
+        if (!this._disableAttachmentBox) {
             this.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
         }
     },
@@ -457,7 +456,6 @@ var Chatter = Widget.extend({
             scheduleActivityButton: !!this.fields.activity,
             isMobile: config.device.isMobile,
             disableAttachmentBox: this._disableAttachmentBox,
-            displayCounter: !!this.fields.thread,
             count: this.record.data.message_attachment_count || 0,
         });
     },
