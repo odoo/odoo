@@ -828,6 +828,7 @@ class Import(models.TransientModel):
         :rtype: bytes
         """
         maxsize = int(config.get("import_image_maxbytes", DEFAULT_IMAGE_MAXBYTES))
+        _logger.debug("Trying to import image from URL: %s into field %s, at line %s" % (url, field, line_number))
         try:
             response = session.get(url, timeout=int(config.get("import_image_timeout", DEFAULT_IMAGE_TIMEOUT)))
             response.raise_for_status()
@@ -850,6 +851,7 @@ class Import(models.TransientModel):
 
             return base64.b64encode(content)
         except Exception as e:
+            _logger.exception(e)
             raise ValueError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
                 'url': url,
                 'field_name': field,
