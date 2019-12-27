@@ -228,7 +228,7 @@
             <field name="inherit_id" ref="stock.view_stock_move_operations"/>
             <field name="arch" type="xml">
                 <field name="move_line_ids" position="replace">
-                    <field name="move_line_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree_lot_name_as_textarea','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+                    <field name="move_line_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                 </field>
             </field>
         </record>
@@ -257,7 +257,10 @@
                             'default_product_id': parent.product_id,
                         }"
                     />
-                    <field name="lot_name" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_lots_text')" groups="stock.group_production_lot"/>
+                    <field name="lot_name" widget="text" groups="stock.group_production_lot"
+                        placeholder="Write your SN/LN one by one or copy paste a list."
+                        attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                        invisible="not context.get('show_lots_text')"/>
                     <field name="package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
                     <field name="result_package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" groups="stock.group_tracking_lot"/>
                     <field name="owner_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_owner')" groups="stock.group_tracking_owner"/>
@@ -297,20 +300,6 @@
                     <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
                     <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
                 </tree>
-            </field>
-        </record>
-
-        <record id="view_stock_move_line_operation_tree_lot_name_as_textarea" model="ir.ui.view">
-            <field name="name">stock.move.line.operations.tree</field>
-            <field name="model">stock.move.line</field>
-            <field name="priority">1000</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
-            <field name="arch" type="xml">
-                <field name="lot_name" position="attributes">
-                    <attribute name="widget">text</attribute>
-                    <attribute name="placeholder">Write your SN/LN one by one or copy paste a list.</attribute>
-                </field>
             </field>
         </record>
 

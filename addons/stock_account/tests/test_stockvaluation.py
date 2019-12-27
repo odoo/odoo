@@ -2079,14 +2079,18 @@ class TestStockValuation(SavepointCase):
         move4._action_assign()
         move4.move_line_ids.qty_done = 10.0
         move4._action_done()
+        # note: 5 units were sent estimated at 12.5 (negative stock)
         self.assertEqual(self.product1.standard_price, 12.5)
         self.assertEqual(self.product1.quantity_svl, -5)
         self.assertEqual(self.product1.value_svl, -62.5)
 
         move2.move_line_ids.qty_done = 20
+        # incrementing the receipt triggered the vacuum, the negative stock is corrected
+        self.assertEqual(self.product1.stock_valuation_layer_ids[-1].value, -12.5)
 
         self.assertEqual(self.product1.quantity_svl, 5)
-        self.assertEqual(self.product1.value_svl, 87.5)
+        self.assertEqual(self.product1.value_svl, 75)
+        self.assertEqual(self.product1.standard_price, 15)
 
     def test_average_perpetual_3(self):
         self.product1.categ_id.property_cost_method = 'average'
@@ -2620,11 +2624,17 @@ class TestStockValuation(SavepointCase):
         move5._action_assign()
         move5.move_line_ids.qty_done = 20.0
         move5._action_done()
-
         self.assertEqual(move5.stock_valuation_layer_ids.value, 400.0)
-        self.assertEqual(self.product1.standard_price, 35)
 
-        self.assertEqual(self.product1.qty_available, 5)
+        # Move 4 is now fixed, it initially sent 30@15 but the 5 last units were negative and estimated
+        # at 15 (1125). The new receipt made these 5 units sent at 20 (1500), so a 450 value is added
+        # to move4.
+        self.assertEqual(move4.stock_valuation_layer_ids[0].value, -450)
+
+        # So we have 5@20 in stock.
+        self.assertEqual(self.product1.quantity_svl, 5)
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.standard_price, 20)
 
         # send 5 products to empty the inventory, the average price should not go to 0
         move6 = self.env['stock.move'].create({
@@ -2639,8 +2649,8 @@ class TestStockValuation(SavepointCase):
         move6.quantity_done = 5.0
         move6._action_done()
 
-        self.assertEqual(move6.stock_valuation_layer_ids.value, -175.0)
-        self.assertEqual(self.product1.standard_price, 35)
+        self.assertEqual(move6.stock_valuation_layer_ids.value, -100.0)
+        self.assertEqual(self.product1.standard_price, 20)
 
         # in 10 @ 10, the new average price should be 10
         move7 = self.env['stock.move'].create({
