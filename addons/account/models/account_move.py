@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils, email_split, email_escape_char, email_re
+from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils, email_split, email_escape_char, email_re, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -2045,7 +2045,8 @@ class AccountMove(models.Model):
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
-                date_msg = move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format)
+                datefmt = self.env['res.lang']._lang_get(self.env.user.lang).date_format or DEFAULT_SERVER_DATE_FORMAT
+                date_msg = move.date.strftime(datefmt)
                 raise UserError(_("This move is configured to be auto-posted on %s" % date_msg))
 
             if not move.partner_id:
@@ -2076,7 +2077,8 @@ class AccountMove(models.Model):
         self.mapped('line_ids').create_analytic_lines()
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
-                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format))))
+                datefmt = self.env['res.lang']._lang_get(self.env.user.lang).date_format or DEFAULT_SERVER_DATE_FORMAT
+                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(datefmt))))
 
             move.message_subscribe([p.id for p in [move.partner_id, move.commercial_partner_id] if p not in move.sudo().message_partner_ids])
 
