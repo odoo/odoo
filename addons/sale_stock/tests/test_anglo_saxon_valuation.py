@@ -167,7 +167,7 @@ class TestAngloSaxonValuation(SavepointCase):
         self.product.standard_price = 14.0
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -207,7 +207,7 @@ class TestAngloSaxonValuation(SavepointCase):
         wiz.process()
 
         # Invoice 1
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice_form = Form(invoice)
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 1
@@ -241,7 +241,7 @@ class TestAngloSaxonValuation(SavepointCase):
         self.product.standard_price = 16.0
 
         # invoice 1
-        invoice2 = sale_order._create_invoices()
+        invoice2 = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice2.post()
         amls = invoice2.line_ids
         self.assertEqual(len(amls), 4)
@@ -286,7 +286,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order.picking_ids.filtered('backorder_id').button_validate()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -346,7 +346,7 @@ class TestAngloSaxonValuation(SavepointCase):
         wiz.process()
 
         # Invoice 1
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice_form = Form(invoice)
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 1
@@ -380,7 +380,7 @@ class TestAngloSaxonValuation(SavepointCase):
         self.product.standard_price = 16.0
 
         # invoice 1
-        invoice2 = sale_order._create_invoices()
+        invoice2 = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice2.post()
         amls = invoice2.line_ids
         self.assertEqual(len(amls), 4)
@@ -425,7 +425,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order.picking_ids.filtered('backorder_id').button_validate()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -460,7 +460,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order = self._so_and_confirm_two_units()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -498,7 +498,7 @@ class TestAngloSaxonValuation(SavepointCase):
         wiz.process()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -534,7 +534,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order.picking_ids.button_validate()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -592,7 +592,7 @@ class TestAngloSaxonValuation(SavepointCase):
         wiz.process()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -627,7 +627,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order.picking_ids.button_validate()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -661,7 +661,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order = self._so_and_confirm_two_units()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -701,7 +701,7 @@ class TestAngloSaxonValuation(SavepointCase):
         self.product.standard_price = 12
 
         # Invoice 2
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice_form = Form(invoice)
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 2
@@ -739,7 +739,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order.picking_ids.button_validate()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -797,7 +797,7 @@ class TestAngloSaxonValuation(SavepointCase):
         self.product.standard_price = 12
 
         # Invoice 2
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice_form = Form(invoice)
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 2
@@ -836,7 +836,7 @@ class TestAngloSaxonValuation(SavepointCase):
         sale_order.picking_ids.button_validate()
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
@@ -912,7 +912,7 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(sale_order.order_line.move_ids.stock_valuation_layer_ids[-1].quantity, 0)
 
         # Invoice the sale order.
-        invoice = sale_order._create_invoices()
+        invoice = sale_order.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
         invoice.post()
 
         # Check the resulting accounting entries
