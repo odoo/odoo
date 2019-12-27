@@ -747,3 +747,68 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(name, move.name)
         self.assertTrue(transfer_move.name)
         self.assertNotEqual(name, transfer_move.name)
+
+    def test_partial_payment_inv_foreign_payment_domestic(self):
+        """
+            Invoice of 1000$ (foreign $) at 01/01 with foreign exchange rate of 0.50000
+            Payment of 500 (domestic €) at 15/01 with foreign exchange rate of 1.00000
+            The residuals should be 500 in foreign and 1500 in domestic.
+        """
+        company = self.env.ref('base.main_company')
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 1.0,
+            'currency_id': self.currency_eur_id,
+            'company_id': company.id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 0.5,  # Don't change this !
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-01-15',
+            'rate': 1.0,  # Don't change this !
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        inv1 = self.invoice_model.create({
+            'partner_id': self.partner_agrolait.id,
+            'currency_id': self.currency_usd_id,
+            'name': 'out_invoice',
+            'account_id': self.account_receivable.id,
+            'type': 'out_invoice',
+            'date_invoice': time.strftime('%Y') + '-01-01',
+        })
+        self.invoice_line_model.create({
+            'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': 1000,
+            'invoice_id': inv1.id,
+            'name': 'something',
+            'account_id': self.account_revenue.id,
+        })
+        inv1.action_invoice_open()
+        payment = self.env['account.payment'].create({
+            'payment_date': time.strftime('%Y') + '-01-15',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': inv1.partner_id.id,
+            'amount': 500,
+            'journal_id': self.bank_journal_euro.id,
+            'company_id': company.id,
+            'currency_id': self.currency_eur_id,
+        })
+        payment.post()
+        inv1_receivable = inv1.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        pay_receivable = payment.move_line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+        self.assertEqual(inv1_receivable.balance, 2000)
+        self.assertEqual(pay_receivable.balance, -500)
+
+        (inv1_receivable + pay_receivable).reconcile()
+        self.assertEquals(inv1.residual, 500)
+        self.assertEquals(inv1.residual_company_signed, 1500)
