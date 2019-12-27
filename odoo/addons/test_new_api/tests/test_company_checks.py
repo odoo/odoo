@@ -2,6 +2,7 @@
 
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import common
+from odoo.tools import frozendict
 
 
 class TestCompanyCheck(common.TransactionCase):
@@ -120,3 +121,26 @@ class TestCompanyCheck(common.TransactionCase):
         # Fallbacks when no allowed_company_ids context key
         self.assertEqual(user.env.company, user.company_id)
         self.assertEqual(user.env.companies, user.company_ids)
+
+    def test_company_sticky_with_context(self):
+        context = frozendict({'nothing_to_see_here': True})
+        companies_1 = frozendict({'allowed_company_ids': [1]})
+        companies_2 = frozendict({'allowed_company_ids': [2]})
+
+        User = self.env['res.users'].with_context(context)
+        self.assertEqual(User.env.context, context)
+
+        User = User.with_context(**companies_1)
+        self.assertEqual(User.env.context, dict(context, **companies_1))
+
+        # 'allowed_company_ids' is replaced if present in keys
+        User = User.with_context(**companies_2)
+        self.assertEqual(User.env.context, dict(context, **companies_2))
+
+        # 'allowed_company_ids' is replaced if present in new context
+        User = User.with_context(companies_1)
+        self.assertEqual(User.env.context, companies_1)
+
+        # 'allowed_company_ids' is sticky
+        User = User.with_context(context)
+        self.assertEqual(User.env.context, dict(context, **companies_1))
