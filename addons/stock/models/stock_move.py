@@ -536,7 +536,7 @@ class StockMove(models.Model):
                 user_id=doc.user_id.id or SUPERUSER_ID
             )
 
-    def _delay_alert_check(self, new_date):
+    def _delay_alert_check(self, new_date=None):
         """Set an alert on late moves by using the `delay_alert_date` field.
         The alert is always on the move that cannot be done because its preceding moves are late.
 
@@ -546,6 +546,9 @@ class StockMove(models.Model):
         self.ensure_one()
         if self.state in ('done', 'cancel'):
             return
+
+        if new_date is None:
+            new_date = self.date_expected
 
         # Check if `self` is scheduled after the next moves. If so, the next moves are late.
         next_done_moves = self.browse()

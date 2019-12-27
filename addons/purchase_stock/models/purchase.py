@@ -317,12 +317,9 @@ class PurchaseOrderLine(models.Model):
                 if not picking:
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
-                move_vals = line._prepare_stock_moves(picking)
-                for move_val in move_vals:
-                    self.env['stock.move']\
-                        .create(move_val)\
-                        ._action_confirm()\
-                        ._action_assign()
+
+                moves = line._create_stock_moves(picking)
+                moves._action_confirm()._action_assign()
 
     def _get_stock_move_price_unit(self):
         self.ensure_one()
@@ -407,7 +404,12 @@ class PurchaseOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):
                 values.append(val)
-        return self.env['stock.move'].create(values)
+
+        moves = self.env['stock.move'].create(values)
+        for move in moves:
+            # update delay alert
+            move._delay_alert_check()
+        return moves
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         """ Return the record in self where the procument with values passed as
