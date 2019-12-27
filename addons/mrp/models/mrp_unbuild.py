@@ -109,7 +109,9 @@ class MrpUnbuild(models.Model):
                 raise UserError(_('You cannot unbuild a undone manufacturing order.'))
 
         consume_move = self._generate_consume_moves()[0]
+        consume_move._action_confirm()
         produce_moves = self._generate_produce_moves()
+        produce_moves._action_confirm()
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
             raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
