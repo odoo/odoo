@@ -737,7 +737,7 @@ const InputUserValueWidget = UserValueWidget.extend({
                 return defaultValue;
             } else {
                 const value = weUtils.convertNumericToUnit(numValue, params.unit, params.saveUnit, params.cssProperty, this.$target);
-                return `${parseFloat(value.toFixed(3))}${params.saveUnit}`;
+                return `${this._floatToStr(value)}${params.saveUnit}`;
             }
         }).join(' ');
     },
@@ -758,7 +758,7 @@ const InputUserValueWidget = UserValueWidget.extend({
         if (isNaN(numValue)) {
             return defaultValue;
         }
-        return `${parseFloat(numValue.toFixed(3))}${unit}`;
+        return `${this._floatToStr(numValue)}${unit}`;
     },
     /**
      * @override
@@ -785,7 +785,7 @@ const InputUserValueWidget = UserValueWidget.extend({
             if (isNaN(numValue)) {
                 return ''; // Something not supported
             }
-            return `${parseFloat(numValue.toFixed(3))}`;
+            return this._floatToStr(numValue);
         }).join(' ');
 
         this._super(value, methodName);
@@ -801,6 +801,16 @@ const InputUserValueWidget = UserValueWidget.extend({
     _updateUI: async function () {
         await this._super(...arguments);
         this.inputEl.value = this._value;
+    },
+    /**
+     * Converts a floating value to a string, rounded to 3 digits without zeros.
+     *
+     * @private
+     * @param {number} value
+     * @returns {string}
+     */
+    _floatToStr: function (value) {
+        return `${parseFloat(value.toFixed(3))}`;
     },
 
     //--------------------------------------------------------------------------
@@ -860,7 +870,7 @@ const InputUserValueWidget = UserValueWidget.extend({
                     step = 1.0;
                 }
                 value += (ev.which === $.ui.keyCode.UP ? step : -step);
-                input.value = `${parseFloat(value.toFixed(3))}`;
+                input.value = this._floatToStr(value);
                 $(input).trigger('input');
                 break;
             }
