@@ -397,6 +397,7 @@ class QuantPackage(models.Model):
 
     def unpack(self):
         for package in self:
+<<<<<<< HEAD
             move_line_to_modify = self.env['stock.move.line'].search([
                 ('package_id', '=', package.id),
                 ('state', 'in', ('assigned', 'partially_available')),
@@ -404,6 +405,19 @@ class QuantPackage(models.Model):
             ])
             move_line_to_modify.write({'package_id': False})
             package.mapped('quant_ids').sudo().write({'package_id': False})
+=======
+            move_lines_to_remove = package.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
+            if move_lines_to_remove:
+                move_lines_to_remove.write({'result_package_id': False})
+            else:
+                move_line_to_modify = self.env['stock.move.line'].search([
+                    ('package_id', '=', package.id),
+                    ('state', 'in', ('assigned', 'partially_available')),
+                    ('product_qty', '!=', 0),
+                ])
+                move_line_to_modify.write({'package_id': False})
+                package.mapped('quant_ids').sudo().write({'package_id': False})
+>>>>>>> ce0865fd19d... temp
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
