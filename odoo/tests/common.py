@@ -1134,7 +1134,7 @@ class HttpCase(TransactionCase):
         session.uid = uid
         session.login = user
         session.session_token = uid and security.compute_session_token(session, env)
-        session.context = env['res.users'].context_get() or {}
+        session.context = dict(env['res.users'].context_get() or {})
         session.context['uid'] = uid
         session._fix_lang(session.context)
 
