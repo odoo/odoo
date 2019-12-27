@@ -1555,6 +1555,13 @@ class AccountMove(models.Model):
             ctx_vals = {'default_type': vals.get('type') or self._context.get('default_type')}
             if vals.get('journal_id'):
                 ctx_vals['default_journal_id'] = vals['journal_id']
+                # reorder the companies in the context so that the company of the journal
+                # (which will be the company of the move) is the main one, ensuring all
+                # property fields are read with the correct company
+                journal_company = self.env['account.journal'].browse(vals['journal_id']).company_id
+                allowed_companies = self._context.get('allowed_company_ids', journal_company.ids)
+                reordered_companies = sorted(allowed_companies, key=lambda cid: cid != journal_company.id)
+                ctx_vals['allowed_company_ids'] = reordered_companies
             self_ctx = self.with_context(**ctx_vals)
             new_vals = self_ctx._add_missing_default_values(vals)
 
