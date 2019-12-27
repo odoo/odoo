@@ -277,6 +277,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         user_demo = self.env['res.users'].create({
             'login': 'zizizmyuser',
             'password': 'zizizmyuser',
+            'email': 'test@test.com',
             'partner_id': self.env['res.partner'].create({'name': 'Zizizmypartner'}).id,
             'company_ids': [(6, False, [company_1.id])],
             'company_id': company_1.id,
@@ -285,6 +286,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
                 self.env.ref('base.group_partner_manager').id,
                 self.env.ref('sales_team.group_sale_manager').id])]})
 
+        user_demo.company_ids = (company_1 | company_2).ids
         so_partner = self.env['res.partner'].create({'name': 'SO Partner'})
         so_partner.write({
             'property_account_position_id': False,
@@ -305,6 +307,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
             'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
+            'property_account_income_id': self.account_receivable.id,
         })
 
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
@@ -317,6 +320,14 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
             'Only taxes from the right company are put by default')
+        so_1.action_confirm()
+        # i'm not interested in groups/acls, but in the multi-company flow only
+        # the sudo is there for that and does not impact the invoice that gets created
+        # the goal here is to invoice in company 1 (because the order is in company 1) while being
+        # 'mainly' in company 2 (through the context), the invoice should be in company 1
+        inv=so_1.sudo().with_context(allowed_company_ids=[company_2.id, company_1.id])._create_invoices()
+        self.assertEqual(inv.company_id, company_1, 'invoices should be created in the company of the SO, not the main company of the context')
+
 
     def test_group_invoice(self):
         """ Test that invoicing multiple sales order for the same customer works. """
