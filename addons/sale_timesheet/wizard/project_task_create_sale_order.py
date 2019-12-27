@@ -28,7 +28,7 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
 
     task_id = fields.Many2one('project.task', "Task", domain=[('sale_line_id', '=', False)], help="Task for which we are creating a sales order", required=True)
     partner_id = fields.Many2one('res.partner', string="Customer", required=True, help="Customer of the sales order")
-    product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks. The existing timesheet will be linked to this product.", required=True)
+    product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks. The existing timesheet will be linked to this product.", required=True, ondelete='cascade')
     price_unit = fields.Float("Unit Price", help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id', readonly=False)
 
