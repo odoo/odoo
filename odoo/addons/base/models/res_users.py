@@ -22,6 +22,8 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, collections, lazy_property
+# WILL NOT BE MERGED, THIS IS JUST HERE FOR DETECTING OTHER ISSUE ON RUNBOT
+from odoo.tools import frozendict
 
 _logger = logging.getLogger(__name__)
 
@@ -577,10 +579,11 @@ class Users(models.Model):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
         values = user.read(list(name_to_key), load=False)[0]
-        return {
+        # WILL NOT BE MERGED, THIS IS JUST HERE FOR DETECTING OTHER ISSUE ON RUNBOT
+        return frozendict({
             key: values[name]
             for name, key in name_to_key.items()
-        }
+        })
 
     @api.model
     def action_get(self):
