@@ -118,6 +118,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'secondary_color': False,
             'logo': False,
             'external_report_layout_id': self.env.ref('base.layout_template1').id,
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
         default_colors = self.default_colors
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -138,6 +139,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -151,6 +153,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': False,
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -166,6 +169,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -181,6 +185,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
