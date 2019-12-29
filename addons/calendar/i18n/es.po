@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Efrem Jimenez <efj@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Alex T <alt@odoo.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alex T <alt@odoo.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -469,7 +469,7 @@ msgstr ""
 "                    <li>Description: ${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duración: ${('%dH%02d' % round(object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duración: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Asistentes\n"
 "                <ul>\n"
