@@ -917,9 +917,6 @@ class Channel(models.Model):
             WHERE C.uuid = %s""", (uuid,))
         return self._cr.dictfetchall()
 
-    def _channel_fetch_listeners_where_clause(self, uuid):
-        return ("C.uuid = %s", (uuid,))
-
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
         if not self:
