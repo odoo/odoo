@@ -6,6 +6,7 @@
 # Максим Дронь <dronmax@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,18 +28,20 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
-msgstr ""
+msgstr "При отправке документа в сообщении возникла ошибка. <br> Ошибка:% s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Произошла неизвестная ошибка. Пожалуйста, свяжитесь с поддержкой."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -48,12 +51,12 @@ msgstr "Приложение"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "обе стороны"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "С обеих сторон"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -68,12 +71,12 @@ msgstr "Отменено"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "Выберите чернила, используется для печати документов"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "Выберите макет для печати документов"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -166,7 +169,7 @@ msgstr "Последнее обновление"
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "письма"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -177,7 +180,7 @@ msgstr "Модель"
 #: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Одно или несколько обязательных полей пусты."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -188,7 +191,7 @@ msgstr "Необязательный отчёт для печати и прик�
 #: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "Опубликовать письмо: произошла ошибка."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
@@ -198,17 +201,17 @@ msgstr "Печать почтового отправления"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Печатать с обеих сторон"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Печать в цвете"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Контакт Qweb поля"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -218,7 +221,7 @@ msgstr "Получатель"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "действие отчета"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -233,14 +236,14 @@ msgstr "Отправлено"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "письмо Snailmail"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail: обработать очередь писем"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -254,12 +257,14 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Приложение письмо не может быть отправлено. Проверьте его содержание и "
+"обратитесь в службу поддержки, если проблема не исчезнет."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Страна партнера не покрывает Snailmail."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:242
@@ -267,11 +272,12 @@ msgstr ""
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
+"Документ был правильно направлен по почте. <br> Иd отслеживание% ssend_id"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "User sending the letter"
-msgstr ""
+msgstr "Направление письма пользователем"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -280,6 +286,10 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"При создании письма, стоит статус «Черновик». Если письмо отправлено "
+"правильно, статус переходит в &quot;Отправлено&quot;, если нет, то он станет"
+" &quot;Ошибка&quot;, а сообщение об ошибке появится в поле &quot;Сообщение "
+"об ошибке&quot;."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:207
@@ -288,6 +298,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"У вас нет учетной записи IAP, зарегистрированного для этой услуги. <br> "
+"Перейдите к <a href=%s target=\"new\">iap.odoo.com</a> чтобы требовать "
+"бесплатные кредиты."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:204
@@ -296,3 +309,5 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Вы не имеете достаточно кредитов для выполнения этой операции. <br> "
+"Перейдите к вашему <a href=%s target=\"new\">учетной записи iap</a> ."

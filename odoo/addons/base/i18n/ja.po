@@ -13222,13 +13222,14 @@ msgid ""
 "                         Group-specific rules grant additional permissions, but are constrained within the bounds of global ones.\n"
 "                         The first group rules restrict further the global rules, but can be relaxed by additional group rules."
 msgstr ""
+"グローバル規則(グループ非依存)は制約であり、回避できません。グループ依存のローカル規則は追加で権限を付与しますが、グローバル規則の制約を越えることはできません。1つ目のグループ依存規則はグローバル規則にさらなる制約を加えますが、その他のグループ規則により制約を緩めることができます。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid ""
 "Global rules are combined together with a logical AND operator, and with the"
 " result of the following steps"
-msgstr ""
+msgstr "グローバル規則は、他のグローバル規則および以下ステップの結果と、論理演算子 AND により結合されます。"
 
 #. module: base
 #: code:addons/base/models/res_config.py:742
@@ -13408,7 +13409,7 @@ msgstr "連絡先のグループ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Group-specific rules are combined together with a logical OR operator"
-msgstr ""
+msgstr "グループ依存規則は論理演算子 OR で結合されます。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups
@@ -14121,6 +14122,7 @@ msgid ""
 "If user belongs to several groups, the results from step 2 are combined with"
 " logical OR operator"
 msgstr ""
+"ユーザが複数グループに属す場合、ステップ2の結果は、各グループ内でのグループ依存規則結合結果が論理演算子 OR で結合されたものになります。"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_state
@@ -21647,7 +21649,7 @@ msgstr "ターゲットウィンドウ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "タスクログ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
