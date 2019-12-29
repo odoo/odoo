@@ -32,6 +32,7 @@
 # Martin Trigaux, 2019
 # Anishchuk Sergei <anishukserg@l-profit.ru>, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +62,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -290,6 +300,9 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"Признание доходов ==================== Управление признанием доходов по "
+"продажам товара. Отслеживает рассрочку признание дохода и создает "
+"соответствующие записи журнала."
 
 #. module: base
 #: code:addons/base/res/res_config.py:315
@@ -325,6 +338,10 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"Этот модуль добавляет несколько функций ресторана в пункт продажи: - Печать "
+"счета: Позволяет напечатать квитанцию, прежде чем оплачивать заказ - "
+"разбивка счета: позволяет разделить заказ на различные заказы - печать заказ"
+" на кухню: позволяет печатать заказ для кухни и баров"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -350,6 +367,8 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"Этот модуль позволяет определить программу лояльности в точке продажи, где "
+"клиенты получают баллы лояльности и получают награды."
 
 #. module: base
 #: code:addons/model.py:136
@@ -418,6 +437,8 @@ msgid ""
 "        - Track timesheet for task from ticket\n"
 "    "
 msgstr ""
+"Позвольте установить проект для команды поддержки - Отслеживание расписания "
+"для задания с заявки"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -563,7 +584,7 @@ msgid ""
 "\n"
 "        Accounting reports for US\n"
 "    "
-msgstr ""
+msgstr "Бухгалтерские отчеты для США"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_reports
@@ -581,7 +602,7 @@ msgid ""
 "\n"
 "        Accounting reports send to HMRC\n"
 "    "
-msgstr ""
+msgstr "Бухгалтерские отчеты направляются в HMRC"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_extension
@@ -607,6 +628,8 @@ msgid ""
 "        Colloquially known as \"Month 13\"\n"
 "    "
 msgstr ""
+"Позвольте генерировать пробный баланс для закрытия записи. Разговорно "
+"известный как &quot;Луна 13&quot;"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -615,6 +638,8 @@ msgid ""
 "        Allow to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"Позволить осуществлять звонки из следующих действий или с помощью нажатия "
+"кнопки мыши."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
@@ -631,7 +656,7 @@ msgid ""
 "\n"
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
-msgstr ""
+msgstr "Табели счетов вошли в заявки поддержки."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -673,7 +698,7 @@ msgid ""
 "            - Trial Balance\n"
 "        DIOT Report\n"
 "    "
-msgstr ""
+msgstr "Электронные бухгалтерские отчеты - COA - Пробный баланс Отчет DIOT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -702,7 +727,7 @@ msgid ""
 "\n"
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
-msgstr ""
+msgstr "Создать электронный счет-фактуру с таможенным номером"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -757,6 +782,10 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"Целью этого модуля является реализация &quot;разреженных&quot; полей, то "
+"есть полей преимущественно нулевые. Эта реализация обходит PostgreSQL "
+"ограничения на количество столбцов в таблице. Значения всех жидких полей "
+"хранятся в серии &quot;серийный&quot; в виде отображения JSON."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -765,6 +794,8 @@ msgid ""
 "        This module adds support for barcodes scanning to the delivery packages.\n"
 "    "
 msgstr ""
+"Этот модуль добавляет поддержку сканирования штрих-кодов до доставки "
+"пакетов."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -812,6 +843,32 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"Этот модуль позволяет создавать соответствующие XML-файлы SEPA Direct Debit "
+"(SDD) (совместимые со спецификацией pain.008.001.02), чтобы отправить в ваш "
+"банк для того, чтобы собирать комплект платежей. Чтобы быть доступным для "
+"этого способа оплаты, сначала клиент должен иметь возвращен мандат компании,"
+" дав свое согласие на использование прямого дебета. Это согласие должно быть"
+" закодирована как &quot;мандат заказчика&quot; на Odoo. Вы также должны "
+"отвечать следующим требованиям, чтобы правильно сгенерировать файл SDD: - "
+"счет вашей компании должен быть установлен на настоящий номер IBAN - счет "
+"вашей компании должен быть связан с банком, который имеет действительный BIC"
+" - Ваша компания должна иметь идентификатор кредитора (это можно сделать в "
+"меню «Настройки» модуля бухгалтерского учета) - Ваша компания должна "
+"определить журнал для получения платежей SDD (опять же, в "
+"&quot;настройках&quot; модуля бухучета) - Каждый клиент, для которого вы "
+"создали платеж должен иметь действительный номер счета IBAN в банке, "
+"связанном с правильным BIC. Odoo сообщит вам, если любое из этих требований "
+"не выполняется. Любой счет-фактура, который получает подтверждение для "
+"заказчика с мандатом, будет автоматически устанавливаться в "
+"&quot;оплачиваемом&quot; состоянии, а платеж будет создан. Опция на "
+"информационной панели позволит вам просмотреть все полученные платежи через "
+"SDD и генерировать файл сбора XML, группируя это, как вы считаете нужным. "
+"Также доступен специальный метод оплаты &quot;SEPA Direct Debit&quot; "
+"открывайте счета-фактуры, когда выбираете банковский счет в мастере "
+"регистрации платежей. Используйте его, чтобы создать платеж SDD для счетов-"
+"фактур, если вы добавили мандат для его владельца после его проверки. Вы "
+"увидите сообщение об ошибке, если вы попытаетесь использовать этот метод на "
+"счете-фактуре, для оплаты которого мандат не может быть использован."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -1012,6 +1069,9 @@ msgid ""
 "    currencies the Tax must be set at date of payment\n"
 "    "
 msgstr ""
+"Надлежащим образом создайте Записи в журнале на налоги кассовым методом, при"
+" использовании иностранной валюты, налог должен быть установлен на дату "
+"платежа"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -1048,7 +1108,7 @@ msgid ""
 "* Timesheet submission and validation\n"
 "* Activate grid view for timesheets\n"
 "    "
-msgstr ""
+msgstr "Подготовка и проверка табеля * Включите режим сетки для табеля"
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -1246,6 +1306,7 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"Бухгалтерские отчеты для Люксембурга ================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_reports
@@ -1441,6 +1502,8 @@ msgid ""
 "-------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"Позвольте клиентам назначать с помощью вашего сайта "
+"----------------------------------------- --------------------"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -1518,6 +1581,16 @@ msgid ""
 "\n"
 "Be careful with this module as it has audit implications. Cancelling accounting entries is not authorized in all countries.\n"
 msgstr ""
+"Позволяет отменять записи бухгалтерского учета. "
+"==================================== Этот модуль добавляет флажок в "
+"бухгалтерских журналах, чтобы позволить отмены записей журнала. Этот флажок "
+"отображается только в журналах учета, когда режим отладки активен. Если этот"
+" флажок установлен на «привального», это позволяет пользователям отменять "
+"записи журнала. После этого запись бухгалтерского учета, отменено, может "
+"быть изменено, повторно размещены или удален. Он также работает на счетах-"
+"фактурах, банковских выписках, платежах ... Будьте осторожны с этим модулем,"
+" поскольку он аудиторские последствия. Отмена бухгалтерских записей не "
+"позволено во всех странах."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -1888,6 +1961,12 @@ msgid ""
 "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
 "    "
 msgstr ""
+"Бельгийские правила оплаты труда. ====================== * Информация "
+"сотрудника * Договоры сотрудников * Паспортный контракт * Выплаты / "
+"отчисления Позволяет настроить основной / валовой / чистый заработок * "
+"Сотрудник Payslip * Ежемесячный учет заработной платы * Интегрированная с "
+"управлением отпусками * Зарплатный Maj, ОНСС, налог на содержание, помощь на"
+" детей ..."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -1912,6 +1991,16 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"Бельгийский зарегистрирован кассовый аппарат "
+"================================ Этот модуль превращает модуль точки продаж "
+"на сертифицированный бельгийский кассовый аппарат. Дополнительная "
+"информация: * http://www.systemedecaisseenregistreuse.be/ * "
+"http://www.geregistreerdkassasysteem.be/ Юридическая информация ----- ** "
+"Использование источников pos_blackbox_be сертифицированы только на платформе"
+" odoo.com SaaS для версии 11.0. * * Свяжитесь с Odoo SA перед установкой "
+"модуля pos_blackbox_be. Запрашиваемая и сертифицирована версия "
+"pos_blackbox_be может быть предоставлена на установление на вашем сервере. "
+"Модифицированная версия не сертифицирована и не поддерживается Odoo SA."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -1935,7 +2024,7 @@ msgid ""
 "\n"
 "Bridge module for rating on website stuff.\n"
 "        "
-msgstr ""
+msgstr "Мостовой модуль для оценки на материалах сайта."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_holidays
@@ -1948,6 +2037,10 @@ msgid ""
 "on leaves. Project and task can be configured company-wide.\n"
 "    "
 msgstr ""
+"Мостовой модуль для интеграции отпусков в табель "
+"=========================================== ===== Этот модуль позволяет "
+"автоматически вести журналы табеля, когда работники в отпусках. Проект и "
+"задачи можно настроить на всей территории страны."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -1957,6 +2050,8 @@ msgid ""
 "====================================================\n"
 "    "
 msgstr ""
+"Мостик для добавления контрактного календаря на автоматические действия "
+"========================================== =========="
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_phone_validation
@@ -1967,6 +2062,8 @@ msgid ""
 "\n"
 "This module allows for validate and format phone numbers for leads and contacts."
 msgstr ""
+"Проверка номера телефонов CRM ============================ Этот модуль "
+"позволяет проверять и форматировать номера телефонов для лидов и контактов."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2103,6 +2200,9 @@ msgid ""
 "This module allows to enforce users to choose the city of a partner inside a given list instead of a free text field.\n"
 "        "
 msgstr ""
+"Управление городами в адресах ============================ Этот модуль "
+"позволяет пользователям выбирать город партнера в пределах определенного "
+"списка, а не свободного текстового поля."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -2114,6 +2214,10 @@ msgid ""
 "In your project plan, you can compare your timesheets and your forecast to better schedule your resources.\n"
 "    "
 msgstr ""
+"Сравнивайте табели и прогноз для ваших проектов. "
+"================================================== В вашем плане проекта, вы"
+" можете сравнить ваши табели и ваш прогноз, чтобы лучше запланировать свои "
+"ресурсы."
 
 #. module: base
 #: model:ir.module.module,description:base.module_decimal_precision
@@ -2138,6 +2242,10 @@ msgid ""
 "- use the international format for all others\n"
 "        "
 msgstr ""
+"Проверка контактного номера на сайте ==================================== "
+"Подтвердить контактам (телефона, мобильных телефонов) и нормализовать их на "
+"лидах и контактах: - используйте национальный формат для страны вашей "
+"компании - используйте международный формат для всех остальных"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -2202,6 +2310,14 @@ msgid ""
 "when you confirm your sales order it will automatically create a registration for\n"
 "this event.\n"
 msgstr ""
+"Создайте регистрации по заказам на продажу. ============================= "
+"Этот модуль позволяет автоматизировать и подключить создания регистрации с "
+"помощью вашего основного потока продаж и, следовательно, чтобы включить "
+"функцию счетов-фактур регистраций. Она определяет новый вид услуг сервиса, "
+"который предлагает возможность выбрать категорию событий, связанную с ней. "
+"Когда вы кода заказа на продажу для этого товара, вы сможете выбрать "
+"существующую событие этой категории и когда вы подтвердите свой заказ на "
+"продажу, он автоматически создаст регистрацию для этого события."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -2337,7 +2453,7 @@ msgstr ""
 msgid ""
 "\n"
 "Display orders to invoice in website dashboard.\n"
-msgstr ""
+msgstr "Отображать заказ на счет на информационной панели сайта."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum_doc
@@ -2361,6 +2477,10 @@ msgid ""
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 "    "
 msgstr ""
+"Мексиканская локализация EDI ======================== Разрешить пользователю"
+" генерировать документ EDI для мексиканского фактур. Этот модуль позволяет "
+"создавать документы EDI и общаться с мексиканскими сертификационными "
+"провайдерами (PACs), чтобы подписать / отменить их."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_payment_bank
@@ -2371,6 +2491,9 @@ msgid ""
 "Allow the user to select the bank account that was used the customer to paid the invoices.\n"
 "    "
 msgstr ""
+"Мексиканская локализация EDI ======================== Позвольте пользователю"
+" выбрать банковский счет, который использовался клиентом для оплаты счетов-"
+"фактур."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -2384,6 +2507,10 @@ msgid ""
 "that would need such functionality.\n"
 "\n"
 msgstr ""
+"ESC / POS драйвер оборудования ======================= Этот модуль позволяет"
+" Odoo печатать с ESC / POS-совместимые принтеры и открыть контрольные "
+"наличные карточки ESC / POS в точке продажи и другие модули, которые требуют"
+" такую функциональность."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -2569,6 +2696,11 @@ msgid ""
 "with the street name, the house number, and room number.\n"
 "        "
 msgstr ""
+"Расширенное управление адресами ============================= Этот модуль "
+"содержит все дополнительные поля, для которых может понадобиться точное "
+"управление адресами. Например, в юридических отчетах некоторые страны должны"
+" разделить улицу на несколько полей, с названием улицы, номером дома и "
+"номером комнаты."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_blackbox_be
@@ -2927,6 +3059,14 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"Индийские правила оплаты заработной платы. ============================ "
+"-конфигурации hr_payroll для локализации Индии - Все основные правила взноса"
+" для Индии. * Новый отчет об уплате заработной платы * Договоры сотрудников "
+"Позволяет настроить основную / валовой / чистый заработок * Сотрудник "
+"PaySlip * Помощь / Вычет * Интегрированная с управлением отпусками * "
+"Медицинская помощь, доходы от путешествий, помощь на детей ... - "
+"консультации и отчет о заработной плате - Ежегодная заработная плата "
+"начальника и годовая заработная плата работников"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_github
@@ -2938,6 +3078,9 @@ msgid ""
 "This Module integrates all post commits, pull requests and activity of github issue to channels in Odoo.\n"
 "    "
 msgstr ""
+"Интеграция Github в обсуждении Odoo. ============================ Этот "
+"модуль объединяет все почтовые обязательства, извлекает запросы и активность"
+" github-проблемы на каналы в Odoo ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -3003,6 +3146,13 @@ msgid ""
 "    - Assign lead to salesteams: define your own filters and sort automatically your leads by saleteam.\n"
 "    - Assign lead to salesmen: define filter by saleman and dispatch automatically your leads to the right saleman.\n"
 msgstr ""
+"Оценивания лида ============ Этот модуль позволяет ... - Отслеживание "
+"определенного просмотра страницы на своем сайте. - назначение счет на лиде: "
+"автоматически отсортируйте свои лиды и в первую очередь рассмотрите важные. "
+"- Предоставьте лед команде продаже: определяйте собственные фильтры и "
+"автоматически сортирует свои лиды через команду продажи. - назначение лед "
+"продавцу: определите фильтр с помощью продавца и отправьте автоматически "
+"ваши лиды к правильному продавца."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_project
@@ -3014,6 +3164,8 @@ msgid ""
 "Link module to map leads to tasks\n"
 "        "
 msgstr ""
+"Лед на задание ============= Ссылка на модуль, чтобы назначить лиды на "
+"звадавння"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -3046,6 +3198,10 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"Поддержка живого чата ========================== Позвольте подключить "
+"виджеты мгновенных сообщений на любой веб-странице, свяжется с текущим "
+"сервером и отправкой запросов посетителей среди нескольких операторов живого"
+" чата. Помогите своим клиентам в этом чате и проанализируйте их отзывы."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -3093,6 +3249,17 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 "    "
 msgstr ""
+"Управление 3-сторонней соответствием на счета поставщика "
+"===================================== В производстве люди часто получают "
+"счета поставщиков раньше, чем получают их покупку, но они не хотят платить "
+"счет до момента получения товара. Решением этой ситуации является создание "
+"счета продавца, когда вы его получите (на основе заказных количеств), но "
+"только платя счет, когда полученное количество (в строках PO) соответствует "
+"записанному счета поставщика. Этот модуль вводит механизм &quot;выпуска "
+"оплаты&quot;, который обозначает для каждого счета поставщика, можно "
+"заплатить или нет. Каждый счет поставщика получает одно из следующих трех "
+"состояний: - Да (счет может быть оплачен) - Нет (счет невозможен, ничего не "
+"доставлено) - Исключение (отличаются полученные и выставленные счета)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -3111,6 +3278,12 @@ msgid ""
 "internal transfer document is needed.\n"
 "\n"
 msgstr ""
+"Управление заказами на дропшипинг =========================== Этот модуль "
+"добавляет предварительно настроенный тип операции доставки, а также маршрут "
+"закупок, который позволяет настроить дропшипинг товара и заказ. При "
+"использовании дропшипинг, товар передается непосредственно от продавцов к "
+"заказчикам (прямая доставка) без прохождения через склад продавца. В этом "
+"случае не нужен внутренний документ перемещения."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -3273,6 +3446,9 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of event attendees.\n"
 "        "
 msgstr ""
+"Участники события массовой рассылки ========================= Мостовой "
+"модуль добавляет требования UX для облегчения массовой рассылки участников "
+"событий."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_track
@@ -3284,6 +3460,9 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of event track speakers.\n"
 "        "
 msgstr ""
+"Отслеживание спикеров события массовой рассылки "
+"============================== Мостовой модуль добавляет требования UX, "
+"чтобы облегчить отслеживание спикеров события массовой рассылки ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_mps
@@ -3303,6 +3482,15 @@ msgid ""
 "safety stock, min/max to supply and to manually override the amount you will\n"
 "procure.\n"
 msgstr ""
+"Мастер планирования производства ========================== Иногда вам нужно"
+" создать заказ на приобретение компонентов заказов на производство, которые "
+"будут созданы позже. Или для заказов на производство, где вы будете иметь "
+"заказ на продажу позже. Решение - предусмотреть ваши прогнозы продаж и "
+"исходя из этого, вы уже создадите определенный заказ на производство или "
+"заказ на покупку. Вам нужно выбрать товары, которые нужно добавить в отчет. "
+"Вы можете выбрать период для отчета: день, неделю, месяц ... Можно "
+"определить безопасный запас, минимум / максимум для снабжения и вручную "
+"переопределить сумму, которую вы будете закупать."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -3327,6 +3515,15 @@ msgid ""
 ".. _SAT: http://www.sat.gob.mx/\n"
 "    "
 msgstr ""
+"Минимальные настройки бухучета для Мексики. "
+"============================================ Этот план счетов является "
+"минимальным предложением , чтобы использовать OоB Особенность бухучета Odoo."
+" Это не претендует на то, что вся локализация для MX является лишь "
+"минимальными данными, необходимыми для запуска с 0 в мексиканской "
+"локализации. Эти модули и их содержание часто обновляются командой openerp-"
+"mexico. С помощью этого модуля вы сможете: - Минимальный план счетов в "
+"производственных средах. - Минимальная схему налогообложения, соответствует "
+"требованиям SAT_. .. _SAT: http://www.sat.gob.mx/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -3377,6 +3574,8 @@ msgid ""
 "Module holding mail improvements for website.\n"
 "It is responsible of comments moderation for published documents (forum, slides, blog, ...)\n"
 msgstr ""
+"Модуль поддерживает улучшение почты на сайте. Он отвечает за модерирования "
+"комментариев опубликованные документов (форум, слайды, блог ...)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports_followup
@@ -3612,7 +3811,7 @@ msgid ""
 "\n"
 "Module with the required configuration to connect to OnSIP.\n"
 "    "
-msgstr ""
+msgstr "Модуль с необходимым настройкам для подключения к OnSIP."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_cash_basis_base_account
@@ -3674,6 +3873,19 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"Новый расширенный импорт файлов для Odoo ============================ "
+"Повторно воплотите систему импорта файлов Odoo * Серверная сторона, "
+"предыдущая система заставляет большую часть логики клиенту, дублирует усилия"
+" (между клиентами), делает систему импорта намного тяжелее для использования"
+" без клиента (прямой RPC или другие формы автоматизации) и дает знания о "
+"импорт / экспорт системы намного тяжелее, чтобы собрать, поскольку она "
+"распространяется на 3+ различные проекты . * В более расширенный способ, "
+"когда пользователи и партнеры могут создавать их собственный интерфейс для "
+"импорта с другими форматами файлов (например, файлы OpenDocument), которые "
+"могут быть простыми для обработки в рабочем потоке или от источника их "
+"данных. * В модуле, для администраторов и пользователей Odoo, которые этого "
+"не делают, им это не нужно или хотят онлайн-импорт, чтобы избежать его "
+"доступности для пользователей."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -3951,6 +4163,9 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
+"Организованный план виджетов для отдела кадров ======================= Этот "
+"модуль расширяет форму сотрудника с организационным планом. (N + 1, N + 2, "
+"прямые подчиненные)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -4060,6 +4275,22 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
+"Периодическая оценка работников ============================== Используя эту"
+" программу, вы можете поддерживать мотивационный процесс, проводя "
+"периодические оценки эффективности ваших сотрудников. Регулярная оценка "
+"кадров может помочь как вашему сотруднику, так и вашей компании. План оценки"
+" может быть назначен для каждого сотрудника. Эти планы определяют частоту и "
+"способ управления периодической личной оценкой. Ключевые особенности "
+"------------ * Возможность создавать оценку (ы) работника. * Оценка может "
+"быть создана менеджером работника или автоматически на основе плана, который"
+" определяется в форме работника. * Оценка проводится в соответствии с "
+"планом, в котором могут быть созданы различные опросы. Каждому опросу можно "
+"отнести определенный уровень в иерархии работников. Окончательный обзор и "
+"оценка осуществляется менеджером. * Менеджер, коллега, сотрудник и сам "
+"работник получают электронную почту для проведения периодической оценки. * "
+"Каждая форма оценивания, заполненная сотрудниками, коллегами может быть "
+"пересмотрена в формате PDF. * Запросы на собеседования создаются вручную "
+"согласно оценкам работников."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -4095,6 +4326,10 @@ msgid ""
 "\n"
 "This module applies this feature to Leads and Contacts."
 msgstr ""
+"Валидация телефонных номеров ======================== Этот модуль добавляет "
+"функцию валидации и форматирования телефонных номеров соответственно в "
+"страну назначения. Он также обрабатывает национальные и международные "
+"форматирования. Этот модуль использует эту функцию к информации и контактов."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -4179,6 +4414,8 @@ msgid ""
 "Proposes advanced routing options not available in web or base to keep\n"
 "base modules simple.\n"
 msgstr ""
+"Предлагает усовершенствованные параметры маршрутизации, недоступны онлайн "
+"или базовые модули."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -4211,6 +4448,11 @@ msgid ""
 "\n"
 "  "
 msgstr ""
+"Опубликуйте ваши товары на eBay ============================= Интегратор "
+"eBay дает вам возможность управлять вашими товарами Odoo на eBay. Ключевые "
+"особенности ------------ * Публикация товаров на eBay Проверка, релист, "
+"конечные элементы на eBay Интеграция со складскими перемещениями "
+"Автоматическое создание заказов на продажу и счетов"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -4247,6 +4489,10 @@ msgid ""
 "Create some products for which you can re-invoice the costs.\n"
 "This module allow to reinvoice employee expense, by setting the SO directly on the expense.\n"
 msgstr ""
+"Переоформление расходов расходы работников ========================== "
+"Создайте некоторые товары, по которым вы можете переоформить расходы. Этот "
+"модуль позволяет повторно вычислять расходы работников, путем прямого "
+"определения средств на расходы."
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
@@ -4320,6 +4566,10 @@ msgid ""
 "2) Analyse the subscriptions modifications by salesman and compute their value.\n"
 "    "
 msgstr ""
+"Информационная панель подписки продажи =========================== Это "
+"добавляет Информационный панели на: 1) Анализ периодических доходов и других"
+" показателей подписок 2) Анализ модификации подписок продавцом и вычисления "
+"их значения."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_screen
@@ -4362,6 +4612,10 @@ msgid ""
 "See: https://www.bpost.be/portal/goHome\n"
 "    "
 msgstr ""
+"Отправьте вашу отправку через bpost и отслеживайте ее онлайн "
+"========================================= ========= ===== компании, "
+"расположенные в Бельгии, могут воспользоваться преимуществами доставки "
+"местной почтовой компании. See: https://www.bpost.be/portal/goHome"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -4487,6 +4741,13 @@ msgid ""
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
 msgstr ""
+"Испанские планы счетов (PGCE 2008). ============================== * "
+"Определяет следующие шаблоны плана счетов: * Испанский общий план счетов "
+"2008 року * Испанский общий план счетов 2008 для малых и средних компаний * "
+"Испанский общий план счетов 2008 для ассоциаций * Определяет шаблоны НДС для"
+" продажи и покупки * Определяет налоговые шаблоны * Определяет схему "
+"налогообложения для испанского финансового законодательства * Определяет "
+"налоговые отчеты mod 111, 115 и 303"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -4526,6 +4787,10 @@ msgid ""
 "model. Furthermore, you can create a new website form or edit an existing one.\n"
 "\n"
 msgstr ""
+"Студия - Настройте Odoo ======================= Этот аддон позволяет "
+"пользователю отображать все формы веб-сайтов, вопросы по конкретным моделям."
+" Кроме того, вы можете создать новую форму сайта или отредактировать "
+"существующую."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote_subscription
@@ -4573,6 +4838,21 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
+"Швейцарская локализация ================== Этот модуль определяет план "
+"счетов для Швейцарии (швейцарский PME / KMU 2015), налоги и позволяет "
+"создавать ISR при печати счета или отправлять его по почте. ISR будет "
+"сгенерирован, если вы указали необходимую информацию: - Вы должны установить"
+" банковский счет, который вы планируете платить, и иметь действительный "
+"почтовый индекс. - Ваш счет-фактура должен быть установлен, предназначен "
+"банковский счет, чтобы получить платеж (это можно сделать вручную, но "
+"значение по умолчанию автоматически устанавливается, если вы определили "
+"банковский счет). - Вы должны установить почтовые ссылки вашего банка. - Ваш"
+" счет-фактура должен быть в EUR или CHF (поскольку ISR не принимает другие "
+"валюты) Генерирование ISR автоматически, если вы отвечаете предыдущим "
+"критериям. Вот как это работает: - Печать счета-фактуры будет инициировать "
+"загрузки двух файлов: счета-фактуры и его ISR - Нажатие кнопки «Отправить по"
+" почте&quot; присоединит два файла в вашей почтовой черновики: счет-фактуру "
+"и соответствующий ISR."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -4599,6 +4879,11 @@ msgid ""
 "If you use the external timesheet application, this module alows you to synchronize timesheet entries between Odoo and the application.\n"
 "    "
 msgstr ""
+"Синхронизация записей табеля с помощью внешнего приложения табеля. "
+"================================================== "
+"=========================== Если вы используете внешнюю программу для "
+"создания табеля, этот модуль позволит вам синхронизировать данные табеля "
+"между Odoo и программой."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -5366,6 +5651,13 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"Этот модуль добавляет ярлык на одну или несколько случаев возможностей в "
+"CRM. ================================================== "
+"========================= Этот ярлык позволяет генерировать заказы на "
+"продажу на основе выбранного случае. Если разные случаи являются открытыми "
+"(список), он генерирует один заказ на продажу отдельно. Затем этот случай "
+"закрывается и связывается с полученным заказом на продажу. Мы рекомендуем "
+"установить этот модуль, если вы установили Продажи и CRM модули."
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -5380,6 +5672,13 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
 msgstr ""
+"Этот модуль создает необходимый базовый код для полностью интегрированного "
+"портала клиентов. Он содержит класс базового контроллера и базовые шаблоны. "
+"Бизнес-приложения добавят их конкретные шаблоны и контроллеры для расширения"
+" клиентского портала. Этот модуль содержит большинство кодов, поступающих от"
+" odoo v10 site_portal. Цель этого модуля - разрешить показ клиентского "
+"портала без наличия зависимости от возможностей издания и настройки веб-"
+"сайтов."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_sale_closing
@@ -5443,6 +5742,8 @@ msgid ""
 "=================================================================\n"
 "    "
 msgstr ""
+"Этот модуль добавляет функцию пакетного комплектования в управлении составом"
+" ========================================= ========================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -5644,6 +5945,9 @@ msgid ""
 "    - Modify subscriptions with sales orders\n"
 "    - Generate invoice automatically at fixed intervals\n"
 msgstr ""
+"Этот модуль позволяет управлять подписками. Особенности: - Создание и "
+"редактирование подписки - изменение подписки по заказу на продажу - "
+"Автоматическое создание счета-фактуры по фиксированным интервалом"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -5656,6 +5960,12 @@ msgid ""
 "competing offers from different vendors and select the best ones. Blanket orders\n"
 "are agreements you have with vendors to benefit from a predetermined pricing.\n"
 msgstr ""
+"Этот модуль позволяет управлять своими соглашениями о покупке. "
+"================================================== ========= Управление "
+"тендерами и долгосрочными заказами. Приглашение на тендеры используются для "
+"получения конкурирующих предложений от разных продавцов и выбрать лучшие. "
+"Долгосрочные заказы - это соглашения, которые у вас есть с поставщиками, "
+"чтобы получить выгоду от заранее определенного ценообразования."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -5742,6 +6052,9 @@ msgid ""
 "\n"
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
+"Этот модуль дает основу для текстовых сообщений SMS "
+"------------------------------------------ --------- Услуга предоставляется "
+"платформой Odoo в приложении Покупки."
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -5930,6 +6243,9 @@ msgid ""
 "\n"
 "This module provides standard tools (account model, context manager and helpers) to support In-App purchases inside Odoo.\n"
 msgstr ""
+"Этот модуль предоставляет стандартные инструменты (модель учетной записи, "
+"контекстный менеджер и помощники) для поддержки покупки внутри приложения "
+"Odoo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -5981,6 +6297,16 @@ msgid ""
 "still unreserve a picking.\n"
 "    "
 msgstr ""
+"Этот модуль автоматически резервировать комплектования со склада, когда "
+"заказ клиента будет подтверждено ===================================== "
+"============= ===================================== ======= После "
+"подтверждения заказа на продажу или добавления количеств выбрав, что запас "
+"из состава будет зарезервировано, если необходимые количества доступны. В "
+"простейших настройках это простой способ работы: первый пришел - первый "
+"получил. Однако, если не установлено, можно воспользоваться ручным "
+"резервированием или запустить планировщик, где находится система, которая "
+"будет учитывать ожидаемую дату и приоритет. Если этого автоматического "
+"бронирования много, вы можете не реагировать на комплектование."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_delivery_ups
@@ -5998,6 +6324,8 @@ msgid ""
 "This module will test the main workflow of Odoo.\n"
 "It will install some main apps and will try to execute the most important actions.\n"
 msgstr ""
+"Этот модуль проверит основной рабочий процесс Odoo. Он установит некоторые "
+"основные программы и попытается выполнить важнейшие действия."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -6054,6 +6382,13 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"Интеграция с Transifex ===================== Этот модуль добавит ссылки на "
+"проект Transifex в окне перевода. Целью этого модуля является ускорение "
+"переводов основных модулей. Чтобы работать, Odoo использует конфигурационные"
+" файлы Transifex `.tx / config` для выявления источника проекта. "
+"Пользовательские модуля не будут переведены (не опубликовано в главный "
+"проект Transifex). Язык, который пользователь пытается перевести необходимо "
+"включать в проекте Transifex."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -6258,6 +6593,10 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"Интеграция форума сайта для модуля поддержки "
+"========================================= ======== Позвольте вашим командам "
+"иметь соответствующий форум, чтобы ответить на вопросы клиентов. Превращайте"
+" запросы в вопрос на форуме одним нажатием кнопки."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -6287,6 +6626,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"Интеграция живого чата сайта IM для модуля информационной панели "
+"======================================= ================ Особенности: - "
+"Имеет линейный канал, отвечающий вашим клиентам, чтобы ответить на вопрос "
+"вашего клиента. - создает новые заявки с легкостью, используя команды в "
+"канале."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_slides
@@ -6299,6 +6643,10 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"Интеграция слайдов сайта для модуля информационной панели "
+"========================================= ========= Добавьте слайды "
+"презентации к вашей команде, чтобы клиенты, которые ищут помощь, могли их "
+"увидеть перед подачей новых заявок."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -6375,7 +6723,7 @@ msgstr ""
 #: code:addons/base/ir/ir_ui_view.py:1054
 #, python-format
 msgid " - %r in %s=%r"
-msgstr ""
+msgstr " - %r in %s=%r"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -6384,6 +6732,10 @@ msgid ""
 "\n"
 "    Supported documents are SO, PO and invoices/credit notes.\n"
 msgstr ""
+"Модуль для синхронизации документов между несколькими компаниями. Например, "
+"это позволяет автоматически создавать заказ клиента, когда Заказ на покупку "
+"проверяется с другой системой компании поставщика, и наоборот. "
+"Поддерживаемые документы - это SO, PO и счета-фактуры / сторно."
 
 #. module: base
 #: code:addons/model.py:148
@@ -6392,6 +6744,7 @@ msgid ""
 " another model requires the record being deleted. If possible, archive it "
 "instead."
 msgstr ""
+"другая модель требует удаления записи. Если это возможно, архивируйте его."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -6540,6 +6893,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Создать / обновить: обязательное поле не установлено. - Удалить другая "
+"модель требует удаления записи. Если это возможно, архивируйте его."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6599,7 +6954,7 @@ msgstr "-Этот модуль не зависит ни от любого дру
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not exclude any other module."
-msgstr ""
+msgstr "-Этот модуль не исключает ни одного другого модуля."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -6689,11 +7044,17 @@ msgid ""
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env['res.partner'].create({'name': partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
+"<code>Увага</code> : Предупреждение о Исключение для использования с "
+"<code>підняттям</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6710,7 +7071,7 @@ msgstr "<code>dateutil</code>(Модуль Python)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr ""
+msgstr "<code>серед</code> : Среда Odoo, на котором срабатывает действие"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6718,6 +7079,8 @@ msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>:logging function to record debug "
+"information in <code>ir.logging</code> table"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6725,12 +7088,16 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
+"<code>модель</code> Модель Odoo записи, на которой действие является "
+"недействительным набором записей"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
+"<code>запис</code> : запись, на которой действует срабатывания; может быть "
+"недействительным"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6738,6 +7105,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
+"<code>записи</code> : набор всех записей, на которых работает мульти-режима;"
+" может быть недействительным"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6757,11 +7126,13 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>час</code> , <code>датачас</code> , <code>dateutil</code> , "
+"<code>часова зона</code> : полезные библиотеки Python"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<strong><span>Current Rate: </span></strong>"
-msgstr ""
+msgstr "<strong><span>Текущий курс:</span></strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7028,6 +7399,129 @@ msgid ""
 "<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
 "\"O-BTN.validate\" is scanned.\n"
 msgstr ""
+"============================== Документация модуля штрих-кода "
+"=============== =============== Этот модуль содержит утилиты кодирования "
+"штрих-кодов и утилиты сканирования штрих-кодов со стороны клиента. "
+"Кодирования штрих-кодов ============================== Модуль штрих-кодов "
+"определяет номенклатуры штрих-кодов, правила которых идентифицируют "
+"конкретный тип элементов , например товары, местоположения. Он содержит "
+"следующие функции: - шаблоны для идентификации штрих-кодов, содержащих "
+"числовые значения (например, вес, цена) - Определите шрифтовые псевдонимы, "
+"которые позволяют идентифицировать тот же товар с разными штрих-кодами - "
+"неограниченные шаблоны и определения штрих-кодов; - Поддержка кодировок "
+"EAN-13, EAN-8 и UPC-A Кодирование штрих-кодов ----------------- Штрих-код - "
+"это произвольная длинная последовательность символов ASCII. Штрих-код EAN-13"
+" - 13 цифры штрих-кода, чей тринадцатый номер - контрольная сумма. Простые "
+"штрих-коды и правила ------------------------- По номенклатуре по умолчанию "
+"предполагается кодирования EAN-13 для штрих-кодов товара. Он определяет "
+"правило для Единицы товаров, чьи кодирования - EAN-13, а схема которой - "
+"&#39;.&#39;, То есть любой штрих-код соответствует этой схеме. Сканирование "
+"штрих-кода товара, скажем &quot;5410013101703&quot;, соответствует этому "
+"правилу. Итак, отсканированный элемент идентифицируется как единица товара и"
+" изымается из таблицы товаров. Примечание: специальный символ &#39;.&#39; в "
+"шаблонах соответствует любому символу. Чтобы ясно указать &#39;.&#39; символ"
+" в шаблоне, укажите его с &quot;\\&quot;. Символ &#39;\\&#39; также должен "
+"быть указан ( &#39;\\\\&#39;), чтобы быть четко указанным. Давайте теперь "
+"предположим, что мы идентифицируем другие элементы со штрих-кодами, скажем, "
+"места расположения склада. Мы определяем a новое правило в номенклатуре с "
+"соответствующим типом (в нашем примере тип - &quot;Местонахождение&quot;), и"
+" чей рисунок, например, &#39;414.&#39;, то есть любой штрих-код расположения"
+" начинается с &#39;414&#39;. Сканирование штрих-кода местонахождение, скажем"
+" &quot;41401&quot;, отвечает данному правилу расположения, и соответствующее"
+" место извлекается из таблицы расположения Примечание. В правиле есть поле "
+"последовательности, указывающее на порядок оценки правил (ASC). В нашем "
+"предыдущем примере, правило Единицы товара имеет иметь большую "
+"последовательность, чем местонахождение, потому что мы хотим, чтобы "
+"последний был оценен сначала. Штрих-коды с численным содержанием "
+"-------------------------------- штрих-коды могут кодировать числовой "
+"содержимое, которое декодируется модулем штрих -кодов. С этой целью "
+"необходимо определить новое правило для штрих-кодов с числовым содержанием "
+"(например, штрих-коды для взвешенных товаров) Числовой содержание в шаблоне "
+"задан между фигурными скобками (специальные символы &#39;{&#39; и "
+"&#39;}&#39;) Содержание фигурных скобок должно быть последовательностью "
+"&#39; N &#39;(представляет всю часть численного содержания), за которым "
+"следует последовательность &quot;D&quot; (представляет десятичную часть "
+"численного содержания). Например, давайте определим новое правило для "
+"взвешенных товаров, схема которой - &#39;21 ..... (NNDDD). &quot;. С тех пор"
+" мы принимаем кодирования EAN-13 для штрих-кодов товара, кодирование этого "
+"правила должно быть также EAN-13. Давайте теперь предположим, что мы хотим "
+"написать штриховой код для данного взвешенного товара, скажем, апельсинов. "
+"Нам сначала надо определить в апельсинах штрих-код, который будет отвечать "
+"правилу взвешенных товаров. Этот штрих-код должен начинаться с "
+"&quot;21&quot; и быть правильным штрих-кодом EAN-13 (например, тринадцатого "
+"цифра должна быть правильной контрольной суммой). Кроме того, все числовой "
+"содержание должен быть установлен на &quot;0&quot;. Например, давайте "
+"установим штрих-код &#39;2100001000004&#39;. Теперь мы хотим написать штрих-"
+"код для 2.75 кг апельсинов. Этот штрих-код должен быть "
+"&quot;2100001027506&quot; (числовой содержание этого штрих-кода - "
+"&quot;02750&quot;, а правильная контрольная сумма - &quot;6&quot;). При "
+"сканировании этот штрих-код соответствует правилу взвешенных товаров "
+"(поскольку начинается с &quot;21&quot;). Численный содержание вытягивается, "
+"и заменен на последовательность &#39;0&#39;. Затем правильная контрольная "
+"сумма вычисляется для полученного штрих-кода ( &#39;2100001000004&#39;) и "
+"соответствующий товар (апельсины) извлекается из таблицы товаров. "
+"Примечание: специальные символы &#39;{&#39; and &#39;}&#39; в шаблонах "
+"используются для идентификации цифрового содержимого. К явно указать "
+"&#39;{&#39; or &#39;}&#39; в шаблоне, их следует избежать. Strict EAN-13 "
+"поле штрих-кода или номенклатуры ---------------------------------------- "
+"---- Многие полос сканера штрих-кодов ведущего нуля при сканировании штрих-"
+"кодов EAN-13. Номенклатура штрих-кодов имеет булево поле &quot;Использовать "
+"строгий EAN13&quot;. Если False, при попытке сопоставить отсканированный "
+"штрих-код правилу, кодирование которого EAN-13, если штрих-код длины 12 и, "
+"добавив его в 0, последняя цифра является правильной контрольной суммой, мы "
+"автоматически добавляем штрих-код к 0 и попытаемся найдите матч с этим новым"
+" штрих-кодом. Если &quot;Использовать строгий стандарт EAN13&quot; "
+"установлено &quot;Правильно&quot;, мы ищем шаблон соответствующий "
+"оригинальному 12-значном длинном штрих-кода. Сканирование штрих-кодов "
+"============================== сканирования -------- Используйте сканер USB "
+"(имитирующий введение клавиатуры) для работы со штрих-кодами в Odoo. Сканер "
+"должен быть настроен на использование без приставки и возвращения вкладки "
+"как суффикс. Задержка между каждым вводом символа должна быть меньше или "
+"равной 50 миллисекунд. Большинство штрих-кодов сканеры будут работать из "
+"коробки. Однако убедитесь, что сканер использует такую же раскладку "
+"клавиатуры, что и устройство, подключенное к нему. Или устанавливая "
+"раскладку клавиатуры устройства QWERTY США (значение по умолчанию для "
+"большинства читателей) или изменением раскладки клавиатуры сканера (смотрите"
+" пособие). Серийные события ------------------------------ Когда модуль "
+"устанавливает штрих-коды, он устанавливает одиночный класс JavaScript-класса"
+" BarcodeEvents. Целью этого компонента является прослушивание клавиш для "
+"выявления штрих-кодов, а затем отправления этих штрих-кодов на core.bus "
+"внутри &quot;barcode_event&quot;. Все клавишные события буферизуются, пока "
+"не будет больше нажатия клавиши в течение 50 мс или возврат каретки / "
+"вкладки введены (поскольку большинство сканеров штрих-кодов используют это "
+"как суффикс). Если буферизированная ключи выглядят как штрих-код, событие "
+"срабатывает: core.bus.trigger ( &#39;barcode_scanned &quot;, штрих-код) В "
+"противном случае, клавиши &quot;отказываются&quot;. Однако, из соображений "
+"безопасности, программирования происходит нажатие клавиши создан, не "
+"вызывает поведение собственного браузера. По этой причине, BarcodeEvents НЕ "
+"перехватывает нажатия клавиш чья цель - это редактируемый элемент (например,"
+" введение) или при нажатии ctrl / cmd / alt. Чтобы поймать нажатие клавиш, "
+"нацеленные на редактируемый элемент, он должен иметь атрибут barcode_events "
+"= &quot;true&quot;. Преобразователи штрих-кодов "
+"------------------------------ Чтобы веб-клиент был совместим, компоненты, "
+"которые хотят прослушивать события из штрих кодами, должны включать "
+"BarcodeHandlerMixin. Нужен метод on_barcode_scanned (штрих-код), который "
+"будет реализован, и выставляет методы start_listening и stop_listening Пока "
+"он является потомком представления данных, управляемого ViewManager, он "
+"слушает только при добавлении нет. Формат просмотра обработчика штрих-кода "
+"------------------------------ Для просмотра формы можно прослушивать "
+"события штрих-кода, обрабатывать их на стороне клиента и / или на стороне "
+"сервера. Когда штрих-код обрабатывается на стороне сервера, он работает как "
+"на бирже. Соответствующая модель должна включать в себя BarcodeEventsMixin и"
+" переопределить метод on_barcode_scanned. Этот метод получает "
+"отсканированный штриховой код и &quot;self&quot; - это псевдорект, "
+"представляющий содержание вида формы, как и в методах @ api.onchange. Штрих-"
+"коды с дополнительными значениями &quot;O-CMD&quot; или &quot;O-BTN&quot; "
+"зарезервированы для специальных функций, и никогда не передаются на "
+"on_barcode_scanned. Формат просмотра штрих-кода можно расширить, чтобы "
+"добавить обработку на стороне клиента. Пожалуйста, обратитесь к (надеюсь "
+"достаточно хорошо) документированного файла для получения дополнительной "
+"информации. Кнопка обработки штрих-кодов ------------------------------ "
+"Добавьте атрибут &#39;barcode_trigger &quot;к кнопке, чтобы иметь "
+"возможность инициировать его, сканируя штрих-код. Пример: <button "
+"name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/>будет "
+"срабатывать, когда штрих-код содержит скан "
+"&quot;O-BTN.validate&quot;.</button>"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -7107,6 +7601,44 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"========================================== Локализация Odoo Мексика для "
+"Состава / Дополнительных расходов "
+"=========================================== Этот модуль расширяет "
+"функциональность мексиканской локализации для поддержки таможенных номеров, "
+"связанные с дополнительными расходами при создании электронных документов "
+"счета-фактуры Использование ===== Чтобы использовать этот модуль, нужно: * "
+"Создайте новый заказ на приобретение товара из-за границы. Дополнительные "
+"расходы являются возможными только для товаров, настроенных с "
+"&quot;автоматизированной&quot; оценкой методу вычисления &quot;FIFO&quot;. "
+"Метод вычисления настроен в категории товара .. figure :: static / "
+"description / product_landed_cost.png * Получите товар заказ на покупку .. "
+"figure :: static / description / picking_done_purchase.png * Перейдите к "
+"инвентаризации -&gt; Инвентаризация -&gt; Дополнительные расходы * Создайте "
+"новую дополнительный расход с указанием выбора заказ на покупку и номер "
+"таможенной информации (федминто). Расходы на землю являются возможными "
+"только для товаров, настроенных в реальном времени с реальным методом "
+"вычисления. Метод вычисления настроен на категории товара .. figure :: "
+"static / description / landed_cost_picking.png Начните, создавая конкретные "
+"товары для обозначения ваших дополнительных расходов, такие как фрахт, "
+"страхование или таможенные пошлины. Перейдите к инвентаризации -&gt; "
+"Конфигурация -&gt; Типы выходных расходов. Дополнительные расходы являются "
+"возможными только для товаров, настроенных в реальном времени с реальным "
+"методом вычисления. Метод вычисления настроен в категории товара .. figure "
+":: static / description / product_landed_cost.png * Нажмите кнопку "
+"«Вычислить», чтобы узнать, как распределены суммы расходов будут разделены "
+"строкой сбора. .. figure :: static / description / compute_landed_cost.png *"
+" Чтобы подтвердить атрибуцию размещенных расходов, нажмите кнопку "
+"&quot;Проверить&quot;. .. figure :: static / description / "
+"validate_landed_cost.png * Создайте заказ на продажу для товара, "
+"приобретенного за рубежом .. figure :: static / description / "
+"sale_order_new.png * Доставка товара, связанного с заказом на продажу .. "
+"figure: : static / description / picking_done_sale.png * Создайте и "
+"подтвердите новый счет, связанный с заказом на продажу .. figure :: static /"
+" description / validate_invoice_customs.png * Таможенная информация "
+"содержится в строках связанных счетов-фактур с каждым товаром. ... figure ::"
+" static / description / invoice_custom_pedimento.png Проверьте электронный "
+"счет-фактуру, связанный с товаром, где находится узел таможенной информации "
+".. figure :: static / description / invoice_custom_xml.png"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_customs
@@ -7157,11 +7689,53 @@ msgid ""
 "For more information in the `SAT page <http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/cfdv33.pdf>`_. Page 70.\n"
 "For more information in the SAT documentation\n"
 msgstr ""
+"================================================== ===== Локализация Odoo "
+"Мексика для счета-фактуры с индивидуальным номером "
+"=================================== =============== ===== Этот модуль "
+"расширяет функциональность мексиканской локализации для поддержки таможенных"
+" номеров при создании электронного счета-фактуры. Использование ===== Чтобы "
+"использовать этот модуль, нужно: - Создайте счет клиента. - добавьте "
+"персонализированный номер, связанный с таможенной информацией, разделенный "
+"запятыми, если для каждой строки счета-фактуры, связанного с товаром, есть "
+"несколько номеров. Например, с учетом количества ходатайство ** 16 52 3XXX "
+"8000988 **. Номер соответствующего запроса на импорт товара должен быть "
+"зарегистрирован, который интегрирован слева направо следующим образом: "
+"Последние 2 цифры года проверки, за которыми следуют два пробела, 2 цифры "
+"таможенного органа, за которыми следуют два пробела, 4 цифры номера патента,"
+" а затем два пробела, 1 цифра, соответствующая последней цифре текущего "
+"года, за исключением того, что она является объединенным движением, "
+"инициированным в непосредственно предыдущем году или начального движения для"
+" исправления, а затем 6 цифр прогрессивной нумерации таможни. + ------------"
+" + ------------ + --------- + ----------- + - ------- + ------------ + "
+"----------------------- + | Проверка | | таможня | | патент | | Упражнение и"
+" количество | + ============ + ============ + ========= + =========== + = "
+"======= + ============ + ======================= + | 16 | Два пробела | 52 |"
+" Два пробела | 3XXX | Два пробела | 8000988 | + ------------ + ------------ "
+"+ --------- + ----------- + - ------- + ------------ + "
+"----------------------- + С предыдущим значением в патенте нашей петиции. "
+"Эти значения должны совпадать с каталогом SAT таким образом, чтобы: "
+"Проверка: год валидации. Значение позиций 1 и 2 должно быть меньше или таким"
+" же, как последние два цифры года текущей даты, и должно быть больше или "
+"таким же, как последние две цифры года текущей даты, за исключением десяти. "
+"* Таможня код агентства по таможенному оформлению. Позиции пять-шесть должны"
+" соответствовать ключу из каталога таможни (catCFDI: c_Aduana) * Патент: "
+"позиции от девяти до двенадцати должны соответствовать патентном номера "
+"каталога таможенных патентов (catCFDI: c_PatenteAduanal) Упражнение: "
+"последняя цифра текущего года, за исключением случаев , когда она состоит из"
+" объединенного движения, начатого непосредственно прошлым годом или "
+"оригинального предложения по исправлению) * Количество: значение последних "
+"шести цифр должно быть между минимальным значением 1 и максимальным "
+"значением последовательных чисел в колонке каталога catCFDI: "
+"c_NumPedimentoAduana каталога каталога, которые соответствуют тем, которые "
+"используются таможней в этом году. - Проверьте счет-фактуру Дополнительную "
+"информацию можно найти на странице SAT "
+"<http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/cfdv33.pdf>"
+" _. Страница 70. Для получения дополнительной информации в документации SAT"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
 msgid "A AGRICULTURE, FORESTRY AND FISHING"
-msgstr ""
+msgstr "СЕЛЬСКОЕ ХОЗЯЙСТВО, ЛЕСНОЕ И РЫБАЛКА"
 
 #. module: base
 #: code:addons/models.py:2826
@@ -7215,7 +7789,7 @@ msgstr "Модуль для тестирования API."
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
 msgid "A module to test the RPC requests."
-msgstr ""
+msgstr "Модуль для тестирования запросов RPC."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -7225,7 +7799,7 @@ msgstr "Модуль для проверки неустановленных ко
 #. module: base
 #: model:ir.module.module,description:base.module_test_translation_import
 msgid "A module to test translation import."
-msgstr ""
+msgstr "Модуль для проверки импорта перевода."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
@@ -8222,7 +8796,7 @@ msgstr "Аргентина- Бухгалтерские Отчёты"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
 msgid "Arguments sent to the client along with the view tag"
-msgstr ""
+msgstr "Аргументы, направленные клиенту вместе с тегом просмотра"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -8421,7 +8995,7 @@ msgstr "Азербайджан"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
 msgid "B MINING AND QUARRYING"
-msgstr ""
+msgstr "Б МАЙНИНГ И ПРОИЗВОДСТВО"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -8535,12 +9109,12 @@ msgstr "Банковский счёт"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_payment_bank
 msgid "Bank account in the payments"
-msgstr ""
+msgstr "Банковский счет в платежах"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment_bank
 msgid "Bank account payment to Mexico"
-msgstr ""
+msgstr "Оплата банковским счетом в Мексику"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank_acc_type
@@ -8579,12 +9153,12 @@ msgstr "Драйвер для установки сканера, считыва�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr ""
+msgstr "Штрих-код в мобильном устройстве"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr ""
+msgstr "Сканирование штрих-кода мобильным устройством"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
@@ -8666,7 +9240,7 @@ msgstr "Базовый 2D-просмотр сетки для odoo"
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr ""
+msgstr "Основные модели и помощники для поддержки покупки приложения."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_deposit
@@ -8676,7 +9250,7 @@ msgstr "Пакетный депозит"
 #. module: base
 #: selection:res.country,name_position:0
 msgid "Before Address"
-msgstr ""
+msgstr "перед адресу"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -8689,6 +9263,8 @@ msgstr "Перед суммой"
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
 msgstr ""
+"Прежде чем нажать &quot;Изменить пароль&quot;, вам нужно будет написать "
+"новый пароль."
 
 #. module: base
 #: model:res.country,name:base.by
@@ -8738,7 +9314,7 @@ msgstr "Бельгия - Платежная ведомость"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
 msgid "Belgium - Payroll - Fleet"
-msgstr ""
+msgstr "Бельгия - Зарплата - Автотранспорт"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
@@ -8955,7 +9531,7 @@ msgstr "От"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
 msgid "C MANUFACTURING"
-msgstr ""
+msgstr "C ПРОИЗВОДСТВО"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -9162,7 +9738,7 @@ msgstr "Сменить пароль"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_form
 msgid "Change the way addresses are displayed in reports"
-msgstr ""
+msgstr "Измените способ отображения адресов в отчетах"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:345
@@ -9327,6 +9903,8 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
+"Выберите сопровождение партнеров, который включает только поля адреса, чтобы"
+" изменить то, как пользователи смогут вводить адреса."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_encryption
@@ -9467,7 +10045,7 @@ msgstr "Совместные планшеты"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
 msgid "Collect payments from your customers through SEPA direct debit."
-msgstr ""
+msgstr "Собирайте платежи от своих клиентов через прямой дебет SEPA."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -9718,7 +10296,7 @@ msgstr "Шаги мастера настроек"
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
 msgid "Config: Run Remaining Action Todo"
-msgstr ""
+msgstr "Настройки: запустите остаточную действие Сделать"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_reporting_config
@@ -9800,7 +10378,7 @@ msgstr "Тип ограничения"
 #: code:addons/model.py:153
 #, python-format
 msgid "Constraint:"
-msgstr ""
+msgstr "ограничения:"
 
 #. module: base
 #: sql_constraint:ir.model.constraint:0
@@ -9811,7 +10389,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
-msgstr ""
+msgstr "Создание"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
@@ -9942,7 +10520,7 @@ msgstr "Невозможно создать контакт без адреса �
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_count
 msgid "Count (incl. archived)"
-msgstr ""
+msgstr "Подсчет (в том числе архивированный)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -10041,7 +10619,7 @@ msgstr "Создание задач из контактной формы."
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_project
 msgid "Create Tasks from Leads"
-msgstr ""
+msgstr "Создайте задачи по лидов"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_menu_create
@@ -10356,7 +10934,7 @@ msgstr "Подблок валюты"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_currency_subunit_label
 msgid "Currency Subunit Name"
-msgstr ""
+msgstr "Название субъединицы валюты"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_currency_unit_label
@@ -10430,7 +11008,7 @@ msgstr "Названия пользовательских полей должн�
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_name_position
 msgid "Customer Name Position"
-msgstr ""
+msgstr "Позиция имя клиента"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal
@@ -10496,12 +11074,12 @@ msgstr "Берег 🐘 Слоновой Кости"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_D
 msgid "D ELECTRICITY,GAS,STEAM AND AIR CONDITIONING SUPPLY"
-msgstr ""
+msgstr "D ЭЛЕКТРОЭНЕРГИЯ, ГАЗ, ТОПЛИВО И ПРЕДПРИЯТИЕ С ПОВИТРИЗАЦИИ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
 msgid "DHL Express Shipping"
-msgstr ""
+msgstr "Экспресс доставка DHL"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -10682,7 +11260,7 @@ msgstr "Доходы будущих периодов"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_asset
 msgid "Deferred Revenues Management for Subscriptions"
-msgstr ""
+msgstr "Управление доходами будущих периодов для подписок"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
@@ -10761,7 +11339,7 @@ msgstr "Зависимость"
 #. module: base
 #: model:ir.module.module,description:base.module_test_pylint
 msgid "Deprecated empty module in favor of test-lint."
-msgstr ""
+msgstr "Устаревший пустой модуль в пользу test-lint."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_description
@@ -10978,7 +11556,7 @@ msgstr "Отображаемое Имя"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
 msgid "Display Website Elements in Studio"
-msgstr ""
+msgstr "Отображать элементы сайта в Студии"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_header_line
@@ -10989,6 +11567,8 @@ msgstr "Отобразить строку заголовка"
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Display an option in the 'More' top-menu in order to run this action."
 msgstr ""
+"Отразите параметр в верхнем меню &quot;Больше&quot;, чтобы запустить это "
+"действие."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -11027,6 +11607,11 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"Отразите формат для использования адресов, принадлежащих этой стране. Вы "
+"можете использовать строку стиля python со всеми полями адреса (например, "
+"используйте &#39;% (street) s&#39; to чтобы отобразить поле "
+"&quot;street&quot;) плюс% (state_name) s: название региона% (state_code) s "
+"код региона% (country_name) s: название страны% (country_code) s код страны"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
@@ -11068,7 +11653,7 @@ msgstr "Модель документа"
 #: code:addons/models.py:2888
 #, python-format
 msgid "Document type:"
-msgstr ""
+msgstr "Тип документа:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
@@ -11130,6 +11715,7 @@ msgstr "Прямые поставки"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
+"Дублирование компании запрещено. Вместо этого создайте новую компанию."
 
 #. module: base
 #: code:addons/base/ir/ir_qweb/fields.py:394
@@ -11141,6 +11727,7 @@ msgstr "Срок действия не может быть отрицатель�
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
 msgid "E WATER SUPPLY;SEWERAGE,WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr ""
+"Е ВОДОСНАБЖЕНИЯ, РЕШЕНИЯ, УТИЛИЗАЦИЯ ОТХОДОВ И Регистрационная деятельность"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_cancellation
@@ -11304,21 +11891,84 @@ msgid ""
 "This is the same case that in the previous one, but extra after that the\n"
 "invoice is open again, the PAC status must be updated to 'Signed.'\n"
 msgstr ""
+"Отмена EDI ================ Этот модуль добавляет следующие функции в "
+"процессе отмены: 1. Добавлена кнопка для запроса на отмену в SAT. 2. Процесс"
+" отмены в Odoo, может выполняться только тогда, когда статус SAT отменяется."
+" 3. Кнопка отмены в счете-фактуре является манекеном, если счет не отменен в"
+" SAT. Новый процесс отмены? -------------------------------- Новая кнопка "
+"`(запрос на отмену)` была добавлена в просмотре счета, с &quot; является, "
+"когда счет открывается, а `статус PAC` на` Пидписано` при нажатии на новую "
+"кнопку направляется CFDI к PAC, чтобы попытаться отменить это в системе SAT."
+" Но не разрешается отменить счет в Odoo пока она не будет должным образом "
+"отменена в SAT. (Это автоматическая действие, которое выполняется в "
+"системе). Если любой счет отменяется в SAT, а пользователь не может ждать "
+"крон, необходимо нажать кнопку `Скасувати`, и будет отменено. Случаи "
+"поддерживает модуль? --------------------------------------------- ** Случай"
+" 1 * * + ---------- + --------- + | система | этап | + ========== + "
+"========= + | Odoo | открыто | + ---------- + --------- + | PAC | Подписано "
+"| + ---------- + --------- + | SAT | действительный | + ---------- + "
+"--------- + Это случай, когда счет-фактура должным образом подписан в "
+"системе SAT. Для отмены необходимо нажать кнопку `Пригласить скасування`, "
+"чтобы проверить, эффективно CFDI раньше не отменено в системе SAT, и будет "
+"отправлено на отмену в SAT. После запроса об отмене могут возникнуть "
+"следующие случаи: * Процесс отмены прошел успешно * + ---------- + "
+"------------ + | система | этап | + ========== + ============ + | Odoo | "
+"открыто | + ---------- + ------------ + | PAC | отменено | + ---------- + "
+"------------ + | SAT | действительный | + ---------- + ------------ + В этом"
+" случае система выполнит следующие действия: 1. Действие приведет к "
+"обновлению статуса PAC (до отмененного). 2. Будет вызвано метод, который "
+"попытается отменить счет-фактуру в Odoo. * Процесс отмены невозможно "
+"завершить * + ---------- + ------------ + | система | этап | + ========== + "
+"============ + | Odoo | открыто | + ---------- + ------------ + | PAC | "
+"Отменить | + ---------- + ------------ + | SAT | действительный | + "
+"---------- + ------------ + В этом случае система ждет систему PAC и "
+"выполняет следующее действие: 1. Будет вызвано метод, чтобы проверить, было "
+"ли правильно отменено CFDI в системе SAT, а когда статус SAT "
+"&quot;Отменены&quot;, попытается отменить счет-фактуру в Odoo. ** Случай 2 "
+"** + ---------- + ------------ + | система | этап | + ========== + "
+"============ + | Odoo | открыто | + ---------- + ------------ + | PAC | "
+"Отменить | + ---------- + ------------ + | SAT | действительный | + "
+"---------- + ------------ + Этот случай тот же, что и в предыдущем случае, "
+"когда процесс отмены невозможно завершить. Если заказчик не принимает отмены"
+" CFDI, процесс отмены должен быть прерван, а счет-фактура должен быть "
+"возвращен к подписанию. Для этого в счете-фактуре &quot;Отменить CFDI&quot; "
+"было добавлено действие, которое можно вызвать в &quot;Операции&quot;. ** "
+"Случай 3 ** + ---------- + ------------ + | система | этап | + ========== + "
+"============ + | Odoo | открыто | + ---------- + ------------ + | PAC | "
+"Отменить | + ---------- + ------------ + | SAT | отменено | + ---------- + "
+"------------ + Система выполняет запланированную действие, отменит счет-"
+"фактуру в Odoo, и в этом процессе статус PAC должен быть обновлен на "
+"&quot;Отменены &quot;. ** Случай 4 ** + ---------- + ------------ + | "
+"система | этап | + ========== + ============ + | Odoo | Отменить | + "
+"---------- + ------------ + | PAC | Подписано | + ---------- + ------------ "
+"+ | SAT | действительный | + ---------- + ------------ + Система выполняет "
+"запланированные действия, которые проверят, статус SAT на "
+"&quot;Действительно&quot;, и если да, счет-фактура должен быть возвращен в "
+"&quot;Открыто&quot; (без создания нового CFDI). Для этого: 1. Если в счете-"
+"фактуре нет записей в журнале, будет создан новый, а состояние счетов-фактур"
+" нужно изменить на `Видкрито`. 2. Если запись журнала в счете-фактуре имеет "
+"восстановление, он будет упразднен, а состояние счетов-фактур нужно изменить"
+" на `Видкрито`. ** Случай 5 ** + ---------- + ------------ + | система | "
+"этап | + ========== + ============ + | Odoo | отменено | + ---------- + "
+"------------ + | PAC | Отменить | + ---------- + ------------ + | SAT | "
+"действительный | + ---------- + ------------ + Это тот самый случай, что и в"
+" предыдущем, но дополнительно после этого счет-фактура снова откроется, "
+"статус PAC должен быть обновлен к &quot;Подписано&quot;."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_cancellation
 msgid "EDI Cancellation for Mexican Localization"
-msgstr ""
+msgstr "Отмена EDI для мексиканской локализации"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_external_trade
 msgid "EDI External Trade Complement for Mexico"
-msgstr ""
+msgstr "EDI Внешнее торговое дополнение для Мексики"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment
 msgid "EDI Payment"
-msgstr ""
+msgstr "оплата EDI"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_payment
@@ -11330,11 +11980,15 @@ msgid ""
 "which established that a payment complement can be emitted ten (10) days after,\n"
 "of the same month, when was received.\n"
 msgstr ""
+"Оплата EDI =========== Этот платежный модуль для мексиканской локализации "
+"позволяет удовлетворить индикацию SAT которая устанавливает дополнение к "
+"платежу и может быть выпущена через десять (10) дней после того же месяца, "
+"когда было получено."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi
 msgid "EDI for Mexico"
-msgstr ""
+msgstr "EDI для Мексики"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -11441,6 +12095,23 @@ msgid ""
 "* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
 "* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 msgstr ""
+"Электронный бухучет для Мексики и финансовые отчеты "
+"=========================================== ======== Добавьте финансовые "
+"отчеты в электронной мекисканського сч - COA - Пробный баланс - Элементы "
+"журнала Добавьте другие оперативные отчеты такие, как DIOT. - DIOT Известны "
+"особенности: - Сохраните созданный XML, чтобы сделать доступной историю "
+"поданных документов бюджета. - единичные тесты, чтобы увеличить охват этого "
+"модуля и избежать регрессам в будущем. Примечания: ------ - В налогам можно "
+"установить счет &quot;Базовый налог полученного счета&quot;, то есть счет, "
+"который будет установлен на строках, созданных с помощью журнала в кассе и в"
+" журнале используется для отслеживания суммы налоговой базы, этот счет не "
+"учитывает мексиканские отчеты. Настройка ============= Чтобы настроить этот "
+"модуль, настоятельно рекомендуется, чтобы ваш план счетов зависел от данных "
+"и структуры l10n_mx. вы можете установить это после того, если CoA не "
+"зависит от того, что делает l10n_mx, но вам понадобится дополнительная "
+"ручная работа. Кредиты ======= ** Авторы ** * номар Хернандес "
+"<nhomar@vauxoo.com> (Планировщик / Аудитор) * Луи Торрес <luis_t@vauxoo.com>"
+" (Разработчик)"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:647
@@ -11472,7 +12143,7 @@ msgstr "Шлюз эл.почты"
 #: model:ir.module.category,name:base.module_category_mass_mailing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr ""
+msgstr "Email-маркетинг"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11517,7 +12188,7 @@ msgstr "Пустая зависимость в %r"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
 msgid "Energy supply"
-msgstr ""
+msgstr "энергоснабжение"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -11546,7 +12217,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
 msgid "Entertainment"
-msgstr ""
+msgstr "Развлечения"
 
 #. module: base
 #: model:res.country,name:base.gq
@@ -11653,12 +12324,12 @@ msgstr "Сканирование штрих-кодов событий"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode_mobile
 msgid "Event Barcode in Mobile"
-msgstr ""
+msgstr "Штрих-код события на мобильном устройстве"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode_mobile
 msgid "Event Barcode scan in Mobile"
-msgstr ""
+msgstr "Сканирование штрих-кода на мобильном устройстве"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_event_management
@@ -11678,7 +12349,7 @@ msgstr "События-продажи"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Example of Python code"
-msgstr ""
+msgstr "Пример кода Python"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification_sale_crm
@@ -11706,23 +12377,23 @@ msgstr "Примеры"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion_exclusion_id
 msgid "Exclusion Module"
-msgstr ""
+msgstr "модуль исключения"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion_ids
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Exclusions"
-msgstr ""
+msgstr "исключение"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category_exclusive
 msgid "Exclusive"
-msgstr ""
+msgstr "исключительный"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view_form
 msgid "Execute Every"
-msgstr ""
+msgstr "выполнить каждый"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -11818,6 +12489,10 @@ msgid ""
 "When Formula type is selected, this field may be a Python expression  that can use the same values as for the code field on the server action.\n"
 "If Value type is selected, the value will be used directly without evaluation."
 msgstr ""
+"Выражение, содержащее спецификацию значения. При выборе тип Формулы, это "
+"поле может быть выражением Python, который может использовать те же "
+"значения, что и для поля кода в действии сервера. При выборе тип Значение, "
+"значение будет использовано непосредственно без оценки."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
@@ -11871,7 +12546,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_external_trade
 msgid "External Trade Complement for the Mexican localization"
-msgstr ""
+msgstr "Внешняя торговая программа для мексиканской локализации"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_external_trade
@@ -12051,12 +12726,12 @@ msgstr "Доп. инструменты"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
 msgid "Extraterritorial"
-msgstr ""
+msgstr "экстратерриториальный"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
 msgid "F CONSTRUCTION"
-msgstr ""
+msgstr "F СТРОИТЕЛЬСТВО"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:128
@@ -12065,7 +12740,7 @@ msgid ""
 "Failed to encode the address %s\n"
 "from mail header:\n"
 "%s"
-msgstr ""
+msgstr "Не удалось кодировать адрес% s из заголовка письма:% s"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -12215,6 +12890,7 @@ msgstr "Поле \"Тип\" не может быть изменено на мо�
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
+"Поле% r использовано в атрибутах, должно быть видимым, но отсутствующим:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
@@ -12394,7 +13070,7 @@ msgstr "Фильтры видимые только для одного поль�
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_K
 msgid "Finance/Insurance"
-msgstr ""
+msgstr "Финансы / Страхование"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
@@ -12433,6 +13109,14 @@ msgid ""
 "3. The trial balance Month 13 report must be generated with dates for all the\n"
 "   fiscal year to report.\n"
 msgstr ""
+"Финансовые отчеты для закрытия периода ================================ "
+"Отчет о пробный баланс дополняется, чтобы позволить генерировать закрытия "
+"периода (напр ., проведение 13-го месяца) Настройка ============= Шаги для "
+"получения отчета: 1. Запись в журнале для перемещения должен быть создан "
+"вручную с датой окончания отчетного периода, заканчивается. И должен быть "
+"опубликованным. 2. Эта проводка должна быть обозначена как закрытие периода "
+"для отчетного периода. 3. Отчет о пробный баланс 13-го месяца должен быть "
+"создан с датами для отчета всего отчетного периода."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
@@ -12527,7 +13211,7 @@ msgstr "Форма"
 #: selection:ir.actions.report,binding_type:0
 #: selection:ir.actions.server,binding_type:0
 msgid "Form-only"
-msgstr ""
+msgstr "только форма"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
@@ -12664,6 +13348,8 @@ msgstr "Функция"
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
 msgid "G WHOLESALE AND RETAIL TRADE;REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
 msgstr ""
+"G ОПТОВАЯ И РОЗНИЧНАЯ ТОРГОВЛЯ, РЕМОНТ МОТОРНЫХ ТРАНСПОРТНЫХ СРЕДСТВ И "
+"МОТОЦИКЛОВ"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -12688,22 +13374,22 @@ msgstr "GPL версии 3 или позже"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase
 msgid "GST Purchase Report"
-msgstr ""
+msgstr "Отчет о покупке GST"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale
 msgid "GST Sale Report"
-msgstr ""
+msgstr "Отчет о продаже GST"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_stock
 msgid "GST Stock Report"
-msgstr ""
+msgstr "Отчет о составе GST"
 
 #. module: base
 #: model:res.country,vat_label:base.in
 msgid "GSTIN"
-msgstr ""
+msgstr "GSTIN"
 
 #. module: base
 #: model:res.country,name:base.ga
@@ -12757,7 +13443,7 @@ msgstr "Общие настройки"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Создать отсутствуют условия"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
@@ -12812,7 +13498,7 @@ msgstr "Гибралтар"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_github
 msgid "Github Integration with Discuss"
-msgstr ""
+msgstr "Интеграция Github по обсуждению"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_global
@@ -13070,7 +13756,7 @@ msgstr "Гуана"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_H
 msgid "H TRANSPORTATION AND STORAGE"
-msgstr ""
+msgstr "H И ХРАНЕНИЕ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_maintenance
@@ -13080,7 +13766,7 @@ msgstr "HR - оборудование"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
 msgid "HR Contract Salary (Belgium)"
-msgstr ""
+msgstr "Зарплатный контракт кадров (Бельгия)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gamification
@@ -13090,12 +13776,12 @@ msgstr "HR Игрофикация"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_org_chart
 msgid "HR Org Chart"
-msgstr ""
+msgstr "Организационный план кадров"
 
 #. module: base
 #: model:res.country,vat_label:base.ca
 msgid "HST"
-msgstr ""
+msgstr "HST"
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -13150,7 +13836,7 @@ msgstr "Расположение заголовка"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
 msgid "Health/Social"
-msgstr ""
+msgstr "Медицина / Социалка"
 
 #. module: base
 #: model:res.country,name:base.hm
@@ -13172,7 +13858,7 @@ msgstr "Помощь для настройки приложения"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Help with Python expressions"
-msgstr ""
+msgstr "Помощь с выражениями Python"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_helpdesk
@@ -13183,7 +13869,7 @@ msgstr "Техподдержка"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
 msgid "Helpdesk Timesheet"
-msgstr ""
+msgstr "Табель поддержки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
@@ -13268,7 +13954,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_holidays
 msgid "Helps you manage your leaves."
-msgstr ""
+msgstr "Помогает управлять вашими отпусками."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing
@@ -13384,7 +14070,7 @@ msgstr "Часы"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_T
 msgid "Households"
-msgstr ""
+msgstr "домохозяйства"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_numbercall
@@ -13409,7 +14095,7 @@ msgstr "Кадровый наем форма интервью"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resource
 msgid "Human Resource"
-msgstr ""
+msgstr "управление кадрами"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_survey
@@ -13434,7 +14120,7 @@ msgstr "Венгрия"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
-msgstr ""
+msgstr "I ДЕЯТЕЛЬНОСТЬ ОБСЛУЖИВАНИЕ И Срок годности ПРОДУКЦИИ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
@@ -13576,7 +14262,7 @@ msgstr "ИТ услуги"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_J
 msgid "IT/Communication"
-msgstr ""
+msgstr "IT / Связь"
 
 #. module: base
 #: model:res.country,name:base.is
@@ -13613,6 +14299,9 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
+"Если это разрешено, полный выход секций SMTP будет записан в журнал сервера "
+"на уровне DEBUG (это очень многословно и может содержать конфиденциальную "
+"информацию!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -13650,7 +14339,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default_condition
 msgid "If set, applies the default upon condition."
-msgstr ""
+msgstr "Если установлено, применяется значение по умолчанию."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -13791,12 +14480,12 @@ msgstr "Приложения, на которые это повлияет"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_model_ids
 msgid "Impacted data models"
-msgstr ""
+msgstr "Закрепленные модели данных"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_module_ids
 msgid "Impacted modules"
-msgstr ""
+msgstr "закреплены модули"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_implementation
@@ -13857,7 +14546,7 @@ msgstr "Импортировать курсы обмена из интернет
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_flow
 msgid "Improved Cash Flow Statement"
-msgstr ""
+msgstr "Улучшенный отчет о движении денежных средств"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_modules
@@ -13910,12 +14599,12 @@ msgstr "Индия - Бухгалтерские Отчёты"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_purchase
 msgid "Indian - Purchase Report(GST)"
-msgstr ""
+msgstr "Индия - Отчет о покупке (GST)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_sale
 msgid "Indian - Sale Report(GST)"
-msgstr ""
+msgstr "Индия - Отчет о продаже (GST)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_schedule6
@@ -13925,7 +14614,7 @@ msgstr "Индия - Таблица VI Бухгалтерский учет"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_stock
 msgid "Indian - Stock Report(GST)"
-msgstr ""
+msgstr "Индия - Складской отчет (GST)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -13950,7 +14639,7 @@ msgstr "Индонезия"
 #: model:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr ""
+msgstr "промышленность"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_info
@@ -14012,7 +14701,7 @@ msgstr "Встроенный Редактор"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_view_id
 msgid "Input View"
-msgstr ""
+msgstr "входной просмотр"
 
 #. module: base
 #: code:addons/base/module/module.py:436
@@ -14087,12 +14776,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
 msgid "Integrate coupon mechanism in sales orders."
-msgstr ""
+msgstr "Интегрируйте механизм купонов в заказах на продажу."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_delivery
 msgid "Integrate coupon mechanism with shipping costs."
-msgstr ""
+msgstr "Интегрируйте механизм купонов с расходами на доставку."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_coupon
@@ -14203,7 +14892,7 @@ msgstr ""
 #: code:addons/base/ir/ir_default.py:68
 #, python-format
 msgid "Invalid field %s.%s"
-msgstr ""
+msgstr "Недействительно поле% s.% S"
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -14248,7 +14937,7 @@ msgstr "Неправильный тип"
 #: code:addons/base/ir/ir_default.py:70
 #, python-format
 msgid "Invalid value for %s.%s: %s"
-msgstr ""
+msgstr "Недопустимое значение для% s.% S:% s"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:343
@@ -14295,7 +14984,7 @@ msgstr "Счета и платежи"
 #: model:ir.module.category,name:base.module_category_invoicing_management
 #: model:ir.module.module,shortdesc:base.module_account_invoicing
 msgid "Invoicing Management"
-msgstr ""
+msgstr "управление счетами"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -14363,7 +15052,7 @@ msgstr "Италия - Учет"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
 msgid "J INFORMATION AND COMMUNICATION"
-msgstr ""
+msgstr "J ИНФОРМАЦИЯ И СВЯЗЬ"
 
 #. module: base
 #: model:res.country,name:base.jm
@@ -14424,7 +15113,7 @@ msgstr "Своевременное Планирование"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
 msgid "K FINANCIAL AND INSURANCE ACTIVITIES"
-msgstr ""
+msgstr "К ФИНАНСОВАЯ И СТРАХОВАЯ ДЕЯТЕЛЬНОСТЬ"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -14495,7 +15184,7 @@ msgstr "Киргизия"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_L
 msgid "L REAL ESTATE ACTIVITIES"
-msgstr ""
+msgstr "L ДЕЯТЕЛЬНОСТЬ НЕДВИЖИМОСТИ"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -14843,7 +15532,7 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
 msgid "Layout in Reports"
-msgstr ""
+msgstr "Макет в отчетах"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_lead_automation
@@ -14858,7 +15547,7 @@ msgstr "Лид-скоринг"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project
 msgid "Lead to Tasks"
-msgstr ""
+msgstr "Лед на задание"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -14933,7 +15622,7 @@ msgstr "Лесото"
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
 msgid "Let returning shoppers save products in a wishlist"
-msgstr ""
+msgstr "Пусть покупатели, возвращаются, хранят товары в список пожеланий"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -14986,6 +15675,9 @@ msgid ""
 "\n"
 " * UPDATE ME\n"
 msgstr ""
+"Свяжите счет и платеж и добавьте платеж к порталу Предоставьте инструменты "
+"для платежа, связанного со счетом как и функции портала, чтобы включить "
+"платеж. * Обновление МЕНЯ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_payment
@@ -15013,7 +15705,7 @@ msgstr "Трекер ссылок"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
-msgstr ""
+msgstr "Объедините модуль между Точкой продажи и продажи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast_sale
@@ -15155,7 +15847,7 @@ msgstr "Люксембург - Бухгалтерские отчеты"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
 msgid "M PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
-msgstr ""
+msgstr "М ПРОФЕССИОНАЛЬНАЯ, НАУЧНАЯ И ТЕХНИЧЕСКАЯ ДЕЯТЕЛЬНОСТЬ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_byproduct
@@ -15302,6 +15994,33 @@ msgid ""
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
 msgstr ""
+"Управление приложениями для подбора персонала и рабочих мест "
+"--------------------------------------- Публикуйте, рекламируйте и "
+"организовывайте свои предложения работы с Odoo <a "
+"href=\"https://www.odoo.com/page/recruitment\">Заявление о подборе персонала"
+" с открытым кодом</a> . Организуйте вашу работу, рекламируйте вашу работу, "
+"объявляйте и отслеживайте подачи заявки легко. Следите за каждым заявителем "
+"и создавайте базу данных навыков и профилей из индексированных документами. "
+"Опубликуйте вашу работу на лучших страницах вакансий "
+"--------------------------------- Автоматическое подключение к самым "
+"известным веб-сайтов рабочей группы; linkedIn, Monster, Craigslist ... В "
+"каждом рабочем месте новая электронный адрес автоматически предназначена "
+"автоматически направлять программы на нужную должность. Если кандидаты "
+"обращаются к вам по электронной почте или с помощью онлайн-формы, вы "
+"получите все данные, которые автоматически индексируются (резюме, "
+"мотивационное письмо), и вы можете ответить просто нажимая повторно "
+"используя шаблоны ответов. Настройте ваш процесс рекрутинга "
+"---------------------------------- Используйте вид канбан и настройте шаги "
+"процесса подбора персонала; предварительная квалификация, первое "
+"собеседование, вторая собеседование, переговоры ... Получите точные "
+"статистические данные о конвейер набора. Получите отчеты для сравнения "
+"эффективности ваших различных инвестиций на внешних стринках вакансий. "
+"Упростите процесс подбора персонала ----------------------------------- "
+"Следите за заявителями в вашем процессе набора с учетом смарт канбан. "
+"Сохраните время, автоматизовуючы некоторые связи с шаблонами электронной "
+"почты. Документы, как резюме и мотивационные письма, индексируются "
+"автоматически, что позволяет легко находить для конкретных навыков и "
+"создавать базы данных о профиле."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -15343,6 +16062,8 @@ msgid ""
 "Manage sectors of activity to better classify partners for tracking and "
 "analysis purposes."
 msgstr ""
+"Управляйте секторами деятельности, чтобы лучше классифицировать партнеров "
+"для целей отслеживания и анализа."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -15363,7 +16084,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll
 msgid "Manage your employee payroll records"
-msgstr ""
+msgstr "Управляйте записями зарплаты работников"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
@@ -15449,12 +16170,12 @@ msgstr "Темы Массовой Рассылки"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event
 msgid "Mass mailing on attendees"
-msgstr ""
+msgstr "Массовая рассылка участникам"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track
 msgid "Mass mailing on track speakers"
-msgstr ""
+msgstr "Массовая рассылка на отслеживание спикеров"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -15558,6 +16279,8 @@ msgid ""
 "Methods that start with `get_default_` are deprecated. Override `get_values`"
 " instead(Method %s)"
 msgstr ""
+"Методы, начинающиеся с `get_default_`, устарели. Переопределите `get_values`"
+" вместо (метод% s)"
 
 #. module: base
 #: code:addons/base/res/res_config.py:544
@@ -15566,12 +16289,14 @@ msgid ""
 "Methods that start with `set_` are deprecated. Override `set_values` instead"
 " (Method %s)"
 msgstr ""
+"Методы, которые начинаются с `set_`, устарели. Переопределите `set_values` "
+"вместо (метод% s)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_payment
 msgid "Mexican Localization for EDI documents"
-msgstr ""
+msgstr "Мексиканская локализация для документов EDI"
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -15596,7 +16321,7 @@ msgstr "Тип Mime"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
 msgid "Mining"
-msgstr ""
+msgstr "добыча"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -15764,13 +16489,13 @@ msgstr "Модель не найдена: %(model)s"
 #: model:ir.model.fields,help:base.field_ir_act_server_model_id
 #: model:ir.model.fields,help:base.field_ir_cron_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Модель, на которой выполняется действие сервера."
 
 #. module: base
 #: code:addons/model.py:142 code:addons/model.py:152
 #, python-format
 msgid "Model:"
-msgstr ""
+msgstr "модель:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -15841,7 +16566,7 @@ msgstr "Зависимость модуля"
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
-msgstr ""
+msgstr "модуль исключения"
 
 #. module: base
 #: code:addons/convert.py:832
@@ -15867,7 +16592,7 @@ msgstr "Модули"
 #: code:addons/base/module/module.py:410
 #, python-format
 msgid "Modules \"%s\" and \"%s\" are incompatible."
-msgstr ""
+msgstr "Модули &quot;% s&quot; и &quot;% s&quot; несовместимы."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -15973,12 +16698,12 @@ msgstr "Мьянма"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
 msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
-msgstr ""
+msgstr "N Административная деятельность и деятельность ПОДДЕРЖКИ"
 
 #. module: base
 #: model:res.country,vat_label:base.gt
 msgid "NIT"
-msgstr ""
+msgstr "NIT"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_name
@@ -16144,7 +16869,7 @@ msgstr "Ниуэ"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "No Record Found"
-msgstr ""
+msgstr "Не найдено записей"
 
 #. module: base
 #: code:addons/models.py:1352
@@ -16280,6 +17005,7 @@ msgstr "Количество обновленных модулей"
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O PUBLIC ADMINISTRATION AND DEFENCE;COMPULSORY SOCIAL SECURITY"
 msgstr ""
+"O ОБЩЕСТВЕННАЯ АДМИНИСТРАЦИЯ И ОБОРОНА; Обязательное социальное БЕЗОПАСНОСТЬ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth
@@ -16421,6 +17147,59 @@ msgid ""
 "etc) and directly following Odoo's standard access rights management, so you do\n"
 "not have to configure things twice.\n"
 msgstr ""
+"Блоги Odoo ---------- Пишите, создавайте дизайн, ркламуйте и Привлекайте с "
+"<a href=\"https://www.odoo.com/page/blog-engine\">блоги Odoo</a> . Выразите "
+"себя с помощью блогов платформы Odoo для ведения бизнеса. Пишите хорошие "
+"посты, общайтесь с посетителями, перекладывайте содержание и Модераторы "
+"социальные потоки. Получайте эффективные ссылки на свои записи в блоге "
+"Google и перекладывайте на несколько языков в несколько кликов. Напишите "
+"хороший пост блога -------------------------- Перетащите красиво оформленные"
+" * &#39;Блоки конструктора&#39; *, чтобы создавать великолепные сообщение в "
+"блоге, идеально о объединяет изображения, видео, призывы к действиям, "
+"цитаты, баннеры и тому подобное. Благодаря нашему уникальному подходу * "
+"&#39;редактировать встроено&#39; *, не нужно быть дизайнером. Создавайте "
+"хороший содержание. Каждая публикация блога будет выглядеть так, будто она "
+"разработана профессиональным дизайнером. Автоматизированные переводы "
+"профессионалами -------------------------------------- Получите свои "
+"сообщения в блоге на разных языках без усилий. Наша функция перевода "
+"&quot;по требованию&quot; позволяет воспользоваться профессиональным "
+"переводчиком для автоматического перевода всех ваших изменений. (\\ $ 0,05 "
+"за слово) Переведенные версии обновляются автоматически после перевода "
+"профессионалами (около 32 часов). Привлеките своих посетителей "
+"------------------------- Функция интегрированного веб-чата позволяет начать"
+" общаться в режиме реального времени. Ваши посетители получают отзывы о "
+"последних публикаций или получают идеи для написания новых постов. "
+"Привлечение посетителей также является прекрасным способом преобразования "
+"посетителей в клиентов. Создание лояльности для посетителей "
+"--------------------- Одно нажатие на кнопку * добавить * позволяет "
+"посетителям получать ваши сообщения в блоге электронной почте без усилий и "
+"регистрации. Иконки соиальних сетей позволяют посетителям делятся своими "
+"лучшими сообщениями в блоге легко. Интеграция с Google Analytics "
+"---------------------------- Получите четкое представление о вашей "
+"последовательность продаж. Отслеживание Google Analytics от Odoo по "
+"умолчанию настраиваются для отслеживания всех видов событий, связанных с "
+"корзинами покупок, призывами к действиям и др. Кроме того, связанные "
+"маркетинговые инструменты Odoo (массовые рассылки, кампании и т.п.) с Google"
+" Analytics, вы получаете 360 ° вида вашего бизнеса. SEO оптимизация постов "
+"блога ------------------------ Инструменты SEO готовы к использованию, без "
+"настройки. Odoo предлагает ключевые слова для ваших имен в соответствии с "
+"самыми поисковых терминов Google, Google Analytics отслеживает интересы "
+"ваших посетителей, файлы Sitemap создаются автоматически для быстрой "
+"индексации Google и тому подобное. Система даже автоматически создает "
+"структурированный содержание, чтобы рекламировать ваш содержание товары и "
+"события в Google. Темы дружественные дизайна ------------------------ темы "
+"являются удивительными и простыми в дизайне. Вам не нужно разрабатывать, "
+"чтобы создавать новые страницы, темы или блоки. Мы используем чистую HTML-"
+"структуру, a [bootstrap] (http://getbootstrap.com/) CSS и наша модульность "
+"позволяет легко распределить свои темы. Подход к блоку конструктора "
+"позволяет сайта оставаться чистым после конечных пользователей. Начните "
+"создавать новое содержание. Простые права доступа ------------------ Не всем"
+" нужен одинаковый доступ к вашему веб-сайта. Дизайнеры управляют макетом "
+"сайта, редакторы одобряют содержание и авторы пишут это содержимое. Это "
+"позволяет организовать процесс публикации в соответствии с вашими "
+"потребностями. Другие права доступа касаются бизнес-объектов (товаров, "
+"людей, событий и т.д.) и непосредственно управляют стандартными правами "
+"доступа Odoo, так что не нужно дважды настраивать эти вещи."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -16587,6 +17366,37 @@ msgid ""
 "for your own company. Follow people, share best practices, 'like' top ideas,\n"
 "etc.\n"
 msgstr ""
+"Социальные сети Odoo Enterprise ------------------------------ Свяжитесь с "
+"экспертами, следите за тем, что вас интересует, обменивайтесь документами и "
+"рекламируйте лучшие практики по Odoo <a href=\"https://www.odoo.com/page"
+"/enterprise-social-network\">Социальные сети Enterprise</a> . Сделайте "
+"работу с эффективным сотрудничеством между ведомствами, географией, "
+"документами и бизнес-заявкам. Все это при снижении перегрузки электронной "
+"почты. Свяжитесь с экспертами -------------------- В следующий раз, когда у "
+"вас будет вопрос по маркетингу, продажам, исследованиям и разработкам или "
+"любом другом отдела не оставляйте по электронной почте сообщение в Odoo и "
+"получайте ответы от необходи человек. Следуйте тому, что вас интересует "
+"------------------------- Хотите получить информацию о новых функциях "
+"товара, горячие предложения, узкие места проекта или любую другую событие? "
+"Просто следуйте тому, что вас интересует, какая информация вам нужна; не "
+"больше и не меньше. Получите выполнения вещей --------------- Вы можете "
+"обрабатывать (не только читать) папку &quot;Входящие&quot; и легко помечать "
+"сообщения для будущего действия. Начните чувствовать удовлетворение от "
+"пустой папки &quot;Входящие&quot; каждый день; больше нет перегрузки "
+"информацией. Рекламируйте лучшие практики ---------------------- Снизьте "
+"количество встреч и электронных цепей, работая вместе в группах. Создайте "
+"группу, чтобы люди могли обмениваться файлами, обсуждать идеи и голосовать "
+"за лучшие практики. Улучшение доступа к информации и экспертизы "
+"------------------------------------------- Разбейте информационные силосы. "
+"Ищите в своих существующих системах, чтобы найти ответы и опыт, необходимые "
+"для быстрого завершения проектов. Сотрудничайте надежно --------------------"
+" Установите правильную политику безопасности; государственная, частная или "
+"только по приглашению - в соответствии с информационной чувствительности. "
+"Twitter-лайк для моей компании --------------------------------------- "
+"Заставьте каждого сотрудника чувствовать себя более связанным и "
+"задействованным в Twitter-ругательствах функций для вашей собственной "
+"компании. Следите за людьми, поделитесь лучшими практиками, "
+"&quot;лакнить&quot; топ-идеи, и тому подобное."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr
@@ -16751,6 +17561,41 @@ msgid ""
 "manufacturing operations.\n"
 "\n"
 msgstr ""
+"Планирование производства ресурсов Odoo ------------------------------------"
+" Управление спецификацией, планированием заказов на производство, "
+"отслеживанием рабочих заказов с приложением Odoo <a "
+"href=\"https://www.odoo.com/page/manufacturing\">Производством Open "
+"Source</a> . Получите все ваши сборки или производственные операции под "
+"управлением Odoo. Планируйте заказ на производство и рабочие заказ "
+"автоматически. Смотрите предлагаемый вариант планировки с умным канбан и "
+"Ганта. Используйте расширенные аналитические функции, позволяющие выявить "
+"ограниченность ресурсов и мест инвентаризации. Эффективно планируйте заказы "
+"на производство ----------------------------------------- Получите заказ на "
+"производство и рабочие заказ, запланированные автоматически на основе ваших "
+"правил закупки, прогнозируемых количеств и зависимого спроса (спрос на эту "
+"часть основан на другой части, потребляет ее). Определите гибкие основные "
+"данные --------------------------- Получите гибкость в создании "
+"многоуровневой спецификации, необязательной маршрутизации, изменения версии "
+"и спецификации. Вы можете использовать спецификацию для комплектов или "
+"заказа на производство. Получите гибкость во всех операциях "
+"--------------------------------- редактирует вручную все предложенные "
+"операции на любом уровне прогресса. С Оdоо вы не будете разочарованы жесткой"
+" системой. Планируйте рабочие заказ -------------------- Проверьте ресурсы и"
+" исправьте узкие места. Определите маршруты и планируйте рабочее время и "
+"мощность ваших ресурсов. Быстро определите ресурс требования и узкие места, "
+"чтобы обеспечить соответствие вашей продукции до даты доставки. Продуктивный"
+" пользовательский интерфейс --------------------------- упорядочивает заказ "
+"на производство и рабочие заказ, как вам это нравится. Процесс следующего "
+"заказа из списка, управление в окне календаря и редактирования предложенного"
+" графика в виде графика Ганта. Аналитика состава и производства "
+"----------------------------------- Отслеживайте развитие складских "
+"значений, в соответствии с уровнем деятельности производства в процессе "
+"трансформации. Полностью интегрированный с операциями "
+"-------------------------------- Получите правильное планирование "
+"производственных ресурсов благодаря полной интеграции с программами продаж и"
+" покупки. Учет интеграции позволяет в режиме реального времени высчитывать "
+"стоимость и более глубокую отчетность о расходах и доходах на ваши "
+"производственные операции."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -16853,32 +17698,97 @@ msgid ""
 "emails directly into the application.\n"
 "\n"
 msgstr ""
+"Массовая рассылка Odoo ----------------- Легко отправьте массовые рассылки "
+"на своем лидами, возможность и клиентам с <a "
+"href=\"https://www.odoo.com/page/mailing#\">Массовой рассылкой</a> Odoo. "
+"Отслеживайте эффективность маркетинговых кампаний, чтобы улучшить показатели"
+" переходов. Дизайн профессиональных электронных писем и повторное "
+"использование шаблонов за несколько кликов. Присылайте профессиональные "
+"электронные письма ------------------------ Импорт базу данных о "
+"перспективах или фильтруйте имеющихся лидов, возможности и клиентов за "
+"несколько кликов. Определите шаблоны электронной почты, чтобы повторно "
+"использовать содержание или конкретный дизайн для вашего информационного "
+"бюллетеня. Настройте несколько серверов электронной почты с собственным IP /"
+" доменом, чтобы оптимизировать запуск. Организуйте маркетинговые кампании "
+"---------------------------- Дизайн, отправка и отслеживание кампаний с "
+"помощью нашего приложения <a "
+"href=\"https://www.odoo.com/page/mailing\">Автоматизация лида</a> . Получите"
+" статистические данные об эффективности кампаний в реальном времени, чтобы "
+"улучшить свою конверсию. Отслеживайте отправки писем, получение, открытие и "
+"ответы. Легко управляйте маркетинговыми кампаниями, дискуссионными группами,"
+" потенциальными клиентами и возможность в одной простой и мощной платформе. "
+"Интеграция с приложениями Odoo ------------------------- Получите доступ к "
+"функциям массовой рассылки с каждого приложения Odoo, чтобы улучшить свой "
+"способ общения с пользователями. Отправьте шаблон электронной почты с Odoo "
+"<a href=\"https://www.odoo.com/page/mailing\">CRM нагодами</a> , выберите "
+"лиды на основе маркетинговых сегментов, отправьте <a "
+"href=\"https://www.odoo.com/page/recruitment\">предложения работы</a> и "
+"автоматически отвечайте заявителям, Повторное использование шаблона "
+"электронной почты в маркетинговых кампаниях по автоматизации. Ответы на "
+"электронные письма появляются автоматически в истории каждого документа с "
+"модулем социальной сети. Очистите вашу базу данных лидов "
+"------------------------ Получите чистую базу данных лидов, которая со "
+"временем улучшается, используя эффективность вашей почты. Odoo эффективно "
+"обрабатывает почтовые отсчета, соответственно выделяет ложные проводки и "
+"предоставляет статистику о качестве ваших лидов. Присылайте письма в один "
+"клик --------------------- Отдел маркетинга будет любить работать над "
+"кампаниями. Но вы также можете предоставить одноразовую рассылку всем другим"
+" пользователям собственными перспективами или документами. Выберите "
+"несколько документов (например, потенциальных клиентов, билеты поддержки, "
+"поставщиков, заявителей и т.д.) и присылайте электронные письма в свои "
+"контакты одним кликом, повторно используя существующие шаблоны электронных "
+"писем. Следите за ответами -------------------- Функция чата позволяет "
+"общаться быстрее и эффективнее с клиентом. Получите документы, созданные "
+"автоматически (лиды возможности, задачи, ...) на основе ответов на свои "
+"массовые кампании. Следите за обсуждениями непосредственно на бизнес-"
+"документах в Odoo или электронной почте. Получайте все переговоры и "
+"обсуждения, приобщенные к нужного документа, и соответствующих менеджеров, "
+"которым сообщено о конкретных событиях. Информационная панель кампании "
+"------------------- Получайте идеи, необходимые для разумной маркетинговой "
+"кампании. Отслеживание статистики для каждой кампании показатели отказов, "
+"отправлены письма, лучший содержание и тому подобное. Четкие информационные "
+"панели дают вам непосредственный осмотр эффективности кампании. Полная "
+"интеграция с другими приложениями --------------------------------- "
+"Определите автоматические действия (например, попросите продавца звонить, "
+"отправлять электронное сообщение ...) на основе триггеров (никакой "
+"активности за 20 дней, ответ на рекламную электронный адрес и т.д.). "
+"Оптимизируйте кампании от лиду к закрытию на каждом канале. Сделайте "
+"разумные решения о том, куда инвестировать, и покажите влияние вашей "
+"маркетинговой деятельности на самую низкую позицию вашей компании. "
+"Интеграция контактной формы на ваш сайт легко. Формы представления создают "
+"лиды автоматически в Odoo CRM. Лиды могут быть использованы в маркетинговых "
+"кампаниях. Управляйте вашей <a "
+"href=\"https://www.odoo.com/page/crm\">воронкой продаж</a> без усилий. "
+"Привлечение потенциальных клиентов, дальнейшие меры по телефонных звонков и "
+"встреч. Анализ качества вашей компании приводит к принятию обоснованных "
+"решений и экономии времени путем интеграции электронных писем "
+"непосредственно в приложение."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
 msgid "Odoo Mexican Localization Reports"
-msgstr ""
+msgstr "Мексиканская локализация отчетов Odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
 msgid "Odoo Mexican Localization Reports for Closing"
-msgstr ""
+msgstr "Отчеты для закрытия Мексиканского локализации Odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
 msgid "Odoo Mexico Localization for Invoice with customs Number"
-msgstr ""
+msgstr "Мексиканская локализация Odoo для счетов с таможенным номером"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_sale_coupon
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_sale_coupon
 msgid "Odoo Mexico Localization for Sale Coupon"
-msgstr ""
+msgstr "Мексиканская локализация Odoo для купонов продажи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Мексиканская локализация Odoo для Состава / Дополнительных расходов"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -16947,6 +17857,49 @@ msgid ""
 "The real time collaborative writings on notes makes it the perfect tool to collaborate on meeting minutes. Attendees will be able to contribute to the minutes, attach important documents or discuss on the related thread.\n"
 "\n"
 msgstr ""
+"Примечания Odoo ---------- Организуйте себя с эффективными <a "
+"href=\"https://www.odoo.com/page/notes\">спискам сделать и примечаниями</a> "
+". Из личных задач к общим минутных встреч, увеличивайте свою "
+"пользовательскую производительность, предоставляя инструменты для "
+"определения приоритетов своей работы, обмена их идей и совместной работы над"
+" документами. Личные списки дел, которые работают "
+"------------------------------ Быстро создавайте задачи, организуйте "
+"горизонтально на среднесрочную перспективу (сегодня на этом недели, в этом "
+"месяце ...), предоставьте приоритет вертикально для короткого срока и "
+"группу, назначая цвета. Канбанський подход позволяет простую визуальную "
+"организацию ваших задач. ### Рабочее перегрузки Почувствуйте, насколько "
+"станет лучше, перейдучы на структурированный способ организации свеи работы,"
+" вместо того, чтобы хранить все в памяти. Используйте примечания для [Get "
+"Things Done] (http://en.wikipedia.org/wiki/Getting_Things_Done). ### "
+"Эффективное определение приоритетов Большинство людей теряются в процессе "
+"чрезвычайных ежедневных задач и испытывают трудности в работе над важными, "
+"долгосрочными задачами. Примечания дают вам простой способ распределить "
+"время в день, чтобы сделать важные, но не менее отложные задачи. ### Найти "
+"мотивацию для закрытия задач Люди работали над задачами, которые им "
+"нравятся, а не над важными задачами. Начните чувствовать себя хорошо, "
+"проверяя задачи, как это сделано. Адаптируется к вашему творческого процесса"
+" ------------------------------ ### Настройте свой собственный рабочий "
+"процесс У каждого есть свой способ организовать деятельность . "
+"Интеллектуальный подход Примечания канбан для примечаний Odoo позволяет "
+"каждому пользователю настраивать собственные шаги для обработки своих задач "
+"и заметок. ### Творческая лицо Креативная человек будет организовывать "
+"заметки на основе уровня зрелости идеи Проект Идеи ** Зрелые идеи ** "
+"Определены ** Для выполнения ### Чистяковой путешественник Работник, много "
+"путешествует, может организовать свои задачи на основе контекста для "
+"выполнения задания Служба США | Лондонский офис | Осмотреть во время "
+"авиарейсов | Дома ### Менеджер Менеджер организует большое количество задач,"
+" опираясь на приоритеты Сделать сегодня | Эта неделя | Этот месяц | Позже "
+"Личные заметки -------------- ### Примечания являются частными, но ими можно"
+" поделиться Запишите свои идеи в закладках, храните заметки на кончиках "
+"пальцев, добавляйте соответствующие документы и используйте теги и цвета, "
+"чтобы организовать информацию. Когда ваши идеи зрелые, вы можете поделиться "
+"ими с другими пользователями, начать обсуждение и сотрудничать, "
+"совершенствуя спецификацию на панели. Совместные протоколы встречи "
+"---------------------------- ### Обмен в режиме реального времени и издание "
+"заметок Сотрудничество в работе с записями в реальном времени делает их "
+"идеальным инструментом для сотрудничества в протоколе встречи. Участники "
+"смогут внести свой вклад в протокол, прикрепить важные документы или "
+"обсудить соответствующую тему."
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -17139,6 +18092,46 @@ msgid ""
 "etc.\n"
 "\n"
 msgstr ""
+"Цепь поставок Odoo ----------------- Автоматизация заявки на оплату, "
+"контрольное выставления счетов с помощью Odoo <a "
+"href=\"https://www.odoo.com/page/purchase\">цепь поставок с открытым "
+"кодом</a> . Автоматизация предложений по закупкам, запуск запроса на "
+"коммерческое предложение, отслеживание заказа на покупку, управление "
+"информацией поставщиков, прием управляемых товаров и проверка счета-фактуры "
+"продавцов. Автоматизированные предложения по закупкам "
+"---------------------------------- снизит уровень инвентаризации правилам "
+"закупок. Получите правильное предложение на покупку в нужное время, чтобы "
+"снизить уровень инвентаризации. Исправьте свою закупку и инвентаризацию по "
+"правилам закупки в зависимости от уровня запаса, логистического правила, "
+"заказы на продажу, прогнозируемого заказ на производство и тому подобное. "
+"Отправьте запрос на коммерческое предложение или заказ на покупку продавца "
+"за один клик. Получите доступ к приему товаров и счетов-фактур с вашего "
+"заказа на покупку. Тендеры на покупку ---------------- Запустите тендерные "
+"предложения, интегрируйте ответы поставщика в процессе и сравните "
+"предложения. Выберите лучшее предложение и отправьте заказ на покупку легко."
+" Используйте отчетности, чтобы потом проанализировать качество ваших "
+"поставщиков. Интеграция электронной почты ------------------ интеграция всех"
+" сообщений поставщика с заказами на покупку (или ЗНКП), чтобы получить "
+"сильную прослеживаемость вопросов переговоров или послепродажного "
+"обслуживания. Используйте модуль управления для отслеживания проблем, "
+"связанных с поставщиками. Стандартная цена, средняя цена, FIFO "
+"----------------------------------- Используйте метод определения стоимости,"
+" который отражает ваш бизнес: стандартная цена, средняя цена, FIFO или LIFO."
+" Получите учетные записи и правильную оценку инвентаризации в режиме "
+"реального времени; Odoo управляет всем вам прозрачно. Импорт цен поставщиков"
+" -------------------------- Возьмите разумные решения о приобретении, "
+"используя лучшие цены. Легко импортировать ПРАЙСЛИСТ поставщика для принятия"
+" разумных решений о покупке на основе акций, цен в зависимости от количества"
+" и специальных условий договора. Вы даже можете создать свою цену продажи в "
+"зависимости от ваших цен производителей. Контроль товаров и счетов-фактур "
+"----------------------------- Отсутствует товар или заказ, управление "
+"запасами позволяет управлять обратными заказами, возвратом средств , приемом"
+" товаров и контролем качества. Выберите правильный метод управления в "
+"соответствии с вашими потребностями. Контролируйте счета поставщика без "
+"каких-либо усилий. Выберите правильный метод соответствии с вашими "
+"потребностями: предварительно генерировать проекты счетов-фактур на основе "
+"заказов на покупку, на прием товаров, создавать счета-фактуры вручную и "
+"импортировать строки из заказов на покупку и тому подобное."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
@@ -17266,6 +18259,69 @@ msgid ""
 "\n"
 "Schedule, organize, promote or sell events online; conferences, trainings, webinars, etc.\n"
 msgstr ""
+"Конструктор сайтов Odoo -------------------- Получите замечательный и <a "
+"href=\"https://www.odoo.com/page/website-builder\">бесплатный сайт</a> , "
+"легко настроен с Odoo <a href=\"https://www.odoo.com/page/website-"
+"builder\">конструктором сайтов</a> . Создайте классный сайт с нашим супер "
+"простым конструктором. Используйте готовые дизайнерские блоки конструктора и"
+" редактируйте-либо в середине. Воспользуйтесь преимуществами беспроводных "
+"бизнес-функций; электронная коммерция, события, блоги, рабочие места, "
+"анонсы, ссылки клиентов, призывы к действиям и др. Редактируйте что-"
+"встраивая -------------------- Создавайте великолепные веб-сайты без "
+"технических знаний. Уникальный подход Odoo * &#39;редактировать "
+"встроено&#39; * делает создание сайта неожиданно простым. Простой бэкенд; "
+"просто нажмите где, чтобы изменить любое содержимое. &quot;Хотите изменить "
+"цену товара?&quot;, Или поместить его жирным шрифтом? Хотите изменить "
+"название блога? &quot;Просто нажмите и измените. Что вы видите, это то, что "
+"вы получаете. Отлично. Хорошо. ------------------------ --------- Блоки "
+"конструктора Odoo позволяют создавать современные веб-сайты, которые "
+"невозможны с традиционными редакторами WYSIWYG страниц. Неважно для описания"
+" товаров, блогов или статических страниц быть профессионалом-дизайнером для "
+"создания чистого содержания. Просто перетащите и настройте заранее "
+"определенные блоки. Готовый Enterprise, с коробки "
+"-------------------------------- Активация готовых к использованию платных "
+"функций в один клик; электронная коммерция призывы к действиям, страница "
+"вакансий, события, ссылки клиентов, блоги и тому подобное. Традиционная "
+"электронная коммерция и CMS имеют плохо разработаны резервные копии, "
+"поскольку это не их основной фокус. Благодаря интеграции Odoo вы получите "
+"преимущества от лучшего управления программным обеспечением для отслеживания"
+" ваших заказов, претендентов на работу, ваших клиентов и тому подобное. "
+"Большой мобильный опыт ------------------------- Получите сайт для мобильных"
+" устройств благодаря нашему адаптивном дизайна на основе бутстрапа. Все ваши"
+" страницы адаптируются автоматически экрана. (Мобильный телефон, планшеты, "
+"настольные компьютеры) Вам не нужно беспокоиться о мобильном содержание, это"
+" работает по умолчанию. Инструменты SEO в ваших руках "
+"----------------------------- Инструмент * Рекламировать * предлагает "
+"ключевые слова в соответствии с самыми поисковых терминов Google. "
+"Инструменты оптимизации поисковой системы готовы к использованию, без "
+"надлежащего настройки. Google Analytics отслеживает ваши действия по корзине"
+" для покупок по умолчанию. Карта сайта и структурированный содержание "
+"создается автоматически для индексации Google. Многие языки с легкостью "
+"------------------------- Получите перевод сайта на нескольких языках без "
+"усилий. Odoo предлагает и автоматически распространяет переводы на всех "
+"страницах после того, как вы редактируете на странице мастера. "
+"Воспользуйтесь профессиональными переводчиками для перевода всего "
+"содержимого автоматически с интеграцией [Gengo] (http://gengo.com). Обновите"
+" любую часть вашего сайта и переведенные версии автоматически обновляются по"
+" несколько часов. Дизайнерские шаблоны --------------------------- Шаблоны "
+"замечательные и простые в разработке. Вам не нужно разрабатывать создания "
+"новой страницы, темы или блока конструктора. Мы используем чистую HTML-"
+"структуру, [bootstrap] (http://getbootstrap.com/) CSS. Настройте каждую "
+"страницу на лету с помощью встроенного редактора шаблонов. Предоставляйте "
+"вашу работу легко, как модуль Odoo. Макетирование жидких сетей "
+"-------------------- Дизайн идеальных страниц путем перетаскивания блоков. "
+"Переместите и масштабируйте их, чтобы соответствовать макета, который вы "
+"ищете. Блоки основаны на чувствительной, мобильной жидкой системе сетки, "
+"соответственно увеличивает до 12 столбиков, как размер устройства или "
+"области нет. Расширенные ------------------- Design a custom theme or reuse "
+"pre-defined themes to customize the look and feel of your website. Проверьте"
+" новую цветовую схему легко; вы можете изменить свою тему в любое время в "
+"любое время только в один клик. Интегрирован с приложениями Odoo "
+"------------------------- ### Электронная коммерция Рекламируйте товары, "
+"продавайте онлайн, повышайте покупки. ### Блоги Напишите новости, привлеките"
+" новых посетителей, создавайте лояльность клиентов. ### События онлайн "
+"Планируйте, организуйте, продвигайте или продавайте события онлайн; "
+"конференции, тренинги, вебинары и тому подобное."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -17425,6 +18481,88 @@ msgid ""
 "Schedule, organize, promote or sell events online; conferences, webinars, trainings, etc.\n"
 "\n"
 msgstr ""
+"Электронная коммерция Odoo --------------- ### Оптимизируйте продажи с "
+"удивительным интернет-магазином. Odoo <a "
+"href=\"https://www.odoo.com/page/e-commerce\">Электронная коммерция с "
+"открытым кодом</a> это не то, что вы раньше видели. Получите замечательный "
+"каталог товаров и замечательные страницы описания товара. Это "
+"полнофункциональный, полностью интегрированный с программным обеспечением "
+"для полного супер простой настройки. Создайте замечательные страницы товара "
+"---------------------------- Уникальный подход Odoo * &#39;редактировать "
+"встроенный&#39; * и строительные блоки создает страницы товара достаточно "
+"просто. &quot;Хотите изменить цену товара?&quot; Жирным шрифтом? Хотите "
+"добавить баннер для определенного товара? &quot;Просто нажмите и измените. "
+"Получаете то, что видите. Действительно. Перетягивание хорошо разработало * "
+"&#39;Строительные блоки&#39; * для создания прекрасного страницы товара, "
+"которое будут любить ваши клиенты. Увеличьте свой доход по заказу ----------"
+" --------------------- Встроенная функция перекрестных продаж поможет вам "
+"предложить дополнительные товары, связанные с тем, что покупатель положил в "
+"своий корзину (например, аксессуары). Алгоритм подъема Odoo позволяет "
+"показать посетителям похожую, но более дорогую продукцию, чем та, что "
+"имеется в виду, с поощрениями. Функция встроенного ре дагування позволяет "
+"легко изменить цену, запустить поощрения или точную настройку описания "
+"товара, просто нажмите кнопку. Простая интеграция Google Analytics "
+"--------------------------- --------- Получите четкое представление о вашей "
+"последовательность продаж. отслеживание Google Analytics от Odoo по "
+"умолчанию настраиваются для отслеживания всех видов событий, связанных с "
+"корзиной покупок, призывы к действиям и др. Кроме того, связанные "
+"маркетинговые инструменты Odoo (массовые рассылки, кампании и т.п.) с Google"
+" Analytics вы получаете полный просмотр вашей компании. Новые маркетинговые "
+"цели ------------------ Получите перевод сайта на нескольких языках без "
+"усилий. Odoo предлагает и автоматически распространяет переводы страниц. Наш"
+" перевод &quot;по требованию&quot; позволяет воспользоваться "
+"профессиональным переводчиком для автоматического перевода всех ваших "
+"изменений. Просто измените любую часть вашего сайта (новый сообщение в "
+"блоге, модификация страницы, описания товаров, ...), переведенные версии "
+"обновляются автоматически примерно через 32 часа. Точная настройка вашего "
+"каталога ---------------------- Получите полный контроль над тем, как "
+"отражать свои товары на странице каталога: рекламные ленты, связанные "
+"размеры товаров, скидки , варианты, сетка / список вид и т. д. Изменение "
+"любого товара в режиме онлайн, чтобы ваш сайт развивался с вашим клиентом. "
+"Привлеките новых клиентов --------------------- Инструменты SEO готовы к "
+"использованию, без настройки. Odoo предлагает ключевые слова в соответствии "
+"с самыми поисковых терминов Google, Google Analytics отслеживает ваши "
+"действия корзины для покупок, карта сайта автоматически создаются для "
+"индексации Google, и тому подобное. Мы даже автоматически создаем "
+"структурированный содержание для эффективного продвижения вашего товара и "
+"событий в Google. Используйте социальные медиа --------------------- Легко "
+"создавайте новые целевые страницы с помощью функции встроенного "
+"редактирования Odoo. Отправьте посетителей ваших различных маркетинговых "
+"кампаний в определенных целевых страниц для оптимизации переходов. "
+"Управление сетью торгового посредника ------------------------- Управляйте "
+"сетью торговых посредников, чтобы ориентироваться на новый рынок, иметь "
+"местную присутствие или расширить ваш распределение. Предоставьте им доступ "
+"к порталу вашего посредника для эффективного сотрудничества Рекламируйте "
+"своих торговых посредников онлайн, перемещайте прямую связь с торговыми "
+"посредниками (с встроенной функцией геолокализации), определите конкретные "
+"ПРАЙСЛИСТ, запустите программу лояльности (предлагайте конкретные скидки для"
+" ваших лучших клиентов или торговых посредников) тому подобное. Получите "
+"преимущество от мощности Odoo в вашем интернет-магазине: мощный налоговый "
+"двигатель, гибкие ценовые структуры, реальное решение по управлению "
+"составом, интерфейс посереденика, поддержка товаров с разным поведением; "
+"физические товары, события, услуги, варианты и тому подобное. Вам не нужно "
+"взаимодействовать со своим составом, продажей или программным обеспечением "
+"для бухгалтерского учета. Все интегрировано с Odoo. Никаких проблем, в "
+"реальном времени. Процесс чистого оформления ------------------------ "
+"Преобразование большинства интересов посетителя в реальные заказы с чистым "
+"процессом оформления с минимальным числом шагов и большой полезной "
+"способностью на каждой странице. Настройте свой процесс оформления заказа в "
+"соответствии с вашими потребностями бизнеса: режимы оплаты, методы доставки "
+"кросс-продаж, специальные условия и тому подобное. И многое другое ... "
+"---------------- ### Продажи онлайн - Мобильный интерфейс - Продавайте "
+"товары, события или услуги - Гибкие ПРАЙСЛИСТ - Много вариантов товара - "
+"Несколько магазинов - Большой процесс проверки ### Обслуживание клиентов - "
+"Портал клиента для отслеживания заказов - содействие магазинам с веб-сайтами"
+" живых чатов - возвращает управления - Дополнительные правила доставки - "
+"Купоны или подарочные сертификаты ### управление заказ - Расширенные "
+"возможности управления составом - Интеграция счетов и учета - Массовые "
+"рассылки и сегментация клиентов - Пр ведения автоматизацию и маркетинговые "
+"кампании - Постоянный корзина для покупок Полностью интегрированный с "
+"другими программами -------------------------------- ### CMS создавайте "
+"великолепные веб-сайты, не требующие технических знаний. ### Блоги Напишите "
+"новости, привлекайте новых посетителей, создавайте лояльность клиентов. ### "
+"онлан-события Планировать, организовывать, продвигать или продавать события "
+"онлайн; конференции, вебинары, тренинги и тому подобное."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_customer_form
@@ -17583,7 +18721,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency.rate:0
 msgid "Only one currency rate per day allowed!"
-msgstr ""
+msgstr "Только один курс валюты на день разрешен!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1189
@@ -17692,7 +18830,7 @@ msgstr "Открыть окно"
 #: code:addons/base/ir/ir_model.py:1215 code:addons/models.py:2888
 #, python-format
 msgid "Operation:"
-msgstr ""
+msgstr "операция:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -17785,6 +18923,31 @@ msgid ""
 "\n"
 "You can activate a blog for each event allowing you to communicate on specific events. Visitors can subscribe to news to get informed."
 msgstr ""
+"Организуйте события, тренинги и вебинары "
+"------------------------------------- ### Планируйте, рекламируйте, "
+"продавайте, организуйте Получите дополнительные функции на одно событие; "
+"несколько страниц, спонсоров, несколько переговоров, форма предложений "
+"обсуждений, повестка дня, новости, связанные с событиями, документы (слайды "
+"презентаций), специальные меню. Организуйте ваши отслеживания "
+"-------------------- ### От предложения к публикации Добавьте форму "
+"предложения по обсуждению в свои события, чтобы посетители могли прислать "
+"переговоры и спикеров. Организуйте процесс подтверждения каждой беседы и "
+"легко планируйте. Настройка уникального фронтенда и бэкенд Odoo делает "
+"организацию и публикацию столь простыми. Легко оформляйте прекрасные "
+"биографии динамиков и описание разговоров. Повестка дня и перечень "
+"переговоров ------------------------ ### Сильный интерфейс Получите "
+"прекрасную программу для каждого события, автоматически публикуется на вашем"
+" сайте . Позвольте вашим посетителям легко искать и просматривать "
+"переговоры, фильтровать по тегам, местами или динамиками. Управляйте "
+"спонсорами --------------- ### Продавайте спонсорство, рекламируйте своих "
+"спонсоров Добавьте спонсоров к вашим событий и публикуйте спонсоров на "
+"уровне (например, бронзовый, серебряный, золотой) внизу каждой страницы "
+"события. Продажа спонсорских пакетов онлайн через электронную коммерцию Odoo"
+" для полной интеграции с циклом продаж. Эффективное общение "
+"----------------------- ### Активируйте блог для нескольких событий Вы "
+"можете активировать блог для каждого события, что позволяет общаться с "
+"определенными событиями. Посетители могут подписаться на новости, чтобы "
+"получить информацию."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event
@@ -17947,7 +19110,7 @@ msgstr "Другой проприетарный"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
 msgid "Other Services"
-msgstr ""
+msgstr "другие услуги"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -18006,7 +19169,7 @@ msgstr "Владелец"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
 msgid "P EDUCATION"
-msgstr ""
+msgstr "P ОБРАЗОВАНИЕ"
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -18224,7 +19387,7 @@ msgstr "Путь"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Payment - Account"
-msgstr ""
+msgstr "Оплата - счет"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_payment
@@ -18281,7 +19444,7 @@ msgstr "Платеж покупателя: Stripe осуществлен"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe_sca
 msgid "Payment Acquirer: Stripe Implementation for the EU PSD2"
-msgstr ""
+msgstr "Платежный эквайер: внедрение Stripe для ЕС PSD2"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
@@ -18362,7 +19525,7 @@ msgstr "Телефон"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_phone_validation
 msgid "Phone Numbers Validation"
-msgstr ""
+msgstr "Проверка телефонных номеров"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18413,6 +19576,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Please set the Model to Create before choosing values"
 msgstr ""
+"Пожалуйста, установите Модель для создания, прежде чем выбрать значение"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:472
@@ -18770,6 +19934,41 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
+"Управление проектом ------------------ ### Бесконечно гибкий. Невероятно "
+"прост в использовании. Общее и реальное Odoo <a "
+"href=\"https://www.odoo.com/page/project-management\">управления проектом с "
+"открытым кодом</a> помогает вашей команде выполнить работу. Следите за всем,"
+" от большой картинки в подробных деталей, от контракта с клиентом до "
+"выставления счета. Разработан в соответствии с вашего собственного процесса "
+"-------------------------------- Организуйте проекты вокруг собственных "
+"процессов. Работа над задачами и проблемами, используют вид канбан, график "
+"задач с использованием диаграммы Ганта и контроль сроков в календарном "
+"режиме. В каждом проекте могут быть собственные этапы, которые позволяют "
+"командам оптимизировать свою работу. Легкий в использовании ----------- "
+"Организуйте так быстро, как вы думаете. Простой в использовании интерфейс не"
+" займет времени, чтобы научиться, и каждое действие мгновенная, поэтому "
+"ничего не мешает между вами и вашим сладким продуктивным процессом. "
+"Работайте вместе ------------- ### Чаты в реальном времени, обмен "
+"документами, интеграция с email Используйте чаты для общения с вашей "
+"командой или клиентами и обменивайтесь комментариями и документы о задачах и"
+" проблемах. Интеграция дискуссии быстрая с электронной почтой. Поговорите с "
+"другими пользователями или клиентами, используя функцию живого чата сайта. "
+"Сотрудничество --------------------- ### Мощность эфирного панели, внутри "
+"ваших задач Совместно редактируйте те же спецификации или протоколы встречи "
+"прямо внутри заявки. Встроенная эфирное панель позволяет нескольким людям "
+"работать над теми же задачами одновременно. Это очень эффективно для скрам "
+"встреч, минутных встреч или встреч спецификации. Каждый пользователь имеет "
+"свой собственный цвет, и вы можете повторить создания содержимого. Получите "
+"завершения работы ------------- Получайте оповещения о следующих событиях, "
+"чтобы быть в курсе того, что вас интересует. Используйте мгновенные зеленые "
+"/ красные визуальные индикаторы, чтобы просканировать, что было сделано и "
+"что требует вашего внимания. Табели Контракты и Счета "
+"--------------------------------- Проекты автоматически интегрируются с "
+"контрактами клиента, позволяют вам счет- фактуру на основе времени и "
+"материалов, а также записывает временные показатели легко. Отслеживание "
+"проблем ------------ Отдельные вопросы, возникающие в проекте, чтобы "
+"получить лучший фокус их решения. Интеграция взаимодействия с клиентами по "
+"каждому выпуску и получения точных отчетов об эффективности вашей команды."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating_project
@@ -18779,12 +19978,12 @@ msgstr "Рейтинг проектов"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
 msgid "Project, Helpdesk, Timesheet and Sale Orders"
-msgstr ""
+msgstr "Проект, Информационная панель, Табель и Заказ на продажу"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr ""
+msgstr "Проект, Задача, Табель"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -18824,6 +20023,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Добавить поле, которое используется для связывания вновь записи с записями, "
+"используемых сервером."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -18838,7 +20039,7 @@ msgstr "Общий"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_O
 msgid "Public Administration"
-msgstr ""
+msgstr "публичное администрирование"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -18930,7 +20131,7 @@ msgstr "Выражение Python"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
 msgid "Q HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
-msgstr ""
+msgstr "Q ЧЕЛОВЕЧЕСКОЕ ЗДОРОВЬЕ И ДЕЯТЕЛЬНОСТЬ СОЦИАЛЬНОЙ РАБОТЫ"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
@@ -18981,7 +20182,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Коммерческое предложение, Заказ на продажу, контроль доставки и счета"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -19001,17 +20202,17 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R ARTS, ENTERTAINMENT AND RECREATION"
-msgstr ""
+msgstr "R ИСКУССТВО, РАЗВЛЕЧЕНИЯ И ОТДЫХ"
 
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -19044,7 +20245,7 @@ msgstr "Только чтение"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
 msgid "Real Estate"
-msgstr ""
+msgstr "Недвижимость"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_data_form
@@ -19099,7 +20300,7 @@ msgstr "Ограничение доступа"
 #: code:addons/models.py:3235 code:addons/models.py:4020
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Сообщений:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_recruitment
@@ -19191,7 +20392,7 @@ msgstr "Название связи"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_table
 msgid "Relation Table"
-msgstr ""
+msgstr "Таблица отношений"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment_use
@@ -19202,11 +20403,13 @@ msgstr "Перезагрузить из Вложения"
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove 'More' top-menu contextual action related to this action"
 msgstr ""
+"Удалите контекстную действие, связанное с этим действием, в верхнем меню "
+"&quot;Более&quot;"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove Contextual Action"
-msgstr ""
+msgstr "Удалить контекстную действие"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -19473,7 +20676,7 @@ msgstr "Реюньон"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_S
 msgid "S OTHER SERVICE ACTIVITIES"
-msgstr ""
+msgstr "S ДРУГАЯ ДЕЯТЕЛЬНОСТЬ УСЛУГИ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa
@@ -19488,17 +20691,17 @@ msgstr "SEPA кредитный перевод в расходах"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr ""
+msgstr "Прямой дебет SEPA"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr ""
+msgstr "Текстовое SMS сообщения"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "SMS шлюз"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_port
@@ -19563,7 +20766,7 @@ msgstr "Сент-Винсент и Гренадины"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
 msgid "Salary Package Configurator"
-msgstr ""
+msgstr "Конфигуратор пакета заработной платы"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -19578,12 +20781,12 @@ msgstr "Ваучеры на Продажу и Покупку"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
 msgid "Sale Coupon"
-msgstr ""
+msgstr "купон продажи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_delivery
 msgid "Sale Coupon Delivery"
-msgstr ""
+msgstr "Доставка купона на продажу"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service_rating
@@ -19593,7 +20796,7 @@ msgstr "Рейтинг сервиса продаж"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
-msgstr ""
+msgstr "Панель приборов подписки продажи"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -19647,7 +20850,7 @@ msgstr "Продаж и управление складом"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
-msgstr ""
+msgstr "Продажа внутренней техники"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_user_id
@@ -19691,7 +20894,7 @@ msgstr "Сохранить"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_report_form_with_print
 msgid "Save and Print"
-msgstr ""
+msgstr "Сохранить и печатать"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment
@@ -19711,7 +20914,7 @@ msgstr "Запланировать и управлять обслуживани�
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
 msgid "Schedule timesheet when on leaves"
-msgstr ""
+msgstr "Расписание табеля во время отпуска"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
@@ -19732,12 +20935,12 @@ msgstr "Запланированные действия"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_user_id
 msgid "Scheduler User"
-msgstr ""
+msgstr "планируемый пользователь"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_M
 msgid "Scientific"
-msgstr ""
+msgstr "научный"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_screen
@@ -19849,7 +21052,7 @@ msgstr "Сам"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet
 msgid "Sell Helpdesk Timesheet"
-msgstr ""
+msgstr "Шаблон информационной панели продажи"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale
@@ -19905,7 +21108,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_calendar_sms
 #: model:ir.module.module,summary:base.module_calendar_sms
 msgid "Send text messages as event reminders"
-msgstr ""
+msgstr "Отправляйте текстовые сообщения как напоминание о событиях"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
@@ -20047,6 +21250,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Установка значения делает это действие доступна на боковой панели для данной"
+" модели."
 
 #. module: base
 #: code:addons/base/res/res_users.py:567
@@ -20102,7 +21307,7 @@ msgstr "Адрес получателя"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_show_all
 msgid "Show All"
-msgstr ""
+msgstr "показать все"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -20117,7 +21322,7 @@ msgstr "Показать неактивные валюты"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Show technical modules"
-msgstr ""
+msgstr "Показать технические модули"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -20307,7 +21512,7 @@ msgstr "Южная Африка"
 #. module: base
 #: model:res.country.group,name:base.south_america
 msgid "South America"
-msgstr ""
+msgstr "Южная Америка"
 
 #. module: base
 #: model:res.country,name:base.gs
@@ -20342,7 +21547,7 @@ msgstr "Испания - Бухгалтерский учет (PGCE 2008) отч�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
 msgid "Sparse Fields"
-msgstr ""
+msgstr "рассеянные поля"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_specific_industry_applications
@@ -20527,7 +21732,7 @@ msgstr "Stripe платежная система"
 #: model:ir.module.module,description:base.module_payment_stripe_sca
 #: model:ir.module.module,shortdesc:base.module_payment_stripe_sca
 msgid "Stripe Payment Acquirer - Strong Customer Authentication Update"
-msgstr ""
+msgstr "Платежный эквайер Stripe - Мощное обновление аутентификации клиента"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
@@ -20684,6 +21889,8 @@ msgid ""
 "T ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS;UNDIFFERENTIATED GOODS- AND "
 "SERVICES-PRODUCING ACTIVITIES OF HOUSEHOLDS FOR OWN USE"
 msgstr ""
+"T ДЕЯТЕЛЬНОСТЬ ГОСУДАРСТВЕННОГО ПРЕДПРИЯТИЯ В РАМКАХ ДЕЯТЕЛЬНОСТИ СИСТЕМЫ; "
+"НЕДИФЕРЕНЦИЙНИ ПРОДУКТЫ И УСЛУГИ ГОСУДАРСТВЕННОЙ ДЕЯТЕЛЬНОСТИ ДОРОГИ"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -20766,7 +21973,7 @@ msgstr "Налоговая наличная база Редактировани�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
 msgid "Tax Cash Basis Entries at Payment Date"
-msgstr ""
+msgstr "Записи об основных налоги на дату платежа"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_tax_cash_basis
@@ -21329,6 +22536,191 @@ msgid ""
 "* Luis Torres <luis_t@vauxoo.com> (Auditor)\n"
 "* Humberto Arocha <luis_t@vauxoo.com> (Planner/Developer)\n"
 msgstr ""
+"Записи налога на основе кассового метода на дату платежа "
+"====================================== Позвольте создавать журнальные записи"
+" для налогов на дату платежа. Следующие тестовые случаи претендуют на то, "
+"чтобы сообщать вам о том, что ожидается от каждого согласно мексиканских "
+"требований. Несколько валютный случай (в счетах и платежах) оплаты перед "
+"выставлением счета ------------------------------------- "
+"------------------------------ Тест для подтверждения эффективного налога "
+"Моя валюта компании MXN. Счет-фактура, выданная вчера в долларах США по "
+"курсу =&gt; 1MXN = 1 USD. Забронировано как: Дебиторская задолженность 1160 "
+"1160 USD Доход 1000 -1000 USD Сбор налогов 160 -160 USD Оплата состоялась "
+"два дня назад в долларах США по курсу =&gt; 1MXN = 0.80 USD. Забронировано "
+"как Банк 1450 1160 USD Дебиторская задолженность 1450 -1160 USD Это "
+"генерирует разницу валютных курсов. Забронировано как: Дебиторская "
+"задолженность 290 0 USD Gain Обменный курс 290 0 USD И генерируется запись "
+"налога на основание кассового метода. Забронировано как: Счет для базы "
+"налога 1250 1000 USD Счет для базы подтку 1250 -1000 USD Сбор налога 200160 "
+"USD Налоги к оплате 200 -160 USD Что я ожидаю здесь: - База, чтобы сообщить "
+"DИОТ, если это произойдет (не в этом случае ): Счет длябазы налога MXN "
+"1250.00 - оплату SAT MXN 200.00 - Разница между MXN 40.00 для сбора налогов "
+"я позже обозначать потерю на курсовой разнице Потеря на курсовые разницы 40 "
+"0 USD Сбор налогов 40 0 USD Многовалютный случай (оба счета и оплаты) оплата"
+" после счета-фактуры --------------------------------------------- "
+"--------------------- Test to validate tax effectively receivable My company"
+" c urrency is MXN. Invoice issued two days ago in USD at a rate =&gt; 1MXN ="
+" 0.80 USD. Booked like: Receivable 1450 1160 USD Revenue 1250 -1000 USD "
+"Taxes to Collect 200 -160 USD Payment issued today in USD at a rate =&gt; 1 "
+"MXN = 1.25 USD. Booked like: Bank 928 1160 USD Receivable 928 -1160 USD This"
+" Generates a Exchange Rate Difference. Booked like: Loss Exchange rate 522 0"
+" USD Receivable 522 0 USD And a Tax Cash Basis Entry is generated. Booked "
+"like: Tax Base Account 800 1000 USD Tax Base Account 800 -1000 USD Taxes to "
+"Collect 128160 USD Taxes to Paid 128 -160 USD What I expect from here: - "
+"Base to report to DIOT if it would be the case (not in this case): Tax Base "
+"Account MXN 800.00 - Paid to SAT MXN 128.00 - Have a difference of MXN "
+"-72.00 for Taxes to Collect that I would later have to issue as a Gain in "
+"Exchange Rate Difference Taxes to Collect 72 0 USD Gain Exchange rate 72 0 "
+"USD Case Multi-currency (both invoice &amp; payment) Payment same day than "
+"Invoice ------------------------------- "
+"------------------------------------------- Test to validate tax effectively"
+" receivable My company currency is MXN. Invoice issued two days ago in USD "
+"at a rate =&gt; 1MXN = 0.8 USD. Booked like: Receivable 1450 1160 USD "
+"Revenue 1250 -1000 USD Taxes to Collect 200 -160 USD Payment issued two days"
+" ago in USD at a rate =&gt; 1 MXN = 0.8 USD. Booked like: Bank 1450 1160 USD"
+" Receivable 1450 -1160 USD This does not generates any Exchange Rate "
+"Difference. But a Tax Cash Basis Entry is generated. Booked like: Tax Base "
+"Account 1250 1000 USD Tax Base Account 1250 -1000 USD Taxes to Collect "
+"200160 USD Taxes to Paid 200 -160 USD What I expect from here: - Base to "
+"report to DIOT if it would be the case (not in this case): Tax Base Account "
+"MXN 1250.00 - Paid to SAT MXN 200.00 - Have no difference for Taxes to "
+"Collect Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD) "
+"------------- ------------------------------------------- Test to validate "
+"tax effectively receivable My company currency is MXN. Invoice issued "
+"yesterday in MXN at a rate =&gt; 1MXN = 1 USD. Booked like: Receivable 1160 "
+"- - Revenue 1000 - - Taxes to Collect 160 - - Payment issued two days ago in"
+" USD at a rate =&gt; 1 MXN = 0.80 USD. Booked like: Bank 1160 928 USD "
+"Receivable 1160 -928 USD This does not generates any Exchange Rate "
+"Difference. But a Tax Cash Basis Entry is generated. Booked like: Tax Base "
+"Account 1000 0 - Tax Base Account 1000 0 - Taxes to Collect 160 0 - Taxes to"
+" Paid 160 0 - What I expect from here: - Base to report to DIOT if it would "
+"be the case (not in this case ): Tax Base Account MXN 1000.00 - Paid to SAT "
+"MXN 160.00 - Have no difference for Taxes to Collect Case Invoiced Yesterday"
+" (USD) Payment Today (MXN) ----------------- "
+"-------------------------------- Test to validate tax effectively receivable"
+" My company currency is MXN. Invoice issued yesterday in USD at a rate =&gt;"
+" 1MXN = 1 USD. Booked like: Receivable 1160 1160 USD Revenue 1000 -1000 USD "
+"Taxes to Collect 160 -160 USD Payment issued today in MXN at a rate =&gt; 1 "
+"MXN = 1.25 USD. Booked like: Bank 928 - - Receivable 928 - - This Generates "
+"a Exchange Rate Difference. Booked like: Loss Exchange rate 232232 USD "
+"Receivable 232 -232 USD And a Tax Cash Basis Entry is generated. Booked "
+"like: Tax Base Account 800 0 USD Tax Base Account 800 0 USD Taxes to Collect"
+" 128 0 USD # (I&#39;d expect the same value as in the invoice for "
+"amount_currency in tax 160 USD) Taxes to Paid 128 0 USD What I expect from "
+"here: - Base to report to DIOT if it would be the case (not in this case): "
+"Tax Base Account MXN 800.00 - Paid to SAT MXN 128.00 - Have a difference of "
+"MXN -32.00 for Taxes to Collect that I would later have to issue as a Gain "
+"in Exchange Rate Difference Taxes to Collect 32 0 USD Gain Exchange rate 32 "
+"0 USD Case Invoiced Yesterday (MXN) Payment Today (MXN) ---------------- "
+"--------------------------------- Test to validate tax effectively "
+"receivable My company currency is MXN. Invoice issued yesterday in MXN at a "
+"rate =&gt; 1MXN = 1 USD. Booked like: Receivable 1160 - - Revenue 1000 - - "
+"Taxes to Collect 160 - - Payment issued today in MXN at a rate =&gt; 1 MXN ="
+" 1.25 USD. Booked like: Bank 1160 - - Receivable 1160 - - This does not "
+"generates any Exchange Rate Difference. But a Tax Cash Basis Entry is "
+"generated. Booked like: Tax Base Account 1000 - - Tax Base Account 1000 - - "
+"Taxes to Collect 160 - - Taxes to Paid 160 - - What I expect from here: - "
+"Base to report to DIOT if it would be the case (not in this case ): Tax Base"
+" Account MXN 1000.00 - Paid to SAT MXN 160.00 - Have no difference for Taxes"
+" to Collect Case Multi-currency (both invoice &amp; payment) Payment before "
+"Invoice (Supplier) ------------ "
+"-------------------------------------------------- ---------------- Test to "
+"validate tax effectively Payable My company currency is MXN. Invoice issued "
+"yesterday in USD at a rate =&gt; 1MXN = 1 USD. Booked like: Expenses 1000 "
+"1000 USD Unpaid Taxes 160160 USD Payable 1160 -1160 USD Payment issued two "
+"days ago in USD at a rate =&gt; 1MXN = 0.80 USD. Booked like: Payable 1450 "
+"1160 USD Bank 1450 -1160 USD This Generates a Exchange Rate Difference. "
+"Booked like: Loss Exchange rate 290 0 USD Payable 290 0 USD And a Tax Cash "
+"Basis Entry is generated. Booked like: Tax Base Account 1250 1000 USD Tax "
+"Base Account 1250 -1000 USD Creditable Tax 200160 USD Unpaid Taxes 200 -160 "
+"USD What I expect from here: - Base to report to DIOT: Tax Base Account MXN "
+"1250.00 - Creditable Tax MXN 200.00 - Have a difference of MXN -40.00 for "
+"Unpaid Taxes that I would later have to issue as a Loss in Exchange Rate "
+"Difference Unpaid Taxes 40 0 USD Gain Exchange rate 40 0 USD Case Multi-"
+"currency (both invoice &amp; payment) Payment after Invoice ( Supplier) "
+"------------------------------------------------ "
+"----------------------------- Test to validate tax effectively Payable My "
+"company currency is MXN. Invoice issued two days ago in USD at a rate =&gt; "
+"1MXN = 0.80 USD. Booked like: Expenses 1250 1000 USD Unpaid Taxes 200160 USD"
+" Payable 1450 -1160 USD Payment issued today in USD at a rate =&gt; 1 MXN = "
+"1.25 USD. Booked like: Payable 928 1160 USD Bank 928 -1160 USD This "
+"Generates a Exchange Rate Difference. Booked like: Payable 522 0 USD Gain "
+"Exchange rate 522 0 USD And a Tax Cash Basis Entry is generated. Booked "
+"like: Tax Base Account 800 1000 USD Tax Base Account 800 -1000 USD "
+"Creditable Tax 128160 USD Unpaid Taxes 128 -160 USD What I expect from here:"
+" - Base to report to DIOT: Tax Base Account MXN 800.00 - Creditable Tax MXN "
+"128.00 - Have a difference of MXN 72.00 for Unpaid Taxes that I would later "
+"have to issue as a Loss in Exchange Rate Difference Loss Exchange rate 72 0 "
+"USD Unpaid Taxes 72 0 USD Case Multi-currency (both invoice &amp; payment) "
+"Payment same day than Invoice (Supplier) "
+"----------------------------------------------- "
+"-------------------------------------- Test to validate tax effectively "
+"Payable My company currency is MXN. Invoice issued two days ago in USD at a "
+"rate =&gt; 1MXN = 0.8 USD. Booked like: Expenses 1250 1000 USD Unpaid Taxes "
+"200160 USD Payable 1450 -1160 USD Payment issued two days ago in USD at a "
+"rate =&gt; 1 MXN = 0.8 USD. Booked like: Payable 1450 1160 USD Bank 1450 "
+"-1160 USD This does not generates any Exchange Rate Difference. But a Tax "
+"Cash Basis Entry is generated. Booked like: Tax Base Account 1250 1000 USD "
+"Tax Base Account 1250 -1000 USD Creditable Tax 200160 USD Unpaid Taxes 200 "
+"-160 USD What I expect from here: - Base to report to DIOT: Tax Base Account"
+" MXN 1250.00 - Creditable Tax MXN 200.00 - Have no difference for Unpaid "
+"Taxes Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD) (Supplier) "
+"--------------------------- ---------------------------------------- Test to"
+" validate tax effectively Payable My company currency is MXN. Invoice issued"
+" yesterday in MXN at a rate =&gt; 1MXN = 1 USD. Booked like: Expenses 1000 -"
+" - Unpaid Taxes 160 - - Payable 1160 - - Payment issued two days ago in USD "
+"at a rate =&gt; 1 MXN = 0.80 USD. Booked like: Payable 1160 928 USD Bank "
+"1160 -928 USD This does not generates any Exchange Rate Difference. But a "
+"Tax Cash Basis Entry is generated. Booked like: Tax Base Account 1000 0 - "
+"Tax Base Account 1000 0 - Creditable Tax 160 0 - Unpaid Taxes 160 0 - What I"
+" expect from here: - Base to report to DIOT: Tax Base Account MXN 1000.00 - "
+"Creditable Tax MXN 160.00 - Have no difference for Unpaid Taxes Case "
+"Invoiced Yesterday (USD) Payment Today (MXN) (Supplier) "
+"------------------------------- ----------------------------- Test to "
+"validate tax effectively Payable My company currency is MXN. Invoice issued "
+"yesterday in USD at a rate =&gt; 1MXN = 1 USD. Booked like: Expenses 1000 "
+"1000 USD Unpaid Taxes 160160 USD Payable 1160 -1160 USD Payment issued today"
+" in MXN at a rate =&gt; 1 MXN = 1.25 USD. Booked like: Payable 928 - - Bank "
+"928 - - This Generates a Exchange Rate Difference. Booked like: Payable "
+"232232 USD Gain Exchange rate 522 -232 USD And a Tax Cash Basis Entry is "
+"generated. Booked like: Tax Base Account 800 0 USD Tax Base Account 800 0 "
+"USD Creditable Tax 128 0 USD # (I&#39;d expect the same value as in the "
+"invoice for amount_currency in tax 160 USD) Unpaid Taxes 128 0 USD What I "
+"expect from here: - Base to report to DIOT: Tax Base Account MXN 800.00 - "
+"Creditable Tax MXN 128.00 - Have a difference of MXN 32.00 for Unpaid Taxes "
+"that I would later have to issue as a Loss in Exchange Rate Difference Loss "
+"Exchange rate 32 0 USD Unpaid Taxes 32 0 USD Case Invoiced Yesterday (MXN) "
+"Payment Today (MXN) (Supplier) -------------------------------- "
+"---------------------------- Test to validate tax effectively Payable My "
+"company currency is MXN. Invoice issued yesterday in MXN at a rate =&gt; "
+"1MXN = 1 USD. Booked like: Expenses 1000 - - Unpaid Taxes 160 - - Payable "
+"1160 - - Payment issued today in MXN at a rate =&gt; 1 MXN = 1.25 USD. "
+"Booked like: Payable 1160 - - Bank 1160 - - This does not generates any "
+"Exchange Rate Difference. But a Tax Cash Basis Entry is generated. Booked "
+"like: Tax Base Account 1000 - - Tax Base Account 1000 - - Creditable Tax 160"
+" - - Unpaid Taxes 160 - - What I expect from here: - Base to report to DIOT:"
+" Tax Base Account MXN 1000.00 - Creditable Tax MXN 160.00 - Have no "
+"difference for Unpaid Taxes Case Invoiced Yesterday (MXN) Credit Note Today "
+"(MXN) (Customer) ------------------------------ "
+"---------------------------------- Test to validate tax effectively "
+"receivable My company currency is MXN. Invoice issued two days ago in USD at"
+" a rate =&gt; 1MXN = 0.80 USD. Booked like: Receivable 1450 1160 USD Revenue"
+" 1250 -1000 USD Taxes to Collect 200 -160 USD Credit Note issued today in "
+"USD at a rate =&gt; 1 MXN = 1.25 USD. Booked like: Revenue 800 1000 USD "
+"Taxes to Collect 128160 USD Receivable 928 -1160 USD This Generates a "
+"Exchange Rate Difference. Booked like: Loss Exchange rate 522 0 USD "
+"Receivable 522 0 USD And two Tax Cash Basis Entry are generated. Booked "
+"like: Tax Base Account 800 1000 USD Tax Base Account 800 -1000 USD Taxes to "
+"Collect 128160 USD Taxes to Paid 128 -160 USD Tax Base Account 800 1000 USD "
+"Tax Base Account 800 -1000 USD Taxes to Paid 128160 USD Taxes to Collect 128"
+" -160 USD What I expect from here: - Base to report to DIOT if it would be "
+"the case (not in this case): Tax Base Account MXN 800.00 and MXN -800.00 - "
+"Paid to SAT MXN 0.00 - Have a difference of MXN -72.00 for Taxes to Collect "
+"that I would later have to issue as a Gain in Exchange Rate Difference Taxes"
+" to Collect 72 0 USD Gain Exchange rate 72 0 USD Credits ======= ** "
+"Contributors ** * Nhomar Hernandez <nhomar@vauxoo.com> (Planner / Auditor) *"
+" Luis Torres <luis_t@vauxoo.com> (Auditor) * Humberto Arocha "
+"<luis_t@vauxoo.com> (Planner / Developer)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_vat
@@ -21414,17 +22806,17 @@ msgstr "Проверка подключения"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
 msgid "Test Main Flow"
-msgstr ""
+msgstr "Тестирование основного процесса"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
 msgid "Test Performance"
-msgstr ""
+msgstr "тестирование производительности"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rpc
 msgid "Test RPC"
-msgstr ""
+msgstr "тест RPC"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -21491,6 +22883,9 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"Выражение параметров выбора не является действительным выражением Pythonic. "
+"Пожалуйста, предоставьте выражение в формате [( &#39;key&#39;, "
+"&#39;label&#39; ...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -21668,12 +23063,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "The following apps will be uninstalled"
-msgstr ""
+msgstr "Следующие приложения будут удалены"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "The following documents will be permanently lost"
-msgstr ""
+msgstr "Следующие документы будут потеряны навсегда"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:69
@@ -21777,7 +23172,7 @@ msgstr "Единственными предопределенными перем
 #: code:addons/model.py:121
 #, python-format
 msgid "The operation cannot be completed:"
-msgstr ""
+msgstr "Операцию невозможно завершить:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
@@ -21845,6 +23240,8 @@ msgid ""
 "The requested operation cannot be completed due to record rules: Document "
 "type: %s, Operation: %s, Records: %s, User: %s"
 msgstr ""
+"Запрашиваемая операция не может быть завершена по правилам записи: Тип "
+"документа:% s, Операция:% s, Сообщений:% s, Пользователь:% s"
 
 #. module: base
 #: code:addons/models.py:2551 code:addons/models.py:2760
@@ -21862,7 +23259,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The rounding factor must be greater than 0!"
-msgstr ""
+msgstr "Коэффициент округления должно быть больше 0!"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
@@ -21883,6 +23280,8 @@ msgid ""
 "The server is busy right now, module operations are not possible at this "
 "time, please try again later."
 msgstr ""
+"Сервер сейчас занят, операции модулей пока невозможны. Повторите попытку "
+"позже."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
@@ -21926,6 +23325,8 @@ msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
 "current model)."
 msgstr ""
+"Значение для поля &quot;% s&quot; уже существует (вероятно, &quot;% s&quot; "
+"в текущем модуль)."
 
 #. module: base
 #: code:addons/models.py:5350
@@ -21934,6 +23335,8 @@ msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
 "current model)."
 msgstr ""
+"Значения для полей &quot;% s&quot; уже существуют (они, вероятно, является "
+"&quot;% s&quot; в текущей модели)."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme
@@ -22090,12 +23493,12 @@ msgstr "Формат времени"
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid
 msgid "Timesheet Validation and Grid View"
-msgstr ""
+msgstr "Проверка табеля и режим просмотра сетки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
 msgid "Timesheet when on Leaves"
-msgstr ""
+msgstr "Табель во время отпуска"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_timesheet
@@ -22186,7 +23589,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "To return an action, assign: <code>action = {...}</code>"
-msgstr ""
+msgstr "Чтобы вернуть действие, назначьте: <code>дія = {...}</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -22221,7 +23624,7 @@ msgstr "Верхнее поле (мм)"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_count
 msgid "Total number of records in this model"
-msgstr ""
+msgstr "Общее количество записей в этой модели"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
@@ -22267,7 +23670,7 @@ msgstr "Переходный процесс: Правда"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_transifex
 msgid "Transifex integration"
-msgstr ""
+msgstr "интеграция Transifex"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_trans_implied_ids
@@ -22353,7 +23756,7 @@ msgstr "Переводы"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
 msgid "Transportation"
-msgstr ""
+msgstr "перевозки"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -22409,6 +23812,9 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Предложено две реализации объектов Стандартная и &quot;Без пробелов&quot;. "
+"Позже это медленнее, чем первый, но запрещает любой пробел в "
+"последовательности (когда они являются возможными в первом)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -22451,7 +23857,7 @@ msgstr "Тип:"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U ACTIVITIES OF EXTRA TERRITORIAL ORGANISATIONS AND BODIES"
-msgstr ""
+msgstr "U деятельность эксперта ТЕРРИТОРИАЛЬНЫХ ОРГАНИЗАЦИЙ И ОРГАНОВ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae
@@ -22471,12 +23877,12 @@ msgstr "Великобритания - Бухгалтерские Отчёты"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports_hmrc
 msgid "UK - Accounting Reports to HMRC"
-msgstr ""
+msgstr "UK - Бухгалтерские отчеты в HMRC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS Bill My Account"
-msgstr ""
+msgstr "Выставления мне счета UPS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
@@ -22493,7 +23899,7 @@ msgstr "URL ссылки"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
 msgid "US - Accounting Reports"
-msgstr ""
+msgstr "США - Бухгалтерские отчеты"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_check_printing
@@ -22587,7 +23993,7 @@ msgstr "Удалить"
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
-msgstr ""
+msgstr "неустановленный модуль"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -22631,7 +24037,7 @@ msgstr "Неизвестный"
 #: code:addons/models.py:833
 #, python-format
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Неизвестная ошибка базы данных &#39;% s&#39;"
 
 #. module: base
 #: code:addons/models.py:996
@@ -22730,7 +24136,7 @@ msgstr "Обновление терминов"
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Update the Record"
-msgstr ""
+msgstr "обновить запись"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_report_form
@@ -22738,6 +24144,8 @@ msgid ""
 "Update your company details and upload your logo to get a beautiful "
 "document."
 msgstr ""
+"Обновите детали вашей компании и загрузите ваше лого, чтобы получить хороший"
+" документ."
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl
@@ -22812,7 +24220,7 @@ msgstr "Используйте формат '%s'"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_vat_label
 msgid "Use this field if you want to change vat label."
-msgstr ""
+msgstr "Используйте это поле, если вы хотите изменить метку ндс."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_address_view_id
@@ -22822,6 +24230,10 @@ msgid ""
 "display addresses (in reports for example), while this field is used to "
 "modify the input form for addresses."
 msgstr ""
+"Используйте это поле, если вы хотите заменить обычный способ кодирования "
+"полного адреса. Обратите внимание, что поле address_format используется для "
+"изменения способа отображения адресов (например, в отчетах), тогда как это "
+"поле используется для изменения формы ввода для адресов."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation_table
@@ -22985,27 +24397,29 @@ msgstr "Подтверждение номера НДС"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
 msgid "VOIP"
-msgstr ""
+msgstr "IP-телефония"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_onsip
 msgid "VOIP OnSIP"
-msgstr ""
+msgstr "IP-телефония OnSIP"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_phone_validation
 msgid "Validate and format contact form numbers"
-msgstr ""
+msgstr "Подтверждение и форматирование номеров контактных форм"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_phone_validation
 msgid "Validate and format phone numbers"
-msgstr ""
+msgstr "Подтверждение и форматирование номеров телефонов"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_phone_validation
 msgid "Validate and format phone numbers for leads and contacts"
 msgstr ""
+"Подтверждение и форматирование номеров телефонов для потенциальных клиентов "
+"и контактов"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_value
@@ -23074,7 +24488,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_vat_label
 msgid "Vat Label"
-msgstr ""
+msgstr "метка Ндс"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
@@ -23089,7 +24503,7 @@ msgstr "Поставщик"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr ""
+msgstr "Счет поставщика: готов к оплате"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -23195,7 +24609,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:583
 #, python-format
 msgid "View: %s"
-msgstr ""
+msgstr "Посмотреть:% s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -23272,7 +24686,7 @@ msgstr "Склад - сканирование штрих-кодов"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Picking"
-msgstr ""
+msgstr "Управление складами: пакетное комплектования"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:479
@@ -23297,7 +24711,7 @@ msgstr "Предупреждения"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
-msgstr ""
+msgstr "Поставка воды"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -23347,7 +24761,7 @@ msgstr "Изображение веб-иконки"
 #: model:ir.module.module,shortdesc:base.module_http_routing
 #: model:ir.module.module,summary:base.module_http_routing
 msgid "Web Routing"
-msgstr ""
+msgstr "Веб-маршрутизация"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
@@ -23481,7 +24895,7 @@ msgstr "Cлайды Службы поддержки веб-сайта"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
 msgid "Website Studio"
-msgstr ""
+msgstr "Сайт студия"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
@@ -23576,7 +24990,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
 msgid "Wholesale/Retail"
-msgstr ""
+msgstr "Оптовая / розничная торговля"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
@@ -23677,6 +25091,7 @@ msgstr ""
 #, python-format
 msgid "You are trying to install incompatible modules in category \"%s\":"
 msgstr ""
+"Вы пытаетесь установить несовместимые модули в категории &quot;% s&quot;:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_type
@@ -23825,6 +25240,9 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"Ваш сервер Odoo не поддерживает SMTP-over-SSL. Вы можете использовать "
+"STARTTLS. Если нужен протокол SSL, обновление до Python 2.6 на стороне "
+"сервера должно сделать трюк."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:480
@@ -23919,22 +25337,22 @@ msgstr "base.update.translations"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "binary"
-msgstr ""
+msgstr "двойной"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "boolean"
-msgstr ""
+msgstr "булевых"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr ""
+msgstr "доставка bpost"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr ""
+msgstr "символ"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -23944,7 +25362,7 @@ msgstr "выбрать"
 #. module: base
 #: model:ir.module.category,name:base.module_category_crm
 msgid "crm"
-msgstr ""
+msgstr "crm"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:314
@@ -23955,12 +25373,12 @@ msgstr "идентификатор базы данных"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "date"
-msgstr ""
+msgstr "дата"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "datetime"
-msgstr ""
+msgstr "дата время"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -24026,7 +25444,7 @@ msgstr "например www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr ""
+msgstr "коннектор eBay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
@@ -24063,7 +25481,7 @@ msgstr "ложь"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "float"
-msgstr ""
+msgstr "float"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -24094,7 +25512,7 @@ msgstr "взять"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "html"
-msgstr ""
+msgstr "html"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -24105,7 +25523,7 @@ msgstr "вкл"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "integer"
-msgstr ""
+msgstr "integer"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -24149,7 +25567,7 @@ msgstr "ir.actions.client"
 #: model:ir.model,name:base.model_ir_actions_report
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report"
-msgstr ""
+msgstr "ir.actions.report"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -24355,17 +25773,17 @@ msgstr "ir.ui.view.custom"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2many"
-msgstr ""
+msgstr "many2many"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr ""
+msgstr "many2one"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "monetary"
-msgstr ""
+msgstr "monetary"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:494
@@ -24393,7 +25811,7 @@ msgstr "на"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "one2many"
-msgstr ""
+msgstr "one2many"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
@@ -24403,12 +25821,12 @@ msgstr "pos_cache"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "pos_sale"
-msgstr ""
+msgstr "pos_sale"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr ""
+msgstr "ссылки"
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
@@ -24448,7 +25866,7 @@ msgstr "res.users.log"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "selection"
-msgstr ""
+msgstr "выбор"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -24508,12 +25926,12 @@ msgstr "test-limits"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_lint
 msgid "test-lint"
-msgstr ""
+msgstr "test-lint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import
 msgid "test-translation-import"
-msgstr ""
+msgstr "test-translation-import"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
@@ -24528,7 +25946,7 @@ msgstr "test_convert"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "text"
-msgstr ""
+msgstr "текст"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer

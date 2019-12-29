@@ -15,6 +15,7 @@
 # Yuriy Ney <k_wizard@mail.ru>, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Collex100, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-17 15:01+0000\n"
 "PO-Revision-Date: 2017-09-20 10:16+0000\n"
-"Last-Translator: Collex100, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,13 +34,15 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"$ {Object.company_id.name} Заказ на доставку (Ref $ {object.name or &#39;n /"
+" a&#39;})"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_notification
@@ -269,14 +272,14 @@ msgstr "Создан"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "отслеживание журналов"
 
 #. module: delivery
 #. openerp-web
 #: code:addons/delivery/static/src/js/delivery_translations.js:13
 #, python-format
 msgid "Debug requests"
-msgstr ""
+msgstr "Запросы на налаживание"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -291,7 +294,7 @@ msgstr "Перевозчик доставки"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "Цена доставки"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -301,7 +304,7 @@ msgstr "Информация о доставке"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "сообщение доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -328,7 +331,7 @@ msgstr "Мастер выбора упаковки для доставки"
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr ""
+msgstr "упаковки доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
@@ -349,7 +352,7 @@ msgstr "Доставка товара"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "Рейтинг успеха доставки"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -366,7 +369,7 @@ msgstr "Определить порядок отображения"
 #: code:addons/delivery/static/src/js/delivery_translations.js:14
 #, python-format
 msgid "Disable debug"
-msgstr ""
+msgstr "Отключить отладку"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -396,7 +399,7 @@ msgstr ""
 #: code:addons/delivery/static/src/js/delivery_translations.js:16
 #, python-format
 msgid "Enable debug"
-msgstr ""
+msgstr "включить отладку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -414,7 +417,7 @@ msgstr "Ошибка, нет соответствующей сетки (grid)"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Ошибка: этот метод доставки недоступен для этого адреса."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -568,7 +571,7 @@ msgstr "Длина должна быть положительной"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Запросы журнала, чтобы облегчить налаживание"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -588,7 +591,7 @@ msgstr "Маржа не может быть ниже -100%"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Маржа на ставке"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
@@ -633,13 +636,15 @@ msgstr "Нет установленного перевозчика для это
 #: code:addons/delivery/static/src/js/delivery_translations.js:15
 #, python-format
 msgid "No debug"
-msgstr ""
+msgstr "Есть настройка"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Нет правила цены, соответствующие этому заказу; стоимость доставки не может "
+"быть вычислена."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -693,7 +698,7 @@ msgstr "Операция упаковки"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "физическая упаковка"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -707,6 +712,8 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
+"Пожалуйста, используйте &quot;Проверить цену&quot;, чтобы вычислить цену "
+"доставки по этой коммерческим предложением."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -789,7 +796,7 @@ msgstr "Сохранить"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "Отправьте подтверждение по электронной почте"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -821,6 +828,8 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Отправка направлено перевозчику% s для отправки с номером отслеживания% s "
+"<br/> Стоимость:% .2f% s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -837,7 +846,7 @@ msgstr "Вес с упаковкой"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "Вес груза:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product_hs_code
@@ -920,7 +929,7 @@ msgstr "Ссылка для отслеживания"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "URL-адрес отслеживания"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -990,7 +999,7 @@ msgstr "Вес для перевозкы груза"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "вес:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
@@ -1017,6 +1026,8 @@ msgstr ""
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
 msgstr ""
+"Вы можете добавить цену доставки только на неподтвержденной коммерческое "
+"предложение."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:182
