@@ -2104,7 +2104,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
-        :param list orderby: optional ``order by`` specification, for
+        :param str orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
