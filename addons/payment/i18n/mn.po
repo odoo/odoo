@@ -7,6 +7,7 @@
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-18 09:47+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019\n"
+"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +124,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Миний Stripe түлхүүрүүдийг авах</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -178,19 +179,19 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "%s гүйлгээг %s-тэй эхлүүлсэн."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
-msgstr ""
+msgstr "Гүйлгээг өөр валюттай нэхэмжлэх рүү холбох боломжгүй."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
-msgstr ""
+msgstr "Гүйлгээг өөр түншүүдтэй хийсэн нэхэмжлэхтэй холбох боломжгүй."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -384,12 +385,12 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "Буцаж дуудах баримт бичгийн дугаар"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Буцаж дуудах баримт бичгийн загвар"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
@@ -399,7 +400,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "Буцаж холбогдох арга"
 
 #. module: payment
 #. openerp-web
@@ -437,7 +438,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Төлбөрийн тохиргоо хийж чадахгүй байна."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
@@ -521,7 +522,7 @@ msgstr "Тохируулга"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Устгалтыг баталгаажуулна уу"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -553,12 +554,12 @@ msgstr "Улс"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr ""
+msgstr "Төлбөр хүлээн авагч шинээр үүсгэх."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "Шинэ төлбөрийн гүйлгээ хийх"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -568,7 +569,7 @@ msgstr "Төлбөрийн дүрсийг үүсгэх"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "Хадгалсан төлбөрийн мэдээллийг үүсгэх"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -841,7 +842,7 @@ msgstr "HTTP Routing"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "Төлбөрийг нийтэлсэн байна."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -894,7 +895,7 @@ msgstr "Зураг"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "Төлбөрийн маягт дээр зураг харагдаж байна."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__state
@@ -1113,7 +1114,7 @@ msgstr "Арга"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr ""
+msgstr "Шинэ төлбөрийн токен үүсгэх үед түншийн лавлагаа байхгүй байна"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1146,14 +1147,14 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Төлбөр хүлээн авагч олдсонгүй."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Төлбөр хийгдээгүй байна."
 
 #. module: payment
 #. openerp-web
@@ -1161,7 +1162,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Төлбөрийн аргыг сонгоогүй байна"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__not_done
@@ -1200,32 +1201,32 @@ msgstr "Тийм"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "Зөвхөн админ л энэ өгөгдөлд хандалт хийж чадна."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Зөвхөн ноорог гүйлгээ боловсруулж болно."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Зөвхөн ноорог гүйлгээ боловсруулж болно."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
+msgstr "Зөвхөн ноорог/зөвшөөрөгдсөн гүйлгээг цуцалж болно."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr ""
+msgstr "Зөвхөн ноорог / эрх бүхий гүйлгээг нийтлэх боломжтой."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1243,7 +1244,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Эсвэл банкны програмаараа скан хийж болно."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1310,7 +1311,7 @@ msgstr "Төлбөрийн хэрэгсэл"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
 msgid "Payment Flow"
-msgstr ""
+msgstr "Төлбөрийн урсгал"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1326,13 +1327,13 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_icon
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "Төлбөрийн тэмдэг"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Төлбөрийн тэмдэгүүд"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
@@ -1404,12 +1405,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__payment_flow__s2s
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "Odoo-с төлбөр хийх"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "Төлбөрийн аргыг тохируулсан!"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1422,14 +1423,14 @@ msgstr "Төлбөрүүд"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "Төлбөр амжилтгүй болсон"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Төлбөр хүлээн авсан"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1459,7 +1460,7 @@ msgstr "Утас"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Төлбөр хүлээн авагчийг тохируулна уу."
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1478,7 +1479,7 @@ msgstr "Төлбөрийн арга сонгоно уу."
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "Шинэ төлбөрийн арга нэмэх сонголтыг сонгоно уу."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1498,12 +1499,12 @@ msgstr "Түр хүлээнэ үү..."
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "Төлбөрийн гүйлгээг хойшлуулна уу."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Боловсруулсан"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1522,7 +1523,7 @@ msgstr "Шалтгаан:"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__payment_flow__form
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Худалдан авагчийн вэбсайт руу дахин чиглүүлэх"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1533,7 +1534,7 @@ msgstr "Холбогдол"
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Лавлагаа нь цор ганц байх ёстой!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1559,7 +1560,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "Төлбөр төлсний дараа URL-г буцаана уу"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
@@ -1574,7 +1575,7 @@ msgstr "SEPA төлбөр хүлээн авах"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Карт хадгалах"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1605,7 +1606,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Онлайнаар төлбөр хийх төлбөрийн аргыг сонгосон байна"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1642,7 +1643,7 @@ msgstr "Серверийн алдаа"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Серверийн алдаа:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1668,7 +1669,7 @@ msgstr "Төлөв"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "Онлайнаар төлбөр хүлээн авах алхам"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1694,7 +1695,7 @@ msgstr "Stripe Secret Key"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "Дэмжигдсэн төлбөрийн тэмдэгтүүд"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
@@ -1717,13 +1718,13 @@ msgstr "%s төлбөрийн хэрэгсэл нь гараар төлбөр б
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "SEPA QR кодын мэдээллийг зөв тохируулаагүй байна."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "Энэ баримтыг төлөхийн тулд үйлчлүүлэгч %s-г сонгосон байна."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1745,7 +1746,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "%s-ийн %s-тай %s гүйлгээ цуцлагдсан байна."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1753,7 +1754,7 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
-msgstr ""
+msgstr "%s-ийн %s-тай %sгүйлгээ батлагдлаа. Холбогдох төлбөрийг оруулсан: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1767,7 +1768,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "%s-ийн %s-тай %s гүйлгээ хүлээгдэж байна."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1789,6 +1790,8 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Энэ талбар нь 1024x1024px -ээр хязгаарлагдсан энэ төлбөрийн дүрсний дүрсийг "
+"ашигладаг."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__save_token
@@ -1798,6 +1801,8 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Энэ сонголт нь үйлчлүүлэгчдэд кредит картаа төлбөрийн токен болгон хадгалах, дараа нь худалдаж авахад ашиглах боломжийг олгодог.\n"
+"Хэрэв та захиалгуудыг удирдаж байгаа бол (давтагдах нэхэмжлэх), та нэхэмжлэх гаргахдаа захиалагчийг автоматаар цэнэглэх шаардлагатай болно."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1805,6 +1810,8 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
+"Энэ төлбөрийн гарцыг сонгосон улс орнуудад ашиглах боломжтой. Хэрэв ямар ч "
+"улс сонгоогүй бол энэ нь бүх улс оронд боломжтой юм."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__view_template_id
@@ -1828,7 +1835,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Энэ гүйлгээг цуцаллаа."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_move__transaction_ids
@@ -1852,7 +1859,7 @@ msgstr "Төрөл"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Odoo сервертэй холбогдох боломжгүй байна."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1863,7 +1870,7 @@ msgstr "Хувилбар Ахиулах"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "SEPA QR кодыг ашиглана уу"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -1873,7 +1880,7 @@ msgstr "Батламжилсан огноо"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__validation
 msgid "Validation of the bank card"
-msgstr ""
+msgstr "Банкны картын баталгаажуулалт"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
@@ -1888,7 +1895,7 @@ msgstr "Олон улсын хувьсах шимтгэл (процентоор)
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
 msgid "Verified"
-msgstr ""
+msgstr "Шалгах"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__check_validity
@@ -1906,13 +1913,13 @@ msgstr "Гүйлгээ буцаалт"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "Төлбөр хүлээж байна"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "Төлбөр баталгаажуулахыг хүлээж байна ..."
 
 #. module: payment
 #. openerp-web
@@ -1926,14 +1933,14 @@ msgstr "Анхааруулга!"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Бид одоогоор таны төлбөрийн аргыг нэмэх боломжгүй байна."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "Бид одоогоор таны төлбөрийн аргыг нэмэх боломжгүй байна.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1941,14 +1948,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
-msgstr ""
+msgstr "Бид таны төлбөрийн аргыг одоо устгах боломжгүй байна."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Бид таны төлбөрийг олж чадсангүй, гэхдээ санаа зовох хэрэггүй."
 
 #. module: payment
 #. openerp-web
@@ -1956,7 +1963,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "Бид таныг төлбөрийн маягт руу шилжүүлэх боломжгүй байна."
 
 #. module: payment
 #. openerp-web
@@ -1970,14 +1977,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Бид төлбөр хүлээн авагч төлбөрийг баталгаажуулахыг хүлээж байна."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Бид таны төлбөрийг боловсруулах боломжгүй байна."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1989,13 +1996,13 @@ msgstr "Утсаар захиалах гүйлгээ"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Баталгаажуулах хуудас руу шилжихийн тулд та энд дарна уу."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Та төлбөр хүлээн авагчын журнал тохируулах хэрэгтэй%s."
 
 #. module: payment
 #. openerp-web
@@ -2003,34 +2010,35 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Хэдэн минутын дараа та төлбөрөө баталгаажуулсан имэйл хүлээн авах болно."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Төлбөр баталгаажсан тохиолдолд танд мэдэгдэх болно."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Төлбөр бүрэн баталгаажсан тохиолдолд танд мэдэгдэх болно."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Таны захиалгыг боловсруулж байна."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "Таны захиалгыг боловсруулж байна, түр хүлээнэ үү ..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2074,6 +2082,7 @@ msgstr ""
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
 msgstr ""
+"Таны төлбөрийг хүлээн авсан боловч гараар баталгаажуулах шаардлагатай."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2116,7 +2125,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Таны төлбөр хүлээгдэж байна."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -2131,7 +2140,7 @@ msgstr "Зип код"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "ба бусад"
 
 #. module: payment
 #. openerp-web
@@ -2140,8 +2149,9 @@ msgstr ""
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr ""
+"Жишээ нь. Таны зээлийн картын мэдээлэл буруу байна. Дугаарыг тулгана уу."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "төлбөрийн өөр аргыг сонгох."
