@@ -236,7 +236,7 @@ class IrTranslation(models.Model):
         '''
         for record in self:
             record.source = record.src
-            if record.type != 'model':
+            if record.type != 'model' or not record.name:
                 continue
             model_name, field_name = record.name.split(',')
             if model_name not in self.env:
