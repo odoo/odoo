@@ -5,10 +5,11 @@
 # Translators:
 # Martin Trigaux, 2019
 # Quim - eccit <quim@eccit.com>, 2019
-# Manel Fernandez <manelfera@outlook.com>, 2019
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # M Palau <mpalau@tda.ad>, 2019
 # Arnau Ros, 2019
+# Carles Antoli <carlesantoli@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Arnau Ros, 2019\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,13 +43,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_type.py:265
 #, python-format
 msgid " days"
-msgstr ""
+msgstr "dies"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:265
 #, python-format
 msgid " hours"
-msgstr ""
+msgstr "hores"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -91,7 +92,7 @@ msgstr "%s : %.2f dies"
 #: code:addons/hr_holidays/models/hr_leave.py:466
 #, python-format
 msgid "%s : %.2f hour(s)"
-msgstr ""
+msgstr "%s : %.2f hora(es)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:440
@@ -103,7 +104,7 @@ msgstr "%s en %s : %.2f dies"
 #: code:addons/hr_holidays/models/hr_leave.py:481
 #, python-format
 msgid "%s on %s : %.2f hour(s)"
-msgstr ""
+msgstr "%s a %s : %.2f hora(es)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -592,7 +593,7 @@ msgstr "Totes les absències"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
 msgid "Allocated (Days/Hours)"
-msgstr ""
+msgstr "Assignat (Dies/Hores)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1128,6 +1129,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
+"Camp que permet veure la durada de l'assignació en dies o hores segons el "
+"tyipe_request_unit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -1135,6 +1138,8 @@ msgid ""
 "Field allowing to see the leave request duration in days or hours depending "
 "on the leave_type_request_unit"
 msgstr ""
+"Camp que permet veure la durada de la sol·licitud de permís en dies o hores,"
+" depenent del leave_type_request_unit"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -1613,7 +1618,7 @@ msgstr "Absències."
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2019"
-msgstr ""
+msgstr "Absències legals 2019"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1981,7 +1986,7 @@ msgstr "Vista general"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla
 msgid "Paid Time Off 2019"
-msgstr ""
+msgstr "Vacances pagades 2019"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -2114,7 +2119,7 @@ msgstr "Petició rebutjada"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
 msgid "Requested (Days/Hours)"
-msgstr ""
+msgstr "Sol·licitat (Dies/Hores)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -2586,7 +2591,7 @@ msgstr "No pots tenir 2 absències que es superposen al mateix dia!"
 #: code:addons/hr_holidays/models/hr_leave.py:520
 #, python-format
 msgid "You can take %s from %s"
-msgstr ""
+msgstr "Podeu agafar %s de %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:515
@@ -2598,7 +2603,7 @@ msgstr "Pots prendre %s només entre %s i %s"
 #: code:addons/hr_holidays/models/hr_leave.py:525
 #, python-format
 msgid "You can take %s until %s"
-msgstr ""
+msgstr "Podeu agafar %s fins%s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:576
@@ -2629,6 +2634,7 @@ msgstr "Dia/es"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:222
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:330
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -2650,6 +2656,7 @@ msgstr "hora/es"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:222
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:330
 #, python-format
 msgid "hours"
 msgstr "hores"

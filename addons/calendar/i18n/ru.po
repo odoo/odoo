@@ -6,6 +6,7 @@
 # Martin Trigaux, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-25 09:28+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Андрей Гусев <gaussgss@gmail.com>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,37 +63,37 @@ msgstr "%s, приглашение отклонено"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "1 Day(s)"
-msgstr ""
+msgstr "1 день"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "1 Hour(s)"
-msgstr ""
+msgstr "1 минута"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "15 Minute(s)"
-msgstr ""
+msgstr "15 минут"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "2 Hour(s)"
-msgstr ""
+msgstr "2:00"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "3 Hour(s), by e-mail"
-msgstr ""
+msgstr "3:00, по e-mail"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "30 Minute(s)"
-msgstr ""
+msgstr "30 минут"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "6 Hour(s), by e-mail"
-msgstr ""
+msgstr "6:00 по e-mail"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -171,6 +172,10 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div> % Set colors = { &#39;needsAction &quot;:&quot; grey &quot;,&quot; accepted &quot;:&quot; green &quot;,&quot; tentative &quot;:&quot; # FFFF00 &quot;,&quot; declined &quot;:&quot; red&#39;} <!--\n"
+"        У випадку, що повторюється, object.event_id завжди є першою подією\n"
+"        Це робить дату події (та іншу інформацію) некоректною\n"
+"    --> % Set event_id = ctx.get ( &#39;force_event_id&#39;) or object.event_id <p> Поздравляем $ {object.common_name} <br/><br/> Это напоминание о событии: </p><div style=\"text-align: center; margin: 16px 0px 16px 0px;\"> <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">Принять</a> <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">Отклонить</a> <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">Посмотреть</a> </div><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td width=\"130px;\"><div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\"> $ {Event_id.get_interval ( &#39;dayname &quot;, tz = object.partner_id.tz if not event_id.allday else None)} </div><div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\"> $ {Event_id.get_interval ( &#39;day&#39;, tz = object.partner_id.tz if not event_id.allday else None)} </div><div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\"> $ {Event_id.get_interval ( &#39;month&#39;, tz = object.partner_id.tz if not event_id.allday else None)} </div><div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\"> $ {Not event_id.allday and event_id.get_interval ( &#39;time&#39;, tz = object.partner_id.tz) or &#39;&#39;} </div></td><td width=\"20px;\"/><td style=\"padding-top: 5px;\"><p> <strong>детали события</strong> </p><ul> % If object.event_id.location: <li> Расположение: $ {object.event_id.location} ( <a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">Посмотреть карту</a> ) </li> % Endif% if object.event_id.description: <li> Описание: $ {object.event_id.description} </li> % Endif% if not object.event_id.allday and object.event_id.duration <li> Описание: $ {( &#39;% dH% 02d &quot;% (object.event_id.duration, (object.event_id.duration * 60)% 60))} </li> % endif <li> Участники <ul> % For attendee in object.event_id.attendee_ids: <li><div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"></div> % If attendee.common_name! = Object.common_name: <span style=\"margin-left:5px\">$ {attendee.common_name}%</span> else <span style=\"margin-left:5px\">Вы%</span> endif </li> % endfor </ul></li></ul></td></tr></table><br/> Спасибо, <br/> % If object.event_id.user_id and object.event_id.user_id.signature: $ {object.event_id.user_id.signature | safe}% endif </div>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -244,6 +249,65 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div> % Set colors = { &#39;needsAction &quot;:&quot; grey &quot;,&quot; "
+"accepted &quot;:&quot; green &quot;,&quot; tentative &quot;:&quot; # FFFF00 "
+"&quot;,&quot; declined &quot;:&quot; red&#39;} <p> Поздравляем $ "
+"{object.common_name} <br/><br/> $ {Object.event_id.user_id.partner_id.name} "
+"пригласил вас на $ {object.event_id.name} событие $ "
+"{object.event_id.user_id.company_id.name}. </p><div style=\"text-align: "
+"center; margin: 16px 0px 16px 0px;\"> <a "
+"href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\">Принять</a> <a "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"'' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\">Отклонить</a> <a "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\">Посмотреть</a> </div><table "
+"border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td "
+"width=\"130px;\"><div style=\"border-top-left-radius: 3px; border-top-right-"
+"radius: 3px; font-size: 12px; border-collapse: separate; text-align: center;"
+" font-weight: bold; color: #ffffff; min-height: 18px; background-color: "
+"#875A7B; border: 1px solid #875A7B;\"> $ {Object.event_id.get_interval ( "
+"&#39;dayname &quot;, tz = object.partner_id.tz if not object.event_id.allday"
+" else None)} </div><div style=\"font-size: 48px; min-height: auto; font-"
+"weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8;"
+" border: 1px solid #875A7B;\"> $ {Object.event_id.get_interval ( "
+"&#39;day&#39;, tz = object.partner_id.tz if not object.event_id.allday else "
+"None)} </div><div style=\"font-size: 12px; text-align: center; font-weight: "
+"bold; color: #ffffff; background-color: #875A7B;\"> $ "
+"{Object.event_id.get_interval ( &#39;month&#39;, tz = object.partner_id.tz "
+"if not object.event_id.allday else None)} </div><div style=\"border-"
+"collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; "
+"border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid "
+"#875A7B; border-bottom-left-radius: 3px;\"> $ {Not object.event_id.allday "
+"and object.event_id.get_interval ( &#39;time&#39;, tz = "
+"object.partner_id.tz) or &#39;&#39;} </div></td><td width=\"20px;\"/><td "
+"style=\"padding-top: 5px;\"><p> <strong>детали события</strong> </p><ul> % "
+"If object.event_id.location: <li> Расположение: $ {object.event_id.location}"
+" ( <a target=\"_blank\" "
+"href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">Посмотреть"
+" карту</a> ) </li> % Endif% if object.event_id.description: <li> Описание: $"
+" {object.event_id.description} </li> % Endif% if not object.event_id.allday "
+"and object.event_id.duration <li> Продолжительность: $ {( &#39;% dH% 02d "
+"&quot;% (object.event_id.duration, round (object.event_id.duration * 60)% "
+"60))} </li> % endif <li> Участники <ul> % For attendee in "
+"object.event_id.attendee_ids: <li><div style=\"display: inline-block; "
+"border-radius: 50%; width: 10px; height: 10px; "
+"background:${colors[attendee.state] or 'white'};\"></div> % If "
+"attendee.common_name! = Object.common_name: <span style=\"margin-"
+"left:5px\">$ {attendee.common_name}%</span> else <span style=\"margin-"
+"left:5px\">Вы%</span> endif </li> % endfor "
+"</ul></li></ul></td></tr></table><br/> Спасибо, <br/> % If "
+"object.event_id.user_id and object.event_id.user_id.signature: $ "
+"{object.event_id.user_id.signature | safe}% endif </div>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -317,6 +381,66 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div> % Set colors = { &#39;needsAction &quot;:&quot; grey &quot;,&quot; "
+"accepted &quot;:&quot; green &quot;,&quot; tentative &quot;:&quot; # FFFF00 "
+"&quot;,&quot; declined &quot;:&quot; red&#39;} <p> Поздравляем $ "
+"{object.common_name} <br/><br/> Дату события обновлен. Событие $ "
+"{object.event_id.name} создана $ {object.event_id.user_id.partner_id.name} "
+"запланирована сейчас на $ {object.event_id.get_display_time_tz (tz = "
+"object.partner_id.tz)}. </p><div style=\"text-align: center; margin: 16px "
+"0px 16px 0px;\"> <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and"
+" ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\">Принять</a> <a "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"'' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\">Отклонить</a> <a "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\">Посмотреть</a> </div><table "
+"border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td "
+"width=\"130px;\"><div style=\"border-top-left-radius: 3px; border-top-right-"
+"radius: 3px; font-size: 12px; border-collapse: separate; text-align: center;"
+" font-weight: bold; color: #ffffff; min-height: 18px; background-color: "
+"#875A7B; border: 1px solid #875A7B;\"> $ {Object.event_id.get_interval ( "
+"&#39;dayname &quot;, tz = object.partner_id.tz if not object.event_id.allday"
+" else None)} </div><div style=\"font-size: 48px; min-height: auto; font-"
+"weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8;"
+" border: 1px solid #875A7B;\"> $ {Object.event_id.get_interval ( "
+"&#39;day&#39;, tz = object.partner_id.tz if not object.event_id.allday else "
+"None)} </div><div style=\"font-size: 12px; text-align: center; font-weight: "
+"bold; color: #ffffff; background-color: #875A7B;\"> $ "
+"{Object.event_id.get_interval ( &#39;month&#39;, tz = object.partner_id.tz "
+"if not object.event_id.allday else None)} </div><div style=\"border-"
+"collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; "
+"border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid "
+"#875A7B; border-bottom-left-radius: 3px;\"> $ {Not object.event_id.allday "
+"and object.event_id.get_interval ( &#39;time&#39;, tz = "
+"object.partner_id.tz) or &#39;&#39;} </div></td><td width=\"20px;\"/><td "
+"style=\"padding-top: 5px;\"><p> <strong>детали события</strong> </p><ul> % "
+"If object.event_id.location: <li> Расположение: $ {object.event_id.location}"
+" ( <a target=\"_blank\" "
+"href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">Посмотреть"
+" карту</a> ) </li> % Endif% if object.event_id.description: <li> Описание: $"
+" {object.event_id.description} </li> % Endif% if not object.event_id.allday "
+"and object.event_id.duration <li> Продолжительность: $ {( &#39;% dH% 02d "
+"&quot;% (object.event_id.duration, round (object.event_id.duration * 60)% "
+"60))} </li> % endif <li> Участники <ul> % For attendee in "
+"object.event_id.attendee_ids: <li><div style=\"display: inline-block; "
+"border-radius: 50%; width: 10px; height: 10px; background: "
+"${colors[attendee.state] or 'white'};\"></div> % If attendee.common_name! = "
+"Object.common_name: <span style=\"margin-left:5px\">$ "
+"{attendee.common_name}%</span> else <span style=\"margin-"
+"left:5px\">Вы%</span> endif </li> % endfor "
+"</ul></li></ul></td></tr></table><br/> Спасибо, <br/> % If "
+"object.event_id.user_id and object.event_id.user_id.signature: $ "
+"{object.event_id.user_id.signature | safe}% endif </div>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -378,7 +502,7 @@ msgstr "Целый день , %s"
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
 msgid "An user cannot have twice the same contact."
-msgstr ""
+msgstr "Пользователь не может иметь дважды одинаковый контакт."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
@@ -443,12 +567,12 @@ msgstr "Оповещение календаря"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr ""
+msgstr "Информация календаря участника"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "Calendar Contacts"
-msgstr ""
+msgstr "Календарь Контакты"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -458,19 +582,21 @@ msgstr "Приглашение календаря"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr ""
+msgstr "Календарь встреч"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "Календарь: Напоминание событий"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
 msgid "Categories may trigger specific behavior like opening calendar view"
 msgstr ""
+"Категории могут вызвать определенное поведение, например, открытие окна "
+"календаря"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -595,7 +721,7 @@ msgstr "Модель документа"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "Модель документа"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -654,17 +780,17 @@ msgstr "Событие"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event Alarm"
-msgstr ""
+msgstr "Уведомление о событии"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Менеджер оповещения о событии"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr ""
+msgstr "Тип события"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -686,7 +812,7 @@ msgstr "Каждый"
 #: code:addons/calendar/models/mail_activity.py:38
 #, python-format
 msgid "Feedback: "
-msgstr ""
+msgstr "отзыв:"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -791,7 +917,7 @@ msgstr "Если отмечено - новые сообщения требуют
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Если обозначено, некоторые сообщения имеют ошибку доставки."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -825,7 +951,7 @@ msgstr "Приглашение для"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to ${object.event_id.name}"
-msgstr ""
+msgstr "Приглашение на $ {object.event_id.name}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -845,7 +971,7 @@ msgstr "Подписчик"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr ""
+msgstr "Или событие освещена"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -910,7 +1036,7 @@ msgstr "Логотип"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основное прикрепления"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
@@ -929,6 +1055,8 @@ msgstr "Встреча"
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
+"Встреча &quot;% s&quot; начинается &quot;% s&quot; и заканчивается &quot;% "
+"s&quot;"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -970,7 +1098,7 @@ msgstr "Сообщение"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Ошибка доставки сообщения"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -1037,7 +1165,7 @@ msgstr "Количество действий"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "количество ошибок"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
@@ -1047,7 +1175,7 @@ msgstr "Количество сообщений, требующих вниман
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Количество сообщений с ложной дставкою"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -1079,7 +1207,7 @@ msgstr "Только Вы"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr ""
+msgstr "открыть календарь"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1127,7 +1255,7 @@ msgstr "Конфиденциальность"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
-msgstr ""
+msgstr "повторение"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -1162,12 +1290,12 @@ msgstr "Повторяющееся правило"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
-msgstr ""
+msgstr "напомнить перед"
 
 #. module: calendar
 #: selection:mail.activity.type,category:0
 msgid "Reminder"
-msgstr ""
+msgstr "напоминание"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1208,7 +1336,7 @@ msgstr "Ответственный"
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "SMS Text Message"
-msgstr ""
+msgstr "Текст SMS-сообщения"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
@@ -1223,7 +1351,7 @@ msgstr "Суббота"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Schedule a new meeting"
-msgstr ""
+msgstr "Запланировать новую встречу"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1343,6 +1471,8 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
+"Деятельность связана с совещанием. Удаление его также приведет к удалению "
+"встречи. Вы хотите продолжить?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1351,19 +1481,21 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"Календарь делится между работниками и полностью интегрирован с другими "
+"программами, такие как отпуска работника, или бизнес возможности."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:941
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
-msgstr ""
+msgstr "Срок и время не могут быть раньше, чем начальная дата и время."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:946
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr ""
+msgstr "Конечная дата не может быть ранее, чем начальная дата."
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1389,7 +1521,7 @@ msgstr "Четверг"
 #: code:addons/calendar/models/res_users.py:41
 #, python-format
 msgid "Today's Meetings"
-msgstr ""
+msgstr "сегодняшние встречи"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tu

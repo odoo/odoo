@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Андрей Гусев <gaussgss@gmail.com>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +136,65 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"<?xml version=\"1.0\"?><table border=\"0\" cellpadding=\"0\" style"
+"=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: "
+"100%; border-collapse:separate;\"><tr><td align=\"center\"><table "
+"border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; "
+"background-color: white; color: #454748; border-collapse:separate;\" "
+"summary=\"o_mail_notification\"><tbody><!-- HEADER --><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table width=\"590\" "
+"border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"white; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td "
+"valign=\"middle\"> <span style=\"font-size: 10px;\">Ваш значок</span> <br/> "
+"<span style=\"font-size: 20px; font-weight: bold;\">$ "
+"{object.badge_id.name}</span> </td><td valign=\"middle\" "
+"align=\"right\"><img "
+"src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: "
+"0px; margin: 0px; height: auto; width: 80px;\" alt=\"$ "
+"{Object.user_id.company_id.name}\"/></td></tr><tr><td colspan=\"2\" style"
+"=\"text-align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px "
+"0px;\"/></td></tr></table></td></tr><!-- CONTENT --><tr><td align=\"center\""
+" style=\"min-width: 590px;\"><table width=\"590\" border=\"0\" "
+"cellpadding=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td valign=\"top\""
+" style=\"font-size: 14px;\"><div> Поздравляем $ {object.user_id.name}! <br/>"
+" Вы только получили значок <strong>$ {object.badge_id.name}!</strong> <br/> "
+"% If object.badge_id.description <table cellspacing=\"0\" cellpadding=\"0\" "
+"border=\"0\" style=\"width: 560px; margin-top: 5px;\"><tbody><tr><td "
+"valign=\"center\"><img "
+"src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" "
+"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"$ "
+"{User.company_id.name}\"/></td><td valign=\"center\"> <cite>$ "
+"{object.badge_id.description}</cite> </td></tr></tbody></table> % endif "
+"<br/> % If object.sender_id Этот значок был предоставлен <strong>$ "
+"{object.sender_id.name}.</strong> % endif <br/> % If object.comment $ "
+"{object.comment}% endif <br/><br/> Спасибо, <br/> % If object.sender_id and "
+"object.sender_id.signature: $ {object.sender_id.signature | safe}% endif "
+"</div></td></tr><tr><td style=\"text-align:center;\"><hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/></td></tr></table></td></tr><!-- FOOTER "
+"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"590\""
+" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"white; font-size: 12px; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"middle\" align=\"left\"> $ "
+"{Object.user_id.company_id.name} </td></tr><tr><td valign=\"middle\" "
+"align=\"left\" style=\"opacity: 0.7;\"> $ {Object.user_id.company_id.phone}%"
+" if object.user_id.company_id.email | <a href=\"'mailto:%s' % "
+"${object.user_id.company_id.email}\" style=\"text-decoration:none; color: "
+"#454748;\">$ {object.user_id.company_id.email}</a> % endif% if "
+"object.user_id.company_id.website | <a href=\"'%s' % "
+"${object.user_id.company_id.website}\" style=\"text-decoration:none; color: "
+"#454748;\">$ {object.user_id.company_id.website}</a> % endif "
+"</td></tr></table></td></tr></tbody></table></td></tr><!-- POWERED BY "
+"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"590\""
+" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"#F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\"><tr><td "
+"style=\"text-align: center; font-size: 14px;\"> сделано <a target=\"_blank\""
+" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=gamification\" "
+"style=\"color: #875A7B;\">Odoo</a> </td></tr></table></td></tr></table>"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:660
@@ -184,6 +244,13 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div> <strong>Напоминание $ {object.name}</strong> <br/> Вы не обновили свой"
+" прогресс для достижения цели $ {object.definition_id.name} (сейчас "
+"достигнуто $ {object.completeness}%) по крайней мере $ "
+"{object.remind_update_delay} дней. Не забудьте сделать это. <br/><br/> "
+"Спасибо, <br/> % If object.challenge_id.manager_id and "
+"object.challenge_id.manager_id.signature: $ "
+"{object.challenge_id.manager_id.signature | safe}% endif </div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -191,6 +258,8 @@ msgid ""
 "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
 "aria-label=\"Goal in Progress\"/>"
 msgstr ""
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
+"aria-label=\"Goal in Progress\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -198,6 +267,8 @@ msgid ""
 "<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
 "aria-label=\"Goal Reached\"/>"
 msgstr ""
+"<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
+"aria-label=\"Goal Reached\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -205,6 +276,8 @@ msgid ""
 "<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
 "aria-label=\"Goal Failed\"/>"
 msgstr ""
+"<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
+"aria-label=\"Goal Failed\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -415,6 +488,104 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style"
+"=\"background-color: #EEE; border-collapse: collapse;\"><tr><td "
+"valign=\"top\" align=\"center\"> % Set record = ctx.get ( &#39;record&#39;)%"
+" set company = record and record.company_id or user.company_id% set "
+"challenge_lines = ctx.get ( &#39;challenge_lines &quot;, []) <table "
+"cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; "
+"width: 570px;\"><tr><td><table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\"><tr><div> % If object.visibility_mode == &#39;ranking&#39;: "
+"<td style=\"padding:15px;\"><p style=\"font-size:20px;color:#666666;\" "
+"align=\"center\"> панель лидеров </p></td> % endif </div></tr></table><table"
+" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style"
+"=\"background-color:#fff;\"><tr><td style=\"padding: 15px;\"> % If "
+"object.visibility_mode == &#39;personal&#39;: <span style=\"color:#666666"
+";font-size:13px;\">Вот ваш текущий прогресс в решении этой проблемы "
+"<strong>$ {object.name}.</strong></span> <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\"><tr><td "
+"align=\"center\"><div> Личная производительность "
+"</div></td></tr></table><table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:30px;color:#666666;\"><thead><tr "
+"style=\"color:#9A6C8E; font-size:12px;\"><th align=\"left\" style=\"padding-"
+"bottom: 0px;width:40%;text-align:left;\"> цели </th><th style=\"width:20"
+"%;text-align:right;\" align=\"left\"> целевой </th><th style=\"width:20"
+"%;text-align:right;\" align=\"right\"> Текущий </th><th style=\"width:20"
+"%;text-align:right;\" align=\"right\"> полнота </th></tr><tr><td "
+"colspan=\"5\" style=\"height:1px;background-"
+"color:#9A6C8E;\"/></tr></thead><tbody> % For line in challenge_lines: <tr "
+"style=\"font-weight:bold;\"><td style=\"padding: 20px 0;\" align=\"left\"> $"
+" {Line [ &#39;name&#39;]}% if line [ &#39;suffix&#39;] or line [ "
+"&#39;monetary&#39;]: ($ {line [ &#39;full_suffix&#39;]})% endif </td><td "
+"style=\"padding: 20px 0;\" align=\"right\"> $ { &quot;%. 2f&quot;% line [ "
+"&#39;target&#39;]}% if line [ &#39;suffix&#39;]: $ {line [ "
+"&#39;suffix&#39;]}% endif </td><td style=\"padding: 20px 0;\" "
+"align=\"right\"> $ { &quot;%. 2f&quot;% line [ &#39;current&#39;]}% if line "
+"[ &#39;suffix&#39;]: $ {line [ &#39;suffix&#39;]}% endif </td><td "
+"style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"> "
+"<strong>$ {line [ &#39;completeness&#39;] | int}%</strong> </td></tr><tr><td"
+" colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"/></tr> % "
+"endfor </tbody></table> % Else: <span style=\"color:#A8A8A8;font-"
+"size:13px;\">Испытания: <strong>$ {object.name}.</strong></span> % For line "
+"in challenge_lines: <!-- Header + Button table --><table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"margin-top:35px;\"><tr><td "
+"width=\"50%\"><div> Лучшие достижения целью <strong>$ {line [ "
+"&#39;name&#39;]}</strong> </div></td></tr></table><!-- Podium --> % If len "
+"(line [ &#39;goals&#39;]) == 2: <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:10px;\"><tr><td style=\"padding:0 "
+"30px;\"><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style"
+"=\"table-layout: fixed;\"><tr> % Set top_goals = line [ &#39;goals&#39;] "
+"[3]% for goal in top_goals: <td align=\"center\" style=\"width:32%;\"> % If "
+"loop.index == 1:% set extra_div = &#39; <div style=\"height:40px;\"/> "
+"&quot;% Set heightA = 95% set heightB = 75% set bgColor = &#39;# "
+"b898b0&#39;% set fontSize = 50% set podiumPosition = &#39;2&#39;% elif "
+"loop.index == 2:% set extra_div = &#39;&#39;% set heightA = 55% set heightB "
+"= 115% set bgColor = &#39;# 9A6C8E&#39;% set fontSize = 85% set "
+"podiumPosition = &#39;1&#39;% elif loop.index == 3:% set extra_div = &#39; "
+"<div style=\"height:60px;\"/> &quot;% Set heightA = 115% set heightB = 55% "
+"set bgColor = &#39;# c8afc1&#39;% set fontSize = 35% set podiumPosition = "
+"&#39;3&#39;% endif <div style=\"margin:0 3px 0 3px;height:220px;\"><div "
+"style=\"height:${heightA}px;\"> $ {Extra_div | safe} <div "
+"style=\"height:55px;\"><img style=\"margin-bottom:5px;width:50px;height:50px"
+";border-radius:50%;\" t-att-"
+"src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)\""
+" alt=\"$ {Goal [ &#39;name&#39;]}\"/></div><div align=\"center\" "
+"style=\"color:${bgColor};height:20px\"> $ {Goal [ &#39;name&#39;]} "
+"</div></div><div style=\"background-color:${bgColor | "
+"safe};height:${heightB}px;\"> <strong><span style=\"color:#fff;font-"
+"size:${fontSize}px;\">$ {podiumPosition | safe}</span></strong> </div><div "
+"style=\"height:30px;\"> $ { &quot;%. 2f&quot;% goal [ &#39;current&#39;]}% "
+"if line [ &#39;suffix&#39;] or line [ &#39;monetary&#39;]: $ {line [ "
+"&#39;full_suffix&#39;]}% endif </div></div></td> % endfor "
+"</tr></table></td></tr></table> % endif <!-- data table --><table "
+"cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-"
+"bottom:5px\"><tr><td><table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:30px;margin-"
+"bottom:5px;color:#666666;\"><thead><tr style=\"color:#9A6C8E; font-"
+"size:12px;\"><th style=\"width:15%;text-align:center;\"> звание </th><th "
+"style=\"width:25%;text-align:left;\"> имя </th><th style=\"width:30%;text-"
+"align:right;\"> Производительность% if line [ &#39;suffix&#39;]: ($ {line [ "
+"&#39;suffix&#39;]})% elif line [ &#39;monetary&#39;]: ($ "
+"{company.currency_id.symbol})% endif </th><th style=\"width:30%;text-"
+"align:right;\"> полнота </th></tr><tr><td colspan=\"5\" style=\"height:1px"
+";background-color:#9A6C8E;\"/></tr></thead><tbody> % For goal in line [ "
+"&#39;goals&#39;]: <tr> % Set tdBgColor = &#39;#fff&#39;% set tdColor = "
+"&#39;gray&#39;% set mutedColor = &#39;#AAAAAA&#39;% set tdPercentageColor = "
+"&#39;# 9A6C8E &quot; <td width=\"15%\" align=\"center\" valign=\"middle\" "
+"style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\"> $ "
+"{Goal [ &#39;rank&#39;] + 1} </td><td width=\"25%\" align=\"left\" "
+"valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-"
+"size:13px;\"> $ {Goal [ &#39;name&#39;]} </td><td width=\"30%\" "
+"align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-"
+"height:1;\"> $ { &quot;%. 2f&quot;% goal [ &#39;current&#39;]} <br/> <span "
+"style=\"font-size:13px;color:${mutedColor};\">on $ { &quot;%. 2f&quot;% line"
+" [ &#39;target&#39;]}</span> </td><td width=\"30%\" "
+"style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-"
+"right:15px;font-size:22px;\" align=\"right\"> <strong>$ {goal [ "
+"&#39;completeness&#39;] | int}%</strong> </td></tr><tr><td colspan=\"5\" "
+"style=\"height:1px;background-color:#DADADA;\"/></tr> % endfor "
+"</tbody></table></td></tr></table> % Endfor% endif "
+"</td></tr></table></td></tr></table></td></tr></table>"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
@@ -715,22 +886,22 @@ msgstr "Создайте пользователя"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Create a new badge"
-msgstr ""
+msgstr "Создать новый значок"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Create a new challenge"
-msgstr ""
+msgstr "Создать новое испытание"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Create a new goal"
-msgstr ""
+msgstr "Создать новую цель"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Create a new goal definition"
-msgstr ""
+msgstr "Создать новое значение цели"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -992,27 +1163,27 @@ msgstr "Полный суффикс"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Гемификация значка"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr ""
+msgstr "Гемификация испытания"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
 msgid "Gamification Goal"
-msgstr ""
+msgstr "Гемификация цели"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
 msgid "Gamification Goal Definition"
-msgstr ""
+msgstr "Определение цели гемификации"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
 msgid "Gamification Goal Wizard"
-msgstr ""
+msgstr "Помощник цели гемификации"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
@@ -1022,12 +1193,12 @@ msgstr "Инструменты игрофикации"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Гемификация пользовательского значка"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "Помощник гемификации пользовательского значка"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
@@ -1212,7 +1383,7 @@ msgstr "Если отмечено - новые сообщения требуют
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Если обозначено, некоторые сообщения имеют ошибку доставки."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__challenge_id
@@ -1365,7 +1536,7 @@ msgstr "Подписка на группу электронной почты"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_main_attachment_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основное прикрепления"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
@@ -1376,7 +1547,7 @@ msgstr "Мои"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Ошибка доставки сообщения"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_ids
@@ -1464,7 +1635,7 @@ msgstr "Дата следующего отчета"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid "No goal found"
-msgstr ""
+msgstr "Не найдено цели"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1513,7 +1684,7 @@ msgstr "Количество действий"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "количество ошибок"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
@@ -1525,7 +1696,7 @@ msgstr "Количество сообщений, требующих вниман
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Количество сообщений с ложной дставкою"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_unread_counter
@@ -2097,6 +2268,9 @@ msgid ""
 "There is no goal associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"Нет никакой цели, связанной с этой задачей, что соответствует вашему поиску."
+" Убедитесь, что ваше испытание активное и предназначено крайней мере одному "
+"пользователю."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__closed
@@ -2250,7 +2424,7 @@ msgstr "Вы не находитесь в списке, разрешенном �
 #: code:addons/gamification/wizard/grant_badge.py:25
 #, python-format
 msgid "You can not grant a badge to yourself."
-msgstr ""
+msgstr "Вы не можете предоставить значок самому себе."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:196

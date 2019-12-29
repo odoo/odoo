@@ -5,9 +5,10 @@
 # Translators:
 # Martin Trigaux, 2018
 # Collex100, 2018
-# nle_odoo, 2018
-# Dmitry sky <d.v.selitsky@gmail.com>, 2018
+# Ꚁemetron <d.v.selitsky@gmail.com>, 2018
 # Denis Trepalin <zekarious@gmail.com>, 2018
+# nle_odoo, 2018
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2018\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,12 +32,12 @@ msgstr "Активно"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Добавьте новую единицу измерения"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "Добавьте новую категорию единицы измерения"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -207,11 +208,12 @@ msgstr ""
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
 msgstr ""
+"Основная единица должна иметь коэффициент преобразования, равный единице."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "Точность округления должна быть строго положительной."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -222,6 +224,10 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Единица измерения% s определена на строке заказ не относится к той же "
+"категории, что и единица измерения% s определена на товаре. Пожалуйста, "
+"исправьте единицу измерения, определенную на строке заказа или на товаре, "
+"они должны принадлежать к одной категории."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -236,12 +242,12 @@ msgstr "Тип"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr ""
+msgstr "Тип измерения"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr ""
+msgstr "Тип категории измерения"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -279,7 +285,7 @@ msgstr "шт."
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Units"
-msgstr ""
+msgstr "единицы"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -313,12 +319,16 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"Категория единицы измерения% s должна иметь ссылки единицы измерения. Если "
+"вы только создали новую категорию, сначала запишите &quot;ссылка&quot;."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
+"Категория единицы измерения% s должна иметь только одну ссылку единицы "
+"измерения."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -340,13 +350,15 @@ msgstr "Рабочее время"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "Можно иметь только одну категорию для каждого типа измерения."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
 msgstr ""
+"Вы не можете удалить эту категорию единицы измерения, поскольку она "
+"используется системой."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -355,6 +367,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Вы не можете удалить эту единицу измерения, поскольку она используется "
+"системой. Вам следует архивировать ее."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action

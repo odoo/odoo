@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
+"Хэрэв танд ямар нэгэн данс байхгүй бол борлуулагчаасаа портал хандалт "
+"хийхийг асуугаарай."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -35,7 +38,7 @@ msgstr "API Нэвтрэх ID"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API гарын үсгийн түлхүүр"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -85,17 +88,17 @@ msgstr "Картны дугаар"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Карт эзэмшигчийн нэр"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Дуусах хугацаа (MM / YY)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net-ээр хэрхэн төлөх вэ?"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:292
@@ -104,6 +107,8 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Буруу токен олдсон байна: Зөвшөөрөх профайл байхгүй байна.\n"
+"Токен нь худалдан авагчийн зөв лавлагаатай байгаа эсэхийг шалгана уу."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -144,13 +149,13 @@ msgstr "Paypal"
 #: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Профайлаа бөглөнө үү."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Төлбөрийг гүйцээхийн тулд нэвтрэн орно уу."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -161,7 +166,7 @@ msgstr "Нийлүүлэгч"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Карт хадгалах"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -186,6 +191,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Зарим харилцагчийн мэдээлэл дутуу эсвэл хүчин төгөлдөр бус байгаа тул "
+"гүйлгээг гүйцэтгэх боломжгүй."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -204,6 +211,8 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Энэ сонголт нь үйлчлүүлэгчдэд кредит картаа төлбөрийн токен болгон хадгалах, дараа нь худалдаж авахад ашиглах боломжийг олгодог.\n"
+"Хэрэв та захиалгуудыг удирдаж байгаа бол (давтагдах нэхэмжлэх), та нэхэмжлэх гаргахдаа захиалагчийг автоматаар цэнэглэх шаардлагатай болно."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
