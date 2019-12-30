@@ -1,4 +1,4 @@
-odoo.define('website_mail_channel.editor', function (require) {
+odoo.define('website_mail_channel.s_channel_options', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -7,7 +7,7 @@ var wUtils = require('website.utils');
 
 var _t = core._t;
 
-options.registry.subscribe = options.Class.extend({
+options.registry.Channel = options.Class.extend({
     /**
      * @override
      */
