@@ -248,6 +248,18 @@ class Lead(models.Model):
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
 
+    @api.depends(lambda self: ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields())
+    def _compute_probabilities(self):
+        for lead in self:
+            was_automated = False
+            lead_probabilities = lead._pls_get_naive_bayes_probabilities()
+            if lead.id in lead_probabilities:
+                if tools.float_compare(lead.probability, lead.automated_probability, 2) == 0 and lead.active:
+                    was_automated = True
+                lead.automated_probability = lead_probabilities[lead.id]
+                if was_automated:
+                    lead.probability = lead.automated_probability
+
     def _onchange_partner_id_values(self, partner_id):
         """ returns the new values when partner_id has changed """
         if partner_id:
