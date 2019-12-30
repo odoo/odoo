@@ -22,12 +22,13 @@
 # Summer Xia <sxi@odoo.com>, 2019
 # neter ji <jifuyi@qq.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # Mandy Choy <mnc@odoo.com>, 2019
 # glovebx <ruinning@163.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Martin Trigaux, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # niulin lnc. <admin@niulin.net>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
@@ -35,12 +36,11 @@
 # Shane Tsoi <sso@odoo.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Shiping Lv <lvshiping@sina.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Shiping Lv <lvshiping@sina.com>, 2019\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,8 +95,8 @@ msgid ""
 "                              Buy now, get in 2 days"
 msgstr ""
 "30 天内可退款保证<br/>\n"
-"                              美国境内包邮<br/>\n"
-"                              现在购买，2 天内到货"
+"                              数字产品即买即发。<br/>\n"
+"                              一般商品全国包邮，2~7 天内到货"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -200,7 +200,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<b>Communication: </b>"
-msgstr "<b>交流： </b>"
+msgstr "<b>订单号： </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -323,7 +323,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">流程结账</span>\n"
+"<span class=\"\">确定并支付</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -332,7 +332,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">流程结账</span>\n"
+"<span class=\"\">确定并支付</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -444,7 +444,7 @@ msgstr "<span>订单</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
-msgstr "<span>流程结账</span>"
+msgstr "<span>确定并支付</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -735,12 +735,12 @@ msgstr "热卖"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Billing"
-msgstr "开单"
+msgstr "发票"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Billing Address"
-msgstr "账单地址"
+msgstr "发票邮寄地址"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
@@ -822,12 +822,12 @@ msgstr "推迟后，购物车被标记为废弃。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr "目录价格：从高到低"
+msgstr "价格:从高到低"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr "目录价格：从低到高"
+msgstr "价格:从低到高"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1398,8 +1398,8 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
-"如果您的网站或移动应用允许用户创建内容并将内容公开给其他用户，则“<b>内容</b>”章节将告知用户他们对所创建的内容享有权利。<br/>“内容”条款通常会提到用户必须向您（网站或移动应用程序开发者）提供许可证，以便您可以在您的网站/移动应用程序上共享此内容，并使其他用户可以使用此内容。<br/>由于用户所创建的内容对其他用户都是公开的，因此"
-" DMCA 通知条款（或版权侵权）章节有助于告知用户和版权作者，如果发现任何内容侵犯了版权，您将响应收到的所有 DMCA 删除通知并删除相关内容。"
+"如果您的网站或移动应用允许用户创建内容并将内容公开给其他用户，则“<b>内容</b>”部分将告知用户他们对所创建的内容享有权利。<br/>“内容”条款通常会提到用户必须向您（网站或移动应用程序开发者）提供许可证，以便您可以在您的网站/移动应用程序上共享此内容，并使其他用户可以使用此内容。<br/>由于用户所创建的内容对其他用户都是公开的，因此"
+" DMCA 通知条款（或版权侵权）部分有助于告知用户和版权作者，如果发现任何内容侵犯了版权，您将响应收到的所有 DMCA 删除通知并删除相关内容。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -1609,7 +1609,7 @@ msgstr "多媒体"
 #: code:addons/website_sale/static/src/js/website_sale.js:0
 #, python-format
 msgid "My Cart"
-msgstr "我的购物车"
+msgstr "购物车"
 
 #. module: website_sale
 #. openerp-web
@@ -1630,12 +1630,12 @@ msgstr "姓名简称"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name: A to Z"
-msgstr ""
+msgstr "名称:升序"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name: Z to A"
-msgstr ""
+msgstr "名称:倒序"
 
 #. module: website_sale
 #. openerp-web
@@ -1852,14 +1852,14 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Order by price: high to low"
-msgstr ""
+msgstr "价格:从高到低"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Order by price: low to high"
-msgstr ""
+msgstr "价格:从低到高"
 
 #. module: website_sale
 #. openerp-web
@@ -1920,7 +1920,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now"
-msgstr "立即付款"
+msgstr "立即支付"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1930,7 +1930,7 @@ msgstr "立即支付 <span class=\"fa fa-chevron-right\"/>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay with"
-msgstr "支付 使用"
+msgstr "支付方式"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
@@ -2250,7 +2250,7 @@ msgstr "收入来自"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
 msgid "Recently viewed Products"
-msgstr ""
+msgstr "最近浏览产品"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2678,7 +2678,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
 msgid "Terms &amp;amp; Conditions"
-msgstr "条款和条件"
+msgstr "服务条款"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2997,7 +2997,7 @@ msgstr "网站网址"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr "网站访问者"
+msgstr "网页访问者"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -3064,6 +3064,8 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
+"你正在编辑 <b>发票及送货</b> 地址！<br/>\n"
+"                                            如果你需要变更送货地址，可以新建一个"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts

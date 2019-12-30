@@ -31,8 +31,6 @@
 # zpq001 <zpq001@live.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# niulin lnc. <admin@niulin.net>, 2019
-# liulixia <liu.lixia@elico-corp.com>, 2019
 # 朱仁杰 <johnson19960308@gmail.com>, 2019
 # 湘子 南 <1360857908@qq.com>, 2019
 # Shane Tsoi <sso@odoo.com>, 2019
@@ -70,6 +68,8 @@
 # Martin Trigaux, 2019
 # Shiping Lv <lvshiping@sina.com>, 2019
 # 阳 杨 <1203461059@qq.com>, 2019
+# niulin lnc. <admin@niulin.net>, 2019
+# 佳 胡 <hujia@tang96.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -77,7 +77,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: 阳 杨 <1203461059@qq.com>, 2019\n"
+"Last-Translator: 佳 胡 <hujia@tang96.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8102,6 +8102,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<span class=\"o_form_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">公司地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">发票地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">邮寄地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">其他地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">私人地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">地址</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -11793,7 +11801,7 @@ msgstr "联系人称谓"
 #: model:ir.module.module,shortdesc:base.module_contacts
 #: model_terms:ir.ui.view,arch_db:base.view_partner_tree
 msgid "Contacts"
-msgstr "更多联系人"
+msgstr "联系人"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -17646,18 +17654,18 @@ msgstr "当前窗口的主要动作"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__maintainer
 msgid "Maintainer"
-msgstr "维护者"
+msgstr "保养人"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_operations_maintenance
 #: model:ir.module.module,shortdesc:base.module_maintenance
 msgid "Maintenance"
-msgstr "维护"
+msgstr "保养"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_maintenance
 msgid "Maintenance - HR"
-msgstr "维修 - HR"
+msgstr "保养 - HR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_maintenance
@@ -18105,7 +18113,7 @@ msgstr "自动合并所有处理"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
-msgstr "合并合同"
+msgstr "合并联系人"
 
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_line
@@ -26086,7 +26094,7 @@ msgstr "跟踪员工执行任务花费时间"
 #. module: base
 #: model:ir.module.module,summary:base.module_maintenance
 msgid "Track equipment and manage maintenance requests"
-msgstr "跟踪设备并管理维修需求"
+msgstr "跟踪设备并管理保养需求"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk

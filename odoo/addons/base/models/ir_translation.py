@@ -438,7 +438,7 @@ class IrTranslation(models.Model):
                     discarded += translation
                 else:
                     vals = {'src': src, 'state': translation.state}
-                    if translation.lang == 'en_US':
+                    if translation.lang == records.env.lang:
                         vals['value'] = src
                     translation.write(vals)
                     done.add((src, translation.lang))

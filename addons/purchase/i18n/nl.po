@@ -34,6 +34,8 @@ msgid ""
 "Quotation - %s' % (object.name) or                 'Purchase Order - %s' % "
 "(object.name))"
 msgstr ""
+"                 (object.state in ('draft', 'sent') and 'Offerteaanvraag - "
+"%s' % (object.name) or                 'Inkooporder - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count

@@ -33,7 +33,7 @@ msgstr "חשבון אנליטי"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "חישוב מחיר מ BOM"
+msgstr "חשב מחיר מעץ המוצר"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -43,31 +43,30 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"לחשב את מחיר המוצר באמצעות מוצרים ופעולות עץ המוצר הקשורות, למוצרים מיוצרים "
+"חשב את מחיר המוצר באמצעות מוצרים ופעולות עץ המוצר הקשורות, למוצרים מיוצרים "
 "בלבד."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr "תיעוד העלויות"
+msgstr "עלות שנרשמה"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr ""
+msgstr "עלות נוספת"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr ""
+msgstr "עלות נוספת ליחידה מיוצרת"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
-"מלא את זה רק אם אתה רוצה ניתוח אוטומטי של רשומות חשבונאיות על הזמנות הייצור."
+msgstr "מלא את זה רק אם אתה רוצה רשומות חשבונאות אנליטית בהוראות ייצור."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
@@ -77,12 +76,12 @@ msgstr "מוצר"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product Template"
-msgstr "תבנית למוצר "
+msgstr "תבנית מוצר "
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
 msgid "Production Order"
-msgstr "הזמנת ייצור"
+msgstr "הוראת ייצור"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
@@ -92,9 +91,9 @@ msgid ""
 " multiple times and only consider new entries in the work centers time "
 "lines."
 msgstr ""
-"שדה טכני נבדק באופן אוטומטי כאשר יצור רציף של רשומות ביומן רשומות עבור "
-"העלויות שלו. בדרך זו, אנחנו יכולים לתעד עלויות הייצור של פעמים מרובות וגם "
-"לשקול ערכים חדשים במרכזי זמן העבודה."
+"שדה טכני מסומן כשייצור מתמשך רושם פקודות יומן לעלויות שלו. בדרך זו, אנחנו "
+"יכולים לרשום את עלויות הייצור מספר פעמים וגם להתחשב בפקודות יומן של תחנות "
+"העבודה."
 
 #. module: mrp_account
 #: code:addons/mrp_account/models/product.py:40
@@ -103,8 +102,8 @@ msgid ""
 "The inventory valuation of some products %s is automated. You can only "
 "update their cost from the product form."
 msgstr ""
-"הערכת מלאי של מוצרים מסוימים %s היא אוטומטית. אתה יכול רק לעדכן את העלות של "
-"טופס המוצר."
+"הערכת מלאי של מוצרים מסוימים %s היא אוטומטית. אתה יכול רק לעדכן את העלות "
+"שלהם בטופס המוצר."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
@@ -114,9 +113,9 @@ msgstr "הערכת שווי"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
-msgstr "מרכז עבודה"
+msgstr "תחנת עבודה"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr "יומן פרודוקטיביות של תחנת בעבודה "
+msgstr "יומן פרודוקטיביות של תחנת עבודה "
