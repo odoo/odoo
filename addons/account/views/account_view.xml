@@ -1168,7 +1168,7 @@
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}" groups="account.group_account_user">
                                     <field name="account_id"/>
-                                    <field name="refund_account_id"/>
+                                    <field name="refund_account_id" attrs="{'required':[('type_tax_use','=','sale'), ('account_id','!=', False)]}"/>
                                 </group>
                             </group>
                             <field name="children_tax_ids"
