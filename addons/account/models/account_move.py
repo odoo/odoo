@@ -3354,12 +3354,6 @@ class AccountMoveLine(models.Model):
                 partners = move.line_ids[-2:].mapped('partner_id')
                 if len(partners) == 1:
                     values['partner_id'] = partners.id
-
-            # Suggest default value for 'account_id'.
-            if 'account_id' in default_fields and not values.get('account_id'):
-                accounts = move.line_ids[-2:].mapped('account_id')
-                if len(accounts) == 1:
-                    values['account_id'] = accounts.id
         return values
 
     @api.depends('ref', 'move_id')
