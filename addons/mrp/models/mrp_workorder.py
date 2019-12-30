@@ -4,7 +4,6 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
-from math import floor
 import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
@@ -135,10 +134,6 @@ class MrpWorkorder(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
-    color = fields.Integer('Color', compute='_compute_color')
-    capacity = fields.Float(
-        'Capacity', default=1.0,
-        help="Number of pieces that can be produced in parallel.")
     raw_workorder_line_ids = fields.One2many('mrp.workorder.line',
         'raw_workorder_id', string='Components')
     finished_workorder_line_ids = fields.One2many('mrp.workorder.line',
@@ -341,16 +336,6 @@ class MrpWorkorder(models.Model):
         count_data = dict((item['workorder_id'][0], item['workorder_id_count']) for item in data)
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
-
-    @api.depends('date_planned_finished', 'production_id.date_planned_finished')
-    def _compute_color(self):
-        late_orders = self.filtered(lambda x: x.production_id.date_planned_finished
-                                              and x.date_planned_finished
-                                              and x.date_planned_finished > x.production_id.date_planned_finished)
-        for order in late_orders:
-            order.color = 4
-        for order in (self - late_orders):
-            order.color = 2
 
     @api.onchange('date_planned_start', 'duration_expected')
     def _onchange_date_planned_start(self):
