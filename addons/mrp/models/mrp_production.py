@@ -767,7 +767,6 @@ class MrpProduction(models.Model):
                     best_workcenter = workcenter
                     vals = {
                         'workcenter_id': workcenter.id,
-                        'capacity': workcenter.capacity,
                         'duration_expected': duration_expected,
                     }
 
