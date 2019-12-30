@@ -4571,6 +4571,11 @@ var Dropzone = /** @class */ (function () {
             else {
                 $$1.each(dataTransfer.types, function (idx, type) {
                     var content = dataTransfer.getData(type);
+                    /* ODOO: start_modification */
+                    if (type.toLowerCase().indexOf('_moz_') > -1) {
+                        return;
+                    }
+                    /* ODOO: end_modification */
                     if (type.toLowerCase().indexOf('text') > -1) {
                         _this.context.invoke('editor.pasteHTML', content);
                     }
