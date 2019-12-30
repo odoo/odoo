@@ -246,3 +246,48 @@ class TestMoveCancelPropagation(TestPurchase):
         self.assertNotEqual(pick.state, 'cancel')
         self.assertNotEqual(pack.state, 'cancel')
         self.assertNotEqual(self.picking_out.state, 'cancel')
+
+    def test_cancel_move_lines_operation(self):
+        """Check for done and cancelled moves. Ensure that the RFQ cancellation
+        will not impact the delivery state if it's already cancelled.
+        """
+        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
+        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+
+        partner = self.env['res.partner'].create({
+            'name': 'Steve'
+        })
+        seller = self.env['product.supplierinfo'].create({
+            'name': partner.id,
+            'price': 10.0,
+        })
+        product_car = self.env['product.product'].create({
+            'name': 'Car',
+            'type': 'product',
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'seller_ids': [(6, 0, [seller.id])],
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        customer_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': picking_type_out.id,
+        })
+        customer_move = self.env['stock.move'].create({
+            'name': 'move out',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product_car.id,
+            'product_uom': product_car.uom_id.id,
+            'product_uom_qty': 10.0,
+            'procure_method': 'make_to_order',
+            'picking_id': customer_picking.id,
+        })
+        customer_move._action_confirm()
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        customer_move._action_cancel()
+        self.assertEqual(customer_move.state, 'cancel', 'Move should be cancelled')
+        purchase_order.button_cancel()
+        self.assertEqual(customer_move.state, 'cancel', 'State of cancelled and done moves should not change.')
