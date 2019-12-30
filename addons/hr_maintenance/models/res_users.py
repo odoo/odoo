@@ -5,7 +5,7 @@ class Users(models.Model):
     _inherit = 'res.users'
 
     equipment_ids = fields.One2many('maintenance.equipment', 'owner_user_id', string="Managed Equipments")
-    equipment_count = fields.Integer(related='employee_id.equipment_count', string="Assigned Equipments")
+    equipment_count = fields.Integer(related='employee_id.equipment_count', string="Equipments")
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
