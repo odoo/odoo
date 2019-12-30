@@ -4,7 +4,7 @@
 <t t-extend="hr_resume_data_row">
     <t t-jquery="tr.o_data_row" t-operation="append">
         <t t-if="data.display_type === 'certification'">
-            <td class="o_data_cell container">
+            <td class="o_data_cell container" colspan="2">
                 <div class="o_resume_line row" t-att-data-id="id">
                     <div class="o_resume_line_dates col-lg-3">
                         <span><t t-esc="data.date_start"/></span>
