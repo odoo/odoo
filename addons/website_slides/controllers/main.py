@@ -830,19 +830,18 @@ class WebsiteSlides(WebsiteProfile):
             # minutes to hours conversion
             values['completion_time'] = int(post['duration']) / 60
 
+        category_id = False
         # handle creation of new categories on the fly
         if post.get('category_id'):
-            if post['category_id'][0] == 0:
+            category_id = post['category_id'][0]
+            if category_id == 0:
                 category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, post['category_id'][1]['name']))
-                values['category_id'] = category.id
                 values['sequence'] = category.sequence + 1
+                category_id = category.id
             else:
                 values.update({
-                    'category_id': post['category_id'][0],
                     'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
-        else:
-            values['sequence'] = -1
 
         # create slide itself
         try:
@@ -857,7 +856,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide)
+        channel._resequence_slides(slide, category_id)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":
