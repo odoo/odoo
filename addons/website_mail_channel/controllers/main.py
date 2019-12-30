@@ -111,7 +111,7 @@ class MailGroup(http.Controller):
 
         else:
             # public users will recieve confirmation email
-            partner_ids = [p.id for p in self.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=channel.sudo(), check_followers=True) if p]
+            partner_ids = [p.id for p in request.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=channel.sudo()) if p]
             if not partner_ids or not partner_ids[0]:
                 name = email.split('@')[0]
                 partner_ids = [request.env['res.partner'].sudo().create({'name': name, 'email': email}).id]
