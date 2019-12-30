@@ -516,7 +516,9 @@ var SlideUploadDialog = Dialog.extend({
         if (!preventOnchange) {
             var input = file.name;
             var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
-            this._formSetFieldValue('name', inputVal);
+            if (this._formGetFieldValue('name') === "") {
+                this._formSetFieldValue('name', inputVal);
+            }
         }
     },
     _onChangeSlideUrl: function (ev) {
