@@ -137,7 +137,7 @@ class StockMove(models.Model):
             'stock_move_id': self.id,
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
-            'description': self.name,
+            'description': self.reference and '%s - %s' % (self.reference, self.product_id.name) or self.product_id.name,
         }
 
     def _create_in_svl(self, forced_quantity=None):
@@ -304,7 +304,7 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move._is_in() and move.with_context(force_company=move.company_id.id).product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
+            product_tot_qty_available = move.product_id.sudo().with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
@@ -380,7 +380,7 @@ class StockMove(models.Model):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
         debit_line_vals = {
-            'name': self.name,
+            'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
@@ -392,7 +392,7 @@ class StockMove(models.Model):
         }
 
         credit_line_vals = {
-            'name': self.name,
+            'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,

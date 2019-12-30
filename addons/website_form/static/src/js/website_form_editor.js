@@ -61,7 +61,7 @@ odoo.define('website_form_editor', function (require) {
 
         start: function () {
             this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
-            this.$target.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
+            this.$target.find('label:not(:has(span)), label span, .o_form_heading').addClass('o_fake_editable').attr('contentEditable', true);
             return this._super.apply(this, arguments);
         },
 
@@ -98,6 +98,7 @@ odoo.define('website_form_editor', function (require) {
                 ],
             }).then(function (models) {
                 self.models = models;
+                var selectedModel = self.$target.attr('data-model_name') || 'mail.mail';
                 // Models selection input
                 var modelSelection = qweb.render("website_form.field_many2one", {
                     field: {
@@ -108,7 +109,7 @@ odoo.define('website_form_editor', function (require) {
                             return {
                                 id: m.id,
                                 display_name: m.website_form_label || m.name,
-                                selected: (m.model === self.$target.attr('data-model_name')) ? 1 : null,
+                                selected: (m.model === selectedModel) ? 1 : null,
                             };
                         }),
                     }
@@ -372,6 +373,7 @@ odoo.define('website_form_editor', function (require) {
                         $('<h1>', {
                             class: 'o_form_heading',
                             text: self.activeForm.website_form_label,
+                            contentEditable: true,
                         }).prependTo(self.$target.find('.container'));
                         self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
                     });
