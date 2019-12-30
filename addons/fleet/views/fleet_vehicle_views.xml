@@ -15,7 +15,8 @@
                         <button name="open_assignation_logs"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-history">
+                            icon="fa-history"
+                            groups="fleet.fleet_group_user">
                             <field name="history_count" widget="statinfo" string="Drivers History"/>
                         </button>
                         <button name="return_action_to_open"
@@ -23,7 +24,8 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             context="{'xml_id':'fleet_vehicle_log_contract_action'}"
-                            help="show the contract for this vehicle">
+                            help="show the contract for this vehicle"
+                            groups="fleet.fleet_group_user">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
                         </button>
                         <button name="return_action_to_open"
@@ -61,8 +63,8 @@
                         <group string="Driver">
                             <field name="active" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
-                            <label for="future_driver_id"/>
-                            <div class="o_row">
+                            <label for="future_driver_id" groups="fleet.fleet_group_manager"/>
+                            <div class="o_row" groups="fleet.fleet_group_manager">
                                 <field name="future_driver_id"/>
                                 <button string="Apply Change"
                                     class="btn btn-primary"
@@ -71,20 +73,20 @@
                                     attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
                             </div>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager"/>
-                            <field name="next_assignation_date"/>
-                            <field name="location"/>
+                            <field name="next_assignation_date" groups="fleet.fleet_group_manager"/>
+                            <field name="location" groups="fleet.fleet_group_manager"/>
                         </group>
                         <group string="Vehicle">
-                            <label for="odometer"/>
-                            <div class="o_row">
+                            <label for="odometer" groups="fleet.fleet_group_manager"/>
+                            <div class="o_row" groups="fleet.fleet_group_manager">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
                             <field name="acquisition_date"/>
                             <field name="vin_sn"/>
-                            <field name="car_value" widget="monetary"/>
-                            <field name="net_car_value" widget="monetary"/>
-                            <field name="residual_value" widget="monetary"/>
+                            <field name="car_value" widget="monetary" groups="fleet.fleet_group_manager"/>
+                            <field name="net_car_value" widget="monetary" groups="fleet.fleet_group_manager"/>
+                            <field name="residual_value" widget="monetary" groups="fleet.fleet_group_manager"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Contract" name="contract">
@@ -233,7 +235,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="o_kanban_button" t-if="!selection_mode">
+                            <div class="o_kanban_button" t-if="!selection_mode" groups="fleet.fleet_group_user">
                                 <a t-if="record.contract_count.raw_value>0" data-type="object"
                                    data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
                                    data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
@@ -247,7 +249,7 @@
                                     </span>
                                 </a>
                             </div>
-                            <div class="o_kanban_inline_block" t-if="!selection_mode">
+                            <div class="o_kanban_inline_block" t-if="!selection_mode" groups="fleet.fleet_group_user">
                                 <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                         </div>

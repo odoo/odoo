@@ -28,7 +28,7 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
-            <field name="domain_force">[('cost_id.vehicle_id.driver_id','=',user.partner_id.id)]</field>
+            <field name="domain_force">[('vehicle_id.driver_id','=',user.partner_id.id)]</field>
         </record>
         <record id="fleet_rule_service_visibility_user" model="ir.rule">
             <field name="name">User can only see his/her vehicle's services</field>
@@ -38,7 +38,7 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
-            <field name="domain_force">[('cost_id.vehicle_id.driver_id','=',user.partner_id.id)]</field>
+            <field name="domain_force">[('vehicle_id.driver_id','=',user.partner_id.id)]</field>
         </record>
         <record id="fleet_rule_odometer_visibility_user" model="ir.rule">
             <field name="name">User can only see his/her vehicle's odometer</field>

@@ -24,3 +24,6 @@ class User(models.Model):
 
     def action_open_employee_cars(self):
         return self.employee_id.action_open_employee_cars()
+
+    def action_open_current_employee_car(self):
+        return self.employee_id.action_open_current_employee_car()

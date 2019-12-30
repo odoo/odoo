@@ -314,6 +314,7 @@ class FleetVehicle(models.Model):
             'context': {'default_driver_id': self.driver_id.id, 'default_vehicle_id': self.id}
         }
 
+
 class FleetVehicleOdometer(models.Model):
     _name = 'fleet.vehicle.odometer'
     _description = 'Odometer log for a vehicle'
@@ -324,7 +325,7 @@ class FleetVehicleOdometer(models.Model):
     value = fields.Float('Odometer Value', group_operator="max")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
     unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver", readonly=False)
+    driver_id = fields.Many2one('res.partner', "Driver", compute='_compute_driver_id', store=True)
 
     @api.depends('vehicle_id', 'date')
     def _compute_vehicle_log_name(self):
@@ -340,6 +341,11 @@ class FleetVehicleOdometer(models.Model):
     def _onchange_vehicle(self):
         if self.vehicle_id:
             self.unit = self.vehicle_id.odometer_unit
+
+    @api.depends('vehicle_id')
+    def _compute_driver_id(self):
+        for rec in self:
+            rec.driver_id = rec.vehicle_id.driver_id
 
 
 class FleetVehicleState(models.Model):

@@ -24,6 +24,18 @@ class Employee(models.Model):
             "name": "History Employee Cars",
         }
 
+    def action_open_current_employee_car(self):
+        self.ensure_one()
+        context = dict(self._context)
+        context['search_default_driver_id'] = self.env.user.partner_id.id
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "fleet.vehicle",
+            "views": [[False, "kanban"], [False, "form"], [False, "tree"]],
+            "context": dict(context, create=False),
+            "name": "Current Car"
+        }
+
     def _compute_employee_cars_count(self):
         driver_ids = (self.mapped('user_id.partner_id') | self.sudo().mapped('address_home_id')).ids
         fleet_data = self.env['fleet.vehicle.assignation.log'].read_group(

@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 from dateutil.relativedelta import relativedelta
 
+
 class FleetVehicleLogContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle.log.contract'
@@ -112,7 +113,7 @@ class FleetVehicleLogContract(models.Model):
                 'fleet.mail_act_fleet_contract_to_renew', contract.expiration_date,
                 user_id=contract.user_id.id)
 
-        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<', fields.Date.today())])
         expired_contracts.write({'state': 'expired'})
 
         futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
@@ -123,6 +124,7 @@ class FleetVehicleLogContract(models.Model):
 
     def run_scheduler(self):
         self.scheduler_manage_contract_expiration()
+
 
 class FleetVehicleLogServices(models.Model):
     _name = 'fleet.vehicle.log.services'
@@ -149,7 +151,7 @@ class FleetVehicleLogServices(models.Model):
     date = fields.Date(help='Date when the cost has been executed')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string="Driver")
+    purchaser_id = fields.Many2one('res.partner', "Driver", compute='_compute_purchaser_id', store=True)
     inv_ref = fields.Char('Vendor Reference')
     vendor_id = fields.Many2one('res.partner', 'Vendor')
     notes = fields.Text()
@@ -181,3 +183,8 @@ class FleetVehicleLogServices(models.Model):
                 # odometer log with 0, which is to be avoided
                 del data['odometer']
         return super(FleetVehicleLogServices, self).create(vals_list)
+
+    @api.depends('vehicle_id')
+    def _compute_purchaser_id(self):
+        for rec in self:
+            rec.purchaser_id = rec.vehicle_id.driver_id
