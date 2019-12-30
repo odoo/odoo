@@ -1276,8 +1276,12 @@ class AccountMove(models.Model):
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
+                    if line.currency_id != self.company_id.currency_id:
+                        amount = self.company_id.currency_id._convert(line.tax_base_amount, line.currency_id, self.company_id, line.date)
+                    else:
+                        amount = line.tax_base_amount
+                    res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
-                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
                     done_taxes.add(tax_key_add_base)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
