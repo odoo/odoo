@@ -10,7 +10,9 @@ Visitors can join public mail channels managed in the Discuss app in order to ge
     'depends': ['website_mail'],
     'data': [
         'data/mail_template_data.xml',
+        'views/assets.xml',
+        'views/snippets/s_channel.xml',
+        'views/snippets/snippets.xml',
         'views/website_mail_channel_templates.xml',
-        'views/snippets.xml',
     ],
 }

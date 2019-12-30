@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" href="/website_mail_channel/static/src/css/website_mail_channel.css"/>
-    </xpath>
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.js"/>
-        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.snippet.js"/>
-    </xpath>
-</template>
-
-<template id="assets_editor" inherit_id="website.assets_editor">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.editor.js"/>
-    </xpath>
-</template>
-
 <template id="mail_channels" name="Mailing Lists">
     <t t-call="website.layout">
         <div id="wrap" class="oe_structure oe_empty">
@@ -50,7 +34,7 @@
                 <div class="col-lg-3">
                     <!--<t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>-->
 
-                    <div class="js_follow_alias"
+                    <div class="s_channel"
                               t-att-data-id="group.id"
                               data-object="mail.channel"
                               t-att-data-follow="'on' if 'unsubscribe' in request.params else 'off'">
