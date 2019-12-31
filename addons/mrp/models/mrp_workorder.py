@@ -600,13 +600,13 @@ class MrpWorkorder(models.Model):
         # Only notable interval (more than one case) is send to the front-end (avoid sending useless information)
         cell_dt = (scale in ['day', 'week'] and timedelta(hours=1)) or (scale == 'month' and timedelta(days=1)) or timedelta(days=28)
 
-        def add_unavailability(row, workcenter=None):
+        def add_unavailability(row, workcenter_id=None):
             if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
-                workcenter = self.env['mrp.workcenter'].browse(row.get('resId'))
-            if workcenter:
-                notable_intervals = filter(lambda interval: interval[1] - interval[0] >= cell_dt, unavailability_mapping[workcenter.resource_id.id])
+                workcenter_id = row.get('resId')
+            if workcenter_id:
+                notable_intervals = filter(lambda interval: interval[1] - interval[0] >= cell_dt, unavailability_mapping[workcenter_id])
                 row['unavailabilities'] = [{'start': interval[0], 'stop': interval[1]} for interval in notable_intervals]
-                return {'workcenter': workcenter}
+                return {'workcenter_id': workcenter_id}
 
         for row in rows:
             traverse_inplace(add_unavailability, row)
