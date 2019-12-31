@@ -3,6 +3,7 @@ odoo.define('website.s_popup', function (require) {
 
 const config = require('web.config');
 const publicWidget = require('web.public.widget');
+const utils = require('web.utils');
 
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
@@ -14,7 +15,9 @@ const PopupWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this._bindPopup();
+        if (!utils.get_cookie(this.$target.attr('id'))) {
+            this._bindPopup();
+        }
         return this._super(...arguments);
     },
     /**
@@ -74,6 +77,8 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _onCloseClick: function () {
+        const nbDays = this.$target.find('.s_popup_main').data('consentsDelay');
+        utils.set_cookie(this.$target.attr('id'), true, nbDays * 24 * 60 * 60);
         this._hidePopup();
     },
 });

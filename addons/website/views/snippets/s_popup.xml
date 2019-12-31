@@ -3,7 +3,8 @@
 
 <template id="s_popup" name="Popup">
     <div class="s_popup o_snippet_invisible">
-        <div class='modal s_popup_main popup_backdrop s_popup_center o_one_page bg-black-25 ' data-show-after="5000" data-display="afterDelay">
+        <div class='modal s_popup_main popup_backdrop s_popup_center o_one_page bg-black-25 '
+             data-show-after="5000" data-display="afterDelay" data-consents-delay="7">
             <div class='modal-dialog modal-dialog-centered s_popup_frame modal-md'>
                 <div class='oe_structure modal-content s_popup_content oe_img_bg oe_custom_bg' style="background-color: #FFFFFF">
                     <div class='s_popup_close o_we_no_overlay o_not_editable'>&amp;times;</div>
@@ -53,6 +54,7 @@
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
             </we-select>
             <we-input string="Delay" data-select-data-attribute="" data-attribute-name="showAfter" data-unit="s" data-save-unit="ms" data-dependencies="show_delay"/>
+            <we-input string="Period between consents" data-select-data-attribute="7days" data-attribute-name="consentsDelay" data-unit="days"/>
             <we-select string="Show on" data-no-preview="true">
                 <we-button data-move-block="moveToBody">This page</we-button>
                 <we-button data-move-block="moveToFooter">All pages</we-button>
