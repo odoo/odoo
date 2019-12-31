@@ -17,6 +17,18 @@ options.registry.SnippetPopup = options.Class.extend({
     /**
      * @override
      */
+    onBuilt: function () {
+        this._assignUniqueID();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._assignUniqueID();
+    },
+    /**
+     * @override
+     */
     onTargetShow: async function () {
         this.$target.removeClass('d-none');
     },
@@ -57,6 +69,14 @@ options.registry.SnippetPopup = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Creates a unique ID.
+     *
+     * @private
+     */
+    _assignUniqueID: function () {
+        this.$target.closest('.s_popup').attr('id', 'sPopup' + Date.now());
+    },
     /**
      * @override
      */
