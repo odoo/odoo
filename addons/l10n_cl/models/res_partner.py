@@ -30,7 +30,7 @@ class ResPartner(models.Model):
                     values.get('l10n_latam_identification_type_id') and
                     self.env['l10n_latam.identification.type'].browse(
                         [values.get('l10n_latam_identification_type_id')]).country_id == self.env.ref('base.cl'))
-        if (partner_country_is_chile or not values.get('country_id')) and \
+        if partner_country_is_chile and \
                 values.get('l10n_latam_identification_type_id') in identification_types and values.get('vat'):
             return stdnum.util.get_cc_module('cl', 'vat').format(values['vat']).replace('.', '').replace(
                 'CL', '').upper()
