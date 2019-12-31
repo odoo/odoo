@@ -2,11 +2,7 @@ odoo.define('website.s_popup', function (require) {
 'use strict';
 
 const config = require('web.config');
-const core = require('web.core');
 const publicWidget = require('web.public.widget');
-
-const qweb = core.qweb;
-const _t = core._t;
 
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
@@ -54,7 +50,7 @@ const PopupWidget = publicWidget.Widget.extend({
         if (display === 'afterDelay') {
             this.timeout = setTimeout(() => this._showPopup(), delay);
         } else {
-            $(document).on('mouseleave.open_popup',  () => this._showPopup());
+            $(document).on('mouseleave.open_popup', () => this._showPopup());
         }
     },
     /**

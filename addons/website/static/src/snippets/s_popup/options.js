@@ -1,10 +1,7 @@
 odoo.define('website.s_popup_options', function (require) {
 'use strict';
 
-const core = require('web.core');
 const options = require('web_editor.snippets.options');
-
-const qweb = core.qweb;
 
 options.registry.SnippetPopup = options.Class.extend({
     /**
@@ -41,7 +38,7 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     moveBlock: function (previewMode, widgetValue, params) {
         const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
-        this.$target.closest('.s_popup').prependTo($container.find(':o_editable').first());
+        this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
     },
     /**
      * Switch layout from modal <--> a sticky div
@@ -66,9 +63,9 @@ options.registry.SnippetPopup = options.Class.extend({
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'moveBlock':
-                return this.$target.closest('footer').length ? 'moveToFooter': 'moveToBody';
+                return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
             case 'setLayout':
-                return this.$target.hasClass('s_popup_center') ? 'modal': 'fixed';
+                return this.$target.hasClass('s_popup_center') ? 'modal' : 'fixed';
         }
         return this._super(...arguments);
     },
