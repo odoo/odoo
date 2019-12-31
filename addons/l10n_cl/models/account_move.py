@@ -26,26 +26,33 @@ class AccountMove(models.Model):
         domain = super()._get_l10n_latam_documents_domain()
         if (self.journal_id.l10n_latam_use_documents and
                 self.journal_id.company_id.country_id == self.env.ref('base.cl')):
-            document_type_ids = self.journal_id.l10n_cl_sequence_ids.mapped('l10n_latam_document_type_id').ids
-            document_type_codes = [x.l10n_latam_document_type_id.code for x in self.journal_id.l10n_cl_sequence_ids]
-            if self.partner_id_vat == '60805000-0' and '914' in document_type_codes:
-                return [('code', '=', '914')]
-            if self.type in ['in_invoice', 'in_refund']:
-                if self.partner_id.l10n_cl_sii_taxpayer_type == '2' and '71' in document_type_codes:
-                    return domain + [('code', '=', '71')]
-                if not self.partner_id.l10n_cl_sii_taxpayer_type or self.partner_id.country_id != self.env.ref(
+            if self.journal_id.type == 'sale':
+                document_type_ids = self.journal_id.l10n_cl_sequence_ids.mapped('l10n_latam_document_type_id').ids
+            else:  # self.journal_id.type == 'purchase':
+                partner_domain = [
+                        ('country_id.code', '=', 'CL'),
+                        ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note']), ('active', '=', True)]
+                if self.partner_id.l10n_cl_sii_taxpayer_type == '1':
+                    partner_domain += [('code', 'not in', ['39', '70', '71'])]
+                elif self.partner_id.l10n_cl_sii_taxpayer_type == '2':
+                    partner_domain += [('code', 'in', ['70', '71', '56', '61'])]
+                elif self.partner_id_vat == '60805000-0':
+                    partner_domain += [('code', '=', '914')]
+                elif self.partner_id.l10n_cl_sii_taxpayer_type == '3':
+                    partner_domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
+                elif not self.partner_id.l10n_cl_sii_taxpayer_type or self.partner_id.country_id != self.env.ref(
                         'base.cl') or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
-                    return [('code', 'in', [])]
+                    partner_domain += [('code', 'in', [])]
+                document_type_obj = self.env['l10n_latam.document.type'].search(partner_domain)
+                document_type_ids = document_type_obj.ids
             domain += [('id', 'in', document_type_ids)]
-            if self.partner_id.l10n_cl_sii_taxpayer_type == '3':
-                domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
         return domain
 
     @api.constrains('state', 'type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
         super()._check_invoice_type_document_type()
-        for rec in self.filtered(lambda r: r.company_id.country_id == self.env.ref('base.cl') and
-                                           r.state in ['posted']):
+        for rec in self.filtered(
+                lambda r: r.company_id.country_id == self.env.ref('base.cl') and r.state in ['posted']):
             tax_payer_type = rec.partner_id.l10n_cl_sii_taxpayer_type
             vat = rec.partner_id.vat
             country_id = rec.partner_id.country_id
