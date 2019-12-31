@@ -192,16 +192,17 @@ class MrpWorkcenter(models.Model):
         return action
 
     def _get_unavailability_intervals(self, start_datetime, end_datetime):
-        """Get Unavailability Intervals foreach workcenter in self.
+        """Get the unavailabilities intervals for the workcenters in `self`.
 
-        Return a dictionnary with key as workcenter id in self and values
-        as a list of unavailability slot as tuple (start, end) of datetime.
+        Return the list of unavailabilities (a tuple of datetimes) indexed
+        by workcenter id.
 
         :param start_datetime: filter unavailability with only slots after this start_datetime
         :param end_datetime: filter unavailability with only slots before this end_datetime
-        :rtype: dict of tuple (datetime, datetime)
+        :rtype: dict
         """
-        return self.resource_id._get_unavailable_intervals(start_datetime, end_datetime)
+        unavailability_ressources = self.resource_id._get_unavailable_intervals(start_datetime, end_datetime)
+        return {wc.id: unavailability_ressources.get(wc.resource_id.id, []) for wc in self}
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
