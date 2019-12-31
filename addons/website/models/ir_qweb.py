@@ -5,6 +5,7 @@ from collections import OrderedDict
 
 from odoo import models
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.osv import expression
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.tools import html_escape as escape
@@ -20,6 +21,11 @@ class AssetsBundleMultiWebsite(AssetsBundle):
         res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, page, type)
         return res
 
+    def _get_assets_domain_for_already_processed_css(self, assets):
+        res = super(AssetsBundleMultiWebsite, self)._get_assets_domain_for_already_processed_css(assets)
+        current_website = self.env['website'].get_current_website(fallback=False)
+        res = expression.AND([res, current_website.website_domain()])
+        return res
 
 class QWeb(models.AbstractModel):
     """ QWeb object for rendering stuff in the website context """
