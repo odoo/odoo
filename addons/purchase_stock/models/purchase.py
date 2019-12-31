@@ -33,8 +33,7 @@ class PurchaseOrder(models.Model):
     group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
+    @api.depends('order_line.move_ids.state',
                  'order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
@@ -42,8 +41,7 @@ class PurchaseOrder(models.Model):
             for line in order.order_line:
                 # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
                 # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
+                pickings |= line.move_ids.mapped('picking_id')
             order.picking_ids = pickings
             order.picking_count = len(pickings)
 
