@@ -221,20 +221,6 @@ class TestViewSaving(common.TransactionCase):
             'text node characters wrongly unescaped when rendering'
         )
 
-    def test_save_node_with_attr(self):
-        """ Test saving node with saved element changed attrs """
-        view = self.env['ir.ui.view'].create({
-            'arch': u'<t t-name="dummy"><div>hi</div><t esc="0"/></t>',
-            'type': 'qweb'
-        })
-        replacement = u'<div data-oe-id="55" class="nice">hoi</div>'
-        view.save(replacement, xpath='/t/div')
-        self.assertIn(
-            '<div class="nice">hoi</div>',
-            view.arch,
-            'saved element attributes are saved excluding branding ones'
-        )
-
     def test_save_only_embedded(self):
         Company = self.env['res.company']
         company_id = 1
