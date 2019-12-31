@@ -167,8 +167,8 @@
         id="action_report_ddt"
         model="stock.picking"
         report_type="qweb-pdf"
-        name="l10n_it_ddt.report_ddt_view"
+        name="l10n_it_stock_ddt.report_ddt_view"
         file="report_ddt"
-        print_report_name="(object.report_name())"
+        print_report_name="'DDT - %s - %s' % (object.partner_id.name or '', object.name)"
     />
 </odoo>
