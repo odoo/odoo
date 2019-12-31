@@ -386,7 +386,7 @@ class Message(models.Model):
             customer_email_data = []
             def filter_notification(notif):
                 return (
-                    (notif.email_status in ('bounce', 'exception', 'canceled') or notif.res_partner_id.partner_share) and
+                    (notif.email_status in ('sent', 'bounce', 'exception', 'canceled') or notif.res_partner_id.partner_share) and
                     notif.res_partner_id.active
                 )
             for notification in message.notification_ids.filtered(filter_notification):
