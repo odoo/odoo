@@ -171,10 +171,12 @@ class StockScrap(models.Model):
             ctx.update({
                 'default_product_id': self.product_id.id,
                 'default_location_id': self.location_id.id,
-                'default_scrap_id': self.id
+                'default_scrap_id': self.id,
+                'default_quantity': self.scrap_qty
             })
+            product_name = self.product_id.name_get()[0][1]
             return {
-                'name': _('Insufficient Quantity'),
+                'name': product_name +  _(' : Insufficient Quantity To Scrap'),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.scrap',
                 'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,
