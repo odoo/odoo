@@ -718,28 +718,70 @@ class PaymentTransaction(models.Model):
             for inv in trans.invoice_ids:
                 inv.message_post(body=post_message)
 
-    def _set_transaction_pending(self):
-        '''Move the transaction to the pending state(e.g. Manual Payment).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be processed.'))
+    def _filter_transaction_state(self, allowed_states, target_state):
+        """Divide a set of transactions according to their state.
 
-        self.write({'state': 'pending', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        :param tuple(string) allowed_states: tuple of allowed states for the target state (strings)
+        :param string target_state: target state for the filtering
+        :return: tuple of transactions divided by their state, in that order
+                    tx_to_process: tx that were in the allowed states
+                    tx_already_processed: tx that were already in the target state
+                    tx_wrong_state: tx that were not in the allowed state for the transition
+        :rtype: tuple(recordset)
+        """
+        tx_to_process = self.filtered(lambda tx: tx.state in allowed_states)
+        tx_already_processed = self.filtered(lambda tx: tx.state == target_state)
+        tx_wrong_state = self -tx_to_process - tx_already_processed
+        return (tx_to_process, tx_already_processed, tx_wrong_state)
+
+    def _set_transaction_pending(self):
+        '''Move the transaction to the pending state(e.g. Wire Transfer).'''
+        allowed_states = ('draft',)
+        target_state = 'pending'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
+
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
+            'state_message': '',
+        })
+        tx_to_process._log_payment_transaction_received()
 
     def _set_transaction_authorized(self):
         '''Move the transaction to the authorized state(e.g. Authorize).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be authorized.'))
-
-        self.write({'state': 'authorized', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        allowed_states = ('draft', 'pending')
+        target_state = 'authorized'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
+            'state_message': '',
+        })
+        tx_to_process._log_payment_transaction_received()
 
     def _set_transaction_done(self):
         '''Move the transaction's payment to the done state(e.g. Paypal).'''
-        if any(trans.state not in ('draft', 'authorized', 'pending') for trans in self):
-            raise ValidationError(_('Only draft/authorized transaction can be posted.'))
+        allowed_states = ('draft', 'authorized', 'pending', 'error')
+        target_state = 'done'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
-        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
+            'state_message': '',
+        })
 
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
@@ -765,23 +807,33 @@ class PaymentTransaction(models.Model):
 
     def _set_transaction_cancel(self):
         '''Move the transaction's payment to the cancel state(e.g. Paypal).'''
-        if any(trans.state not in ('draft', 'authorized') for trans in self):
-            raise ValidationError(_('Only draft/authorized transaction can be cancelled.'))
+        allowed_states = ('draft', 'authorized')
+        target_state = 'cancel'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
         # Cancel the existing payments.
-        self.mapped('payment_id').cancel()
+        tx_to_process.mapped('payment_id').cancel()
 
-        self.write({'state': 'cancel', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        tx_to_process.write({'state': target_state, 'date': fields.Datetime.now()})
+        tx_to_process._log_payment_transaction_received()
 
     def _set_transaction_error(self, msg):
         '''Move the transaction to the error state (Third party returning error e.g. Paypal).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be processed.'))
+        allowed_states = ('draft', 'authorized', 'pending')
+        target_state = 'error'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
-        self.write({
-            'state': 'error',
-            'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
             'state_message': msg,
         })
         self._log_payment_transaction_received()
