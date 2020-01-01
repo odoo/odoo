@@ -279,8 +279,9 @@ class MrpUnbuild(models.Model):
         if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
             return self.action_unbuild()
         else:
+            product_name = self.product_id.name_get()[0][1]
             return {
-                'name': _('Insufficient Quantity'),
+                'name': product_name +  _(' : Insufficient Quantity To Unbuild'),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.unbuild',
                 'view_id': self.env.ref('mrp.stock_warn_insufficient_qty_unbuild_form_view').id,
@@ -288,7 +289,8 @@ class MrpUnbuild(models.Model):
                 'context': {
                     'default_product_id': self.product_id.id,
                     'default_location_id': self.location_id.id,
-                    'default_unbuild_id': self.id
+                    'default_unbuild_id': self.id,
+                    'default_quantity': self.product_qty
                 },
                 'target': 'new'
             }

@@ -8,6 +8,11 @@
             <xpath expr="//field[@name='location_id']" position="after">
                 <field name="unbuild_id" invisible="True"/>
             </xpath>
+            <xpath expr="//div[@name='description']" position="replace">
+                <div>
+                    Do you confirm you want to unbuild <strong><field name="quantity" readonly="True"/></strong> units form location <strong><field name="location_id" readonly="True"/></strong>? This may lead to inconsistencies in your inventory.
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
