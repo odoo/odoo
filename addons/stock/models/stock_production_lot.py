@@ -94,3 +94,13 @@ class ProductionLot(models.Model):
         if self.user_has_groups('stock.group_stock_manager'):
             self = self.with_context(inventory_mode=True)
         return self.env['stock.quant']._get_quants_action()
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        """ search name and reference """
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('ref', operator, name)]
+        move_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return models.lazy_name_get(self.browse(move_ids).with_user(name_get_uid))
