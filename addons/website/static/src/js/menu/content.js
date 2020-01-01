@@ -981,15 +981,14 @@ var PageManagement = Widget.extend({
     //--------------------------------------------------------------------------
 
     _onSeoButtonClick : function(ev){
-        var url = window.location.origin+ev.currentTarget.dataset.url;
-        this._getHTML(url);
+        this._getHTML(window.location.origin + ev.currentTarget.dataset.url);
     },
     _getHTML: function(url){
         var xhr = new XMLHttpRequest();
         var self = this;
         xhr.onload = function() {
-            var page = this.responseXML;
-            new seo.SeoConfigurator(self,{page:page}).open();
+            var htmlPage = this.response;
+            new seo.newSeoConfigurator(self,{page: htmlPage}).open();
         }
         xhr.open( 'GET', url, true );
         xhr.responseType = 'document';

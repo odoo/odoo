@@ -124,7 +124,6 @@ var Keyword = Widget.extend({
     },
     destroy: function () {
         this.trigger('removed');
-
         this._super();
     },
     _updateTitle: function () {
@@ -218,28 +217,25 @@ var Preview = Widget.extend({
 });
 
 var HtmlPage = Class.extend(mixins.PropertiesMixin, {
-    init: function (page) {
-        this.page = page;
+    init: function () {
         mixins.PropertiesMixin.init.call(this);
         this.initTitle = this.title();
-        this.defaultTitle = $(this.page).find('meta[name="default_title"]').attr('content') || $('meta[name="default_title"]').attr('content');
+        this.defaultTitle = $('meta[name="default_title"]').attr('content');
         this.initDescription = this.description();
     },
     url: function () {
-        return this.page ? this.page.URL : window.location.origin + window.location.pathname;
+        return window.location.origin + window.location.pathname;
     },
     title: function () {
-        return $(this.page).find('title').text().trim() || $('title').text().trim();
+        return $('title').text().trim();
     },
     changeTitle: function (title) {
         // TODO create tag if missing
-        if (!this.page){
-            $('title').text(title.trim() || this.defaultTitle);
-        }
+        $('title').text(title.trim() || this.defaultTitle);
         this.trigger('title-changed', title);
     },
     description: function () {
-        return $(this.page).find('meta[name="description"]').attr('content') || ($('meta[name=description]').attr('content') || '').trim();
+        return ($('meta[name=description]').attr('content') || '').trim();
     },
     changeDescription: function (description) {
         // TODO create tag if missing
@@ -247,8 +243,8 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.trigger('description-changed', description);
     },
     keywords: function () {
-        var $keywords = this.page ? $(this.page).find('meta[name="keywords"]')[0].content : $('meta[name=keywords]');
-        var parsed = ($keywords.length > 0) && (this.page ? $keywords : $keywords.attr('content')) && (this.page ? $keywords.split(",") : $keywords.attr('content').split(','));
+        var $keywords = $('meta[name=keywords]');
+        var parsed = ($keywords.length > 0) && $keywords.attr('content') && $keywords.attr('content').split(',');
         return (parsed && parsed[0]) ? parsed: [];
     },
     changeKeywords: function (keywords) {
@@ -258,12 +254,13 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
     headers: function (tag) {
         return $('#wrap '+tag).map(function () {
             return $(this).text();
+
         });
     },
     getOgMeta: function () {
-        var ogImageUrl = $(this.page).find('meta[property="og:image"]').attr('content') || $('meta[property="og:image"]').attr('content');
-        var title = $(this.page).find('meta[property="og:title"]').attr('content') || $('meta[property="og:title"]').attr('content');
-        var description = $(this.page).find('meta[property="og:description"]').attr('content') || $('meta[property="og:description"]').attr('content');
+        var ogImageUrl = $('meta[property="og:image"]').attr('content');
+        var title = $('meta[property="og:title"]').attr('content');
+        var description = $('meta[property="og:description"]').attr('content');
         return {
             ogImageUrl: ogImageUrl && ogImageUrl.replace(window.location.origin, ''),
             metaTitle: title,
@@ -271,8 +268,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         };
     },
     images: function () {
-        var image = this.page ? $(this.page).find('#wrap img') : $('#wrap img');
-        return image.map(function () {
+        return $("#wrap img").map(function () {
             var $img = $(this);
             return  {
                 src: $img.attr('src'),
@@ -540,9 +536,9 @@ var MetaImageSelector = Widget.extend({
      * @param {Object} data
      */
     init: function (parent, data) {
-        this.metaTitle = data.htmlpage.initTitle || data.title || '';
+        this.metaTitle = data.title || '';
         this.activeMetaImg = data.metaImg;
-        this.serverUrl = typeof(data.htmlpage.url) != 'function' ? data.htmlpage.url : data.htmlpage.url();
+        this.serverUrl = data.htmlpage.url();
         data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/logo', odoo.session_info.website_id));
         data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/social_default_image', odoo.session_info.website_id));
         this.images = _.uniq(data.pageImages);
@@ -643,14 +639,13 @@ var SeoConfigurator = Dialog.extend({
                 {text: _t('Discard'), close: true},
             ],
         });
-        this.page = options.page;
         this._super(parent, options);
     },
     start: function () {
         var self = this;
 
         this.$modal.addClass('oe_seo_configuration');
-        this.htmlPage = new HtmlPage(this.page);
+        this.htmlPage = this.getHtmlPage();
 
 
         this.disableUnsavableFields().then(function () {
@@ -686,6 +681,9 @@ var SeoConfigurator = Dialog.extend({
      *
      * @private
      */
+    getHtmlPage: function () {
+        return new HtmlPage();
+    },
     destroy: function () {
         if (!this.savedData) {
             this.htmlPage.changeTitle(this.htmlPage.initTitle);
@@ -788,19 +786,8 @@ var SeoConfigurator = Dialog.extend({
             }
         });
     },
-    getTargetPageObj: function() {
-        var repr = $(this.page).children()[0].dataset.mainObject;
-        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
-        if (!match) {
-            return null;
-        }
-        return {
-            model: match[1],
-            id: match[2] | 0,
-        };
-    },
     saveMetaData: function (data) {
-        var obj = this.page ? this.getTargetPageObj() : this.getSeoObject() || this.getMainObject();
+        var obj = this.getSeoObject() || this.getMainObject();
         if (!obj) {
             return Promise.reject();
         } else {
@@ -829,6 +816,7 @@ var SeoConfigurator = Dialog.extend({
     },
 });
 
+
 var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
         'promote-current-page': '_promoteCurrentPage',
@@ -856,10 +844,84 @@ var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
+var newSeoConfigurator = SeoConfigurator.extend({
+    init: function (parent,options) {
+        this._super(parent, options)
+        this.page = options.page;
+    },
+    getHtmlPage: function () {
+        return new newHtmlPage(this.page);
+    },
+    getMainObject: function () {
+        var repr = $(this.page).children()[0].dataset.mainObject;
+        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
+    },
+});
+
+var newHtmlPage  = HtmlPage.extend({
+    init: function (page) {
+        this.page = page;
+        mixins.PropertiesMixin.init.call(this);
+        this.initTitle = this.title();
+        this.defaultTitle = $(this.page).find('meta[name="default_title"]').attr('content');
+        this.initDescription = this.description();
+    },
+    url: function () {
+        return this.page.URL;
+    },
+    title: function () {
+        return $(this.page).find('title').text().trim();
+    },
+    changeTitle: function (title) {
+        // TODO create tag if missing
+        $(this.page).find('title').text(title.trim() || this.defaultTitle);
+        this.trigger('title-changed', title);
+    },
+    description: function () {
+        return ($(this.page).find('meta[name=description]').attr('content') || '').trim();
+    },
+    changeDescription: function (description) {
+        // TODO create tag if missing
+        $(this.page).find('meta[name=description]').attr('content', description);
+        this.trigger('description-changed', description);
+    },
+    keywords: function () {
+        var $keywords = $(this.page).find('meta[name="keywords"]')[0].content;
+        var parsed = ($keywords.length > 0) && $keywords.split(",");
+        return (parsed && parsed[0]) ? parsed: [];
+    },
+    getOgMeta: function () {
+        var ogImageUrl = $(this.page).find('meta[property="og:image"]').attr('content');
+        var title = $(this.page).find('meta[property="og:title"]').attr('content');
+        var description = $(this.page).find('meta[property="og:description"]').attr('content');
+        return {
+            ogImageUrl: ogImageUrl && ogImageUrl.replace(window.location.origin, ''),
+            metaTitle: title,
+            metaDescription: description,
+        };
+    },
+    images: function () {
+        return $(this.page).find("#wrap img").map(function () {
+            var $img = $(this);
+            return  {
+                src: $img.attr('src'),
+                alt: $img.attr('alt'),
+            };
+        });
+    },
+});
 websiteNavbarData.websiteNavbarRegistry.add(SeoMenu, '#promote-menu');
 
 return {
     SeoConfigurator: SeoConfigurator,
     SeoMenu: SeoMenu,
+    newSeoConfigurator: newSeoConfigurator,
 };
 });
