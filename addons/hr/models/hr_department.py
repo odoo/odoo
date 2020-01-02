@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class Department(models.Model):
     _name = "hr.department"
-    _description = "HR Department"
+    _description = "Department"
     _inherit = ['mail.thread']
     _order = "name"
     _rec_name = 'complete_name'
