@@ -120,6 +120,7 @@ class AccountInvoiceSend(models.TransientModel):
     def save_as_template(self):
         self.ensure_one()
         self.composer_id.save_as_template()
+        self.template_id = self.composer_id.template_id.id
         action = _reopen(self, self.id, self.model, context=self._context)
         action.update({'name': _('Send Invoice')})
         return action
