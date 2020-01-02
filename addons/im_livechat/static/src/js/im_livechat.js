@@ -167,6 +167,35 @@ var LivechatButton = Widget.extend({
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
     /**
+     * create and open livechat window
+     *
+     * @private
+     * @param {Object} livechatData
+     */
+    _createChatWindow(livechatData) {
+        const self = this;
+        this._livechat = new WebsiteLivechat({
+            parent: this,
+            data: livechatData
+        });
+        return this._openChatWindow().then(function () {
+            if (!self._history) {
+                self._sendWelcomeMessage();
+            }
+            self._renderMessages();
+            self.call('bus_service', 'addChannel', self._livechat.getUUID());
+            self.call('bus_service', 'startPolling');
+
+            utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
+            utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+            if (livechatData && livechatData.operator_pid[0]) {
+                // livechatData.operator_pid contains a tuple (id, name)
+                // we are only interested in the id
+                utils.set_cookie('im_livechat_previous_operator_pid', livechatData.operator_pid[0], 7*24*60*60);
+            }
+        });
+    },
+    /**
      * @private
      * @param {Array} notification
      */
@@ -270,28 +299,7 @@ var LivechatButton = Widget.extend({
             if (!livechatData || !livechatData.operator_pid) {
                 self._notifyNoOperator();
             } else {
-                self._livechat = new WebsiteLivechat({
-                    parent: self,
-                    data: livechatData
-                });
-                return self._openChatWindow().then(function () {
-                    if (!self._history) {
-                        self._sendWelcomeMessage();
-                    }
-                    self._renderMessages();
-                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                    self.call('bus_service', 'startPolling');
-
-                    utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
-                    utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
-                    if (livechatData.operator_pid[0]) {
-                        // livechatData.operator_pid contains a tuple (id, name)
-                        // we are only interested in the id
-                        var operatorPidId = livechatData.operator_pid[0];
-                        var oneWeek = 7*24*60*60;
-                        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
-                    }
-                });
+                self._createChatWindow(livechatData);
             }
         }).then(function () {
             self._openingChat = false;

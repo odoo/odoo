@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="visitor_lead_creation_email_template" model="mail.template">
+            <field name="name">Visitor: Reception Acknowledgment for no operator</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="subject">Would appreciate your request</field>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+            <field name="email_to">${object.email_from}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name or 'Madam/Sir'},<br /><br />
+        Thank you for connecting with us, we will contact you as soon as possible.
+        To add additional comments, reply to this email.<br />
+        Thank you!<br /><br />
+        ${object.user_id.name or 'Odoo Team'}.
+    </p>
+</div>
+            </field>
+            <field name="lang">${object.partner_id.lang or object.user_id.lang or user.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

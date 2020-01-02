@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_lib" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/crm_livechat/static/src/js/im_livechat.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="livechat_tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
+            <script type="text/javascript" src="/crm_livechat/static/src/js/im_livechat.js"></script>
+            <script type="text/javascript" src="/crm_livechat/static/tests/livechat_no_operator_tests.js"></script>
+        </xpath>
+    </template>
+</odoo>

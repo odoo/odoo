@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <div t-name="crm_livechat.lead_generation_form" class="o_lead_creation_form card bg-light m-3">
+        <div class="card-body">
+            <span>
+                There is no operator available at the moment. please leave your contact details here, we will contact you.
+            </span>
+            <form action="/livechat/generate_lead" id="lead-form">
+                <div class="mb-3 mt-3">
+                    <input type="hidden" name="channel_uuid" t-att-value="channel_uuid"/>
+                    <table>
+                        <tr>
+                            <td> Name: </td>
+                            <td><input name="name" required="1" autofocus="autofocus"/></td>
+                        </tr>
+                        <tr>
+                            <td> Email:</td>
+                            <td><input type="email" name="email_from" placeholder="email@example.com" required="1"/></td>
+                        </tr>
+                        <tr t-if="!channel_uuid">
+                            <td> Description:</td>
+                            <td><textarea name="description"/></td>
+                        </tr>
+                        <tr>
+                            <td><button class="btn btn-primary" type="submit">Send</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
