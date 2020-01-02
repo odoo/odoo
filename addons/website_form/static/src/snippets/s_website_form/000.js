@@ -12,25 +12,12 @@ odoo.define('website_form.animation', function (require) {
     publicWidget.registry.form_builder_send = publicWidget.Widget.extend({
         selector: '.s_website_form',
 
-        willStart: function () {
-            var prom;
-            if (!$.fn.datetimepicker) {
-                prom = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
-            }
-            return Promise.all([this._super.apply(this, arguments), prom]);
-        },
-
-        start: function (editable_mode) {
-            if (editable_mode) {
-                this.stop();
-                return;
-            }
+        start: function () {
             var self = this;
             this.templates_loaded = ajax.loadXML('/website_form/static/src/xml/website_form.xml', qweb);
             this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);});
 
             // Initialize datetimepickers
-            var l10n = _t.database.parameters;
             var datepickers_options = {
                 minDate: moment({ y: 1900 }),
                 maxDate: moment({ y: 9999, M: 11, d: 31 }),
