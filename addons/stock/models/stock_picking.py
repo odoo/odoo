@@ -836,7 +836,7 @@ class Picking(models.Model):
             if pickings_without_moves:
                 raise UserError(_('Please add some items to move.'))
             if pickings_without_quantities:
-                raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
+                raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit mode and encode the done quantities.'))
             if pickings_without_lots:
                 raise UserError(_('You need to supply a Lot/Serial number for products %s.') % ', '.join(products_without_lots.mapped('display_name')))
         else:
