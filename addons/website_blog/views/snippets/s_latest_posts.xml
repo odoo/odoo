@@ -22,6 +22,12 @@
     </section>
 </template>
 
+<template id="s_latest_posts_big_orizontal" name="Latest Posts Horizontal">
+        <section class="s_latest_posts_big_orizontal">
+        <div class="js_get_posts container-fluid"  data-loading="true" data-template="website_blog.s_latest_posts_big_orizontal_template"/>
+    </section>
+</template>
+
 <template id="s_latest_posts_list_template">
     <div t-foreach="posts" t-as="p" class="d-flex col-12 mt-3 s_latest_posts_post">
         <a class="s_latest_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}" t-att-title="'Read' + p.name">
@@ -64,6 +70,23 @@
     </figure>
 </template>
 
+<template id="s_latest_posts_big_orizontal_template">
+    <t t-foreach="posts" t-as="p">
+        <figure class="post s_latest_posts_post">
+            <figcaption>
+                <h4 class="mb0"><a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)"><t t-esc="p.name"/></a></h4>
+                <h5 class="mt0 mb4" t-field="p.write_date" t-field-options='{"format": "dd/MM"}' />
+            </figcaption>
+            <a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="p"/>
+                    <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
+                </t>
+            </a>
+        </figure>
+    </t>
+</template>
+
 <!-- Options -->
 <template id="s_latest_posts_options" inherit_id="website.snippet_options">
     <xpath expr="//div[@data-js='background']" position="before">
@@ -87,6 +110,20 @@
                 <we-button data-select-data-attribute="9">9 posts max</we-button>
                 <we-button data-select-data-attribute="10">10 posts max</we-button>
             </we-select>
+        </div>
+
+        <div data-js='s_latest_posts_style' data-selector=".s_latest_posts_big_picture .js_get_posts">
+            <we-select string="List Style">
+                <we-button data-select-class="">Default</we-button>
+                <we-button data-select-class="effect-marley">Marley</we-button>
+                <we-button data-select-class="effect-dexter">Dexter</we-button>
+                <we-button data-select-class="effect-chico">Silly-Chico</we-button>
+                <we-button data-select-class="effect-steve">Lonely Steve</we-button>
+            </we-select>
+        </div>
+
+        <div data-js='s_latest_posts_options' data-selector=".s_latest_posts_big_picture .js_get_posts">
+            <we-checkbox string="First is bigger" data-select-class="first_is_big"/>
         </div>
     </xpath>
     <xpath expr="//div[@data-js='layout_column']" position="attributes">
