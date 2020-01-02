@@ -9,15 +9,9 @@ from odoo import api, fields, models
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    expiration_date_readonly = fields.Boolean(compute='_compute_expiration_date_readonly')
     expiration_date = fields.Datetime(string='Expiration Date',
         help='This is the date on which the goods with this Serial Number may'
         ' become dangerous and must not be consumed.')
-
-    @api.depends('picking_id', 'product_id')
-    def _compute_expiration_date_readonly(self):
-        for line in self:
-            line.expiration_date_readonly = bool(not line.picking_id.picking_type_id.use_existing_lots and line.product_id.use_expiration_date)
 
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
