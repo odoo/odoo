@@ -1095,7 +1095,7 @@ class AccountMove(models.Model):
                     vendor_display_name = _('#Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
             move.invoice_partner_display_name = vendor_display_name
 
-    @api.depends('state', 'journal_id', 'invoice_date')
+    @api.depends('state', 'journal_id', 'date', 'invoice_date')
     def _compute_invoice_sequence_number_next(self):
         """ computes the prefix of the number that will be assigned to the first invoice/bill/refund of a journal, in order to
         let the user manually change it.
@@ -1130,8 +1130,9 @@ class AccountMove(models.Model):
                 continue
 
             for move in group:
-                prefix, dummy = sequence._get_prefix_suffix(date=move.invoice_date or fields.Date.today(), date_range=move.invoice_date)
-                number_next = sequence._get_current_sequence(sequence_date=move.date).number_next_actual
+                sequence_date = move.date or move.invoice_date
+                prefix, dummy = sequence._get_prefix_suffix(date=sequence_date, date_range=sequence_date)
+                number_next = sequence._get_current_sequence(sequence_date=sequence_date).number_next_actual
                 move.invoice_sequence_number_next_prefix = prefix
                 move.invoice_sequence_number_next = '%%0%sd' % sequence.padding % number_next
                 treated |= move
@@ -1153,7 +1154,8 @@ class AccountMove(models.Model):
             nxt = re.sub("[^0-9]", '', move.invoice_sequence_number_next)
             result = re.match("(0*)([0-9]+)", nxt)
             if result and sequence:
-                date_sequence = sequence._get_current_sequence(sequence_date=move.date)
+                sequence_date = move.date or move.invoice_date
+                date_sequence = sequence._get_current_sequence(sequence_date=sequence_date)
                 date_sequence.number_next_actual = int(result.group(2))
 
     def _compute_payments_widget_to_reconcile_info(self):
