@@ -1162,9 +1162,9 @@ options.registry.CoverProperties = options.Class.extend({
         await this._super(...arguments);
 
         // Update saving dataset
-        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] .active').data('selectClass') || '';
-        this.$target[0].dataset.textSizeClass = this.$el.find('[data-cover-opt-name="text_size"] .active').data('selectClass') || '';
-        this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] .active').data('selectClass') || '';
+        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
+        this.$target[0].dataset.textSizeClass = this.$el.find('[data-cover-opt-name="text_size"] we-button.active').data('selectClass') || '';
+        this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
         this.$target[0].dataset.filterColor = this.$filterColorOpts.filter('.active').data('filterColor') || '';
     },
