@@ -1076,6 +1076,7 @@ class TestReconciliation(AccountingTestCase):
         inv2 = self.create_invoice(type="out_refund", invoice_amount=140, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
+            'payment_date': time.strftime('%Y') + '-07-15',
             'payment_method_id': self.inbound_payment_method.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
@@ -1138,6 +1139,7 @@ class TestReconciliation(AccountingTestCase):
         inv2 = self.create_invoice(type="out_refund", invoice_amount=400, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
+            'payment_date': time.strftime('%Y') + '-07-15',
             'payment_method_id': self.inbound_payment_method.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
@@ -1240,6 +1242,7 @@ class TestReconciliation(AccountingTestCase):
         inv2 = self.create_invoice(type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
+            'payment_date': time.strftime('%Y') + '-07-15',
             'payment_method_id': self.inbound_payment_method.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
