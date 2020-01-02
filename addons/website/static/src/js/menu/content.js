@@ -976,23 +976,25 @@ var PageManagement = Widget.extend({
         });
     },
 
+    _getHTML: function(url){
+        var self = this,
+            xhr = new XMLHttpRequest();
+
+        xhr.onload = function () {
+            new seo.SeoConfigurator(self, {
+                targetPage: $(this.response.documentElement),
+            }).open();
+        }
+        xhr.open('GET', url, true);
+        xhr.responseType = 'document';
+        xhr.send();
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     _onSeoButtonClick : function(ev){
         this._getHTML(window.location.origin + ev.currentTarget.dataset.url);
-    },
-    _getHTML: function(url){
-        var xhr = new XMLHttpRequest();
-        var self = this;
-        xhr.onload = function() {
-            var htmlPage = this.response;
-            new seo.newSeoConfigurator(self,{page: htmlPage}).open();
-        }
-        xhr.open( 'GET', url, true );
-        xhr.responseType = 'document';
-        xhr.send();
     },
     _onPagePropertiesButtonClick: function (ev) {
         var moID = $(ev.currentTarget).data('id');
