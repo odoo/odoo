@@ -582,19 +582,18 @@
                         </div>
                         <group>
                             <group id="header_left_group">
-                                <div class="o_td_label">
-                                    <label for="partner_id" string="Customer" style="font-weight:bold;"
-                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
-                                    <label for="partner_id" string="Vendor" style="font-weight:bold;"
-                                           attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
-                                </div>
-                                <field name="partner_id" widget="res_partner_many2one" nolabel="1"
+                                <field name="partner_id" widget="res_partner_many2one" string="Customer"
                                        context="{
-                                            'res_partner_search_mode': (context.get('default_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
+                                            'res_partner_search_mode': (context.get('default_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or False,
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                        options='{"always_reload": True, "no_quick_create": True}'
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                <field name="partner_id" widget="res_partner_many2one" string="Ventor"
+                                       context="{
+                                            'res_partner_search_mode': (context.get('default_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
+                                            'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                                       options='{"always_reload": True, "no_quick_create": True}'
+                                       attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
                                 <field name="ref"/>
                                 <field name="invoice_vendor_bill_id"
                                        attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type', '!=', 'in_invoice')]}"
@@ -603,15 +602,10 @@
                                        options="{'no_create': True}" context="{'show_total_amount': True}"/>
                             </group>
                             <group id="header_right_group">
-                                <!-- Invoice date (only invoices / receipts) -->
-                                <div class="o_td_label">
-                                    <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
-                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
-                                    <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
-                                           attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
-                                </div>
-                                <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}"
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <field name="invoice_date" string="Invoice Date" options="{'datepicker': {'warn_future': true}}"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                <field name="invoice_date" string="Bill Date" options="{'datepicker': {'warn_future': true}}"
+                                       attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
 
                                 <field name="date" string="Accounting Date"
                                        attrs="{'invisible': [('type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
