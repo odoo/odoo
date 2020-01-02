@@ -34,7 +34,6 @@
                                 context="{'default_model_id': res_model_id}"/>
                         </group>
                         <group>
-                            <field name="default_description"/>
                             <label for="delay_count"/>
                             <div>
                                 <div class="o_row">
@@ -45,6 +44,8 @@
                             </div>
                         </group>
                     </group>
+                    <label for="default_description"/>
+                    <field name="default_description"/>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
