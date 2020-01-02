@@ -1,0 +1,118 @@
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_sale_referral/static/src/scss/website_sale_referral.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_sale_referral/static/src/js/referral_widget.js"></script>
+        </xpath>
+    </template>
+
+
+    <template id="portal_my_home_menu_referral" name="Portal layout : referral menu entries" inherit_id="portal.portal_breadcrumbs" priority="90">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'referral'" t-attf-class="breadcrumb-item #{'active' if not referral else ''}">
+                <a t-if="referral" t-attf-href="/referral">Referrals</a>
+                <t t-else="">Referral</t>
+            </li>
+            <li t-if="referral" class="breadcrumb-item active">
+                <t t-esc="referral.name" t-if="referral.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_referral" name="Portal My Home : Referrals" inherit_id="portal.portal_my_home" priority="90">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Referral</t>
+                <t t-set="url" t-value="'/referral'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="referral_title_sub_template">
+        <section class="text-center o_referral_cover_container pt48 pb48">
+            <h1>Get $250 per referral</h1>
+            <h3 class="lead">Get a $250 Amazon Gift card when your referral signs up to a paid plan with Odoo</h3>
+        </section>
+    </template>
+
+    <template id="referral_controller_template_register" name="Referals">
+        <t t-call="website.layout">
+            <div id="wrap" class="website_referral bg-light oe_structure">
+                <t t-call="website_sale_referral.referral_title_sub_template" />
+                <div class="container pb96">
+                    <div class="row">
+                        <section class="col-12 col-lg-8 pt-3">
+                            <form t-attf-action="/referral/register" method="POST">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div>
+                                        <h2 class="h5 mt-2">Identify yourself</h2>
+                                        <p class="text-muted">Give us your email to be rewarded</p>
+                                        <div class="form-inline">
+                                            <input type="email" required="1" class="form-control w-50 mr-2" id="referrer_email" placeholder="jane.doe@email.com" name="referrer_email" />
+                                            <button type="submit" class="btn btn-primary">Start Referring</button>
+                                        </div>
+                                    </div>
+                            </form>
+                        </section>
+                        <section class="col-12 col-lg-4 pb-5 bg-white border">
+                            <div id="referral_tracking_sub_template" class="oe_structure referral_widget">
+                                <!-- Here will be the tracking infos, which are generated client-side by js-->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="oe_structure "/>
+            </div>
+        </t>
+    </template>
+
+    <template id="referral_controller_template" name="Referrals">
+        <t t-call="website.layout">
+            <div id="wrap" class="website_referral bg-light oe_structure">
+                <t t-call="website_sale_referral.referral_title_sub_template" />
+                <div class="container pb96">
+                    <div class="row referral_widget">
+                        <section class="col-12 col-lg-8 pt-3">
+                                <div class="alert alert-primary d-lg-none d-flex justify-content-between" role="alert">
+                                    <span>Connected as <b><t t-esc="referrer_email"/></b></span>
+                                    <a class="align-self-center" href="/referral?force=true">Change</a>
+                                </div>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="referral_token" id="referral_token" t-att-value="token" />
+                                <input type="hidden" id="referrer_email" name="referrer_email" t-att-value="referrer_email"/>
+                                <h2 class="h5 mt-2">Share</h2>
+                                <p class="text-muted">Get a reward from each buyer coming from your link.</p>
+                                <div id="sharer" class="row mb-4">
+                                    <div class="col-xl-6 mb-2 input-group">
+                                        <input type="text" class="form-control o_border-dashed" id="copy_link_input" placeholder="Click on 'copy link' to get the link" aria-label="Copy this link" aria-describedby="copy-link" readonly="1"/>
+                                        <div class="input-group-append">
+                                        <button type="button" class="input-group-text bg-700 get_link" t-attf-value="direct" id="copy-link"><i t-attf-class="fa fa-lg fa-link pr-2" role="img" t-attf-aria-label="Copy Link"/>Copy Link</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 pl-xl-0">
+                                        <t t-foreach="[{'lower': 'facebook', 'name': 'Facebook'}, {'lower': 'twitter', 'name': 'Twitter'}, {'lower': 'linkedin', 'name': 'Linkedin'}]" t-as="network">
+                                            <button type="button" t-attf-class="btn mb-2 mr-2 o_btn-{{network['lower']}} share_social_network" name="channel" t-attf-value="{{network['lower']}}">
+                                                <span t-attf-title="Share on {{network['name']}}" class="text-white"><i t-attf-class="fa fa-lg pr-2 fa-{{network['lower']}} text-white" role="img" t-attf-aria-label="Share on {{network['name']}}"/><t t-esc="network['name']"/></span>
+                                            </button>
+                                        </t>
+                                    </div>
+                                </div>
+                        </section>
+                        <section class="col-12 col-lg-4 pt-3 pb-3 bg-white border">
+                            <div class="alert alert-primary pl-2 pr-2 d-none d-lg-flex justify-content-between" role="alert">
+                                <span>Connected as <b><t t-esc="referrer_email"/></b></span>
+                                <a href="/referral?force=true">Change</a>
+                            </div>
+                            <div id="referral_tracking_sub_template">
+                                <!-- Here will be the tracking infos, which are generated client-side by js-->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="oe_structure "/>
+            </div>
+        </t>
+    </template>
+</odoo>

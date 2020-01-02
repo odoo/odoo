@@ -37,6 +37,7 @@ class ResConfigSettings(models.TransientModel):
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
     external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
+    module_odoo_referral = fields.Boolean(string="Odoo Referral Program", config_parameter='base_setup.odoo_referral')
     company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
     active_user_count = fields.Integer('Number of Active Users', compute="_compute_active_user_count")
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")

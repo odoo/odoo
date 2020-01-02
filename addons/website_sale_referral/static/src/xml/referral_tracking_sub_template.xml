@@ -1,0 +1,54 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="referral_tracking_sub_template">
+        <div class="row border-bottom pt-3">
+            <div class="col-lg-6">
+                <h2 class="text-600 mb-0">
+                    <b>
+                        <div id="potential_reward">
+                            <t t-esc="potential_reward"/>
+                        </div>
+                    </b>
+                </h2>
+                <p class="text-muted">Potential rewards</p>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="text-secondary mb-0">
+                    <b>
+                        <t t-esc="total_reward" />
+                    </b>
+                </h2>
+                <p class="text-muted">Rewards won</p>
+            </div>
+        </div>
+        <div id="referral_tracking_single_sub_template">
+            <t t-foreach="my_referrals" t-as='re'>
+                <t t-set="r" t-value="my_referrals[re]"/>
+                <t t-call="referral_tracking_single_sub_template" />
+            </t>
+        </div>
+    </t>
+
+
+    <t t-name="referral_tracking_single_sub_template">
+        <div class="pt-3">
+            <p class="text-muted float-right mb0"><t t-esc="r['date_str']"/></p>
+            <p class="font-weight-bolder text-600 m-0"><t t-esc="r['name']" /></p>
+            <p class="text-muted m-0"><t t-esc="r['company']" /></p>
+            <div>
+                <t t-if="r['state'] == 'new' || r['state'] == 'in_progress' ">
+                    <span t-attf-class="badge #{r['state'] == 'new' ? 'badge-primary' : 'bg-400'} px-2">Referred</span>
+                    <span><i class="text-muted fa fa-chevron-right"/></span>
+                    <span t-attf-class="badge #{r['state'] == 'in_progress' ? 'badge-primary' : 'bg-400'} px-2">In Progress</span>
+                    <span><i class="text-muted fa fa-chevron-right"/></span>
+                    <span t-attf-class="badge #{r['state'] == 'done' ? 'badge-primary' : 'bg-400'} px-2">Won</span>
+                </t>
+                <t t-if="r['state'] == 'done'">
+                    <span t-attf-class="badge badge-success px-2">Won</span>
+                </t>
+                <t t-if="r['state'] == 'cancel'">
+                    <span t-attf-class="badge badge-danger px-2">Lost</span>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
