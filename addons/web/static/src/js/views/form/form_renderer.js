@@ -572,10 +572,13 @@ var FormRenderer = BasicRenderer.extend({
             } else if (child.tag === 'label') {
                 $tds = self._renderInnerGroupLabel(child);
             } else {
-                if (child.tag === 'div' && child.attrs.class !== undefined && child.attrs.class.includes('o_td_label'))
-                    $tds = $('<td class="o_td_label"/>').append(self._renderNode(child));
-                else
-                    $tds = $('<td/>').append(self._renderNode(child));
+                var $td = $('<td/>');
+                var $child = self._renderNode(child);
+                if ($child.hasClass('o_td_label')) { // transfer classname to outer td for css reasons
+                    $td.addClass('o_td_label');
+                    $child.removeClass('o_td_label');
+                }
+                $tds = $td.append($child);
             }
             if (finalColspan > 1) {
                 $tds.last().attr('colspan', finalColspan);
