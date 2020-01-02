@@ -177,6 +177,16 @@ class PurchaseOrder(models.Model):
         return new_po
 
     @api.multi
+    def write(self, vals):
+        for edited_line in vals.get('order_line', []):
+            if edited_line[2]:
+                line = self.order_line.filtered(lambda l: l.id == edited_line[1])
+                has_invoice = bool(len(line.invoice_lines))
+                if has_invoice:
+                    raise UserError(_('You cannot change a purchase order that is already invoiced.'))
+        return super(PurchaseOrder, self).write(vals)
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'purchase':
