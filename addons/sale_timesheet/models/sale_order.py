@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import operator
+
 from odoo import api, fields, models, _
 
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.tools.misc import groupby
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -51,10 +54,14 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super(SaleOrder, self)._action_confirm()
-        self.mapped('order_line').sudo().with_context(
-            default_company_id=self.company_id.id,
-            force_company=self.company_id.id,
-        )._timesheet_service_generation()
+        for company, lines in groupby(
+            self.mapped('order_line').sudo(),
+            key=operator.itemgetter('company_id'),
+        ):
+            self.env['sale.order.line'].concat(*lines).sudo().with_context(
+                default_company_id=company.id,
+                force_company=company.id,
+            )._timesheet_service_generation()
         return result
 
     @api.multi
