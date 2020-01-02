@@ -121,6 +121,7 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onFileInputChange: function () {
         var self = this;
+
         this.$sendButton.prop('disabled', true);
 
         return Promise.all(_.map(this.$fileInput[0].files, function (file) {
@@ -171,7 +172,7 @@ var PortalComposer = publicWidget.Widget.extend({
                 self._rpc({
                     route: route,
                     params: _.object(_.pluck(data, 'name'), _.pluck(data, 'value')),
-                }).then(function (url) {
+                }).then(function () {
                     var $parent = self.getParent();
                     if (self.options.is_portal_chatter) {
                         $parent._chatterInit().then(function (result) {
@@ -189,7 +190,6 @@ var PortalComposer = publicWidget.Widget.extend({
                         window.location.reload();
                     }
                 });
-
             }
         });
     },
