@@ -1,4 +1,4 @@
-.s_latest_posts, .s_latest_posts_big_picture {
+.s_latest_posts:not([data-vcss]), .s_latest_posts_big_picture:not([data-vcss]) {
     .s_latest_posts_loader {
         @include o-position-absolute(0, 0, 0, 0);
         transform: translateZ(1px);
@@ -20,7 +20,7 @@
     }
 }
 
-.s_latest_posts {
+.s_latest_posts:not([data-vcss]) {
     // Set sizes relative to the container font-size.
     // (handle parents with, for example, '.small' or '.h1' classes)
     .s_latest_posts_post_cover {

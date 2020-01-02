@@ -1,33 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="s_latest_posts" name="Latest Posts - List">
-    <section class="s_latest_posts pt16 pb16">
+<!-- Snippet -->
+<template id="s_latest_posts" name="Blog Posts">
+    <section class="s_latest_posts pt16 pb16" data-vcss="001">
         <div class="container">
-            <h2>Latest Posts</h2>
-            <div class="row s_col_no_bgcolor s_nb_column_fixed js_get_posts"
+            <div class="row s_col_no_bgcolor s_nb_column_fixed js_get_posts s_latest_posts_big_picture s_latest_posts_effect_marley"
                 data-loading="true"
-                data-template="website_blog.s_latest_posts_list_template"/>
+                data-template="website_blog.s_latest_posts_big_picture_template"
+                data-filter-by-blog-id="0"
+                data-order="published_date desc"/>
         </div>
     </section>
 </template>
 
-<template id="s_latest_posts_big_picture" name="Latest Posts - Big Images">
-    <section class="s_latest_posts_big_picture pt16 pb16">
-        <div class="container">
-            <h2 style="text-align: center">Latest Posts</h2>
-            <div class="row s_col_no_bgcolor s_nb_column_fixed js_get_posts"
-                data-loading="true"
-                data-template="website_blog.s_latest_posts_big_picture_template"/>
-        </div>
-    </section>
-</template>
-
-<template id="s_latest_posts_big_orizontal" name="Latest Posts Horizontal">
-        <section class="s_latest_posts_big_orizontal">
-        <div class="js_get_posts container-fluid"  data-loading="true" data-template="website_blog.s_latest_posts_big_orizontal_template"/>
-    </section>
-</template>
-
+<!-- Load-time templates (rendered in JS on page load) -->
+<!-- List layout -->
 <template id="s_latest_posts_list_template">
     <div t-foreach="posts" t-as="p" class="d-flex col-12 mt-3 s_latest_posts_post">
         <a class="s_latest_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}" t-att-title="'Read' + p.name">
@@ -48,9 +35,9 @@
         </div>
     </div>
 </template>
-
+<!-- Big picture layout -->
 <template id="s_latest_posts_big_picture_template">
-    <figure t-foreach="posts" t-as="p" class="col-12 col-md-6 col-xl-4 my-3 s_latest_posts_post">
+    <figure t-foreach="posts" t-as="p" class="col-md-6 col-lg-4 my-3 s_latest_posts_post">
         <a class="s_latest_posts_post_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="p"/>
@@ -69,61 +56,70 @@
         </a>
     </figure>
 </template>
-
-<template id="s_latest_posts_big_orizontal_template">
-    <t t-foreach="posts" t-as="p">
-        <figure class="post s_latest_posts_post">
-            <figcaption>
-                <h4 class="mb0"><a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)"><t t-esc="p.name"/></a></h4>
-                <h5 class="mt0 mb4" t-field="p.write_date" t-field-options='{"format": "dd/MM"}' />
-            </figcaption>
-            <a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)">
+<!-- Horizontal layout -->
+<template id="s_latest_posts_horizontal_template">
+    <figure t-foreach="posts" t-as="p" class="post s_latest_posts_post col-md-6 col-lg-4">
+        <figcaption>
+            <h4 class="mb0"><a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)"><t t-esc="p.name"/></a></h4>
+            <h5 class="mt0 mb4" t-field="p.write_date" t-options='{"format": "dd/MM"}' />
+        </figcaption>
+        <a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="p"/>
+                <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
+            </t>
+        </a>
+    </figure>
+</template>
+<!-- Card layout -->
+<template id="s_latest_posts_card_template">
+    <div t-foreach="posts" t-as="p" class="col-md-6 col-lg-4 s_latest_posts_post pb32">
+        <div class="card">
+            <a class="s_latest_posts_post_cover" t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="p"/>
                     <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
                 </t>
             </a>
-        </figure>
-    </t>
+            <div class="card-body">
+                <a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)"><h4 class="mb-0"><t t-esc="p.name"/></h4></a>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <span class="text-muted mb-0" t-field="p.write_date" t-options='{"format": "MMM d, yyyy"}' />
+                <span class="text-muted mb-0">In <a class="font-weight-bold" t-esc="p.blog_id.name" t-att-href="'/blog/%s' % (p.blog_id.id)" /></span>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- Options -->
 <template id="s_latest_posts_options" inherit_id="website.snippet_options">
     <xpath expr="//div[@data-js='background']" position="before">
-        <div data-js="js_get_posts_selectBlog" data-selector=".s_latest_posts, .s_latest_posts_big_picture" data-target=".js_get_posts" data-no-check="true">
+        <div data-js="js_get_posts_selectBlog" data-selector=".s_latest_posts" data-target=".js_get_posts" data-no-check="true">
             <we-select string="Choose a blog" data-no-preview="true" name="blog_selection" data-attribute-name="filterByBlogId">
                 <we-button data-select-data-attribute="0">All blogs</we-button>
                 <!-- the blog list will be generated in js -->
             </we-select>
-        </div>
-
-        <div data-selector=".s_latest_posts, .s_latest_posts_big_picture" data-target=".js_get_posts" data-no-check="true">
-            <we-select string="Posts limit" data-no-preview="true" data-attribute-name="postsLimit" data-attribute-default-value="3">
-                <we-button data-select-data-attribute="1">1 post max</we-button>
-                <we-button data-select-data-attribute="2">2 posts max</we-button>
-                <we-button data-select-data-attribute="3">3 posts max</we-button>
-                <we-button data-select-data-attribute="4">4 posts max</we-button>
-                <we-button data-select-data-attribute="5">5 posts max</we-button>
-                <we-button data-select-data-attribute="6">6 posts max</we-button>
-                <we-button data-select-data-attribute="7">7 posts max</we-button>
-                <we-button data-select-data-attribute="8">8 posts max</we-button>
-                <we-button data-select-data-attribute="9">9 posts max</we-button>
-                <we-button data-select-data-attribute="10">10 posts max</we-button>
+            <we-select string="Posts" data-no-preview="true" data-attribute-name="order" class="o_we_inline">
+                <we-button data-select-data-attribute="published_date desc">Latest</we-button>
+                <we-button data-select-data-attribute="visits desc">Most viewed</we-button>
             </we-select>
-        </div>
-
-        <div data-js='s_latest_posts_style' data-selector=".s_latest_posts_big_picture .js_get_posts">
-            <we-select string="List Style">
-                <we-button data-select-class="">Default</we-button>
-                <we-button data-select-class="effect-marley">Marley</we-button>
-                <we-button data-select-class="effect-dexter">Dexter</we-button>
-                <we-button data-select-class="effect-chico">Silly-Chico</we-button>
-                <we-button data-select-class="effect-steve">Lonely Steve</we-button>
+            <we-select string="Layout" data-no-preview="true" data-attribute-name="template" class="o_we_inline">
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_list_template" data-select-class="s_latest_posts_list">List</we-button>
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_big_picture_template"
+                    data-select-class="s_latest_posts_big_picture"
+                    data-name="big_picture_opt">Big Pictures</we-button>
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_horizontal_template"
+                    data-select-class="s_latest_posts_horizontal">Horizontal</we-button>
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_card_template"
+                    data-select-class="s_latest_posts_card">Cards</we-button>
             </we-select>
-        </div>
-
-        <div data-js='s_latest_posts_options' data-selector=".s_latest_posts_big_picture .js_get_posts">
-            <we-checkbox string="First is bigger" data-select-class="first_is_big"/>
+            <we-select string="Hover effect" data-no-widget-refresh="true" data-dependencies="big_picture_opt" class="o_we_inline">
+                <we-button data-select-class="">None</we-button>
+                <we-button data-select-class="s_latest_posts_effect_marley">Marley</we-button>
+                <we-button data-select-class="s_latest_posts_effect_dexter">Dexter</we-button>
+                <we-button data-select-class="s_latest_posts_effect_chico">Silly-Chico</we-button>
+            </we-select>
         </div>
     </xpath>
     <xpath expr="//div[@data-js='layout_column']" position="attributes">
@@ -135,6 +131,11 @@
 <template id="assets_snippet_s_latest_posts_css_000" inherit_id="website.assets_frontend">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website_blog/static/src/snippets/s_latest_posts/000.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_latest_posts_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_blog/static/src/snippets/s_latest_posts/001.scss"/>
     </xpath>
 </template>
 

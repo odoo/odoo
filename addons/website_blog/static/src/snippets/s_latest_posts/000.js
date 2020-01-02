@@ -16,10 +16,16 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
-        var limit = self.$target.data('postsLimit') || 3;
-        var blogID = self.$target.data('filterByBlogId');
-        var template = self.$target.data('template') || 'website_blog.s_latest_posts_list_template';
-        var loading = self.$target.data('loading');
+        const data = self.$target[0].dataset;
+        const limit = parseInt(data.postsLimit) || 4;
+        const blogID = parseInt(data.filterByBlogId);
+        // Compatibility with old template xml id
+        if (data.template && data.template.endsWith('.s_latest_posts_big_orizontal_template')) {
+            data.template = 'website_blog.s_latest_posts_horizontal_template';
+        }
+        const template = data.template || 'website_blog.s_latest_posts_list_template';
+        const loading = data.loading === 'true';
+        const order = data.order || 'published_date desc';
 
         this.$target.empty(); // Compatibility with db that saved content inside by mistake
         this.$target.attr('contenteditable', 'False'); // Prevent user edition
@@ -29,7 +35,10 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
             ['post_date', '<=', moment().utc().locale('en').format('YYYY-MM-DD HH:mm:ss')],
         ];
         if (blogID) {
-            domain.push(['blog_id', '=', parseInt(blogID)]);
+            domain.push(['blog_id', '=', blogID]);
+        }
+        if (order.includes('visits')) {
+            domain.push(['visits', '!=', false]);
         }
 
         var prom = new Promise(function (resolve) {
@@ -39,6 +48,7 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
                     template: template,
                     domain: domain,
                     limit: limit,
+                    order: order,
                 },
             }).then(function (posts) {
                 var $posts = $(posts).filter('.s_latest_posts_post');
@@ -48,10 +58,10 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
                         class: 'alert alert-warning alert-dismissible text-center',
                         text: _t("No blog post was found. Make sure your posts are published."),
                     })));
-                    return;
+                    resolve();
                 }
 
-                if (loading && loading === true) {
+                if (loading) {
                     // Perform an intro animation
                     self._showLoading($posts);
                 } else {
