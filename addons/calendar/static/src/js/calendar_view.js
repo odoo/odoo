@@ -4,6 +4,7 @@ odoo.define('calendar.CalendarView', function (require) {
 var CalendarPopover = require('web.CalendarPopover');
 var CalendarRenderer = require('web.CalendarRenderer');
 var CalendarView = require('web.CalendarView');
+const session = require('web.session');
 var viewRegistry = require('web.view_registry');
 
 var AttendeeCalendarPopover = CalendarPopover.extend({
@@ -17,10 +18,8 @@ var AttendeeCalendarPopover = CalendarPopover.extend({
     init: function () {
         var self = this;
         this._super.apply(this, arguments);
-        var session = this.getSession();
         // Show status dropdown if user is in attendees list
-        this.showStatusDropdown = _.contains(this.event.record.partner_ids, session.partner_id);
-        if (this.showStatusDropdown) {
+        if (this.isCurrentPartnerAttendee()) {
             this.statusColors = {accepted: 'text-success', declined: 'text-danger', tentative: 'text-muted', needsAction: 'text-dark'};
             this.statusInfo = {};
             _.each(this.fields.attendee_status.selection, function (selection) {
@@ -28,6 +27,50 @@ var AttendeeCalendarPopover = CalendarPopover.extend({
             });
             this.selectedStatusInfo = this.statusInfo[this.event.record.attendee_status];
         }
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean}
+     */
+    isCurrentPartnerAttendee() {
+        return this.event.record.partner_ids.includes(session.partner_id);
+    },
+    /**
+     * @override
+     * @return {boolean}
+     */
+    isEventDeletable() {
+        return this._super() && (this._isEventPrivate() ? this.isCurrentPartnerAttendee() : true);
+    },
+    /**
+     * @override
+     * @return {boolean}
+     */
+    isEventDetailsVisible() {
+        return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
+    },
+    /**
+     * @override
+     * @return {boolean}
+     */
+    isEventEditable() {
+        return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    _isEventPrivate() {
+        return this.event.record.privacy === 'private';
     },
 
     //--------------------------------------------------------------------------

@@ -781,9 +781,9 @@ class Meeting(models.Model):
     event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
-    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]})
+    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, required=True)
     location = fields.Char('Location', states={'done': [('readonly', True)]}, tracking=True, help="Location of Event")
-    show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
+    show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy', required=True)
 
     # linked document
     res_id = fields.Integer('Document ID')
@@ -1692,7 +1692,7 @@ class Meeting(models.Model):
             if r['privacy'] == 'private':
                 for f in r:
                     recurrent_fields = self._get_recurrent_fields()
-                    public_fields = list(set(recurrent_fields + ['id', 'active', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
+                    public_fields = list(set(recurrent_fields + ['id', 'active', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule', 'privacy']))
                     if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []

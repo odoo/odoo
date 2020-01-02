@@ -27,7 +27,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
         this.fields = eventInfo.fields;
         this.event = eventInfo.event;
         this.modelName = eventInfo.modelName;
-        this.canDelete = eventInfo.canDelete;
+        this._canDelete = eventInfo.canDelete;
     },
     /**
      * @override
@@ -44,6 +44,29 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
             $field.appendTo(self.$('.o_cw_popover_fields_secondary'));
         });
         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean}
+     */
+    isEventDeletable() {
+        return this._canDelete;;
+    },
+    /**
+     * @return {boolean}
+     */
+    isEventDetailsVisible() {
+        return true;
+    },
+    /**
+     * @return {boolean}
+     */
+    isEventEditable() {
+        return true;
     },
 
     //--------------------------------------------------------------------------
