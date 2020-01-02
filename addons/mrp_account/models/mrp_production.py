@@ -39,7 +39,7 @@ class MrpProduction(models.Model):
             if finished_move.product_id.cost_method in ('fifo', 'average'):
                 qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
                 extra_cost = self.extra_cost * qty_done
-                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves]) + work_center_cost + extra_cost) / qty_done
+                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + work_center_cost + extra_cost) / qty_done
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):
