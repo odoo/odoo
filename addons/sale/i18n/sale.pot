@@ -3564,6 +3564,17 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"The following products cannot be restricted to the company"
+" %s because they have already been used in quotations or "
+"sales orders in another company:\n%s\n"
+"You can archive these products and recreate them "
+"with your company restriction instead, or leave them as "
+"shared product."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
 msgid ""
 "The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
