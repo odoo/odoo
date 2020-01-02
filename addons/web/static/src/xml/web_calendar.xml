@@ -42,10 +42,10 @@
                     <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventTime.duration)"/></small>
                 </li>
             </ul>
-            <ul class="list-group list-group-flush o_cw_popover_fields_secondary"/>
+            <ul t-if="widget.isEventDetailsVisible()" class="list-group list-group-flush o_cw_popover_fields_secondary"/>
             <div class="card-footer border-top">
-                <a href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
-                <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
+                <a t-if="widget.isEventEditable()" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
+                <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
             </div>
         </div>
     </t>
