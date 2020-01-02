@@ -1,0 +1,65 @@
+.s_latest_posts, .s_latest_posts_big_picture {
+    .s_latest_posts_loader {
+        @include o-position-absolute(0, 0, 0, 0);
+        transform: translateZ(1px);
+
+        > div {
+            animation: o-wblog-loader 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            max: {width: 30px; height: 30px;}
+        }
+    }
+
+    .s_latest_posts_post_title  {
+        font-weight: $headings-font-weight;
+        // Tweek line-height to help fit multi-line titles.
+        line-height: 1;
+    }
+
+    .s_latest_posts_post_subtitle {
+        font-size: 1em;
+    }
+}
+
+.s_latest_posts {
+    // Set sizes relative to the container font-size.
+    // (handle parents with, for example, '.small' or '.h1' classes)
+    .s_latest_posts_post_cover {
+        @include size(3.5em);
+        max: {width: 85px; height: 85px}
+    }
+
+    .s_latest_posts_post_title  {
+        font-size: 1.25em;
+    }
+}
+
+.s_latest_posts_big_picture {
+    .s_latest_posts_post {
+        min-height: 150px;
+
+        figcaption {
+            position: relative;
+            justify-content: center;
+        }
+
+        .s_latest_posts_post_cover {
+            min-height: 100%;
+
+            .o_record_cover_container {
+                top: 0;
+            }
+        }
+
+        .s_latest_posts_post_title  {
+            @include font-size($h3-font-size);
+            margin-bottom: 0.5em;
+            word-spacing: -0.15em;
+        }
+
+        @include s-latest-posts-figure-hook;
+    }
+
+    .js_get_posts {
+        @include s-latest-posts-js-get-posts-hook;
+    }
+}
