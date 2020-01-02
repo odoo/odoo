@@ -11,8 +11,6 @@ from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
-EDITING_ATTRIBUTES = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-note-id']
-
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
@@ -138,11 +136,6 @@ class IrUiView(models.Model):
         # Note: after a standard edition, the tail *must not* be replaced
         if replace_tail:
             root.tail = replacement.tail
-        # update attributes
-        root.attrib.clear()
-        root.attrib.update(replacement.attrib)
-        for attribute in EDITING_ATTRIBUTES:
-            root.attrib.pop(attribute, None)
         # replace all children
         del root[:]
         for child in replacement:
