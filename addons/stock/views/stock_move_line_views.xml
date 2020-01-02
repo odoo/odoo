@@ -67,7 +67,8 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <search string="Stock Moves">
-                <field name="picking_id" string="Reference"/>
+                <field name="picking_id" string="Transfer"/>
+                <field name="reference" string="Reference"/>
                 <field name="product_id"/>
                 <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                 <field name="location_dest_id" string="Destination Location" groups="stock.group_stock_multi_locations"/>
