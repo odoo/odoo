@@ -507,8 +507,17 @@ class SaleOrderLine(models.Model):
 
     def _update_line_quantity(self, values):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        line_products = self.filtered(lambda l: l.product_id.type in ['product', 'consu'])
-        if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
-            raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
-                              'Create a return first.'))
+        line_by_order = defaultdict(lambda: self.env['sale.order.line'])
+        for line in self:
+            if line.product_id.type in ['product', 'consu']:
+                line_by_order[line.order_id] |= line
+        for order, lines in line_by_order.items():
+            to_log = {}
+            for line in lines:
+                if line.qty_delivered and float_compare(values['product_uom_qty'], line.qty_delivered, precision_digits=precision) == -1:
+                    to_log[line] = (values['product_uom_qty'], line.product_uom_qty)
+            if to_log:
+                documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                order._log_decrease_ordered_quantity(documents)
+
         super(SaleOrderLine, self)._update_line_quantity(values)
