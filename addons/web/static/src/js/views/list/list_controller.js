@@ -527,6 +527,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onToggleGroup: function (event) {
+        event.stopPropagation();
         this.model
             .toggleGroup(event.data.group.id)
             .then(this.update.bind(this, {}, {keepSelection: true, reload: false}));
