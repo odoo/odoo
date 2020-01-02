@@ -3998,6 +3998,58 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('toggle group in list in dialog (with other list below)', function (assert) {
+        // In this test, two list controllers are nested (one of them is opened
+        // in a dialog). When the user toggles a group in the dialog, a custom
+        // event is triggered by the renderer. This event must be stopped by the
+        // list controller of the dialog, otherwise it would be handled by the
+        // other controller as well, and it will crash (unknown group).
+        assert.expect(7);
+
+        // add enough bar records to have the 'Search More' option in the many2one
+        for (var i = 0; i < 8; i++) {
+            var id = i + 10;
+            this.data.bar.records.push({id: id, display_name: 'Value ' + id});
+        }
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<list editable="top"><field name="m2o"/></list>',
+            archs: {
+                'bar,false,list': '<list><field name="display_name"/></list>',
+                'bar,false,search': '<search>' +
+                        '<filter string="ID" domain="[]" context="{\'group_by\': \'id\'}"/>' +
+                    '</search>',
+            },
+        });
+
+        // edit first row and click on Search More
+        list.$('.o_data_cell:first').click();
+        var $dropdown = list.$('.o_field_many2one input').autocomplete('widget');
+        list.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search More)').mouseenter().click();
+        assert.strictEqual($('.modal').length, 1);
+
+        // group list view in the dialog
+        $('.modal .o_group_by_menu li a:contains(ID)').click();
+        assert.strictEqual($('.modal .o_group_header').length, 11);
+        assert.strictEqual($('.modal .o_data_row').length, 0);
+
+        // unfold last group
+        $('.modal .o_group_header:last').click();
+        assert.strictEqual($('.modal .o_group_header').length, 11);
+        assert.strictEqual($('.modal .o_data_row').length, 1);
+
+        // select visible record
+        $('.o_data_row').click();
+        assert.strictEqual($('.modal').length, 0);
+        assert.strictEqual(list.$('.o_field_many2one input').val(), 'Value 17');
+
+        list.destroy();
+    });
 });
 
 });
