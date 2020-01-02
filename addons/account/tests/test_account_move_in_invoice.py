@@ -823,7 +823,10 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         self.assertRecordValues(self.invoice, [{'name': 'BILL/2019/0042'}])
 
-        invoice_copy = self.invoice.copy()
+        values = {
+            'invoice_date': self.invoice.invoice_date,
+        }
+        invoice_copy = self.invoice.copy(default=values)
         invoice_copy.post()
 
         self.assertRecordValues(invoice_copy, [{'name': 'BILL/2019/0043'}])
