@@ -74,6 +74,33 @@
     </t>
 
     <t t-name="portal.Chatter.Attachments">
+        <div class="o_thread_message_content">
+            <div t-if="attachments.length">
+                <div class="o_attachments_previews">
+                    <t t-foreach="attachments" t-as="attachment">
+                        <t t-if="attachment.mimetype == 'image' or attachment.mimetype.split('/')[0] == 'image'"> 
+                            <t t-call="mail.AttachmentPreview">
+                                <t t-set="isDeletable" t-value='True'/>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+
+                <div class="o_attachments_list">
+                    <t t-foreach="attachments" t-as="attachment">
+                        <t t-if="!(attachment.mimetype == 'image' or attachment.mimetype.split('/')[0] == 'image')">
+                            <t t-call="portal.Chatter.attachment_preview">
+                                <t t-set="attachment.url" t-value="'/web/content/' + attachment.id + '/?download=true&amp;access_token=' + attachment.access_token"/>
+                                <t t-set="editable" t-value="showDelete and attachment.state == 'pending'"/>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="portal.Chatter.Attachments_composer">
         <div t-if="attachments.length" class="o_attachments_list">
             <t t-foreach="attachments" t-as="attachment">
                 <t t-call="portal.Chatter.attachment_preview">
@@ -83,7 +110,6 @@
             </t>
         </div>
     </t>
-
     <!--
         Widget PortalChatter, and subtemplates
     -->

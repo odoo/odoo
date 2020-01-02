@@ -90,7 +90,6 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/discuss.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread_window.scss"/>
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/composer.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/chatter.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/followers.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/out_of_office.scss"/>
@@ -106,6 +105,7 @@
         <!-- load document viewer for attchment preview -->
         <template id="assets_common" inherit_id="web_editor.assets_common" name="Preview and chatter Assets">
             <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/composer.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/document_viewer.scss"/>
             </xpath>
             <xpath expr="//script[last()]" position="after">

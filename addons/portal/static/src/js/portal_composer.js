@@ -121,7 +121,6 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onFileInputChange: function () {
         var self = this;
-
         this.$sendButton.prop('disabled', true);
 
         return Promise.all(_.map(this.$fileInput[0].files, function (file) {
@@ -190,6 +189,7 @@ var PortalComposer = publicWidget.Widget.extend({
                         window.location.reload();
                     }
                 });
+
             }
         });
     },
@@ -204,7 +204,7 @@ var PortalComposer = publicWidget.Widget.extend({
     _updateAttachments: function () {
         this.$attachmentIds.val(_.pluck(this.attachments, 'id'));
         this.$attachmentTokens.val(_.pluck(this.attachments, 'access_token'));
-        this.$attachments.html(qweb.render('portal.Chatter.Attachments', {
+        this.$attachments.html(qweb.render('portal.Chatter.Attachments_composer', {
             attachments: this.attachments,
             showDelete: true,
         }));

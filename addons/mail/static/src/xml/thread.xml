@@ -57,12 +57,15 @@
                     <div t-if="widget.activeAttachment.fileType == 'image'" class="o_loading_img text-center">
                         <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
                     </div>
-                    <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}&amp;model=#{model}&amp;access_token=#{widget.activeAttachment.access_token}" alt="Viewer"/>
-                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?access_token%3D#{widget.activeAttachment.access_token}&amp;model%3D#{model}" />
+                    <t t-set="image_url" t-value="'/web/image/' + widget.activeAttachment.id + '?unique=1&amp;signature=' + widget.activeAttachment.checksum + '&amp;model=' + model"/>
+                    <t t-set="pdf_url" t-value="'/web/static/lib/pdfjs/web/viewer.html?file=/web/content/' + widget.activeAttachment.id + '?'"/>
+                    <t t-set="video_url" t-value="'/web/image/' + widget.activeAttachment.id + '?model=' + model"/>
+                    <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="#{widget.activeAttachment.access_token ? (image_url + '&amp;access_token=' + widget.activeAttachment.access_token) : image_url}" alt="Viewer"/>
+                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="#{widget.activeAttachment.access_token ? pdf_url + 'access_token%3D' + widget.activeAttachment.access_token + '&amp;model%3D' + model : pdf_url + 'model%3D' + model}" />
                     <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
                     <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
                     <video t-if="widget.activeAttachment.fileType == 'video'" class="o_viewer_video" controls="controls">
-                        <source t-attf-src="/web/image/#{widget.activeAttachment.id}?model=#{model}" t-att-data-type="widget.activeAttachment.mimetype"/>
+                        <source t-attf-src="#{widget.activeAttachment.access_token ? video_url + '&amp;access_token=' + widget.activeAttachment.access_token : video_url}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
                 </div>
             </div>
@@ -543,7 +546,7 @@
         <div class="o_attachment" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
                 <div class="o_image_box">
-                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
+                    <div class="o_attachment_image" t-attf-style="background-image:url(/web/image/#{attachment.id}/160x160/?crop=true#{access_token ? '&amp;access_token=' + attachment.access_token : ''});"/>
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
                         <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
@@ -579,7 +582,7 @@
                 <div t-attf-class="o_image_box float-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
                     <div t-if="has_preview"
                          class="o_image o_hover"
-                         t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
+                         t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' + access_token ? '&amp;access_token=' + attachment.access_token : '' + ');' : '' "
                          t-att-data-mimetype="attachment.mimetype">
                     </div>
                     <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name" aria-label="Download">
