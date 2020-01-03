@@ -48,53 +48,6 @@
         </field>
     </record>
 
-    <record id="view_location_qweb" model="ir.ui.view">
-        <field name="name">stock.location.qweb</field>
-        <field name="type">qweb</field>
-        <field name="model">stock.location</field>
-        <field name="arch" type="xml">
-            <div class="container-fluid o_stock_location_hierarchy">
-                <div class="row">
-                    <t t-if="data">
-                        <div class="col-12 py-3" t-foreach="data" t-as="location">
-                            <ul class="o_hierarchy_container mb-0">
-                                <t t-call="stock.stock_location_hierarchy"/>
-                            </ul>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <div class="col py-4 text-center">
-                            <h1>No data available.</h1>
-                        </div>
-                    </t>
-                </div>
-            </div>
-        </field>
-    </record>
-
-    <template id="stock_location_hierarchy" name="Stock Location Hierarchy">
-        <li class="o_hierarchy_item">
-            <div t-attf-class="o_hierarchy_box #{location['usage'] == 'view' and 'disabled' or ''}">
-                <a href="#" type="action" t-att-data-res-id="location['id']" class="o_hierarchy_box_title text-truncate" t-att-title="location['name']">
-                    <t t-esc="location['name']"/>
-                </a>
-                <small class="o_hierarchy_box_subtitle text-truncate text-muted d-block" t-att-title="location['barcode']">
-                    <t t-esc="location['barcode']"/>
-                </small>
-                <div class="o_hierarchy_action">
-                    <a href="#" type="action" data-views='[[false, "form"]]' t-attf-data-context='{"default_location_id": #{location["id"]}}' class="o_hierarchy_add_child" title="Add a new child record">
-                        <i class="fa fa-plus-circle"/>
-                    </a>
-                </div>
-            </div>
-            <ul class="o_hierarchy_level" t-if="len(location['childs'])">
-                <t t-foreach="location['childs']" t-as="location">
-                    <t t-call="stock.stock_location_hierarchy"/>
-                </t>
-            </ul>
-        </li>
-    </template>
-
     <record id="stock_location_view_form_editable" model="ir.ui.view">
         <field name="name">stock.location.form.editable</field>
         <field name="model">stock.location</field>
@@ -153,7 +106,7 @@
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">tree,form,qweb</field>
+        <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{'search_default_in_location':1}</field>
