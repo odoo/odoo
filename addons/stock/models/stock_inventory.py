@@ -481,6 +481,8 @@ class InventoryLine(models.Model):
             rounding = line.product_id.uom_id.rounding
             if float_is_zero(line.difference_qty, precision_rounding=rounding):
                 continue
+            if not virtual_location:
+                raise UserError(_("The Inventory Location of the product is not set"))
             if line.difference_qty > 0:  # found more than expected
                 vals = line._get_move_values(line.difference_qty, virtual_location.id, line.location_id.id, False)
             else:
