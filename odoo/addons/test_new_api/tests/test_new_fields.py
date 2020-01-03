@@ -150,6 +150,38 @@ class TestFields(common.TransactionCase):
         })
         check_stored(discussion3)
 
+    def test_11_stored_protected(self):
+        """ test protection against recomputation """
+        model = self.env['test_new_api.compute.protected']
+        field = model._fields['bar']
+
+        record = model.create({'foo': 'unprotected #1'})
+        self.assertEqual(record.bar, 'unprotected #1')
+
+        record.write({'foo': 'unprotected #2'})
+        self.assertEqual(record.bar, 'unprotected #2')
+
+        # by protecting 'bar', we prevent it from being recomputed
+        with self.env.protecting([field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+            # also works when nested
+            with self.env.protecting([field], record):
+                record.write({'foo': 'protected'})
+                self.assertEqual(record.bar, 'unprotected #2')
+
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+        record.write({'foo': 'unprotected #3'})
+        self.assertEqual(record.bar, 'unprotected #3')
+
+        # we protect 'bar' on a different record
+        with self.env.protecting([field], record):
+            record2 = model.create({'foo': 'unprotected'})
+            self.assertEqual(record2.bar, 'unprotected')
+
     def test_11_computed_access(self):
         """ test computed fields with access right errors """
         User = self.env['res.users']
