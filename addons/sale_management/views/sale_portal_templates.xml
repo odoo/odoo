@@ -30,8 +30,13 @@
         <xpath expr="//section[@id='signature']" position="after">
             <t t-if="any([(not option.is_present) for option in sale_order.sale_order_option_ids])">
                 <section>
+<<<<<<< HEAD
                     <h3>Options</h3>
                     <t t-set="display_discount" t-value="True in [option.discount > 0 for option in sale_order.sale_order_option_ids]"/>
+=======
+                    <h3>Optional Products</h3>
+                    <t t-set="display_discount" t-value="any([option.discount for option in sale_order.sale_order_option_ids])"/>
+>>>>>>> 4d98f8286a8... temp
                     <table class="table table-sm">
                         <thead>
                             <tr>
