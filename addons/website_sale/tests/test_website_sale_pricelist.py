@@ -427,10 +427,8 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
             'company_id': self.company2.id,
             'website_id': False,
         })
-        self.demo_user.partner_id.property_product_pricelist = self.c1_pl
-        # Switch env.user company to create ir.property in company2
-        self.env.user.company_id = self.company2
-        self.demo_user.partner_id.property_product_pricelist = self.c2_pl
+        self.demo_user.partner_id.with_company(self.company1.id).property_product_pricelist = self.c1_pl
+        self.demo_user.partner_id.with_company(self.company2.id).property_product_pricelist = self.c2_pl
 
         # Ensure everything was done correctly
         self.assertEqual(self.demo_user.partner_id.with_company(self.company1.id).property_product_pricelist, self.c1_pl)
