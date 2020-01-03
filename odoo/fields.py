@@ -598,6 +598,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # copy the cache of draft records into others' cache
         if records.env.in_onchange and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
+            others.env._protected = records.env._protected
         #
         # Traverse fields one by one for all records, in order to take advantage
         # of prefetching for each field access. In order to clarify the impact
