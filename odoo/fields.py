@@ -633,34 +633,6 @@ class Field(MetaField('DummyField', (object,), {})):
         return Property.search_multi(self.name, self.model_name, operator, value)
 
     #
-    # Cache key for context-dependent fields
-    #
-
-    def cache_key(self, env):
-        """ Return the cache key corresponding to ``self.depends_context``. """
-
-        def get(key, get_context=env.context.get):
-            if key == 'company':
-                return env.company.id
-            elif key == 'uid':
-                return (env.uid, env.su)
-            elif key == 'active_test':
-                return get_context('active_test', self.context.get('active_test', True))
-            else:
-                v = get_context(key)
-                try: hash(v)
-                except TypeError:
-                    raise TypeError(
-                        "Can only create cache keys from hashable values, "
-                        "got non-hashable value {!r} at context key {!r} "
-                        "(dependency of field {})".format(v, key, self)
-                    ) from None # we don't need to chain the exception created 2 lines above
-                else:
-                    return v
-
-        return tuple(get(key) for key in self.depends_context)
-
-    #
     # Setup of field triggers
     #
 
