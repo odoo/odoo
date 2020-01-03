@@ -761,6 +761,9 @@ attributes:
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
   grouped by many2one, selection, char or boolean fields, and disabled when not.
+``create``, ``edit``, ``delete``
+  allows *dis*\ abling the corresponding action in the view by setting the
+  corresponding attribute to ``false``
 ``records_draggable``
   whether it should be possible to drag records when kanban is grouped. Default: true.
 
