@@ -9,20 +9,19 @@ from odoo.exceptions import UserError
 
 class Partner(models.Model):
     _inherit = ['res.partner']
-    _name = 'res.partner'
 
-    street_name = fields.Char('Street Name', compute='_split_street',
-                              inverse='_set_street', store=True)
-    street_number = fields.Char('House', compute='_split_street', help="House Number",
-                                inverse='_set_street', store=True)
-    street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
-                                 inverse='_set_street', store=True)
+    street_name = fields.Char(
+        'Street Name', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
+    street_number = fields.Char(
+        'House', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
+    street_number2 = fields.Char(
+        'Door', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
 
-    def _set_street(self):
+    def _inverse_street_data(self):
         """Updates the street field.
         Writes the `street` field on the partners when one of the sub-fields in STREET_FIELDS
         has been touched"""
-        street_fields = self.get_street_fields()
+        street_fields = self._get_street_fields()
         for partner in self:
             street_format = (partner.country_id.street_format or
                 '%(street_number)s/%(street_number2)s %(street_name)s')
@@ -56,10 +55,10 @@ class Partner(models.Model):
             partner.street = street_value
 
     @api.depends('street')
-    def _split_street(self):
+    def _compute_street_data(self):
         """Splits street value into sub-fields.
         Recomputes the fields of STREET_FIELDS when `street` of a partner is updated"""
-        street_fields = self.get_street_fields()
+        street_fields = self._get_street_fields()
         for partner in self:
             if not partner.street:
                 for field in street_fields:
@@ -77,7 +76,7 @@ class Partner(models.Model):
                 partner[k] = None
 
     def _split_street_with_params(self, street_raw, street_format):
-        street_fields = self.get_street_fields()
+        street_fields = self._get_street_fields()
         vals = {}
         previous_pos = 0
         field_name = None
@@ -119,14 +118,14 @@ class Partner(models.Model):
     def write(self, vals):
         res = super(Partner, self).write(vals)
         if 'country_id' in vals and 'street' not in vals:
-            self._set_street()
+            self._inverse_street_data()
         return res
 
     def _formatting_address_fields(self):
         """Returns the list of address fields usable to format addresses."""
-        return super(Partner, self)._formatting_address_fields() + self.get_street_fields()
+        return super(Partner, self)._formatting_address_fields() + self._get_street_fields()
 
-    def get_street_fields(self):
+    def _get_street_fields(self):
         """Returns the fields that can be used in a street format.
         Overwrite this function if you want to add your own fields."""
         return ['street_name', 'street_number', 'street_number2']
