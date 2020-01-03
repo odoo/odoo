@@ -1102,82 +1102,19 @@ var VideoWidget = MediaWidget.extend({
      */
     _createVideoNode: function (url, options) {
         options = options || {};
-
-        // Video url patterns(youtube, instagram, vimeo, dailymotion, youku, ...)
-        var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?$/;
-        var ytMatch = url.match(ytRegExp);
-
-        var insRegExp = /(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)/;
-        var insMatch = url.match(insRegExp);
-
-        var vinRegExp = /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/;
-        var vinMatch = url.match(vinRegExp);
-
-        var vimRegExp = /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/;
-        var vimMatch = url.match(vimRegExp);
-
-        var dmRegExp = /.+dailymotion.com\/(video|hub|embed)\/([^_]+)[^#]*(#video=([^_&]+))?/;
-        var dmMatch = url.match(dmRegExp);
-
-        var ykuRegExp = /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/;
-        var ykuMatch = url.match(ykuRegExp);
-
-        var $video = $('<iframe>').width(1280).height(720).attr('frameborder', 0).addClass('o_video_dialog_iframe');
-        var videoType = 'yt';
-
-        if (!/^(http:\/\/|https:\/\/|\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(url)){
+        const videoData = this._getVideoURLData(url, options);
+        if (videoData.error) {
             return {errorCode: 0};
         }
-
-        var autoplay = options.autoplay ? '?autoplay=1&mute=1' : '?autoplay=0';
-
-        if (ytMatch && ytMatch[2].length === 11) {
-            $video.attr('src', '//www.youtube' + (ytMatch[1] || '') + '.com/embed/' + ytMatch[2] + autoplay);
-        } else if (insMatch && insMatch[2].length) {
-            $video.attr('src', '//www.instagram.com/p/' + insMatch[2] + '/embed/');
-            videoType = 'ins';
-        } else if (vinMatch && vinMatch[0].length) {
-            $video.attr('src', vinMatch[0] + '/embed/simple');
-            videoType = 'vin';
-        } else if (vimMatch && vimMatch[3].length) {
-            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay.replace('mute', 'muted'));
-            videoType = 'vim';
-        } else if (dmMatch && dmMatch[2].length) {
-            var justId = dmMatch[2].replace('video/', '');
-            $video.attr('src', '//www.dailymotion.com/embed/video/' + justId + autoplay);
-            videoType = 'dm';
-        } else if (ykuMatch && ykuMatch[3].length) {
-            var ykuId = ykuMatch[3].indexOf('.html?') >= 0 ? ykuMatch[3].substring(0, ykuMatch[3].indexOf('.html?')) : ykuMatch[3];
-            $video.attr('src', '//player.youku.com/embed/' + ykuId);
-            videoType = 'yku';
-        } else {
+        if (!videoData.type) {
             return {errorCode: 1};
         }
+        const $video = $('<iframe>').width(1280).height(720)
+            .attr('frameborder', 0)
+            .attr('src', videoData.embedURL)
+            .addClass('o_video_dialog_iframe');
 
-        if (ytMatch) {
-            $video.attr('src', $video.attr('src') + '&rel=0');
-        }
-        if (options.loop && (ytMatch || vimMatch)) {
-            var videoSrc = _.str.sprintf('%s&loop=1', $video.attr('src'));
-            $video.attr('src', ytMatch ? _.str.sprintf('%s&playlist=%s', videoSrc, ytMatch[2]) : videoSrc);
-        }
-        if (options.hide_controls && (ytMatch || dmMatch)) {
-            $video.attr('src', $video.attr('src') + '&controls=0');
-        }
-        if (options.hide_fullscreen && ytMatch) {
-            $video.attr('src', $video.attr('src') + '&fs=0');
-        }
-        if (options.hide_yt_logo && ytMatch) {
-            $video.attr('src', $video.attr('src') + '&modestbranding=1');
-        }
-        if (options.hide_dm_logo && dmMatch) {
-            $video.attr('src', $video.attr('src') + '&ui-logo=0');
-        }
-        if (options.hide_dm_share && dmMatch) {
-            $video.attr('src', $video.attr('src') + '&sharing-enable=0');
-        }
-
-        return {$video: $video, type: videoType};
+        return {$video: $video, type: videoData.type};
     },
     /**
      * Updates the video preview according to video code and enabled options.
@@ -1287,6 +1224,63 @@ var VideoWidget = MediaWidget.extend({
      */
     _onVideoCodeInput: function () {
         this._updateVideo();
+    },
+    /**
+     * Parses a URL and returns the provider type and an emebedable URL.
+     *
+     * @private
+     */
+    _getVideoURLData: function (url, options) {
+        if (!url.match(/^(http:\/\/|https:\/\/|\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i)) {
+            return {
+                error: true,
+                message: 'The provided url is invalid',
+            };
+        }
+        const regexes = {
+            youtube: /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?$/,
+            instagram: /(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)/,
+            vine: /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/,
+            vimeo: /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/,
+            dailymotion: /.+dailymotion.com\/(video|hub|embed)\/([^_]+)[^#]*(#video=([^_&]+))?/,
+            youku: /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/,
+        };
+        const matches = _.mapObject(regexes, regex => url.match(regex));
+        const autoplay = options.autoplay ? '?autoplay=1&mute=1' : '?autoplay=0';
+        const controls = options.hide_controls ? '&controls=0' : '';
+        const loop = options.loop ? '&loop=1' : '';
+
+        let embedURL;
+        let type;
+        if (matches.youtube && matches.youtube[2].length === 11) {
+            const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
+            const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
+            const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
+            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
+            type = 'youtube';
+        } else if (matches.instagram && matches.instagram[2].length) {
+            embedURL = `//www.instagram.com/p/${matches.instagram[2]}/embed/`;
+            type = 'instagram';
+        } else if (matches.vine && matches.vine[0].length) {
+            embedURL = `${matches.vine[0]}/embed/simple`;
+            type = 'vine';
+        } else if (matches.vimeo && matches.vimeo[3].length) {
+            const vimeoAutoplay = autoplay.replace('mute', 'muted');
+            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}`;
+            type = 'vimeo';
+        } else if (matches.dailymotion && matches.dailymotion[2].length) {
+            const videoId = matches.dailymotion[2].replace('video/', '');
+            const logo = options.hide_dm_logo ? '&ui-logo=0' : '';
+            const share = options.hide_dm_share ? '&sharing-enable=0' : '';
+            embedURL = `//www.dailymotion.com/embed/video/${videoId}${autoplay}${controls}${logo}${share}`;
+            type = 'dailymotion';
+        } else if (matches.youku && matches.youku[3].length) {
+            const videoId = matches.youku[3].indexOf('.html?') >= 0 ? matches.youku[3].substring(0, matches.youku[3].indexOf('.html?')) : matches.youku[3];
+            embedURL = `//player.youku.com/embed/${videoId}`;
+            type = 'youku';
+        }
+
+        return {type: type, embedURL: embedURL};
     },
 });
 

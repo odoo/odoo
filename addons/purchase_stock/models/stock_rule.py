@@ -22,13 +22,20 @@ class StockRule(models.Model):
         })
         return message_dict
 
+    @api.depends('action')
+    def _compute_picking_type_code_domain(self):
+        remaining = self.browse()
+        for rule in self:
+            if rule.action == 'buy':
+                rule.picking_type_code_domain = 'incoming'
+            else:
+                remaining |= rule
+        super(StockRule, remaining)._compute_picking_type_code_domain()
+
     @api.onchange('action')
     def _onchange_action(self):
-        domain = {'picking_type_id': []}
         if self.action == 'buy':
             self.location_src_id = False
-            domain = {'picking_type_id': [('code', '=', 'incoming')]}
-        return {'domain': domain}
 
     @api.model
     def _run_buy(self, procurements):
@@ -51,6 +58,7 @@ class StockRule(models.Model):
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
+            procurement.values['delay_alert'] = rule.delay_alert
             procurement.values['propagate_date'] = rule.propagate_date
             procurement.values['propagate_date_minimum_delta'] = rule.propagate_date_minimum_delta
             procurement.values['propagate_cancel'] = rule.propagate_cancel

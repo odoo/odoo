@@ -47,6 +47,8 @@ class StockMoveLine(models.Model):
         if move._is_in() and diff > 0 or move._is_out() and diff < 0:
             move.product_price_update_before_done(forced_qty=diff)
             stock_valuation_layers |= move._create_in_svl(forced_quantity=abs(diff))
+            if move.product_id.cost_method in ('average', 'fifo'):
+                move.product_id._run_fifo_vacuum(move.company_id)
         elif move._is_in() and diff < 0 or move._is_out() and diff > 0:
             stock_valuation_layers |= move._create_out_svl(forced_quantity=abs(diff))
         elif move._is_dropshipped() and diff > 0 or move._is_dropshipped_returned() and diff < 0:

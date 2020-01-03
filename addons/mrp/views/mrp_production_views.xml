@@ -25,6 +25,8 @@
                     <field name="state" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="delay_alert_date" invisible="1"/>
+                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -102,6 +104,7 @@
                             <div class="o_row no-gutters d-flex">
                                 <div class="col">
                                     <field name="product_qty" class="mr-1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <button type="action"
                                         name="%(mrp.action_change_production_qty)d"
@@ -115,30 +118,22 @@
                         </group>
                         <group>
                             <field name="date_deadline" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
-                            <field name="date_start_wo"
-                                attrs="{'invisible': [
-                                '|',
-                                    '&amp;',
-                                        ('routing_id', '!=', False),
-                                        ('state', 'not in', ['draft', 'confirmed']),
-                                    ('routing_id', '=', False),
-                                ], 'readonly': [
-                                    ('routing_id', '!=', False),
-                                    ('state', 'not in', ['draft', 'confirmed']),
-                                ]}"/>
                             <div class="o_row o_td_label">
                                 <label for="date_planned_start" string="Planned Date"
                                        attrs="{'invisible': [
                                                 ('routing_id', '!=', False),
                                                 ('state', 'in', ['draft', 'confirmed'])
                                         ]}"/>
+                                <label for="date_planned_start" string="Plan from"
+                                       attrs="{'invisible': [
+                                                '|',
+                                                ('routing_id', '=', False),
+                                                ('state', 'not in', ['draft', 'confirmed'])
+                                        ]}"/>
                             </div>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                       attrs="{'invisible': [
-                                            ('routing_id', '!=', False),
-                                            ('state', 'in', ['draft', 'confirmed']),
-                                        ], 'readonly': [
+                                       attrs="{'readonly': [
                                        '|',
                                         '&amp;',
                                             ('routing_id', '=', False),
@@ -164,6 +159,8 @@
                                     ('routing_id', '!=', False),
                                     ('state', 'in', ['draft', 'confirmed'])
                                 ]}"/>
+                                <field name="delay_alert_date" invisible="1"/>
+                                <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                             </div>
                             <field name="user_id"/>
                             <field name="origin"/>
@@ -188,6 +185,7 @@
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="done_move" invisible="1"/>
                                     <field name="state" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                 </tree>
                             </field>
                             <p attrs="{'invisible': [('finished_move_line_ids', '!=', [])]}">
@@ -240,6 +238,8 @@
                                     <div class="oe_kanban_bottom_left text-muted">
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_deadline.value and record.date_deadline.value.split(' ')[0] or False"/></span>
                                         <field name="activity_ids" widget="kanban_activity"/>
+                                        <field name="delay_alert_date" invisible="1"/>
+                                        <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span t-attf-class="badge #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['none'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-primary'}"><t t-esc="record.state.value"/></span>
@@ -323,6 +323,7 @@
                     <separator/>
                     <filter string="Late" name="late" help="Production started late"
                         domain="['&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
+                    <filter string="Planning Issues" name="delay_alert_date" domain="[('delay_alert_date', '!=', False)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

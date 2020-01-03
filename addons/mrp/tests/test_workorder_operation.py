@@ -1011,7 +1011,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         production_table_form.bom_id = self.mrp_bom_desk
         production_table_form.product_qty = 1.0
         production_table_form.product_uom_id = dining_table.uom_id
-        production_table_form.date_start_wo = date_start
+        production_table_form.date_planned_start = date_start
         production_table = production_table_form.save()
         production_table.action_confirm()
 
@@ -1075,7 +1075,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             mo_form.product_id = self.product_4
             mo_form.bom_id = self.planning_bom
             mo_form.product_qty = 1
-            mo_form.date_start_wo = planned_date
+            mo_form.date_planned_start = planned_date
             mo = mo_form.save()
             mo.action_confirm()
             mo.button_plan()
@@ -1093,7 +1093,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             mo_form.product_id = self.product_4
             mo_form.bom_id = self.planning_bom
             mo_form.product_qty = 1
-            mo_form.date_start_wo = planned_date
+            mo_form.date_planned_start = planned_date
             mo = mo_form.save()
             mo.action_confirm()
             mo.button_plan()
@@ -1154,9 +1154,9 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_start_wo = datetime(2019, 5, 13, 14, 0, 0, 0)
+        mo_form.date_planned_start = datetime(2019, 5, 13, 14, 0, 0, 0)
         mo = mo_form.save()
-        start = mo.date_start_wo
+        start = mo.date_planned_start
         mo.action_confirm()
         mo.button_plan()
         self.assertEqual(mo.workorder_ids[0].workcenter_id, self.wc_alt_2, "wrong workcenter")
@@ -1170,7 +1170,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_start_wo = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo_form.date_planned_start = datetime(2019, 5, 13, 9, 0, 0, 0)
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
@@ -1236,7 +1236,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_start_wo = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo_form.date_planned_start = datetime(2019, 5, 13, 9, 0, 0, 0)
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
@@ -1253,7 +1253,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_start_wo = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo_form.date_planned_start = datetime(2019, 5, 13, 9, 0, 0, 0)
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
@@ -1292,7 +1292,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_start_wo = planned_date
+        mo_form.date_planned_start = planned_date
         mo = mo_form.save()
         mo.action_confirm()
         # Plans the MO and checks the date.
@@ -1368,6 +1368,65 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertEqual(line2.qty_done, 1)
         self.assertEqual(line3.product_id, self.product_1)
         self.assertEqual(line3.qty_done, 4)
+
+    def test_replan(self):
+        """ TEST Json data conflicted and the replan button of a workorder """
+        self.routing_1.operation_ids[0].write({'workcenter_id': self.mrp_workcenter_3.id})
+        dining_table = self.dining_table
+        bom = self.mrp_bom_desk
+        bom.routing_id = self.routing_1
+
+        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_table_sheet).operation_id = bom.routing_id.operation_ids[0].id
+        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_table_leg).operation_id = bom.routing_id.operation_ids[1].id
+        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_bolt).operation_id = bom.routing_id.operation_ids[2].id
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = bom
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table = production_table_form.save()
+
+        production_table.action_confirm()
+        # Create work order
+        production_table.button_plan()
+        # Check Work order created or not
+        self.assertEqual(len(production_table.workorder_ids), 3)
+
+        workorders = production_table.workorder_ids
+        wo1, wo2, wo3 = workorders[0], workorders[1], workorders[2]
+
+        self.assertEqual(wo1.state, 'ready', "First workorder state should be ready.")
+        self.assertEqual(wo1.workcenter_id.id, self.mrp_workcenter_3.id)
+        self.assertEqual(wo2.state, 'pending')
+        self.assertEqual(wo3.state, 'pending')
+
+        # Conflicted with wo1
+        wo2.write({'date_planned_start': wo1.date_planned_start, 'date_planned_finished': wo1.date_planned_finished})
+        # Bad order of workorders (wo3-wo1-wo2) + Late
+        wo3.write({'date_planned_start': wo1.date_planned_start - timedelta(weeks=1), 'date_planned_finished': wo1.date_planned_finished - timedelta(weeks=1)})
+
+        self.assertEqual(wo2.id in wo2._get_conflicted_workorder_ids(), True, "Should conflict with wo1")
+        self.assertEqual(wo1.id in wo1._get_conflicted_workorder_ids(), True, "Should conflict with wo2")
+
+        self.assertTrue('text-danger' in wo2.json_popover, "Popover should in be in red (due to conflict)")
+        self.assertTrue('text-danger' in wo3.json_popover, "Popover should in be in red (due to bad order of wo)")
+        self.assertTrue('text-warning' in wo3.json_popover, "Popover contains of warning (late)")
+
+        wo1.button_start()
+        self.assertEqual(wo1.state, 'progress')
+        self.assertEqual(wo2.id in wo2._get_conflicted_workorder_ids(), False, "Shouldn't have a conflict because wo1 is in progress")
+
+        wo1_date_planned_start = wo1.date_planned_start
+        wo2_date_planned_start = wo2.date_planned_start
+        wo3_date_planned_start = wo3.date_planned_start
+
+        wo2.action_replan()  # Replan all MO of WO
+
+        self.assertEqual(wo1.date_planned_start, wo1_date_planned_start, "Planned date of Workorder 1 shouldn't change (because it is in progress)")
+        self.assertNotEqual(wo2.date_planned_start, wo2_date_planned_start, "Planned date of Workorder 2 should be updated")
+        self.assertNotEqual(wo3.date_planned_start, wo3_date_planned_start, "Planned date of Workorder 3 should be updated")
+        self.assertTrue(wo3.date_planned_start > wo2.date_planned_start, "Workorder 2 should be before the 3")
 
 
 class TestRoutingAndKits(SavepointCase):

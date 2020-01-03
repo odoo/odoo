@@ -532,7 +532,7 @@ registry.parallax = Animation.extend({
             this.$bg = this.$('> .s_parallax_bg');
             if (!this.$bg.length) {
                 this.$bg = $('<span/>', {
-                    class: 's_parallax_bg' + (this.$target.hasClass('oe_custom_bg') ? ' oe_custom_bg' : ''),
+                    class: 's_parallax_bg',
                 }).prependTo(this.$target);
             }
         }

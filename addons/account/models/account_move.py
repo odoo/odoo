@@ -1127,7 +1127,7 @@ class AccountMove(models.Model):
 
             for move in group:
                 prefix, dummy = sequence._get_prefix_suffix(date=move.invoice_date or fields.Date.today(), date_range=move.invoice_date)
-                number_next = sequence._get_current_sequence().number_next_actual
+                number_next = sequence._get_current_sequence(sequence_date=move.date).number_next_actual
                 move.invoice_sequence_number_next_prefix = prefix
                 move.invoice_sequence_number_next = '%%0%sd' % sequence.padding % number_next
                 treated |= move
@@ -1149,7 +1149,7 @@ class AccountMove(models.Model):
             nxt = re.sub("[^0-9]", '', move.invoice_sequence_number_next)
             result = re.match("(0*)([0-9]+)", nxt)
             if result and sequence:
-                date_sequence = sequence._get_current_sequence()
+                date_sequence = sequence._get_current_sequence(sequence_date=move.date)
                 date_sequence.number_next_actual = int(result.group(2))
 
     def _compute_payments_widget_to_reconcile_info(self):
@@ -1272,8 +1272,12 @@ class AccountMove(models.Model):
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
+                    if line.currency_id != self.company_id.currency_id:
+                        amount = self.company_id.currency_id._convert(line.tax_base_amount, line.currency_id, self.company_id, line.date)
+                    else:
+                        amount = line.tax_base_amount
+                    res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
-                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
                     done_taxes.add(tax_key_add_base)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(

@@ -259,7 +259,7 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].search([
+        candidates = self.env['stock.valuation.layer'].sudo().search([
             ('product_id', '=', self.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', company.id),
@@ -394,6 +394,11 @@ class ProductProduct(models.Model):
                 'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
+
+            # If some negative stock were fixed, we need to recompute the standard price.
+            product = self.with_company(company.id)
+            if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
             # Create the account move.
             if self.valuation != 'real_time':

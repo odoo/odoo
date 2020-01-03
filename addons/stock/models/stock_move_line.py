@@ -24,7 +24,8 @@ class StockMoveLine(models.Model):
         help="Change to a better name", index=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(
         'Real Reserved Quantity', digits=0,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
@@ -112,10 +113,6 @@ class StockMoveLine(models.Model):
                     self.product_uom_id = self.move_id.product_uom.id
                 else:
                     self.product_uom_id = self.product_id.uom_id.id
-            res = {'domain': {'product_uom_id': [('category_id', '=', self.product_uom_id.category_id.id)]}}
-        else:
-            res = {'domain': {'product_uom_id': []}}
-        return res
 
     @api.onchange('lot_name', 'lot_id')
     def onchange_serial_number(self):
