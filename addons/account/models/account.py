@@ -280,6 +280,26 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
 
+    @api.constrains('user_type_id')
+    def _check_user_type_id(self):
+        if not self:
+            return
+
+        self.flush(['user_type_id'])
+        self._cr.execute('''
+            SELECT account.id
+            FROM account_account account
+            JOIN account_account_type acc_type ON account.user_type_id = acc_type.id
+            JOIN account_journal journal ON journal.default_credit_account_id = account.id OR journal.default_debit_account_id = account.id
+            WHERE account.id IN %s
+            AND acc_type.type IN ('receivable', 'payable')
+            AND journal.type IN ('sale', 'purchase')
+            LIMIT 1;
+        ''', [tuple(self.ids)])
+
+        if self._cr.fetchone():
+            raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -819,6 +839,13 @@ class AccountJournal(models.Model):
         ''', [tuple(self.ids)])
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your journal since there are some journal entries linked to it."))
+
+    @api.constrains('type', 'default_credit_account_id', 'default_debit_account_id')
+    def _check_type_default_credit_account_id_type(self):
+        journals_to_check = self.filtered(lambda journal: journal.type in ('sale', 'purchase'))
+        accounts_to_check = journals_to_check.mapped('default_debit_account_id') + journals_to_check.mapped('default_credit_account_id')
+        if any(account.user_type_id.type in ('receivable', 'payable') for account in accounts_to_check):
+            raise ValidationError(_("The type of the journal's default credit/debit account shouldn't be 'receivable' or 'payable'."))
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
