@@ -325,6 +325,18 @@ class Related(models.Model):
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 
+class ComputeProtected(models.Model):
+    _name = 'test_new_api.compute.protected'
+
+    foo = fields.Char(default='')
+    bar = fields.Char(compute='_compute_bar', store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
 
