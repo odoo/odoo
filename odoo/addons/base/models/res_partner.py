@@ -135,9 +135,6 @@ class Partner(models.Model):
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
-    def _split_street_with_params(self, street_raw, street_format):
-        return {'street': street_raw}
-
     name = fields.Char(index=True)
     display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)
