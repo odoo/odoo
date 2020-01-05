@@ -6,15 +6,15 @@
 # Martin Trigaux, 2019
 # Cozmin Candea <office@terrabit.ro>, 2019
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2019
-# Dorin Hongu <dhongu@gmail.com>, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2197,7 +2197,7 @@ msgstr "Nu mai editați comenzile după confirmare"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Nu sunt comenzi de facturat"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -3637,6 +3637,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "The ordered quantity has been updated."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr ""
@@ -4119,6 +4125,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
+"Puteți selecta toate comenzile și le puteți factura în masă,\n"
+"sau verificați fiecare comandă și facturați una câte una."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
