@@ -5154,7 +5154,7 @@ msgstr "Contiene fatture"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__has_outstanding
 msgid "Has Outstanding"
-msgstr "Contiene insoluti"
+msgstr "Contiene pendenze"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -7675,19 +7675,19 @@ msgstr "Conto di emissione per valutazione del magazzino"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__outstanding_credits_debits_widget
 msgid "Outstanding Credits Debits Widget"
-msgstr "Widget per debiti e crediti insoluti"
+msgstr "Widget per debiti e crediti in sospeso"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:133
 #, python-format
 msgid "Outstanding credits"
-msgstr "Crediti insoluti"
+msgstr "Crediti in sospeso"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:136
 #, python-format
 msgid "Outstanding debits"
-msgstr "Debiti insoluti"
+msgstr "Debiti in sospeso"
 
 #. module: account
 #: selection:account.invoice,activity_state:0
@@ -7698,12 +7698,12 @@ msgstr "In ritardo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__overdue_msg
 msgid "Overdue Payments Message"
-msgstr "Messaggio di ritardato incasso"
+msgstr "Messaggio pagamenti in ritardo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr "Fatture scadute, data di scadenza superata"
+msgstr "Fatture in ritardo, oltre la data di scadenza"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
@@ -8784,7 +8784,7 @@ msgstr "Rappresenta il conio più piccolo diverso da zero (ad esempio 0,05)."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr ""
+msgstr "Banca risorsa partner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -9958,7 +9958,7 @@ msgstr "Visualizzare imposta modello B2C"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_tax_signed
 msgid "Tax in Invoice Currency"
-msgstr ""
+msgstr "Imposta in valuta della fattura"
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -11581,7 +11581,7 @@ msgstr "Importo imponibile in valuta aziendale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed_invoice_signed
 msgid "Untaxed Amount in Invoice Currency"
-msgstr ""
+msgstr "Importo imponibile in valuta della fattura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -12056,8 +12056,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:944
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr ""
-"Si sta tentando di riconciliare alcune registrazioni già riconciliate."
+msgstr "Tentativo di riconciliare delle registrazioni già riconciliate."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
