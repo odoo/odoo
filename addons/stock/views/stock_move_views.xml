@@ -491,7 +491,7 @@
             <field name="name">stock.move.kanban2</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" quick_create="false">
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -501,7 +501,7 @@
                                     </div>
                                     <div class="col-4">
                                         <span class="float-right text-right">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger',
+                                            <field name="state" widget="label_selection" readonly="1" options="{'classes': {'draft': 'default', 'cancel': 'danger',
                                             'assigned': 'success', 'confirmed': 'default'}}"/>
                                         </span>
                                     </div>

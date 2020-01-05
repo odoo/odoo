@@ -1128,7 +1128,7 @@ class AccountMove(models.Model):
 
             for move in group:
                 prefix, dummy = sequence._get_prefix_suffix(date=move.invoice_date or fields.Date.today(), date_range=move.invoice_date)
-                number_next = sequence._get_current_sequence().number_next_actual
+                number_next = sequence._get_current_sequence(sequence_date=move.date).number_next_actual
                 move.invoice_sequence_number_next_prefix = prefix
                 move.invoice_sequence_number_next = '%%0%sd' % sequence.padding % number_next
                 treated |= move
@@ -1150,7 +1150,7 @@ class AccountMove(models.Model):
             nxt = re.sub("[^0-9]", '', move.invoice_sequence_number_next)
             result = re.match("(0*)([0-9]+)", nxt)
             if result and sequence:
-                date_sequence = sequence._get_current_sequence()
+                date_sequence = sequence._get_current_sequence(sequence_date=move.date)
                 date_sequence.number_next_actual = int(result.group(2))
 
     def _compute_payments_widget_to_reconcile_info(self):
@@ -1268,11 +1268,12 @@ class AccountMove(models.Model):
             res = {}
             # There are as many tax line as there are repartition lines
             done_taxes = set()
+            done_groups = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes:
+                if tax_key_add_base not in done_taxes and line.tax_line_id.tax_group_id not in done_groups:
                     if line.currency_id != self.company_id.currency_id:
                         amount = self.company_id.currency_id._convert(line.tax_base_amount, line.currency_id, self.company_id, line.date)
                     else:
@@ -1280,6 +1281,7 @@ class AccountMove(models.Model):
                     res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
                     done_taxes.add(tax_key_add_base)
+                    done_groups.add(line.tax_line_id.tax_group_id)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -2049,7 +2051,7 @@ class AccountMove(models.Model):
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
-                date_msg = move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format)
+                date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s" % date_msg))
 
             if not move.partner_id:
@@ -2080,7 +2082,7 @@ class AccountMove(models.Model):
         self.mapped('line_ids').create_analytic_lines()
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
-                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format))))
+                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
 
             move.message_subscribe([p.id for p in [move.partner_id, move.commercial_partner_id] if p not in move.sudo().message_partner_ids])
 
@@ -3319,12 +3321,6 @@ class AccountMoveLine(models.Model):
                 partners = move.line_ids[-2:].mapped('partner_id')
                 if len(partners) == 1:
                     values['partner_id'] = partners.id
-
-            # Suggest default value for 'account_id'.
-            if 'account_id' in default_fields and not values.get('account_id'):
-                accounts = move.line_ids[-2:].mapped('account_id')
-                if len(accounts) == 1:
-                    values['account_id'] = accounts.id
         return values
 
     @api.depends('ref', 'move_id')

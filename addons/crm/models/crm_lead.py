@@ -482,7 +482,7 @@ class Lead(models.Model):
 
     def toggle_active(self):
         res = super(Lead, self).toggle_active()
-        self.filtered(lambda lead: lead.active)._compute_probabilities()
+        self.filtered(lambda lead: lead.active)._update_probability()
         return res
 
     def _rebuild_pls_frequency_table_threshold(self):

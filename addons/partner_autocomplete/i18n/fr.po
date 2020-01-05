@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
 msgid "(Time Now)"
-msgstr ""
+msgstr "(Heure Actuelle)"
 
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
@@ -40,6 +41,8 @@ msgid ""
 "<i class=\"fa fa-fw mr-2 fa-calendar text-primary\"/>\n"
 "                <b>Founded:</b>"
 msgstr ""
+"<i class=\"fa fa-fw mr-2 fa-calendar text-primary\"/>\n"
+"                <b>Fondé:</b>"
 
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
@@ -47,6 +50,8 @@ msgid ""
 "<i class=\"fa fa-fw mr-2 fa-cube text-primary\"/>\n"
 "                <b>Technology Used :</b>"
 msgstr ""
+"<i class=\"fa fa-fw mr-2 fa-cube text-primary\"/>\n"
+"                <b>Technologie Employée:</b>"
 
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
@@ -112,13 +117,6 @@ msgstr ""
 "                <b>Employés:</b>"
 
 #. module: partner_autocomplete
-#. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
-#, python-format
-msgid "IAP Account Token missing"
-msgstr ""
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
@@ -126,7 +124,7 @@ msgstr "information additionnelle"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:21
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Buy more credits"
 msgstr "Acheter plus de crédits"
@@ -141,7 +139,7 @@ msgstr "Sociétés"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
 msgid "Company database ID"
-msgstr ""
+msgstr "ID de la base de données de la société"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
@@ -169,6 +167,13 @@ msgid "Display Name"
 msgstr "Afficher Nom"
 
 #. module: partner_autocomplete
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
+#, python-format
+msgid "IAP Account Token missing"
+msgstr "Token du Compte IAP manquant"
+
+#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
 msgid "ID"
 msgstr "ID"
@@ -181,7 +186,7 @@ msgstr "Crédit insuffisant"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
 msgid "Is synched"
-msgstr ""
+msgstr "Est synchronisé"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
@@ -200,10 +205,10 @@ msgstr "Dernière mise à jour le"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:320
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "Not enough credits for Partner Autocomplete"
-msgstr ""
+msgstr "Pas assez de crédits pour l'Autocomplétion de Partenaires"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
@@ -215,38 +220,38 @@ msgstr "Partenaire"
 #: model:ir.cron,cron_name:partner_autocomplete.ir_cron_partner_autocomplete
 #: model:ir.cron,name:partner_autocomplete.ir_cron_partner_autocomplete
 msgid "Partner Autocomplete : Sync with remote DB"
-msgstr ""
+msgstr "Autocomplétion de Partenaires : Synchroniser avec DB à distance"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
 msgid "Partner Autocomplete Sync"
-msgstr ""
+msgstr "Synchronisation de l'Autocomplétion de Partenaires"
 
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
 msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr ""
+msgstr "Partenaire créé par le Service d'Autocomplétion de Partenaires d'Odoo"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:8
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
 msgstr "Zone de texte"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:23
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:0
 #, python-format
 msgid "Searching Autocomplete..."
-msgstr ""
+msgstr "Recherche de l'Autocomplétion..."
 
 #. module: partner_autocomplete
 #. openerp-web
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Set Your Account Token"
-msgstr ""
+msgstr "Définissez le Token de votre Compte"
 
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
@@ -256,4 +261,4 @@ msgstr "Twitter :"
 #. module: partner_autocomplete
 #: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
 msgid "followers)"
-msgstr ""
+msgstr "abonnés)"
