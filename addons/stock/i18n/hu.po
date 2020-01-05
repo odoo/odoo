@@ -9,8 +9,8 @@
 # krnkris, 2017
 # Martin Trigaux, 2018
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
 # Tamás Németh <ntomasz81@gmail.com>, 2019
+# gezza <geza.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> Termék  mértékegység %s (%s) - Mozgás mértékegység %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:341
@@ -127,6 +130,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Here is your current inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Jelenlegi készlet: </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -212,7 +217,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"o_stat_text\">Details</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Részletek</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -389,6 +394,9 @@ msgid ""
 "                The done move line has been corrected.\n"
 "            </strong>"
 msgstr ""
+"<strong>\n"
+"                Az elvégzett mozgás sor javításra került.\n"
+"            </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -635,7 +643,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_head
 msgid "<strong>The initial demand has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Az eredeti igény frissítésre került.</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -679,7 +687,7 @@ msgstr "Egy klasszikus értékesítési folyamat a következőképpen néz ki:"
 #: code:addons/stock/models/stock_move_line.py:93
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr ""
+msgstr "Egy elvégzett mozgás sor nem rendelkezhet foglalt mennyiséggel."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -693,7 +701,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:80
 #, python-format
 msgid "A serial number should only be linked to a single product."
-msgstr ""
+msgstr "Egy sorszám csak egy termékhez kapcsolódhat."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_type
@@ -711,7 +719,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr ""
+msgstr "Figyelmeztetést lehet beállítani partnernék (Készlet)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -745,6 +753,8 @@ msgstr "Aktív"
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
 msgstr ""
+"Belső megjegyzés hozzáadása, mely nyomtatásra kerül a Kigyűjtési műveletek "
+"dokumentumra."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_adv_location
@@ -787,7 +797,7 @@ msgstr "Haladó"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Advanced Scheduling"
-msgstr ""
+msgstr "Haladó ütemezés"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -820,6 +830,8 @@ msgid ""
 "All items couldn't be shipped, the remaining ones will be shipped as soon as"
 " they become available."
 msgstr ""
+"Nem lehetett kiszállítani az összes tételt. A fennmaradó tételek "
+"kiszállításra kerülnek, amikor elérhetővé válnak."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:112
@@ -927,7 +939,7 @@ msgstr "Mozgásokat jelöl ki"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr ""
+msgstr "Specifikus dátumon"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -1028,7 +1040,7 @@ msgstr "Vonalkód leolvasó"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Kötegelt kigyűjtések"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1216,12 +1228,12 @@ msgstr "Termékmennyiség megváltoztatása"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Change must be higher than"
-msgstr ""
+msgstr "A változásnak többnek kell lennie, mint"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_move_id
 msgid "Change to a better name"
-msgstr ""
+msgstr "Változtassa meg egy jobb névre"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -1455,12 +1467,12 @@ msgstr "Gratulálunk!"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_owner
 msgid "Consignment"
-msgstr ""
+msgstr "Bizomány"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
 msgid "Consume Line"
-msgstr ""
+msgstr "Sor felhasználása"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -1708,7 +1720,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "Current Inventory"
-msgstr ""
+msgstr "Jelenlegi készlet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_id
@@ -2014,7 +2026,7 @@ msgstr "Szállítólevelek"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Kiszállítási csomagok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -2112,7 +2124,7 @@ msgstr "Célállomás helye:"
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_dest_ids
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Destination Moves"
-msgstr ""
+msgstr "Cél mozgások"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_result_package_id
@@ -2123,7 +2135,7 @@ msgstr "Cél csomag"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package :"
-msgstr ""
+msgstr "Cél csomag:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
@@ -2145,7 +2157,7 @@ msgstr "Részletek"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_details_visible
 msgid "Details Visible"
-msgstr ""
+msgstr "Részletek mutatása"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_procure_method
@@ -2451,7 +2463,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_reserved_availability
 msgid "From Supplier"
-msgstr ""
+msgstr "Beszállítótól"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_complete_name
@@ -2574,7 +2586,7 @@ msgstr "HDD SH-1"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_move_lines
 msgid "Has Move Lines"
-msgstr ""
+msgstr "Van mozás sor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_exist
@@ -2584,17 +2596,17 @@ msgstr "Csomag műveletei vannak"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_packages
 msgid "Has Packages"
-msgstr ""
+msgstr "Van csomag"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "Van selejt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking
 msgid "Has Tracking"
-msgstr ""
+msgstr "Van követés"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
@@ -2975,7 +2987,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Kimerült termékekkel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3214,7 +3226,7 @@ msgstr "Készlet sor"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr ""
+msgstr "Leltár sorok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3235,7 +3247,7 @@ msgstr "Leltárhiány"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Product"
-msgstr ""
+msgstr "Leltár termék"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -3246,7 +3258,7 @@ msgstr "Készlet hivatkozás"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr ""
+msgstr "Leltár riport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3586,7 +3598,7 @@ msgstr "Lokalizáció"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Lokalizálás"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
@@ -3684,7 +3696,7 @@ msgstr "Szett/Széria"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial :"
-msgstr ""
+msgstr "Lot/sorszám :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -3706,7 +3718,7 @@ msgstr "Szett/Széria szám"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr ""
+msgstr "Lot/szériaszám leltár"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_production_lot
@@ -3926,7 +3938,7 @@ msgstr "Bizonylat, áthelyezés"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr ""
+msgstr "Mozgás részletek"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -4253,7 +4265,7 @@ msgstr "Csak egy tulajdonos"
 #: code:addons/stock/models/stock_inventory.py:113
 #, python-format
 msgid "One product category"
-msgstr ""
+msgstr "Egy termékkategória"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:118
@@ -4297,7 +4309,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr ""
+msgstr "Visszáru művelet típus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
