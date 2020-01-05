@@ -44,7 +44,7 @@
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Miquel Torner <miq@odoo.com>, 2019
-# Edilianny Sánchez <esanchez@vauxoo.com>, 2019
+# Edilianny Sanchez - https://www.vauxoo.com/ <esanchez@vauxoo.com>, 2019
 # John Guardado <jgu@odoo.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
@@ -10851,6 +10851,14 @@ msgid "The account %s (%s) is deprecated."
 msgstr "La cuenta %s (%s) es obsoleta. "
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The account is already in use in a 'sale' or 'purchase' journal. This means "
+"that the account's type couldn't be 'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -11463,6 +11471,14 @@ msgid "The tie-breaking rule used for float rounding operations"
 msgstr ""
 "La regla de desempate utilizada para las operaciones de redondeo de "
 "decimales"
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The type of the journal's default credit/debit account shouldn't be "
+"'receivable' or 'payable'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices

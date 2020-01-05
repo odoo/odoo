@@ -10,6 +10,7 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-13 11:29+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,6 +95,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Champ utilisé pour stocker le numéro de téléphone aseptisé. Aide à accélérer"
+" les recherches et comparaisons."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -168,7 +171,7 @@ msgstr "Numéro %s non valide : l'indicatif est probablement incorrect."
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Invalid primary phone field on model %s"
-msgstr ""
+msgstr "Champ téléphone primaire invalide sur le modèle %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
@@ -249,7 +252,7 @@ msgstr "Nombre de messages non lus"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
 msgid "Number should be E164 formatted"
-msgstr ""
+msgstr "Le numéro doit avoir le format E164"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
@@ -263,17 +266,17 @@ msgstr "Téléphone / SMS"
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Phone Blacklist"
-msgstr ""
+msgstr "Liste Noire de Téléphones"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Mixin de la Liste Noire de Téléphones"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Téléphone sur Liste Noire"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
@@ -283,12 +286,12 @@ msgstr "Numéro de téléphone"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
-msgstr ""
+msgstr "Mixin de la Validation de Téléphones"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Numéro Aseptisé"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -304,7 +307,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Unable to parse %s: %s"
-msgstr ""
+msgstr "Impossible d'interpréter %s: %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_unread
