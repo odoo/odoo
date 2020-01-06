@@ -50,7 +50,7 @@ class WebsiteBlog(http.Controller):
             tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
 
             group['month'] = babel.dates.format_datetime(start, format='MMMM', tzinfo=tzinfo, locale=locale)
-            group['year'] = babel.dates.format_datetime(start, format='YYYY', tzinfo=tzinfo, locale=locale)
+            group['year'] = babel.dates.format_datetime(start, format='yyyy', tzinfo=tzinfo, locale=locale)
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
