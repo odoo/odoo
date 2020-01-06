@@ -14,7 +14,7 @@ class Page(models.Model):
 
     url = fields.Char('Page URL')
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
-    website_indexed = fields.Boolean('Page Indexed', default=True)
+    website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
     # This is needed to be able to display if page is a menu in /website/pages
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
