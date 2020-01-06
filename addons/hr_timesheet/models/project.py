@@ -23,10 +23,6 @@ class Project(models.Model):
         ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
     ]
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        return {'domain': {'analytic_account_id': [('partner_id', '=', self.partner_id.id)] if self.partner_id else []}}
-
     @api.onchange('analytic_account_id')
     def _onchange_analytic_account(self):
         if not self.analytic_account_id and self._origin:
