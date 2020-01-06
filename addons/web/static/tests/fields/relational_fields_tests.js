@@ -13730,6 +13730,35 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_checkboxes: values are updated when domain changes', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field"/>' +
+                    '<field name="timmy" widget="many2many_checkboxes" domain="[[\'id\', \'>\', int_field]]"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '10');
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .custom-checkbox').length, 2);
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'goldsilver');
+
+        form.$('.o_field_widget[name=int_field]').val('13').trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .custom-checkbox').length, 1);
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'silver');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyBinaryMultiFiles');
 
     QUnit.test('widget many2many_binary', function (assert) {
