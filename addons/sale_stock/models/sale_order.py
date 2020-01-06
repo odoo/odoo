@@ -8,6 +8,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 from odoo.exceptions import UserError
+from odoo.addons.stock.models.stock_move import PropagateException
 
 
 class SaleOrder(models.Model):
@@ -351,7 +352,23 @@ class SaleOrderLine(models.Model):
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_stock_rule(previous_product_uom_qty)
+            try:
+                with self._cr.savepoint():
+                    lines._action_launch_stock_rule(previous_product_uom_qty)
+            except PropagateException as error:
+                line_by_order = defaultdict(lambda: self.env['sale.order.line'])
+                sub_lines = lines.filtered(lambda line: line.product_id in error.propagate_exceptions)
+                for line in sub_lines:
+                    if line.product_id.type in ['product', 'consu']:
+                        line_by_order[line.order_id] |= line
+                for order, lines in line_by_order.items():
+                    to_log = {}
+                    for line in lines:
+                        if line.product_uom_qty and float_compare(line.product_uom_qty, previous_product_uom_qty[line.id], precision_digits=precision) == -1:
+                            to_log[line] = (previous_product_uom_qty[line.id], line.product_uom_qty)
+                    if to_log:
+                        documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                        order._log_decrease_ordered_quantity(documents)
         return res
 
     @api.depends('order_id.state')

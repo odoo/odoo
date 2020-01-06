@@ -766,7 +766,7 @@ class StockMove(models.Model):
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
         moves_to_merge = []
-        propagate_errors = self.env['stock.move']
+        propagate_errors = self.env['product.product']
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
             candidate_moves = candidate_moves.with_context(prefetch_fields=False)
@@ -778,7 +778,7 @@ class StockMove(models.Model):
                 else:
                     for move in moves:
                         if move.product_uom_qty < 0:
-                            propagate_errors |= move
+                            propagate_errors |= move.product_id
         if propagate_errors:
             raise PropagateException(propagate_errors)
 
@@ -1080,17 +1080,7 @@ class StockMove(models.Model):
         self._push_apply()
         self._check_company()
         if merge:
-            try:
-                with self._cr.savepoint():
-                    self._merge_moves(merge_into=merge_into)
-            except PropagateException as error:
-                for picking in error.propagate_exceptions.picking_id:
-                    picking.activity_schedule(
-                        'mail.mail_activity_data_warning',
-                        date.today(),
-                        note='Move negatif',
-                        user_id=picking.user_id or SUPERUSER_ID
-                    )
+            return self._merge_moves(merge_into=merge_into)
         return self
 
     def _prepare_procurement_values(self):
