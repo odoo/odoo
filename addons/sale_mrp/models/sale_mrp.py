@@ -68,6 +68,6 @@ class SaleOrderLine(models.Model):
         # and after update, and return the difference. We don't take into account what was already
         # sent, or any other exceptional case.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id, bom_type='phantom')
-        if bom and 'previous_product_uom_qty' in self.env.context:
+        if bom and previous_product_uom_qty:
             return previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
