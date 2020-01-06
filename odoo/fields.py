@@ -2715,7 +2715,10 @@ class _RelationalMulti(_Relational):
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, record, self)
         Comodel = record.pool[self.comodel_name]
         corecords = Comodel._browse(record.env, value, prefetch_ids)
-        if Comodel._active_name and record.env.context.get('active_test', True):
+        if (
+            Comodel._active_name
+            and self.context.get('active_test', record.env.context.get('active_test', True))
+        ):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
 

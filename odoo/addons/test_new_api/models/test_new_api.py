@@ -742,6 +742,10 @@ class ModelActiveField(models.Model):
     active = fields.Boolean(default=True)
     parent_id = fields.Many2one('test_new_api.model_active_field')
     children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')
+    all_children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id',
+                                       context={'active_test': False})
+    active_children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id',
+                                          context={'active_test': True})
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
