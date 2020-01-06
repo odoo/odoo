@@ -794,3 +794,12 @@ class ModelParentM2o(models.Model):
 
     name = fields.Char('Name')
     child_ids = fields.One2many('test_new_api.model_child_m2o', 'parent_id', string="Children")
+
+
+class ModelRecursive(models.Model):
+    _name = 'test_new_api.model.recursive'
+    _description = 'dummy model with recursive One2many and active test false'
+
+    active = fields.Boolean('Error is not fixed', default=True, track_visibility='onchange')
+    parent_id = fields.Many2one('test_new_api.model.recursive')
+    child_ids = fields.One2many('test_new_api.model.recursive', 'parent_id', context={'active_test': False})

@@ -247,3 +247,23 @@ class One2manyCase(TransactionCase):
         # delete parent, and check that recomputation ends
         parent.unlink()
         parent.flush()
+
+    def test_recursive_active_test(self):
+        child = self.env['test_new_api.model.recursive'].create({})
+        parent = self.env['test_new_api.model.recursive'].create({})
+
+        child.active = False # child is inactive but one2many is active_test=False
+        child.parent_id = parent.id
+
+        self.assertEqual(child.parent_id, parent, 'parent should be set')
+        self.assertEqual(parent.child_ids, child, 'childrens should be the correct ones')  # will fail
+
+    def test_recursive_active_test_fixed(self):
+        child = self.env['test_new_api.model.recursive'].create({})
+        parent = self.env['test_new_api.model.recursive'].create({})
+
+        child.active = False # child is inactive but one2many is active_test=False
+        child.parent_id = parent.id
+
+        self.assertEqual(child.parent_id, parent, 'parent should be set')
+        self.assertEqual(parent.with_context(active_test=False).child_ids, child, 'childrens should be the correct ones')  # works fine, but shouldn't be necessary
