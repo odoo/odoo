@@ -35,6 +35,7 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
+<<<<<<< HEAD
     <record id="hr_leave_rule_officer_read" model="ir.rule">
         <field name="name">Leaves: officer: read all</field>
         <field name="model_id" ref="model_hr_leave"/>
@@ -103,6 +104,12 @@
         <field name="domain_force">['|',
 '|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id),
 '|', '|', ('department_id', '=', False), ('department_id.member_ids.user_id', 'in', [user.id]), ('department_id.manager_id.user_id', '=', user.id)]</field>
+=======
+    <record id="property_rule_holidays_officer" model="ir.rule">
+        <field name="name">Leaves Officer</field>
+        <field name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">['|',('holiday_status_id.company_id','=',False),('holiday_status_id.company_id','=',user.company_id.id)]</field>
+>>>>>>> 14684adb938... temp
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
