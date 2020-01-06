@@ -981,6 +981,7 @@
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                         <field name="invoice_payment_ref" attrs="{'readonly': [('state', '=', 'paid'), ('type', 'in', ('in_invoice', 'in_refund'))]}"/>
                                         <field name="invoice_partner_bank_id"
+                                               context="{'default_partner_id': commercial_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"
                                                attrs="{'readonly': [('state', '=', 'paid')]}"/>
                                     </group>
