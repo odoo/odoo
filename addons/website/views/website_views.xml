@@ -140,12 +140,12 @@
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
             <field name="arch" type="xml">
-                <tree string="Website Pages" default_order="name">
+                <tree string="Website Pages" default_order="name" multi_edit="1">
                     <field name="name"/>
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="website_indexed"/>
-                    <field name="is_published" string="Page Published"/>
+                    <field name="is_published" string="Is Published"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>

@@ -19,6 +19,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="is_published" string="Is Published" optional="hide"/>
             </field>
         </field>
     </record>
@@ -44,6 +45,9 @@
         <field name="arch" type="xml">
             <field name="sequence" position="replace">
                 <field name="website_sequence" widget="handle"/>
+            </field>
+            <field name="website_id" position="after">
+                <field name="is_published" string="Is Published" optional="hide"/>
             </field>
         </field>
     </record>
