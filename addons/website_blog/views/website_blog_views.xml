@@ -41,12 +41,13 @@
             <field name="name">blog.post.list</field>
             <field name="model">blog.post</field>
             <field name="arch" type="xml">
-                <tree string="Blog Posts">
+                <tree string="Blog Posts" multi_edit="1">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="author_id"/>
                     <field name="blog_id"/>
                     <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="is_published" string="Is Published" optional="hide"/>
                     <field name="visits"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
