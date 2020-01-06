@@ -73,6 +73,7 @@ class Channel(models.Model):
         return res
 
     name = fields.Char('Name', required=True, translate=True)
+    active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     channel_type = fields.Selection([
         ('chat', 'Chat Discussion'),
         ('channel', 'Channel')],
