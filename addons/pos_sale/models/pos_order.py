@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate applicable at the date of the order')
+    currency_rate = fields.Float(compute='_compute_currency_rate', store=True, digits=(12, 6), readonly=True)
     crm_team_id = fields.Many2one('crm.team', string="Sales Team")
 
     @api.model

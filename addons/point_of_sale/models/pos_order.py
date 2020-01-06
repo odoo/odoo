@@ -226,7 +226,8 @@ class PosOrder(models.Model):
         readonly=True)
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True,
+        help='The rate of the currency to the currency of rate applicable at the date of the order')
 
     invoice_group = fields.Boolean(related="config_id.module_account", readonly=False)
     state = fields.Selection(
