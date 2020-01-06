@@ -131,8 +131,7 @@ class StockPackageLevel(models.Model):
     def create(self, vals):
         result = super(StockPackageLevel, self).create(vals)
         if vals.get('location_dest_id'):
-            result.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
-            result.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})
+            result.location_dest_id = result.location_dest_id.get_putaway_strategy(result.package_id.quant_ids.mapped('product_id')).id or result.location_dest_id.id
         if result.picking_id.state != 'draft' and result.location_id and result.location_dest_id and not result.move_ids and not result.move_line_ids:
             result._generate_moves()
         return result
