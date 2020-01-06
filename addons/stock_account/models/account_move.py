@@ -13,6 +13,10 @@ class AccountMove(models.Model):
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
 
+    def _get_lines_onchange_currency(self):
+        # OVERRIDE
+        return self.line_ids.filtered(lambda l: not l.is_anglo_saxon_line)
+
     def _reverse_move_vals(self, default_values, cancel=True):
         # OVERRIDE
         # Don't keep anglo-saxon lines if not cancelling an existing invoice.
