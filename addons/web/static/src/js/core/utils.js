@@ -122,6 +122,8 @@ var utils = {
             // formatterCallback seems useless here.
             return number + 'e' + numberMagnitude;
         }
+        var sign = Math.sign(number);
+        number = Math.abs(number);
         for (var i = val.length; i > 0 ; i--) {
             var s = Math.pow(10, i * 3);
             if (s <= number / Math.pow(10, minDigits - 1)) {
@@ -130,6 +132,7 @@ var utils = {
                 break;
             }
         }
+        number = sign * number;
         return formatterCallback('' + number) + symbol;
     },
     /**
