@@ -68,7 +68,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test('human_number', function (assert) {
-        assert.expect(13);
+        assert.expect(26);
 
         var human_number = utils.human_number;
 
@@ -85,6 +85,20 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(human_number(1.0045e+22, 3, 1), '1.005e+22');
         assert.strictEqual(human_number(1.012e+43, 2, 1), '1.01e+43');
         assert.strictEqual(human_number(1.012e+43, 2, 2), '1.01e+43');
+
+        assert.strictEqual(human_number(-1020, 2, 1), '-1.02k');
+        assert.strictEqual(human_number(-1020000, 2, 2), '-1020k');
+        assert.strictEqual(human_number(-10200000, 2, 2), '-10.2M');
+        assert.strictEqual(human_number(-1020, 2, 1), '-1.02k');
+        assert.strictEqual(human_number(-1002, 2, 1), '-1k');
+        assert.strictEqual(human_number(-101, 2, 1), '-101');
+        assert.strictEqual(human_number(-64.2, 2, 1), '-64');
+        assert.strictEqual(human_number(-1e+18), '-1E');
+        assert.strictEqual(human_number(-1e+21, 2, 1), '-1e+21');
+        assert.strictEqual(human_number(-1.0045e+22, 2, 1), '-1e+22');
+        assert.strictEqual(human_number(-1.0045e+22, 3, 1), '-1.004e+22');
+        assert.strictEqual(human_number(-1.012e+43, 2, 1), '-1.01e+43');
+        assert.strictEqual(human_number(-1.012e+43, 2, 2), '-1.01e+43');
     });
 
 });
