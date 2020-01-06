@@ -92,6 +92,33 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
         return self.write({'user_ids': [(3, self._uid)]})
 
+    def write(self, vals):
+        if vals.get('user_ids'):
+            notifications = []
+            write_type = vals['user_ids'][0][0]
+            if write_type == 3:
+                notifications.extend(self.notify_livechat_user([vals['user_ids'][0][1]], True))
+            elif write_type == 4:
+                notifications.extend(self.notify_livechat_user([vals['user_ids'][0][1]]))
+            elif write_type == 6:
+                updated_users = self.env['res.users'].browse(vals['user_ids'][0][2])
+                left_users = self.user_ids - updated_users
+                joined_users = updated_users - self.user_ids
+                notifications.extend(self.notify_livechat_user(left_users.ids, True))
+                notifications.extend(self.notify_livechat_user(joined_users.ids))
+            self.env['bus.bus'].sendmany(notifications)
+        return super(ImLivechatChannel, self).write(vals)
+
+    def notify_livechat_user(self, operators, no_operator=False):
+        notifications = []
+        livechat_operator_id = self.env['res.users'].browse(operators).partner_id.ids
+        for channel in self.channel_ids.filtered(lambda ch: ch.livechat_operator_id.id in livechat_operator_id):
+            data = {'_type': 'operator_status', 'no_operator': no_operator}
+            notifications.extend([
+                [(self._cr.dbname, 'mail.channel', channel.id), data], [channel.uuid, data]
+            ])  # notify backend and frontend users
+        return notifications
+
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
             sessions of the current channel
@@ -228,8 +255,8 @@ class ImLivechatChannel(models.Model):
         info = {}
         info['available'] = len(self._get_available_users()) > 0
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        info['options'] = self._get_channel_infos()
         if info['available']:
-            info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
         return info
 
