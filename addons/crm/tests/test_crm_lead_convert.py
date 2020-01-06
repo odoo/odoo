@@ -1,13 +1,144 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestCrmCommon
+from unittest.mock import patch
+
+from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.fields import Datetime
+from odoo.tests.common import tagged, users
 
 
-class TestLead2opportunity2win(TestCrmCommon):
+@tagged('lead_manage')
+class TestLeadConvertCommon(TestCrmCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestLeadConvertCommon, cls).setUpClass()
+
+        cls.sales_team_convert = cls.env['crm.team'].create({
+            'name': 'Convert Sales Team',
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': cls.user_sales_manager.id,
+            'member_ids': [(4, cls.user_sales_salesman.id)],
+        })
+        cls.lead_1.write({'date_open': Datetime.from_string('2020-01-15 11:30:00')})
+
+        cls.crm_lead_dt_patcher = patch('odoo.addons.crm.models.crm_lead.fields.Datetime', wraps=Datetime)
+        cls.crm_lead_dt_mock = cls.crm_lead_dt_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.crm_lead_dt_patcher.stop()
+        super(TestLeadConvertCommon, cls).tearDownClass()
+
+    def create_duplicates(self):
+        self.lead_1_dup1 = self.env['crm.lead'].create({
+            'name': 'Duplicate1',
+            'type': 'lead',
+            'user_id': False,
+            'team_id': self.lead_1.team_id.id,
+            'contact_name': 'Amy Wong Duplicate',
+            'email_from': self.lead_1.email_from,
+        })
+        self.lead_1_dup2 = self.env['crm.lead'].create({
+            'name': 'Duplicate2',
+            'type': 'lead',
+            'user_id': False,
+            'team_id': self.lead_1.team_id.id,
+            'contact_name': 'Amy Wong Duplicate Two',
+            'email_from': self.lead_1.email_from,
+        })
+
+
+class TestLeadConvert(TestLeadConvertCommon):
+
+    @users('user_sales_manager')
+    def test_lead_convert_convert(self):
+        date = Datetime.from_string('2020-01-20 16:00:00')
+        self.crm_lead_dt_mock.now.return_value = date
+
+        self.assertFalse(self.lead_1.date_conversion)
+        self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': self.lead_1.id,
+            'active_ids': self.lead_1.ids,
+        }).create({})
+
+        # test internals of convert wizard
+        # self.assertEqual(convert.lead_id, self.lead_1)
+        self.assertEqual(convert.user_id, self.lead_1.user_id)
+        self.assertEqual(convert.team_id, self.lead_1.team_id)
+        self.assertFalse(convert.partner_id)
+        self.assertEqual(convert.name, 'convert')
+        self.assertEqual(convert.action, 'create')
+
+        convert.write({'user_id': self.user_sales_salesman.id})
+        convert._onchange_user()
+        self.assertEqual(convert.user_id, self.user_sales_salesman)
+        self.assertEqual(convert.team_id, self.sales_team_convert)
+
+        convert.action_apply()
+        self.assertEqual(self.lead_1.type, 'opportunity')
+
+    @users('user_sales_manager')
+    def test_lead_convert_merge(self):
+        self.create_duplicates()
+        date = Datetime.from_string('2020-01-20 16:00:00')
+        self.crm_lead_dt_mock.now.return_value = date
+
+        self.assertFalse(self.lead_1.date_conversion)
+        self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': self.lead_1.id,
+            'active_ids': self.lead_1.ids,
+        }).create({})
+
+        # test internals of convert wizard
+        self.assertEqual(convert.opportunity_ids, self.lead_1 | self.lead_1_dup1 | self.lead_1_dup2)
+        self.assertEqual(convert.user_id, self.lead_1.user_id)
+        self.assertEqual(convert.team_id, self.lead_1.team_id)
+        self.assertFalse(convert.partner_id)
+        self.assertEqual(convert.name, 'merge')
+        self.assertEqual(convert.action, 'create')
+
+        convert.write({'user_id': self.user_sales_salesman.id})
+        convert._onchange_user()
+        self.assertEqual(convert.user_id, self.user_sales_salesman)
+        self.assertEqual(convert.team_id, self.sales_team_convert)
+
+        convert.action_apply()
+        self.assertEqual(self.lead_1.type, 'opportunity')
+
+    @users('user_sales_manager')
+    def test_lead_convert_various(self):
+        self.lead_1.write({'contact_name': False})
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': self.lead_1.id,
+        }).create({})
+        self.assertEqual(convert.action, 'nothing')
+
+        self.lead_1.write({'partner_id': self.contact_1.id})
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': self.lead_1.id,
+        }).create({})
+        self.assertEqual(convert.action, 'exist')
+
+
+class TestLeadConvertMass(TestLeadConvertCommon):
 
     def test_lead2opportunity2win(self):
         """ Tests for Test Lead 2 opportunity 2 win """
-        CrmLead2OpportunityPartnerMass = self.env['crm.lead2opportunity.partner.mass']
         default_stage_id = self.stage_gen_1.id
 
         crm_case_2 = self.env['crm.lead'].create({
@@ -40,14 +171,12 @@ class TestLead2opportunity2win(TestCrmCommon):
         self.assertEqual(crm_case_3.partner_id.id, self.contact_2.id, 'Partner mismatch!')
         self.assertEqual(crm_case_3.stage_id.id, default_stage_id, 'Stage of opportunity is incorrect!')
 
-        # Now I schedule meeting with customer.
-        crm_case_3.action_schedule_meeting()
-
-        # After communicated  with customer, I put some notes with contract details.
-        crm_case_3.message_post(subject='Test note', body='Détails envoyés par le client sur ​​le FAX pour la qualité')
-
         # I convert mass lead into opportunity customer.
-        mass = CrmLead2OpportunityPartnerMass.with_user(self.user_sales_manager).with_context({'active_model': 'crm.lead', 'active_ids': [crm_case_13.id, crm_case_2.id], 'active_id': crm_case_13.id}).create({
+        mass = self.env['crm.lead2opportunity.partner.mass'].with_user(self.user_sales_manager).with_context({
+            'active_model': 'crm.lead',
+            'active_ids': [crm_case_13.id, crm_case_2.id],
+            'active_id': crm_case_13.id}
+        ).create({
             'user_ids': [(6, 0, self.env.ref('base.user_root').ids)],
             'team_id': self.env.ref("sales_team.team_sales_department").id
         })
@@ -73,7 +202,6 @@ class TestLead2opportunity2win(TestCrmCommon):
 
     def test_lead2opportunity_assign_salesmen(self):
         """ Tests for Test Lead2opportunity Assign Salesmen """
-        CrmLead2OpportunityPartnerMass = self.env['crm.lead2opportunity.partner.mass']
         LeadSaleman = self.env['crm.lead'].with_user(self.user_sales_manager)
         default_stage_id = self.stage_gen_1.id
 
@@ -137,8 +265,11 @@ class TestLead2opportunity2win(TestCrmCommon):
         salesmen_ids = [test_res_user_01.id, test_res_user_02.id, test_res_user_03.id, test_res_user_04.id]
 
         # Salesman create a mass convert wizard and convert all the leads.
-        additionnal_context = {'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': test_crm_lead_01.id}
-        mass = CrmLead2OpportunityPartnerMass.with_user(self.user_sales_manager).with_context(**additionnal_context).create({
+        mass = self.env['crm.lead2opportunity.partner.mass'].with_user(self.user_sales_manager).with_context({
+            'active_model': 'crm.lead',
+            'active_ids': lead_ids,
+            'active_id': test_crm_lead_01.id}
+        ).create({
             'user_ids': [(6, 0, salesmen_ids)],
             'team_id': self.env.ref("sales_team.team_sales_department").id,
             'deduplicate': False,
