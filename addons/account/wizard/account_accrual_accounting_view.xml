@@ -22,8 +22,10 @@
                             <field name="journal_id"/>
                         </group>
                     </group>
+                    <label for="preview_data" string="The following Journal Entries will be generated"/>
+                    <field name="preview_data" widget="grouped_view_widget"/>
                     <footer>
-                        <button string="Create Journal Entry" name="amend_entries" type="object" class="oe_highlight"/>
+                        <button string="Create Journal Entries" name="amend_entries" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </form>
@@ -31,7 +33,7 @@
         </record>
 
         <record id="account_accrual_accounting_wizard_action" model="ir.actions.act_window">
-            <field name="name">Create Accrual Entry for the expense/revenue recognition</field>
+            <field name="name">Create Accrual Entries for the expense/revenue recognition</field>
             <field name="res_model">account.accrual.accounting.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
