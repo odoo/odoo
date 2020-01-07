@@ -15,7 +15,7 @@ class IrAttachment(models.Model):
         for record in self:
             record.register_as_main_attachment(force=False)
 
-    def register_as_main_attachment(self, force=True):
+    def register_as_main_attachment(self, force=False):
         """ Registers this attachment as the main one of the model it is
         attached to.
         """
