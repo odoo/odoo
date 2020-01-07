@@ -6,47 +6,22 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-STREET_FIELDS = ['street_name', 'street_number', 'street_number2']
-
-
-class ResCountry(models.Model):
-    _inherit = 'res.country'
-
-    street_format = fields.Text(
-        help="Format to use for streets belonging to this country.\n\n"
-             "You can use the python-style string pattern with all the fields of the street "
-             "(for example, use '%(street_name)s, %(street_number)s' if you want to display "
-             "the street name, followed by a comma and the house number)"
-             "\n%(street_name)s: the name of the street"
-             "\n%(street_number)s: the house number"
-             "\n%(street_number2)s: the door number",
-        default='%(street_number)s/%(street_number2)s %(street_name)s', required=True)
 
 class Partner(models.Model):
     _inherit = ['res.partner']
-    _name = 'res.partner'
 
-    street_name = fields.Char('Street Name', compute='_split_street',
-                              inverse='_set_street', store=True)
-    street_number = fields.Char('House', compute='_split_street', help="House Number",
-                                inverse='_set_street', store=True)
-    street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
-                                 inverse='_set_street', store=True)
+    street_name = fields.Char(
+        'Street Name', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
+    street_number = fields.Char(
+        'House', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
+    street_number2 = fields.Char(
+        'Door', compute='_compute_street_data', inverse='_inverse_street_data', store=True)
 
-    def _formatting_address_fields(self):
-        """Returns the list of address fields usable to format addresses."""
-        return super(Partner, self)._formatting_address_fields() + self.get_street_fields()
-
-    def get_street_fields(self):
-        """Returns the fields that can be used in a street format.
-        Overwrite this function if you want to add your own fields."""
-        return STREET_FIELDS
-
-    def _set_street(self):
+    def _inverse_street_data(self):
         """Updates the street field.
         Writes the `street` field on the partners when one of the sub-fields in STREET_FIELDS
         has been touched"""
-        street_fields = self.get_street_fields()
+        street_fields = self._get_street_fields()
         for partner in self:
             street_format = (partner.country_id.street_format or
                 '%(street_number)s/%(street_number2)s %(street_name)s')
@@ -79,8 +54,29 @@ class Partner(models.Model):
             street_value += street_format[previous_pos:]
             partner.street = street_value
 
+    @api.depends('street')
+    def _compute_street_data(self):
+        """Splits street value into sub-fields.
+        Recomputes the fields of STREET_FIELDS when `street` of a partner is updated"""
+        street_fields = self._get_street_fields()
+        for partner in self:
+            if not partner.street:
+                for field in street_fields:
+                    partner[field] = None
+                continue
+
+            street_format = (partner.country_id.street_format or
+                '%(street_number)s/%(street_number2)s %(street_name)s')
+            street_raw = partner.street
+            vals = self._split_street_with_params(street_raw, street_format)
+            # assign the values to the fields
+            for k, v in vals.items():
+                partner[k] = v
+            for k in set(street_fields) - set(vals):
+                partner[k] = None
+
     def _split_street_with_params(self, street_raw, street_format):
-        street_fields = self.get_street_fields()
+        street_fields = self._get_street_fields()
         vals = {}
         previous_pos = 0
         field_name = None
@@ -119,62 +115,17 @@ class Partner(models.Model):
             vals[field_name] = street_raw
         return vals
 
-
-    @api.depends('street')
-    def _split_street(self):
-        """Splits street value into sub-fields.
-        Recomputes the fields of STREET_FIELDS when `street` of a partner is updated"""
-        street_fields = self.get_street_fields()
-        for partner in self:
-            if not partner.street:
-                for field in street_fields:
-                    partner[field] = None
-                continue
-
-            street_format = (partner.country_id.street_format or
-                '%(street_number)s/%(street_number2)s %(street_name)s')
-            street_raw = partner.street
-            vals = self._split_street_with_params(street_raw, street_format)
-            # assign the values to the fields
-            for k, v in vals.items():
-                partner[k] = v
-            for k in set(street_fields) - set(vals):
-                partner[k] = None
-
     def write(self, vals):
         res = super(Partner, self).write(vals)
         if 'country_id' in vals and 'street' not in vals:
-            self._set_street()
+            self._inverse_street_data()
         return res
 
+    def _formatting_address_fields(self):
+        """Returns the list of address fields usable to format addresses."""
+        return super(Partner, self)._formatting_address_fields() + self._get_street_fields()
 
-class Company(models.Model):
-    _inherit = 'res.company'
-
-    street_name = fields.Char('Street Name', compute='_compute_address',
-                              inverse='_inverse_street_name')
-    street_number = fields.Char('House Number', compute='_compute_address',
-                                inverse='_inverse_street_number')
-    street_number2 = fields.Char('Door Number', compute='_compute_address',
-                                 inverse='_inverse_street_number2')
-
-    def _get_company_address_fields(self, partner):
-        address_fields = super(Company, self)._get_company_address_fields(partner)
-        address_fields.update({
-            'street_name': partner.street_name,
-            'street_number': partner.street_number,
-            'street_number2': partner.street_number2,
-        })
-        return address_fields
-
-    def _inverse_street_name(self):
-        for company in self:
-            company.partner_id.street_name = company.street_name
-
-    def _inverse_street_number(self):
-        for company in self:
-            company.partner_id.street_number = company.street_number
-
-    def _inverse_street_number2(self):
-        for company in self:
-            company.partner_id.street_number2 = company.street_number2
+    def _get_street_fields(self):
+        """Returns the fields that can be used in a street format.
+        Overwrite this function if you want to add your own fields."""
+        return ['street_name', 'street_number', 'street_number2']
