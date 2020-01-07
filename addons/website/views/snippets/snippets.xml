@@ -120,7 +120,7 @@
     <t t-call="web_editor.snippet_options"/>
 
     <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
-    <div data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
+    <div data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
          data-target=".card">
         <we-colorpicker string="Background Color"
             data-select-style="true"
@@ -186,11 +186,6 @@
         <we-button data-remove-slide="true" data-no-preview="true" class="fa fa-fw fa-minus"/>
     </div>
 
-    <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
-        <we-button data-add-tab="1" data-no-preview="true">Add Tab</we-button>
-        <we-button data-remove-tab="1" data-name="remove_tab_opt" data-no-preview="true">Remove Tab</we-button>
-    </div>
-
     <!-- Accordion -->
     <div data-js="collapse"
          data-selector='.accordion > .card'
@@ -216,7 +211,7 @@
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
     </div>
     <div data-js="SnippetMove"
-         data-selector=".row:not(.s_col_no_resize) > div">
+         data-selector=".row:not(.s_col_no_resize) > div, .nav-item">
         <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
     </div>
@@ -358,7 +353,7 @@
     <!-- Anchor Name -->
     <div data-js="anchor"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
-        data-exclude=".modal *">
+        data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *">
         <we-button class="fa fa-fw fa-link"
                    title="Create a link to target this section"
                    data-no-preview="true"/>
