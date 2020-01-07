@@ -137,11 +137,14 @@ var ActivityMenu = Widget.extend({
         } else {
             context['search_default_activities_' + data.filter] = 1;
         }
+        // Necessary because activity_ids of mail.activity.mixin has auto_join
+        // So, duplicates are faking the count and "Load more" doesn't show up
+        context['force_search_count'] = 1;
         this.do_action({
             type: 'ir.actions.act_window',
             name: data.model_name,
             res_model:  data.res_model,
-            views: [[false, 'kanban'], [false, 'form']],
+            views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
             search_view_id: [false],
             domain: [['activity_user_id', '=', session.uid]],
             context:context,
