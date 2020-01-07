@@ -148,7 +148,6 @@ var WysiwygMultizone = Wysiwyg.extend({
         var cssBgImage = $(el.querySelector('.o_record_cover_image')).css('background-image');
         var coverProps = {
             'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
-            'background-color': el.dataset.filterColor,
             'opacity': el.dataset.filterValue,
             'resize_class': el.dataset.coverClass,
             'text_align_class': el.dataset.textAlignClass,
