@@ -52,7 +52,7 @@
                     <field name="unit_amount" optional="hide"/>
                     <field name="currency_id" optional="hide"/>
                     <field name="quantity" optional="hide"/>
-                    <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_user"/>
+                    <field name="tax_ids" optional="show" widget="many2many_tags" groups="account.group_account_user"/>
                     <field name="total_amount" optional="show" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <button name="action_get_attachment_view" string="View Attached Documents" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="message_unread" invisible="1"/>
@@ -519,7 +519,7 @@
                      <notebook>
                         <page name="expenses" string="Expense">
                         <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id}">
-                            <tree decoration-danger="is_refused">
+                            <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="name"/>
                                 <field name="state" invisible="1"/>
@@ -528,13 +528,13 @@
                                 <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                 <field name="account_id" optional="hide"/>
                                 <field name="message_unread" invisible="1"/>
-                                <field name="attachment_number" optional="show" string=" "/>
-                                <button name="action_get_attachment_view"  string="View Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': ['&amp;', ('attachment_number', '=', 0), ('state', '!=', 'draft')]}"/>
+                                <field name="attachment_number" string=" "/>
+                                <button name="action_get_attachment_view"  string="View Attachments" type="object" icon="fa-paperclip"/>
                                 <field name="unit_amount" optional="hide"/>
                                 <field name="currency_id" optional="hide"/>
                                 <field name="quantity" optional="hide"/>
-                                <field name="company_id"/>
-                                <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_readonly" context="{'default_company_id': company_id}"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="tax_ids" optional="show" widget="many2many_tags" groups="account.group_account_readonly" context="{'default_company_id': company_id}"/>
                                 <field name="total_amount" optional="show"/>
                                 <field name="company_currency_id" invisible="1"/>
                                 <field name="total_amount_company" optional="show" groups="base.group_multi_currency"/>
