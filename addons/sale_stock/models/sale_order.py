@@ -400,6 +400,24 @@ class SaleOrderLine(models.Model):
         if self.product_packaging:
             return self._check_package()
 
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty(self):
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones
+        # in database. Hence, we need to explicitly read them from there.
+        if self._origin:
+            product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
+        else:
+            product_uom_qty_origin = 0
+
+        done_pickings = self.order_id.picking_ids.filtered(lambda picking: picking.state == 'done')
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < product_uom_qty_origin:
+            if self.product_uom_qty >= self.qty_delivered and done_pickings:
+                warning_mess = {
+                    'title': _('Ordered quantity decreased!'),
+                    'message': _('You are decreasing the ordered quantity! Do not forget to return the desire quantities of the following already validated transfer(s): %s.' % ','.join(done_pickings.mapped('name'))),
+                }
+                return {'warning': warning_mess}
+
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from a sale order line. This method could be override in order to add other custom key that could
