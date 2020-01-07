@@ -327,7 +327,9 @@
 
 <template id="record_cover">
     <t t-set="_cp" t-value="_cp or json.loads(_record.cover_properties)"/>
+    <t t-set="default_cover_name">Cover</t>
     <div t-att-data-use_size="use_size"
+         t-att-data-name="display_opt_name or default_cover_name"
          t-att-data-use_filters="use_filters"
          t-att-data-use_text_align="use_text_align"
          t-att-data-res-model="request.env.user.has_group('website.group_website_publisher') and _record._name"
