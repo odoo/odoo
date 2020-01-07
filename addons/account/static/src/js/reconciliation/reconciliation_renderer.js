@@ -294,6 +294,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             };
             self.fields.partner_id.insertAfter(self.$('.accounting_view caption .o_buttons'));
         });
+        var def3 = session.user_has_group('analytic.group_analytic_tags').then(function(has_group) {
+                self.group_tags = has_group;
+            });
+        var def4 = session.user_has_group('analytic.group_analytic_accounting').then(function(has_group) {
+                self.group_acc = has_group;
+            });
         $('<span class="line_info_button fa fa-info-circle"/>')
             .appendTo(this.$('thead .cell_info_popover'))
             .attr("data-content", qweb.render('reconciliation.line.statement_line.details', {'state': this._initialState}));
@@ -310,7 +316,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             'toggle': 'popover'
         });
         var def2 = this._super.apply(this, arguments);
-        return Promise.all([def1, def2]);
+        return Promise.all([def1, def2, def3, def4]);
     },
 
     //--------------------------------------------------------------------------
@@ -594,7 +600,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.to_check = new basic_fields.FieldBoolean(self,
                 'to_check', record, {mode: 'edit'});
 
-            var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
+            var $create = $(qweb.render("reconciliation.line.create", {'state': state, 'group_tags': self.group_tags, 'group_acc': self.group_acc}));
             self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.account_id));
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
