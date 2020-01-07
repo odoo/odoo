@@ -82,7 +82,7 @@
 ============================================================================ -->
 <template id="post_breadcrumbs">
     <nav aria-label="breadcrumb" t-attf-class="breadcrumb flex-nowrap py-0 px-0 css_editable_mode_hidden #{additionnal_classes or ''}">
-        <li t-if="blogs" class="breadcrumb-item"><a href="/blog">All Blogs</a></li>
+        <li t-if="len(blogs) &gt; 1" class="breadcrumb-item"><a href="/blog">All Blogs</a></li>
         <li class="breadcrumb-item">
             <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" t-esc="blog.name"/>
         </li>
