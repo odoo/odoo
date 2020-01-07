@@ -54,15 +54,15 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
         self.assertTrue(sale_order.name, "Saleperson can read its own SO")
 
-        action = sale_order.sudo().action_view_purchase()
+        action = sale_order.sudo().action_view_purchase_orders()
 
         # try to access PO as sale person
         with self.assertRaises(AccessError):
-            purchase_orders = self.env['purchase.order'].with_user(self.user_salesperson).search(action['domain'])
+            purchase_orders = self.env['purchase.order'].with_user(self.user_salesperson).browse(action['res_id'])
             purchase_orders.read()
 
         # try to access PO as purchase person
-        purchase_orders = self.env['purchase.order'].with_user(self.user_purchaseperson).search(action['domain'])
+        purchase_orders = self.env['purchase.order'].with_user(self.user_purchaseperson).browse(action['res_id'])
         purchase_orders.read()
 
         # try to access the PO lines from the SO, as sale person

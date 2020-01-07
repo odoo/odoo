@@ -11,17 +11,15 @@ from odoo.tools import float_compare
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    purchase_order_count = fields.Integer("Number of Purchase Order", compute='_compute_purchase_order_count', groups='purchase.group_purchase_user')
+    purchase_order_count = fields.Integer(
+        "Number of Purchase Order Generated",
+        compute='_compute_purchase_order_count',
+        groups='purchase.group_purchase_user')
 
-    @api.depends('order_line.purchase_line_ids')
+    @api.depends('order_line.purchase_line_ids.order_id')
     def _compute_purchase_order_count(self):
-        purchase_line_data = self.env['purchase.order.line'].read_group(
-            [('sale_order_id', 'in', self.ids)],
-            ['sale_order_id', 'purchase_order_count:count_distinct(order_id)'], ['sale_order_id']
-        )
-        purchase_count_map = {item['sale_order_id'][0]: item['purchase_order_count'] for item in purchase_line_data}
         for order in self:
-            order.purchase_order_count = purchase_count_map.get(order.id, 0)
+            order.purchase_order_count = len(self._get_purchase_orders())
 
     def _action_confirm(self):
         result = super(SaleOrder, self)._action_confirm()
@@ -37,10 +35,28 @@ class SaleOrder(models.Model):
         self.sudo()._activity_cancel_on_purchase()
         return result
 
-    def action_view_purchase(self):
-        action = self.env.ref('purchase.purchase_rfq').read()[0]
-        action['domain'] = [('id', 'in', self.mapped('order_line.purchase_line_ids.order_id').ids)]
+    def action_view_purchase_orders(self):
+        self.ensure_one()
+        purchase_order_ids = self._get_purchase_orders().ids
+        action = {
+            'res_model': 'purchase.order',
+            'type': 'ir.actions.act_window',
+        }
+        if len(purchase_order_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': purchase_order_ids[0],
+            })
+        else:
+            action.update({
+                'name': _("Purchase Order generated from %s" % self.name),
+                'domain': [('id', 'in', purchase_order_ids)],
+                'view_mode': 'tree,form',
+            })
         return action
+
+    def _get_purchase_orders(self):
+        return self.order_line.purchase_line_ids.order_id
 
     def _activity_cancel_on_purchase(self):
         """ If some SO are cancelled, we need to put an activity on their generated purchase. If sale lines of

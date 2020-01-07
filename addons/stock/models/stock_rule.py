@@ -366,6 +366,7 @@ class ProcurementGroup(models.Model):
         ('direct', 'Partial'),
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
+    stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
 
     @api.model
     def run(self, procurements, raise_user_error=True):
