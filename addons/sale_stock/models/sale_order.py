@@ -66,10 +66,6 @@ class SaleOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
     def write(self, values):
-        if values.get('order_line') and self.state == 'sale':
-            for order in self:
-                pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
-
         if values.get('partner_shipping_id'):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
@@ -469,10 +465,9 @@ class SaleOrderLine(models.Model):
         sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         procurements = []
         for line in self:
-            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+            if line.state != 'sale' or line.product_id.type not in ('consu', 'product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
             # if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
