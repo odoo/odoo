@@ -4,12 +4,12 @@
         <record id="blog_blog_1" model="blog.blog">
             <field name="name">Travel</field>
             <field name="subtitle">Holiday tips</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "text_size_class": "o_record_cover_font_big", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_black", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_black", "opacity": "0.4"}</field>
         </record>
         <record id="blog_blog_2" model="blog.blog">
             <field name="name">Astronomy</field>
             <field name="subtitle">Astronomy is “stargazing"</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_2.jpeg')", "text_size_class": "o_record_cover_font_big", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_black", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_2.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_black", "opacity": "0.4"}</field>
         </record>
 
         <!-- TAGS -->
@@ -37,7 +37,7 @@
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_full_screen_height", "text_size_class": "o_record_cover_font_big", "background-color": "oe_black", "opacity": "0"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_black", "opacity": "0"}</field>
             <field name="content"><![CDATA[
 <p class="lead">Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. The area is a favorite destination among those seeking an adventurous vacation.</p>
 <p>Copper Canyon is one of the six gorges in the area. Although the name suggests that the gorge might have some relevance to copper mining, this is not the case. The name is derived from the copper and green lichen covering the canyon. Copper Canyon has two climatic zones. The region features an alpine climate at the top and a subtropical climate at the lower levels. Winters are cold with frequent snowstorms at the higher altitudes. Summers are dry and hot. The capital city, Chihuahua, is a high altitude desert where weather ranges from cold winters to hot summers. The region is unique because of the various ecosystems that exist within it.</p>
@@ -72,7 +72,7 @@
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_2')])]"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_size_class": "o_record_cover_font_big", "background-color": "oe_blue", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_blue", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
 <section class="container">
     <div class="row">
@@ -170,7 +170,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
             <field name="website_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_size_class": "o_record_cover_font_big", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
 <p class="lead">It is safe to say that at some point on our lives, each and every one of us has that moment when we are suddenly stunned when we come face to face with the enormity of the universe that we see in the night sky.</p>
 
@@ -253,7 +253,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_3'), ref('blog_tag_4')])]"/>
             <field name="website_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.jpg')", "resize_class": "o_record_has_cover o_full_screen_height", "text_size_class": "o_record_cover_font_huge", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
 <p class="lead">Buying the right telescope to take your love of astronomy to the next level is a big next step in the development of your passion for the stars.</p>
 <p>In many ways, it is a big step from someone who is just fooling around with astronomy to a serious student of the science. But you and I both know that there is still another big step after buying a telescope before you really know how to use it.</p>
@@ -294,7 +294,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
             <field name="website_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_size_class": "o_record_cover_font_big", "background-color": "oe_black", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "background-color": "oe_black", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
 <p class="lead">For many of us, our very first experience of learning about the celestial bodies begins when we saw our first full moon in the sky. It is truly a magnificent view even to the naked eye.</p>
 <p>If the night is clear, you can see amazing detail of the lunar surface just star gazing on in your back yard.

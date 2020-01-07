@@ -329,11 +329,10 @@
     <t t-set="_cp" t-value="_cp or json.loads(_record.cover_properties)"/>
     <div t-att-data-use_size="use_size"
          t-att-data-use_filters="use_filters"
-         t-att-data-use_text_size="use_text_size"
          t-att-data-use_text_align="use_text_align"
          t-att-data-res-model="request.env.user.has_group('website.group_website_publisher') and _record._name"
          t-att-data-res-id="request.env.user.has_group('website.group_website_publisher') and _record.id"
-         t-attf-class="o_record_cover_container d-flex flex-column h-100 bg-secondary #{use_size and _cp.get('resize_class')} #{use_text_size and _cp.get('text_size_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
+         t-attf-class="o_record_cover_container d-flex flex-column h-100 bg-secondary #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
         <div class="o_record_cover_component o_record_cover_image" t-attf-style="background-image: #{_cp.get('background-image')};"/>
         <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter #{_cp.get('background-color')}" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
         <t t-raw="0"/>

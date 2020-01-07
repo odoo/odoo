@@ -2,29 +2,6 @@
 $o-wblog-sidebar-width: 280px;
 $o-wblog-loader-size: 50px;
 
-$o-wblog-title-sizes-variants: (
-    tiny: (
-        title: $display4-size*0.6,
-        subtitle: $lead-font-size
-    ),
-    small: (
-        title: $display4-size*0.75,
-        subtitle: $lead-font-size
-    ),
-    big: (
-        title: $display3-size,
-        subtitle: $lead-font-size*1.25
-    ),
-    huge: (
-        title: $display2-size,
-        subtitle: $lead-font-size*1.5
-    ),
-    hero: (
-        title: $display1-size,
-        subtitle: $lead-font-size*1.75
-    )
-) !default;
-
 // ======= ANIMATIONS =======
 // Generic fade-in
 @keyframes o-wblog-fade-In {
@@ -229,18 +206,6 @@ $o-wblog-title-sizes-variants: (
             font-weight: $lead-font-weight;
             // Default font-size.
             @include font-size($lead-font-size);
-        }
-    }
-
-    // Size variants
-    @each $size, $map in $o-wblog-title-sizes-variants {
-        .o_record_cover_font_#{$size} .o_wblog_post_title {
-            #o_wblog_post_name {
-                @include font-size(map-get($map, title));
-            }
-            #o_wblog_post_subtitle {
-                @include font-size(map-get($map, subtitle));
-            }
         }
     }
 
