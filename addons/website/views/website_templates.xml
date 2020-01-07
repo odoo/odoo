@@ -336,7 +336,7 @@
          t-att-data-res-id="request.env.user.has_group('website.group_website_publisher') and _record.id"
          t-attf-class="o_record_cover_container d-flex flex-column h-100 bg-secondary #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
         <div t-attf-class="o_record_cover_component o_record_cover_image #{snippet_autofocus and 'o_we_snippet_autofocus'}" t-attf-style="background-image: #{_cp.get('background-image')};"/>
-        <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter #{_cp.get('background-color')}" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
+        <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter oe_black" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
         <t t-raw="0"/>
     </div>
 </template>

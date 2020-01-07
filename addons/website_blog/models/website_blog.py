@@ -23,7 +23,7 @@ class Blog(models.Model):
     content = fields.Html('Content', translate=html_translate, sanitize=False)
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "o_half_screen_height"}')
+        default='{"background-image": "none", "opacity": "0.2", "resize_class": "o_half_screen_height"}')
 
     def write(self, vals):
         res = super(Blog, self).write(vals)
@@ -133,7 +133,7 @@ class BlogPost(models.Model):
     active = fields.Boolean('Active', default=True)
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "o_half_screen_height"}')
+        default='{"background-image": "none", "opacity": "0.2", "resize_class": "o_half_screen_height"}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
