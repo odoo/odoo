@@ -25,7 +25,7 @@ QUnit.test('Magic wand', async function (assert) {
     var wysiwyg = await weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     });
     var $editable = wysiwyg.$('.note-editable');
@@ -118,6 +118,7 @@ QUnit.test('Font style', function (assert) {
             generateOptions: function (options) {
                 options.toolbar[1][1] = ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'];
             },
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -603,7 +604,7 @@ QUnit.test('Font size', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -721,7 +722,7 @@ QUnit.test('Text forecolor', function (assert) {
         return weTestUtils.createWysiwyg({
             debug: false,
             wysiwygOptions: {
-
+                tooltip: false,
             },
         }).then(function (wysiwyg) {
             var $editable = wysiwyg.$('.note-editable');
@@ -1037,7 +1038,7 @@ QUnit.test('Text bgcolor', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -1159,7 +1160,7 @@ QUnit.test('Unordered list', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -1432,7 +1433,7 @@ QUnit.test('Ordered list', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -2061,7 +2062,7 @@ QUnit.test('Align', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -2245,7 +2246,7 @@ QUnit.test('Indent/outdent', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -2492,6 +2493,7 @@ QUnit.test('checklist', function (assert) {
             generateOptions: function (options) {
                 options.toolbar[4][1] = ['ul', 'ol', 'checklist', 'paragraph'];
             },
+            tooltip: false,
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -2933,7 +2935,7 @@ QUnit.test('Link', function (assert) {
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            tooltip: false,
         },
     }).then(async function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -3126,7 +3128,9 @@ QUnit.test('Table', function (assert) {
 
     return weTestUtils.createWysiwyg({
         debug: false,
-        wysiwygOptions: {},
+        wysiwygOptions: {
+            tooltip: false,
+        },
     }).then(async function (wysiwyg) {
         var $editable = wysiwyg.getEditable();
 
@@ -3371,6 +3375,7 @@ QUnit.test('CodeView', async function (assert) {
         debug: false,
         wysiwygOptions: {
             codeview: true,
+            tooltip: false,
         },
     });
         wysiwyg.setValue('<p>dom to edit <img src="/web_editor/static/src/img/transparent.png"></p>');
@@ -3431,7 +3436,7 @@ QUnit.module('Media', {
         this.data = {
             debug: false,
             wysiwygOptions: {
-
+                tooltip: false,
             },
             mockRPC: function (route, args) {
                 if (args.model === 'ir.attachment' || !args.length) {
