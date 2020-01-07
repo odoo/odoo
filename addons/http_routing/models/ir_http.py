@@ -627,6 +627,21 @@ class IrHttp(models.AbstractModel):
 
         if not request.uid:
             cls._auth_method_public()
+
+        # We rollback the current transaction before initializing a new
+        # cursor to avoid potential deadlocks.
+
+        # If the current (failed) transaction was holding a lock, the new
+        # cursor might have to wait for this lock to be released further
+        # down the line. However, this will only happen after the
+        # request is done (and in fact it won't happen). As a result, the
+        # current thread/worker is frozen until its timeout is reached.
+
+        # So rolling back the transaction will release any potential lock
+        # and, since we are in a case where an exception was raised, the
+        # transaction shouldn't be committed in the first place.
+        request.env.cr.rollback()
+
         with registry(request.env.cr.dbname).cursor() as cr:
             env = api.Environment(cr, request.uid, request.env.context)
             if code == 500:
