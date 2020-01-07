@@ -5,11 +5,13 @@
         <div t-attf-class="o_wsildes_quiz_question_input mt-3 #{!widget.update ? 'col' : ''}" t-att-data-id="widget.question.id || ''">
             <form class="mb-3">
                 <div class="o_wslides_quiz_question row align-items-center mr-0 mb-2">
-                    <small class="text-muted col-1 text-center">
-                        <span class="h4 o_wslides_quiz_question_sequence"><t t-esc="widget.sequence"/></span>.
-                    </small>
-                    <input type="text" name="question-name" class="form-control col-11" placeholder="Enter your question"
-                           t-att-value="widget.question.text" />
+                    <div class="input-group ml-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text o_wslides_quiz_question_sequence"><t t-esc="widget.sequence"/></span>
+                        </div>
+                        <input type="text" name="question-name" class="form-control col-11" placeholder="Enter your question"
+                            t-att-value="widget.question.text"/>
+                    </div>
                 </div>
                 <div class="text-muted mb-2">
                     <span>Select the correct answer below :</span>
@@ -64,25 +66,25 @@
     </t>
 
     <t t-name="slide.quiz.create.buttons">
-        <div class="d-flex">
+        <div>
             <a class="o_wslides_js_quiz_validate_question btn btn-primary text-white border" role="button">
-                <span class="d-none d-sm-inline-block">Save &amp; Close</span>
+                <span>Save &amp; Close</span>
             </a>
-            <a class="o_wslides_js_quiz_validate_question o_wslides_js_quiz_create_next btn btn-primary text-white border ml-2" role="button">
-                <span class="d-none d-sm-inline-block">Save &amp; New</span>
+            <a class="o_wslides_js_quiz_validate_question o_wslides_js_quiz_create_next btn btn-primary text-white border" role="button">
+                <span>Save &amp; New</span>
             </a>
-            <a class="o_wslides_js_quiz_cancel_question btn btn-light border ml-2" role="button">
-                <span class="d-none d-sm-inline-block">Cancel</span>
+            <a class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">
+                <span>Cancel</span>
             </a>
         </div>
     </t>
 
     <t t-name="slide.quiz.update.buttons">
         <a class="o_wslides_js_quiz_validate_question o_wslides_js_quiz_update btn btn-primary text-white border" role="button">
-            <span class="d-none d-sm-inline-block">Update</span>
+            <span>Update</span>
         </a>
-        <a class="o_wslides_js_quiz_cancel_question btn btn-light border ml-2" role="button">
-            <span class="d-none d-sm-inline-block">Cancel</span>
+        <a class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">
+            <span>Cancel</span>
         </a>
     </t>
 
