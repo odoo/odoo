@@ -126,6 +126,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
 
     // case 1: click on "late"
     context = {
+        force_search_count: 1,
         search_default_activities_overdue: 1,
     };
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
@@ -134,18 +135,21 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     assert.doesNotHaveClass(activityMenu.$el, 'show', 'ActivityMenu should be closed');
     // case 2: click on "today"
     context = {
+        force_search_count: 1,
         search_default_activities_today: 1,
     };
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     await testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='today']"));
     // case 3: click on "future"
     context = {
+        force_search_count: 1,
         search_default_activities_upcoming_all: 1,
     };
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     await testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='upcoming_all']"));
     // case 4: click anywere else
     context = {
+        force_search_count: 1,
         search_default_activities_overdue: 1,
         search_default_activities_today: 1,
     };
