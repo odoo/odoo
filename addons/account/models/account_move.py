@@ -286,6 +286,7 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
+        self = self.with_company(self.company_id)
         warning = {}
         if self.partner_id:
             rec_account = self.partner_id.property_account_receivable_id
@@ -320,7 +321,7 @@ class AccountMove(models.Model):
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
-        self.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(
+        self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(
             self.partner_id.id, delivery_id=delivery_partner_id)
         self._recompute_dynamic_lines()
         if warning:
