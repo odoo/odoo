@@ -17,7 +17,7 @@ function getLang() {
     return (html.getAttribute('lang') || 'en_US').replace('-', '_');
 }
 var lang = utils.get_cookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
-var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
+var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_')).replace(/"/g, "");
 
 // In the frontend, there is no CrashManager instance. Errors are displayed in
 // the console. However, we do want to do the same as the backend for Promise
