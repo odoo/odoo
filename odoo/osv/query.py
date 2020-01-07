@@ -190,7 +190,7 @@ class Query(object):
         # Joins is a mapping of table to list. Append if key already exists.
         joins = deepcopy(self.joins)
         for join_table in query.joins:
-            self.joins.setdefault(join_table, [])
+            joins.setdefault(join_table, [])
             for join in query.joins[join_table]:
                 if join not in joins[join_table]:
                     joins[join_table].append(join)
