@@ -1049,7 +1049,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         :returns: the new context
         """
         assert self.uid, "The user needs to be logged-in to initialize his context"
-        self.context = request.env['res.users'].context_get() or {}
+        self.context = dict(request.env['res.users'].context_get() or {})
         self.context['uid'] = self.uid
         self._fix_lang(self.context)
         return self.context
@@ -1238,7 +1238,7 @@ class DisableCacheMiddleware(object):
         def start_wrapped(status, headers):
             req = werkzeug.wrappers.Request(environ)
             root.setup_session(req)
-            if req.session and req.session.debug:
+            if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
                 new_headers = [('Cache-Control', 'no-cache')]
 
                 for k, v in headers:

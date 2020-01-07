@@ -368,14 +368,10 @@ class MrpProduction(models.Model):
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
             order.unreserve_visible = not any_quantity_done and already_reserved
 
-    @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done', 'is_locked')
+    @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
     def _compute_post_visible(self):
         for order in self:
-            if order.product_tmpl_id._is_cost_method_standard():
-                order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids | order.move_finished_ids)
-            else:
-                order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
-            order.post_visible &= all(wo.state in ['done', 'cancel'] for wo in order.workorder_ids) or all(m.product_id.tracking == 'none' for m in order.move_raw_ids)
+            order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
 
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done', 'is_locked')
     def _get_produced_qty(self):
@@ -621,7 +617,7 @@ class MrpProduction(models.Model):
                 move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
                 move[0]._recompute_state()
                 move[0]._action_assign()
-                move[0].unit_factor = remaining_qty and quantity / remaining_qty or 1.0
+                move[0].unit_factor = remaining_qty and (quantity - move[0].quantity_done) / remaining_qty or 1.0
                 return move[0], old_qty, quantity
             else:
                 if move[0].quantity_done > 0:
@@ -703,6 +699,8 @@ class MrpProduction(models.Model):
         self.ensure_one()
 
         # Schedule all work orders (new ones and those already created)
+        qty_to_produce = max(self.product_qty - self.qty_produced, 0)
+        qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
         start_date = self._get_start_date()
         for workorder in self.workorder_ids:
             workcenters = workorder.workcenter_id | workorder.workcenter_id.alternative_workcenter_ids
@@ -712,7 +710,7 @@ class MrpProduction(models.Model):
             for workcenter in workcenters:
                 # compute theoretical duration
                 time_cycle = workorder.operation_id.time_cycle
-                cycle_number = float_round(workorder.qty_producing / workcenter.capacity, precision_digits=0, rounding_method='UP')
+                cycle_number = float_round(qty_to_produce / workcenter.capacity, precision_digits=0, rounding_method='UP')
                 duration_expected = workcenter.time_start + workcenter.time_stop + cycle_number * time_cycle * 100.0 / workcenter.time_efficiency
 
                 # get first free slot
@@ -724,7 +722,7 @@ class MrpProduction(models.Model):
                 to_date = workcenter.resource_calendar_id.plan_hours(duration_expected / 60.0, from_date, compute_leaves=True, resource=workcenter.resource_id, domain=[('time_type', 'in', ['leave', 'other'])])
 
                 # Check if this workcenter is better than the previous ones
-                if to_date < best_finished_date:
+                if to_date and to_date < best_finished_date:
                     best_start_date = from_date
                     best_finished_date = to_date
                     best_workcenter = workcenter
@@ -740,7 +738,7 @@ class MrpProduction(models.Model):
 
             # Instantiate start_date for the next workorder planning
             if workorder.next_work_order_id:
-                if workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= workorder.qty_producing:
+                if workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= qty_to_produce:
                     start_date = best_finished_date
                 else:
                     cycle_number = float_round(workorder.operation_id.batch_size / best_workcenter.capacity, precision_digits=0, rounding_method='UP')
@@ -1037,4 +1035,3 @@ class MrpProduction(models.Model):
             return self.env.ref('mrp.exception_on_mo').render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
-

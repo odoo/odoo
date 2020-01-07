@@ -12,14 +12,15 @@
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Amit Spilman <amit@laylinetech.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,7 +171,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
 #, python-format
 msgid "Canceled"
-msgstr ""
+msgstr "בוטל"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -233,6 +234,16 @@ msgstr "נוצר ב-"
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
 msgid "Customer"
 msgstr "לקוח"
+
+#. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr ""
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear ${object.display_name} this is an automated SMS."
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -735,7 +746,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "שגיאת שליחת SMS"
 
 #. module: sms
 #. openerp-web
@@ -982,6 +993,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"סוג פעולת השרת. הערכים הבאים זמינים:\n"
+"- 'בצע קוד פייתון': בלוק של קוד פייתון שיבוצע\n"
+"- 'צור': צור רשומה חדשה עם ערכים חדשים\n"
+"- 'עדכן רשומה': עדכן את ערכי הרשומה\n"
+"- 'בצע מספר פעולות': הגדר פעולה שמפעילה מספר פעולות שרת אחרות\n"
+"- 'שלח דוא\"ל': שלח דוא\"ל באופן אוטומטי (צ'אט)\n"
+"- 'הוסף עוקבים': הוסף עוקבים לרשומה (צ'אט)\n"
+"- 'צור פעילות הבאה': צור פעילות (צ'אט)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count

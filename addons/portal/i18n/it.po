@@ -13,14 +13,15 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Francesco Foresti <francesco.foresti@ooops404.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
+"POT-Creation-Date: 2019-10-07 07:14+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "<b>Accedi</b>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Ritorna alla modalità modifica"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -57,11 +58,15 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Precedente\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" "
+"title=\"Successivo\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -174,6 +179,87 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Il tuo account</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Gentile ${object.user_id.name or ''},<br/> <br/>\n"
+"                        Di seguito le credenziali di accesso al sito web di ${object.user_id.company_id.name}:<br/>\n"
+"                        <ul>\n"
+"                            <li>Username: ${object.user_id.login or ''}</li>\n"
+"                            Sito Web: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        Puoi impostare o modificare la password al seguente link:\n"
+"                        <ul>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #. openerp-web
@@ -198,7 +284,7 @@ msgstr "Aggiungi una nota"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Add attachment"
-msgstr "Aggiunge allegato"
+msgstr "Aggiungi allegato"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -294,7 +380,7 @@ msgstr "Contatto"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Contact Details"
-msgstr "Dettagli Contatto"
+msgstr "Dettagli contatto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -357,6 +443,7 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_404
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Documents"
 msgstr "Documenti"
@@ -482,6 +569,12 @@ msgid "Logout"
 msgstr "Esci"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_404
+msgid "Maybe you were looking for one of these popular pages ?"
+msgstr ""
+"Forse la pagina richiesta era una delle seguenti, con molti visitatori."
+
+#. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
 msgstr "Messaggio"
@@ -509,7 +602,7 @@ msgstr "Nome"
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr "Succ"
+msgstr "Successivo"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -538,7 +631,7 @@ msgstr "Telefono"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr "URL di accesso al portale"
+msgstr "URL accesso al portale"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -665,7 +758,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "Stato / Provincia"
+msgstr "Provincia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -677,7 +770,7 @@ msgstr "Indirizzo"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Grazie!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -901,7 +994,7 @@ msgstr "CAP"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
@@ -927,7 +1020,7 @@ msgstr "autenticato"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

@@ -346,7 +346,8 @@ class IrHttp(models.AbstractModel):
                         filename = os.path.basename(module_resource_path)
                         mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
                         filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
-            else:
+
+            if not content:
                 status = 301
                 content = record.url
 
@@ -373,10 +374,12 @@ class IrHttp(models.AbstractModel):
             content = record[field] or ''
 
         # filename
+        default_filename = False
         if not filename:
             if filename_field in record:
                 filename = record[filename_field]
             if not filename:
+                default_filename = True
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
@@ -388,7 +391,7 @@ class IrHttp(models.AbstractModel):
 
         # extension
         _, existing_extension = os.path.splitext(filename)
-        if not existing_extension:
+        if not existing_extension or default_filename:
             extension = mimetypes.guess_extension(mimetype)
             if extension:
                 filename = "%s%s" % (filename, extension)

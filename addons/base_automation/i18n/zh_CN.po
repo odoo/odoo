@@ -8,25 +8,31 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # 卫安琪 <weianqi1991@gmail.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: John An <johnxan@163.com>, 2019\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr "<div>自动电子邮件</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -124,6 +130,54 @@ msgid "Base Action Rule: check and execute"
 msgstr "基本动作规则:检查并执行"
 
 #. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "基础自动化：测试递归的规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "基础自动化：创建测试规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "基础自动化：重新计算的测试规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "基础自动化：二级模型测试规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "基础自动化：写入测试规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "基础自动化：写入检查上下文的测试规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_with_trigger
+#: model:ir.actions.server,name:base_automation.test_rule_with_trigger_ir_actions_server
+msgid "Base Automation: test rule with trigger"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
+msgstr "基础自动化: 发送测试电子邮件"
+
+#. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "Based on Form Modification"
 msgstr "基于表单修改"
@@ -151,7 +205,7 @@ msgstr "绑定类型"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "绑定视图类型"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -501,7 +555,7 @@ msgstr "建立一个新的自动化系统"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
 msgid "Status"
-msgstr "省份"
+msgstr "状态"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name

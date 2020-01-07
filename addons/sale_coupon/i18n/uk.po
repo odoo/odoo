@@ -3,16 +3,16 @@
 # 	* sale_coupon
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-12-05 09:02+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr "%s%% знижка на найдешевший товар"
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr ""
+msgstr "%s%% знижка на товарах"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
@@ -53,7 +53,18 @@ msgstr "%s%% знижка на загальну суму"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr ""
+msgstr "*Дійсний для наступних товарів:"
+
+#. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr "10% знижки"
+
+#. module: sale_coupon
+#: model:product.product,name:sale_coupon.product_product_10_percent_discount
+#: model:product.template,name:sale_coupon.product_product_10_percent_discount_product_template
+msgid "10.0% discount on total amount"
+msgstr "10.0% знижки на загальну суму"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form
@@ -197,6 +208,93 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        % if object.partner_id.name:\n"
+"        Вітаємо ${object.partner_id.name},<br/>\n"
+"        % endif\n"
+"\n"
+"       Це ваша нагорода від ${object.program_id.company_id.name}.<br/>\n"
+"\n"
+"        % if object.program_id.reward_type == 'discount':\n"
+"            % if object.program_id.discount_type == 'fixed_amount':\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">від наступного замовлення</strong><br/>\n"
+"            %else\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"                ${object.program_id.discount_percentage} %\n"
+"            </span>\n"
+"            % if object.program_id.discount_apply_on == 'specific_products'\n"
+"                <br/>\n"
+"                % if len(object.program_id.discount_specific_product_ids) != 1\n"
+"                % set display_specific_products = True\n"
+"                <strong style=\"font-size: 24px;\">\n"
+"                    на деяких товарів*\n"
+"                </strong>\n"
+"                % else\n"
+"                <strong style=\"font-size: 24px;\">\n"
+"                    ${'on %s' % object.program_id.discount_specific_product_ids.name}\n"
+"                </strong>\n"
+"                % endif\n"
+"            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
+"            <br/><strong style=\"font-size: 24px;\">\n"
+"                від найдешевшого товару\n"
+"            </strong>\n"
+"            % else\n"
+"            <br/><strong style=\"font-size: 24px;\">\n"
+"                від наступного замовлення\n"
+"            </strong>\n"
+"            % endif\n"
+"            <br/>\n"
+"            % endif\n"
+"        % elif object.program_id.reward_type == 'product':\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                ${'get %s безкоштовно %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">на вашому наступному замовленні</strong><br/>\n"
+"        % elif object.program_id.reward_type == 'free_shipping':\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                отримайте безкоштовну доставку\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">на вашому наступному замовленні</strong><br/>\n"
+"        % endif\n"
+"    </td></tr>\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        Використайте цей промо-код\n"
+"        % if object.expiration_date:\n"
+"            перед ${object.expiration_date}\n"
+"        % endif\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\">\n"
+"                ${object.code}\n"
+"            </strong>\n"
+"        </p>\n"
+"        % if object.program_id.rule_min_quantity not in [0, 1]\n"
+"        <span style=\"font-size: 14px;\">\n"
+"            Мінімальна купівля ${object.program_id.rule_min_quantity} товарів\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        % if object.program_id.rule_minimum_amount != 0.00\n"
+"        <span style=\"font-size: 14px;\">\n"
+"            Дійсно для придбання вище ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        % if display_specific_products\n"
+"        <span>\n"
+"            *Дійсно для наступних товарів: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        <br/>\n"
+"        Дякуємо,\n"
+"        <br/>\n"
+"        % if object.order_id.user_id:\n"
+"            ${object.order_id.user_id.signature | safe}\n"
+"        % endif\n"
+"    </td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:0
@@ -312,6 +410,11 @@ msgid "Apply on First"
 msgstr "Застосувати на першому"
 
 #. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
+msgid "Archived"
+msgstr "Заархівовано"
+
+#. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:0
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
@@ -360,9 +463,14 @@ msgstr ""
 "                Можна ділитися промо-кодами або надавати промо-акції автоматично, якщо виконуються певні умови."
 
 #. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "Придбайте 3 великих шафи, отримайте одну безкоштовно"
+
+#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "CODE:"
-msgstr ""
+msgstr "КОД:"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
@@ -387,6 +495,11 @@ msgstr "Закриті програми"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
 msgid "Code"
 msgstr "Код"
+
+#. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.10_percent_auto_applied
+msgid "Code for 10% on orders"
+msgstr "Код на 10% від замовлення"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__company_id
@@ -607,7 +720,7 @@ msgstr "Кінцева дата"
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "Введіть акційний чи купонний код"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__expiration_date
@@ -654,6 +767,12 @@ msgid "Free Product - %s"
 msgstr "Безкоштовний товар - %s"
 
 #. module: sale_coupon
+#: model:product.product,name:sale_coupon.product_product_free_large_cabinet
+#: model:product.template,name:sale_coupon.product_product_free_large_cabinet_product_template
+msgid "Free Product - Large Cabinet"
+msgstr "Безкоштовний товар - велика шафа"
+
+#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_generate_view_form
 msgid "Generate"
 msgstr "Згенерувати"
@@ -671,7 +790,7 @@ msgstr "Створити купони"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_generate
 msgid "Generate Sales Coupon"
-msgstr ""
+msgstr "Створіть купон продажу"
 
 #. module: sale_coupon
 #: model_terms:ir.actions.act_window,help:sale_coupon.sale_coupon_program_action_coupon_program
@@ -874,6 +993,9 @@ msgid ""
 "Cheapest product - Discount on cheapest product of the order\n"
 "Specific products - Discount on selected specific products"
 msgstr ""
+"На замовленні - Знижка на все замовлення\n"
+"Найдешевший товар - Знижка на найдешевший товар замовлення\n"
+"Конкретні товари - Знижка на вибрані конкретні товари"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_products_domain
@@ -884,7 +1006,7 @@ msgstr "При покупці вибраного товару буде наго�
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "На конкретних товарах"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
@@ -958,6 +1080,7 @@ msgid ""
 "Products that will be discounted if the discount is applied on specific "
 "products"
 msgstr ""
+"Товари, які матимуть знижку, якщо знижка застосована на конкретних товарах"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__program_id
@@ -1029,7 +1152,7 @@ msgstr "Промо-коди не є сукупними."
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
 msgid "Promotions"
-msgstr ""
+msgstr "Акції"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__reward_product_quantity
@@ -1172,7 +1295,7 @@ msgstr "Виберіть товар"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Select products"
-msgstr ""
+msgstr "Оберіть товари"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -1311,6 +1434,14 @@ msgid "Unit of Measure"
 msgstr "Одиниця вимірювання"
 
 #. module: sale_coupon
+#: model:product.product,uom_name:sale_coupon.product_product_10_percent_discount
+#: model:product.product,uom_name:sale_coupon.product_product_free_large_cabinet
+#: model:product.template,uom_name:sale_coupon.product_product_10_percent_discount_product_template
+#: model:product.template,uom_name:sale_coupon.product_product_free_large_cabinet_product_template
+msgid "Units"
+msgstr "Одиниці"
+
+#. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
 msgstr "Використовуйте код"
@@ -1352,6 +1483,8 @@ msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
+"Якщо натиснуто, зміст замовлення буде перевірено виявлення (і застосування) "
+"можливої акційної програми."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0

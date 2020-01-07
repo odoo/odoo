@@ -3,18 +3,19 @@
 # 	* website_slides_survey
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
+# Martin Trigaux, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Beste ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        Helaas heeft u de certificering niet gehaald en bent u niet langer lid van deze opleiding: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Helaas heeft u de certificering niet gehaald en bent u niet langer lid van deze cursus: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
 "        Aarzel niet om u opnieuw in te schrijven!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -75,6 +76,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Finished</span>\n"
 "                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certified</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Voltooid</span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Gecertificeerd</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -89,12 +92,12 @@ msgstr "<span class=\"text-muted\">Certificeringen</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Gecertificeerd</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Finished</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Voltooid</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
@@ -122,6 +125,21 @@ msgstr "Voeg certificering toe"
 #: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides_report
 msgid "Add a new certification"
 msgstr "Voeg een nieuwe certificering toe"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
+msgid "Ash"
+msgstr "As"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
+msgid "Bed"
+msgstr "Bed"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
+msgid "Beech"
+msgstr "Beuk"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -177,6 +195,11 @@ msgid "Certifications"
 msgstr "Certificeringen"
 
 #. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
+msgid "Chair"
+msgstr "Stoel"
+
+#. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
@@ -188,7 +211,17 @@ msgstr "Voorbeeldweergave inhoud"
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid "Cover Image File"
-msgstr "Voorkant afbeelding bestand"
+msgstr "Omslagafbeelding bestand"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
+msgid "DIY Furniture Certification"
+msgstr "DIY meubel certificering"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
+msgid "Desk"
+msgstr "Bureau"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -198,9 +231,39 @@ msgid "Download certification"
 msgstr "Download certificaat"
 
 #. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
+msgid "Fir"
+msgstr "Spar"
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1
+msgid "Furniture"
+msgstr "Meubilair"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
+#: model:survey.survey,title:website_slides_survey.furniture_certification
+msgid "Furniture Creation Certification"
+msgstr "Meubelmaker certificering"
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_templates_inherit_website_slides
 msgid "Go back to course"
-msgstr "Ga terug naar opleiding"
+msgstr "Ga terug naar cursus"
+
+#. module: website_slides_survey
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_3
+msgid "If other, please specify:"
+msgstr "Indien anders, specificeer: "
+
+#. module: website_slides_survey
+#: model:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
+msgid "It's time to test your knowledge!"
+msgstr "Het is tijd om uw kennis te testen!"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -208,10 +271,21 @@ msgid "No certifications yet!"
 msgstr "Nog geen certificaten!"
 
 #. module: website_slides_survey
+#: model:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
+msgid ""
+"Now that you have completed the course, it's time to test your knowledge!"
+msgstr "Het is tijd om uw kennis te testen!"
+
+#. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
 msgid "Number of Certifications"
 msgstr "Aantal certificeringen"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
+msgid "Oak"
+msgstr "Eik"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -223,12 +297,23 @@ msgstr "Slagen voor certificering"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
 msgid "Related course slide"
-msgstr "Gerelateerde opleiding slide"
+msgstr "Gerelateerde cursus slide"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Score :"
 msgstr "Score:"
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
+msgid "Select all the furniture shown in the video"
+msgstr "Selecteer alle meubels die getoond zijn in de video"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
+msgid "Shelve"
+msgstr "Schap"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide_partner
@@ -266,12 +351,35 @@ msgid "Survey User Input"
 msgstr "Enquête gebruikers invoer"
 
 #. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
+msgid "Table"
+msgstr "Tafel"
+
+#. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #, python-format
 msgid "Test Certification"
 msgstr "Test certificering"
+
+#. module: website_slides_survey
+#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
+msgid "Test your furniture knowledge!"
+msgstr "Test uw meubel kennis!"
+
+#. module: website_slides_survey
+#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
+msgid "Test your furniture knowledge!."
+msgstr "Test uw meubel kennis!"
+
+#. module: website_slides_survey
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_3
+msgid "The answer you entered is not valid."
+msgstr "Het antwoord dat u heeft ingevuld is ongeldig."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
@@ -286,7 +394,15 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
 msgid "The related course slide when there is no membership information"
 msgstr ""
-"De gerelateerde opleiding slide wanneer er geen lidmaatschap informatie is"
+"De gerelateerde cursus slide wanneer er geen lidmaatschap informatie is"
+
+#. module: website_slides_survey
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1_question_3
+msgid "This question requires an answer."
+msgstr "Deze vraag moet beantwoord worden."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
@@ -294,7 +410,19 @@ msgid "Type"
 msgstr "Soort"
 
 #. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_3
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
+msgid "What do you think about the content of the course? (not rated)"
+msgstr "Wat denkt u van de inhoud van deze cursus? (niet beoordeeld)"
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
+msgid "What type of wood is the best for furniture?"
+msgstr "Welke soort hout is het beste voor meubels te maken?"
+
+#. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
 msgstr ""
-"U bent gezakt voor de opleiding: ${object.slide_partner_id.channel_id.name}"
+"U bent gezakt voor de cursus: ${object.slide_partner_id.channel_id.name}"

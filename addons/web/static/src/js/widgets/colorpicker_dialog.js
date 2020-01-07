@@ -421,7 +421,7 @@ ColorpickerDialog.convertHexToRgba = function (hex) {
         red: parseInt(hex.substr(1, 2), 16),
         green: parseInt(hex.substr(3, 2), 16),
         blue: parseInt(hex.substr(5, 2), 16),
-        opacity: hex.length === 9 ? parseInt(hex.substr(7, 2), 16) : 100,
+        opacity: (hex.length === 9 ? (parseInt(hex.substr(7, 2), 16) / 255) : 1) * 100,
     };
 };
 /**

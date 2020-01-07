@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_sms
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2019\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_reminder
+msgid ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: We are excited to remind you that the "
+"${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
+" confirm your registration and hope to meet you there."
+msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}:  ${object.event_id.name} 행사가 시작되고 있습니다 "
+"${object.get_date_range_str()}. 귀하의 등록을 기대하며 행사장소에서 만나기를 기대합니다."
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_registration
+msgid ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: We are happy to confirm your registration for the "
+"${object.event_id.name} event."
+msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: ${object.event_id.name} 행사에서 귀하의 등록을 환영합니다."
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail
+msgid "Event Automated Mailing"
+msgstr "행사용 자동 메일 보내기"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_registration
+msgid "Event Registration"
+msgstr "행사 등록"
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_registration
+msgid "Event: Registration"
+msgstr "행사 : 등록"
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_reminder
+msgid "Event: Reminder"
+msgstr "행사 : 알림"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr "행사 범주의 메일 계획"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail_registration
+msgid "Registration Mail Scheduler"
+msgstr "등록 메일 계획표"
+
+#. module: event_sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
+msgid "SMS"
+msgstr "SMS"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
+msgid "SMS Template"
+msgstr "SMS양식"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "전송"
+
+#. module: event_sms
+#: model:ir.model.fields,help:event_sms.field_event_mail__sms_template_id
+#: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
+msgid ""
+"This field contains the template of the SMS that will be automatically sent"
+msgstr "자동으로 전송할 SMS양식을 포함합니다."

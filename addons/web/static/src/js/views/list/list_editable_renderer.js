@@ -111,6 +111,7 @@ ListRenderer.include({
     start: function () {
         core.bus.on('click', this, this._onWindowClicked.bind(this));
         core.bus.on('resize', this, _.debounce(this._onResize.bind(this), this.RESIZE_DELAY));
+        core.bus.on('DOM_updated', this, () => this._freezeColumnWidths());
         return this._super();
     },
     /**
@@ -520,7 +521,6 @@ ListRenderer.include({
      * @override
      */
     updateState: function (state, params) {
-        this.columnWidths = false;
         // There are some cases where a record is added to an invisible list
         // e.g. set a quotation template with optionnal products
         if (params.keepWidths && this.$el.is(':visible')) {
@@ -554,6 +554,56 @@ ListRenderer.include({
     _addEventListener: function (type, el, callback, options) {
         el.addEventListener(type, callback, options);
         this.eventListeners.push({ type, el, callback, options });
+    },
+    /**
+     * Handles the assignation of default widths for each column header.
+     * If the list is empty, an arbitrary absolute or relative width will be
+     * given to the header
+     *
+     * @see _getColumnWidth for detailed information about which width is
+     * given to a certain field type.
+     *
+     * @private
+     */
+    _computeDefaultWidths: function () {
+        const isListEmpty = !this._hasVisibleRecords(this.state);
+        const relativeWidths = [];
+        this.columns.forEach(column => {
+            const th = this._getColumnHeader(column);
+            if (th.offsetParent === null) {
+                relativeWidths.push(false);
+            } else {
+                const width = this._getColumnWidth(column);
+                if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
+                    if (isListEmpty) {
+                        th.style.width = width;
+                    } else {
+                        // If there are records, we force a min-width for fields with an absolute
+                        // width to ensure a correct rendering in edition
+                        th.style.minWidth = width;
+                    }
+                    relativeWidths.push(false);
+                } else { // relative width expressed as a weight (e.g. 1.5)
+                    relativeWidths.push(parseFloat(width, 10));
+                }
+            }
+        });
+
+        // Assignation of relative widths
+        if (isListEmpty) {
+            const totalWidth = this._getColumnsTotalWidth(relativeWidths);
+            for (let i in this.columns) {
+                if (relativeWidths[i]) {
+                    const th = this._getColumnHeader(this.columns[i]);
+                    th.style.width = (relativeWidths[i] / totalWidth * 100) + '%';
+                }
+            }
+            // Manualy assigns trash icon header width since it's not in the columns
+            const trashHeader = this.el.getElementsByClassName('o_list_record_remove_header')[0];
+            if (trashHeader) {
+                trashHeader.style.width = '32px';
+            }
+        }
     },
     /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
@@ -598,24 +648,29 @@ ListRenderer.include({
      * @private
      */
     _freezeColumnWidths: function () {
-        if (!this.columnWidths && (!this._hasVisibleRecords(this.state) || !this.$el.is(':visible'))) {
+        if (!this.columnWidths && this.el.offsetParent === null) {
             // there is no record nor widths to restore or the list is not visible
             // -> don't force column's widths w.r.t. their label
             return;
         }
+        const thElements = [...this.el.querySelectorAll('table thead th')];
+        if (!thElements.length) {
+            return;
+        }
         const table = this.el.getElementsByTagName('table')[0];
-        const thead = table.getElementsByTagName('thead')[0];
-        const thElements = [...thead.getElementsByTagName('th')];
-
         let columnWidths = this.columnWidths;
+
         if (!columnWidths) { // no column widths to restore
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = 'auto';
-            thElements.forEach((th) => {
+            thElements.forEach(th => {
                 th.style.width = null;
                 th.style.maxWidth = null;
             });
+
+            // Resets the default widths computation now that the table is visible.
+            this._computeDefaultWidths();
 
             // Squeeze the table by applying a max-width on largest columns to
             // ensure that it doesn't overflow
@@ -623,7 +678,10 @@ ListRenderer.include({
         }
 
         thElements.forEach((th, index) => {
-            th.style.width = `${columnWidths[index]}px`;
+            // Width already set by default relative width computation
+            if (!th.style.width) {
+                th.style.width = `${columnWidths[index]}px`;
+            }
         });
 
         // Set the table layout to fixed
@@ -643,16 +701,17 @@ ListRenderer.include({
         return $borderDataRow;
     },
     /**
-     * Compute the sum of the weights for each columns, excluding
-     * those with an absolute width. param `$thread` is useful for studio, in
-     * order to show column hooks.
+     * Compute the sum of the weights for each column, given an array containing
+     * all relative widths. param `$thead` is useful for studio, in order to
+     * show column hooks.
      *
      * @private
      * @param {jQuery} $thead
+     * @param {number[]} relativeWidths
      * @return {integer}
      */
-    _getColumnsTotalWidth($thead) {
-        return this.columns.reduce((acc, column) => acc + (column.attrs.relativeWidth || 0), 0);
+    _getColumnsTotalWidth(relativeWidths) {
+        return relativeWidths.reduce((acc, width) => acc + width, 0);
     },
     /**
      * Returns the width of a column according the 'width' attribute set in the
@@ -702,6 +761,23 @@ ListRenderer.include({
             type = fieldsInfo[name].widget;
         }
         return fixedWidths[type] || '1';
+    },
+    /**
+     * Gets the th element corresponding to a given column.
+     *
+     * @private
+     * @param {Object} column
+     * @returns {HTMLElement}
+     */
+    _getColumnHeader: function (column) {
+        const { icon, name, string } = column.attrs;
+        if (name) {
+            return this.el.querySelector(`thead th[data-name="${name}"]`);
+        } else if (string) {
+            return this.el.querySelector(`thead th[data-string="${string}"]`);
+        } else if (icon) {
+            return this.el.querySelector(`thead th[data-icon="${icon}"]`);
+        }
     },
     /**
      * Returns the nearest editable row starting from a given table row.
@@ -968,17 +1044,6 @@ ListRenderer.include({
         } else {
             this.columnWidths = false; // columns changed, so forget stored widths
         }
-        // if we don't have widths yet, computed them
-        if (!this.columnWidths) {
-            this.columns.forEach((column) => {
-                const width = this._getColumnWidth(column);
-                if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
-                    column.attrs.absoluteWidth = width;
-                } else { // relative width expressed as a weight (e.g. 1.5)
-                    column.attrs.relativeWidth = parseFloat(width, 10);
-                }
-            });
-        }
     },
     /**
      * @override
@@ -1064,33 +1129,6 @@ ListRenderer.include({
      */
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
-
-        if (!this.columnWidths) {
-            if (!this._hasVisibleRecords(this.state)) {
-                var totalWidth = this._getColumnsTotalWidth($thead);
-                this.columns.forEach(function (column) {
-                    let width;
-                    if (column.attrs.absoluteWidth) {
-                        width = column.attrs.absoluteWidth;
-                    } else if (column.attrs.relativeWidth) {
-                        width = ((column.attrs.relativeWidth / totalWidth * 100) + '%');
-                    }
-                    if (width) {
-                        $thead.find('th[data-name=' + column.attrs.name + ']').css('width', width);
-                    }
-                });
-            } else {
-                // if there are records, we force a min-width for fields with an
-                // absolute width to ensure a correct rendering in edition
-                this.columns.forEach(function (column) {
-                    if (column.attrs.absoluteWidth) {
-                        let width = column.attrs.absoluteWidth;
-                        $thead.find('th[data-name=' + column.attrs.name + ']').css('min-width', width);
-                    }
-                });
-            }
-        }
-
         if (this.addTrashIcon) {
             $thead.find('tr').append($('<th>', {class: 'o_list_record_remove_header'}));
         }
@@ -1259,7 +1297,6 @@ ListRenderer.include({
             // we don't want the column widths to change when selecting rows
             this._storeColumnWidths();
         }
-        this._freezeColumnWidths();
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;

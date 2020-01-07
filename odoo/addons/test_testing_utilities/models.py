@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
+
+from itertools import count, zip_longest
+
 from odoo import api, fields, models
 
 class A(models.Model):
@@ -78,12 +81,22 @@ class M2MChange(models.Model):
     _description = 'Testing Utilities E'
 
     m2m = fields.Many2many('test_testing_utilities.sub2')
-    count = fields.Integer(compute='_m2m_count')
+    count = fields.Integer(compute='_m2m_count', inverse='_set_count')
 
     @api.depends('m2m')
     def _m2m_count(self):
         for r in self:
             r.count = len(r.m2m)
+
+    def _set_count(self):
+        for r in self:
+            r.write({
+                'm2m': [
+                    (0, False, {'name': str(n)})
+                    for n, v in zip_longest(range(r.count), r.m2m or [])
+                    if v is None
+                ]
+            })
 
 class M2MSub(models.Model):
     _name = 'test_testing_utilities.sub2'

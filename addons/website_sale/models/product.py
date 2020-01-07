@@ -163,6 +163,10 @@ class ProductPublicCategory(models.Model):
             res.append((category.id, " / ".join(category.parents_and_self.mapped('name'))))
         return res
 
+    def unlink(self):
+        self.child_id.parent_id = None
+        return super(ProductPublicCategory, self).unlink()
+
     def _compute_parents_and_self(self):
         for category in self:
             if category.parent_path:
@@ -177,20 +181,23 @@ class ProductTemplate(models.Model):
     _mail_post_access = 'read'
 
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
-    alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
-                                               string='Alternative Products', help='Suggest alternatives to your customer'
-                                               '(upsell strategy).Those product show up on the product page.')
-    accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
-                                             string='Accessory Products', help='Accessories show up when the customer'
-                                             'reviews the cart before payment (cross-sell strategy).')
+    alternative_product_ids = fields.Many2many(
+        'product.template', 'product_alternative_rel', 'src_id', 'dest_id',
+        string='Alternative Products', help='Suggest alternatives to your customer (upsell strategy). '
+                                            'Those products show up on the product page.')
+    accessory_product_ids = fields.Many2many(
+        'product.product', 'product_accessory_rel', 'src_id', 'dest_id', string='Accessory Products',
+        help='Accessories show up when the customer reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence())
-    public_categ_ids = fields.Many2many('product.public.category', relation='product_public_category_product_template_rel', string='Website Product Category',
-                                        help="The product will be available in each mentioned e-commerce category. Go to"
-                                        "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
+    public_categ_ids = fields.Many2many(
+        'product.public.category', relation='product_public_category_product_template_rel',
+        string='Website Product Category',
+        help="The product will be available in each mentioned eCommerce category. Go to Shop > "
+             "Customize and enable 'eCommerce categories' to view all eCommerce categories.")
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 

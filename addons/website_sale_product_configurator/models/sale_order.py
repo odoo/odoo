@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
 
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id, **kwargs)
-        if lines:
+        if line_id:  # in this case we get the exact line we want, so filtering below would be wrong
             return lines
 
         linked_line_id = kwargs.get('linked_line_id', False)

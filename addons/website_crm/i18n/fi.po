@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Tommi Rintala <tommi.rintala@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Teija Hölttä <teija.holtta@gmail.com>, 2018
-# Kari Lindgren <karisatu@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
+# Martin Trigaux, 2019
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
+# Teija Hölttä <teija.holtta@gmail.com>, 2019
+# Kari Lindgren <karisatu@gmail.com>, 2019
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
+# Jukka Paulin <jukka.paulin@gmail.com>, 2019
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018\n"
+"POT-Creation-Date: 2019-09-23 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,10 +31,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr "# Sivun näyttöjä"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -38,14 +46,28 @@ msgid "Add a contact form in the"
 msgstr "Lisää yhteydenottolomake"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales channel."
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr ""
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
-msgstr "Viestirivi 1"
+msgstr "Viestintä"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguraatioasetukset"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -67,11 +89,13 @@ msgstr "Oletusmyyntitiimi"
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
+"Oletusmyyntitiimi uusille liidille, jotka on luotu Ota yhteyttä -lomakkeen "
+"kautta."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr ""
+msgstr "Oletusmyyntitiimi"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
@@ -87,7 +111,10 @@ msgstr ""
 "Oletus myyjä uusille liideille, jotka luodaan yhteydenottolomakkeelta."
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Email"
 msgstr "Sähköposti"
 
@@ -97,6 +124,19 @@ msgid "Lead/Opportunity"
 msgstr "Liidi/mahdollisuus"
 
 #. module: website_crm
+#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "Liidit"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads/Opportunities"
+msgstr "Liidit/Mahdollisuudet"
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr ""
@@ -104,7 +144,20 @@ msgstr ""
 "sovelluksessa."
 
 #. module: website_crm
+#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+msgid "No lead linked for this visitor"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Phone Number"
 msgstr "Puhelinnumero"
 
@@ -114,6 +167,15 @@ msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
 msgstr ""
+"Aseta verkkosivustolle myyntitiimi. Muuten et voi seurata liittyviä "
+"tapahtumia."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Sales Channel"
+msgstr "Myyntikanava"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -121,7 +183,10 @@ msgid "Sales Team"
 msgstr "Myyntitiimi"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "Myyjä"
 
@@ -131,21 +196,22 @@ msgid "Send"
 msgstr "Lähetä"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Subject"
 msgstr "Aihe"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Thanks!"
-msgstr "Kiitos!"
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Visitors"
+msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "We will get back to you shortly."
-msgstr "Otamme sinuun yhteyttä mahdollisimman nopeasti."
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -158,25 +224,33 @@ msgid "Website Contact Form"
 msgstr "Verkkosivun yhteystietolomake"
 
 #. module: website_crm
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Company"
 msgstr "Yrityksesi"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Name"
 msgstr "Nimesi"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Question"
 msgstr "Kysymyksesi"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "Viestin lähettäminen onnistui."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

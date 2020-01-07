@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.misc import format_date
 
 
 class ProjectTaskType(models.Model):
@@ -500,6 +501,7 @@ class Task(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    date_deadline_formatted = fields.Char(compute='_compute_date_deadline_formatted')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
@@ -540,6 +542,11 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+
+    @api.depends('date_deadline')
+    def _compute_date_deadline_formatted(self):
+        for task in self:
+            task.date_deadline_formatted = format_date(self.env, task.date_deadline) if task.date_deadline else None
 
     def _compute_attachment_ids(self):
         for task in self:

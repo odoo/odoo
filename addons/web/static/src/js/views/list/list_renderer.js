@@ -434,17 +434,22 @@ var ListRenderer = BasicRenderer.extend({
             var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
             return $td.append($el);
         }
+        this._handleAttributes($td, node);
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
-        var formattedValue = field_utils.format[field.type](value, field, {
-            data: record.data,
+        var formatter = field_utils.format[field.type];
+        var formatOptions = {
             escape: true,
+            data: record.data,
             isPassword: 'password' in node.attrs,
             digits: node.attrs.digits && JSON.parse(node.attrs.digits),
-        });
-        this._handleAttributes($td, node);
-        var title = field.type !== 'boolean' ? formattedValue : '';
+        };
+        var formattedValue = formatter(value, field, formatOptions);
+        var title = '';
+        if (field.type !== 'boolean') {
+            title = formatter(value, field, _.extend(formatOptions, {escape: false}));
+        }
         return $td.html(formattedValue).attr('title', title);
     },
     /**
@@ -457,7 +462,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderButton: function (record, node) {
         var self = this;
-        var $button = viewUtils.renderButtonFromNode(node, {
+        var nodeWithoutWidth = Object.assign({}, node);
+        delete nodeWithoutWidth.attrs.width;
+        var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
         });
@@ -759,13 +766,17 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <th> element
      */
     _renderHeaderCell: function (node) {
-        var name = node.attrs.name;
+        const { icon, name, string } = node.attrs;
         var order = this.state.orderedBy;
         var isNodeSorted = order[0] && order[0].name === name;
         var field = this.state.fields[name];
         var $th = $('<th>');
         if (name) {
             $th.attr('data-name', name);
+        } else if (string) {
+            $th.attr('data-string', string);
+        } else if (icon) {
+            $th.attr('data-icon', icon);
         }
         if (node.attrs.editOnly) {
             $th.addClass('oe_edit_only');
@@ -776,7 +787,7 @@ var ListRenderer = BasicRenderer.extend({
         if (!field) {
             return $th;
         }
-        var description = node.attrs.string || field.string;
+        var description = string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
             if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
@@ -862,8 +873,15 @@ var ListRenderer = BasicRenderer.extend({
             'aria-expanded': false,
         });
         $a.appendTo($optionalColumnsDropdown);
+
+        // Set the expansion direction of the dropdown
+        // The button is located at the end of the list headers
+        // We want the dropdown to expand towards the list rather than away from it
+        // https://getbootstrap.com/docs/4.0/components/dropdowns/#menu-alignment
+        var direction = _t.database.parameters.direction;
+        var dropdownMenuClass = direction === 'rtl' ? 'dropdown-menu-left' : 'dropdown-menu-right';
         var $dropdown = $("<div>", {
-            class: 'dropdown-menu dropdown-menu-right o_optional_columns_dropdown',
+            class: 'dropdown-menu o_optional_columns_dropdown ' + dropdownMenuClass,
             role: 'menu',
         });
         this.optionalColumns.forEach(function (col) {

@@ -5,25 +5,25 @@
 # Translators:
 # ilan kl <ilan@qaroads.co.il>, 2019
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # Martin Trigaux, 2019
 # yizhaq agronov <yizhaq@gmail.com>, 2019
 # Moshe Flam <pashute@gmail.com>, 2019
-# ExcaliberX <excaliberx@gmail.com>, 2019
-# yacov mosbacher (‫יעקב מוסבכר‬‎) <ymosba@gmail.com>, 2019
+# yacov mosbacher <ymosba@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
+# ExcaliberX <excaliberx@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Amit Spilman <amit@laylinetech.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +157,7 @@ msgstr "פעילויות"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "עיטור פעילות חריגה"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
@@ -180,6 +180,12 @@ msgstr ""
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Administrator"
+msgstr "מנהל"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
 msgstr ""
 
 #. module: hr_expense
@@ -249,6 +255,11 @@ msgid "Approved Expenses"
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Archived"
+msgstr "בארכיון"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Document"
 msgstr ""
@@ -292,6 +303,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
 msgstr "בטל"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
@@ -479,12 +496,6 @@ msgid "Error"
 msgstr "שגיאה"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Exception Activities"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -503,7 +514,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense Date"
-msgstr ""
+msgstr "תאריך ההוצאה"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
@@ -513,7 +524,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
 msgid "Expense Lines"
-msgstr ""
+msgstr "שורות ההוצאה"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -617,6 +628,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
 msgstr "הוצאות"
 
@@ -790,7 +803,7 @@ msgstr "סמל"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_icon
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "סמל לציין פעילות חריגה."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction
@@ -811,7 +824,7 @@ msgstr "אם סומן, בחלק מההודעות קיימת שגיאת משלו�
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Incoming Emails"
-msgstr ""
+msgstr "הודעות דוא\"ל נכנסות"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -844,7 +857,7 @@ msgstr "רשומה ביומן"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "פקודות יומן"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense____last_update
@@ -939,7 +952,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Team"
-msgstr ""
+msgstr "הצוות שלי"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1034,7 +1047,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "מספר השגיאות"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
@@ -1199,7 +1212,7 @@ msgstr "וריאנט מוצר"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product:"
-msgstr ""
+msgstr "מוצר:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1209,7 +1222,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "עובד כללי"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1244,7 +1257,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Ref."
-msgstr ""
+msgstr "מזהה"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
@@ -1269,7 +1282,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 msgid "Refused"
-msgstr ""
+msgstr "מסורב"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1343,7 +1356,7 @@ msgstr "משתמש אחראי"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "שגיאת שליחת SMS"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1482,12 +1495,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "The journal linked to the expense report must be in the same company."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
 msgstr ""
@@ -1563,7 +1570,7 @@ msgstr "סה\"כ"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "סוג פעילות חריגה ברשומה."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount
@@ -1575,6 +1582,14 @@ msgstr "מחיר ליחידה"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
 msgid "Unit of Measure"
 msgstr "יחידת מידה"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.air_ticket
+#: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,uom_name:hr_expense.air_ticket_product_template
+#: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+msgid "Units"
+msgstr "יחידות"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
@@ -1780,6 +1795,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
 msgstr ""
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.car_travel
+#: model:product.template,uom_name:hr_expense.car_travel_product_template
+msgid "km"
+msgstr "ק\"מ"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

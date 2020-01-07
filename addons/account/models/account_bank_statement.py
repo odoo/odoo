@@ -47,6 +47,7 @@ class AccountBankStmtCashWizard(models.Model):
     @api.depends('start_bank_stmt_ids', 'end_bank_stmt_ids')
     def _compute_currency(self):
         for cashbox in self:
+            cashbox.currency_id = False
             if cashbox.end_bank_stmt_ids:
                 cashbox.currency_id = cashbox.end_bank_stmt_ids[0].currency_id
             if cashbox.start_bank_stmt_ids:
@@ -234,6 +235,7 @@ class AccountBankStatement(models.Model):
         return True
 
     def unlink(self):
+
         for statement in self:
             if statement.state != 'open':
                 raise UserError(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
@@ -805,7 +807,7 @@ class AccountBankStatementLine(models.Model):
         if self.account_number and self.partner_id and not self.bank_account_id:
             # Search bank account without partner to handle the case the res.partner.bank already exists but is set
             # on a different partner.
-            bank_account = self.env['res.partner.bank'].search([('acc_number', '=', self.account_number)])
+            bank_account = self.env['res.partner.bank'].search([('company_id', '=', self.company_id.id),('acc_number', '=', self.account_number)])
             if not bank_account:
                 bank_account = self.env['res.partner.bank'].create({
                     'acc_number': self.account_number, 'partner_id': self.partner_id.id

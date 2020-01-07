@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
+# Miku Laitinen <miku.laitinen@gmail.com>, 2019
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +30,13 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                            on our services on \""
+msgstr ""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
 msgstr ""
 
 #. module: rating
@@ -79,6 +88,7 @@ msgstr "Päivämäärä"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
@@ -119,13 +129,14 @@ msgid "Group By"
 msgstr "Ryhmittely"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "Tunniste (ID)"
@@ -142,6 +153,7 @@ msgstr "Kuva"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Viimeksi muokattu"
@@ -149,7 +161,7 @@ msgstr "Viimeksi muokattu"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
 msgid "Last Updated by"
-msgstr "Viimeksi päivittänyt"
+msgstr "Viimeksi päivitetty"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
@@ -177,7 +189,7 @@ msgid "My Ratings"
 msgstr ""
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
 msgid "No Rating yet"
 msgstr ""
 
@@ -187,8 +199,8 @@ msgid "No rating yet"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
 msgstr ""
 
@@ -218,6 +230,11 @@ msgid "Parent Related Document Model"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr ""
+
+#. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
 msgstr ""
@@ -239,6 +256,7 @@ msgid "Rating"
 msgstr "Arvostelu"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
@@ -270,11 +288,20 @@ msgid "Rating Number"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Rating Value"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
@@ -282,7 +309,7 @@ msgid "Rating count"
 msgstr ""
 
 #. module: rating
-#: sql_constraint:rating.rating:0
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 to 10"
 msgstr "Arvosanan pitäisi olla välillä 0 - 10"
 
@@ -292,6 +319,7 @@ msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "Arvosana: 0=Tyytymätön, 10=Tyytyväinen"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr "Arviointi"
@@ -308,11 +336,10 @@ msgid "Related Document Model"
 msgstr "Liittyvä dokumenttimalli"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Related ratings"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -325,15 +352,15 @@ msgid "Resource name"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Satisfied"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Turvatunnus"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -388,13 +415,13 @@ msgid "for"
 msgstr ""
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:21
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "highly dissatisfied"
 msgstr ""
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:20
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "not satisfied"
 msgstr ""
@@ -405,7 +432,7 @@ msgid "on"
 msgstr "päiväyksellä"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:22
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
 msgstr ""

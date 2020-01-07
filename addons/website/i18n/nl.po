@@ -6,17 +6,17 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Martin Trigaux, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Cas Vissers <casvissers@brahoo.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,9 +32,15 @@ msgid " Add Images"
 msgstr "Afbeeldingen toevoegen"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr "\" waarschuwing met een"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
-msgstr ""
+msgstr "# Bezochte pagina's"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -87,22 +93,8 @@ msgstr "(kan worden gebruikt in"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ""
-",\n"
-"                                updated:"
-msgstr ""
-",\n"
-"                                bijgewerkt:"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid ", author:"
 msgstr ", autheur:"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ", updated:"
-msgstr ", bijgewerkt:"
 
 #. module: website
 #. openerp-web
@@ -146,6 +138,12 @@ msgid "1s"
 msgstr "1s"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"sr-only\">(current)</span>"
+msgstr "2 <span class=\"sr-only\">(huidige)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "2/5"
 msgstr "2/5"
@@ -171,19 +169,19 @@ msgid "3/5"
 msgstr "3/5"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_301
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
 msgid "301 Moved permanently"
-msgstr ""
+msgstr "301 Permanent verplaatst"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_302
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
 msgid "302 Moved temporarily"
-msgstr ""
+msgstr "302 Tijdelijk verplaatst"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__rewrite
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__308
 msgid "308 Redirect / Rewrite"
-msgstr ""
+msgstr "308 Redirect / Rewrite"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -196,19 +194,9 @@ msgid "4/5"
 msgstr "4/5"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "403: Forbidden"
-msgstr "403: Verboden"
-
-#. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__not_found
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
 msgid "404 Not Found"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "404: Page not found!"
-msgstr "404: Pagina niet gevonden!"
+msgstr "404 Niet gevonden"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -414,192 +402,192 @@ msgstr "<i class=\"fa fa-diamond\"/> Opties"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-align-left\"/> Alignment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-align-left\"/> Uitlijning"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-anchor\"/> Link Anchor"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-anchor\"/>Link anker"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-arrows\"/> Background Image Sizing"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrows\"/> Afmeting achtergrondafbeelding"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-arrows\"/> Size"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrows\"/> Grootte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-arrows-h\"/> Images spacing"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrows-h\"/> Afstand tussen afbeeldingen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-arrows-h\"/> Size"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrows-h\"/> Grootte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-arrows-h\"/> Width"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrows-h\"/> Breedte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-arrows-v\"/> Alignment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrows-v\"/> Uitlijning"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Scroll Speed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Scrollsnelheid"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Slideshow speed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Diavoorstelling snelheid"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Speed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Snelheid"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-clone\"/> Transition"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clone\"/> Transitie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-columns\"/> Number of columns"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-columns\"/> Aantal kolommen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-eye-slash\"/> Transparent"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-eye-slash\"/> Transparant"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-eyedropper\"/> Background Color"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-eyedropper\"/> Achtergrondkleur"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-eyedropper\"/> Color"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-eyedropper\"/> Kleur"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-eyedropper\"/> Filter"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-eyedropper\"/> Filter"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-facebook\"/> Options"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-facebook\"/> Opties"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-font\"/> Typography"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-font\"/> Typografie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-heart\"/> Hearts"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-heart\"/> Hartjes"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-magic\"/> Mode"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-magic\"/> Modus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-magic\"/> Style"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-magic\"/> Stijl"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-magic\"/> Styles"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-magic\"/> Stijlen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-minus\"/> Remove Tab"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-minus\"/> Verwijder tab"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-minus\"/> Thickness"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-minus\"/> Dikte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-paint-brush\"/> Styling"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-paint-brush\"/> Styling"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-pencil\"/> Style"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-pencil\"/> Stijl"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-picture-o\"/> Background"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-picture-o\"/> Achtergrond"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-plus\"/> Add Tab"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-plus\"/>Toevoegen tab"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-plus-circle\"/> Add Slide"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-plus-circle\"/> Voeg slide toe"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-plus-circle\"/> Add images"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-plus-circle\"/>Afbeeldingen toevoegen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-refresh\"/> Re-order"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-refresh\"/> Opnieuw indelen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-square\"/> Squares"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-square\"/> Vierkanten"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-star\"/> Stars"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-star\"/> Sterren"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-tasks\"/> Progress Bar"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-tasks\"/> Voortgangsbalk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-th\"/> Columns"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-th\"/> Kolommen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-trash\"/> Remove all images"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-trash\"/> Verwijder alle afbeeldingen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-trash-o\"/> Remove Slide"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-trash-o\"/> Dia verwijderen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -616,6 +604,8 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-circle text-success\"/>\n"
 "                            <span>Connected</span>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-circle text-success\"/>\n"
+"                            <span>Verbonden</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -645,7 +635,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-puzzle-piece\"/> Mega Menu"
-msgstr ""
+msgstr "<i class=\"fa fa-puzzle-piece\"/> Megamenu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -723,6 +713,16 @@ msgstr ""
 #, python-format
 msgid "<p>Enter a title for the page.</p>"
 msgstr "<p>Geef een titel in voor deze pagina.</p>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We zullen uw "
+"e-mailadres nooit met iemand anders delen.</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -882,19 +882,13 @@ msgid "<span>— John DOE, CEO of <b>MyCompany</b></span>"
 msgstr "<span>— John DOE, CEO van <b>MijnBedrijf</b></span>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.error_message
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "<strong>Error message:</strong>"
-msgstr "<strong>Foutmelding:</strong>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
 msgstr ""
 "Een CDN helpt u met het aanbieden van de website inhoud met hoge "
-"beschikbaarheid en hoge performantie aan elke bezoeker, waar deze zich ook "
+"beschikbaarheid en hoge prestatie aan elke bezoeker, waar deze zich ook "
 "bevind."
 
 #. module: website
@@ -942,8 +936,13 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
 msgid ""
-"A new visit is considered if last connection was more than 24 hours ago."
+"A new visit is considered if last connection was more than 8 hours ago."
 msgstr ""
+
+#. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
+msgid "A partner is linked to only one visitor."
+msgstr "Een relatie is gekoppeld aan slechts één bezoeker."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -956,6 +955,8 @@ msgid ""
 "A visitor is considered as connected if his last page view was within the "
 "last 5 minutes."
 msgstr ""
+"Een bezoeker wordt als verbonden beschouwd als de laatste paginaweergave in "
+"de laatste 5 minuten was."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_version
@@ -988,12 +989,19 @@ msgid "Access Token"
 msgstr "Toegangstoken"
 
 #. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
+msgid "Access token should be unique."
+msgstr "Toegangstoken moet uniek zijn."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
 msgstr "Boekhoud &amp; Verkoopbeheer"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "Actie"
 
@@ -1033,7 +1041,7 @@ msgstr "Voeg opties toe"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Add Mega Menu Item"
-msgstr ""
+msgstr "Voeg megamenu item toe"
 
 #. module: website
 #. openerp-web
@@ -1048,7 +1056,7 @@ msgstr "Voeg menuitem toe"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Add a Google Font"
-msgstr ""
+msgstr "Voeg een Google lettertype toe"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1089,6 +1097,12 @@ msgstr ""
 "voorbeeldweergave</b>."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
+msgstr "Waarschuwing"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
 msgstr "Aline Turner, CTO"
@@ -1107,7 +1121,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_website_route
 msgid "All Website Route"
-msgstr ""
+msgstr "Alle website routes"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1135,7 +1149,7 @@ msgstr ""
 "specifiek vermeld."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "An error occured while rendering the template"
 msgstr "Er is een fout opgetreden tijdens het renderen van de template"
 
@@ -1143,7 +1157,7 @@ msgstr "Er is een fout opgetreden tijdens het renderen van de template"
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_google_analytics
 msgid "Analytics"
-msgstr "Kostenplaatsen"
+msgstr "Analyses"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1157,8 +1171,8 @@ msgstr ""
 "Analyseer de efficiëntie van uw marketingcampagnes met behulp van "
 "traceerbare UTM-trackers (campagnes, medium, bronnen). Maak trackers en volg"
 " klikken vanuit het promoot-menu van uw website. Deze trackers kunnen worden"
-" gebruikt in Google Analytics of in Odoo-rapporten, waar u de prospects en "
-"verkopen kunt zien die dankzij uw links zijn gegenereerd."
+" gebruikt in Google Analytics of in Odoo-rapporten, waar u de verkoopkansen "
+"en verkopen kunt zien die dankzij uw links zijn gegenereerd."
 
 #. module: website
 #. openerp-web
@@ -1217,6 +1231,12 @@ msgid "Autoredirect Language"
 msgstr "Autoredirect taal"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr "Automatisch aanpassen"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
@@ -1224,14 +1244,15 @@ msgid "Available on the Website"
 msgstr "Beschikbaar op de website"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
-msgid "Back"
-msgstr "Terug"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Background"
 msgstr "Achtergrond"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
+msgstr "Badge"
 
 #. module: website
 #: model:ir.model,name:website.model_base
@@ -1292,10 +1313,18 @@ msgstr "Onder"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Boxed"
-msgstr "Boxed"
+msgstr "Kader"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Breadcrumb"
+msgstr "Kruimelpad"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Button"
 msgstr "Knop"
 
@@ -1325,7 +1354,7 @@ msgstr "Kan publiceren"
 #: code:addons/website/static/src/js/backend/dashboard.js:0
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #: code:addons/website/static/src/xml/website.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #, python-format
 msgid "Cancel"
 msgstr "Annuleren"
@@ -1337,6 +1366,30 @@ msgid "Cannot deactivate a language that is currently used on a website."
 msgstr ""
 "U kan geen taal deactiveren die momenteel in gebruik is op één van uw "
 "websites."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr "Kaart"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr "Kaart inhoud"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr "Kaart voet"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr "Kaart kop"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -1418,7 +1471,7 @@ msgstr "Kies uw layout"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Choose your navbar"
-msgstr ""
+msgstr "Kies uw navbar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1482,7 +1535,7 @@ msgstr "Dupliceer deze pagina"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -1515,6 +1568,12 @@ msgid "Complete CRM for any size team"
 msgstr "Complete CRM voor elke teamgrootte"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Components"
+msgstr "Componenten"
+
+#. module: website
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Compose Email"
@@ -1533,7 +1592,7 @@ msgstr "Configuratie"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_social_network
 msgid "Configure Social Network"
-msgstr "Configureer sociaal netwerk"
+msgstr "Configureer social netwerk"
 
 #. module: website
 #. openerp-web
@@ -1556,18 +1615,12 @@ msgid "Connect with us"
 msgstr "Volg ons"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__connection_datetime
-msgid "Connection Datetime"
-msgstr ""
-
-#. module: website
 #: model:ir.model,name:website.model_res_partner
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Contact"
 msgstr "Contact"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "Contacteer ons"
@@ -1654,7 +1707,6 @@ msgstr "Maak een nieuwe website"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_uid
 #: model:ir.model.fields,field_description:website.field_website_route__create_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
@@ -1664,7 +1716,6 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_date
 #: model:ir.model.fields,field_description:website.field_website_route__create_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
@@ -1728,6 +1779,12 @@ msgid "Dashed"
 msgstr "Gestippeld"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Data"
+msgstr "Data"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Date"
 msgstr "Datum"
@@ -1758,7 +1815,7 @@ msgstr "Standaard hoofdmenu"
 #: model:ir.model.fields,field_description:website.field_website__social_default_image
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default Social Share Image"
-msgstr "Standaard afbeelding voor sociaal delen"
+msgstr "Standaard afbeelding voor social delen"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
@@ -1843,6 +1900,12 @@ msgid "Disable autoplay"
 msgstr "Autoplay uitschakelen"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
@@ -1875,7 +1938,6 @@ msgstr "Discussiegroep"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
@@ -1902,7 +1964,7 @@ msgstr "Toon de website omschrijving"
 #: model:ir.model.fields,help:website.field_website__logo
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this logo on the website."
-msgstr ""
+msgstr "Toon het logo op de website."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1967,7 +2029,7 @@ msgstr "Sleep nog een blok in uw pagina, onder de cover."
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr "Sleep de <i>Cover</i> block en laat ze los op uw pagina."
+msgstr "Sleep het <i>Omslag</i> block en laat ze los op uw pagina."
 
 #. module: website
 #. openerp-web
@@ -1981,7 +2043,13 @@ msgstr "Sleep dit blok en laat het los op uw nieuwe pagina."
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Drag to the right to get a submenu"
-msgstr ""
+msgstr "Schuif naar rechts om een submenu aan te maken"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Dropdown"
+msgstr "Dropdown"
 
 #. module: website
 #. openerp-web
@@ -2076,9 +2144,21 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr "E-mailadres"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "E-mail ondersteuning"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
+msgstr "Geef e-mail in"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2086,7 +2166,6 @@ msgid "Equal height"
 msgstr "Gelijke hoogte"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Error"
 msgstr "Fout"
@@ -2221,12 +2300,12 @@ msgstr "Eerste optie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "First Menu"
-msgstr ""
+msgstr "Eerste menu"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_date
 msgid "First connection date"
-msgstr ""
+msgstr "Eerste datum verbinding"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -2242,7 +2321,7 @@ msgstr "Eerste pagina die linkt naar deze weergave"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fit text"
-msgstr ""
+msgstr "Passende tekst"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2292,6 +2371,12 @@ msgid "Force your user to create an account per website"
 msgstr "Forceer uw gebruiker om een account aan te maken per website"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Form"
+msgstr "Formulier"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Form Builder"
 msgstr "Formulier bouwer"
@@ -2325,7 +2410,7 @@ msgstr "Volledig scherm"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Full-Width"
-msgstr ""
+msgstr "Volledige breedte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2360,7 +2445,7 @@ msgstr "Ga naar pagina"
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Go back to the blocks menu."
-msgstr ""
+msgstr "Ga terug naar het blokken menu."
 
 #. module: website
 #. openerp-web
@@ -2470,17 +2555,6 @@ msgid "Google Maps API Key"
 msgstr "Google Maps API sleutel"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Google Plus"
-msgstr "Google Plus"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
-#: model:ir.model.fields,field_description:website.field_website__social_googleplus
-msgid "Google+ Account"
-msgstr "Google+ account"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "Waar voor je geld"
@@ -2499,7 +2573,7 @@ msgstr "Groen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Grid"
-msgstr "Grid"
+msgstr "Matrix"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -2541,7 +2615,13 @@ msgstr "HTTP routing"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Half Screen"
-msgstr ""
+msgstr "Half scherm"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr "Kop"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
@@ -2554,32 +2634,44 @@ msgid "Header Overlay"
 msgstr "Kop overlapping"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 1"
 msgstr "Kop 1"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 2"
 msgstr "Kop 2"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 3"
 msgstr "Kop 3"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 4"
 msgstr "Kop 4"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 5"
 msgstr "Kop 5"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 6"
 msgstr "Kop 6"
 
@@ -2623,25 +2715,34 @@ msgstr "Hoog"
 msgid ""
 "Hint: Type '/' to search an existing page and '#' to link to an anchor."
 msgstr ""
+"Hint: type '/' om een bestaande pagina te zoeken en '#' om een anker te "
+"linken."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model:website.menu,name:website.menu_home
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "Home"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"sr-only\">(current)</span>"
+msgstr "Home <span class=\"sr-only\">(huidig)</span>"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model:ir.model.fields,field_description:website.field_website__homepage_id
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
-#: model_terms:ir.ui.view,arch_db:website.404
+#: model_terms:ir.ui.view,arch_db:website.portal_404
 #, python-format
 msgid "Homepage"
 msgstr "Startpagina"
@@ -2677,7 +2778,6 @@ msgstr "Groot"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 #: model:ir.model.fields,field_description:website.field_website_track__id
 #: model:ir.model.fields,field_description:website.field_website_visitor__id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__id
 msgid "ID"
 msgstr "ID"
 
@@ -2711,10 +2811,10 @@ msgstr ""
 msgid "If set, replaces the company logo as the default social share image."
 msgstr ""
 "Indien ingesteld, wordt het bedrijfslogo vervangen als de "
-"standaardafbeelding voor sociale share."
+"standaardafbeelding voor social share."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset the template to its <strong>factory settings</strong>."
@@ -2840,8 +2940,8 @@ msgstr "Geïnstalleerde applicaties"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "Installed Modules"
-msgstr "Geïnstalleerde modules"
+msgid "Installed Localizations / Account Charts"
+msgstr "Geïnstalleerde lokalisaties / grootboekschema's"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -2858,7 +2958,7 @@ msgstr "\"%s\" installeren"
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
 msgid "Interact with them by sending them messages."
-msgstr ""
+msgstr "Ga interactie met hen aan door berichten te versturen."
 
 #. module: website
 #. openerp-web
@@ -2886,12 +2986,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Is Connected"
-msgstr ""
+msgstr "Is verbonden"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_mega_menu
 msgid "Is Mega Menu"
-msgstr ""
+msgstr "Is megamenu"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__is_published
@@ -2911,7 +3011,7 @@ msgstr "Is zichtbaar"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__is_connected
 msgid "Is connected ?"
-msgstr ""
+msgstr "Is verbonden?"
 
 #. module: website
 #. openerp-web
@@ -2930,6 +3030,18 @@ msgid ""
 msgstr ""
 "Het is wellicht mogelijk om de relevante items te bewerken of het probleem "
 "te verhelpen in <a href=\"%s\">de klassiek Odoo interface</a>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr "Item 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr "Item 2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
@@ -2975,7 +3087,7 @@ msgstr "Taal"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__lang_id
 msgid "Language from the website when visitor has been created"
-msgstr ""
+msgstr "Taal van de website wanneer een bezoeker aangemaakt is"
 
 #. module: website
 #: model:ir.model,name:website.model_res_lang
@@ -2990,7 +3102,9 @@ msgid "Languages available on your website"
 msgstr "Talen beschikbaar op uw website"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "Groot"
 
@@ -3002,17 +3116,12 @@ msgstr "Laatste actie"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_connection_datetime
 msgid "Last Connection"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__last_connections_ids
-msgid "Last Connections"
-msgstr ""
+msgstr "Laatste verbinding"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Last Menu"
-msgstr ""
+msgstr "Laatste menu"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website____last_update
@@ -3026,7 +3135,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -3040,7 +3148,7 @@ msgstr " Vorige maand"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Last Page"
-msgstr ""
+msgstr "Laatste pagina"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__write_uid
@@ -3049,7 +3157,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_uid
 #: model:ir.model.fields,field_description:website.field_website_route__write_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
@@ -3060,14 +3167,13 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_date
 #: model:ir.model.fields,field_description:website.field_website_route__write_date
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_visited_page_id
 msgid "Last Visited Page"
-msgstr ""
+msgstr "Laatst bezochte pagina"
 
 #. module: website
 #. openerp-web
@@ -3086,12 +3192,12 @@ msgstr "Vorige jaar"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__time_since_last_action
 msgid "Last action"
-msgstr ""
+msgstr "Laatste actie"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__last_connection_datetime
 msgid "Last page view date"
-msgstr ""
+msgstr "Laatste paginaweergavedatum"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -3112,7 +3218,7 @@ msgstr "Links"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
 msgid "Left Menu"
-msgstr ""
+msgstr "Linkse menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3127,6 +3233,12 @@ msgid "Let's start designing."
 msgstr "Laten we starten met ontwerpen."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Library"
+msgstr "Bibliotheek"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "Beperkte personalisering"
@@ -3137,11 +3249,17 @@ msgid "Line-On-Sides"
 msgstr "Lijnen aan weerzijde"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link"
+msgstr "Link"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Link Anchor"
-msgstr ""
+msgstr "Link anker"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
@@ -3149,9 +3267,15 @@ msgid "Link Trackers"
 msgstr "Link traceerders"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__user_partner_id
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
+msgstr "Link knop"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
 msgid "Linked Partner"
-msgstr ""
+msgstr "Gekoppelde relatie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3201,7 +3325,7 @@ msgstr "Laag"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Main"
-msgstr ""
+msgstr "Hoofd"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -3244,11 +3368,6 @@ msgid "Masonry"
 msgstr "Metselwerk"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "Maybe you were looking for one of these popular pages ?"
-msgstr "Misschien zocht u naar een van deze populaire pagina's?"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
 msgstr "Gemiddeld"
@@ -3263,17 +3382,17 @@ msgstr "Ontmoet het uitvoerend team"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Mega Menu"
-msgstr ""
+msgstr "Megamenu"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__mega_menu_classes
 msgid "Mega Menu Classes"
-msgstr ""
+msgstr "Megamenu classes"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__mega_menu_content
 msgid "Mega Menu Content"
-msgstr ""
+msgstr "Megamenu inhoud"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -3287,7 +3406,7 @@ msgstr "Menu"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Menu Item %s"
-msgstr ""
+msgstr "Menuitem %s"
 
 #. module: website
 #. openerp-web
@@ -3334,7 +3453,7 @@ msgstr "Midden"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 msgid "Mobile Phone"
-msgstr ""
+msgstr "Mobiele telefoon"
 
 #. module: website
 #. openerp-web
@@ -3440,7 +3559,9 @@ msgid "Narrow"
 msgstr "Smal"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Navbar"
 msgstr "Navbar"
 
@@ -3457,7 +3578,7 @@ msgstr "Nieuw blogbericht"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Course"
-msgstr "Nieuwe opleiding"
+msgstr "Nieuwe cursus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3510,7 +3631,7 @@ msgstr "Nieuwsbrief"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Block"
-msgstr ""
+msgstr "Nieuwsbrief blok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -3521,9 +3642,11 @@ msgstr "Nieuwsbrief popup"
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "Volgende"
@@ -3536,12 +3659,12 @@ msgstr "Geen personalisering"
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitor_page_action
 msgid "No page views yet for this visitor"
-msgstr ""
+msgstr "Nog geen pagina bezoeken voor deze bezoeker"
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.visitor_partner_action
 msgid "No partner linked for this visitor"
-msgstr ""
+msgstr "Geen relatie gekoppeld aan deze bezoeker"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3577,12 +3700,12 @@ msgstr "Niet geïndexeerd"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Not published"
-msgstr ""
+msgstr "Niet gepubliceer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Not tracked"
-msgstr ""
+msgstr "Niet getraceer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -3603,7 +3726,7 @@ msgstr "Aantal talen"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 msgid "Number of visits"
-msgstr ""
+msgstr "Aantal bezoeken"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -3772,6 +3895,12 @@ msgstr ""
 "prestaties willen optimaliseren."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Outline"
+msgstr "Uitlijning"
+
+#. module: website
 #: code:addons/website/models/website.py:0
 #: code:addons/website/models/website.py:0
 #: model:ir.model,name:website.model_website_page
@@ -3846,17 +3975,17 @@ msgstr "Pagina URL"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__visitor_page_count
 msgid "Page Views"
-msgstr "Paginaweergaven"
+msgstr "Paginaweergaves"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitor_page_action
 msgid "Page Views History"
-msgstr ""
+msgstr "Paginaweergavehistorie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Page views"
-msgstr "Pagina weergaven"
+msgstr "Paginaweergaves"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -3869,6 +3998,22 @@ msgid "Pages"
 msgstr "Pagina's"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
+msgstr "Paginering"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"Paragraaf met <strong>vet</strong>, <span class=\"text-"
+"muted\">Gedempte</span> en <em>cursieve</em> tekst"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr "Bovenliggend menu"
@@ -3879,9 +4024,9 @@ msgid "Parent Path"
 msgstr "Bovenliggend pad"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_visitor__user_partner_id
+#: model:ir.model.fields,help:website.field_website_visitor__partner_id
 msgid "Partner of the last logged in user."
-msgstr ""
+msgstr "Relatie van de laatst aangemelde gebruiker."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
@@ -3892,6 +4037,12 @@ msgstr "Relatie gerelateerde gegevens van de gebruiker"
 #: model:ir.actions.act_window,name:website.visitor_partner_action
 msgid "Partners"
 msgstr "Relaties"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pill"
+msgstr "Pil"
 
 #. module: website
 #. openerp-web
@@ -3917,8 +4068,10 @@ msgstr "Voorbeeld"
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "Vorige"
@@ -3937,7 +4090,7 @@ msgstr "Primair"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Products Recently Viewed"
-msgstr ""
+msgstr "Producten recent bekeken"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -4013,11 +4166,6 @@ msgid "Purple"
 msgstr "Paars"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "QWeb"
-msgstr "QWeb"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating
 msgid "Quality"
 msgstr "Kwaliteit"
@@ -4072,7 +4220,7 @@ msgstr "Referenties"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "Refresh route's list"
-msgstr ""
+msgstr "Vernieuw routes"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4128,17 +4276,17 @@ msgid "Reset"
 msgstr "Reset"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset templates"
 msgstr "Reset thema's"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset to initial version (hard reset)."
 msgstr "Terugzetten naar initiële versie (harde reset)."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
 msgstr "Herstel vorige versie (zachte reset)."
 
@@ -4164,7 +4312,7 @@ msgstr "Controle"
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_rewrite_list
 msgid "Rewrite"
-msgstr ""
+msgstr "Rewrite"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4174,7 +4322,7 @@ msgstr "Rechts"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
 msgid "Right Menu"
-msgstr ""
+msgstr "Rechtermenu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4223,7 +4371,9 @@ msgid "Save"
 msgstr "Opslaan"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "Zoek"
 
@@ -4241,7 +4391,7 @@ msgstr "Zoek doorverwijzing"
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Search Visitor"
-msgstr ""
+msgstr "Zoek bezoeker"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
@@ -4256,7 +4406,7 @@ msgstr "Tweede functie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Second Menu"
-msgstr ""
+msgstr "Tweede menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4321,6 +4471,12 @@ msgstr "Verzend e-mail"
 #: model_terms:website.page,arch_db:website.contactus_page
 msgid "Send us an email"
 msgstr "Stuur ons een e-mail"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr "Aparte link"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__sequence
@@ -4418,7 +4574,9 @@ msgid "Slow"
 msgstr "Traag"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "Klein"
 
@@ -4430,14 +4588,14 @@ msgstr "Kleine letters"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Social Media"
-msgstr "Sociale media"
+msgstr "Social media"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Social Preview"
-msgstr "Sociaal voorbeeld"
+msgstr "Social voorbeeld"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4445,9 +4603,10 @@ msgid "Solid"
 msgstr "Vast"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Something went wrong."
-msgstr "Er is iets misgegaan."
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
+msgstr "Iets anders hier"
 
 #. module: website
 #: code:addons/website/controllers/main.py:0
@@ -4524,11 +4683,6 @@ msgid "Tabs"
 msgstr "Tabs"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Take a look at the error message below."
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,help:website.field_ir_attachment__key
 #: model:ir.model.fields,help:website.field_mrp_document__key
 msgid ""
@@ -4568,7 +4722,7 @@ msgid "Template <b>%s (id:%s)</b> is calling this file"
 msgstr "Sjabloon <b>%s (id:%s)</b> roept dit bestand aan"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "Sjabloon fallback"
 
@@ -4649,11 +4803,6 @@ msgstr ""
 "van de pagina, tenzij u er een opgeeft."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "The error occured while rendering the template"
-msgstr "Er is een fout opgetreden tijdens het renderen van het thema"
-
-#. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
 #: model:ir.model.fields,help:website.field_res_users__website_url
 #: model:ir.model.fields,help:website.field_website_page__website_url
@@ -4685,23 +4834,7 @@ msgid "The language of the keyword and related keywords."
 msgstr "De taal van het zoekwoord en gerelateerde zoekwoorden."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "The page you were looking for could not be authorized."
-msgstr "De pagina waarnaar u zocht is niet geautoriseerd."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid ""
-"The page you were looking for could not be found; it is possible you have\n"
-"                        typed the address incorrectly, but it has most probably been removed due\n"
-"                        to the recent website reorganisation."
-msgstr ""
-"De pagina die u zocht kon niet worden gevonden; het is mogelijk dat u \n"
-"                        het adres verkeerd heeft getypt, maar het is het meest waarschijnlijk te wijten aan een \n"
-"                        verwijderde pagina na de recente website aanpassingen."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr ""
 "De geselecteerde thema's worden gereset naar hun default instellingen."
@@ -4734,7 +4867,7 @@ msgstr "Er zijn momenteel geen gegevens beschikbaar."
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "There is no email linked this visitor."
-msgstr ""
+msgstr "Er is geen e-mail gekoppeld aan deze bezoeker."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4772,7 +4905,7 @@ msgstr "Derde functie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Third Menu"
-msgstr ""
+msgstr "Derde menu"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -4816,6 +4949,12 @@ msgstr ""
 "Handig om (zachte) resets van een kapotte weergave te doen."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
+msgstr "Dit is een \""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component <br/>for "
@@ -4852,7 +4991,7 @@ msgstr "Miniaturen"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__time_since_last_action
 msgid "Time since last page view. E.g.: 2 minutes ago"
-msgstr ""
+msgstr "Tijd sinds laatste paginaweergave. Bijvoorbeeld: 2 minuten geleden"
 
 #. module: website
 #. openerp-web
@@ -4902,6 +5041,18 @@ msgstr ""
 "optie in het actie menu."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle"
+msgstr "Schakelen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle navigation"
+msgstr "Navigatie aan/uitzetten"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
 msgstr "Tony Fred, CEO"
@@ -4932,12 +5083,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visitor_page_count
 msgid "Total number of visits on tracked pages"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "Traceback"
-msgstr "Fout herleiden"
+msgstr "Totaal aantal bezoeken op gevolgde pagina's"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
@@ -4955,7 +5101,7 @@ msgstr "Traceer klikken op UTM links"
 #: code:addons/website/static/src/xml/track_page.xml:0
 #, python-format
 msgid "Track visitor"
-msgstr ""
+msgstr "Volg bezoekers"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4965,7 +5111,7 @@ msgstr "Volg bezoekers in Google Analytics"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Tracked"
-msgstr ""
+msgstr "Gevolgt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5035,7 +5181,7 @@ msgid "Type"
 msgstr "Soort"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "Type '<i class=\"confirm_word\">yes</i>' in the box below if you want to "
 "confirm."
@@ -5067,7 +5213,7 @@ msgstr "UA-XXXXXXXX-Y"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
-msgstr ""
+msgstr "URL van"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
@@ -5080,7 +5226,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
-msgstr ""
+msgstr "URL naar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5107,7 +5253,7 @@ msgstr "Onbeperkte wijzigingen"
 #: code:addons/website/static/src/js/backend/button.js:0
 #, python-format
 msgid "Unpublish"
-msgstr ""
+msgstr "Niet publiceren"
 
 #. module: website
 #. openerp-web
@@ -5130,7 +5276,7 @@ msgstr "Url"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Urls & Pages"
-msgstr ""
+msgstr "Urls & Pagina's"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5217,20 +5363,19 @@ msgstr "Gebruikt wanneer meerdere websites hetzelfde domein hebben."
 #: model:ir.model.fields,help:website.field_website_menu__group_ids
 msgid "User need to be at least in one of these groups to see the menu"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"Gebruiker-agent: *\n"
-"Sitemap:"
+"Gebruiker moet minimaal in een van deze groepen zijn om het menu te kunnen "
+"zien"
 
 #. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "Gebruikers"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr "Hulpprogramma's &amp; typografie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5313,16 +5458,15 @@ msgstr "Bezoekdatum"
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_ids
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visited Pages"
-msgstr ""
+msgstr "Bezochte pagina's"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_track_ids
 msgid "Visited Pages History"
-msgstr "Bekijk pagina's historiek"
+msgstr "Bekijk paginahistorie"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visitor_id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__visitor_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visitor"
@@ -5331,27 +5475,27 @@ msgstr "Bezoeker"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Visitor Informations"
-msgstr ""
+msgstr "Informatie bezoekers"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_graph
 msgid "Visitor Page Views"
-msgstr ""
+msgstr "Bezoeker paginaweergaves"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_tree
 msgid "Visitor Page Views History"
-msgstr ""
+msgstr "Bezoeker paginaweergavehistorie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_track_view_graph
 msgid "Visitor Views"
-msgstr ""
+msgstr "Bezoeker paginaweergaves"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_track_view_tree
 msgid "Visitor Views History"
-msgstr ""
+msgstr "Bezoeker paginaweergavehistorie"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitors_action
@@ -5378,11 +5522,14 @@ msgstr "Bezoeken"
 msgid ""
 "Wait for visitors to come to your website to see the pages they viewed."
 msgstr ""
+"Wacht tot bezoekers naar uw website komen om de pagina's te bekijken die ze "
+"hebben bekeken."
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
 msgid "Wait for visitors to come to your website to see their history."
 msgstr ""
+"Wacht tot bezoekers naar uw website komen om hun geschiedenis te bekijken."
 
 #. module: website
 #. openerp-web
@@ -5425,7 +5572,7 @@ msgstr "We vonden deze:"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Web Visitors"
-msgstr ""
+msgstr "Web bezoekers"
 
 #. module: website
 #. openerp-web
@@ -5557,14 +5704,14 @@ msgstr "Website bezoeker"
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Website Visitor #%s"
-msgstr ""
+msgstr "Website bezoekers #%s"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
 #: model:ir.cron,cron_name:website.website_visitor_cron
 #: model:ir.cron,name:website.website_visitor_cron
 msgid "Website Visitor : Archive old visitors"
-msgstr ""
+msgstr "Website bezoeker: archiveer oude bezoekers"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -5614,17 +5761,17 @@ msgstr "Website opengraph afbeelding"
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
 msgid "Website rewrite"
-msgstr ""
+msgstr "Website rewrite"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "Website rewrite Settings"
-msgstr ""
+msgstr "Website herschrijf instellingen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.action_website_rewrite_tree
 msgid "Website rewrites"
-msgstr ""
+msgstr "Website rewrites"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
@@ -5698,7 +5845,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid ""
 "Write what the customer would like to know, <br/>not what you want to show."
-msgstr "Schrijf wat de klant graag wilt weten,<br/> niet wat u wilt tonen."
+msgstr "Schrijf wat de klant graag wilt weten, <br/>niet wat u wilt tonen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5729,7 +5876,9 @@ msgstr ""
 " te bepalen welke website u wilt gebruiken."
 
 #. module: website
+#: code:addons/website/models/res_users.py:0
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
+#, python-format
 msgid "You can not have two users with the same login!"
 msgstr "U kan niet twee gebruikers met dezelfde login hebben!"
 
@@ -5837,12 +5986,13 @@ msgstr "Youtube account"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "and copy paste the embed code here."
-msgstr ""
+msgstr "en kopieer en plak hier de embed-code."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "and evaluating the following expression:"
-msgstr "en evalueer de volgende uitdrukking:"
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "breadcrumb"
+msgstr "kruimelpad"
 
 #. module: website
 #. openerp-web
@@ -5881,6 +6031,12 @@ msgid "instance of Odoo, the"
 msgstr "instantie van Odoo, de"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr "link"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "name"
 msgstr "naam"
@@ -5913,11 +6069,6 @@ msgid "sitemap.xml"
 msgstr "sitemap.xml"
 
 #. module: website
-#: model:ir.model,name:website.model_website_visitor_lastconnection
-msgid "temporary table for Visitor"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "url"
 msgstr "url"
@@ -5935,7 +6086,7 @@ msgid "www.odoo.com"
 msgstr "www.odoo.com"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "ja"
 

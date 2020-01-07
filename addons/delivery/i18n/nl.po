@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Volluta <volluta@tutanota.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -32,12 +32,12 @@ msgstr "(Geschatte kosten: %s)"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
-msgstr ""
+msgstr "(berekend:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Kosten opvragen"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
@@ -63,12 +63,12 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"text-danger\">Geen debug</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">Debug aanvragen</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -83,12 +83,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr ""
+msgstr "<strong>Vervoerder:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>HS Code</strong>"
-msgstr ""
+msgstr "<strong>HS Code</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -96,11 +96,13 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Gewicht verzending:</strong>\n"
+"                <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number:</strong>"
-msgstr ""
+msgstr "<strong>Tracking nummer:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -109,6 +111,8 @@ msgid ""
 "<strong>Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Gewicht:</strong>\n"
+"                <br/>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -135,7 +139,7 @@ msgstr "Voeg een verzendwijze toe"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Add shipping"
-msgstr ""
+msgstr "Verzending toevoegen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -264,11 +268,6 @@ msgstr "Standaard levermethode gebruikt in verkooporders."
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr "Definieer een nieuwe leveringsmethode"
-
-#. module: delivery
-#: model:product.category,name:delivery.product_category_deliveries
-msgid "Deliveries"
-msgstr "Leveringen"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -630,6 +629,13 @@ msgstr ""
 "berekend worden."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Standaard afleverkosten"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "OK"
@@ -782,7 +788,7 @@ msgstr "Opslaan"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Verstuur naar verzender"
+msgstr "Verzend naar verzender"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -833,7 +839,7 @@ msgstr "Verzendwijze"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "Verzendmethodes"
+msgstr "Verzendwijzes"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -865,6 +871,13 @@ msgstr "Status"
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Voorraadmutatie"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "De post"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -979,6 +992,10 @@ msgstr "Verplaatsing"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "Stuks"
@@ -993,7 +1010,7 @@ msgstr "Bijwerken"
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
 msgid "Update shipping cost"
-msgstr ""
+msgstr "Verzendkosten bijwerken"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -1064,11 +1081,6 @@ msgid ""
 msgstr ""
 "U verzend verschillende verpakking types in dezelfde verzending.\n"
 "Verpakking types: %s"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__partner_id
-msgid "You can find a customer from their name, email, tax ID or reference."
-msgstr "U kan een klant vinden via hun naam, e-mail, BTW nummer of rerentie."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

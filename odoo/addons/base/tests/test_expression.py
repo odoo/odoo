@@ -487,7 +487,7 @@ class TestExpression(TransactionCase):
         default_currency = Currency.browse(1)
 
         # search the currency via its rates one2many (the one2many must point back at the currency)
-        currency_rate1 = self._search(CurrencyRate, [('name', 'not like', 'probably_unexisting_name')])
+        currency_rate1 = self._search(CurrencyRate, [('currency_id', 'not like', 'probably_unexisting_name')])
         currency_rate2 = self._search(CurrencyRate, [('id', 'not in', [non_currency_id])])
         self.assertEqual(currency_rate1, currency_rate2)
         currency_rate3 = self._search(CurrencyRate, [('id', 'not in', [])])
@@ -579,6 +579,37 @@ class TestExpression(TransactionCase):
         self.assertEqual(helene, Company.search([('name','ilike','hélène')]))
         self.assertNotIn(helene, Company.search([('name','not ilike','Helene')]))
         self.assertNotIn(helene, Company.search([('name','not ilike','hélène')]))
+
+    def test_pure_function(self):
+        orig_false = expression.FALSE_DOMAIN.copy()
+        orig_true = expression.TRUE_DOMAIN.copy()
+        false = orig_false.copy()
+        true = orig_true.copy()
+
+        domain = expression.AND([])
+        domain += [('id', '=', 1)]
+        domain = expression.AND([])
+        self.assertEqual(domain, orig_true)
+
+        domain = expression.AND([false])
+        domain += [('id', '=', 1)]
+        domain = expression.AND([false])
+        self.assertEqual(domain, orig_false)
+
+        domain = expression.OR([])
+        domain += [('id', '=', 1)]
+        domain = expression.OR([])
+        self.assertEqual(domain, orig_false)
+
+        domain = expression.OR([true])
+        domain += [('id', '=', 1)]
+        domain = expression.OR([true])
+        self.assertEqual(domain, orig_true)
+
+        domain = expression.normalize_domain([])
+        domain += [('id', '=', 1)]
+        domain = expression.normalize_domain([])
+        self.assertEqual(domain, orig_true)
 
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field

@@ -230,11 +230,15 @@ class AssetsBundle(object):
             ('url', '=like', url),
             '!', ('url', '=like', self.get_asset_url(unique=self.version))
         ]
+        attachments = ira.sudo().search(domain)
+        # avoid to invalidate cache if it's already empty (mainly useful for test)
 
-        # force bundle invalidation on other workers
-        self.env['ir.qweb'].clear_caches()
+        if attachments:
+            attachments.unlink()
+            # force bundle invalidation on other workers
+            self.env['ir.qweb'].clear_caches()
 
-        return ira.sudo().search(domain).unlink()
+        return True
 
     def get_attachments(self, type, ignore_version=False):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
@@ -366,6 +370,12 @@ class AssetsBundle(object):
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
 
+    def _get_assets_domain_for_already_processed_css(self, assets):
+        """ Method to compute the attachments' domain to search the already process assets (css).
+        This method was created to be overridden.
+        """
+        return [('url', 'in', list(assets.keys()))]
+
     def is_css_preprocessed(self):
         preprocessed = True
         attachments = None
@@ -377,7 +387,7 @@ class AssetsBundle(object):
             outdated = False
             assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
-                assets_domain = [('url', 'in', list(assets.keys()))]
+                assets_domain = self._get_assets_domain_for_already_processed_css(assets)
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
                 for attachment in attachments:
                     asset = assets[attachment.url]
@@ -437,7 +447,7 @@ class AssetsBundle(object):
                         fname = os.path.basename(asset.url)
                         url = asset.html_url
                         with self.env.cr.savepoint():
-                            self.env['ir.attachment'].sudo().with_context(not_force_website_id=True).create(dict(
+                            self.env['ir.attachment'].sudo().create(dict(
                                 datas=base64.b64encode(asset.content.encode('utf8')),
                                 mimetype='text/css',
                                 type='binary',

@@ -315,6 +315,24 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('field titles are not escaped', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records[0].foo = '<div>Hello</div>';
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('tbody tr:first .o_data_cell').text(), "<div>Hello</div>");
+        assert.strictEqual(list.$('tbody tr:first .o_data_cell').attr('title'), "<div>Hello</div>");
+
+        list.destroy();
+    });
+
     QUnit.test('record-depending invisible lines are correctly aligned', async function (assert) {
         assert.expect(4);
 
@@ -1623,7 +1641,7 @@ QUnit.module('Views', {
             { field: 'amount', expected: 104, type: 'Monetary' },
             { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
-        assert.expect(11);
+        assert.expect(12);
 
         this.data.foo.fields.foo_o2m = {string: "Foo O2M", type: "one2many", relation: "foo"};
         const form = await createView({
@@ -1669,6 +1687,8 @@ QUnit.module('Views', {
         });
         assert.strictEqual(form.$('.o_field_one2many th[data-name="foo"]')[0].style.width, '100%',
             "Char field should occupy the remaining space");
+
+        assert.strictEqual(form.el.querySelector('.o_list_record_remove_header').style.width, '32px');
 
         form.destroy();
     });
@@ -1769,7 +1789,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list: list view in an initially unselected notebook page', async function (assert) {
-        assert.expect(8);
+        assert.expect(5);
 
         this.data.foo.records = [{ id: 1, o2m: [1] }];
         this.data.bar = {
@@ -1788,8 +1808,7 @@ QUnit.module('Views', {
                 },
             ],
         };
-        let form;
-        const formOptions = {
+        const form = await createView({
             View: FormView,
             model: 'foo',
             data: this.data,
@@ -1810,72 +1829,26 @@ QUnit.module('Views', {
                         '</notebook>' +
                     '</sheet>' +
                 '</form>',
-        };
+        });
 
-        // Case 1: select a record
-        form = await createView(formOptions);
+        const [titi, grosminet] = form.el.querySelectorAll('.tab-pane:last-child th');
+        const one2many = form.el.querySelector('.o_field_one2many');
 
-        // Since it is the first case, we assert that the list is initially hidden, then visible
-        // It should not be frozen when displayed.
-        assert.isNotVisible(form.$('.o_field_one2many'),
+        assert.isNotVisible(one2many,
             "One2many field should be hidden");
-
-        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
-
-        assert.isVisible(form.$('.o_field_one2many'),
-            "One2many field should be visible");
-
-        let [titi, grosminet] = form.$('.tab-pane:last-child th');
         assert.strictEqual(titi.style.width, "",
             "width of small char should not be set yet");
         assert.strictEqual(grosminet.style.width, "",
             "width of large char should also not be set");
 
-        await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first-child'));
-        [titi, grosminet] = form.$('th');
+        await testUtils.dom.click(form.el.querySelector('.nav-item:last-child .nav-link'));
+
+        assert.isVisible(one2many,
+            "One2many field should be visible");
         assert.ok(
             titi.style.width.split('px')[0] > 80 &&
             grosminet.style.width.split('px')[0] > 700,
-            "list has been correctly frozen after selecting a record");
-
-        form.destroy();
-
-        // Case 2: add a record
-        form = await createView(formOptions);
-        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
-
-        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-        [titi, grosminet] = form.$('th');
-        assert.ok(
-            titi.style.width.split('px')[0] > 80 &&
-            grosminet.style.width.split('px')[0] > 700,
-            "list has been correctly frozen after adding a record");
-
-        form.destroy();
-
-        // Case 3: delete a record
-        form = await createView(formOptions);
-        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
-
-        await testUtils.dom.click(form.$('.o_data_row:last() .o_list_record_remove'));
-        [titi, grosminet] = form.$('th');
-        assert.ok(
-            titi.style.width.split('px')[0] > 80 &&
-            grosminet.style.width.split('px')[0] > 700,
-            "list has been correctly frozen after deleting a record");
-
-        form.destroy();
-
-        // Case 4: sort a column
-        form = await createView(formOptions);
-        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
-
-        await testUtils.dom.click(form.$('th:first-child'));
-        [titi, grosminet] = form.$('th');
-        assert.ok(
-            titi.style.width.split('px')[0] > 80 &&
-            grosminet.style.width.split('px')[0] > 700,
-            "list has been correctly frozen after sorting a column");
+            "list has been correctly frozen after being visible");
 
         form.destroy();
     });
@@ -1919,35 +1892,30 @@ QUnit.module('Views', {
                 '</form>',
         });
 
-        assert.isNotVisible(form.$('.o_field_one2many'),
+        const [titi, grosminet] = form.el.querySelectorAll('th');
+        const one2many = form.el.querySelector('.o_field_one2many');
+
+        assert.isNotVisible(one2many,
             "One2many field should be hidden");
-
-        await testUtils.dom.click(form.$('.o_field_boolean input'));
-
-        assert.isVisible(form.$('.o_field_one2many'),
-            "One2many field should be visible");
-
-        let [titi, grosminet] = form.$('th');
         assert.strictEqual(titi.style.width, "",
             "width of small char should not be set yet");
         assert.strictEqual(grosminet.style.width, "",
             "width of large char should also not be set");
 
-        await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first-child'));
-        [titi, grosminet] = form.$('th');
+        await testUtils.dom.click(form.el.querySelector('.o_field_boolean input'));
+
+        assert.isVisible(one2many,
+            "One2many field should be visible");
         assert.ok(
             titi.style.width.split('px')[0] > 80 &&
             grosminet.style.width.split('px')[0] > 700,
-            "list has been correctly frozen after selecting a record");
-        // We only test with selecting a record. Other assertion cases are run in the previous test.
-        // Once the o2m is visible, the behaviour is strictly the same.
-        // @see "editable list: list view in an initially unselected notebook page".
+            "list has been correctly frozen after being visible");
 
         form.destroy();
     });
 
     QUnit.test('editable list: updating list state while invisible', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.foo.onchanges = {
             bar: function (obj) {
@@ -1978,12 +1946,43 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(form.$('.o_field_boolean input'));
+
+        assert.strictEqual(form.el.querySelector('th').style.width, "",
+            "Column header should be initially unfrozen");
+
         await testUtils.dom.click(form.$('.nav-item:last() .nav-link'));
 
-        assert.strictEqual(form.$('th')[0].style.width, "",
-            "Column header should be reset and remain unfrozen");
+        assert.notEqual(form.el.querySelector('th').style.width, "",
+            "Column header should have been frozen");
 
         form.destroy();
+    });
+
+    QUnit.test('empty list: state with nameless and stringless buttons', async function (assert) {
+        assert.expect(3);
+
+        this.data.foo.records = [];
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="text"/>
+                    <button string="choucroute"/>
+                    <button icon="fa-heart"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.strictEqual(list.el.querySelector('th[data-name="foo"]').style.width, '25%',
+            "Field column should be frozen");
+        assert.strictEqual(list.el.querySelector('th[data-string="choucroute"]').style.width, '25%',
+            "Nameless button column should be frozen");
+        assert.strictEqual(list.el.querySelector('th[data-icon="fa-heart"]').style.width, '25%',
+            "Nameless and stringless button should be frozen");
+
+        list.destroy();
     });
 
     QUnit.test('editable list: unnamed columns cannot be resized', async function (assert) {
@@ -2222,6 +2221,26 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, 146);
         assert.strictEqual(list.$('th[data-name="int_field"]')[0].offsetWidth, 200);
+
+        list.destroy();
+    });
+
+    QUnit.test("button in a list view with a default relative width", async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            arch: `
+            <tree>
+                <field name="foo"/>
+                <button name="the_button" icon="fa-heart" width="0.1"/>
+            </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.strictEqual(list.el.querySelector('.o_data_cell button').style.width, "",
+            "width attribute should not change the CSS style");
 
         list.destroy();
     });
@@ -4447,6 +4466,78 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('edition, then navigation with tab (with a readonly field and onchange)', async function (assert) {
+        // This test makes sure that if we have a read-only cell in a row, in
+        // case the keyboard navigation move over it and there a unsaved changes
+        // (which will trigger an onchange), the focus of the next activable
+        // field will not crash
+        assert.expect(4);
+
+        this.data.bar.onchanges = {
+            o2m: function () {},
+        };
+        this.data.bar.fields.o2m = {string: "O2M field", type: "one2many", relation: "foo"};
+        this.data.bar.records[0].o2m = [1, 4];
+
+        var form = await createView({
+            View: FormView,
+            model: 'bar',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="display_name"/>' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom">' +
+                                '<field name="foo"/>' +
+                                '<field name="date" readonly="1"/>' +
+                                '<field name="int_field"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step(args.method + ':' + args.model);
+                }
+                return this._super.apply(this, arguments);
+            },
+            fieldDebounce: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var jq_evspecial_focus_trigger = $.event.special.focus.trigger;
+        // As KeyboardEvent will be triggered by JS and not from the
+        // User-Agent itself, the focus event will not trigger default
+        // action (event not being trusted), we need to manually trigger
+        // 'change' event on the currently focused element
+        $.event.special.focus.trigger = function () {
+            if (this !== document.activeElement && this.focus) {
+                var activeElement = document.activeElement;
+                this.focus();
+                $(activeElement).trigger('change');
+            }
+        };
+
+        // editable list, click on first td and press TAB
+        await testUtils.dom.click(form.$('.o_data_cell:contains(yop)'));
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row input[name="foo"]')[0],
+            "focus should be on an input with name = foo");
+        await testUtils.fields.editInput(form.$('tr.o_selected_row input[name="foo"]'), 'new value');
+        var tabEvent = $.Event("keydown", { which: $.ui.keyCode.TAB });
+        await testUtils.dom.triggerEvents(form.$('tr.o_selected_row input[name="foo"]'), [tabEvent]);
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row input[name="int_field"]')[0],
+            "focus should be on an input with name = int_field");
+
+        // Restore origin jQuery special trigger for 'focus'
+        $.event.special.focus.trigger = jq_evspecial_focus_trigger;
+
+        assert.verifySteps(["onchange:bar"], "onchange method should have been called");
+        form.destroy();
+    });
+
     QUnit.test('pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]', async function (assert) {
         assert.expect(4);
 
@@ -5726,7 +5817,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var list = await createView({
             View: ListView,
@@ -5759,6 +5850,8 @@ QUnit.module('Views', {
         assert.strictEqual(modalText,
             "Among the 4 selected records, 2 are valid for this update. Are you sure you want to " +
             "perform the following update on those 2 records ? Field: int_field Update to: 666");
+        assert.strictEqual(document.querySelector('.modal .o_modal_changes .o_field_widget').style.pointerEvents, 'none',
+            "pointer events should be deactivated on the demo widget");
 
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "1yop666",
@@ -7998,7 +8091,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with optional fields rendering', async function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
@@ -8017,6 +8110,9 @@ QUnit.module('Views', {
             services: {
                 local_storage: RamStorageService,
             },
+            translateParameters: {
+                direction: 'ltr',
+            }
         });
 
         assert.containsN(list, 'th', 3,
@@ -8024,6 +8120,13 @@ QUnit.module('Views', {
 
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
+
+        var $optionalFieldsToggler = list.$('table *:last()');
+        assert.ok($optionalFieldsToggler.hasClass('o_optional_columns_dropdown_toggle'),
+            'The optional fields toggler is the last element');
+
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-right'),
+            'In LTR, the dropdown should be anchored to the right and expand to the left');
 
         // optional fields
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
@@ -8051,6 +8154,44 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
         assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields rendering in RTL mode', async function (assert) {
+        assert.expect(3);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+            translateParameters: {
+                direction: 'rtl',
+            }
+        });
+
+        assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
+            "should have the optional columns dropdown toggle inside the table");
+
+        var $optionalFieldsToggler = list.$('table *:last()');
+        assert.ok($optionalFieldsToggler.hasClass('o_optional_columns_dropdown_toggle'),
+            'The optional fields toggler is the last element');
+
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-left'),
+            'In RTL, the dropdown should be anchored to the left and expand to the right');
 
         list.destroy();
     });

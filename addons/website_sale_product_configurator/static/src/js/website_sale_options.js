@@ -81,7 +81,7 @@ publicWidget.registry.WebsiteSale.include({
                 window.location.pathname = path;
             }
             var $quantity = $(".my_cart_quantity");
-            $quantity.parent().parent().removeClass("d-none", !quantity);
+            $quantity.parent().parent().removeClass('d-none');
             $quantity.html(quantity).hide().fadeIn(600);
         });
     },

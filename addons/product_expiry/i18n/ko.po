@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_expiry
+# 	* product_expiry
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2019
+# JH CHOI <hwangtog@gmail.com>, 2019
+# Link Up링크업 <linkup.way@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
@@ -32,8 +31,8 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
-msgid "<span>days</span>"
-msgstr ""
+msgid "<span> days</span>"
+msgstr "<span>일</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
@@ -59,7 +58,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "날짜"
@@ -75,9 +73,14 @@ msgid "Expiration Alerts"
 msgstr ""
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "LOT/시리얼"
+msgstr "LOT/일련번호"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -141,7 +144,7 @@ msgstr "상품 제거 시간"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "상품 서식"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
@@ -166,7 +169,7 @@ msgid "The Alert Date has been reached."
 msgstr ""
 
 #. module: product_expiry
-#: code:addons/product_expiry/models/production_lot.py:84
+#: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
 msgstr ""
@@ -183,8 +186,8 @@ msgstr "이 일련번호를 가진 상품이 위험해질 수 있거나 사용�
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr "이 일련번호를 가진 상품을 재고에서 제거해야 하는 날짜입니다."
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date

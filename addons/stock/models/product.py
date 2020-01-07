@@ -259,9 +259,9 @@ class Product(models.Model):
                     ids.add(item)
                 else:
                     domain = expression.OR([[('name', 'ilike', item)], domain])
-            if force_company_id:
-                domain = expression.AND([[('company_id', '=', force_company_id)], domain])
             if domain:
+                if force_company_id:
+                    domain = expression.AND([[('company_id', '=', force_company_id)], domain])
                 ids |= set(self.env[model].search(domain).ids)
             return ids
 
@@ -475,7 +475,11 @@ class Product(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {'default_product_id': self.id, 'set_product_readonly': True}
+        action['context'] = {
+            'default_product_id': self.id,
+            'set_product_readonly': True,
+            'default_company_id': (self.company_id or self.env.company).id,
+        }
         return action
 
     # Be aware that the exact same function exists in product.template
@@ -555,9 +559,8 @@ class ProductTemplate(models.Model):
 
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
-        domain="['|', ('company_id', '=', False), ('company_ids', 'in', allowed_company_ids[0])]",
         help="This user will be responsible of the next activities related to logistic operations for this product.")
-    type = fields.Selection(selection_add=[('product', 'Storable Product')])
+    type = fields.Selection(selection_add=[('product', 'Storable Product')], tracking=True)
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
         company_dependent=True, check_company=True, domain="[('usage', '=', 'production'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
@@ -779,7 +782,10 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
-        action['context'] = {'default_product_tmpl_id': self.id}
+        action['context'] = {
+            'default_product_tmpl_id': self.id,
+            'default_company_id': (self.company_id or self.env.company).id,
+        }
         if self.product_variant_count == 1:
             action['context'].update({
                 'default_product_id': self.product_variant_id.id,
@@ -856,4 +862,3 @@ class UoM(models.Model):
         else:
             computed_qty = self._compute_quantity(qty, procurement_uom, rounding_method='HALF-UP')
         return (computed_qty, procurement_uom)
-

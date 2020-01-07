@@ -1823,6 +1823,57 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('text fields should have correct height after onchange', async function (assert) {
+        assert.expect(2);
+
+        const damnLongText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Donec est massa, gravida eget dapibus ac, eleifend eget libero.
+            Suspendisse feugiat sed massa eleifend vestibulum. Sed tincidunt
+            velit sed lacinia lacinia. Nunc in fermentum nunc. Vestibulum ante
+            ipsum primis in faucibus orci luctus et ultrices posuere cubilia
+            Curae; Nullam ut nisi a est ornare molestie non vulputate orci.
+            Nunc pharetra porta semper. Mauris dictum eu nulla a pulvinar. Duis
+            eleifend odio id ligula congue sollicitudin. Curabitur quis aliquet
+            nunc, ut aliquet enim. Suspendisse malesuada felis non metus
+            efficitur aliquet.`;
+
+        this.data.partner.records[0].txt = damnLongText;
+        this.data.partner.records[0].bar = false;
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                obj.txt = damnLongText;
+            },
+        };
+        const form = await createView({
+            arch: `
+                <form string="Partners">
+                    <field name="bar"/>
+                    <field name="txt" attrs="{'invisible': [('bar', '=', True)]}"/>
+                </form>`,
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView,
+            viewOptions: { mode: 'edit' },
+        });
+
+        const textarea = form.el.querySelector('textarea[name="txt"]');
+        const initialHeight = textarea.offsetHeight;
+
+        await testUtils.fields.editInput($(textarea), 'Short value');
+
+        assert.ok(textarea.offsetHeight < initialHeight,
+            "Textarea height should have shrank");
+
+        await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+
+        assert.strictEqual(textarea.offsetHeight, initialHeight,
+            "Textarea height should be reset");
+
+        form.destroy();
+    });
+
     QUnit.test('text fields in editable list have correct height', async function (assert) {
         assert.expect(2);
 
@@ -2989,6 +3040,46 @@ QUnit.module('basic_fields', {
 
         // focus another field
         await testUtils.dom.click(form.$('.o_field_widget[name=foo]').focus().mouseenter());
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
+            "datepicker should close itself when the user clicks outside");
+
+        form.destroy();
+    });
+
+    QUnit.test('date field: toggle datepicker far in the future', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [{
+            id: 1,
+            date: "9999-12-30",
+            foo: "yop",
+        }]
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form><field name="foo"/><field name="date"/></form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
+            "datepicker should be closed initially");
+
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        // focus another field
+        form.$('.o_field_widget[name=foo]').click().focus();
 
         assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
             "datepicker should close itself when the user clicks outside");

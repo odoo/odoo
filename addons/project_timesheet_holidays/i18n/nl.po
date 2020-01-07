@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,9 @@ msgid ""
 "the time off. If you don't want a timesheet, you should leave the internal "
 "project and task empty."
 msgstr ""
+"Zowel het interne project als de taak zijn vereist om een rooster voor de "
+"vrije tijd te genereren. Als u geen urenstaat wilt, moet u het interne "
+"project en de taak leeg laten."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -69,7 +72,7 @@ msgid ""
 "Vacation Project of the company."
 msgstr ""
 "Indien aangevinkt wordt er een urenstaat gegenereerd in het vakantie project"
-" van het bedrijf wanneer de verlofaanvraag gevalideerd wordt."
+" van het bedrijf wanneer de verlofaanvraag bevestigd wordt."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -104,7 +107,7 @@ msgstr "Taak voor urenstaat"
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #, python-format
 msgid "The Internal Project of a company should be in that company."
-msgstr ""
+msgstr "Het interne project van een bedrijf moet in dat bedrijf zijn."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -112,26 +115,25 @@ msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
 msgstr ""
-"Het project bevat de urenstaat gegenereerd wanneer een afwezigheid "
-"gevalideerd is."
+"Het project bevat de urenstaat gegenereerd wanneer een verlof bevestigd is."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
-msgstr "Afwezigheid"
+msgstr "Verlof"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr "Tijd afwezigheid"
+msgstr "Tijd verlof"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr "Soort afwezigheid"
+msgstr "Soort verlof"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit

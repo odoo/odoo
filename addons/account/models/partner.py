@@ -8,6 +8,9 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+from psycopg2 import sql, DatabaseError
+
+_logger = logging.getLogger(__name__)
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -119,9 +122,12 @@ class AccountFiscalPosition(models.Model):
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
-        base_domain = [('auto_apply', '=', True), ('vat_required', '=', vat_required)]
-        if self.env.context.get('force_company'):
-            base_domain.append(('company_id', '=', self.env.context.get('force_company')))
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        base_domain = [
+            ('auto_apply', '=', True),
+            ('vat_required', '=', vat_required),
+            ('company_id', '=', company_id),
+        ]
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
@@ -499,3 +505,21 @@ class ResPartner(models.Model):
                 elif is_supplier and 'supplier_rank' not in vals:
                     vals['supplier_rank'] = 1
         return super().create(vals_list)
+
+    def _increase_rank(self, field):
+        if self.ids and field in ['customer_rank', 'supplier_rank']:
+            try:
+                with self.env.cr.savepoint():
+                    query = sql.SQL("""
+                        SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR UPDATE NOWAIT;
+                        UPDATE res_partner SET {field} = {field} + 1
+                        WHERE id IN %(partner_ids)s
+                    """).format(field=sql.Identifier(field))
+                    self.env.cr.execute(query, {'partner_ids': tuple(self.ids)})
+                    for partner in self:
+                        self.env.cache.remove(partner, partner._fields[field])
+            except DatabaseError as e:
+                if e.pgcode == '55P03':
+                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+                else:
+                    raise e

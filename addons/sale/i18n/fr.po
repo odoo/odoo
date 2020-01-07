@@ -17,13 +17,11 @@
 # Melanie Bernard <mbe@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
 # Nicolas Bayet <nicolas.bayet@gmail.com>, 2019
-# Olivier ANDRE <frsw194@gmail.com>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # fr trans <e2ffr05@hotmail.com>, 2019
 # Richard Mathot <rim@odoo.com>, 2019
 # Florian Hatat, 2019
 # Fabri Yohann <psn@fabri.pw>, 2019
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # f5f0a0dac17dde787a1d812a6989680e, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
@@ -36,19 +34,23 @@
 # gdp Odoo <gdp@odoo.com>, 2019
 # Lucas Deliege <lud@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Nancy Bolognesi <nb@microcom.ca>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Oriane Malburny <oma@odoo.com>, 2019
+# Olivier ANDRE <frsw194@gmail.com>, 2019
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
+"POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"Last-Translator: Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +122,13 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
+
+#. module: sale
+#: model:product.product,description_sale:sale.product_product_4e
+#: model:product.product,description_sale:sale.product_product_4f
+#: model:product.template,description_sale:sale.product_product_4e_product_template
+msgid "160x80cm, with large legs."
+msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -256,6 +265,137 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        Bonjour,\n"
+"        <br/><br/>\n"
+"        % set transaction = object.get_portal_last_transaction()\n"
+"        Votre commande <strong>${object.name}</strong> d'un montant de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        % if object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized')) :\n"
+"            a été confirmée.<br/>\n"
+"           Merci pour votre confiance!\n"
+"        % elif transaction and transaction.state == 'pending' :\n"
+"            est en attente. Elle sera confirmée à la réception du paiement..\n"
+"            % if object.reference:\n"
+"                Votre référence de paiement est <strong>${object.reference}</strong>.\n"
+"            % endif\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        N'hésitez pas à nous contacter si vous avez des questions.\n"
+"        <br/><br/>\n"
+"        % if object.website_id:\n"
+"            <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+"                    <td width=\"18%\"><strong>Produits</strong></td>\n"
+"                    <td/>\n"
+"                    <td><strong>Quantité</strong></td>\n"
+"                    <td width=\"10%\" align=\"center\"><strong>Prix</strong></td>\n"
+"                </tr>\n"
+"                % for line in object.order_line:\n"
+"                    % if not line.is_delivery:\n"
+"                        <tr style=\"${loop.cycle('background-color: #f2f2f2', 'background-color: #ffffff')}\">\n"
+"                            % if line.display_type == 'line_section':\n"
+"                                <td colspan=\"4\"><strong>${line.name}</strong></td>\n"
+"                            % elif line.display_type == 'line_note':\n"
+"                                <td colspan=\"4\"><i>${line.name}</i></td>\n"
+"                            % else:\n"
+"                                <td style=\"width: 150px;\">\n"
+"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Image Produit\"/>\n"
+"                                </td>\n"
+"                                <td align=\"left\">${line.product_id.name}</td>\n"
+"                                <td>${line.product_uom_qty}</td>\n"
+"                                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):\n"
+"                                    <td align=\"right\">${format_amount(line.price_reduce_taxexcl, object.currency_id)}</td>\n"
+"                                % endif\n"
+"                                % if object.user_id.has_group('account.group_show_line_subtotals_tax_included'):\n"
+"                                    <td align=\"right\">${format_amount(line.price_reduce_taxinc, object.currency_id)}</td>\n"
+"                                % endif\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    % endif\n"
+"                % endfor\n"
+"            </table>\n"
+"            <table width=\"40%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"                % if object.carrier_id:\n"
+"                    <tr>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Livraison:</strong></td>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_delivery, object.currency_id)}</td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td width=\"30%\" align=\"right\"><strong>Sous-Total:</strong></td>\n"
+"                        <td align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
+"                    </tr>\n"
+"                % else:\n"
+"                    <tr>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" width=\"30%\" align=\"right\"><strong>Sous-Total:</strong></td>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
+"                    </tr>\n"
+"                % endif\n"
+"                <tr>\n"
+"                    <td align=\"right\"><strong>Taxes:</strong></td>\n"
+"                    <td align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Total:</strong></td>\n"
+"                    <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_total, object.currency_id)}</td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <br/>\n"
+"            <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"                % if object.partner_invoice_id:\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top: 10px;\">\n"
+"                            <strong>Facturation:</strong>\n"
+"                            ${object.partner_invoice_id.street or ''}\n"
+"                            ${object.partner_invoice_id.city or ''}\n"
+"                            ${object.partner_invoice_id.state_id.name or ''}\n"
+"                            ${object.partner_invoice_id.zip or ''}\n"
+"                            ${object.partner_invoice_id.country_id.name or ''}\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <strong>Méthode de paiement:</strong>\n"
+"                            % if transaction.payment_token_id:\n"
+"                                ${transaction.payment_token_id.name}\n"
+"                            % else:\n"
+"                                ${transaction.acquirer_id.name}\n"
+"                            % endif\n"
+"                             (${format_amount(transaction.amount, object.currency_id)})\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                % endif\n"
+"                % if object.partner_shipping_id and not object.only_services:\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <br/>\n"
+"                            <strong>Livraison à:</strong>\n"
+"                            ${object.partner_shipping_id.street or ''}\n"
+"                            ${object.partner_shipping_id.city or ''}\n"
+"                            ${object.partner_shipping_id.state_id.name or ''}\n"
+"                            ${object.partner_shipping_id.zip or ''}\n"
+"                            ${object.partner_shipping_id.country_id.name or ''}\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    % if object.carrier_id:\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>Méthode de livraison:</strong>\n"
+"                                ${object.carrier_id.name}\n"
+"                                % if object.carrier_id.fixed_price == 0.0:\n"
+"                                    (Gratuit)\n"
+"                                % else:\n"
+"                                    (${format_amount(object.carrier_id.fixed_price, object.currency_id)})\n"
+"                                % endif\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    % endif\n"
+"                % endif\n"
+"            </table>\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -392,16 +532,6 @@ msgstr "<small><b class=\"text-muted\">Cette proposition expire dans</b></small>
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Notre offre</b></small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<small>Quotations:</small>"
-msgstr "<small>Devis:</small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<small>Revenues:</small>"
-msgstr "<small>Revenus:</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -819,6 +949,12 @@ msgid "Amount Before Discount"
 msgstr "Montant avant remise"
 
 #. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "Anomalie de montant (%s)"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
 msgstr "Montant des devis à facturer"
@@ -920,15 +1056,6 @@ msgstr "Basé sur l'ID client"
 #: model:ir.model.fields.selection,name:sale.selection__payment_acquirer__so_reference_type__so_name
 msgid "Based on Document Reference"
 msgstr "Basé sur la référence du document"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__validity_date
-msgid ""
-"Beyond this date, the customer is no longer able to accept the quotation "
-"from the portal."
-msgstr ""
-"Au-delà de cette date, le client n'est plus en mesure d'accepter le devis du"
-" portail."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1218,6 +1345,12 @@ msgid "Currency Rate"
 msgstr "Taux de la devise"
 
 #. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
+msgid "Custom"
+msgstr "Personnalisé"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
 msgstr ""
@@ -1292,6 +1425,13 @@ msgstr "Taxes à la vente"
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "Clients"
+
+#. module: sale
+#: model:product.product,name:sale.product_product_4e
+#: model:product.product,name:sale.product_product_4f
+#: model:product.template,name:sale.product_product_4e_product_template
+msgid "Customizable Desk (CONFIG)"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1404,11 +1544,6 @@ msgid "Delivery address for current invoice."
 msgstr "Adresse de livraison pour la facture en cours."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__partner_shipping_id
-msgid "Delivery address for current sales order."
-msgstr "Adresse de livraison du bon de commande en cours."
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
@@ -1421,6 +1556,12 @@ msgstr ""
 "Service. En cas d'expédition, la politique d'expédition de la commande sera "
 "prise en compte pour utiliser soit le délai minimum soit le délai maximum "
 "des lignes de commande."
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Dépôt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
@@ -1577,11 +1718,6 @@ msgstr "Modèle de courriel"
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_template_id
 msgid "Email sent to the customer once the order is paid."
 msgstr "Email envoyé au client une fois que la commande est payée."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Exception Activities"
-msgstr "Activités d'Exception"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1818,6 +1954,11 @@ msgstr ""
 "paiements des abonnements se feront automatiquement."
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
+msgid "If you change the pricelist, only newly added lines will be affected."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
 msgstr "Importer des commandes Amazon et synchroniser les livraisons"
@@ -1909,11 +2050,6 @@ msgstr "Facturer les lignes de commande"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_status
 msgid "Invoice Status"
 msgstr "État de la facture"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__partner_invoice_id
-msgid "Invoice address for current sales order."
-msgstr "Adresse de facturation pour le bon de commandes actuel."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2643,13 +2779,9 @@ msgstr "Payer &amp; Confirmer"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #, python-format
 msgid "Pay Now"
-msgstr "Payer maintenant"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Pay now"
 msgstr "Payer maintenant"
 
 #. module: sale
@@ -2714,13 +2846,6 @@ msgid "Payment terms"
 msgstr "Conditions de règlement"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__payment_term_id
-msgid "Payment terms applies to all invoices issued from this order."
-msgstr ""
-"Les conditions de paiement s'appliquent à toutes les factures émises à "
-"partir de cette commande."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
 msgstr "Type d'utilisateur Paypal"
@@ -2763,15 +2888,6 @@ msgstr "Sous-total du prix"
 #: model:ir.model.fields,field_description:sale.field_sale_report__pricelist_id
 msgid "Pricelist"
 msgstr "Liste de prix"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
-msgid ""
-"Pricelist for current order. If you change the pricelist, only new lines "
-"will consider this pricelist."
-msgstr ""
-"Liste de prix pour la commande en cours. Si vous modifiez la liste de prix, "
-"seules les nouvelles lignes prendront en compte cette liste de prix."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2957,7 +3073,7 @@ msgstr "Date du devis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
-msgstr "Layout des devis"
+msgstr "Mise en page des devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -3005,6 +3121,7 @@ msgstr "Devis vu par le client %s"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
 msgstr "Devis"
@@ -3123,6 +3240,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
 msgstr "Revenus"
 
@@ -3165,6 +3283,11 @@ msgstr "Commandes de vente"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
+msgstr ""
+
+#. module: sale
+#: model:utm.source,name:sale.utm_source_sale_order_0
+msgid "Sale Promotion 1"
 msgstr ""
 
 #. module: sale
@@ -3812,6 +3935,20 @@ msgstr ""
 "L'état de la commande ne requiert pas de signature de la part du client."
 
 #. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "The ordered quantity has been updated."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr "La communication de paiement de ce bon de commande."
@@ -4101,6 +4238,15 @@ msgid "Unit of Measure"
 msgstr "Unité de mesure"
 
 #. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.product,uom_name:sale.product_product_4e
+#: model:product.product,uom_name:sale.product_product_4f
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+#: model:product.template,uom_name:sale.product_product_4e_product_template
+msgid "Units"
+msgstr "Unités"
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4110,7 +4256,7 @@ msgstr "Unités de mesure"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Catégories d'unités de mesure"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -4200,7 +4346,7 @@ msgstr "Confirmer la commande"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Grille d'entrée des variantes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -4267,14 +4413,6 @@ msgstr ""
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Mauvaise valeur saisie !"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__partner_id
-#: model:ir.model.fields,help:sale.field_sale_order_line__order_partner_id
-msgid "You can find a customer from their name, email, tax ID or reference."
-msgstr ""
-"Vous pouvez trouver un client à partir de son nom, email, numéro "
-"d'identification fiscale ou référence."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4373,6 +4511,8 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+"Votre ordre contient des produits de la société %s alors qu'il appartient à la société %s. \n"
+" Veuillez modifier la société de votre ordre ou retirer les produits appartenant à une autre société (%s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

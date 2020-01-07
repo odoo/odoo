@@ -146,8 +146,8 @@ class Applicant(models.Model):
     partner_mobile = fields.Char("Mobile", size=32)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one('hr.department', "Department", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    day_open = fields.Float(compute='_compute_day', string="Days to Open")
-    day_close = fields.Float(compute='_compute_day', string="Days to Close")
+    day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
+    day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
@@ -335,7 +335,6 @@ class Applicant(models.Model):
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
         res['context'] = {
-            'search_default_partner_ids': self.partner_id.name,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,

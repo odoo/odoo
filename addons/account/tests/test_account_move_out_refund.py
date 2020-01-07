@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 from odoo import fields
 
 
@@ -771,6 +772,14 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
             'amount_total': 260.006,
         })
 
+        # The journal forces you to provide a secondary currency.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move_form = Form(self.invoice)
+            move_form.currency_id = self.company_data['currency']
+            move_form.save()
+
+        # Exit the multi-currencies.
+        journal.currency_id = False
         move_form = Form(self.invoice)
         move_form.currency_id = self.company_data['currency']
         move_form.save()
@@ -829,7 +838,10 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(self.invoice, [{'name': 'RINV/2019/0042'}])
 
-        invoice_copy = self.invoice.copy()
+        values = {
+            'invoice_date': self.invoice.invoice_date,
+        }
+        invoice_copy = self.invoice.copy(default=values)
         invoice_copy.post()
 
         self.assertRecordValues(invoice_copy, [{'name': 'RINV/2019/0043'}])

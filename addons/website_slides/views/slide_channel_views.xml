@@ -49,7 +49,7 @@
                             </button>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Course Title"/>
@@ -61,7 +61,7 @@
                         </div>
                         <notebook colspan="4">
                             <page name="content" string="Content">
-                                <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" context="{'default_channel_id': active_id}">
+                                <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': active_id}">
                                      <tree decoration-bf="is_category" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>

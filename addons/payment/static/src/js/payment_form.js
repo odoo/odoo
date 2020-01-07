@@ -10,8 +10,8 @@ var _t = core._t;
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '.o_payment_form',
     events: {
-        'submit': 'async onSubmit',
-        'click #o_payment_form_pay': 'async payEvent',
+        'submit': 'onSubmit',
+        'click #o_payment_form_pay': 'payEvent',
         'click #o_payment_form_add_pm': 'addPmEvent',
         'click button[name="delete_pm"]': 'deletePmEvent',
         'click .o_payment_form_pay_icon_more': 'onClickMorePaymentIcon',
@@ -246,6 +246,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     // here we remove the 'processing' icon from the 'add a new payment' button
                     self.enableButton(button);
                 }).guardedCatch(function (error) {
+                    error.event.preventDefault();
                     // if the rpc fails, pretty obvious
                     self.enableButton(button);
 
@@ -258,6 +259,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             }
             // if the user is going to pay with a form payment, then
             else if (this.isFormPaymentRadio(checked_radio)) {
+                this.disableButton(button);
                 var $tx_url = this.$el.find('input[name="prepare_tx_url"]');
                 // if there's a prepare tx url set
                 if ($tx_url.length === 1) {
@@ -297,8 +299,10 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                                 _t('Server Error'),
                                 _t("We are not able to redirect you to the payment form.")
                             );
+                            self.enableButton(button);
                         }
                     }).guardedCatch(function (error) {
+                        error.event.preventDefault();
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to redirect you to the payment form.") + " " +
@@ -312,6 +316,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         _t("Cannot setup the payment"),
                         _t("We're unable to process your payment.")
                     );
+                    self.enableButton(button);
                 }
             }
             else {  // if the user is using an old payment then we just submit the form
@@ -325,6 +330,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 _t('No payment method selected'),
                 _t('Please select a payment method.')
             );
+            this.enableButton(button);
         }
     },
     /**
@@ -426,6 +432,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 $(button).children('.fa').addClass('fa-plus-circle');
                 $(button).find('span.o_loader').remove();
             }).guardedCatch(function (error) {
+                error.event.preventDefault();
                 // if the rpc fails, pretty obvious
                 $(button).attr('disabled', false);
                 $(button).children('.fa').addClass('fa-plus-circle');

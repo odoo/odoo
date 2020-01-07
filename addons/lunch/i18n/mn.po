@@ -10,14 +10,15 @@
 # Martin Trigaux, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # nasaaskii <nasaaskii@gmail.com>, 2019
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: nasaaskii <nasaaskii@gmail.com>, 2019\n"
+"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Receive button\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -48,7 +51,7 @@ msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amou
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -56,6 +59,8 @@ msgid ""
 "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Order button\"/>"
 msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -63,6 +68,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel button\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -297,7 +304,9 @@ msgstr "Дүн"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
 msgid "Archived"
 msgstr "Архивласан"
@@ -465,7 +474,7 @@ msgstr "Улс"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Төлбөр үүсгэх"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -476,6 +485,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "Create a new product for lunch"
+msgstr ""
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create new lunch alerts"
 msgstr ""
 
 #. module: lunch
@@ -971,12 +985,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "Үдийн хоолны бүтээгдэхүүн"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
-msgstr ""
+msgstr "Үдийн хоолны бүтээгдэхүүний ангилал"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
@@ -986,12 +1000,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "Үдийн хоол: Хоолуудыг цуцлах"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "Үдийн зоог: Хоол хүлээн авах"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.ir_cron_lunch_alerts_ir_actions_server
@@ -1135,17 +1149,17 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "Бэлэн мөнгө хараахан шилжсэнгүй"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "Захиалга одоогоор байхгүй"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
 msgid "No previous order found"
-msgstr ""
+msgstr "Өмнөх ямар ч захиалга олдсонгүй"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1179,7 +1193,7 @@ msgstr "Тэмдэглэл"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "Өнөөдрийн хувьд захиалга алга"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
@@ -1732,7 +1746,7 @@ msgstr "Нийлүүлэгч"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "Нийлүүлэгчийн захиалга Өдрөөр"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_vendors_action

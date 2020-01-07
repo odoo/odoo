@@ -13,17 +13,17 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
 # Silvija Butko <silvija.butko@gmail.com>, 2019
-# Martin Trigaux, 2019
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
 # Anatolij, 2019
+# Martin Trigaux, 2019
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -39,6 +39,12 @@ msgstr ""
 #, python-format
 msgid " Add Images"
 msgstr "Pridėti paveikslėlių"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr "\" įspėjimas su"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -96,22 +102,8 @@ msgstr "(gali būti naudojamas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ""
-",\n"
-"                                updated:"
-msgstr ""
-",\n"
-"                                atnaujinta:"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid ", author:"
 msgstr ", autorius:"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ", updated:"
-msgstr ", atnaujinta:"
 
 #. module: website
 #. openerp-web
@@ -155,6 +147,12 @@ msgid "1s"
 msgstr "1s"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"sr-only\">(current)</span>"
+msgstr "2 <span class=\"sr-only\">(esamas)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "2/5"
 msgstr "2/5"
@@ -180,17 +178,17 @@ msgid "3/5"
 msgstr "3/5"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_301
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
 msgid "301 Moved permanently"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_302
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
 msgid "302 Moved temporarily"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__rewrite
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__308
 msgid "308 Redirect / Rewrite"
 msgstr ""
 
@@ -205,19 +203,9 @@ msgid "4/5"
 msgstr "4/5"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "403: Forbidden"
-msgstr "403: Neleidžiama"
-
-#. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__not_found
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
 msgid "404 Not Found"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "404: Page not found!"
-msgstr "404: Puslapis nerastas!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -726,6 +714,16 @@ msgid "<p>Enter a title for the page.</p>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Mes niekada niekam "
+"neatskleisime jūsų el. pašto.</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
 msgstr "<small>/ mėnesį</small>"
@@ -881,12 +879,6 @@ msgid "<span>— John DOE, CEO of <b>MyCompany</b></span>"
 msgstr "<span>— Jonas Jonaitis, <b>MyCompany</b>direktorius</span>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.error_message
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "<strong>Error message:</strong>"
-msgstr "<strong>Klaidos pranešimas:</strong>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
@@ -939,7 +931,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
 msgid ""
-"A new visit is considered if last connection was more than 24 hours ago."
+"A new visit is considered if last connection was more than 8 hours ago."
+msgstr ""
+
+#. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
+msgid "A partner is linked to only one visitor."
 msgstr ""
 
 #. module: website
@@ -985,12 +982,19 @@ msgid "Access Token"
 msgstr "Prieigos raktas"
 
 #. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
+msgid "Access token should be unique."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
 msgstr "Sąskaitų ir pardavimų valdymas"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "Veiksmas"
 
@@ -1082,6 +1086,12 @@ msgstr ""
 "Po patikrinimo, kaip tai atrodo mobiliuosiuose, <b>uždarykite peržiūrą</b>."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
+msgstr "Įspėjimas"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
 msgstr "Aline Turner, CTO"
@@ -1125,7 +1135,7 @@ msgstr ""
 "tai nėra atskirai nurodyta."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "An error occured while rendering the template"
 msgstr "Atvaizduojant šį šabloną įvyko klaida"
 
@@ -1207,6 +1217,12 @@ msgid "Autoredirect Language"
 msgstr "Automatinio nukreipimo kalba"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr "Automatinis dydis"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
@@ -1214,14 +1230,15 @@ msgid "Available on the Website"
 msgstr "Pasiekiama svetainėje"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
-msgid "Back"
-msgstr "Grįžti"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Background"
 msgstr "Fonas"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
+msgstr "Ženklelis"
 
 #. module: website
 #: model:ir.model,name:website.model_base
@@ -1285,7 +1302,15 @@ msgid "Boxed"
 msgstr "Įrėmintas"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Breadcrumb"
+msgstr "Kelias"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Button"
 msgstr "Mygtukas"
 
@@ -1315,7 +1340,7 @@ msgstr ""
 #: code:addons/website/static/src/js/backend/dashboard.js:0
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #: code:addons/website/static/src/xml/website.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #, python-format
 msgid "Cancel"
 msgstr "Atšaukti"
@@ -1325,6 +1350,30 @@ msgstr "Atšaukti"
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr "Kortelė"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr "Kortelės turinys"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr "Kortelės poraštė"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr "Kortelės antraštė"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -1470,7 +1519,7 @@ msgstr "Klonuoti šį puslapį"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -1501,6 +1550,12 @@ msgstr "Įmonės komanda"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
 msgstr "Pilnas CRM bet kokio dydžio komandai"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Components"
+msgstr "Komponentai"
 
 #. module: website
 #: code:addons/website/models/website_visitor.py:0
@@ -1544,18 +1599,12 @@ msgid "Connect with us"
 msgstr "Susisiekite su mumis"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__connection_datetime
-msgid "Connection Datetime"
-msgstr ""
-
-#. module: website
 #: model:ir.model,name:website.model_res_partner
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Contact"
 msgstr "Kontaktai"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "Susisiekite su mumis"
@@ -1642,7 +1691,6 @@ msgstr "Sukurkite naują svetainę"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_uid
 #: model:ir.model.fields,field_description:website.field_website_route__create_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
@@ -1652,7 +1700,6 @@ msgstr "Sukūrė"
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_date
 #: model:ir.model.fields,field_description:website.field_website_route__create_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
@@ -1712,6 +1759,12 @@ msgstr "Valdymo skydelis"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dashed"
 msgstr "Brūkšniuotas"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Data"
+msgstr "Duomenys"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -1826,6 +1879,12 @@ msgid "Disable autoplay"
 msgstr "Išjungti automatinį grojimą"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Disabled"
+msgstr "Išjungta"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
@@ -1858,7 +1917,6 @@ msgstr "Diskusijų grupė"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -1967,6 +2025,12 @@ msgid "Drag to the right to get a submenu"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Dropdown"
+msgstr "Išsiskleidžiantis"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
@@ -2059,9 +2123,21 @@ msgid "Email"
 msgstr "El. paštas"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr "El. pašto adresas"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "El. pašto palaikymas"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
+msgstr "Įvesti el. paštą"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2069,7 +2145,6 @@ msgid "Equal height"
 msgstr "Lygus aukštis"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Error"
 msgstr "Klaida"
@@ -2273,6 +2348,12 @@ msgid "Force your user to create an account per website"
 msgstr "Priversti vartotoją susikurti paskyrą svetainei"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Form"
+msgstr "Forma"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Form Builder"
 msgstr "Formų kūrėjas"
@@ -2449,17 +2530,6 @@ msgid "Google Maps API Key"
 msgstr "Google Maps API raktas"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Google Plus"
-msgstr "Google Plus"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
-#: model:ir.model.fields,field_description:website.field_website__social_googleplus
-msgid "Google+ Account"
-msgstr "Google+ paskyra"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "Puiki vertė"
@@ -2523,6 +2593,12 @@ msgid "Half Screen"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr "Antraštė"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
 msgstr "Antraštės spalva"
@@ -2533,32 +2609,44 @@ msgid "Header Overlay"
 msgstr "Antraštės padengimas"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 1"
 msgstr "Antraštės 1"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 2"
 msgstr "Antraštės 2"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 3"
 msgstr "Antraštės 3"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 4"
 msgstr "Antraštės 4"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 5"
 msgstr "Antraštės 5"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 6"
 msgstr "Antraštės 6"
 
@@ -2604,21 +2692,28 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model:website.menu,name:website.menu_home
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "Pradžia"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"sr-only\">(current)</span>"
+msgstr "Namai <span class=\"sr-only\">(esamas)</span>"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model:ir.model.fields,field_description:website.field_website__homepage_id
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
-#: model_terms:ir.ui.view,arch_db:website.404
+#: model_terms:ir.ui.view,arch_db:website.portal_404
 #, python-format
 msgid "Homepage"
 msgstr "Namų puslapis"
@@ -2654,7 +2749,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 #: model:ir.model.fields,field_description:website.field_website_track__id
 #: model:ir.model.fields,field_description:website.field_website_visitor__id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__id
 msgid "ID"
 msgstr "ID"
 
@@ -2689,7 +2783,7 @@ msgstr ""
 "Jei nenustatyta, pakeis numatytąjį dalijimosi paveikslėlį įmonės logotipu."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset the template to its <strong>factory settings</strong>."
@@ -2813,8 +2907,8 @@ msgstr "Įdiegtos programos"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "Installed Modules"
-msgstr "Įdiegti moduliai"
+msgid "Installed Localizations / Account Charts"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -2905,6 +2999,18 @@ msgstr ""
 "href=\"%s\">klasikinėje \"Odoo\" sąsajoje</a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr "Įrašas 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr "Įrašas 2"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
 msgid "Join us and make your company a better place."
 msgstr "Prisijunkite prie mūsų ir pagerinkite savo įmonę"
@@ -2963,7 +3069,9 @@ msgid "Languages available on your website"
 msgstr "Kalbos, galimos jūsų svetainėje"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "Didelis"
 
@@ -2975,11 +3083,6 @@ msgstr "Paskutinis veiksmas"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_connection_datetime
 msgid "Last Connection"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__last_connections_ids
-msgid "Last Connections"
 msgstr ""
 
 #. module: website
@@ -2999,7 +3102,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -3022,7 +3124,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_uid
 #: model:ir.model.fields,field_description:website.field_website_route__write_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
@@ -3033,7 +3134,6 @@ msgstr "Paskutinį kartą atnaujino"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_date
 #: model:ir.model.fields,field_description:website.field_website_route__write_date
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
@@ -3100,6 +3200,12 @@ msgid "Let's start designing."
 msgstr "Pradėkime dizaino darbus."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Library"
+msgstr "Biblioteka"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "Ribotas pritaikymas"
@@ -3108,6 +3214,12 @@ msgstr "Ribotas pritaikymas"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Line-On-Sides"
 msgstr "Linijos šonuose"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link"
+msgstr "Nuoroda"
 
 #. module: website
 #. openerp-web
@@ -3122,7 +3234,13 @@ msgid "Link Trackers"
 msgstr "Nuorodų sekimas"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__user_partner_id
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
+msgstr "Nuorodos mygtukas"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
 msgid "Linked Partner"
 msgstr ""
 
@@ -3215,11 +3333,6 @@ msgstr "Valdyti šį puslapį"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Masonry"
 msgstr "Masonry"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "Maybe you were looking for one of these popular pages ?"
-msgstr "Galbūt ieškojote vieno iš šių populiarių puslapių?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3414,7 +3527,9 @@ msgid "Narrow"
 msgstr "Siauras"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Navbar"
 msgstr "Navigacijos juosta"
 
@@ -3495,9 +3610,11 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "Kitas"
@@ -3753,6 +3870,12 @@ msgstr ""
 "yra pasiruošė optimizuoti savo procesus."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Outline"
+msgstr "Kontūras"
+
+#. module: website
 #: code:addons/website/models/website.py:0
 #: code:addons/website/models/website.py:0
 #: model:ir.model,name:website.model_website_page
@@ -3850,6 +3973,22 @@ msgid "Pages"
 msgstr "Puslapiai"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
+msgstr "Puslapiavimas"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"Pastraipa su <strong>pastorintu</strong>, <span class=\"text-"
+"muted\">išblukusiu</span> ir <em>pasviru</em> tekstais"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr "Tėvinis meniu"
@@ -3860,7 +3999,7 @@ msgid "Parent Path"
 msgstr "Tėvinis kelias"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_visitor__user_partner_id
+#: model:ir.model.fields,help:website.field_website_visitor__partner_id
 msgid "Partner of the last logged in user."
 msgstr ""
 
@@ -3873,6 +4012,12 @@ msgstr "Su partneriu susiję vartotojo duomenys"
 #: model:ir.actions.act_window,name:website.visitor_partner_action
 msgid "Partners"
 msgstr "Partneriai"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pill"
+msgstr "Piliulė"
 
 #. module: website
 #. openerp-web
@@ -3898,8 +4043,10 @@ msgstr "Peržiūra"
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "Ankstesnis"
@@ -3992,11 +4139,6 @@ msgstr "Publikavimo data"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Purple"
 msgstr "Violetinis"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "QWeb"
-msgstr "QWeb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating
@@ -4109,17 +4251,17 @@ msgid "Reset"
 msgstr "Atstatyti"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset templates"
 msgstr "Atstatyti šablonus"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset to initial version (hard reset)."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
 msgstr ""
 
@@ -4204,7 +4346,9 @@ msgid "Save"
 msgstr "Išsaugoti"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "Paieška"
 
@@ -4304,6 +4448,12 @@ msgid "Send us an email"
 msgstr "Atsiųskite mums el. laišką"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr "Atskirta nuoroda"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website_page__priority
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
@@ -4399,7 +4549,9 @@ msgid "Slow"
 msgstr "Lėtas"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "Mažas"
 
@@ -4426,9 +4578,10 @@ msgid "Solid"
 msgstr "Vientisas"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Something went wrong."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
+msgstr "Kažkas kitas čia"
 
 #. module: website
 #: code:addons/website/controllers/main.py:0
@@ -4506,11 +4659,6 @@ msgid "Tabs"
 msgstr "Skiltys"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Take a look at the error message below."
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,help:website.field_ir_attachment__key
 #: model:ir.model.fields,help:website.field_mrp_document__key
 msgid ""
@@ -4550,7 +4698,7 @@ msgid "Template <b>%s (id:%s)</b> is calling this file"
 msgstr "Šablonas <b>%s (id:%s)</b> kviečia šį failą"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "Atsarginis šablonas"
 
@@ -4628,11 +4776,6 @@ msgstr ""
 "Aprašas bus sugeneruotas socialinių tinklų, nebent jūs nurodysite kitaip."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "The error occured while rendering the template"
-msgstr "Atvaizduojant šabloną įvyko klaida"
-
-#. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
 #: model:ir.model.fields,help:website.field_res_users__website_url
 #: model:ir.model.fields,help:website.field_website_page__website_url
@@ -4663,23 +4806,7 @@ msgid "The language of the keyword and related keywords."
 msgstr "Raktažodžių ir susijusių raktažodžių kalba."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "The page you were looking for could not be authorized."
-msgstr "Puslapis, kurio ieškote, negalėjo būti patvirtintas."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid ""
-"The page you were looking for could not be found; it is possible you have\n"
-"                        typed the address incorrectly, but it has most probably been removed due\n"
-"                        to the recent website reorganisation."
-msgstr ""
-"Puslapis, kurio ieškote, nerastas; gali būti, kad neteisingai įvedėte\n"
-"adresą, bet tikriausiai jis buvo pašalintas per paskutinę svetainės\n"
-"reorganizaciją."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr "Pasirinkti šablonai bus atstatyti į gamyklinius parametrus."
 
@@ -4782,6 +4909,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
+msgstr "Tai yra \""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component <br/>for "
@@ -4865,6 +4998,18 @@ msgstr ""
 "pasirinkimą iš nusileidžiančio veiksmų meniu."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle"
+msgstr "Perjungti"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle navigation"
+msgstr "Perjungti navigaciją"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
 msgstr "Tony Fred, CEO"
@@ -4896,11 +5041,6 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_visitor__visitor_page_count
 msgid "Total number of visits on tracked pages"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "Traceback"
-msgstr "Atsekti"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
@@ -4999,7 +5139,7 @@ msgid "Type"
 msgstr "Tipas"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "Type '<i class=\"confirm_word\">yes</i>' in the box below if you want to "
 "confirm."
@@ -5195,6 +5335,12 @@ msgid "Users"
 msgstr "Vartotojai"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr "Funkcijos ir tipografija"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Value"
 msgstr "Reikšmė"
@@ -5284,7 +5430,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visitor_id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__visitor_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visitor"
@@ -5691,7 +5836,9 @@ msgstr ""
 "pasirinkimui, kurią naudoti."
 
 #. module: website
+#: code:addons/website/models/res_users.py:0
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
+#, python-format
 msgid "You can not have two users with the same login!"
 msgstr "Jūs negalite turėti dviejų vartotojų su tokiu pačiu vartotojo vardu!"
 
@@ -5802,9 +5949,10 @@ msgid "and copy paste the embed code here."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "and evaluating the following expression:"
-msgstr "ir vertinant šį išsireiškimą:"
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "breadcrumb"
+msgstr "kelias"
 
 #. module: website
 #. openerp-web
@@ -5843,6 +5991,12 @@ msgid "instance of Odoo, the"
 msgstr "\"Odoo\" atvejis"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr "nuoroda"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "name"
 msgstr "pavadinimas"
@@ -5875,11 +6029,6 @@ msgid "sitemap.xml"
 msgstr "sitemap.xml"
 
 #. module: website
-#: model:ir.model,name:website.model_website_visitor_lastconnection
-msgid "temporary table for Visitor"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "url"
 msgstr "nuoroda"
@@ -5897,7 +6046,7 @@ msgid "www.odoo.com"
 msgstr "www.odoo.com"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "taip"
 

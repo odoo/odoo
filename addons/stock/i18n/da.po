@@ -14,13 +14,14 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# Simon Andersen <simon@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -254,7 +255,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -276,6 +277,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -607,7 +610,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -653,14 +656,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Alle returnerede flytninger"
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"All the products currently reserved in the picking are already in a pack. "
-"Please add products to the picking to create a new pack."
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -712,11 +707,17 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Arkiveret"
@@ -741,11 +742,6 @@ msgid "As soon as possible"
 msgstr "Hurtigst muligt"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign"
-msgstr "Tildel"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
 msgstr "Tilknyt ejer"
@@ -762,13 +758,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
 msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
-#: model:ir.actions.server,name:stock.action_assign_a_responsible
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign a Responsible"
-msgstr "Tildel en ansvarlig"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -930,6 +919,12 @@ msgstr ""
 "Ved at efterlade feltet blankt, kan du gemme et lager uden at slette det."
 
 #. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Kalendervisning"
@@ -954,7 +949,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
@@ -1695,6 +1689,7 @@ msgstr "Leveringsadresse"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2049,11 +2044,6 @@ msgid ""
 "            from a vendor, Odoo will move products from the Vendor\n"
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Exception Activities"
 msgstr ""
 
 #. module: stock
@@ -2794,7 +2784,7 @@ msgstr "Lagernedskrivning"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr ""
+msgstr "Lager oversigt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__name
@@ -3645,7 +3635,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4120,6 +4110,12 @@ msgstr "Udførte plukninger"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
 msgstr "Planlagt overførsel"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Please add 'Done' qantitites to the picking to create a new pack."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4713,6 +4709,7 @@ msgstr "Modtagelses rute"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -5098,7 +5095,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS leveringsfejl"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -6128,21 +6125,21 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "This note will show up on delivery orders."
-msgstr "Denne note vil fremgå af leveringsordrer."
+msgid "This note is added to delivery orders."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on internal transfer orders (e.g. where to pick the "
+"This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on receipt orders (e.g. where to store the product in"
-" the warehouse)."
+"This note is added to receipt orders (e.g. where to store the product in the"
+" warehouse)."
 msgstr ""
 
 #. module: stock
@@ -6441,6 +6438,12 @@ msgstr "Enhedspris"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
 msgstr "Enhed"
+
+#. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "Enheder"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6751,6 +6754,7 @@ msgstr "Advarsel!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
 msgstr "Advarsler"
 

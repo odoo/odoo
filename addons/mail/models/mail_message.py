@@ -7,7 +7,6 @@ import re
 from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
-from email.utils import formataddr
 from odoo.http import request
 
 from odoo import _, api, fields, models, modules, tools
@@ -32,7 +31,7 @@ class Message(models.Model):
     @api.model
     def _get_default_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return tools.formataddr((self.env.user.name, self.env.user.email))
         raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model
@@ -305,7 +304,9 @@ class Message(models.Model):
         attachments = self.env['ir.attachment']
         message_ids = list(message_tree.keys())
         email_notification_tree = {}
-        for message in message_tree.values():
+        # By rebrowsing all the messages at once, we ensure all the messages
+        # to be on the same prefetch group, enhancing that way the performances
+        for message in self.sudo().browse(message_ids):
             if message.author_id:
                 partners |= message.author_id
             # find all notified partners
@@ -363,14 +364,16 @@ class Message(models.Model):
             for notification in email_notification_tree[message.id]:
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.notification_status))
 
-            has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
-            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
-                main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
             attachment_ids = []
-            for attachment in message.attachment_ids:
-                if attachment.id in attachments_tree:
-                    attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
-                    attachment_ids.append(attachments_tree[attachment.id])
+            if message.attachment_ids:
+                has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
+                if message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
+                    main_attachment = self.env[message.model].browse(message.res_id).message_main_attachment_id
+                for attachment in message.attachment_ids:
+                    if attachment.id in attachments_tree:
+                        attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
+                        attachment_ids.append(attachments_tree[attachment.id])
+
             tracking_value_ids = []
             for tracking_value_id in message_to_tracking.get(message_id, list()):
                 if tracking_value_id in tracking_tree:
@@ -1179,11 +1182,11 @@ class Message(models.Model):
             if not msg.email_from:
                 continue
             if self.env.user.partner_id.email:
-                email_from = formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
+                email_from = tools.formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
             else:
                 email_from = self.env.company.catchall
 
-            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body)
+            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body, plaintext=False)
             vals = {
                 'subject': subject,
                 'body_html': body_html,

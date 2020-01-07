@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_hr_recruitment
+# 	* website_hr_recruitment
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Teija Hölttä <teija.holtta@gmail.com>, 2018
-# Kari Lindgren <karisatu@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Iipponen <erno@web-veistamo.fi>, 2018
-# Kimmo Lehtonen <leban@netzionale.com>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
+# Martin Trigaux, 2019
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
+# Mikko Salmela <salmemik@gmail.com>, 2019
+# Teija Hölttä <teija.holtta@gmail.com>, 2019
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Iipponen <erno@web-veistamo.fi>, 2019
+# Kimmo Lehtonen <leban@netzionale.com>, 2019
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +46,25 @@ msgstr "3 kk"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "50% YoY"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Publication date\" role=\"img\" aria-"
+"label=\"Publication date\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -105,6 +124,11 @@ msgid ""
 msgstr ""
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "<span class=\"o_recruitment_purple\">Published</span>"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 #: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
@@ -158,6 +182,13 @@ msgstr "Kaikki toimipisteet"
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
 msgid "Applicant"
 msgstr "Hakija"
+
+#. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Applied Job"
+msgstr "Haettu työ"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -215,6 +246,14 @@ msgid ""
 msgstr ""
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
+msgid "Department"
+msgstr "Osasto"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Direct coordination with functional consultants for qualification and follow"
@@ -245,9 +284,9 @@ msgid "In the meantime,"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-msgid "Is published"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Job"
+msgstr "Tehtävä"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -258,6 +297,11 @@ msgstr "Työhakemus"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Job Complexity:"
 msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "Job Description"
+msgstr "Työnkuva"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -275,7 +319,7 @@ msgid "Job Security:"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:77
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "Tehtävänimike"
@@ -319,11 +363,6 @@ msgid "Need More Info?"
 msgstr "Tarvitsetko lisätietoja?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
-msgid "New Job Offer"
-msgstr "Uusi työtarjous"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No outbound calls, you get leads and focus on providing value to them"
 msgstr ""
@@ -356,6 +395,13 @@ msgid "Personal Evolution:"
 msgstr ""
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
+#, python-format
+msgid "Phone Number"
+msgstr "Puhelinnumero"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues and the bill is covered"
 msgstr ""
@@ -371,19 +417,12 @@ msgid "Profitable"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr ""
-
-#. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Resume"
 msgstr "Jatka"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
-msgid "SEO optimized"
-msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -391,7 +430,10 @@ msgid "Sales Cycle:"
 msgstr ""
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Short Introduction"
 msgstr "Lyhyt kuvaus"
 
@@ -431,11 +473,6 @@ msgid "The founder’s story"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Dokumentin URL-osoite verkkosivustolla."
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event"
@@ -462,54 +499,14 @@ msgid "Variability of the Job:"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published
-msgid "Visible on current website"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
-msgid "Website"
-msgstr "Verkkosivu"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "Website Editor"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Verkkosivun työhakulomake"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
-msgid "Website URL"
-msgstr "Verkkosivuston osoite"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
 msgid "Website description"
 msgstr "Verkkosivun kuvaus"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
-msgid "Website meta description"
-msgstr "Verkkosivuston metakuvaus"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Verkkosivuston meta-avainsanat"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
-msgid "Website meta title"
-msgstr "Verkkosivuston metaotsikko"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
-msgid "Website opengraph image"
-msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -524,12 +521,18 @@ msgid ""
 msgstr ""
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Your Email"
 msgstr "Sähköpostisi"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Your Name"
 msgstr "Nimesi"
 

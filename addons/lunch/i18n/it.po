@@ -22,9 +22,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -314,7 +314,9 @@ msgstr "Importo"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
 msgid "Archived"
 msgstr "Archiviato"
@@ -449,7 +451,7 @@ msgstr "Azienda"
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
@@ -493,6 +495,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "Create a new product for lunch"
+msgstr ""
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create new lunch alerts"
 msgstr ""
 
 #. module: lunch
@@ -712,27 +719,27 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_follower_ids
 msgid "Followers"
-msgstr "Follower"
+msgstr "Chi segue"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Follower (canali)"
+msgstr "Chi segue (canali)"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Chi segue (partner)"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "Formattare l'indirizzo email \"Nome <email@dominio>\""
+msgstr "Formatta l'indirizzo e-mail \"Nome <e-mail@dominio>\""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
 msgid "Formatted Email"
-msgstr "Email formattato"
+msgstr "E-mail con formattazione"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_friday
@@ -855,7 +862,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
@@ -1361,7 +1368,7 @@ msgstr "Categorie prodotto"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Categories Form"
-msgstr ""
+msgstr "Modulo categorie prodotto"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
@@ -1506,7 +1513,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "State"
-msgstr "Provincia"
+msgstr "Stato"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__state
@@ -1707,7 +1714,7 @@ msgstr "Messaggi non letti"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_end_date

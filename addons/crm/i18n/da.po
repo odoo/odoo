@@ -11,14 +11,15 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
+# JonathanStein <jstein@image.dk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: JonathanStein <jstein@image.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,16 +178,6 @@ msgstr ""
 "e-mails.</p>"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Leads:</small>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Opportunities:</small>"
-msgstr ""
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -299,6 +290,7 @@ msgstr "Anvend deduplikering"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -323,7 +315,7 @@ msgstr "Tildel denne salgsmulighed til"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign to"
-msgstr ""
+msgstr "Tildel til"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
@@ -388,6 +380,11 @@ msgstr "CRM faser"
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
 msgstr ""
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Ring for demo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
@@ -555,6 +552,11 @@ msgid "Consider leads created as of the"
 msgstr ""
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Konsulent"
+
+#. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
@@ -707,7 +709,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create new tags for your opportunities"
-msgstr ""
+msgstr "Opret nye tags til dine muligheder"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
@@ -715,6 +717,8 @@ msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and track your opportunities."
 msgstr ""
+"Opret tags der passer til din virksomhed (produktstruktur, salgstype etc.), "
+"så du bedre kan administrere og spore din muligheder."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -828,6 +832,11 @@ msgid "Description"
 msgstr "Beskrivelse"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Design"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr "Opsummering"
@@ -897,7 +906,7 @@ msgstr "E-mailadresse på kontakten"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -961,12 +970,6 @@ msgid "Estimate of the date on which the opportunity will be won."
 msgstr "Vurdering af hvornår sagen bliver vundet."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -1024,6 +1027,11 @@ msgstr "Foldet i pipeline"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Follow-up"
 msgstr "Opfølgning"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Opfølgsningstilbud"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -1194,6 +1202,11 @@ msgid "Incorrect"
 msgstr ""
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Information"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Internal Notes"
 msgstr "Interne notater"
@@ -1206,7 +1219,7 @@ msgstr "Er følger"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
 msgid "Is Won Stage?"
-msgstr ""
+msgstr "Er vundet fase?"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
@@ -1395,6 +1408,7 @@ msgstr "Kundeemne/Salgsmulighed"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 msgid "Leads"
 msgstr "Kundeemner"
 
@@ -1486,10 +1500,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Liste over cc fra indgående emails."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1527,6 +1542,11 @@ msgstr "Lav"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Vedhæftning"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Lav tilbud"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1757,7 +1777,7 @@ msgstr "Antal handlinger"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -1823,6 +1843,7 @@ msgstr "Årsag for tabt salgsmulighed"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -1927,6 +1948,11 @@ msgstr ""
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "Vundet salgsmulighed"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Andet"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2047,6 +2073,11 @@ msgid "Probability"
 msgstr "Sandsynlighed"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Produkt"
+
+#. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
 msgstr "Forslag/tilbud"
@@ -2109,7 +2140,7 @@ msgstr "Gendan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS leveringsfejl"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
@@ -2195,6 +2226,11 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Serviceydelser"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr "Opret en ny fase i din pipeline"
@@ -2227,6 +2263,11 @@ msgstr "Vis kun kundeemner"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Vis kun salgsmuligheder"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Software"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2503,6 +2544,11 @@ msgid "Tracking"
 msgstr "Sporing"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Træning"
+
+#. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
 msgstr "Prøv nu"
@@ -2700,6 +2746,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
@@ -2779,7 +2826,7 @@ msgstr "f.eks. produktpriser"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "f.eks. https://www.odoo.com"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0

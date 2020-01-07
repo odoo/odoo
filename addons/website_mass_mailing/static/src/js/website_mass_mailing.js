@@ -83,7 +83,12 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             if (self.$popup.length) {
                 self.$popup.modal('hide');
             }
-            self.displayNotification(_t("Success"), result.toast_content, 'success', true);
+            self.displayNotification({
+                type: 'success',
+                title: _t("Success"),
+                message: result.toast_content,
+                sticky: true,
+            });
         });
     },
 });
@@ -168,6 +173,9 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
         });
         this.massMailingPopup.opened().then(function () {
             var $modal = self.massMailingPopup.$modal;
+            $modal.find('header button.close').on('mouseup', function (ev) {
+                ev.stopPropagation();
+            });
             $modal.addClass('o_newsletter_modal');
             $modal.find('.oe_structure').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             $modal.find('.modal-dialog').addClass('modal-dialog-centered');

@@ -254,7 +254,7 @@ msgstr "Sequenza registrazione nota di credito"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes Next Number"
-msgstr ""
+msgstr "Prossimo numero nota di credito"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -305,17 +305,17 @@ msgstr "File"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
 msgid "Followers"
-msgstr "Follower"
+msgstr "Chi segue"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Follower (canali)"
+msgstr "Chi segue (canali)"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Chi segue (partner)"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -364,6 +364,14 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Se selezionato, alcuni messaggi presentano un errore di consegna."
 
 #. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
 msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
@@ -400,7 +408,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -415,7 +423,7 @@ msgstr "Opera come conto predefinito per l'importo in dare"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr ""
+msgstr "Crea fatture cliente e fornitore in bozza inviando una e-mail."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -741,14 +749,14 @@ msgstr ""
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any statement."
-msgstr "Il file non contiene alcuna registrazione."
+msgid "This file doesn't contain any statement for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any transaction."
-msgstr "Il file non contiene alcuna transazione."
+msgid "This file doesn't contain any transaction for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -768,7 +776,7 @@ msgstr "Messaggi non letti"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import

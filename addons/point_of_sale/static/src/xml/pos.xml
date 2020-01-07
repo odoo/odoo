@@ -975,7 +975,7 @@
             <t t-if='!taxincluded'>
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
-                <div>Subtotal<span t-esc='widget.format_currency_no_symbol(receipt.subtotal)' class="pos-receipt-right-align"/></div>
+                <div>Subtotal<span t-esc='widget.format_currency(receipt.subtotal)' class="pos-receipt-right-align"/></div>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
                     <div>
                         <t t-esc='tax.name' />
@@ -989,7 +989,7 @@
             <br/>
             <div class="pos-receipt-amount">
                 TOTAL
-                <span t-esc='widget.format_currency_no_symbol(receipt.total_with_tax)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(receipt.total_with_tax)' class="pos-receipt-right-align"/>
             </div>
             <br/><br/>
 
@@ -1005,7 +1005,7 @@
 
             <div class="pos-receipt-amount receipt-change">
                 CHANGE
-                <span t-esc='widget.format_currency_no_symbol(receipt.change)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(receipt.change)' class="pos-receipt-right-align"/>
             </div>
             <br/>
 
@@ -1014,7 +1014,7 @@
             <t t-if='receipt.total_discount'>
                 <div>
                     Discounts
-                    <span t-esc='widget.format_currency_no_symbol(receipt.total_discount)' class="pos-receipt-right-align"/>
+                    <span t-esc='widget.format_currency(receipt.total_discount)' class="pos-receipt-right-align"/>
                 </div>
             </t>
             <t t-if='taxincluded'>
@@ -1026,7 +1026,7 @@
                 </t>
                 <div>
                     Total Taxes
-                    <span t-esc='widget.format_currency_no_symbol(receipt.total_tax)' class="pos-receipt-right-align"/>
+                    <span t-esc='widget.format_currency(receipt.total_tax)' class="pos-receipt-right-align"/>
                 </div>
             </t>
 

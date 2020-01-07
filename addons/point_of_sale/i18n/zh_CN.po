@@ -8,17 +8,13 @@
 # Joray <13637815@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # 湘子 南 <1360857908@qq.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2019
-# keecome <7017511@qq.com>, 2019
 # Fisher <fisher@kdomi.com>, 2019
 # 卫安琪 <weianqi1991@gmail.com>, 2019
 # xu xiaohu <xu.xiaohu@gmail.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
@@ -26,14 +22,20 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# Shiping Lv <lvshiping@sina.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Shiping Lv <lvshiping@sina.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,6 +150,12 @@ msgid ""
 " continues to run without an internet connection.</p>"
 msgstr ""
 "<p>单击以启动销售点接口。<b>它在平板电脑、</b>笔记本电脑或工业硬件上运行。</p><p>一旦会议启动，该系统将继续在没有互联网连接的情况下运行。</p>"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -488,6 +496,11 @@ msgid "Allow global discounts on orders"
 msgstr "订单全场折扣"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
+msgid "Allowed Pricelists"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__amount
 msgid "Amount"
@@ -524,6 +537,7 @@ msgid "Another session is already opened for this point of sale."
 msgstr "已为此销售点打开其他会话。"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
 msgstr "已归档"
@@ -709,7 +723,7 @@ msgstr "找零"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 #, python-format
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: point_of_sale
 #. openerp-web
@@ -820,6 +834,11 @@ msgstr "类别图片"
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_categ_id
 msgid "Category used in the Point of Sale."
 msgstr "在销售点中使用分类"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_chairs
+msgid "Chairs"
+msgstr "椅子"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1389,8 +1408,21 @@ msgstr "取消选择客户"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+#: model:product.product,name:point_of_sale.desk_organizer
+#: model:product.template,name:point_of_sale.desk_organizer_product_template
 msgid "Desk Organizer"
 msgstr "桌上收纳盒"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.desk_pad
+#: model:product.template,name:point_of_sale.desk_pad_product_template
+msgid "Desk Pad"
+msgstr "桌垫"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_desks
+msgid "Desks"
+msgstr "桌台"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2106,6 +2138,12 @@ msgid "Kpi Pos Total Value"
 msgstr "终端销售总额的关键绩效指标"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.led_lamp
+#: model:product.template,name:point_of_sale.led_lamp_product_template
+msgid "LED Lamp"
+msgstr "LED灯"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 msgid "Label"
 msgstr "标签"
@@ -2185,6 +2223,12 @@ msgid "Led Lamp"
 msgstr "发光二极管"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.letter_tray
+#: model:product.template,name:point_of_sale.letter_tray_product_template
+msgid "Letter Tray"
+msgstr "信托盘"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
 msgid "Line No"
 msgstr "行号"
@@ -2258,6 +2302,12 @@ msgid "Loyalty program to use for this point of sale."
 msgstr "用于此销售单的忠诚度方案。"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.magnetic_board
+#: model:product.template,name:point_of_sale.magnetic_board_product_template
+msgid "Magnetic Board"
+msgstr "磁板"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "附件"
@@ -2303,6 +2353,11 @@ msgid "Method"
 msgstr "方法"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_miscellaneous
+msgid "Miscellaneous"
+msgstr "杂项"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
 msgstr "模块Pos Hr"
@@ -2310,6 +2365,8 @@ msgstr "模块Pos Hr"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+#: model:product.product,name:point_of_sale.monitor_stand
+#: model:product.template,name:point_of_sale.monitor_stand_product_template
 msgid "Monitor Stand"
 msgstr "监控标准"
 
@@ -2362,6 +2419,12 @@ msgstr "新订单"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New session"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.newspaper_rack
+#: model:product.template,name:point_of_sale.newspaper_rack_product_template
+msgid "Newspaper Rack"
+msgstr "报纸架"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -2615,8 +2678,8 @@ msgstr "订单"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
-msgid "Order "
-msgstr "订单"
+msgid "Order %s"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -2963,7 +3026,7 @@ msgstr "请检查打印机是否仍连接。"
 msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
-msgstr ""
+msgstr "请在关闭此会话之前关闭所有销售点的会话。打开的会话是 ：%s "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3018,6 +3081,7 @@ msgstr "PoS接口"
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_pivot
 #, python-format
 msgid "PoS Orders"
 msgstr "POS 订单"
@@ -3496,6 +3560,12 @@ msgid "Ready to launch your <b>point of sale</b>?"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
 msgid "Receipt Footer"
 msgstr "收据页脚"
@@ -3950,11 +4020,30 @@ msgid "Slash"
 msgstr "砍价"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.small_shelf
+#: model:product.template,name:point_of_sale.small_shelf_product_template
+msgid "Small Shelf"
+msgstr "小架子"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:0
 #, python-format
-msgid "Some orders could not be submitted to"
-msgstr "有些订单不能提交给"
+msgid ""
+"Some orders could not be submitted to the server due to configuration "
+"errors. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/gui.js:0
+#, python-format
+msgid ""
+"Some orders could not be submitted to the server due to internet connection "
+"issues. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4004,7 +4093,7 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__state
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Status"
-msgstr "省份"
+msgstr "状态"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_state
@@ -4276,7 +4365,7 @@ msgstr "因为未知错误，订单不能发送到服务器"
 msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
-msgstr ""
+msgstr "订单已提前同步。请从后台为订单开具发票："
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
@@ -4476,7 +4565,7 @@ msgstr "这会添加价格表上的货币选项。"
 msgid ""
 "This barcode is already assigned to another contact. Please make sure you "
 "assign a unique barcode to this contact."
-msgstr ""
+msgstr "此条码已分配给其他联系人。请确保为此联系人分配了唯一的条码。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -4508,6 +4597,11 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr "此发票已在销售点会话中创建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__allowed_pricelist_ids
+msgid "This is a technical field used for the domain of pricelist_id."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -4744,10 +4838,32 @@ msgid "Unit Price"
 msgstr "单价"
 
 #. module: point_of_sale
+#: model:product.product,uom_name:point_of_sale.desk_organizer
+#: model:product.product,uom_name:point_of_sale.desk_pad
+#: model:product.product,uom_name:point_of_sale.led_lamp
+#: model:product.product,uom_name:point_of_sale.letter_tray
+#: model:product.product,uom_name:point_of_sale.magnetic_board
+#: model:product.product,uom_name:point_of_sale.monitor_stand
+#: model:product.product,uom_name:point_of_sale.newspaper_rack
 #: model:product.product,uom_name:point_of_sale.product_product_consumable
 #: model:product.product,uom_name:point_of_sale.product_product_tip
+#: model:product.product,uom_name:point_of_sale.small_shelf
+#: model:product.product,uom_name:point_of_sale.wall_shelf
+#: model:product.product,uom_name:point_of_sale.whiteboard
+#: model:product.product,uom_name:point_of_sale.whiteboard_pen
+#: model:product.template,uom_name:point_of_sale.desk_organizer_product_template
+#: model:product.template,uom_name:point_of_sale.desk_pad_product_template
+#: model:product.template,uom_name:point_of_sale.led_lamp_product_template
+#: model:product.template,uom_name:point_of_sale.letter_tray_product_template
+#: model:product.template,uom_name:point_of_sale.magnetic_board_product_template
+#: model:product.template,uom_name:point_of_sale.monitor_stand_product_template
+#: model:product.template,uom_name:point_of_sale.newspaper_rack_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_consumable_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_tip_product_template
+#: model:product.template,uom_name:point_of_sale.small_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.wall_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_pen_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_product_template
 msgid "Units"
 msgstr "单位"
 
@@ -4891,6 +5007,12 @@ msgid "Waiting for card"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.wall_shelf
+#: model:product.template,name:point_of_sale.wall_shelf_product_template
+msgid "Wall Shelf Unit"
+msgstr "墙架单元"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
 msgid "Warehouse"
 msgstr "仓库"
@@ -4926,8 +5048,16 @@ msgid ""
 msgstr "无论何时关闭会话，都会在所有未开票订单的以下会计日记账中生成一个分录。发票在会计中单独记录。"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.whiteboard
+#: model:product.template,name:point_of_sale.whiteboard_product_template
+msgid "Whiteboard"
+msgstr "白板"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+#: model:product.product,name:point_of_sale.whiteboard_pen
+#: model:product.template,name:point_of_sale.whiteboard_pen_product_template
 msgid "Whiteboard Pen"
 msgstr "白板笔"
 

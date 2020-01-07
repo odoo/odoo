@@ -261,6 +261,17 @@ class TestM2M(TransactionCase):
         f.save()
         self.assertEqual(r.m2m, a)
 
+    def test_attr(self):
+        f = Form(self.env['test_testing_utilities.e'], view='test_testing_utilities.attrs_using_m2m')
+        with self.assertRaises(AssertionError):
+            f.count = 5
+        f.m2m.add(self.env['test_testing_utilities.sub2'].create({'name': 'ok'}))
+        f.count = 5
+        r = f.save()
+        self.assertEqual(
+            r.m2m.mapped('name'),
+            ['ok', '1', '2', '3', '4']
+        )
 
 get = itemgetter('name', 'value', 'v')
 class TestO2M(TransactionCase):
@@ -507,6 +518,21 @@ class TestO2M(TransactionCase):
         )
         f = Form(Model, view='test_testing_utilities.o2m_modifier')
         f.save()
+
+    def test_o2m_widget(self):
+        create = self.env['test_testing_utilities.sub'].create
+        a, b, c = create({'v': 1}), create({'v': 2}), create({'v': 3})
+
+        f = Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_widget_m2m')
+        f.subs.add(a)
+        f.subs.add(b)
+        f.subs.add(c)
+        r = f.save()
+
+        self.assertEqual(
+            r.subs,
+            a | b | c
+        )
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record

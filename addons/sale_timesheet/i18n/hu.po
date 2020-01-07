@@ -5,17 +5,20 @@
 # Translators:
 # Tamás Dombos, 2019
 # Martin Trigaux, 2019
-# krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
+# Istvan <leki69@gmail.com>, 2019
+# krnkris, 2019
+# Tamás Németh <ntomasz81@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:49+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -300,7 +303,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_tracking__task_in_project
-msgid "Create a task in sale order's project"
+msgid "Create a task in sales order's project"
 msgstr ""
 
 #. module: sale_timesheet
@@ -334,6 +337,12 @@ msgid "Customer"
 msgstr "Ügyfél"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
 msgstr ""
@@ -358,6 +367,14 @@ msgid "Don't create task"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_2
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_done
+#: model:project.task.type,legend_done:sale_timesheet.project_stage_fixed
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_done
+msgid "Done"
+msgstr "Elvégezve"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
@@ -374,6 +391,11 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task.type,name:sale_timesheet.project_stage_fixed
+msgid "Fixed"
+msgstr "Állandó"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -397,6 +419,12 @@ msgstr "Csoportosítás"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Hours"
 msgstr "Órák"
 
@@ -413,6 +441,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
 msgstr "Azonosító"
+
+#. module: sale_timesheet
+#: model:project.task,legend_normal:sale_timesheet.project_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_task_2
+#: model:project.task,legend_normal:sale_timesheet.project_task_3
+#: model:project.task,legend_normal:sale_timesheet.project_task_4
+#: model:project.task,legend_normal:sale_timesheet.project_task_internal
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_done
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_in_progress
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_to_do
+#: model:project.task.type,legend_normal:sale_timesheet.project_stage_fixed
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "In Progress"
+msgstr "Folyamatban"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -489,6 +531,18 @@ msgid "Journal Item"
 msgstr "Könyvelési napló tételsor"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line____last_update
@@ -554,6 +608,24 @@ msgid "Name"
 msgstr "Név"
 
 #. module: sale_timesheet
+#: model:project.task.type,legend_blocked:sale_timesheet.project_stage_fixed
+msgid "Need functional or technical help"
+msgstr "Működési vagy technikai segítség szükséges"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_task_3
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "Need help"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:0
+#, python-format
+msgid "New"
+msgstr "Új"
+
+#. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__no
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task__billable_type__no
 msgid "No Billable"
@@ -589,6 +661,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_2
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_done
+msgid "Not done yet"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_4
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_to_do
+msgid "Not ready"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
+msgid "Not validated"
+msgstr "Nincs jóváhagyva"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
@@ -755,6 +844,17 @@ msgid "Re-invoiced costs"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_internal
+msgid "Ready for Next Stage"
+msgstr "Készen áll a következő szakaszra"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_4
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_to_do
+msgid "Ready to be started"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Remaining"
@@ -799,7 +899,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Vevői rendelés elem"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -875,6 +975,12 @@ msgid "Sell services and invoice time spent"
 msgstr "Szolgáltatások értékesítése és a munkaidő kiszámlázása"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
@@ -896,7 +1002,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Eladva"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1001,7 +1107,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "There is no timesheet for now."
+msgid "There are no timesheets for now."
 msgstr ""
 
 #. module: sale_timesheet
@@ -1071,7 +1177,7 @@ msgstr "Költség Munkaidő-kiosztás"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Munkaidő-nyilvántartás időegysége"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1133,6 +1239,11 @@ msgid "Timesheets on tasks"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_to_do
+msgid "To Do"
+msgstr "Teendő"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "To invoice"
 msgstr "Számlázandó"
@@ -1175,6 +1286,12 @@ msgid "Unit price of the sales order item."
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Units"
+msgstr "Egység"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
 msgstr ""
@@ -1208,6 +1325,13 @@ msgid "Wizard"
 msgstr "Varázsló"
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_1
+#: model:project.task,legend_done:sale_timesheet.project_task_3
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "Work done"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid ""
@@ -1235,29 +1359,4 @@ msgstr ""
 #, python-format
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "billable_fixed"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "billable_time"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "canceled"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "non_billable"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "non_billable_project"
 msgstr ""

@@ -403,7 +403,7 @@ class Lead(models.Model):
 
         result = super(Lead, self.with_context(context)).create(vals)
         # Compute new probability for each lead separately
-        result._write_probability(vals)
+        result._update_probability()
         return result
 
     def write(self, vals):
@@ -426,20 +426,12 @@ class Lead(models.Model):
 
         write_result = super(Lead, self).write(vals)
         # Compute new automated_probability (and, eventually, probability) for each lead separately
-        self._write_probability(vals)
+        if self._should_update_probability(vals):
+            self._update_probability()
 
         return write_result
 
-    def _write_probability(self, vals):
-        compute = False
-        fields_to_check = ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields()
-        for field, value in vals.items():
-            if field in fields_to_check:
-                compute = True
-                break
-
-        if not compute:
-            return
+    def _update_probability(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
@@ -449,6 +441,13 @@ class Lead(models.Model):
                     proba_vals['probability'] = lead_proba
                 super(Lead, lead).write(proba_vals)
         return
+
+    def _should_update_probability(self, vals):
+        fields_to_check = ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields()
+        for field, value in vals.items():
+            if field in fields_to_check:
+                return True
+        return False
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -481,6 +480,11 @@ class Lead(models.Model):
     # Actions Methods
     # ----------------------------------------
 
+    def toggle_active(self):
+        res = super(Lead, self).toggle_active()
+        self.filtered(lambda lead: lead.active)._update_probability()
+        return res
+
     def _rebuild_pls_frequency_table_threshold(self):
         """ Called by action_set_lost and action_set_won.
          Will run the cron to update the frequency table only if the number of lead is above
@@ -497,7 +501,7 @@ class Lead(models.Model):
 
     def action_set_lost(self, **additional_values):
         """ Lost semantic: probability = 0 or active = False """
-        result = self.write({'active': False, 'probability': 0, **additional_values})
+        result = self.write({'active': False, 'probability': 0, 'automated_probability': 0, **additional_values})
         self._rebuild_pls_frequency_table_threshold()
         return result
 
@@ -953,6 +957,8 @@ class Lead(models.Model):
         """
         partner_ids = {}
         for lead in self:
+            if partner_id:
+                lead.partner_id = partner_id
             if lead.partner_id:
                 partner_ids[lead.id] = lead.partner_id.id
                 continue
@@ -960,8 +966,6 @@ class Lead(models.Model):
                 partner = lead._create_lead_partner()
                 partner_id = partner.id
                 partner.team_id = lead.team_id
-            if partner_id:
-                lead.partner_id = partner_id
             partner_ids[lead.id] = partner_id
         return partner_ids
 
@@ -1177,7 +1181,7 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
-        elif self.active:
+        elif 'active' in init_values and self.active:
             return self.env.ref('crm.mt_lead_restored')
         return super(Lead, self)._track_subtype(init_values)
 

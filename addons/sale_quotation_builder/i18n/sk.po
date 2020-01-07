@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_quotation_builder
+# 	* sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# gebri <gebri@inmail.sk>, 2019
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid "&amp;times;"
 msgstr "&amp;times;"
 
@@ -42,6 +44,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+msgid ""
+":\n"
+"                        this content will appear on the quotation only if this\n"
+"                        product is not removed."
+msgstr ""
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
 "<strong>Template Header:</strong> this content\n"
@@ -55,6 +65,11 @@ msgid "About us"
 msgstr "O nás"
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "An awesome"
+msgstr ""
+
+#. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid ""
 "As a leading professional services firm,\n"
@@ -63,24 +78,19 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
-msgid "Back"
-msgstr "Späť"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid "Close"
 msgstr "Zatvor"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenie konfigurácie"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
-msgid "Edit Template"
-msgstr "Upraviť šablónu"
+msgid "Design Template"
+msgstr ""
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -100,6 +110,11 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Open Source CRM"
+msgstr "Open Source CRM"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -129,7 +144,7 @@ msgstr "Cena"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_product_template
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -140,6 +155,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Product:"
 msgstr "Produkt:"
@@ -164,12 +180,12 @@ msgstr "Šablóna cenovej ponuky"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Riadok šablóny cenovej ponuky"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Možnosti šablóny cenovej ponuky"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
@@ -178,13 +194,13 @@ msgstr "Možnosti predaja"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "Objednávka predaja"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Položky objednávky"
+msgstr "Položka objednávok"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -213,6 +229,11 @@ msgid ""
 "                                customize it to fit your own needs from the <i>Sales</i>\n"
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
+msgstr ""
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+msgid "This is a preview of the sale order template."
 msgstr ""
 
 #. module: sale_quotation_builder
@@ -250,4 +271,9 @@ msgid ""
 "                        of all products in the proposal. The table of content\n"
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "portal"
 msgstr ""

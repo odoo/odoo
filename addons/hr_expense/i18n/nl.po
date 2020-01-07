@@ -5,18 +5,19 @@
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # dpms <pieter.van.de.wygaert@telenet.be>, 2019
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -32,6 +33,8 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'Declaraties - %s - %s' % (object.employee_id.name, "
+"(object.name).replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -189,6 +192,12 @@ msgid "Administrator"
 msgstr "Beheerder"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr "Vlucht"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Alias"
 msgstr "Alias"
@@ -255,6 +264,11 @@ msgid "Approved Expenses"
 msgstr "Goedgekeurde declaraties"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Document"
 msgstr "Koppel document"
@@ -298,6 +312,12 @@ msgstr "Declaratie product"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
 msgstr "Annuleren"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr "Autokosten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
@@ -361,7 +381,7 @@ msgstr "Maak een nieuwe declaratie"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense product"
-msgstr ""
+msgstr "Maak een nieuw uitgave product"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -374,7 +394,7 @@ msgstr "Maak een nieuw declaratie rapport"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "Maak declaraties vanuit inkomende e-mails"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -485,12 +505,6 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -573,7 +587,7 @@ msgstr "Declaratie rapport"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "Declaratieformulieren Analyse"
+msgstr "Declaratieformulieren analyse"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -609,7 +623,7 @@ msgstr "Declaratie betaald"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Declaratie afgekeurd"
+msgstr "Declaratie afgewezen"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
@@ -623,6 +637,8 @@ msgstr "Declaratie waaruit de mutatie vandaan komt"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
 msgstr "Declaraties"
 
@@ -634,13 +650,13 @@ msgstr "Declaraties"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
 msgid "Expenses Analysis"
-msgstr "Declaraties analyse"
+msgstr "Declaratiesanalyse"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Declaratie rapport"
+msgstr "Declaratierapport"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
@@ -655,7 +671,7 @@ msgstr "Declaraties op datum"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expenses can be reimbursed in payslips."
-msgstr ""
+msgstr "Declaraties kunnen terugbetaald worden via loonstroken."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -694,7 +710,7 @@ msgstr "Declaraties om te verwerken"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitely Refused by manager or acccountant"
-msgstr "Expliciet geweigerd door manager of boekhouder"
+msgstr "Expliciet afgewezen door manager of boekhouder"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -745,13 +761,13 @@ msgstr "Algemene informatie"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expense"
-msgstr ""
+msgstr "Gegenereerde kost"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expenses"
-msgstr ""
+msgstr "Gegenereerde kosten"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -829,12 +845,12 @@ msgstr "Inkomende e-mails"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "Foutieve bijlages!"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "Is wijzigbaar door huidige gebruiker"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1171,7 +1187,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
-msgstr "Dagboekregels boeken"
+msgstr "Boeking maken"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1272,7 +1288,7 @@ msgstr "Ref."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "Referentie is wijzigbaar door huidige gebruiker"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1292,12 +1308,12 @@ msgstr "Declaratie weigeren"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 msgid "Refused"
-msgstr "Geweigerd"
+msgstr "Afgewezen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr "Geweigerde declaratie"
+msgstr "Afgewezen declaratie"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
@@ -1309,12 +1325,12 @@ msgstr "Betaling registreren"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr ""
+msgstr "Declaraties terugbetalen via loonstrook"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr ""
+msgstr "Terugbetalen via loonstrook"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1349,7 +1365,7 @@ msgstr "Rapportages te boeken"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__require_partner_bank_account
 msgid "Require Partner Bank Account"
-msgstr "Vereist Partner Bankrekening"
+msgstr "Vereist bankrekening klant"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1481,8 +1497,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
-"Technisch veld gebruikt om de betaaalmethode te verbergen als het "
-"geselecteerde dagboek maar één betalingsmethodeheeft die 'handmatig' is"
+"Technisch veld gebruikt om de betaalmethode te verbergen als het "
+"geselecteerde dagboek maar één betalingsmethode heeft die 'handmatig' is"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
@@ -1500,6 +1516,9 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_account_id` "
 "needs to be required or not in the payments form views"
 msgstr ""
+"Technisch veld gebruikt om aan te geven of het veld "
+"'partner_bank_account_id' noodzakelijk is om al dan niet weer te geven in "
+"het formulier betalingsoverzicht."
 
 #. module: hr_expense
 #. openerp-web
@@ -1518,18 +1537,12 @@ msgid ""
 "You'll have to set the product manually on the expense."
 msgstr ""
 "Het eerste woord van het e-mail onderwerp kwam niet overeen met een product "
-"code. U moet het product manueel koppelen aan de declaratie."
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "The journal linked to the expense report must be in the same company."
-msgstr ""
+"code. U moet het product handmatig koppelen aan de declaratie."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "Het dagboek moet ingesteld zijn op de geboekte declaratie"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1546,7 +1559,7 @@ msgstr "Het betaalbedrag kan alleen maar positief zijn."
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr ""
-"De betalingsmethodegebruikt wanneer de declaratie betaald is door het "
+"De betalingsmethode gebruikt wanneer de declaratie betaald is door het "
 "bedrijf."
 
 #. module: hr_expense
@@ -1618,6 +1631,14 @@ msgid "Unit of Measure"
 msgstr "Maateenheid"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.air_ticket
+#: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,uom_name:hr_expense.air_ticket_product_template
+#: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+msgid "Units"
+msgstr "Stuks"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread
 msgid "Unread Messages"
@@ -1645,7 +1666,7 @@ msgstr "Upload"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Uploaded Attachment"
-msgstr ""
+msgstr "Bijlage uploaden"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1708,18 +1729,19 @@ msgstr "Website communicatie geschiedenis"
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
 msgstr ""
+"U bent niet gemachtigd om de referentie van deze onkostennota te bewerken."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr ""
+msgstr "U bent niet gemachtigd om deze onkostennota te bewerken."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without product."
-msgstr ""
+msgstr "U kan geen rapport aanmaken zonder product."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1736,7 +1758,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr "U kan alleen declaraties van uw eigen departement goedkeuren"
+msgstr "U kan alleen declaraties van uw eigen afdeling goedkeuren"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1749,7 +1771,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only refuse your department expenses"
-msgstr "U kan alleen declaraties van uw eigen departement weigeren"
+msgstr "U kan alleen declaraties van uw eigen afdeling weigeren"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1824,7 +1846,13 @@ msgstr "Bijv. Reis naar New York"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr "is geweigerd"
+msgstr "is afgewezen"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.car_travel
+#: model:product.template,uom_name:hr_expense.car_travel_product_template
+msgid "km"
+msgstr "km"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

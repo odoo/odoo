@@ -16,19 +16,20 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
 # Abdulmajeed Alomar <majeeed87@gmail.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
-# Shaima Safar <shaima.safar@open-inside.com>, 2019
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Martin Trigaux, 2019
 # hoxhe Aits <hoxhe0@gmail.com>, 2019
 # Fahad Alqahtani <fahad@cloudland.sa>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2019
+# Ali zuaby <ali@zuaby.net>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Fahad Alqahtani <fahad@cloudland.sa>, 2019\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +43,12 @@ msgstr ""
 #, python-format
 msgid " Add Images"
 msgstr " إضافة صور"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr "\" تنبيه مع"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -99,22 +106,8 @@ msgstr "(يمكن استخدامه في"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ""
-",\n"
-"                                updated:"
-msgstr ""
-",\n"
-"                                تم تحديثه:"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid ", author:"
 msgstr "، الناشر:"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ", updated:"
-msgstr "، تم تحديثه:"
 
 #. module: website
 #. openerp-web
@@ -158,6 +151,12 @@ msgid "1s"
 msgstr "ثانية واحدة"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"sr-only\">(current)</span>"
+msgstr "2 <span class=\"sr-only\">(جاري)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "2/5"
 msgstr "2/5"
@@ -183,17 +182,17 @@ msgid "3/5"
 msgstr "3/5"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_301
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
 msgid "301 Moved permanently"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_302
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
 msgid "302 Moved temporarily"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__rewrite
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__308
 msgid "308 Redirect / Rewrite"
 msgstr ""
 
@@ -208,19 +207,9 @@ msgid "4/5"
 msgstr "4/5"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "403: Forbidden"
-msgstr "403: محظور"
-
-#. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__not_found
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
 msgid "404 Not Found"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "404: Page not found!"
-msgstr "404: لم يُعثر على الصفحة!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -721,6 +710,16 @@ msgid "<p>Enter a title for the page.</p>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">لن نشارك بريدك "
+"الإلكتروني مع أحد.</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
 msgstr "<small>/ شهر</small>"
@@ -876,12 +875,6 @@ msgid "<span>— John DOE, CEO of <b>MyCompany</b></span>"
 msgstr "<span>— جون دو، المدير التنفيذي لـ<b>شركتنا</b></span>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.error_message
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "<strong>Error message:</strong>"
-msgstr "<strong>رسالة خطأ:</strong>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
@@ -932,7 +925,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
 msgid ""
-"A new visit is considered if last connection was more than 24 hours ago."
+"A new visit is considered if last connection was more than 8 hours ago."
+msgstr ""
+
+#. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
+msgid "A partner is linked to only one visitor."
 msgstr ""
 
 #. module: website
@@ -978,12 +976,19 @@ msgid "Access Token"
 msgstr "كلمة السر"
 
 #. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
+msgid "Access token should be unique."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
 msgstr "إدارة الحساب والمبيعات"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "إجراء"
 
@@ -1074,6 +1079,12 @@ msgid "After having checked how it looks on mobile, <b>close the preview</b>."
 msgstr "بعد معاينة كيف يبدو موقعك على الهاتف المحمول، <b>أغلق المعاينة</b>."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
+msgstr "تنبيه"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
 msgstr "آلين تيرنر، المدير التقني"
@@ -1117,7 +1128,7 @@ msgstr ""
 "لأي موقع مرتبط، ما لم يُنص على ذلك هنا."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "An error occured while rendering the template"
 msgstr "حدث خطأ ما أثناء معالجة القالب"
 
@@ -1198,6 +1209,12 @@ msgid "Autoredirect Language"
 msgstr "إعادة توجيه اللغة تلقائيًا"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr "التحجيم التلقائي"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
@@ -1205,14 +1222,15 @@ msgid "Available on the Website"
 msgstr "متوفر في الموقع"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
-msgid "Back"
-msgstr "العودة"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Background"
 msgstr "الخلفية"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
+msgstr "الشارة"
 
 #. module: website
 #: model:ir.model,name:website.model_base
@@ -1276,7 +1294,15 @@ msgid "Boxed"
 msgstr "في صندوق"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Breadcrumb"
+msgstr "فتات الخبز"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Button"
 msgstr "الزر"
 
@@ -1306,7 +1332,7 @@ msgstr ""
 #: code:addons/website/static/src/js/backend/dashboard.js:0
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #: code:addons/website/static/src/xml/website.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #, python-format
 msgid "Cancel"
 msgstr "إلغاء"
@@ -1316,6 +1342,30 @@ msgstr "إلغاء"
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr "البطاقة"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr "متن البطاقة"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr "تذييل البطاقة"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr "رأس البطاقة"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -1461,7 +1511,7 @@ msgstr "استنساخ هذه الصفحة"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -1492,6 +1542,12 @@ msgstr "فريق المؤسسة"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
 msgstr "نظام شامل لإدارة العلاقات العامة في أي فريق مهما كان حجمه"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Components"
+msgstr "المكونات"
 
 #. module: website
 #: code:addons/website/models/website_visitor.py:0
@@ -1535,18 +1591,12 @@ msgid "Connect with us"
 msgstr "تواصل معنا"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__connection_datetime
-msgid "Connection Datetime"
-msgstr ""
-
-#. module: website
 #: model:ir.model,name:website.model_res_partner
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Contact"
 msgstr "جهة الاتصال"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "تواصل معنا"
@@ -1633,7 +1683,6 @@ msgstr "إنشاء موقع جديد"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_uid
 #: model:ir.model.fields,field_description:website.field_website_route__create_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
@@ -1643,7 +1692,6 @@ msgstr "أنشئ بواسطة"
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_date
 #: model:ir.model.fields,field_description:website.field_website_route__create_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_date
 msgid "Created on"
 msgstr "أنشئ في"
 
@@ -1703,6 +1751,12 @@ msgstr "لوحة المعلومات"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dashed"
 msgstr "متقطع"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Data"
+msgstr "بيانات"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -1817,6 +1871,12 @@ msgid "Disable autoplay"
 msgstr "تعطيل التشغيل التلقائي"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Disabled"
+msgstr "معطل"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
@@ -1849,7 +1909,6 @@ msgstr "مجموعة النقاش"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
 
@@ -1958,6 +2017,12 @@ msgid "Drag to the right to get a submenu"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Dropdown"
+msgstr "المنسدلة"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
@@ -2050,9 +2115,21 @@ msgid "Email"
 msgstr "البريد الإلكتروني"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr "البريد الإلكتروني"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "دعم البريد الإلكتروني"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
+msgstr "إدخال البريد الإلكتروني"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2060,7 +2137,6 @@ msgid "Equal height"
 msgstr "ارتفاع متساوٍ"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Error"
 msgstr "خطأ"
@@ -2264,6 +2340,12 @@ msgid "Force your user to create an account per website"
 msgstr "إلزام المستخدم بإنشاء حساب لكل موقع"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Form"
+msgstr "النموذج"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Form Builder"
 msgstr "منشئ النماذج"
@@ -2439,17 +2521,6 @@ msgid "Google Maps API Key"
 msgstr "مفتاح واجهة برمجة تطبيق خرائط جوجل"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Google Plus"
-msgstr "جوجل بلاس"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
-#: model:ir.model.fields,field_description:website.field_website__social_googleplus
-msgid "Google+ Account"
-msgstr "حساب جوجل بلاس"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "قيمة عظيمة"
@@ -2513,6 +2584,12 @@ msgid "Half Screen"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr "الرأس"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
 msgstr "لون الرأس"
@@ -2523,32 +2600,44 @@ msgid "Header Overlay"
 msgstr "تراكب الرأس"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 1"
 msgstr "العنوان 1"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 2"
 msgstr "العنوان 2"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 3"
 msgstr "العنوان 3"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 4"
 msgstr "العنوان 4"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 5"
 msgstr "العنوان 5"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 6"
 msgstr "العنوان 6"
 
@@ -2594,21 +2683,28 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model:website.menu,name:website.menu_home
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "الرئيسية"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"sr-only\">(current)</span>"
+msgstr "الرئيسية <span class=\"sr-only\">(الحالية)</span>"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model:ir.model.fields,field_description:website.field_website__homepage_id
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
-#: model_terms:ir.ui.view,arch_db:website.404
+#: model_terms:ir.ui.view,arch_db:website.portal_404
 #, python-format
 msgid "Homepage"
 msgstr "الصفحة الرئيسية"
@@ -2644,7 +2740,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 #: model:ir.model.fields,field_description:website.field_website_track__id
 #: model:ir.model.fields,field_description:website.field_website_visitor__id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -2680,7 +2775,7 @@ msgstr ""
 "الاجتماعي."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset the template to its <strong>factory settings</strong>."
@@ -2805,8 +2900,8 @@ msgstr "التطبيقات المثبتة"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "Installed Modules"
-msgstr "الموديولات المثبتة"
+msgid "Installed Localizations / Account Charts"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -2897,6 +2992,18 @@ msgstr ""
 "href=\"%s\">واجهة أودو الكلاسيكية</a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr "العنصر 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr "العنصر 2"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
 msgid "Join us and make your company a better place."
 msgstr "انضم إلينا واجعل مؤسستنا مكانًا أفضل."
@@ -2955,7 +3062,9 @@ msgid "Languages available on your website"
 msgstr "اللغات المتاحة في موقعك"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "كبير"
 
@@ -2967,11 +3076,6 @@ msgstr "آخر إجراء"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_connection_datetime
 msgid "Last Connection"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__last_connections_ids
-msgid "Last Connections"
 msgstr ""
 
 #. module: website
@@ -2991,7 +3095,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection____last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
@@ -3014,7 +3117,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_uid
 #: model:ir.model.fields,field_description:website.field_website_route__write_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
@@ -3025,7 +3127,6 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_date
 #: model:ir.model.fields,field_description:website.field_website_route__write_date
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
@@ -3092,6 +3193,12 @@ msgid "Let's start designing."
 msgstr "فلنبدأ التصميم."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Library"
+msgstr "المكتبة"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "تخصيص محدود"
@@ -3100,6 +3207,12 @@ msgstr "تخصيص محدود"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Line-On-Sides"
 msgstr "خط على الجانبين"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link"
+msgstr "الرابط"
 
 #. module: website
 #. openerp-web
@@ -3114,7 +3227,13 @@ msgid "Link Trackers"
 msgstr "متتبعات الرابط"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__user_partner_id
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
+msgstr "زر الرابط"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
 msgid "Linked Partner"
 msgstr ""
 
@@ -3207,11 +3326,6 @@ msgstr "إدارة هذه الصفحة"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Masonry"
 msgstr "بناء"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "Maybe you were looking for one of these popular pages ?"
-msgstr "ربما كنت تبحث عن واحدة من صفحاتنا الشهيرة؟"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3404,7 +3518,9 @@ msgid "Narrow"
 msgstr "ضيق"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Navbar"
 msgstr "شريط التنقل"
 
@@ -3485,9 +3601,11 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "التالي"
@@ -3741,6 +3859,12 @@ msgstr ""
 "                                تحسين أدائها."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Outline"
+msgstr "الخطوط العريضة"
+
+#. module: website
 #: code:addons/website/models/website.py:0
 #: code:addons/website/models/website.py:0
 #: model:ir.model,name:website.model_website_page
@@ -3838,6 +3962,22 @@ msgid "Pages"
 msgstr "صفحات"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
+msgstr "ترقيم الصفحات"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"فقرة نصية بها نصوص <strong>سميكة</strong>، <span class=\"text-"
+"muted\">ومكتومة</span>، و<em>مائلة</em>"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr "القائمة الأصلية"
@@ -3848,7 +3988,7 @@ msgid "Parent Path"
 msgstr "المسار الأصلي"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_visitor__user_partner_id
+#: model:ir.model.fields,help:website.field_website_visitor__partner_id
 msgid "Partner of the last logged in user."
 msgstr ""
 
@@ -3861,6 +4001,12 @@ msgstr "بيانات المستخدم المرتبطة بالشريك"
 #: model:ir.actions.act_window,name:website.visitor_partner_action
 msgid "Partners"
 msgstr "الشركاء"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Pill"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3886,8 +4032,10 @@ msgstr "معاينة"
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "السابق"
@@ -3980,11 +4128,6 @@ msgstr "تاريخ النشر"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Purple"
 msgstr "بنفسجي"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "QWeb"
-msgstr "QWeb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating
@@ -4097,17 +4240,17 @@ msgid "Reset"
 msgstr "إعادة تعيين"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset templates"
 msgstr "إعادة تعيين القوالب"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset to initial version (hard reset)."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
 msgstr ""
 
@@ -4192,7 +4335,9 @@ msgid "Save"
 msgstr "حفظ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "بحث"
 
@@ -4292,6 +4437,12 @@ msgid "Send us an email"
 msgstr "أرسل لنا رسالة"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr "رابط منفصل"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website_page__priority
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
@@ -4387,7 +4538,9 @@ msgid "Slow"
 msgstr "بطيء"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "صغير"
 
@@ -4414,9 +4567,10 @@ msgid "Solid"
 msgstr "لون جامد"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Something went wrong."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
+msgstr "شيء آخر هنا"
 
 #. module: website
 #: code:addons/website/controllers/main.py:0
@@ -4492,11 +4646,6 @@ msgid "Tabs"
 msgstr "التبويبات"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Take a look at the error message below."
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,help:website.field_ir_attachment__key
 #: model:ir.model.fields,help:website.field_mrp_document__key
 msgid ""
@@ -4534,7 +4683,7 @@ msgid "Template <b>%s (id:%s)</b> is calling this file"
 msgstr "القالب <b>%s (id:%s)</b> يطلب هذا الملف"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "ارتداد القالب"
 
@@ -4613,11 +4762,6 @@ msgstr ""
 "قمت بتعيينه بنفسك."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "The error occured while rendering the template"
-msgstr "الخطأ الذي حدث أثناء معالجة القالب"
-
-#. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
 #: model:ir.model.fields,help:website.field_res_users__website_url
 #: model:ir.model.fields,help:website.field_website_page__website_url
@@ -4648,23 +4792,7 @@ msgid "The language of the keyword and related keywords."
 msgstr "لغة الكلمة الدلالية والكلمات الدلالية المرتبطة."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "The page you were looking for could not be authorized."
-msgstr "لم نتمكن من اعتماد الصفحة التي تبحث عنها."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid ""
-"The page you were looking for could not be found; it is possible you have\n"
-"                        typed the address incorrectly, but it has most probably been removed due\n"
-"                        to the recent website reorganisation."
-msgstr ""
-"لم نتمكن من إيجاد الصفحة التي تبحث عنها؛ ربما تكون أخطأت\n"
-"                        في كتابة عنوان الصفحة، لكن الأرجح أن الصفحة حُذفت بسبب\n"
-"                        إعادة تنظيم الموقع حديثًا."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr "سيتم إعادة ضبط القوالب المختارة لإعدادات المصنع."
 
@@ -4770,6 +4898,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
+msgstr "هذا \""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component <br/>for "
@@ -4851,6 +4985,18 @@ msgstr ""
 "المنسدلة."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle"
+msgstr "تبديل"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Toggle navigation"
+msgstr "توجيه التبديل"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
 msgstr "توني فريد، المدير التنفيذي"
@@ -4882,11 +5028,6 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_visitor__visitor_page_count
 msgid "Total number of visits on tracked pages"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "Traceback"
-msgstr "تتبع الأثر"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
@@ -4983,7 +5124,7 @@ msgid "Type"
 msgstr "النوع"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "Type '<i class=\"confirm_word\">yes</i>' in the box below if you want to "
 "confirm."
@@ -5179,6 +5320,12 @@ msgid "Users"
 msgstr "المستخدمون"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr "الأدوات وأسلوب الكتابة"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Value"
 msgstr "القيمة"
@@ -5268,7 +5415,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visitor_id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__visitor_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visitor"
@@ -5671,7 +5817,9 @@ msgstr ""
 "يستخدم الموقع."
 
 #. module: website
+#: code:addons/website/models/res_users.py:0
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
+#, python-format
 msgid "You can not have two users with the same login!"
 msgstr "لا يمكن لمستخدمين استخدام نفس بيانات الدخول!"
 
@@ -5781,9 +5929,10 @@ msgid "and copy paste the embed code here."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "and evaluating the following expression:"
-msgstr "وتقييم التعبيرات التالية:"
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "breadcrumb"
+msgstr "فتات الخبز"
 
 #. module: website
 #. openerp-web
@@ -5822,6 +5971,12 @@ msgid "instance of Odoo, the"
 msgstr "نسخة أودو،"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr "الرابط"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "name"
 msgstr "الاسم"
@@ -5854,11 +6009,6 @@ msgid "sitemap.xml"
 msgstr "sitemap.xml"
 
 #. module: website
-#: model:ir.model,name:website.model_website_visitor_lastconnection
-msgid "temporary table for Visitor"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "url"
 msgstr "رابط ويب"
@@ -5876,7 +6026,7 @@ msgid "www.odoo.com"
 msgstr "www.odoo.com"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "نعم"
 

@@ -263,7 +263,7 @@ class IrTranslation(models.Model):
         existing_ids = [row[0] for row in self._cr.fetchall()]
 
         # create missing translations
-        self.create([{
+        self.sudo().create([{
                 'lang': lang,
                 'type': tt,
                 'name': name,
@@ -437,7 +437,10 @@ class IrTranslation(models.Model):
                 elif (src, translation.lang) in done:
                     discarded += translation
                 else:
-                    translation.write({'src': src, 'state': translation.state})
+                    vals = {'src': src, 'state': translation.state}
+                    if translation.lang == records.env.lang:
+                        vals['value'] = src
+                    translation.write(vals)
                     done.add((src, translation.lang))
 
         # process outdated and discarded translations

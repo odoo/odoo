@@ -417,6 +417,10 @@ class IrFieldsConverter(models.AbstractModel):
         return id, w1 + w2
 
     @api.model
+    def _str_to_many2one_reference(self, model, field, value):
+        return self._str_to_integer(model, field, value)
+
+    @api.model
     def _str_to_many2many(self, model, field, value):
         [record] = value
 

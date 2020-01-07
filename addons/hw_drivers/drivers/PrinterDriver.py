@@ -87,13 +87,13 @@ class PrinterDriver(Driver):
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection:
+        if 'direct' in self._device_connection and 'CMD:ESC/POS;' in self.dev['device-id']:
             self.print_status()
 
     @classmethod
     def supported(cls, device):
         protocol = ['dnssd', 'lpd']
-        if any(x in device['url'] for x in protocol) or 'direct' in device['device-class']:
+        if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
             model = cls.get_device_model(device)
             ppdFile = ''
             for ppd in PPDs:

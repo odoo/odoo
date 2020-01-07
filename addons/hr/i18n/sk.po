@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr
+# 	* hr
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
-# Robert Kirschner <robertkirschner@yahoo.com>, 2018
+# Stefan Stieranka <stieranka@itec.sk>, 2019
+# Radoslav Sloboda <rado.sloboda@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Matus Krnac <matus.krnac@gmail.com>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# gebri <gebri@inmail.sk>, 2019
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Robert Kirschner <robertkirschner@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +26,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
+msgid "# emails to send"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_job.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
@@ -34,15 +43,9 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<i>Work in a fun atmosphere</i>"
-msgstr "<i>Práca v zábavnej atmosfére</i>"
+#: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
+msgid "'Print Badge - %s' % (object.name).replace('/', '')"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -52,28 +55,160 @@ msgstr "<i>Práca v zábavnej atmosfére</i>"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<i>You are passionate</i>"
-msgstr "<i>Ste vášnivý</i>"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<i>You autonomously and quickly learn</i>"
-msgstr "<i>Samostatne a rýchlo sa učíte</i>"
+msgid "100 people"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-msgid "<i>You easily manage them</i>"
-msgstr "<i>Ľahko ich spravujete</i>"
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"12 days of pro training per year,<br> including 6 of your choice, for "
+"personal development."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "2 months"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "4,300,000"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "60% Year over Year"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"<b>Congratulations!</b> May I recommend you to setup an <a "
+"href=\"%s\">onboarding plan?</a>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<b>Flexible </b>working hours"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<br>What do we offer?"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Spravuj\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
+"title=\"Absent\" name=\"presence_absent\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
+"label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"To define\" name=\"presence_to_define\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"ml8 mr-2\">IP Addresses (comma-separated)</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Presence Control</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                        Not Connected\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "<span class=\"o_stat_text\">Connected Since</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span class=\"o_stat_text\">Present Since</span>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Výkazy</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -116,6 +251,33 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hi,<br/>\n"
+"                        Dokument nebol vytvorený, pretože vaša mailová adresa je neznáma. Zasielajte prosím maily s adresou, ktorá je definovaná v nastavení zamestnanca, alebo kontaktujte vaše HR.\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"    </td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POHÁŇANÝ -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Poháňaný <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -126,26 +288,21 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
-"A full time job, with an attractive salary package in a small team of smart "
-"people. You will start contract with a full technical and functional "
-"training. If you are passionate, motivate and flexible apply for this job, "
-"you will certainly join the best company ever."
+"A pleasant and friendly working environment located in a renovated farm in the countryside\n"
+"                        between Louvain-la-Neuve and Namur"
 msgstr ""
-"Práca na plný úväzok, s atraktívnym platovým balíčkom v malom tíme bystrých "
-"ľudí. Začnete kontrakt s plným technickým a funkčným tréningom. Ak ste "
-"vášnivý, motivovaný a flexibilný uchádzjte sa o túto prácu, určite sa "
-"pripojíte k najlepšej spoločnosti."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "A good job in a young and dynamic team"
-msgstr "Skvelá práca v mladom a dynamickom tíme"
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
+msgid "A user cannot be linked to multiple employees in the same company."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
+msgid "Absent"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -157,41 +314,119 @@ msgstr "Potrebná akcia"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
+#: model:ir.model.fields,field_description:hr.field_hr_plan__active
 msgid "Active"
 msgstr "Aktívne"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Activities"
 msgstr "Aktivity"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
+msgid "Activity"
+msgstr "Aktivita"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan
+msgid "Activity Planning"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stav aktivity"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
+msgid "Activity Type"
+msgstr "Typ aktivity"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Pridajte nového zamestnanca."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
+msgid "Additional Information"
+msgstr "Dodatočné informácie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
+#: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
+msgstr "Dodatočná poznámka"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
+msgid "Address"
+msgstr "Adresa"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Advanced <b>training</b>: Technical and functional training sessions (5 "
+"weeks)"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
+msgid "Advanced Presence Control"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Advanced presence of employees"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
+#: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
 msgstr "Alias kontakt bezpečnosti"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Analyse needs, write specification documents and quotation"
-msgstr "Anlyzujte potreby, pripravujte špecifikačné dokumenty a cenové ponuky"
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data"
+msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
@@ -202,32 +437,86 @@ msgstr "Archivovaný"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Počet príloh"
 
 #. module: hr
-#: selection:mail.alias,alias_contact:0
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Attendance"
+msgstr "Dochádzka"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
 msgid "Authenticated Employees"
-msgstr ""
-
-#. module: hr
-#: selection:mail.alias,alias_contact:0
-msgid "Authenticated Partners"
-msgstr "Overený partnery"
+msgstr "Autentifikovaní zamestnanci"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Automatické prihlásenie oddelenia"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
+msgstr "Automaticky prihlásiť členov oddelenia k odberu kanála."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Autonomy:"
 msgstr ""
 
 #. module: hr
-#: selection:hr.employee,certificate:0
-msgid "Bachelor"
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Available"
+msgstr "Dostupné"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Away"
+msgstr "Preč"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"BabyFoot &amp; Video Games <br>at Lunch Time, <br>Drinks at the Office, "
+"<br>Several Team Buildings"
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
+msgid "Bachelor"
+msgstr "Bakalár"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Bachelor or Master Degree"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
+msgid "Badge ID"
+msgstr "ID dochádzkovej karty"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
@@ -235,53 +524,72 @@ msgid "Bank Account Number"
 msgstr "Číslo bankového účtu"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid ""
-"Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic chief technical officer. So if working on an open "
-"source project in a friendly and cooperative atmosphere sounds like fun to "
-"you, read on..."
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
+msgid "Based on IP Address"
 msgstr ""
-"Vzhľadom k náśmu neustálemu rastu, hľadáme ľudí ktorí by posilnili náš tím "
-"nadšených technických pracovníkov. Takže ak práca na open source projekte v "
-"priateľskej a kooperatívnej atmosfére znie pre vás ako zábava , čítajte "
-"ďalej ..."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
+msgid "Based on attendances"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
+msgid "Based on number of emails sent"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
+msgid "Based on user status in system"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic developers. So if working on an open source project"
-" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
-msgstr ""
-"Vzhľadom k náśmu neustálemu rastu, hľadáme ľudí ktorí by posilnili náš tím "
-"nadšených vývojarov. Takže ak práca na open source projekte v priateľskej a "
-"kooperatívnej atmosfére znie pre vás ako zábava , čítajte ďalej ..."
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid ""
-"Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic trainees. So if working on an open source project "
-"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+msgid "Be responsible of what you develop"
 msgstr ""
-"Vzhľadom k náśmu neustálemu rastu, hľadáme ľudí ktorí by posilnili náš tím "
-"nadšených stážistov. Takže ak práca na open source projekte v priateľskej a "
-"kooperatívnej atmosfére znie pre vás ako zábava , čítajte ďalej ..."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Birth"
-msgstr "Narodenie"
+#: model:ir.model.fields,field_description:hr.field_res_users__can_edit
+msgid "Can Edit"
+msgstr "Môže upravovať"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+msgid "Cancel"
+msgstr "Zrušiť"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
+#: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
+msgstr "Úroveň diplomu"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.res_users_action_my
+msgid "Change my Preferences"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Change password"
+msgstr "Zmeň heslo"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Chat"
+msgstr "Chat"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -299,9 +607,25 @@ msgid "Child Departments"
 msgstr "Podriadené oddelenia"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Citizenship & Other Information"
-msgstr "Občianstvo & ďalšie informácie"
+msgid "Citizenship"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,field_description:hr.field_res_users__coach_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
+msgid "Coach"
+msgstr "Kouč"
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:0
+#, python-format
+msgid "Coach of employee %s is not set."
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -311,23 +635,20 @@ msgstr "Občianstvo & ďalšie informácie"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Close to the perfection ..."
-msgstr "Blízko k dokonalosti ..."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-msgid "Coach"
-msgstr "Kouč"
+msgid "Coach small distributed dev teams"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
 msgid "Color Index"
 msgstr "Farebný index"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_company
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
 msgstr "Spoločnosti"
@@ -335,15 +656,49 @@ msgstr "Spoločnosti"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Company Growth:"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Company Logo"
+msgstr "Logo Spoločnosti"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Company Maturity:"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
+msgstr "Pracovné hodiny spoločnosti"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_id
+msgid "Company employee"
 msgstr ""
 
 #. module: hr
@@ -354,7 +709,7 @@ msgstr "Kompletný Názov"
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenie konfigurácie"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -372,40 +727,64 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Contact Information"
 msgstr "Kontaktné informácie"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Contributions to open source projects"
-msgstr "Príspevky do open sourceových projektov"
+msgid "Contribution to Open Source Projects"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "Krajina narodenia"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
+msgid "Create Date"
+msgstr "Dátum Vytvorenia"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
+msgstr "Vytvoriť nové oddelenie"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Create employee"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
@@ -415,16 +794,21 @@ msgid "Current Number of Employees"
 msgstr "Aktuálny počet zamestnancov"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
-msgid "Date of Birth"
-msgstr "Dátum narodenia"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Define a clear communication strategy"
-msgstr "Definujte jasnú komunikačnú stratégiu"
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Customer Relationship:"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday
+msgid "Date of Birth"
+msgstr "Dátum narodenia"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -432,13 +816,12 @@ msgid "Define the schedule of resource"
 msgstr "Definujte harmonogram zdroja"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Deliver generic Odoo functional training sessions"
-msgstr "Dodajte generické funkčné Odoo školenia"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
+#: model:ir.model.fields,field_description:hr.field_res_users__department_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -458,27 +841,90 @@ msgid "Departments"
 msgstr "Oddelenia"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Departure"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason
+msgid "Departure Reason"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Dependant"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Develop and improve Apps people care about"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
+msgid "Direct subordinates"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr "Diskusný kanál"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
 msgid "Display Name"
 msgstr "Zobrazovaný Názov"
 
 #. module: hr
-#: selection:hr.employee,marital:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
 msgid "Divorced"
 msgstr "Rozvedený/á"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Eat &amp; Drink"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
 msgstr "Vzdelanie"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Email"
+msgstr "Email"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
@@ -488,20 +934,34 @@ msgstr "Aliasy Emailu"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
+msgstr "Aliasy Emailu mixin"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Emergency"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
 msgid "Emergency Contact"
-msgstr ""
+msgstr "Núdzový kontakt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "Núdzový telefón"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration_employee
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr "Zamestnanec"
@@ -512,41 +972,86 @@ msgid "Employee Category"
 msgstr "Kategória zamestnanca"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
-msgid "Employee Documents"
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_count
+msgid "Employee Count"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
-msgid "Employee Tag"
-msgstr "Štítky zamestnanca"
+#: model:ir.ui.menu,name:hr.menu_hr_employee
+msgid "Employee Directory"
+msgstr "Adresár Zamestnanca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
+msgid "Employee Edition"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Employee Image"
+msgstr "Foto zamestnanca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__name
+msgid "Employee Name"
+msgstr "Meno zamestnanca"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model:ir.model.fields,field_description:hr.field_res_users__category_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "Štítky zamestnanca"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Employee Update Rights"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank salary account"
 msgstr "Bankový účet zamestnanca"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
+msgid "Employee's Bank Account Number"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
+msgid "Employee's Country"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr "Meno zamestnanca"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Employee(s)"
+msgstr "Zamestnanci"
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
+#: model:ir.actions.act_window,name:hr.hr_employee_action_from_user
+#: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
+#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
+#: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
@@ -565,16 +1070,28 @@ msgid "Employees Tags"
 msgstr "Štítky zamestnancov"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
-msgid ""
-"Enter here the private address of the employee, not the one linked to your "
-"company."
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Enrich employee profiles with skills and resumes"
 msgstr ""
 
 #. module: hr
-#: selection:mail.alias,alias_contact:0
-msgid "Everyone"
-msgstr "Každý"
+#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,help:hr.field_res_users__address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr "Zadaj súkromnú adresu zamestnanca, nie firemnú"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Evolution"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -594,19 +1111,21 @@ msgid "Experienced Developer"
 msgstr "Skúsený vývojár"
 
 #. module: hr
-#: selection:hr.employee,gender:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
 msgid "Female"
 msgstr "Žena"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
+#: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "Oblasť štúdia"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Follow and check the development part"
-msgstr "Odoberať a kontrolovať vývojovú časť"
+#: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__fired
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__fired
+msgid "Fired"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -630,56 +1149,69 @@ msgid "Followers (Partners)"
 msgstr "Odberatelia (Partneri)"
 
 #. module: hr
-#: selection:mail.alias,alias_contact:0
-msgid "Followers only"
-msgstr "Iba odberatelia"
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Framework and/or front-end"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Fruit Basket, coffee and soup provided all day"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Budúce aktivity"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
+#: model:ir.model.fields,field_description:hr.field_res_users__gender
 msgid "Gender"
 msgstr "Pohlavie"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Good knowledge of HTML and Javascript"
-msgstr "Dobré znalosti HTML a Javascript"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Generate"
+msgstr "Všeobecné"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of object oriented programming"
-msgstr "Dobré znalosti objektovo orientovaného programovania"
+msgid ""
+"Great <b>team</b> of experienced people in a friendly, supporting and open "
+"culture"
+msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of the latest web technologies"
-msgstr "Dobré znalosti najnovších webových technológií"
+msgid "Great Work Place"
+msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of the programming language"
-msgstr "Dobré znalosti programovacieho jazyka"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of web design"
-msgstr "Dobré znalosti webového dizajnu"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good language skills in another language"
-msgstr "Dobré jazykové znalosti v inom jazyku"
-
-#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
@@ -693,37 +1225,26 @@ msgstr "HR oddelenie"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "HR oddelenia"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "HR konfigurácie"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Help with the configuration of the software"
-msgstr "Pomoc s konfiguráciou softvéru"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Hire a team of great Human Resources people"
-msgstr "Najmite skvelých ľudí pre tím Ľudské zdroje"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid "Hire a team of great executive people"
-msgstr "Najmite tím skvelých vedúcich pracovníkov"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Hire a team of great marketing people"
-msgstr "Najmite tím skvelých marketingových ľudí"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
 msgstr "Najatí zamestnanci"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
+msgid "Hr Presence State"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -737,28 +1258,47 @@ msgstr "Manažér ľudských zdojov"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
+msgid "ID used for employee identification."
+msgstr "ID použité na identifikáciu zamestnanca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
+#: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
 msgstr "Identifikačné číslo"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department__message_unread
-#: model:ir.model.fields,help:hr.field_hr_employee__message_unread
-#: model:ir.model.fields,help:hr.field_hr_job__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_department__message_unread
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_job__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
@@ -767,7 +1307,7 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ak zaškrtnuté, niektoré správy majú chybu dodania."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -779,17 +1319,39 @@ msgstr ""
 " jeho odstránenia."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:296
-#, python-format
-msgid "Import Template for Employees"
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
+msgid "Image"
+msgstr "Obrázok"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
+msgid "Image 1024"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Improve our communication to customers"
-msgstr "Zlepšite našu komunikáciu voči zákazníkom"
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
+msgid "Image 128"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
+msgid "Image 256"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
+msgid "Image 512"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "Import Template for Employees"
+msgstr "Import šablóny zamestnancov"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -802,20 +1364,6 @@ msgid "In Recruitment"
 msgstr "V nábore"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Increase opportunities"
-msgstr "Zvýśte príležitosti"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Increase the visibility of the product"
-msgstr "Zvýšte vidieľnosť produktu"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
@@ -826,7 +1374,6 @@ msgstr "Je odberateľ"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
-#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
 msgstr "Práca"
 
@@ -838,7 +1385,12 @@ msgstr "Popis práce"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
 msgstr "Pracovná pozícia"
 
@@ -849,6 +1401,11 @@ msgstr "Pracovné pozície"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_title
+#: model:ir.model.fields,field_description:hr.field_res_users__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 msgid "Job Title"
 msgstr "Pracovný titul"
 
@@ -859,81 +1416,167 @@ msgid "Jobs"
 msgstr "Pozície"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Join our experienced team of Python &amp; JavaScript\n"
+"                    Developers, and work on an amazing Open Source product! Develop things people care about."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
-msgid "Km home-work"
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
+msgid "Km Home-Work"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Large apps scope - <b>Diversity</b> in the job, you'll never get bored​"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__last_activity
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity
+#: model:ir.model.fields,field_description:hr.field_res_users__last_activity
+msgid "Last Activity"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
+msgid "Last Activity Time"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
 msgid "Last Modified on"
 msgstr "Posledná modifikácia"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Launch new marketing campaigns and offers"
-msgstr "Spustite nové marketingové kampane a ponuky"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Omeškané aktivity"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Launch new products, Human Resources campaigns and offers"
-msgstr "Spustite nové produkty, kampane ľudských zdrojov a ponuky"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid "Launch new products, marketing campaigns and offers"
-msgstr "Spustite nové produkty, maketingové kampane a ponuky"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Legal Cohabitant"
+#: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Launch Plan"
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
+msgid "Legal Cohabitant"
+msgstr "Právny spoločník"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
+msgstr "Vytvor pracovnú pozíciu."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Linux, GitHub"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Location"
+msgstr "Umiestnenie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hlavná príloha"
 
 #. module: hr
-#: selection:hr.employee,gender:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
 msgid "Male"
 msgstr "Muž"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__manager
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Manažér"
 
 #. module: hr
+#: code:addons/hr/models/hr_plan.py:0
+#, python-format
+msgid "Manager of employee %s is not set."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
+#: model:ir.model.fields,field_description:hr.field_res_users__marital
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Marital Status"
 msgstr "Manželský stav"
 
@@ -943,37 +1586,14 @@ msgid "Marketing and Community Manager"
 msgstr "Marketingový a komunitný manažér"
 
 #. module: hr
-#: selection:hr.employee,marital:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
 msgid "Married"
 msgstr "Ženatý"
 
 #. module: hr
-#: selection:hr.employee,certificate:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
 msgid "Master"
-msgstr "Hlavné"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Master or engineer in computer science"
-msgstr "Magister alebo inžinier informatiky"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__image_medium
-msgid "Medium-sized photo"
-msgstr "Stredne veľká fotografia"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__image_medium
-msgid ""
-"Medium-sized photo of the employee. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
-msgstr ""
-"Stredne veľká fotografia zamestnanca. Je automaticky upravované na 128x128px"
-" fotografiu so zachovaním pomeru strán. Použije sa v zobrazniach formulárov "
-"alebo niektorých kanban zobrazeniach."
+msgstr "Magister, inžinier"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
@@ -985,7 +1605,7 @@ msgstr "Členovia"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Chyba zobrazovania správ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -1002,11 +1622,20 @@ msgstr "Správy"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Must have ..."
-msgstr "Musí mať ..."
+msgid "Must Have"
+msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__name
+#. openerp-web
+#: code:addons/hr/static/src/xml/hr_templates.xml:0
+#, python-format
+msgid "My Profile"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__name
 msgid "Name"
 msgstr "Meno"
 
@@ -1016,9 +1645,20 @@ msgid "Nationality (Country)"
 msgstr "Národnosť (krajina)"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Need More Info?"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Ďalšia lehota aktivity"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
@@ -1028,6 +1668,17 @@ msgstr "Zhrnutie ďalšej aktivity"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
+msgstr "Typ ďalšej aktivity"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Nice to Have"
 msgstr ""
 
 #. module: hr
@@ -1038,16 +1689,53 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Nice to have"
-msgstr "Milé mať"
-
-#. module: hr
-#: selection:hr.job,state:0
-msgid "Not Recruiting"
+msgid ""
+"No customer deadlines - Time to focus on <b>quality</b>, refactoring and "
+"testing"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "No solution architect, no business analysts, no Gantt chart"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "No specific start date, we recruit all year long​"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:0
+#, python-format
+msgid "No specific user given on activity."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
+msgid "Not Recruiting"
+msgstr "Nie náborom"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Not available"
+msgstr "Nedostupné"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
 msgid "Note"
 msgstr "Poznámka"
 
@@ -1065,6 +1753,7 @@ msgstr "Počet akcií"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
+#: model:ir.model.fields,field_description:hr.field_res_users__children
 msgid "Number of Children"
 msgstr "Počet detí"
 
@@ -1078,7 +1767,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: hr
@@ -1101,7 +1790,7 @@ msgstr "Počet správ ktoré vyžadujú akciu"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Počet chýb zobrazovania správ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -1122,57 +1811,59 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"Odoo štruktúra oddelení slúži na správu všetkých dokumentov\n"
+"vzťahujúcich sa na zamestnancov oddelenia: náklady, časové výkazy,\n"
+"pracovné voľno, nábory, atď."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
-msgstr "Úradník"
+msgstr "Nadriadený"
 
 #. module: hr
-#: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
+msgid "Organizational Chart"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
+msgid "Original Image"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
 msgid "Other"
 msgstr "Iné"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
+msgid "PIN"
+msgstr "PIN"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Other Information ..."
-msgstr "Ďalšie informácie ..."
+msgid "PIN Code"
+msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Our staff at work"
-msgstr "Naši zamestnanci pri práci"
-
-#. module: hr
-#: selection:hr.employee,activity_state:0
-msgid "Overdue"
-msgstr "Oneskorené"
+#: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
+msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
+msgstr ""
+"Použitý PIN pri vstupe/výstupe v móde Kiosk (ak je povolené v konfigurácii)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
-msgstr "Rodičovské oddelenie"
+msgstr "Nadradené oddelenie"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Passion for the Internet and its culture"
-msgstr "Vášeň pre internet a jeho kultúru"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
-msgid "Passport No"
-msgstr "Cestovný pas číslo"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__image
-msgid "Photo"
-msgstr "Fotografia"
+#: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
+msgid "Partner-related data of the user"
+msgstr "Súvisiace partnerské dáta užívateľa"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1182,21 +1873,89 @@ msgstr "Fotografia"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Pictures of smart and enthusiastic people"
-msgstr "Obrázky bystrých a nadšených ľudí"
+msgid "Passion for development"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
+#: model:ir.model.fields,field_description:hr.field_res_users__passport_id
+msgid "Passport No"
+msgstr "Cestovný pas číslo"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Personal Evolution:"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Phone"
+msgstr "Telefón"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__place_of_birth
 msgid "Place of Birth"
 msgstr "Miesto narodenia"
 
 #. module: hr
-#: selection:hr.employee,activity_state:0
-msgid "Planned"
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__plan_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+msgid "Plan"
+msgstr "Plánovanie"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_wizard
+msgid "Plan Wizard"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_activity_type
+msgid "Plan activity type"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_action
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
+msgid "Planning"
+msgstr "Plánovaná"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+#: model:ir.ui.menu,name:hr.menu_config_plan_types
+msgid "Planning Types"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "Plans"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Play any sport with colleagues and the bill is covered"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
+#: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1210,51 +1969,179 @@ msgstr ""
 "\n"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Position"
-msgstr "Pozícia"
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Preferences"
+msgstr "Predvoľby"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Preferably 1 year of experience"
-msgstr "Pokiaľ možno s 1 rokom praxe"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
-msgid "Private Address"
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence of employees"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence reporting screen, email and IP address control."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
+msgid "Present"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.report,name:hr.hr_employee_print_badge
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Print Badge"
+msgstr "Tlač dochádzkovej karty"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Contact"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
+#: model:ir.model.fields,field_description:hr.field_res_users__private_email
+msgid "Private Email"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
+msgstr "Súkromná informácia"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+msgid "Private Phone"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Quantify and negotiate the resources required"
-msgstr "Kvantifikovať a vyjednať potrebné zdroje"
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Product Complexity:"
+msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
-msgid "Quick and autonomous learner"
-msgstr "Rýchly a samostatný študent"
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Profitable"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Programming Languages: Python &amp; JavaScript<br>Database: postgresql (with object relational\n"
+"                    mapping)<br>Collaboration platform: GitHub<br>Development model: open with external\n"
+"                    community<br>Framework: Odoo (ORM, Workflows, Report Engine, BI)"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_public
+msgid "Public Employee"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Python, JavaScript"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Quality of Product / Tools:"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Quick &amp; Autonomous learner"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Read &amp; Written English"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
+msgstr "Pripravený vykonávať nábor efektívnejšie?"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Real responsibilities and <b>autonomy</b>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Recruitment"
-msgstr "Nábor"
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Recruitment Guidebook"
+msgstr ""
 
 #. module: hr
-#: selection:hr.job,state:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_job__state__recruit
 msgid "Recruitment in Progress"
 msgstr "Nábor prebieha"
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
+#, python-format
+msgid "Register Departure"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1263,8 +2150,8 @@ msgstr "Súvisiaci používateľ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
-msgid "Related employees"
-msgstr "Súvisiaci zamestnanci"
+msgid "Related employee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -1272,6 +2159,18 @@ msgid "Related user name for the resource to manage its access."
 msgstr "Súvisiace užívateľské meno pre zdroj na spravovanie jeho prístupu."
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Release Cycle:"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.hr_menu_hr_reports
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reporting"
 msgstr "Výkazy"
@@ -1282,9 +2181,23 @@ msgid "Requirements"
 msgstr "Požiadavky"
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__resigned
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__resigned
+msgid "Resigned"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_id
 msgid "Resource"
 msgstr "Prostriedok"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
+msgid "Resource Calendar"
+msgstr "Kalendár zdrojov"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1298,9 +2211,32 @@ msgid "Responsibilities"
 msgstr "Zodpovednosti"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
+msgid "Responsible"
+msgstr "Zodpovedný"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
+msgid "Responsible Person"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 msgid "Responsible User"
 msgstr "Zodpovedný používateľ"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Responsibles"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__retired
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__retired
+msgid "Retired"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -1313,22 +2249,25 @@ msgid "SSN No"
 msgstr "Číslo sociálneho zabezpečenia"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Scale our events organization all around the world"
-msgstr "Mierka organizácie našich akcií po celom svete"
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Save"
+msgstr "Uložiť"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Schedule"
+msgstr "Naplánovať"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
+#: model:ir.model.fields,field_description:hr.field_res_users__study_school
 msgid "School"
-msgstr ""
+msgstr "Vzdelanie"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid ""
-"Set default calendar used to compute time allocation for leaves, timesheets,"
-" ..."
+msgid "Set default company schedule to manage your employees working time"
 msgstr ""
 
 #. module: hr
@@ -1347,26 +2286,6 @@ msgid "Settings"
 msgstr "Nastavenia"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
-msgid "Show Organizational Chart"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Show organizational chart on employee form"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Show organizational chart on employee form."
-msgstr ""
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Single"
-msgstr "Slobodný"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1374,24 +2293,23 @@ msgstr "Slobodný"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Skills"
-msgstr "Zručnosti"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__image_small
-msgid "Small-sized photo"
-msgstr "Malá fotografia"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__image_small
-msgid ""
-"Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+msgid "Several programming languages &amp; Expert in one specific language"
 msgstr ""
-"Malá fotografia zamestnanca. Veľkosť je automaticky zmenená na 64x64px "
-"obrázok, so zachovaním pomeru strán. Použite toto pole vždy keď je potrebný "
-"malý obrázok."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr "Ukázať organizačnú štruktúru na formulári zamestnanca"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
+msgid "Single"
+msgstr "Slobodný"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
+msgid "Skills Management"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sinid
@@ -1404,14 +2322,32 @@ msgid "Social Security Number"
 msgstr "Číslo sociálneho zabezpečenia"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
-msgid "Spouse Birthdate"
+#: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
+msgid "Specific responsible of activity if not linked to the employee."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
-msgid "Spouse Complete Name"
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Sport Activity"
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
+msgid "Spouse Birthdate"
+msgstr "Dátum narodenia partnera/ky"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
+msgid "Spouse Complete Name"
+msgstr "Plné meno partnera/ky"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1420,6 +2356,7 @@ msgstr "Začať nábor"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
@@ -1433,6 +2370,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1440,42 +2381,93 @@ msgid "Stop Recruitment"
 msgstr "Zastaviť nábor"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
-msgid "Subordinate Hierarchy"
-msgstr "Hierarchia podriadených"
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
+msgid "Summary"
+msgstr "Zhrnutie"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
-msgid "Subordinates"
-msgstr "Podriadený"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
+msgid "Tag Name"
+msgstr "Názov visačky"
 
 #. module: hr
-#: sql_constraint:hr.employee.category:0
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists !"
 msgstr "Názov visačky už existuje !"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Tags"
-msgstr "Popisky"
+msgstr "Štítky"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Take part in the consulting services"
-msgstr "Zapojte sa do konzlutačných služieb"
-
-#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
-msgid "Team spirit and good communication"
-msgstr "Tímový duch a dobrá komunikácia"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
-msgid "The employee adress has a company linked"
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Team Size:"
 msgstr ""
 
 #. module: hr
-#: sql_constraint:hr.job:0
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"The\n"
+"                            founder’s story"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
+msgid ""
+"The Badge ID must be unique, this one is already assigned to another "
+"employee."
+msgstr ""
+"Dochádzková karta musí byť unikátna, táto je už priradená inému "
+"zamestnancovi."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "The Odoo culture"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The PIN must be a sequence of digits."
+msgstr "PIN musí obsahovať len čísla."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
+#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
+msgid "The employee address has a company linked"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"The fields \"%s\" you try to read is not available on the public employee "
+"profile."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
 "Názov pracovnej pozície musí byť unikátne v každom oddelní spoločnosti!"
@@ -1483,7 +2475,7 @@ msgstr ""
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
-msgstr ""
+msgstr "Užívateľ má právo schvaľovať dokumenty vytvorené zamestnancami."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1491,32 +2483,36 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__image
-msgid ""
-"This field holds the image used as photo for the employee, limited to "
-"1024x1024px."
-msgstr ""
-"Toto pole obsahuje obrázok použitý ako fotografiu pre tohoto zamestnanca, "
-"obmedzený na 1024x1024px"
+"Užívateľ bude mať prístup ku konfigurácii ľudských zdrojov ako aj "
+"štatistikám a reportom."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
+#: model:ir.model.fields,help:hr.field_hr_employee_base__tz
+#: model:ir.model.fields,help:hr.field_hr_employee_public__tz
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr ""
+msgstr "Toto pole spravidla definuje časovú zónu zdrojov."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__tz
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
 msgid "Timezone"
 msgstr "Časová zóna"
 
 #. module: hr
-#: selection:hr.employee,activity_state:0
-msgid "Today"
-msgstr "Dnes"
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__to_define
+msgid "To Define"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Dnešné aktivity"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -1529,10 +2525,9 @@ msgid "Trainee"
 msgstr "Stážista"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Transform our product into a suite of well positioned business Apps"
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
-"Transformujte náš produkt do sady dobre umiestnených obchodných aplikácií"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -1552,17 +2547,34 @@ msgid "Unread Messages Counter"
 msgstr "Počítadlo neprečítaných správ"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
-"Use here the home address of the employee.\n"
-"                                            This private address is used in the expense report reimbursement document.\n"
-"                                            It should be different from the work address."
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+msgid "User"
+msgstr "Používateľ"
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:0
+#, python-format
+msgid "User linked to employee %s is required."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
-msgid "User"
-msgstr "Používateľ"
+#: code:addons/hr/models/hr_plan.py:0
+#, python-format
+msgid "User of coach of employee %s is not set."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:0
+#, python-format
+msgid "User of manager of employee %s is not set."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
+msgid "User's partner"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -1570,70 +2582,49 @@ msgid "Users"
 msgstr "Používatelia"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Users of the Product:"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
+msgstr "Voľné pracovné miesta:"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip_list
+msgid "Valid IP addresses"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expire Date"
 msgstr "Dátum expirácie víza"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_no
 msgid "Visa No"
 msgstr "Vízum číslo"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid ""
-"We are looking for a motivated and results-driven Functional Consultant! You"
-" will take part in the consulting services we provide to our partners and "
-"customers, on the functional side. Your job start from the quotation to the "
-"customer to the delivery to the customer. You listen the customer and try to"
-" give him the best service. You report to the head of consulting service and"
-" will be coached by a senior consultant."
-msgstr ""
-"Hľadáme motivovaného a výsledkami hnano funkčného poradcu! Budete sa "
-"podieľať na konzultačných službách, ktoré poskytujeme našim partnerom a "
-"zákazníkom, na funkčnej strane. Vašou úlohou začína od cenovej ponuky "
-"zákazníkovi až po dodanie zákazníkovi. Počúvate zákazníka a pokúsite sa mu "
-"dať mu čo najlepšie služby. Budete sa zodpovedať vedeniu poradenského "
-"servisu a bude vás trénovať senior konzultant."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid ""
-"We are looking for a passionated Human Resources Manager to help us make "
-"products people love to use. We need someone who is ambitious, passionated, "
-"and ..... not afraid to start new things, a lot of new things and scale "
-"them."
-msgstr ""
-"Hľadáme vášnivého manažéra ľudských zdrojov, aby nám pomohol vyrobiť "
-"produkty ktoré ľudia radi používajú. Potrebujeme niekoho, kto je ambiciózny,"
-" vášnivý, a ..... nebojí sa začať nové veci, veľa nových vecí a zväčšiť ich."
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
-msgid ""
-"We are looking for a passionated executive manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
-msgstr ""
-"Hľadáme vášnivého výkonového manažéra, aby nám pomohol vyrobiť produkty "
-"ktoré ľudia radi používajú. Potrebujeme niekoho, kto je ambiciózny, vášnivý,"
-" a ..... nebojí sa začať nové veci, veľa nových vecí a zväčšiť ich."
-
-#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"We are looking for a passionated marketer manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What people say about us?"
 msgstr ""
-"Hľadáme vášnivého odbytového manažéra aby nám pomohol vyrobiť produkty ktoré"
-" ľudia radi používajú. Potrebujeme niekoho, kto je ambiciózny, vášnivý, a "
-"..... nebojí sa začať nové veci, veľa nových vecí a zväčšiť ich."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1643,8 +2634,8 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "What we offer"
-msgstr "Čo ponúkame"
+msgid "What's great in the job?"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1654,92 +2645,110 @@ msgstr "Čo ponúkame"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "What you will do ..."
-msgstr "Čo budete robiť ..."
+msgid ""
+"Who is your\n"
+"                            manager?"
+msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
 msgstr "Vdovec"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Will report to the Head of Professional Services"
-msgstr "Bude sa zodpovedať vedeniu profesionálnych služieb"
-
-#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
-#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"Pri letmom pohľade na Odoo zamestnanckú obrazovku, vy\n"
-"môžet ľahko nájsť všetky informácie, ktoré potrebujete pre každú osobu;\n"
+"Pri letmom pohľade na prehľad zamestnancov Odoo,\n"
+"môžete ľahko nájsť všetky informácie, ktoré potrebujete pre každú osobu;\n"
 "kontaktné údaje, pracovná pozícia, dostupnosť, atď."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
-"With our product, which is a suite of 3000 business apps. It is fully open "
-"source, full featured and it’s online offer is 3 times cheaper than "
-"traditional competitors. We have 2.000.000 users, and we're growing fast."
+"With just a quick glance on the Odoo employee screen, you\n"
+"               can easily find all the information you need for each person;\n"
+"               contact data, job position, availability, etc."
 msgstr ""
-"S naším produktom, čo je sada 3000 obchodných aplikácií. Je plne open "
-"sourceový, plne vybavený a jeho on-line ponuka je 3 krát lacnejšie ako "
-"tradičný konkurenti. Máme 2.000.000 užívateľov, a rýchlo rastieme."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Pracovná adresa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
+#: model:ir.model.fields,field_description:hr.field_res_users__work_email
 msgid "Work Email"
 msgstr "Pracovný E-mail"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Pracovná informácia"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location
 msgid "Work Location"
 msgstr "Pracovné umiestnenie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Work Mobile"
 msgstr "Pracovný mobil"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Pracovná organizácia"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr "Pracovné povolenie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
+#: model:ir.model.fields,field_description:hr.field_res_users__permit_no
 msgid "Work Permit No"
 msgstr "Pracovné povolenie číslo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__work_phone
 msgid "Work Phone"
 msgstr "Telefón do práce"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Working Environment"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -1747,193 +2756,40 @@ msgid "Working Hours"
 msgstr "Pracovné hodiny"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Write attractive content"
-msgstr "Napíšte atraktívny obsah"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Write attractive content and build up Human Resources materials"
-msgstr "Napíšte atraktívny obsah a budujte materiály ľudských zdrojov"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid "Write attractive content and build up executive materials"
-msgstr "Napíšte atraktívny obsah a budujte exekutívne materiály"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are a quick and autonomous learner"
-msgstr "Ste rýchly a samostatný študent"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are an excellent communicator and negotiator"
-msgstr "Ste excelentný komunikátor a vyjednávač"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You are approachable, honest and fun team player"
-msgstr "Ste prístupný, úprimný a zábavný tímový hráč"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are available immediately"
-msgstr "Ste dostupný okamžite"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You are creative"
-msgstr "Ste kreatívny"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are ready to travel in US"
-msgstr "Ste pripravený vycestovať do US"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You are ready to work in a dynamic company"
-msgstr "Ste pripravený pracovať pre dynamickú spoločnosť"
-
-#. module: hr
-#: code:addons/hr/models/hr.py:206
+#: code:addons/hr/models/res_users.py:0
 #, python-format
-msgid "You cannot create a recursive hierarchy."
+msgid ""
+"You are only allowed to update your preferences. Please contact a HR officer"
+" to update other informations."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:331
+#: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You have 2 or 3 years of experience"
-msgstr "Máte 2 lebo 3 roky praxe"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You have a Master degree in Business Management"
-msgstr "Máte magisterský titul z obchodného manažmentu"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You have an affinity with the IT world"
-msgstr "Ste spriaznený s IT svetom"
+msgstr "Nemôžete vytvárať rekurzívne oddelenia."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You have an affinity with the product"
-msgstr "Ste spriaznený s produktom"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You have good knowledge in accounting"
-msgstr "Máte dobré znalosti účtovníctva"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You speak a third language"
-msgstr "Hovoríte tretím jazykom"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You speak fluently French and English"
-msgstr "Hovoríte plynulo po francúzsky a anglicky"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
-"You will be responsible for developing and improving applications. You will "
-"work autonomously as well as                     coordinate and supervise "
-"small distributed development teams for specific projects. You will become a"
-" technical                 expert of the product."
+"You develop an <b>Open Source</b> Software and interact with the community"
 msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid ""
-"You will be responsible for developing and improving applications. You will "
-"work autonomously as well as coordinate and supervise small distributed "
-"development teams for specific projects. You will become a technical expert "
-"of the product."
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"You will be responsible for developing and improving product communication. "
-"You will work autonomously as well as coordinate and supervise small "
-"distributed development teams for specific projects. You will become a "
-"techinical expert of the product."
-msgstr ""
-"Budete zodpovedný za vývoj a zlepšovanie produktovej komunikácie. Budete "
-"pracovať samostatne, rovnako ako koordinovať a dohliadať na malé "
-"distribuované vývojové tímy na konkrétne projekty. Stanete sa technickým "
-"expertom na výrobok."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will become a technical expert of the product."
-msgstr "Stanete sa technickým expertom na výrobok."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "You will initially be coached by senior developers"
-msgstr "Spočiatku budete trénovaný senior vývojármi"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "You will initially be coached by senior technical officer"
-msgstr "Spočiatku budete trénovaný senior technickým úradníkom"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will initially be coached by senior trainees"
-msgstr "Spočiatku budete trénovaný senior stážistami"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will report to the head of R&amp;D"
-msgstr "Budete sa zodpovedať vedeniu R&amp;D"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "You will work closely with all developers"
-msgstr "Budete úzko spolupracovať so všetkými vývojármi"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "You will work closely with all technical officer"
-msgstr "Budete úzko spolupracovať so všetkými technickými úradníkmi"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will work closely with all trainees"
-msgstr "Budete úzko spolupracovať so všetkými stážistami"
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
-msgstr ""
+msgstr "Dokument sa nevytvoril"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "barcode"
+msgstr "čiarový kód"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -1941,11 +2797,11 @@ msgid "department"
 msgstr "oddelenie"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "e.g. Part Time"
-msgstr "napr. čiastočný úväzok"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
+msgstr "napr. vedúci predaja"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan
+msgid "plan"
 msgstr ""

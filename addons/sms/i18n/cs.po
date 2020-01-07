@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -175,7 +175,7 @@ msgstr "Šekový"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose a language:"
-msgstr ""
+msgstr "Vyberte jazyk:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -230,6 +230,16 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr ""
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear ${object.display_name} this is an automated SMS."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__null_value
 msgid "Default Value"
@@ -248,7 +258,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 msgid "Discard delivery failures"
-msgstr ""
+msgstr "Zahodit selhání doručení"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_cancel
@@ -850,7 +860,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
-msgstr ""
+msgstr "Odeslat SMS textovou zprávu"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer

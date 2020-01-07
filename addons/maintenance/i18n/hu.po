@@ -5,19 +5,20 @@
 # Translators:
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Martin Trigaux, 2019
 # krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
 # Kovács Tibor <kovika@gmail.com>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Tamás Németh <ntomasz81@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,12 +59,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-warning float-right\">Törölve</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"ml8\">hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">óra</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -78,12 +79,12 @@ msgstr "<span>Nézet</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipments:</strong>"
-msgstr ""
+msgstr "<strong>Eszközök:</strong>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Maintenance:</strong>"
-msgstr ""
+msgstr "<strong>Karbantartás:</strong>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
@@ -95,11 +96,17 @@ msgstr ""
 "szolgáltatása érdekében ezen álnév új rekordjainak létrehozásakor."
 
 #. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr "Acer laptop"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
 msgid "Action Needed"
-msgstr "Akció szükséges"
+msgstr "Művelet szükséges"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__active
@@ -135,12 +142,12 @@ msgstr "Tevékenység típusai"
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid "Add a new equipment"
-msgstr ""
+msgstr "Új eszköz"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
-msgstr ""
+msgstr "Új eszköz kategória"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
@@ -150,7 +157,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid "Add a new maintenance request"
-msgstr ""
+msgstr "Új karbantartási kérelem"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
@@ -205,7 +212,9 @@ msgstr "Archiválás"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Archived"
 msgstr "Archivált"
@@ -289,6 +298,11 @@ msgstr "Megjegyzések"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__company_id
 msgid "Company"
 msgstr "Vállalat"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_computer
+msgid "Computers"
+msgstr "Számítógépek"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
@@ -422,7 +436,7 @@ msgstr "Időtartam"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
 msgid "Duration in hours."
-msgstr ""
+msgstr "Időtartam órában."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -451,7 +465,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Email cc"
-msgstr ""
+msgstr "Másolat"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
@@ -460,7 +474,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Equipment"
-msgstr "Szerszám / Eszköz"
+msgstr "Eszköz"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_mat_assign
@@ -479,7 +493,7 @@ msgstr "Eszköz kategóriák"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__category_id
 msgid "Equipment Category"
-msgstr ""
+msgstr "Eszköz kategória"
 
 #. module: maintenance
 #: model:res.groups,name:maintenance.group_equipment_manager
@@ -500,12 +514,6 @@ msgstr "Eszköz neve"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
 msgstr "Eszközök"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Exception Activities"
-msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
@@ -559,6 +567,17 @@ msgid "Group by..."
 msgstr "Csoportosítás..."
 
 #. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "HP tintasugaras nyomtató"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
+msgstr "HP Laptop"
+
+#. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
 msgid "High"
 msgstr "Magas"
@@ -566,7 +585,7 @@ msgstr "Magas"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "High-priority"
-msgstr ""
+msgstr "Magas prioritású"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
@@ -626,7 +645,7 @@ msgstr "Folyamatban"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
 msgid "Internal Maintenance"
-msgstr ""
+msgstr "Belső karbantartás"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -740,7 +759,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr ""
+msgstr "Karbantartási berendezés"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -807,14 +826,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Maintenance Team"
-msgstr ""
+msgstr "Karbantartói csapat"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_dashboard_action
 #: model:ir.model,name:maintenance.model_maintenance_team
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_teams
 msgid "Maintenance Teams"
-msgstr ""
+msgstr "Karbantartói csapatok"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__maintenance_type
@@ -843,9 +862,19 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_metrology
+msgid "Metrology"
+msgstr "Mérésügy"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr "Modell"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr "Monitorok"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -855,7 +884,7 @@ msgstr "Eszközeim"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "My Maintenances"
-msgstr ""
+msgstr "Karbantartásaim"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__name
@@ -912,7 +941,7 @@ msgstr "Akciók száma"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count
 msgid "Number of Requests"
-msgstr ""
+msgstr "Kérelmek száma"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_block
@@ -939,7 +968,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Hibák száma"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
@@ -1009,6 +1038,11 @@ msgstr ""
 "projekt (parent_model) és feladat (model))."
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr "Telefonok"
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1036,6 +1070,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
 msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_printer
+msgid "Printers"
+msgstr "Nyomtatók"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
@@ -1125,7 +1164,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_ids
 msgid "Requests"
-msgstr ""
+msgstr "Kérelmek"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__technician_user_id
@@ -1139,6 +1178,13 @@ msgstr "Felelős"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
 msgstr "Felelős felhasználó"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Samsung Monitor 15\""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1197,6 +1243,11 @@ msgstr ""
 " előtti"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_software
+msgid "Software"
+msgstr "Szoftver"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stage"
@@ -1232,6 +1283,11 @@ msgid "Status changed"
 msgstr "Állapot megváltoztatva"
 
 #. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
+msgid "Subcontractor"
+msgstr "Alvállalkozó"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
 msgid "Subjects"
 msgstr "Igény tárgya"
@@ -1251,7 +1307,7 @@ msgstr "Csapat tagjai"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__name
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
-msgstr ""
+msgstr "Csapatnév"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings

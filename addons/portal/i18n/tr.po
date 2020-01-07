@@ -3,11 +3,9 @@
 # 	* portal
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # Martin Trigaux, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Saban Yildiz <sabany@projetgrup.com>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
@@ -16,14 +14,16 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-10-07 07:14+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d gün geciken"
+msgstr "%d gün geciken ödeme"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -52,7 +52,7 @@ msgstr "<b>Giriş</b>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Düzenleme moduna dön"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -60,6 +60,8 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -89,7 +91,7 @@ msgstr "<span class=\"small mr-1 navbar-text\">Sıralama:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr ""
+msgstr "<strong>Aç </strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -265,7 +267,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
-msgstr ""
+msgstr "Kabul Et & İmzala"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -445,6 +447,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_404
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Documents"
 msgstr "Belgeler"
@@ -454,20 +457,20 @@ msgstr "Belgeler"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %d days"
-msgstr "Güne %d kadar"
+msgstr "Ödeme kalan gün %d "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "Ödeme son günü"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr "Eposta"
+msgstr "E-posta"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -483,7 +486,7 @@ msgstr "Portal Erişimi Ver"
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 msgid "Grant portal access"
-msgstr ""
+msgstr "Portal Erişimi Ver"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -518,7 +521,7 @@ msgstr "Geçersiz Eposta! Lütfen geçerli eposta adresi girin."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Geçersiz rapor türü: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -568,6 +571,11 @@ msgstr "Kullanıcı Girişi"
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
 msgstr "Çıkış"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_404
+msgid "Maybe you were looking for one of these popular pages ?"
+msgstr "Marj boyutlandırma"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -743,10 +751,10 @@ msgstr "Bazı zorunlu alanlar boş."
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:0
+#: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Something went wrong."
-msgstr ""
+msgstr "Bir şeyler yanlış gitti."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -763,7 +771,7 @@ msgstr "Sokak/Cadde"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Teşekkürler!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -801,7 +809,7 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:0
+#: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "The file <strong>%s</strong> could not be saved."
 msgstr ""
@@ -865,10 +873,14 @@ msgstr "Vergi No"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
@@ -876,11 +888,15 @@ msgstr "Vergi No"
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mailing_contact__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mailing_mailing__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
@@ -889,10 +905,14 @@ msgstr "Websitesi Mesajları"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
 #: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
@@ -900,11 +920,15 @@ msgstr "Websitesi Mesajları"
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_mailing_contact__website_message_ids
+#: model:ir.model.fields,help:portal.field_mailing_mailing__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
 #: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"

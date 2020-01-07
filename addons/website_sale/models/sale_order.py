@@ -89,12 +89,7 @@ class SaleOrder(models.Model):
         else:
             domain += [('product_custom_attribute_value_ids', '=', False)]
 
-        lines = self.env['sale.order.line'].sudo().search(domain)
-
-        if line_id:
-            return lines
-
-        return self.env['sale.order.line']
+        return self.env['sale.order.line'].sudo().search(domain)
 
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.sudo().browse(order_id)
@@ -105,6 +100,7 @@ class SaleOrder(models.Model):
             'quantity': qty,
             'date': order.date_order,
             'pricelist': order.pricelist_id.id,
+            'force_company': order.company_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
         discount = 0
@@ -257,6 +253,7 @@ class SaleOrder(models.Model):
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
+                    'force_company': order.company_id.id,
                 })
                 product_with_context = self.env['product.product'].with_context(product_context)
                 product = product_with_context.browse(product_id)

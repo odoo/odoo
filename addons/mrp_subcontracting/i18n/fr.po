@@ -9,6 +9,7 @@
 # Xavier Brochard <xavier@alternatif.org>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
 # a270031086f2a0d3514bc0cb507b48f6, 2019
+# Oriane Malburny <oma@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: a270031086f2a0d3514bc0cb507b48f6, 2019\n"
+"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +37,19 @@ msgid ""
 "can use the edit + unlock buttons in order to adapt the initial demand on the\n"
 "operations."
 msgstr ""
+"\n"
+"Vous devez utiliser le bouton \"Enregistrer les composants\" afin d'enregistrer la quantité pour un\n"
+"article sous-traité avec des composants trackés:\n"
+" %s.\n"
+"Si vous voulez traiter une quantité plus élevée que prévue, vous\n"
+"pouvez utiliser \"Modifier\" ainsi ue le bouton Déverouiller afin d'adapter la demande initiale sur les\n"
+"opérations."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/res_company.py:0
 #, python-format
 msgid "%s: Subcontracting Location"
-msgstr ""
+msgstr "%s: Emplacement de sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
@@ -58,6 +66,8 @@ msgstr "Type de nomenclature"
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
+"Choisissez un fournisseur de type sous-traitant si vous souhaitez sous-"
+"traiter l'article"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -72,7 +82,7 @@ msgstr "Contact"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
 msgid "Display Action Record Components"
-msgstr ""
+msgstr "Montrer l'action \"Enregistrer les composants\""
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -89,7 +99,7 @@ msgstr "Mouvements d'article (Ligne de mouvement de stock)"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
-msgstr ""
+msgstr "Matières premières pour %s"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_product_produce
@@ -99,36 +109,36 @@ msgstr "Enregistrer la production"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Record components"
-msgstr ""
+msgstr "Enregistrer les composants"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Register components for subcontracted product"
-msgstr ""
+msgstr "Enregistrer les composants pour les articles sous-traités"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr ""
+msgstr "Réapprovisionner le sous-traitant"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr ""
+msgstr "Réapprovisionner le sous-traitant sur demande"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr ""
+msgstr "Réapprovisionner les sous-traitants"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply subcontractors with components"
-msgstr ""
+msgstr "Réapprovisionner les sous-traitants avec les composants"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -139,12 +149,12 @@ msgstr "Retour à la cueillette"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence subcontracting"
-msgstr ""
+msgstr "Séquence de sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
-msgstr ""
+msgstr "Montrer les détails de sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -154,7 +164,7 @@ msgstr "Stock déplacer"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
-msgstr ""
+msgstr "Sous-traité"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -166,28 +176,28 @@ msgstr "Sous-traitance"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
-msgstr ""
+msgstr "Emplacement de sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr ""
+msgstr "Règle de sous-traitance MTO"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
 msgid "Subcontracting MTS Rule"
-msgstr ""
+msgstr "Règle de sous-traitance MTS"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr ""
+msgstr "Type d'opération sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr ""
+msgstr "Emplacement sous-traitant"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
@@ -202,7 +212,7 @@ msgstr "Liste de prix du fournisseur"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr ""
+msgstr "Le mouvement est une réception sous-contractée"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -211,12 +221,14 @@ msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
 msgstr ""
+"L'emplacement de stock utilisé comme source et destination lorsqu'on envoie "
+"les biens à ce contact durant le processus de sous-traitance."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "To subcontract, use a planned transfer."
-msgstr ""
+msgstr "Pour sous-traiter, utiliser un transfert planifié."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -231,4 +243,4 @@ msgstr "Entrepôt"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_product_produce__subcontract_move_id
 msgid "stock move from the subcontract picking"
-msgstr ""
+msgstr "Mouvement de stock depuis un transfert sous-traité"

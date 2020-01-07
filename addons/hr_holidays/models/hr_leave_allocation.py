@@ -337,14 +337,24 @@ class HolidaysAllocation(models.Model):
             else:
                 target = allocation.employee_id.name
 
-            res.append(
-                (allocation.id,
-                 _("Allocation of %s : %.2f %s to %s") %
-                 (allocation.holiday_status_id.name,
-                  allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
-                  'hours' if allocation.type_request_unit == 'hour' else 'days',
-                  target))
-            )
+            if allocation.type_request_unit == 'hour':
+                res.append(
+                    (allocation.id,
+                     _("Allocation of %s : %.2f hour(s) to %s") % (
+                        allocation.holiday_status_id.name,
+                        allocation.number_of_hours_display,
+                        target)
+                    )
+                )
+            else:
+                res.append(
+                    (allocation.id,
+                     _("Allocation of %s : %.2f day(s) to %s") % (
+                        allocation.holiday_status_id.name,
+                        allocation.number_of_days,
+                        target)
+                    )
+                )
         return res
 
     def add_follower(self, employee_id):
@@ -355,14 +365,12 @@ class HolidaysAllocation(models.Model):
     @api.constrains('holiday_status_id')
     def _check_leave_type_validity(self):
         for allocation in self:
-            if allocation.holiday_status_id.validity_start and allocation.holiday_status_id.validity_stop:
-                vstart = allocation.holiday_status_id.validity_start
+            if allocation.holiday_status_id.validity_stop:
                 vstop = allocation.holiday_status_id.validity_stop
                 today = fields.Date.today()
 
-                if vstart > today or vstop < today:
-                    raise ValidationError(_('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
-                                                                                  allocation.holiday_status_id.validity_start, allocation.holiday_status_id.validity_stop))
+                if vstop < today:
+                    raise ValidationError(_('You can allocate %s only before %s') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):
@@ -504,7 +512,7 @@ class HolidaysAllocation(models.Model):
         # If a category that created several holidays, cancel all related
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
-            linked_requests.linked_request_ids.action_refuse()
+            linked_requests.action_refuse()
         self.activity_update()
         return True
 

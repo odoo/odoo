@@ -275,7 +275,7 @@ class AccountMove(models.Model):
             'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
         })
 
-        mail_fattura = self.env['mail.mail'].with_context(wo_return_path=True).create({
+        mail_fattura = self.env['mail.mail'].with_context(wo_bounce_return_path=True).create({
             'mail_message_id': message.id,
             'email_to': self.env.company.l10n_it_address_recipient_fatturapa,
         })
@@ -351,7 +351,7 @@ class AccountMove(models.Model):
             elif elements and elements[0].text and elements[0].text == 'TD04':
                 type = 'in_refund'
             # self could be a single record (editing) or be empty (new).
-            with Form(self.env['account.move'].with_context(default_type=type)) as invoice_form:
+            with Form(self.with_context(default_type=type)) as invoice_form:
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>

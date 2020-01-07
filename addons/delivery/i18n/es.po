@@ -13,14 +13,16 @@
 # VivianMontana23 <vivianpvm@gmail.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Juan Pablo Mora <jpm@odoo.com>, 2019
+# Antonio Trueba, 2019
+# Amaia Bastida <amaiatrainer@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Juan Pablo Mora <jpm@odoo.com>, 2019\n"
+"Last-Translator: Amaia Bastida <amaiatrainer@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,11 +275,6 @@ msgstr "Método de envío predeterminado usado en las ordenes de venta."
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr "Definir un nuevo método de envío."
-
-#. module: delivery
-#: model:product.category,name:delivery.product_category_deliveries
-msgid "Deliveries"
-msgstr "Entregas"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -638,6 +635,13 @@ msgstr ""
 " calculados."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Gastos de entrega normales."
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "OK"
@@ -874,6 +878,13 @@ msgid "Stock Move"
 msgstr "Movimiento de existencias"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "The Poste"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
@@ -980,6 +991,10 @@ msgstr "Albarán"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "Unidades"
@@ -1065,11 +1080,6 @@ msgid ""
 msgstr ""
 "Está enviando diferentes tipos de paquete en el mismo envío.\n"
 "Tipos de paquete: %s"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__partner_id
-msgid "You can find a customer from their name, email, tax ID or reference."
-msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

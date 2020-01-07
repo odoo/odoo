@@ -229,3 +229,30 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         self.assertEqual(images[1].image_1920, red_image)
         self.assertEqual(images[2].image_1920, image_gif)
         self.assertEqual(images[3].image_1920, image_svg)
+
+        # CASE: When uploading a product variant image
+        # we don't want the default_product_tmpl_id from the context to be applied if we have a product_variant_id set
+        # we want the default_product_tmpl_id from the context to be applied if we don't have a product_variant_id set
+
+        additionnal_context = {'default_product_tmpl_id': template.id}
+
+        product = self.env['product.product'].create({
+            'product_tmpl_id': template.id,
+        })
+
+        product_image = self.env['product.image'].with_context(**additionnal_context).create([{
+            'name': 'Template image',
+            'image_1920': red_image,
+        }, {
+            'name': 'Variant image',
+            'image_1920': blue_image,
+            'product_variant_id': product.id,
+        }])
+
+        template_image = product_image.filtered(lambda i: i.name == 'Template image')
+        variant_image = product_image.filtered(lambda i: i.name == 'Variant image')
+
+        self.assertEqual(template_image.product_tmpl_id.id, template.id)
+        self.assertFalse(template_image.product_variant_id.id)
+        self.assertFalse(variant_image.product_tmpl_id.id)
+        self.assertEqual(variant_image.product_variant_id.id, product.id)

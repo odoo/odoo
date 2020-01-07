@@ -9,23 +9,25 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
 # Filip Cuk <filipcuk2@gmail.com>, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Davor Bojkić <davor.bojkic@storm.hr>, 2019
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
-# Tina Milas, 2019
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Tina Milas, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:48+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,7 +361,7 @@ msgstr "Aktivnosti"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
@@ -390,7 +392,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -438,7 +440,7 @@ msgstr "Sve"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Svi zadaci"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
@@ -466,7 +468,9 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "Arhivirano"
@@ -578,6 +582,10 @@ msgstr "Osnovno"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
+#: model:project.task,legend_blocked:project.project_task_19
+#: model:project.task,legend_blocked:project.project_task_24
+#: model:project.task,legend_blocked:project.project_task_3
+#: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -590,6 +598,8 @@ msgstr "Osnovno"
 #: model:project.task,legend_blocked:project.project_task_data_6
 #: model:project.task,legend_blocked:project.project_task_data_7
 #: model:project.task,legend_blocked:project.project_task_data_9
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model:project.task.type,legend_blocked:project.project_stage_data_0
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
@@ -605,9 +615,28 @@ msgid "Brainstorm"
 msgstr ""
 
 #. module: project
+#: model:project.task,legend_done:project.project_task_10
+#: model:project.task,legend_done:project.project_task_11
+#: model:project.task,legend_done:project.project_task_2
+#: model:project.task,legend_done:project.project_task_21
+#: model:project.task,legend_done:project.project_task_22
+#: model:project.task,legend_done:project.project_task_4
+#: model:project.task,legend_done:project.project_task_5
+#: model:project.task,legend_done:project.project_task_6
+#: model:project.task,legend_done:project.project_task_7
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Po odgovornom"
+
+#. module: project
+#: model:project.task.type,name:project.project_stage_3
+msgid "Cancelled"
+msgstr "Otkazano"
 
 #. module: project
 #. openerp-web
@@ -763,7 +792,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Napravljeno"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -876,6 +905,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
 msgstr "Dnevno"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
+msgid "Date Deadline Formatted"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -995,6 +1029,7 @@ msgstr "Dokumenti"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Riješeno"
@@ -1089,11 +1124,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Exception Activities"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
 msgstr "Datum isteka "
@@ -1148,7 +1178,7 @@ msgstr "Slijedi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Zadaci koje pratim"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1306,7 +1336,7 @@ msgstr "Ikona"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki"
 
 #. module: project
 #. openerp-web
@@ -1329,7 +1359,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -1368,6 +1398,25 @@ msgstr "Važno"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
+#: model:project.task,legend_normal:project.project_task_1
+#: model:project.task,legend_normal:project.project_task_10
+#: model:project.task,legend_normal:project.project_task_11
+#: model:project.task,legend_normal:project.project_task_12
+#: model:project.task,legend_normal:project.project_task_19
+#: model:project.task,legend_normal:project.project_task_2
+#: model:project.task,legend_normal:project.project_task_20
+#: model:project.task,legend_normal:project.project_task_21
+#: model:project.task,legend_normal:project.project_task_22
+#: model:project.task,legend_normal:project.project_task_24
+#: model:project.task,legend_normal:project.project_task_25
+#: model:project.task,legend_normal:project.project_task_26
+#: model:project.task,legend_normal:project.project_task_3
+#: model:project.task,legend_normal:project.project_task_4
+#: model:project.task,legend_normal:project.project_task_5
+#: model:project.task,legend_normal:project.project_task_6
+#: model:project.task,legend_normal:project.project_task_7
+#: model:project.task,legend_normal:project.project_task_8
+#: model:project.task,legend_normal:project.project_task_9
 #: model:project.task,legend_normal:project.project_task_data_0
 #: model:project.task,legend_normal:project.project_task_data_1
 #: model:project.task,legend_normal:project.project_task_data_11
@@ -1380,9 +1429,14 @@ msgstr "Važno"
 #: model:project.task,legend_normal:project.project_task_data_6
 #: model:project.task,legend_normal:project.project_task_data_7
 #: model:project.task,legend_normal:project.project_task_data_9
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
 #: model:project.task.type,legend_normal:project.project_stage_data_0
 #: model:project.task.type,legend_normal:project.project_stage_data_1
 #: model:project.task.type,legend_normal:project.project_stage_data_2
+#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "U tijeku"
@@ -1479,7 +1533,7 @@ msgstr "Posljednja 3 mjeseca"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Zadnjih 30 dana"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1511,7 +1565,7 @@ msgstr "Posljednja faza ažuriranja"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Vrijeme promjene"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1667,6 +1721,20 @@ msgid "Name of the tasks :"
 msgstr ""
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_task_10
+#: model:project.task,legend_blocked:project.project_task_11
+#: model:project.task,legend_blocked:project.project_task_2
+#: model:project.task,legend_blocked:project.project_task_21
+#: model:project.task,legend_blocked:project.project_task_22
+#: model:project.task,legend_blocked:project.project_task_4
+#: model:project.task,legend_blocked:project.project_task_5
+#: model:project.task,legend_blocked:project.project_task_6
+#: model:project.task,legend_blocked:project.project_task_7
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Potrebna funkcionalna ili tehnička pomoć"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -1765,6 +1833,17 @@ msgid "Normal"
 msgstr "Normalan"
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_task_1
+#: model:project.task,legend_blocked:project.project_task_12
+#: model:project.task,legend_blocked:project.project_task_20
+#: model:project.task,legend_blocked:project.project_task_25
+#: model:project.task,legend_blocked:project.project_task_26
+#: model:project.task,legend_blocked:project.project_task_9
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Nije potvrđeno"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 msgid "Number of Actions"
@@ -1789,7 +1868,7 @@ msgstr "Broj pridruženih dokumenata"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -2114,6 +2193,11 @@ msgid "Projects"
 msgstr "Projekti"
 
 #. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr "Projekti i zadaci"
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
 msgstr "Kvartalno"
@@ -2205,6 +2289,15 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task,legend_done:project.project_task_1
+#: model:project.task,legend_done:project.project_task_12
+#: model:project.task,legend_done:project.project_task_20
+#: model:project.task,legend_done:project.project_task_24
+#: model:project.task,legend_done:project.project_task_25
+#: model:project.task,legend_done:project.project_task_26
+#: model:project.task,legend_done:project.project_task_3
+#: model:project.task,legend_done:project.project_task_8
+#: model:project.task,legend_done:project.project_task_9
 #: model:project.task,legend_done:project.project_task_data_0
 #: model:project.task,legend_done:project.project_task_data_1
 #: model:project.task,legend_done:project.project_task_data_11
@@ -2217,6 +2310,8 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_data_6
 #: model:project.task,legend_done:project.project_task_data_7
 #: model:project.task,legend_done:project.project_task_data_9
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
@@ -2228,6 +2323,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for next stage"
 msgstr "Spreman za sljedeću fazu"
+
+#. module: project
+#: model:project.task,legend_done:project.project_task_19
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Spremno za ponovno otvaranje"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -2308,7 +2409,7 @@ msgstr "Odgovorna osoba"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -2408,7 +2509,7 @@ msgstr "Prikaži projekt na nadzornoj ploči"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 
 #. module: project
 #. openerp-web
@@ -2484,6 +2585,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
@@ -2746,14 +2851,14 @@ msgid "There are no projects."
 msgstr "Nema projekata."
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
+msgid "There are no ratings for this object at the moment"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
 msgstr "Nema zadataka."
-
-#. module: project
-#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
-msgid "There is no rating for this object at the moment"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -2827,6 +2932,11 @@ msgid "Title"
 msgstr "Naslov"
 
 #. module: project
+#: model:project.task.type,name:project.project_stage_0
+msgid "To Do"
+msgstr "Za napraviti"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2870,7 +2980,7 @@ msgstr "Dva puta mjesečno"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3052,21 +3162,9 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot create recursive tasks."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Your task must be in the same company as its project."
 msgstr ""
 
 #. module: project

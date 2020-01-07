@@ -71,7 +71,7 @@ class SaleOrder(models.Model):
             values['warning'] = _('Sorry, The %(ticket)s tickets for the %(event)s event are sold out.') % {
                 'ticket': ticket.name,
                 'event': ticket.event_id.name}
-            new_qty, set_qty, add_qty = 0, 0, 0
+            new_qty, set_qty, add_qty = 0, 0, -old_qty
         # case: buying tickets, too much attendees
         elif ticket and ticket.seats_availability == 'limited' and new_qty > ticket.seats_available:
             values['warning'] = _('Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.') % {

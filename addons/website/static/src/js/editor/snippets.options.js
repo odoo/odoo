@@ -591,8 +591,8 @@ options.registry.layout_column = options.Class.extend({
 
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
-            for (var i = 0 ; i < count ; i++) {
-                $lastColumn.clone().insertAfter($lastColumn);
+            for (var i = 0; i < count; i++) {
+                this.trigger_up('clone_snippet', {$snippet: $lastColumn});
             }
         } else {
             var self = this;
@@ -1521,15 +1521,13 @@ options.registry.topMenuTransparency = options.Class.extend({
     _setActive: function () {
         this._super.apply(this, arguments);
 
-        var enabled;
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
-            onSuccess: function (value) {
-                enabled = value;
+            onSuccess: value => {
+                this.$el.find('[data-transparent]').toggleClass('active', !!value);
             },
         });
-        this.$el.find('[data-transparent]').toggleClass('active', !!enabled);
     },
 });
 
@@ -1549,15 +1547,13 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
      * @override
      */
     onFocus: function () {
-        var enabled;
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
-            onSuccess: function (value) {
-                enabled = value;
+            onSuccess: value => {
+                this.$el.toggleClass('d-none', !value);
             },
         });
-        this.$el.toggleClass('d-none', !enabled);
     },
 
     //--------------------------------------------------------------------------
@@ -1792,12 +1788,12 @@ options.registry.CoverProperties = options.Class.extend({
         this.$filterColorOpts.removeClass('active');
 
         var activeFilterValue = this.$filterValueOpts
-            .filter(el => {
+            .filter((i, el) => {
                 return (parseFloat($(el).data('filterValue')).toFixed(1) === parseFloat(this.$filter.css('opacity')).toFixed(1));
             }).addClass('active').data('filterValue');
 
         var activeFilterColor = this.$filterColorOpts
-            .filter(el => {
+            .filter((i, el) => {
                 return this.$filter.hasClass($(el).data('filterColor'));
             }).addClass('active').data('filterColor');
 

@@ -84,7 +84,7 @@ class WebsiteVisitor(models.Model):
          This will only happen if the mail channel linked to the chat request already has a message.
          So that empty livechat channel won't pop up at client side. """
         super(WebsiteVisitor, self)._handle_website_page_visit(response, website_page, visitor_sudo)
-        visitor_id = self.env['website.visitor']._get_visitor_from_request().id if not visitor_sudo else visitor_sudo.id
+        visitor_id = visitor_sudo.id or self.env['website.visitor']._get_visitor_from_request().id
         if visitor_id:
             # get active chat_request linked to visitor
             chat_request_channel = self.env['mail.channel'].sudo().search([('livechat_visitor_id', '=', visitor_id), ('livechat_active', '=', True)], order='create_date desc', limit=1)
@@ -101,5 +101,5 @@ class WebsiteVisitor(models.Model):
                     "uuid": chat_request_channel.uuid,
                     "type": "chat_request"
                 })
-                expiration_date = datetime.now() + timedelta(days=100*365)  # never expire
+                expiration_date = datetime.now() + timedelta(days=100 * 365)  # never expire
                 response.set_cookie('im_livechat_session', livechat_session, expires=expiration_date.timestamp())

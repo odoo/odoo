@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -74,6 +74,8 @@ msgid ""
 "<span class=\"o_form_label\">Lunch Overdraft</span>\n"
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Lunchachterstand</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -271,7 +273,7 @@ msgstr "Voeg toe aan mandje"
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__address
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Address"
-msgstr "Adre"
+msgstr "Adres"
 
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_manager
@@ -286,7 +288,7 @@ msgstr "Naam waarschuwing"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
-msgstr ""
+msgstr "Waarschuwing in app"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
@@ -302,7 +304,9 @@ msgstr "Bedrag"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
 msgid "Archived"
 msgstr "Gearchiveerd"
@@ -312,7 +316,7 @@ msgstr "Gearchiveerd"
 #: model:ir.model.fields,help:lunch.field_lunch_order_temp__available_toppings_2
 #: model:ir.model.fields,help:lunch.field_lunch_order_temp__available_toppings_3
 msgid "Are extras available for this product"
-msgstr ""
+msgstr "Zijn extra's beschikbaar voor dit product"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
@@ -371,7 +375,7 @@ msgstr "Geannuleerd"
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
-msgstr ""
+msgstr "Kas mutaties"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
@@ -490,6 +494,11 @@ msgid "Create a new product for lunch"
 msgstr "Maak een nieuw product voor de lunch aan"
 
 #. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create new lunch alerts"
+msgstr "Maak nieuwe lunchwaarschuwingen"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__create_uid
@@ -600,12 +609,12 @@ msgstr "E-mail"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
 msgid "Employee who ordered last month"
-msgstr ""
+msgstr "Werknemer die vorige maand besteld heeft"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
 msgid "Employee who ordered last week"
-msgstr ""
+msgstr "Werknemer die vorige week besteld heeft"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
@@ -621,7 +630,7 @@ msgstr "Iedereen"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_label_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_1
 msgid "Extra 1 Label"
-msgstr ""
+msgstr "Extra 1 label"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_quantity_1
@@ -633,7 +642,7 @@ msgstr "Extra 1 hoeveelheid"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_label_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_2
 msgid "Extra 2 Label"
-msgstr ""
+msgstr "Extra 2 label"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_quantity_2
@@ -696,7 +705,7 @@ msgstr "Favoriet"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
 msgid "Favorite Lunch Product"
-msgstr ""
+msgstr "Favoriete lunch product"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__favorite_user_ids
@@ -1007,7 +1016,7 @@ msgstr "Lunch: ontvang maaltijden"
 #: model:ir.cron,cron_name:lunch.ir_cron_lunch_alerts
 #: model:ir.cron,name:lunch.ir_cron_lunch_alerts
 msgid "Lunch: alert chat notification"
-msgstr ""
+msgstr "Lunch: waarschuwing chat notificatie"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.ir_cron_lunch_ir_actions_server
@@ -1024,7 +1033,7 @@ msgstr "Hoofdbijlage"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
 msgid "Main currency of the company."
-msgstr "Hoofd valuta van het bedrijf."
+msgstr "Hoofdvaluta van het bedrijf."
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -1034,7 +1043,7 @@ msgstr "Manager"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
 msgid "Maximum Allowed Overdraft"
-msgstr "Maximale toegestane overschrijding"
+msgstr "Maximale toegestane achterstand"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1075,7 +1084,7 @@ msgstr "Mijn account"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
 msgid "My Account History"
-msgstr ""
+msgstr "Mijn rekeninghistorie"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
@@ -1091,7 +1100,7 @@ msgstr "Mijn lunch"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "My Order History"
-msgstr "Mijn order historiek"
+msgstr "Mijn orderhistorie"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action
@@ -1193,17 +1202,17 @@ msgstr "Niets te bestellen vandaag"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
 msgid "Notification Moment"
-msgstr ""
+msgstr "Moment van melding"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
 msgid "Notification Time"
-msgstr ""
+msgstr "Tijd van melding"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
 msgid "Notification time must be between 0 and 12"
-msgstr ""
+msgstr "Tijd van melding moet tussen 0 en 12 zijn"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1565,6 +1574,8 @@ msgid ""
 "The responsible is the person that will order lunch for everyone. It will be"
 " used as the 'from' when sending the automatic email."
 msgstr ""
+"De verantwoordelijke is de persoon die de lunch besteld voor iedereen. Het "
+"wordt gebruikt als de 'van' wanneer de automatische e-mail verzonden wordt."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
@@ -1772,6 +1783,8 @@ msgid ""
 "You are trying to impersonate another user, but this can only be done by a "
 "lunch manager"
 msgstr ""
+"U probeert een andere gebruiker na te doen, maar dit kan alleen door een "
+"lunch manager"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lunch_line_wizard.py:0

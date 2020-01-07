@@ -124,8 +124,8 @@
                 <form string="Register Payment">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
-                        <button name="action_draft" class="btn btn-secondary" states="posted" string="Reset To Draft" type="object"/>
-                        <button name="cancel" attrs="{'invisible': [('state', 'in', ('cancelled', 'posted'))]}" string="Cancel" type="object"/>
+                        <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object"/>
+                        <button name="cancel" states="draft" string="Cancel" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
                     </header>
                     <sheet>
@@ -135,7 +135,7 @@
                                     groups="account.group_account_user"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
-                            <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars">
+                            <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars" attrs="{'invisible':[('reconciled_invoices_count','=', 0)]}" >
                                 <field name="reconciled_invoices_count"/>
                                 <span attrs="{'invisible':[('reconciled_invoices_count','&gt;',1)]}">Invoice</span>
                                 <span attrs="{'invisible':[('reconciled_invoices_count','&lt;=',1)]}">Invoices</span>

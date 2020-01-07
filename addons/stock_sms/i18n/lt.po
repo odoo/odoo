@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -24,22 +24,15 @@ msgstr ""
 #. module: stock_sms
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
-"${object.company_id.name}: We are glad to inform you that your order has been shipped.\n"
-"            %if object.carrier_tracking_ref:\n"
-"                Your tracking reference is ${object.carrier_tracking_ref}.\n"
-"            %endif"
-msgstr ""
-
-#. module: stock_sms
-#: model:mail.template,body_html:stock_sms.mail_template_no_more_credit_sms
-msgid ""
-"<p>Dear ${object.name},</p>\n"
-"                <br/>\n"
-"                <p>There are no more credits on your IAP SMS account.<br/>\n"
-"                You can charge your IAP SMS account from the Settings of the Inventory app or from the General Settings.<br/></p>\n"
-"                <br/>\n"
-"                <p>Best regards,</p>\n"
-"                <p>Odoo S.A.</p>\n"
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: We are glad to inform you that your order n° ${object.origin} has been shipped.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: We are glad to inform you that your order has been shipped.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Your tracking reference is ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
 "            "
 msgstr ""
 
@@ -101,11 +94,6 @@ msgstr "Rodomas pavadinimas"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
-
-#. module: stock_sms
-#: model:mail.template,subject:stock_sms.mail_template_no_more_credit_sms
-msgid "IAP SMS Confirmation Notification"
 msgstr ""
 
 #. module: stock_sms

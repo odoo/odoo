@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -21,6 +21,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr "<div>E-mailová automatizace</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -115,6 +120,54 @@ msgstr "Automatizace"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_with_trigger
+#: model:ir.actions.server,name:base_automation.test_rule_with_trigger_ir_actions_server
+msgid "Base Automation: test rule with trigger"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
 msgstr ""
 
 #. module: base_automation
@@ -248,7 +301,7 @@ msgstr "Datum vypršení"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Typ termínu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id

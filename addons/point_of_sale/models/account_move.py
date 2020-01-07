@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
@@ -12,10 +12,16 @@ class AccountMove(models.Model):
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
-            stock_moves += invoice.mapped('pos_order_ids.picking_id.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
+            stock_moves += invoice.sudo().mapped('pos_order_ids.picking_id.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
         for invoice in self.filtered(lambda x: x.type == 'out_refund'):
-            stock_moves += invoice.mapped('pos_order_ids.picking_id.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
+            stock_moves += invoice.sudo().mapped('pos_order_ids.picking_id.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return stock_moves
+
+    def _compute_amount(self):
+        super(AccountMove, self)._compute_amount()
+        pos_invoices = self.filtered(lambda i: i.type in ['out_invoice', 'out_refund'] and i.pos_order_ids)
+        for invoice in pos_invoices:
+            invoice.invoice_payment_state = 'paid'
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

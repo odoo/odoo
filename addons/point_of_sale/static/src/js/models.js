@@ -307,7 +307,8 @@ exports.PosModel = Backbone.Model.extend({
                 });
                 if (user.id === session.uid) {
                     self.user = user;
-                    self.employee = user;
+                    self.employee.name = user.name;
+                    self.employee.role = user.role;
                     self.employee.user_id = [user.id, user.name];
                 }
             });
@@ -318,7 +319,13 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name', 'discount_policy'],
-        domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
+        domain: function(self) {
+            if (self.config.use_pricelist) {
+                return [['id', 'in', self.config.available_pricelist_ids]];
+            } else {
+                return [['id', '=', self.config.pricelist_id[0]]];
+            }
+        },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
@@ -667,9 +674,6 @@ exports.PosModel = Backbone.Model.extend({
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
-        if (this.config.iface_customer_facing_display) {
-            this.send_current_order_to_customer_facing_display();
-        }
         return order;
     },
     /**
@@ -1418,7 +1422,7 @@ exports.Orderline = Backbone.Model.extend({
             try {
                 this.init_from_JSON(options.json);
             } catch(error) {
-                console.error('ERROR: attempting to recover product ID', json.product_id,
+                console.error('ERROR: attempting to recover product ID', options.json.product_id,
                     'not available in the point of sale. Correct the product or clean the browser cache.');
             }
             return;
@@ -2146,6 +2150,7 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
+        this.pos.send_current_order_to_customer_facing_display();
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline
@@ -2248,7 +2253,7 @@ exports.Order = Backbone.Model.extend({
         } else {
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.uid  = this.generate_unique_id();
-            this.name = _t("Order ") + this.uid;
+            this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
             this.fiscal_position = _.find(this.pos.fiscal_positions, function(fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
@@ -2264,8 +2269,7 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.on('remove', function(){ this.save_to_db("paymentline:rem"); }, this);
 
         if (this.pos.config.iface_customer_facing_display) {
-            this.paymentlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
-            // removing last paymentline does not trigger change event
+            this.paymentlines.on('add', this.pos.send_current_order_to_customer_facing_display, this.pos);
             this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
         }
 
@@ -2298,7 +2302,7 @@ exports.Order = Backbone.Model.extend({
         }
         this.session_id = this.pos.pos_session.id;
         this.uid = json.uid;
-        this.name = _t("Order ") + this.uid;
+        this.name = _.str.sprintf(_t("Order %s"), this.uid);
         this.validation_date = json.creation_date;
         this.server_id = json.server_id ? json.server_id : false;
         this.user_id = json.user_id;
@@ -2381,6 +2385,7 @@ exports.Order = Backbone.Model.extend({
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
+            to_invoice: this.to_invoice ? this.to_invoice : false,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -2601,7 +2606,7 @@ exports.Order = Backbone.Model.extend({
             var mapped_included_taxes = [];
             _(taxes).each(function(tax) {
                 var line_taxes = line._map_tax_fiscal_position(tax);
-                if(tax.price_include && _.contains(line_taxes, tax)){
+                if(tax.price_include && !_.contains(line_taxes, tax)){
 
                     mapped_included_taxes.push(tax);
                 }
@@ -2627,6 +2632,7 @@ exports.Order = Backbone.Model.extend({
         attr.pos = this.pos;
         attr.order = this;
         var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
+        this.fix_tax_included_price(line);
 
         if(options.quantity !== undefined){
             line.set_quantity(options.quantity);
@@ -2634,14 +2640,12 @@ exports.Order = Backbone.Model.extend({
 
         if(options.price !== undefined){
             line.set_unit_price(options.price);
+            this.fix_tax_included_price(line);
         }
 
         if(options.lst_price !== undefined){
             line.set_lst_price(options.lst_price);
         }
-
-        //To substract from the unit price the included taxes mapped by the fiscal position
-        this.fix_tax_included_price(line);
 
         if(options.discount !== undefined){
             line.set_discount(options.discount);

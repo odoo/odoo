@@ -108,6 +108,7 @@ var AddNewFavoriteMenu = Widget.extend({
     _toggleMenu: function () {
         this.isOpen = !this.isOpen;
         this._render();
+        this.trigger_up('favorite_submenu_toggled');
     },
 
     //--------------------------------------------------------------------------

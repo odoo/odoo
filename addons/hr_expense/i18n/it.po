@@ -9,8 +9,6 @@
 # Christian <chris@effeci.info>, 2019
 # Pietro Della Notte <pdellanotte@gmail.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
-# Martin Trigaux, 2019
-# Leonardo Donelli <learts92@gmail.com>, 2019
 # Paolo Valier, 2019
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2019
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
@@ -18,13 +16,15 @@
 # mymage <stefano.consolaro@mymage.it>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Leonardo Donelli <learts92@gmail.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -196,6 +196,12 @@ msgid "Administrator"
 msgstr "Amministratore"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr "Volo aereo"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Alias"
 msgstr "Alias"
@@ -262,6 +268,11 @@ msgid "Approved Expenses"
 msgstr "Nota spese approvata"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Archived"
+msgstr "Archiviati"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Document"
 msgstr "Allega documento"
@@ -307,6 +318,12 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr "Note spese viaggio in auto"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
 msgid "Category"
 msgstr "Categoria"
@@ -329,7 +346,7 @@ msgstr "Azienda"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -493,12 +510,6 @@ msgid "Error"
 msgstr "Errore"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Exception Activities"
-msgstr "Eccezioni "
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -631,6 +642,8 @@ msgstr "Nota spese da cui proviene la riga del movimento"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
 msgstr "Note spese"
 
@@ -708,19 +721,19 @@ msgstr "Rifiutata espressamente dal supervisore o dal contabile"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
-msgstr "Follower"
+msgstr "Chi segue"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_channel_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Follower (canali)"
+msgstr "Chi segue (canali)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Chi segue (partner)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -837,7 +850,7 @@ msgstr "E-mail in arrivo"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "Allegati non validi."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -848,7 +861,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1018,7 +1031,7 @@ msgstr "Nessuna nota spese dipendente approvata"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Non è stato fornito alcun allegato"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1467,7 +1480,7 @@ msgstr "Inviata"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Subtotal"
-msgstr "Subtotale"
+msgstr "Imponibile"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
@@ -1504,6 +1517,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_account_id` "
 "needs to be required or not in the payments form views"
 msgstr ""
+"Campo tecnico usato per sapere se il campo \"partner_bank_account_id\" deve "
+"essere obbligatorio nelle viste modulo dei pagamenti"
 
 #. module: hr_expense
 #. openerp-web
@@ -1520,12 +1535,6 @@ msgstr ""
 msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "The journal linked to the expense report must be in the same company."
 msgstr ""
 
 #. module: hr_expense
@@ -1619,6 +1628,14 @@ msgid "Unit of Measure"
 msgstr "Unità di misura"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.air_ticket
+#: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,uom_name:hr_expense.air_ticket_product_template
+#: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+msgid "Units"
+msgstr "Unità"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread
 msgid "Unread Messages"
@@ -1628,7 +1645,7 @@ msgstr "Messaggi non letti"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_unsubmitted_expense
@@ -1824,6 +1841,12 @@ msgstr "es. Viaggio a New York"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
 msgstr "è stata rifiutata"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.car_travel
+#: model:product.template,uom_name:hr_expense.car_travel_product_template
+msgid "km"
+msgstr "km"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

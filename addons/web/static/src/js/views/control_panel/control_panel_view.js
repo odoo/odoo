@@ -168,6 +168,9 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
+        if (attrs.invisible) {
+            filter.invisible = true;
+        }
         if (filter.type === 'filter') {
             if (filter.isDefault) {
                 filter.defaultRank = -5;
@@ -183,9 +186,6 @@ var ControlPanelView = Factory.extend({
                                             DEFAULT_PERIOD;
                 filter.currentOptionIds = new Set();
                 filter.basicDomains = this._getDateFilterBasicDomains(filter);
-            }
-            if (attrs.invisible) {
-                filter.invisible = true;
             }
         } else if (filter.type === 'groupBy') {
             if (filter.isDefault) {
@@ -231,8 +231,8 @@ var ControlPanelView = Factory.extend({
             const setParam = _.extend({}, y.setParam, o ? o.setParam : {});
             const granularity = o ? o.granularity : y.granularity;
             const date = this.referenceMoment.clone().set(setParam).add(addParam);
-            let leftBound = date.clone().startOf(granularity);
-            let rightBound = date.clone().endOf(granularity);
+            let leftBound = date.clone().startOf(granularity).locale('en');
+            let rightBound = date.clone().endOf(granularity).locale('en');
 
             if (filter.fieldType === 'date') {
                 leftBound = leftBound.format("YYYY-MM-DD");

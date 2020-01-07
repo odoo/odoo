@@ -3,7 +3,7 @@
 # 	* purchase
 # 
 # Translators:
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
+# Lorenzo Battistini <lb@takobi.online>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Tiziano Zambelli <zstiziano@gmail.com>, 2019
 # Franco Tampieri <franco@tampieri.info>, 2019
@@ -21,14 +21,15 @@
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Giovanni S <giovanni@gslab.it>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Giovanni S <giovanni@gslab.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr "N. fatture fornitore"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
-msgstr "Numero di righe"
+msgstr "N. di righe"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
@@ -141,6 +142,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Spett.le ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Siamo ad inviarLe la richiesta di preventivo <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            con riferimento: ${object.partner_ref}\n"
+"        % endif\n"
+"        da ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Per ulteriori domande, non esiti a contattarci.\n"
+"        <br/><br/>\n"
+"        Cordiali saluti,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -345,7 +364,7 @@ msgstr "Stato attività"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add a note"
-msgstr "Aggiungi una nota"
+msgstr "Aggiungi nota"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -573,7 +592,7 @@ msgstr "Componi e-mail"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -701,7 +720,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr "Imposta i tuoi Termini e condizioni..."
+msgstr "Definire termini e condizioni..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -752,12 +771,6 @@ msgid "Drop Ship Address"
 msgstr "Indirizzo dropshipping"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Exception Activities"
-msgstr "Eccezioni "
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
 msgstr "Filtri estesi"
@@ -777,17 +790,17 @@ msgstr "Posizione fiscale"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
 msgid "Followers"
-msgstr "Follower"
+msgstr "Chi segue"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Follower (canali)"
+msgstr "Chi segue (canali)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Chi segue (partner)"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
@@ -917,7 +930,7 @@ msgstr "Fatturazione"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1087,7 +1100,7 @@ msgstr "Acquisti mensili"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "My Orders"
-msgstr "Ordini"
+msgstr "I miei ordini"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1272,7 +1285,7 @@ msgstr "Termini di pagamento"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
 msgid "Portal Access URL"
-msgstr "URL di accesso al portale"
+msgstr "URL accesso al portale"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1323,7 +1336,7 @@ msgstr "Modello prodotto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
 msgid "Product Type"
-msgstr "Tipo prodotto"
+msgstr "Tipologia prodotto"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_product_action
@@ -1363,7 +1376,7 @@ msgstr "Contratti di acquisto"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
 msgid "Purchase Analysis"
-msgstr "Analisi degli acquisti"
+msgstr "Analisi acquisti"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1483,7 +1496,7 @@ msgstr "Ordini di acquisto"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr "Ordini di acquisto n."
+msgstr "N. ordini di acquisto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1593,17 +1606,17 @@ msgstr "RDP"
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "RDP Approvata"
+msgstr "RdP approvata"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "RDP Confermata"
+msgstr "RdP confermata"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "RDP Completata"
+msgstr "RdP effettuata"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
@@ -1987,8 +2000,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "This note will show up on purchase orders."
-msgstr "Questa nota sarà visibile negli ordini di acquisto."
+msgid "This note is added to purchase orders."
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0
@@ -2087,7 +2100,7 @@ msgstr "Unità di misura"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Categorie unità di misura"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2102,13 +2115,13 @@ msgstr "Messaggi non letti"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Untaxed"
-msgstr "Non tassato"
+msgstr "Senza imposte"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
@@ -2238,7 +2251,9 @@ msgid "Warning when Purchasing this Product"
 msgstr "Avviso all'acquisto di questo prodotto"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Warnings"
 msgstr "Avvisi"
 

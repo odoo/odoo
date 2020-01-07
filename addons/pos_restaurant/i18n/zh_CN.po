@@ -4,26 +4,29 @@
 # 
 # Translators:
 # Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # fausthuang, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
-# keecome <7017511@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
-# xu xiaohu <xu.xiaohu@gmail.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
+# e2f <projects@e2f.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# 老窦 北京 <2662059195@qq.com>, 2019
+# 湘子 南 <1360857908@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# xu xiaohu <xu.xiaohu@gmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +40,26 @@ msgid " Use a printer connected to the IoT Box"
 msgstr ""
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 3.12"
+msgstr "$ 3.12"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.40"
+msgstr "$ 4.40"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.50"
+msgstr "$ 4.50"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 8.50"
+msgstr "$ 8.50"
+
+#. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid ""
 "<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
@@ -44,6 +67,36 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
 "role=\"img\" aria-label=\"For bars and restaurants\"/>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
+msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\">改变</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
+msgstr "<span class=\"total-amount-formatting\">总计</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+msgstr "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>$ 470.00</span>"
+msgstr "<span>$ 470.00</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>Cash (USD):</span>"
+msgstr "<span>现金（美元）：</span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -70,11 +123,6 @@ msgid ""
 msgstr ""
 "餐馆楼层代表您服务的客户的位置，您可以\n"
 "                定义和布置桌椅。"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Accept customer tips or convert their change to a tip"
-msgstr "接受客户提示，或将其更改转换为提示"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
@@ -185,6 +233,12 @@ msgid "Background Image"
 msgstr "背景图像"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_bacon
+#: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
+msgid "Bacon Burger"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #, python-format
@@ -230,12 +284,36 @@ msgid "Changes could not be saved"
 msgstr "修改将不会保存"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_cheeseburger
+#: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
+msgid "Cheese Burger"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_chicken
+#: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
+msgid "Chicken Curry Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Close"
 msgstr "关闭"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_club
+#: model:product.template,name:pos_restaurant.pos_food_club_product_template
+msgid "Club Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.coke
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr "可口可乐"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -264,18 +342,9 @@ msgid "Delete"
 msgstr "刪除"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discount:"
-msgstr "折扣："
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discounts"
-msgstr "折扣"
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Desk Organizer"
+msgstr "桌上收纳盒"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -283,6 +352,11 @@ msgstr "折扣"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+msgid "Drinks"
+msgstr "饮料可乐"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -341,6 +415,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
 msgstr "最低标准"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.food
+msgid "Food"
+msgstr "食品"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_funghi
+#: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
+msgid "Funghi"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -432,6 +517,11 @@ msgid "Last Updated on"
 msgstr "更新时间"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Led Lamp"
+msgstr "发光二极管"
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
@@ -440,16 +530,50 @@ msgid "Light grey"
 msgstr "浅灰"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Logo"
-msgstr "Logo"
+#: model:product.product,name:pos_restaurant.pos_food_maki
+#: model:product.template,name:pos_restaurant.pos_food_maki_product_template
+msgid "Lunch Maki 18pc"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_salmon
+#: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
+msgid "Lunch Salmon 20pc"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_temaki
+#: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
+msgid "Lunch Temaki mix 3pc"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
 msgstr "订单管理"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_margherita
+#: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
+msgid "Margherita"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.minute_maid
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr "美汁源"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Monitor Stand"
+msgstr "监控标准"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_mozza
+#: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
+msgid "Mozzarella Sandwich"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -481,10 +605,22 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "Nothing to Print"
+msgstr "没有可打印的"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Number of Seats ?"
 msgstr "座位数？"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Odoo Logo"
+msgstr "Odoo 徽标"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -541,6 +677,25 @@ msgstr "POS 打印机"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
+#, python-format
+msgid "PRO FORMA"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_4formaggi
+#: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
+msgid "Pasta 4 formaggi "
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_bolo
+#: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
+msgid "Pasta Bolognese"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "Payment"
@@ -565,6 +720,11 @@ msgstr "销售网点订单行"
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "POS订单"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Price"
+msgstr "价格"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -610,6 +770,11 @@ msgstr "代理 IP 地址"
 #, python-format
 msgid "Purple"
 msgstr "紫色"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Quantity"
+msgstr "数量"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -674,6 +839,12 @@ msgid "Round Shape"
 msgstr "圆形"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_chirashi
+#: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
+msgid "Salmon and Avocado"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
@@ -687,13 +858,6 @@ msgid "Sequence"
 msgstr "单号规则"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Served by"
-msgstr "服务员"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
 msgid "Shape"
 msgstr "图形"
@@ -701,6 +865,12 @@ msgstr "图形"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_tuna
+#: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
+msgid "Spicy Tuna Sandwich"
 msgstr ""
 
 #. module: pos_restaurant
@@ -726,20 +896,6 @@ msgstr "方形"
 #, python-format
 msgid "Square Shape"
 msgstr "方形"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Subtotal"
-msgstr "小计"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "TOTAL"
-msgstr "总计"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
@@ -768,13 +924,6 @@ msgstr "桌台名称？"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
 msgstr "桌台"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Tel:"
-msgstr "电话:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -844,15 +993,17 @@ msgstr "阵列中表格的宽度"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "There are no order lines"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "这个楼层没有多余的桌子，请使用"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "This product is used as reference on customer receipts."
-msgstr "本产品用于客户收据的参考。"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -860,16 +1011,6 @@ msgstr "本产品用于客户收据的参考。"
 #, python-format
 msgid "Tint"
 msgstr "色调"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tip Product"
-msgstr "提示产品"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tips"
-msgstr "提示"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -887,14 +1028,71 @@ msgid "Turquoise"
 msgstr "绿宝石"
 
 #. module: pos_restaurant
+#: model:product.product,uom_name:pos_restaurant.coke
+#: model:product.product,uom_name:pos_restaurant.minute_maid
+#: model:product.product,uom_name:pos_restaurant.pos_food_4formaggi
+#: model:product.product,uom_name:pos_restaurant.pos_food_bacon
+#: model:product.product,uom_name:pos_restaurant.pos_food_bolo
+#: model:product.product,uom_name:pos_restaurant.pos_food_cheeseburger
+#: model:product.product,uom_name:pos_restaurant.pos_food_chicken
+#: model:product.product,uom_name:pos_restaurant.pos_food_chirashi
+#: model:product.product,uom_name:pos_restaurant.pos_food_club
+#: model:product.product,uom_name:pos_restaurant.pos_food_funghi
+#: model:product.product,uom_name:pos_restaurant.pos_food_maki
+#: model:product.product,uom_name:pos_restaurant.pos_food_margherita
+#: model:product.product,uom_name:pos_restaurant.pos_food_mozza
+#: model:product.product,uom_name:pos_restaurant.pos_food_salmon
+#: model:product.product,uom_name:pos_restaurant.pos_food_temaki
+#: model:product.product,uom_name:pos_restaurant.pos_food_tuna
+#: model:product.product,uom_name:pos_restaurant.pos_food_vege
+#: model:product.product,uom_name:pos_restaurant.water
+#: model:product.template,uom_name:pos_restaurant.coke_product_template
+#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_4formaggi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_bacon_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_bolo_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_cheeseburger_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_chicken_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_chirashi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_club_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_funghi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_maki_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_margherita_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_mozza_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_salmon_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_temaki_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_tuna_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_vege_product_template
+#: model:product.template,uom_name:pos_restaurant.water_product_template
+msgid "Units"
+msgstr "单位"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
 msgstr "用作楼层分类"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_vege
+#: model:product.template,name:pos_restaurant.pos_food_vege_product_template
+msgid "Vegetarian"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
 msgstr "竖直位置"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.water
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "水"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Whiteboard Pen"
+msgstr "白板笔"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width

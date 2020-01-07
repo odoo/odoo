@@ -76,10 +76,10 @@ var GroupByMenu = DropdownMenu.extend({
      * @override
      */
     start: function () {
-        this.$menu = this.$('.o_dropdown_menu');
+        var superProm = this._super.apply(this, arguments);
         this.$menu.addClass('o_group_by_menu');
         this._renderGeneratorMenu();
-        return this._super.apply(this, arguments);
+        return superProm;
     },
 
     //--------------------------------------------------------------------------
@@ -135,6 +135,7 @@ var GroupByMenu = DropdownMenu.extend({
         this.$menu.append($generatorMenu);
         this.$addCustomGroup = this.$menu.find('.o_add_custom_group');
         this.$groupSelector = this.$menu.find('.o_group_selector');
+        this.$dropdownReference.dropdown('update');
     },
     /**
      * @private

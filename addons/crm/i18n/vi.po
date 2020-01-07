@@ -5,20 +5,21 @@
 # Translators:
 # Phạm Lân <phamquanglan@gmail.com>, 2019
 # Minh Nguyen <ndminh210994@gmail.com>, 2019
-# son dang <son.dang@doda100.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Martin Trigaux, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
+# son dang <son.dang@doda100.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -192,16 +193,6 @@ msgstr ""
 "tương tự như tính năng CC trong email.</p>"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Leads:</small>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Opportunities:</small>"
-msgstr ""
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -314,6 +305,7 @@ msgstr "Áp dụng chống trùng lặp"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -403,6 +395,11 @@ msgstr "Trạng thái"
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
 msgstr ""
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Yêu cầu Demo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
@@ -568,6 +565,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Consider leads created as of the"
 msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Tư vấn"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -844,6 +846,11 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Thiết kế"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr "Tiêu"
@@ -983,12 +990,6 @@ msgid "Estimate of the date on which the opportunity will be won."
 msgstr "Dự kiến ngày mà cơ hội được đánh dấu là chiến thắng."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -1046,6 +1047,11 @@ msgstr "Đóng ở trong Pipeline"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Follow-up"
 msgstr "Theo sát"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Theo dõi báo giá"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -1219,6 +1225,11 @@ msgstr "Email gửi đến"
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__incorrect
 msgid "Incorrect"
 msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Thông tin"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1422,6 +1433,7 @@ msgstr "Tiềm năng/Cơ hội"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 msgid "Leads"
 msgstr "Tiềm năng"
 
@@ -1518,6 +1530,7 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1555,6 +1568,11 @@ msgstr "Thấp"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Đính kèm chính"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Tạo báo giá"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1785,7 +1803,7 @@ msgstr "Số lượng Hành động"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Số lỗi"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -1851,6 +1869,7 @@ msgstr "Lý do cơ hội thất bại"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -1959,6 +1978,11 @@ msgstr ""
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "Cơ hội thành công"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Khác"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2080,6 +2104,11 @@ msgid "Probability"
 msgstr "Xác suất"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
 msgstr "Đề xuất"
@@ -2142,7 +2171,7 @@ msgstr "Khôi phục"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Lỗi gửi SMS"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
@@ -2228,6 +2257,11 @@ msgid "Sequence"
 msgstr "Thứ tự"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Các dịch vụ"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr "Đưa ra một giai đoạn mới trong luồng xử lý cơ hội của bạn"
@@ -2261,6 +2295,11 @@ msgstr "Chỉ hiển thị Tiềm năng"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Chỉ hiển thị cơ hội"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Phần mềm"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2542,6 +2581,11 @@ msgid "Tracking"
 msgstr "Theo vết"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Đào tạo"
+
+#. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
 msgstr "Thử ngay"
@@ -2562,7 +2606,7 @@ msgstr "Kiểu được sử dụng để tách riêng Tiềm năng và Cơ hộ
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign
@@ -2743,6 +2787,7 @@ msgstr "Khi gửi mail, địa chỉ email mặc định được lấy từ đ�
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format

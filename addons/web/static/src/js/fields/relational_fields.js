@@ -1108,7 +1108,7 @@ var FieldX2Many = AbstractField.extend({
             // 'UPDATE' commands with no data can be ignored: they occur in
             // one2manys when the record is updated from a dialog and in this
             // case, we can re-render the whole subview.
-            if (command.operation === 'UPDATE' && command.data) {
+            if (command && command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this._reset(record, ev);
@@ -1714,7 +1714,7 @@ var FieldOne2Many = FieldX2Many.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
-                if (ev.data.changes[self.name].operation === 'CREATE') {
+                if (ev.data.changes[self.name] && ev.data.changes[self.name].operation === 'CREATE') {
                     var index = 0;
                     if (self.editable !== 'top') {
                         index = self.value.data.length - 1;
@@ -2440,6 +2440,10 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
      */
     _onOpenColorPicker: function (ev) {
         ev.preventDefault();
+        if (this.nodeOptions.no_edit_color) {
+            ev.stopPropagation();
+            return;
+        }
         var tagID = $(ev.currentTarget).parent().data('id');
         var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
@@ -2516,7 +2520,11 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
      */
     _render: function () {
         var self = this;
-        this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
+
+        if (this.$el) {
+            this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
+        }
+
         _.each(this.value.data, function (m2m) {
             if (self.colorField in m2m.data && !m2m.data[self.colorField]) {
                 // When a color field is specified and that color is the default
@@ -2716,7 +2724,7 @@ var FieldSelection = AbstractField.extend({
      * @returns {jQuery}
      */
     getFocusableElement: function () {
-        return this.$el.is('select') ? this.$el : $();
+        return this.$el && this.$el.is('select') ? this.$el : $();
     },
     /**
      * @override

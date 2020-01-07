@@ -9,6 +9,7 @@ import urllib3
 import io
 import json
 import logging
+import os
 import subprocess
 import zipfile
 
@@ -50,6 +51,44 @@ def check_certificate():
         else:
             load_certificate()
 
+def check_git_branch():
+    """
+    Check if the local branch is the same than the connected Odoo DB and
+    checkout to match it if needed.
+    """
+    server = get_odoo_server_url()
+    if server:
+        urllib3.disable_warnings()
+        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+        try:
+            response = http.request(
+                'POST',
+                server + "/web/webclient/version_info",
+                body = '{}',
+                headers = {'Content-type': 'application/json'}
+            )
+
+            if response.status == 200:
+                git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+
+                db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
+                if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+                    db_branch = 'master'
+
+                local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+
+                if db_branch != local_branch:
+                    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                    subprocess.check_call(git + ['branch', '-m', db_branch])
+                    subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
+                    os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
+                    subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+                    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+
+        except Exception as e:
+            _logger.error('Could not reach configured server')
+            _logger.error('A error encountered : %s ' % e)
+
 def get_ip():
     try:
         return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
@@ -74,7 +113,7 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return '19.10'
+    return '19.12'
 
 def get_wifi_essid():
     wifi_options = []

@@ -66,7 +66,7 @@
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['billable_time']"/> %)
                                                     </td>
-                                                    <td title=" Includes the time logged into tasks for which you invoice based on ordered quantities or on milestones.">
+                                                    <td title="Includes the time logged into tasks for which you invoice based on timesheets on tasks.">
                                                         Billed on Timesheets
                                                     </td>
                                                 </tr>
@@ -77,7 +77,7 @@
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['billable_fixed']"/> %)
                                                     </td>
-                                                    <td title="Includes the time logged into tasks for which you invoice based on timesheets on tasks.">
+                                                    <td title="Includes the time logged into tasks for which you invoice based on ordered quantities or on milestones.">
                                                         Billed at a Fixed price
                                                     </td>
                                                 </tr>
@@ -236,23 +236,23 @@
                                                             <t t-set="total" t-value="employee['total'] or 1.0" />
                                                             <t t-call="sale_timesheet.progressbar">
                                                                 <t t-set="label">Billed on Timesheets</t>
-                                                                <t t-set="key">billable_time</t>
+                                                                <t t-set="key" t-translation="off">billable_time</t>
                                                             </t>
                                                             <t t-call="sale_timesheet.progressbar">
                                                                 <t t-set="label">Billed at a Fixed price</t>
-                                                                <t t-set="key">billable_fixed</t>
+                                                                <t t-set="key" t-translation="off">billable_fixed</t>
                                                             </t>
                                                             <t t-call="sale_timesheet.progressbar">
                                                                 <t t-set="label">No task found</t>
-                                                                <t t-set="key">non_billable_project</t>
+                                                                <t t-set="key" t-translation="off">non_billable_project</t>
                                                             </t>
                                                             <t t-call="sale_timesheet.progressbar">
                                                                 <t t-set="label">Non billable tasks</t>
-                                                                <t t-set="key">non_billable</t>
+                                                                <t t-set="key" t-translation="off">non_billable</t>
                                                             </t>
                                                             <t t-call="sale_timesheet.progressbar">
                                                                 <t t-set="label">Cancelled</t>
-                                                                <t t-set="key">canceled</t>
+                                                                <t t-set="key" t-translation="off">canceled</t>
                                                             </t>
                                                         </div>
                                                     </td>

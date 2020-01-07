@@ -14,6 +14,8 @@ class ThemeView(models.Model):
     _description = 'Theme UI View'
 
     def compute_arch_fs(self):
+        if 'install_filename' not in self._context:
+            return ''
         path_info = get_resource_from_path(self._context['install_filename'])
         if path_info:
             return '/'.join(path_info[0:2])
@@ -111,10 +113,10 @@ class ThemeMenu(models.Model):
         new_menu = {
             'name': self.name,
             'url': self.url,
-            'page_id': page_id,
+            'page_id': page_id and page_id.id or False,
             'new_window': self.new_window,
             'sequence': self.sequence,
-            'parent_id': parent_id,
+            'parent_id': parent_id and parent_id.id or False,
             'theme_template_id': self.id,
         }
         return new_menu

@@ -122,7 +122,7 @@ class LandedCost(models.Model):
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
-                linked_layer = line.move_id.stock_valuation_layer_ids[-1]  # Maybe the LC layer should be linked to multiple IN layer?
+                linked_layer = line.move_id.stock_valuation_layer_ids[0]
 
                 # Prorate the value at what's still in stock
                 cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
@@ -292,7 +292,7 @@ class LandedCostLine(models.Model):
         if not self.product_id:
             self.quantity = 0.0
         self.name = self.product_id.name or ''
-        self.split_method = 'equal'
+        self.split_method = self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
         self.account_id = accounts_data['stock_input']

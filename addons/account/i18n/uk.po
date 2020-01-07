@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -147,6 +147,11 @@ msgstr "21 день"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 днів"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% авансу і решта до кінця місяця"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -719,11 +724,6 @@ msgstr "<strong>Код клієнта:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Клієнт: </strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Опис:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1777,7 +1777,6 @@ msgstr "Валюта суми"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
-#: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
@@ -2089,11 +2088,16 @@ msgid "April"
 msgstr "Квітень"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_incoterms_form
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_view_search
+#: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Archived"
 msgstr "Заархівовано"
@@ -3407,6 +3411,7 @@ msgstr "Протилежні значення"
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__country_id
@@ -3752,6 +3757,7 @@ msgid "Credit Move"
 msgstr "Кредитне проведення"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4743,11 +4749,6 @@ msgstr ""
 "відповідного рядка"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "Exception Activities"
-msgstr "Виключення дій"
-
-#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Exchange Difference"
@@ -4940,6 +4941,7 @@ msgstr "Звітні періоди"
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -5726,6 +5728,7 @@ msgstr "Імпортувати вашу банківську виписку у Q
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__in_payment
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__in_payment
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In Payment"
 msgstr "В оплаті"
 
@@ -5970,12 +5973,14 @@ msgid "Invalid fiscal year last day"
 msgstr "Недійсний останній день звітного періоду"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, python-format
 msgid "Invoice"
 msgstr "Рахунок"
 
@@ -7272,6 +7277,11 @@ msgid "Move Reconciled"
 msgstr "Переміщення узгоджено"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
+msgid "Move Type"
+msgstr "Тип переміщення"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
 msgstr "Мультивалютніть"
@@ -7575,7 +7585,6 @@ msgstr "Кількість днів"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__number_entries
 msgid "Number of entries related to this model"
 msgstr "Кількість записів відноситься до цієї моделі"
 
@@ -7704,15 +7713,6 @@ msgstr "Лише рахунки можуть друкуватися."
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
 msgid "Only one payment will be created by partner (bank)/ currency."
 msgstr "Лише один платіж буде створено партнером (банк)/ валютою."
-
-#. module: account
-#: code:addons/account/wizard/account_move_reversal.py:0
-#, python-format
-msgid ""
-"Only posted journal entries being not already a refund can be reversed."
-msgstr ""
-"Можуть бути скасовані лише опубліковані записи журналів, оскільки "
-"відшкодування можна повернути назад."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -7957,6 +7957,7 @@ msgstr "Упаковка"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__paid
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Оплачено"
@@ -8034,11 +8035,6 @@ msgstr "Партнер"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
 msgid "Partner Company"
 msgstr "Компанія партнера"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
-msgid "Partner Company's Country"
-msgstr "Країна компанії партнера"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -8259,6 +8255,11 @@ msgstr "Терміни оплати: 21 день"
 #: model:account.payment.term,note:account.account_payment_term_30days
 msgid "Payment terms: 30 Days"
 msgstr "Терміни оплати: 30 днів"
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Термін оплати: 30% авансу і решта до кінця місяця"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
@@ -9102,6 +9103,7 @@ msgstr "Зробити новим"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
 #, python-format
 msgid "Residual"
 msgstr "Залишок"
@@ -9176,6 +9178,11 @@ msgid "Reversal date"
 msgstr "Дата сторнування"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
+msgid "Reversal of"
+msgstr "Сторнування"
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
@@ -9218,11 +9225,6 @@ msgstr "Скасувати запис журналу"
 #, python-format
 msgid "Reverse Moves"
 msgstr "Скасувати проведення"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
-msgid "Reverse entry"
-msgstr "Скасувати запис"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -10272,7 +10274,7 @@ msgstr "Без податків"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped_sales_purchases
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
 msgstr "Сітки податків"
 
@@ -10679,11 +10681,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
 msgid ""
-"Technical field used to hide the payment method if theselected journal has "
+"Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
-"Технічне поле, яке використовується для приховування способу оплати, якщо в "
-"цих вибраних журналах є лише один доступний, який є \"ручним\""
+"Технічне поле, яке використовується для приховання способу оплати, якщо у "
+"вибраному журналі є лише один доступний, який є \"ручним\""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
@@ -10848,6 +10850,24 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "Рахунок %s (%s) застарілий."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The account is already in use in a 'sale' or 'purchase' journal. This means "
+"that the account's type couldn't be 'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The account selected on your journal entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account."
+msgstr ""
+"Рахунок, обраний у вашому журналі, вимагає отримання вторинної валюти. Слід "
+"видалити вторинну валюту з рахунку."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11231,12 +11251,12 @@ msgstr "Необов'язкова інша валюта, якщо вона вх�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
 msgid ""
-"The optional quantity expressed by this line, eg: number of product sold.The"
-" quantity is not a legal requirement but is very useful for some reports."
+"The optional quantity expressed by this line, eg: number of product sold. "
+"The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"Необов'язкова кількість, виражена цим рядком, наприклад: кількість проданого"
-" товару. Кількість не є юридичною вимогою, але дуже корисна для деяких "
-"звітів."
+"Необов'язкова кількість, вказана в цьому рядку, наприклад: кількість "
+"проданих товарів. Ця кількість не є юридичною вимогою, але дуже корисна для "
+"деяких звітів."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -11474,9 +11494,23 @@ msgid "The tie-breaking rule used for float rounding operations"
 msgstr "Правило розбиття крапок використовується для операцій округлення"
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The type of the journal's default credit/debit account shouldn't be "
+"'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
 msgstr "Зараз для вашого рахунку немає рахунків-фактур та платежів."
+
+#. module: account
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "There are no journal items in the draft state to post."
+msgstr "Немає жодного елементу журналу у статусі чернетки для публікування."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -11497,12 +11531,6 @@ msgid ""
 msgstr ""
 "У налаштуваннях бухобліку не визначено рахунок переказу. Визначте, щоби "
 "підтвердити цей переказ."
-
-#. module: account
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "There is no journal items in draft state to post."
-msgstr "Немає елементів журналу у стані чернетки для публікації."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -12007,13 +12035,17 @@ msgstr "Переміщення"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__message_type
 #: model:ir.model.fields,field_description:account.field_account_journal__type
 #: model:ir.model.fields,field_description:account.field_account_move__type
-#: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__rule_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__rule_type
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_type
 msgid "Type"
 msgstr "Тип"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__type_name
+msgid "Type Name"
+msgstr "Назва типу"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__activity_exception_decoration
@@ -12406,6 +12438,11 @@ msgid "View"
 msgstr "Перегляд"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "View accounts detail"
+msgstr "Переглянути деталі обліку"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
 msgid "Warning"
 msgstr "Сповіщення"
@@ -12632,6 +12669,26 @@ msgstr "Ви можете зареєструвати оплату тільки �
 #, python-format
 msgid "You can only send invoices."
 msgstr "Ви можете лише надіслати рахунки."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the payable type on payment terms lines "
+"for vendor bill."
+msgstr ""
+"Ви можете встановити лише рахунок, який має платіжний тип в рядках термінів "
+"оплати для рахунка постачальника."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the receivable type on payment terms "
+"lines for customer invoice."
+msgstr ""
+"Ви можете встановити лише рахунок, який має тип дебіторської заборгованості "
+"в рядках термінів оплати для клієнтських рахунків."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -13230,3 +13287,53 @@ msgstr "рахунки постачальників"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Вирахувати"
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your account since there are some journal "
+"items linked to it."
+msgstr ""
+"Ви не можете змінювати компанію вашого рахунка оскільки з ним пов'язані "
+"деякі статті журналу."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your journal since there are some journal "
+"entries linked to it."
+msgstr ""
+"Ви не можете змінювати компанію вашого журналу, оскільки з ним пов'язані "
+"деякі статті журналу."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your tax since there are some journal items "
+"linked to it."
+msgstr ""
+"Ви не можете змінювати компанію вашого податку, оскільки з ним пов'язані "
+"деякі елементи журналу."
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some journal items linked to it."
+msgstr ""
+"Ви не можете встановити різні компанії на ваш аналітичний рахунок, оскільки "
+"з ним пов'язані деякі елементи журналу."
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic tags since there are some"
+" journal items linked to it."
+msgstr ""
+"Ви не можете встановити різні компанії на ваші аналітичні мітки, оскільки з "
+"ними пов'язані деякі елементи журналу."

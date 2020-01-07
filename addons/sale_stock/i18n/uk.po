@@ -60,7 +60,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Продажі</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -80,7 +80,7 @@ msgstr "<span>Кількість</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr "<span>SN/LN</span>"
+msgstr "<span>Серійний номер/Партійний номер</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -138,12 +138,12 @@ msgstr "Допродаж"
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr ""
+msgstr "Включені усі заплановані операції"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "Застосуйте конкретні маршрути"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -208,6 +208,11 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Дата доставки, яку ви можете гарантувати клієнту, вираховується з "
+"мінімального терміну виконання рядків замовлень у випадку товарів послуг. У "
+"випадку доставки, політика доставки замовлення буде враховувати або "
+"використовувати мінімальний або максимальний час виконання рядків "
+"замовлення."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
@@ -217,7 +222,7 @@ msgstr "Відображати партії та серійні номери н�
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Відобразити віджет кількості"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_lot_on_invoice
@@ -228,7 +233,8 @@ msgstr "Відображати партії та серійні номери н�
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr ""
-"Відображати інкотермс на замовлення на продаж та відповідні рахунки-фактури"
+"Відображати інкотермс на замовленні на продаж та пов'язаних рахунках-"
+"фактурах"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -273,7 +279,7 @@ msgstr "Очікувана дата"
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "Expected Delivery"
-msgstr ""
+msgstr "Очікувана доставка"
 
 #. module: sale_stock
 #. openerp-web
@@ -285,7 +291,7 @@ msgstr "Прогнозований запас"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "Безкоштовна кількість сьогодні"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -312,7 +318,7 @@ msgstr "Інкотерм"
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr "Інкотерми"
+msgstr "Інкотермс"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -337,7 +343,7 @@ msgstr "Рахунки"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr ""
+msgstr "Виробництво на замовлення"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -447,12 +453,12 @@ msgstr "Тип товару"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "К-сть доступна сьогодні"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "К-сть для доставки"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -617,7 +623,7 @@ msgstr "Цей товар запакований %.2f %s. Вам потрібн�
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Цей товар поповнюється на вимогу."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -639,7 +645,7 @@ msgstr "Переглянути прогноз"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "Віртуальний доступний на дату"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id

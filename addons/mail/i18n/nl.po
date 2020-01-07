@@ -5,21 +5,22 @@
 # Translators:
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -281,7 +282,7 @@ msgstr ""
 "<p> Kanalen maken het gemakkelijk om informatie over verschillende "
 "onderwerpen en groepen te organiseren.</p> <p>Probeer <b>uw eerste kanaal "
 "</b> aan rte maken (bijvoorbeeld verkoop, marketing, product XYZ, "
-"vrijdagmiddag borrel, etc ). <"
+"vrijdagmiddag borrel, etc ). </p>"
 
 #. module: mail
 #. openerp-web
@@ -503,6 +504,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender "
+"weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -840,6 +843,7 @@ msgid "Apply"
 msgstr "Toepassen"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
 msgid "Archived"
@@ -1618,7 +1622,7 @@ msgstr "Standaard omschrijving"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr "Standaard volgende activitiet"
+msgstr "Standaard volgende activiteit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -1955,7 +1959,7 @@ msgstr "Dynamische bladwijzer generator"
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -2226,11 +2230,6 @@ msgid "Exception"
 msgstr "Fout"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
@@ -2306,7 +2305,7 @@ msgstr "Veld *Mailactiviteit* kan niet worden ingesteld naar \"False\"."
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr ""
+msgstr "Veld \"Mail blacklist\" kan niet naar \"Onwaar\" gezet worden."
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:0
@@ -2725,7 +2724,7 @@ msgid ""
 "the email will be send as soon as possible."
 msgstr ""
 "Indien ingesteld, zal de wachtrij de e-mail te sturen na de datum. Indien "
-"niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd."
+"niet ingesteld, zal de e-mail zo snel mogelijk worden verzonden."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__scheduled_date
@@ -2735,7 +2734,7 @@ msgid ""
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
 "Indien ingesteld, zal de wachtrij managerde e-mail sturen na de datum. "
-"Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd. "
+"Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verzonden. "
 "Jinja2 placeholders kunnen worden gebruikt."
 
 #. module: mail
@@ -3263,6 +3262,7 @@ msgstr "Mail activiteit soort"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
+#: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Blacklist"
 msgstr "E-mail blacklist"
 
@@ -3594,7 +3594,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Messages marked as read will appear in the history."
-msgstr ""
+msgstr "Berichten gemarkeerd als gelezen worden getoond in de geschiedenis."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -3967,7 +3967,7 @@ msgstr "Geen volger"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "No history messages"
-msgstr "Geen berichten historiek"
+msgstr "Geen berichtenhistorie"
 
 #. module: mail
 #. openerp-web
@@ -4067,7 +4067,7 @@ msgstr "Notificatie bericht"
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
 #: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
-msgstr ""
+msgstr "Notificatie: verwijder notificaties ouder dan 6 maanden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification_ids
@@ -4377,7 +4377,7 @@ msgstr "Uitgaande mailserver"
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
 #, python-format
 msgid "Overdue"
-msgstr "Vervallen"
+msgstr "Te laat"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4572,6 +4572,7 @@ msgstr "Even geduld"
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Please wait..."
 msgstr "Even geduld..."
@@ -5064,7 +5065,7 @@ msgstr "Zeg iets"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Plannen"
+msgstr "Planning"
 
 #. module: mail
 #. openerp-web
@@ -5105,7 +5106,7 @@ msgstr "Geplande datum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr "Geplande verstuurdatum"
+msgstr "Geplande verzenddatum"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -5207,7 +5208,7 @@ msgstr "Verzend e-mail"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Send Mail (%s)"
-msgstr "Verstuur mail (%s)"
+msgstr "Verzend mail (%s)"
 
 #. module: mail
 #. openerp-web
@@ -5229,19 +5230,19 @@ msgstr "Bericht versturen"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr "Verstuur e-mail"
+msgstr "Verzend e-mail"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid "Send explanation to author"
-msgstr "Verstuur uitleg naar auteur"
+msgstr "Verzend uitleg naar auteur"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Send guidelines"
-msgstr "Verstuur richtlijnen"
+msgstr "Verzend richtlijnen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_guidelines
@@ -5253,7 +5254,7 @@ msgstr "Verzend regels naar nieuwe abonnees"
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Send message"
-msgstr "Verstuur bericht"
+msgstr "Verzend bericht"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__email_send
@@ -5383,7 +5384,7 @@ msgstr "Met ster"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
 msgid "State"
-msgstr "Provincie / Staat"
+msgstr "Status"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__state
@@ -5680,7 +5681,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "This record has an exception activity."
-msgstr ""
+msgstr "Dit record heeft een activiteit met uitzondering."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -5820,6 +5821,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maken': maak een nieuw record met nieuwe waarden\n"
+"- 'Update een record': update de waarden van een record\n"
+"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail verzenden': automatisch een e-mail verzenden (Discuss)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Discuss)\n"
+"- 'Maak volgende activiteit': maak een activiteit aan (Discuss)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6268,7 +6277,7 @@ msgstr "Je gaat %s berichten verwijderen. Bevestig je de actie?"
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid "You are going to discard 1 message. Do you confirm the action?"
-msgstr "U gaat één bericht verwerpen. Bevestigd u de actie?"
+msgstr "U gaat één bericht verwijderen. Bevestigd u de actie?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -6492,6 +6501,11 @@ msgid "assigned you an activity"
 msgstr "heeft u een activiteit toegewezen"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "Bestuursvergaderingen"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -6649,6 +6663,11 @@ msgid "or"
 msgstr "of"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_widget.js:0
 #, python-format
@@ -6698,6 +6717,11 @@ msgstr "beperkt tot volgers"
 #, python-format
 msgid "restricted to known authors"
 msgstr "Beperkt tot bekende auteurs"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "verkoop"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

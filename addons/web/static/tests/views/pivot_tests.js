@@ -382,6 +382,106 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('clicking on the "Total" Cell with time range activated gives the right action domain', async function (assert) {
+        assert.expect(2);
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+        var context = {
+            timeRangeMenuData: {
+                timeRange: ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                timeRangeDescription: 'This Month',
+                comparisonTimeRange: [],
+            }
+        };
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+            intercepts: {
+                do_action: function (ev) {
+                    assert.deepEqual(
+                        ev.data.action.domain,
+                        ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                        "should trigger do_action with the correct action domain"
+                    );
+                },
+            },
+            viewOptions: {
+                context: context,
+                title: 'Partners',
+            }
+        });
+
+        assert.hasClass(pivot.$('table'), 'o_enable_linking',
+            "root node should have classname 'o_enable_linking'");
+        await testUtilsDom.click(pivot.$('.o_pivot_cell_value'));
+
+        unpatchDate();
+        pivot.destroy();
+    });
+
+    QUnit.test('clicking on a fake cell value ("empty group") in comparison mode gives an action domain equivalent to [[0,"=",1]]', async function (assert) {
+        assert.expect(3);
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        this.data.partner.records[0].date = '2016-11-15';
+        this.data.partner.records[1].date = '2016-11-17';
+        this.data.partner.records[2].date = '2016-11-22';
+        this.data.partner.records[3].date = '2016-11-03';
+
+        var context = {
+            timeRangeMenuData: {
+                timeRange: ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                timeRangeDescription: 'This Month',
+                comparisonTimeRange: ["&",["date",">=","2016-11-01"],["date","<","2017-12-01"]],
+                comparisonTimeRangeDescription: 'Previous Period'
+            }
+        };
+
+        var first_do_action = true;
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="row"/>' +
+                    '</pivot>',
+            intercepts: {
+                do_action: function (ev) {
+                    if (first_do_action) {
+                        assert.deepEqual(
+                            ev.data.action.domain,
+                            ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                            "should trigger do_action with the correct action domain"
+                        );
+                    } else {
+                        assert.deepEqual(
+                            ev.data.action.domain,
+                            [[0, "=", 1]],
+                            "should trigger do_action with the correct action domain"
+                        );
+                    }
+                    first_do_action = false;
+                },
+            },
+            viewOptions: {
+                context: context,
+                title: 'Partners',
+            }
+        });
+        assert.hasClass(pivot.$('table'), 'o_enable_linking',
+            "root node should have classname 'o_enable_linking'");
+        // here we click on the group corresponding to Total/Total/This Month
+        pivot.$('.o_pivot_cell_value').eq(0).click(); // should trigger a do_action with appropriate domain
+        // here we click on the group corresponding to xphone/Total/This Month
+        pivot.$('.o_pivot_cell_value').eq(3).click(); // should trigger a do_action with appropriate domain
+
+        unpatchDate();
+        pivot.destroy();
+    });
+
     QUnit.test('pivot view grouped by date field', async function (assert) {
         assert.expect(2);
 

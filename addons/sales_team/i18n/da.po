@@ -8,16 +8,16 @@
 # Morten Schou <ms@msteknik.dk>, 2019
 # Jesper Carstensen <jc@danodoo.dk>, 2019
 # Jarnhold Nattestad <nattestads@gmail.com>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -30,7 +30,7 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -72,10 +72,16 @@ msgstr ""
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "Amerika"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Archived"
 msgstr "Arkiveret"
 
@@ -162,6 +168,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
 msgstr "Vis navn"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Europa"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -276,7 +287,7 @@ msgstr "Antal handlinger"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -297,11 +308,6 @@ msgstr "Antal ulæste beskeder"
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "POS"
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Sales"
-msgstr "Salg"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -422,16 +428,6 @@ msgstr "Brugere"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Hjemmeside"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-msgid "Website Messages"
-msgstr "Beskeder fra hjemmesiden"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-msgid "Website communication history"
-msgstr "Website kommunikations historik"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

@@ -3,18 +3,21 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Collex100, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Dinar <gabbasov@it-projects.info>, 2019
+# Максим Дронь <dronmax@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Ꚁemetron <d.v.selitsky@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Dinar <gabbasov@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,21 +31,73 @@ msgid " Use a printer connected to the IoT Box"
 msgstr ""
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 3.12"
+msgstr "$ 3.12"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.40"
+msgstr "$ 4.40"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.50"
+msgstr "$ 4.50"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 8.50"
+msgstr "$ 8.50"
+
+#. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid ""
 "<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
 "role=\"img\" aria-label=\"For bars and restaurants\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
+"role=\"img\" aria-label=\"For bars and restaurants\"/>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
+msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\">Сдача</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
+msgstr "<span class=\"total-amount-formatting\">ВСЕГО</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+msgstr "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>$ 470.00</span>"
+msgstr "<span>$ 470.00</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>Cash (USD):</span>"
+msgstr "<span>Нал (USD):</span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr ""
+msgstr "<strong>Название зала:</strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sale: </strong>"
-msgstr ""
+msgstr "<strong>Точка продажи:</strong>"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_image
@@ -61,11 +116,6 @@ msgid ""
 msgstr ""
 "Этаж в ресторане представляет собой место, где обслуживаются клиенты, здесь вы можете\n"
 "                 определить и расположить столы."
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Accept customer tips or convert their change to a tip"
-msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
@@ -89,39 +139,39 @@ msgstr "Добавить заметку"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr ""
+msgstr "Добавить новый зал ресторана"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Add a new restaurant order printer"
-msgstr ""
+msgstr "Добавить новый принтер заказов ресторана"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Add button"
-msgstr ""
+msgstr "Добавить кнопку"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Add notes to orderlines"
-msgstr ""
+msgstr "Добавить примечание к строкам заказ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Allow custom notes on Orderlines."
-msgstr ""
+msgstr "Разрешить пользовательские примечания на строках заказа."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Allow to print bill before payment"
-msgstr ""
+msgstr "Разрешить распечатывать счет перед оплатой"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr ""
+msgstr "Позволяет распечатывать счет перед оплатой."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
@@ -163,7 +213,7 @@ msgstr "Назад"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Back to floor"
-msgstr ""
+msgstr "Вернуться в зал"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
@@ -174,6 +224,12 @@ msgstr "Цвет фона"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_image
 msgid "Background Image"
 msgstr "Фоновое изображение"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_bacon
+#: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
+msgid "Bacon Burger"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -221,12 +277,36 @@ msgid "Changes could not be saved"
 msgstr "Не удалось сохранить изменения"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_cheeseburger
+#: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
+msgid "Cheese Burger"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_chicken
+#: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
+msgid "Chicken Curry Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Close"
 msgstr "Закрыть"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_club
+#: model:product.template,name:pos_restaurant.pos_food_club_product_template
+msgid "Club Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.coke
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr "Кока-кола"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -255,18 +335,9 @@ msgid "Delete"
 msgstr "Удалить"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discount:"
-msgstr "Descuento:"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discounts"
-msgstr "Скидки"
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Desk Organizer"
+msgstr "план столов"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -274,6 +345,11 @@ msgstr "Скидки"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+msgid "Drinks"
+msgstr "напитки"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -290,6 +366,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Каждый принтер заказов имеет IP-адрес, который определяет IoT Box / "
+"Оборудование Прокси, где можно найти принтер, и список категорий товаров. "
+"Принтер заказов печатать только обновления для товаров, принадлежащих одной "
+"из ее категорий."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -301,7 +381,7 @@ msgstr "Править"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr ""
+msgstr "Позволяет распределить счет в точке продажи."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -328,6 +408,17 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
+msgstr "залы"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.food
+msgid "Food"
+msgstr "Пища"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_funghi
+#: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
+msgid "Funghi"
 msgstr ""
 
 #. module: pos_restaurant
@@ -420,23 +511,62 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Led Lamp"
+msgstr "светодиодная лампа"
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Light grey"
+msgstr "Светло-серый"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_maki
+#: model:product.template,name:pos_restaurant.pos_food_maki_product_template
+msgid "Lunch Maki 18pc"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Logo"
-msgstr "Логотип"
+#: model:product.product,name:pos_restaurant.pos_food_salmon
+#: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
+msgid "Lunch Salmon 20pc"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_temaki
+#: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
+msgid "Lunch Temaki mix 3pc"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
+msgstr "Управляйте заказами на столы"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_margherita
+#: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
+msgid "Margherita"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.minute_maid
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr "Свежие соки"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Monitor Stand"
+msgstr "Подставка для монитора"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_mozza
+#: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
+msgid "Mozzarella Sandwich"
 msgstr ""
 
 #. module: pos_restaurant
@@ -469,10 +599,22 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "Nothing to Print"
+msgstr "Для печати ничего нет"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Количество мест ?"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Odoo Logo"
+msgstr "Логотип Odoo"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -487,7 +629,7 @@ msgstr "Ok"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Orange"
-msgstr ""
+msgstr "оранжевый"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -499,7 +641,7 @@ msgstr "Заказ"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_order_printer
 msgid "Order Printer"
-msgstr ""
+msgstr "принтер заказов"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
@@ -529,6 +671,25 @@ msgstr "Impresora POS"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
+#, python-format
+msgid "PRO FORMA"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_4formaggi
+#: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
+msgid "Pasta 4 formaggi "
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_bolo
+#: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
+msgid "Pasta Bolognese"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "Payment"
@@ -547,12 +708,17 @@ msgstr "Конфигурация точки продаж"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Строки заказ точки продаж"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Заказы точки продажи"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Price"
+msgstr "Цена"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -564,7 +730,7 @@ msgstr "Печать"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Print orders at the kitchen, at the bar, etc."
-msgstr ""
+msgstr "Печать заказов на кухню, в баре и тому подобное."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
@@ -600,6 +766,11 @@ msgid "Purple"
 msgstr "Пурпурный"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Quantity"
+msgstr "Количество"
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
@@ -619,7 +790,7 @@ msgstr "Удаление таблицы невозможно отменить"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Rename"
-msgstr ""
+msgstr "переименовать"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -641,7 +812,7 @@ msgstr "Impresoras de pedidos del restaurante"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
 msgid "Restaurant Printer"
-msgstr ""
+msgstr "Ресторанный принтеров"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
@@ -659,6 +830,12 @@ msgstr "Круглый"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Round Shape"
+msgstr "круглая форма"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_chirashi
+#: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
+msgid "Salmon and Avocado"
 msgstr ""
 
 #. module: pos_restaurant
@@ -675,13 +852,6 @@ msgid "Sequence"
 msgstr "Нумерация"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Served by"
-msgstr "Обслуживается"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
 msgid "Shape"
 msgstr "Форма"
@@ -689,6 +859,12 @@ msgstr "Форма"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_tuna
+#: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
+msgid "Spicy Tuna Sandwich"
 msgstr ""
 
 #. module: pos_restaurant
@@ -701,7 +877,7 @@ msgstr "Разделить"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Split total or order lines"
-msgstr ""
+msgstr "Разбивания общих или заказанных строк"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__square
@@ -713,21 +889,7 @@ msgstr "Квадратный"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Square Shape"
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Subtotal"
-msgstr "Подытог"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "TOTAL"
-msgstr "ИТОГО"
+msgstr "квадратная форма"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
@@ -737,7 +899,7 @@ msgstr "Таблица"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_table_management
 msgid "Table Management"
-msgstr ""
+msgstr "управление столами"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
@@ -756,13 +918,6 @@ msgstr "Название стола ?"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
 msgstr "Таблицы"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Tel:"
-msgstr "Телефон:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -796,7 +951,7 @@ msgstr "Список столов на этом этаже"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr ""
+msgstr "Залы ресторана обслуживаются этой точкой продажи."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -836,32 +991,24 @@ msgstr "Ширина столов в пикселях"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
 #, python-format
-msgid "This floor has no tables yet, use the"
-msgstr "На этом этаже еще нет столиков, используйте"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "This product is used as reference on customer receipts."
+msgid "There are no order lines"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
+msgid "This floor has no tables yet, use the"
+msgstr "На этом этаже еще нет столиков, используйте"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#, python-format
 msgid "Tint"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tip Product"
-msgstr "Совет Продукт"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tips"
-msgstr "Советы"
+msgstr "оттенок"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -876,7 +1023,47 @@ msgstr "Перемещение"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Turquoise"
-msgstr ""
+msgstr "бирюза"
+
+#. module: pos_restaurant
+#: model:product.product,uom_name:pos_restaurant.coke
+#: model:product.product,uom_name:pos_restaurant.minute_maid
+#: model:product.product,uom_name:pos_restaurant.pos_food_4formaggi
+#: model:product.product,uom_name:pos_restaurant.pos_food_bacon
+#: model:product.product,uom_name:pos_restaurant.pos_food_bolo
+#: model:product.product,uom_name:pos_restaurant.pos_food_cheeseburger
+#: model:product.product,uom_name:pos_restaurant.pos_food_chicken
+#: model:product.product,uom_name:pos_restaurant.pos_food_chirashi
+#: model:product.product,uom_name:pos_restaurant.pos_food_club
+#: model:product.product,uom_name:pos_restaurant.pos_food_funghi
+#: model:product.product,uom_name:pos_restaurant.pos_food_maki
+#: model:product.product,uom_name:pos_restaurant.pos_food_margherita
+#: model:product.product,uom_name:pos_restaurant.pos_food_mozza
+#: model:product.product,uom_name:pos_restaurant.pos_food_salmon
+#: model:product.product,uom_name:pos_restaurant.pos_food_temaki
+#: model:product.product,uom_name:pos_restaurant.pos_food_tuna
+#: model:product.product,uom_name:pos_restaurant.pos_food_vege
+#: model:product.product,uom_name:pos_restaurant.water
+#: model:product.template,uom_name:pos_restaurant.coke_product_template
+#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_4formaggi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_bacon_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_bolo_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_cheeseburger_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_chicken_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_chirashi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_club_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_funghi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_maki_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_margherita_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_mozza_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_salmon_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_temaki_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_tuna_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_vege_product_template
+#: model:product.template,uom_name:pos_restaurant.water_product_template
+msgid "Units"
+msgstr "единицы"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
@@ -884,9 +1071,26 @@ msgid "Used to sort Floors"
 msgstr "Используется для сортировки этажей"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_vege
+#: model:product.template,name:pos_restaurant.pos_food_vege_product_template
+msgid "Vegetarian"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
 msgstr "Вертикальная позиция"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.water
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "Вода"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Whiteboard Pen"
+msgstr "Маркер для доски"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width

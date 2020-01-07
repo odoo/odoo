@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* sms
 # 
+# Translators:
+# Martin Trigaux, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +34,7 @@ msgstr ""
 #: code:addons/sms/models/sms_template.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copie)"
 
 #. module: sms
 #. openerp-web
@@ -76,12 +81,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 msgid "Action To Do"
-msgstr ""
+msgstr "Acțiune de efectuat"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain
 msgid "Active domain"
-msgstr ""
+msgstr "Domeniu Activ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain_count
@@ -106,7 +111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
-msgstr ""
+msgstr "Se aplică pentru"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_cancel.py:0
@@ -133,7 +138,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__body
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__body
 msgid "Body"
-msgstr ""
+msgstr "Conținut"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -145,7 +150,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Anulează"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -158,12 +163,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
 #, python-format
 msgid "Canceled"
-msgstr ""
+msgstr "Anulat(ă)"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Check"
-msgstr ""
+msgstr "Verifică"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -173,12 +178,12 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose an example"
-msgstr ""
+msgstr "Alege un exemplu"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -188,12 +193,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Content"
-msgstr ""
+msgstr "Conținut"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__create_uid
@@ -204,7 +209,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__create_date
@@ -215,23 +220,33 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
 msgid "Customer"
+msgstr "Client"
+
+#. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr ""
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear ${object.display_name} this is an automated SMS."
 msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__null_value
 msgid "Default Value"
-msgstr ""
+msgstr "Valoare implicită"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
-msgstr ""
+msgstr "Abandonează"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_cancel_action
@@ -241,7 +256,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 msgid "Discard delivery failures"
-msgstr ""
+msgstr "Renunțați la eșecurile de livrare"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_cancel
@@ -258,17 +273,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
 msgid "Document Followers"
-msgstr ""
+msgstr "Interesați de document"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "Document ID"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
@@ -278,12 +293,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "Nume model document"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_duplicate
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplicare"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -298,7 +313,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Fir E-mail"
 
 #. module: sms
 #. openerp-web
@@ -306,7 +321,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Eroare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__error_code
@@ -323,7 +338,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_object_field
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_object_field
 msgid "Field"
-msgstr ""
+msgstr "Câmp"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
@@ -337,6 +352,7 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Expresie înlocuitoare finală, care va fi copiată in câmpul șablon dorit."
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -381,7 +397,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -413,7 +429,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -453,7 +469,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__lang
 msgid "Language"
-msgstr ""
+msgstr "Limba"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api____last_update
@@ -465,7 +481,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__write_uid
@@ -476,7 +492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__write_date
@@ -487,7 +503,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare pe"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
@@ -509,12 +525,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_composer__body
 #: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
 msgid "Message"
-msgstr ""
+msgstr "Mesaj"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Mesaje notificări"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -523,6 +539,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Tipul de mesaj: email pentru mesaj email, notificare pentru mesajul sistem, "
+"comentariu pentru alte mesaje, cum ar fi răspunsurile utilizatorului"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
@@ -539,23 +557,23 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__model
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Modele"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__name
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
 msgid "Notification"
-msgstr ""
+msgstr "Notificare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
@@ -566,13 +584,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
-msgstr ""
+msgstr "Număr"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
 #: model:ir.model.fields,help:sms.field_sms_template_preview__null_value
 msgid "Optional value to use if the target field is empty"
 msgstr ""
+"Valoarea optionala care va fi folosita in cazul in care campul tinta este "
+"gol"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -583,7 +603,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_composer__partner_ids
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partener"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
@@ -594,7 +614,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Expresie Substituenta"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -604,12 +624,12 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Preview"
-msgstr ""
+msgstr "Previzualizare"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Preview of"
-msgstr ""
+msgstr "Previzualizare a"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -619,19 +639,19 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Reason"
-msgstr ""
+msgstr "Motiv"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Recipient"
-msgstr ""
+msgstr "Destinatar"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Recipients"
-msgstr ""
+msgstr "Destinatari"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
@@ -646,7 +666,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__res_id
 msgid "Record ID"
-msgstr ""
+msgstr "ID Înregistrare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
@@ -657,7 +677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Modelul Documentului Asociat"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -668,7 +688,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
-msgstr ""
+msgstr "Retrimite"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
@@ -810,17 +830,19 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"Selectati campul tinta din modelul documentului asociat.\n"
+"Daca este un camp de relatie, veti putea sa selectati un camp tinta la destinatia relatiei."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Send Now"
-msgstr ""
+msgstr "Trimite acum"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
-msgstr ""
+msgstr "Trimite SMS"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -853,7 +875,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "Trimite un SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -882,24 +904,24 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
 #, python-format
 msgid "Sent"
-msgstr ""
+msgstr "Trimis"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr ""
+msgstr "Acțiune server"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_server
 msgid "Server Error"
-msgstr ""
+msgstr "Eroare server"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sidebar_action_id
 msgid "Sidebar action"
-msgstr ""
+msgstr "Actiune bara laterala"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
@@ -908,6 +930,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Bara laterala de acțiune pentru a face ca acest șablon sa fie disponibil în "
+"înregistrările modelului documentului asociat"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -923,18 +947,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "Sub-câmp"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_object
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "Submodel"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
-msgstr ""
+msgstr "Previzualizare Sablon"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
@@ -944,7 +968,7 @@ msgstr ""
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
 msgid "Templates"
-msgstr ""
+msgstr "Șabloane"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -956,7 +980,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:sms.field_mail_message__message_type
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
@@ -993,7 +1017,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "Folosește domeniul activ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
@@ -1020,6 +1044,9 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Atunci cand un camp de relatie este selectat drept primul camp, acest camp "
+"va permite sa selectati campul tinta din cadrul modelului documentului "
+"destinatie (sub-model)."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_object
@@ -1028,6 +1055,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Atunci cand un camp de relatie este selectat ca prim camp, acest camp arata "
+"modelul documentului la care se refera relatia."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1066,7 +1095,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "înregistrare:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

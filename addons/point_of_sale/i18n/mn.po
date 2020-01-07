@@ -7,17 +7,21 @@
 # nasaaskii <nasaaskii@gmail.com>, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Ganbaatar Buriad <Ganbaatar@asterisk-tech.mn>, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
+# Minj P <pminj322@gmail.com>, 2019
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
+# baaska sh <sh.baaskash@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: baaska sh <sh.baaskash@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +141,12 @@ msgstr ""
 "</b>,  зөөврийн компьютер, эсвэл үйлдвэрийн төхөөрөмж дээр "
 "ажилладаг.</p><p>Борлуулалтын цэгийн интефэйсийг нээсний дараа интернэт "
 "холболт тасарсан ч хэвийн ажилласаар байх боломжтой.</p>"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -321,6 +331,8 @@ msgstr "ABC"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
+"Хэрэглэгчийн зөвлөмжийг хүлээж авах эсвэл өөрчлөлтийг зөвлөмж болгон "
+"хөрвүүлэх."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -487,6 +499,11 @@ msgid "Allow global discounts on orders"
 msgstr "Баримтанд бүхэлд нь хөнгөлөлт тооцохыг зөвшөөрөх"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
+msgid "Allowed Pricelists"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__amount
 msgid "Amount"
@@ -525,6 +542,7 @@ msgid "Another session is already opened for this point of sale."
 msgstr "Энэ борлуулалтын цэгт өөр нэг сэшн аль хэдийнээ нээгдсэн байна."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
 msgstr "Архивласан"
@@ -827,6 +845,11 @@ msgid "Category used in the Point of Sale."
 msgstr "Борлуулалтын цэг дээр ашиглагдах ангилал."
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_chairs
+msgid "Chairs"
+msgstr "Сандал"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -1102,7 +1125,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to IoT Box failed"
-msgstr ""
+msgstr "IoT хайрцгийн холболт амжилтгүй"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1403,8 +1426,21 @@ msgstr "Захиалагчийг үл сонгох"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+#: model:product.product,name:point_of_sale.desk_organizer
+#: model:product.template,name:point_of_sale.desk_organizer_product_template
 msgid "Desk Organizer"
 msgstr "Ширээний тавиур"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.desk_pad
+#: model:product.template,name:point_of_sale.desk_pad_product_template
+msgid "Desk Pad"
+msgstr "Ширээний ПАД"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_desks
+msgid "Desks"
+msgstr "Ширээ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2132,6 +2168,12 @@ msgid "Kpi Pos Total Value"
 msgstr "KPI ПОС-н нийт дүн"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.led_lamp
+#: model:product.template,name:point_of_sale.led_lamp_product_template
+msgid "LED Lamp"
+msgstr "LED гэрэл"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 msgid "Label"
 msgstr "Гүйлгээний утга"
@@ -2211,6 +2253,12 @@ msgid "Led Lamp"
 msgstr "Led гэрэл"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.letter_tray
+#: model:product.template,name:point_of_sale.letter_tray_product_template
+msgid "Letter Tray"
+msgstr "Бичгийн тавиур"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
 msgid "Line No"
 msgstr "Мөрийн №"
@@ -2284,6 +2332,12 @@ msgid "Loyalty program to use for this point of sale."
 msgstr "Энэ борлуулалтын цэг дээр лоялти хөтөлбөр ашиглах."
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.magnetic_board
+#: model:product.template,name:point_of_sale.magnetic_board_product_template
+msgid "Magnetic Board"
+msgstr "Соронзон самбар"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Үндсэн хавсралт"
@@ -2333,6 +2387,11 @@ msgid "Method"
 msgstr "Арга"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_miscellaneous
+msgid "Miscellaneous"
+msgstr "Бусад"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
 msgstr ""
@@ -2340,6 +2399,8 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+#: model:product.product,name:point_of_sale.monitor_stand
+#: model:product.template,name:point_of_sale.monitor_stand_product_template
 msgid "Monitor Stand"
 msgstr "Дэлгэцийн суурь"
 
@@ -2394,6 +2455,12 @@ msgid "New session"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.newspaper_rack
+#: model:product.template,name:point_of_sale.newspaper_rack_product_template
+msgid "Newspaper Rack"
+msgstr "Сэтгүүлийн тавиур"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Дараагийн ажилбарын эцсийн огноо"
@@ -2446,7 +2513,7 @@ msgstr "Баримт олдсонгүй"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "No results found for \""
-msgstr ""
+msgstr "Илэрц олдсонгүй"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0
@@ -2649,8 +2716,8 @@ msgstr "Захиалга"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
-msgid "Order "
-msgstr "Захиалга"
+msgid "Order %s"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -2984,14 +3051,14 @@ msgstr "Их хэмжээтэй үнийн дүнг баталгаажуулна
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the IoT Box is still connected."
-msgstr ""
+msgstr "IoT хайрцаг холбоотой эсэхийг шалгана уу."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
-msgstr ""
+msgstr "Принтер холбоотой хэвээр эсэхийг шалгана уу."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -3054,6 +3121,7 @@ msgstr ""
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_pivot
 #, python-format
 msgid "PoS Orders"
 msgstr "PoS захиалга"
@@ -3537,6 +3605,12 @@ msgid "Ready to launch your <b>point of sale</b>?"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
 msgid "Receipt Footer"
 msgstr "Баримтын хөл"
@@ -3991,11 +4065,30 @@ msgid "Slash"
 msgstr "Налуу"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.small_shelf
+#: model:product.template,name:point_of_sale.small_shelf_product_template
+msgid "Small Shelf"
+msgstr "Жижиг тавиур"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:0
 #, python-format
-msgid "Some orders could not be submitted to"
-msgstr "Зарим захиалгууд серверт илгээгдсэнгүй"
+msgid ""
+"Some orders could not be submitted to the server due to configuration "
+"errors. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/gui.js:0
+#, python-format
+msgid ""
+"Some orders could not be submitted to the server due to internet connection "
+"issues. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4398,7 +4491,7 @@ msgstr "Өгсөн файл нь үл мэдэгдэх алдаанаас бол
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "Захиалга хийгдсэн өдөр тухайн валютын ханштай харьцах ханш"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -4594,6 +4687,11 @@ msgid ""
 msgstr ""
 "Энэ нэхэмжлэлийг дараах борлуулалтын цэгийн сэшнээс үүсгэсэн: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__allowed_pricelist_ids
+msgid "This is a technical field used for the domain of pricelist_id."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -4844,12 +4942,34 @@ msgid "Unit Price"
 msgstr "Нэгж үнэ"
 
 #. module: point_of_sale
+#: model:product.product,uom_name:point_of_sale.desk_organizer
+#: model:product.product,uom_name:point_of_sale.desk_pad
+#: model:product.product,uom_name:point_of_sale.led_lamp
+#: model:product.product,uom_name:point_of_sale.letter_tray
+#: model:product.product,uom_name:point_of_sale.magnetic_board
+#: model:product.product,uom_name:point_of_sale.monitor_stand
+#: model:product.product,uom_name:point_of_sale.newspaper_rack
 #: model:product.product,uom_name:point_of_sale.product_product_consumable
 #: model:product.product,uom_name:point_of_sale.product_product_tip
+#: model:product.product,uom_name:point_of_sale.small_shelf
+#: model:product.product,uom_name:point_of_sale.wall_shelf
+#: model:product.product,uom_name:point_of_sale.whiteboard
+#: model:product.product,uom_name:point_of_sale.whiteboard_pen
+#: model:product.template,uom_name:point_of_sale.desk_organizer_product_template
+#: model:product.template,uom_name:point_of_sale.desk_pad_product_template
+#: model:product.template,uom_name:point_of_sale.led_lamp_product_template
+#: model:product.template,uom_name:point_of_sale.letter_tray_product_template
+#: model:product.template,uom_name:point_of_sale.magnetic_board_product_template
+#: model:product.template,uom_name:point_of_sale.monitor_stand_product_template
+#: model:product.template,uom_name:point_of_sale.newspaper_rack_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_consumable_product_template
 #: model:product.template,uom_name:point_of_sale.product_product_tip_product_template
+#: model:product.template,uom_name:point_of_sale.small_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.wall_shelf_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_pen_product_template
+#: model:product.template,uom_name:point_of_sale.whiteboard_product_template
 msgid "Units"
-msgstr ""
+msgstr "Нэгж"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4901,6 +5021,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__barcode
 msgid "Use a barcode to identify this contact from the Point of Sale."
 msgstr ""
+"Борлуулалтын цэгээс харилцагчийг тодорхойлохын тулд баркодыг ашиглана."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4991,6 +5112,12 @@ msgid "Waiting for card"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.wall_shelf
+#: model:product.template,name:point_of_sale.wall_shelf_product_template
+msgid "Wall Shelf Unit"
+msgstr "Ханийн тавиур"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Агуулах"
@@ -5029,8 +5156,16 @@ msgstr ""
 "үүсгэх нь санхүү бүртгэлийн хувьд тусдаа ойлголт юм."
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.whiteboard
+#: model:product.template,name:point_of_sale.whiteboard_product_template
+msgid "Whiteboard"
+msgstr "Цагаан самбар"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+#: model:product.product,name:point_of_sale.whiteboard_pen
+#: model:product.template,name:point_of_sale.whiteboard_pen_product_template
 msgid "Whiteboard Pen"
 msgstr "Цагаан самбарын үзэг"
 

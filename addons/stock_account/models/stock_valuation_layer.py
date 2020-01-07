@@ -24,7 +24,7 @@ class StockValuationLayer(models.Model):
     unit_cost = fields.Monetary('Unit Value', readonly=True)
     value = fields.Monetary('Total Value', readonly=True)
     remaining_qty = fields.Float(digits=0, readonly=True)
-    remaining_value = fields.Monetary('remaining_value Value', readonly=True)
+    remaining_value = fields.Monetary('Remaining Value', readonly=True)
     description = fields.Char('Description', readonly=True)
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')

@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -21,6 +21,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: sale_management
+#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
+msgid "4 Person Desk"
+msgstr "4 персональні столи"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -315,6 +320,11 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr "Кількість днів для розрахунку терміну дії пропозиції"
 
 #. module: sale_management
+#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
+msgid "Office Chair"
+msgstr "Офісний стілець"
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Платіж онлайн"
@@ -345,7 +355,7 @@ msgstr "Опції"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr ""
+msgstr "Присутній на комерційній пропозиції"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -531,6 +541,8 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
+"Це поле буде перевірено, якщо товар додаткового рядка присутній у "
+"комерційній пропозиції."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -603,7 +615,7 @@ msgstr ""
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
-msgstr ""
+msgstr "Ваш шаблон не може містити товари з кількох компаній."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -612,6 +624,8 @@ msgid ""
 "Your template contains products from company %s whereas your template belongs to company %s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Ваш шаблон містить товари з компанії %s тоді як ваш шаблон належить компанії %s. \n"
+" Змініть компанію вашого шаблону або вилучіть товари з інших компаній."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

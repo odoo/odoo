@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_sips
+# 	* payment_sips
 # 
 # Translators:
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# Miroslav Fic <mirko.fic@gmail.com>, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# Miroslav Fic <mirko.fic@gmail.com>, 2019
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Miroslav Fic <mirko.fic@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,40 +23,25 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:164
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr "; viacnásobná objednávka nájdená"
+msgstr "; nájdená viacnásobná objednávka"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:162
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr "; žiadna objednávka nájdená"
+msgstr "; nenájdená žiadna objednávka"
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net "
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:75
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Menu nepodporuje Wordline"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:56
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr "Nesprávny poskytovateľ platby nadobúdateľa"
@@ -65,24 +52,9 @@ msgid "Interface Version"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr "ID obchodníka"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr ""
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
@@ -93,11 +65,6 @@ msgstr "Príjemca platby "
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Platobná transakcia"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
@@ -115,20 +82,15 @@ msgid "Secret Key"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
 msgid "Sips"
 msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:160
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: prijaté dáta pre referenciu %s"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
@@ -139,8 +101,3 @@ msgstr ""
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
 msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Drôtový prenos"

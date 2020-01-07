@@ -438,8 +438,8 @@ list of filtered posts (by date or tag).
                            t-att-data-text="_cp.get('text_size_class')"
                            t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
 
-                        <t t-set="next_cover_is_full" t-value="'cover_full' in _cp.get('resize_class')"/>
-                        <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class')"/>
+                        <t t-set="next_cover_is_full" t-value="'cover_full' in _cp.get('resize_class', '')"/>
+                        <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
 
                         <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                             <div t-attf-class="o_wblog_post_title">
@@ -586,7 +586,7 @@ list of filtered posts (by date or tag).
 <template id="blog_post_template_new_post">
     <p>A new post <t t-esc="post.name" /> has been published on the <t t-esc="object.name" /> blog. Click here to access the blog :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-        <a href="/blog/#{slug(object)}/post/#{slug(post)}"
+        <a t-attf-href="/blog/#{slug(object)}/post/#{slug(post)}"
             style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             Access post
         </a>

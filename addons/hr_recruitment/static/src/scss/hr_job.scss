@@ -2,7 +2,9 @@
     &.o_hr_recruitment_kanban {
         &.o_kanban_ungrouped .o_kanban_record {
             width: 350px;
-            height: 180px;
+            &:not(.o_kanban_ghost) {
+                height: 180px;
+            }
         }
 
         .ribbon {

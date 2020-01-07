@@ -33,8 +33,8 @@ class StockMove(models.Model):
         self.ensure_one()
         price_unit = self.price_unit
         # If the move is a return, use the original move's price unit.
-        if self.origin_returned_move_id:
-            price_unit = self.origin_returned_move_id.price_unit
+        if self.origin_returned_move_id and self.origin_returned_move_id.stock_valuation_layer_ids:
+            price_unit = self.origin_returned_move_id.stock_valuation_layer_ids[-1].unit_cost
         return not self.company_id.currency_id.is_zero(price_unit) and price_unit or self.product_id.standard_price
 
     @api.model
@@ -137,7 +137,7 @@ class StockMove(models.Model):
             'stock_move_id': self.id,
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
-            'description': self.name,
+            'description': self.reference and '%s - %s' % (self.reference, self.product_id.name) or self.product_id.name,
         }
 
     def _create_in_svl(self, forced_quantity=None):
@@ -176,6 +176,8 @@ class StockMove(models.Model):
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+            if float_is_zero(forced_quantity or valued_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                continue
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
@@ -245,6 +247,13 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
+        # '_action_done' might have created an extra move to be valued
+        for move in res - self:
+            for valued_type in self._get_valued_types():
+                if getattr(move, '_is_%s' % valued_type)():
+                    valued_moves[valued_type] |= move
+                    continue
+
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
         for valued_type in self._get_valued_types():
@@ -295,7 +304,7 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move._is_in() and move.with_context(force_company=move.company_id.id).product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
+            product_tot_qty_available = move.product_id.sudo().with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
@@ -371,7 +380,7 @@ class StockMove(models.Model):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
         debit_line_vals = {
-            'name': self.name,
+            'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
@@ -383,7 +392,7 @@ class StockMove(models.Model):
         }
 
         credit_line_vals = {
-            'name': self.name,
+            'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,

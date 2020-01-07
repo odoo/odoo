@@ -4,6 +4,7 @@ odoo.define('account.tour_bank_statement_reconciliation', function(require) {
 var core = require('web.core');
 var rpc = require('web.rpc');
 var Tour = require('web_tour.tour');
+var currentYear = new Date().getFullYear();
 
 Tour.register('bank_statement_reconciliation', {
         test: true,
@@ -24,6 +25,10 @@ Tour.register('bank_statement_reconciliation', {
             content: "open the 4th line in match_rp mode to test the partial reconciliation",
             extra_trigger: '.o_reconciliation_line:first[data-mode="match_rp"]',
             trigger: '.o_reconciliation_line:nth-child(4) .cell_label:contains("First")'
+        },
+        {
+            content: "select the right line to match",
+            trigger: '.o_reconciliation_line:nth-child(4) .o_notebook .cell_label:contains("' + currentYear + '/0001")'
         },
         {
             content: "click on partial reconcile",

@@ -25,12 +25,12 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -40,14 +40,14 @@ msgstr "需採取行動"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr ""
+msgstr "要執行的操作"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
-msgstr ""
+msgstr "操作可能會觸發特定行為，如打開日曆視圖或自動標記為上載文檔時執行的操作"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -68,7 +68,7 @@ msgstr "活動"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "活動異常圖示"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
@@ -83,7 +83,7 @@ msgstr "活動類型"
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr "添加個人便箋"
+msgstr "添加個人記事"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
@@ -102,7 +102,7 @@ msgstr "增加備註"
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add new note"
-msgstr "添加便簽"
+msgstr "添加記事"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -117,7 +117,7 @@ msgstr "附件數"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr "按便箋類別"
+msgstr "按記事簿類別"
 
 #. module: note
 #. openerp-web
@@ -176,7 +176,7 @@ msgstr "下拉選單"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Exception Activities"
-msgstr ""
+msgstr "異常活動"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -228,23 +228,23 @@ msgstr "圖示"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "用於指示異常活動的圖示。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
 #: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "勾選代表有新訊息需要您留意。"
+msgstr "被勾選代表有新訊息需要您留意。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "勾選代表有訊息發生傳送錯誤。"
+msgstr "被勾選代表有訊息發生傳送錯誤。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
-msgstr "是關注人"
+msgstr "是關注者"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
@@ -280,7 +280,7 @@ msgstr "主要附件"
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr "會議紀要"
+msgstr "會議記錄"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
@@ -322,22 +322,22 @@ msgstr "備註"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
-msgstr "便箋內容"
+msgstr "記事內容"
 
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr "便箋階段"
+msgstr "記事簿階段"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__name
 msgid "Note Summary"
-msgstr "便箋摘要"
+msgstr "記事摘要"
 
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr "便箋標籤"
+msgstr "記事標籤"
 
 #. module: note
 #: code:addons/note/models/res_users.py:0
@@ -355,8 +355,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
-"紀要是隱私內容，除非由紀要上的邀約人來共享。\n"
-"      （對會議紀要有用）"
+"記事簿內容僅可被個人讀取，除非您通過邀請關注者來分享內容。\n"
+"      （建議使用於會議記錄）"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -366,7 +366,7 @@ msgstr "動作數量"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -392,12 +392,12 @@ msgstr "所有者"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr "便箋階段的所有者"
+msgstr "記事簿階段的所有者"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr "相關便簽"
+msgstr "相關記事"
 
 #. module: note
 #. openerp-web
@@ -456,7 +456,7 @@ msgstr "階段名稱"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr "便箋階段"
+msgstr "記事簿階段"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -468,7 +468,7 @@ msgstr "階段"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr "便箋階段"
+msgstr "記事簿階段"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_ids
@@ -483,10 +483,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"根據活動的狀態 \n"
-" 逾期：已經超過截止日期 \n"
-" 現今：活動日期是當天 \n"
-" 計劃：未來活動。"
+"基於活動的狀態\n"
+"過期：到期日期已過\n"
+"今天：活動日期是今天\n"
+"計畫：未來活動。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -528,7 +528,7 @@ msgstr "待辦"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "記錄的異常活動的類型。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread
@@ -543,7 +543,7 @@ msgstr "未讀消息計數器"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr "用於為便箋階段排序"
+msgstr "用於為記事簿階段排序"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users

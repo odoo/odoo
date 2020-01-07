@@ -1,18 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_paypal
+# 	* payment_paypal
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# Link Up링크업 <linkup.way@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Link Up링크업 <linkup.way@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,29 +21,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
-msgid "Access Token"
-msgstr "액세스 토큰"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
-msgid "Access Token Validity"
-msgstr "액세스 토큰 유효성"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "이메일"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
@@ -56,51 +50,51 @@ msgid "Fixed international fees"
 msgstr "고정 국외 수수료"
 
 #. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+
+#. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
+msgstr "페이팔 계정을 구성하는 방법은 무엇입니까?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "지불 취득자"
+msgstr "결제 매입사"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid ""
 "Payment Data Transfer allows you to receive notification of successful "
 "payments as they are made."
-msgstr ""
+msgstr "결제 데이터 전송을 사용하면 성공적인 지불에 대한 통지를 받을 수 있습니다."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "지불 거래"
+msgstr "결제 거래"
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
-msgid "Paypal Email ID"
-msgstr "페이팔 이메일 ID"
+msgstr "페이팔"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
@@ -108,44 +102,19 @@ msgid "Paypal Instant Payment Notification"
 msgstr "페이팔 간편 결제 알림"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid "Paypal Merchant ID"
-msgstr "페이팔 판매자 ID"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid "Paypal PDT Token"
-msgstr ""
-
-#. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:138
+#: code:addons/payment_paypal/models/payment.py:0
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
+msgstr "Paypal: 누락된 참조(%s) 또는 txn_id (%s)가 있는 수신 데이터"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "공급자"
+msgstr "공급업체"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
-msgid "Rest API Password"
-msgstr "나머지 API 암호"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
-msgid "Rest API Username"
-msgstr "나머지 API 사용자 이름"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr ""
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
 msgstr ""
 
 #. module: payment_paypal
@@ -166,11 +135,6 @@ msgid "Use IPN"
 msgstr "IPN 사용"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
-msgid "Use Rest API"
-msgstr "나머지 API 사용"
-
-#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "가변 국내 수수료 (퍼센트)"
@@ -179,8 +143,3 @@ msgstr "가변 국내 수수료 (퍼센트)"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "가변 국외 수수료 (퍼센트)"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr ""

@@ -6,19 +6,18 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Martin Trigaux, 2019
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
-# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # Christian <chris@effeci.info>, 2019
 # Paolo Valier, 2019
 # Pietro Della Notte <pdellanotte@gmail.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -74,6 +73,11 @@ msgstr ""
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
 msgstr "Amministratore"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "America"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -165,6 +169,11 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Europa"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
 msgstr "Iscritti preferiti"
@@ -189,17 +198,17 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
 msgid "Followers"
-msgstr "Follower"
+msgstr "Chi segue"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Follower (canali)"
+msgstr "Chi segue (canali)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Chi segue (partner)"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -244,7 +253,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
@@ -305,11 +314,6 @@ msgstr "Numero di messaggi non letti"
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Punto vendita"
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Sales"
-msgstr "Vendite"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -397,7 +401,7 @@ msgstr "Messaggi non letti"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
@@ -432,16 +436,6 @@ msgstr "Utenti"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Sito web"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-msgid "Website Messages"
-msgstr "Messaggi sito web"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-msgid "Website communication history"
-msgstr "Cronologia comunicazioni sito web"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

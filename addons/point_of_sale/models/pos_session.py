@@ -51,7 +51,7 @@ class PosSession(models.Model):
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
-    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control')
+    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True)
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
     cash_register_id = fields.Many2one('account.bank.statement', compute='_compute_cash_all', string='Cash Register', store=True)
 
@@ -112,6 +112,10 @@ class PosSession(models.Model):
                 )
                 session.cash_register_balance_end = session.cash_register_balance_start + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
+            else:
+                session.cash_register_total_entry_encoding = 0.0
+                session.cash_register_balance_end = 0.0
+                session.cash_register_difference = 0.0
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
@@ -282,6 +286,8 @@ class PosSession(models.Model):
         self._create_account_move()
         if self.move_id.line_ids:
             self.move_id.post()
+            # Set the uninvoiced orders' state to 'done'
+            self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
         else:
             # The cash register needs to be confirmed for cash diffs
             # made thru cash in/out when sesion is in cash_control.
@@ -402,6 +408,9 @@ class PosSession(models.Model):
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
 
+                # Increasing current partner's customer_rank
+                order.partner_id._increase_rank('customer_rank')
+
         ## SECTION: Create non-reconcilable move lines
         # Create account.move.line records for
         #   - sales
@@ -411,7 +420,7 @@ class PosSession(models.Model):
         #   - non-cash combine receivables (not for automatic reconciliation)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
-        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items()]
+        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items() if amounts['amount']]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
         tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
         if len(tax_names_no_account) > 0:

@@ -106,7 +106,7 @@ var FieldOrgChart = AbstractField.extend({
                             '.o_employee_redirect', _.bind(self._onEmployeeRedirect, self));
                         return $title;
                     },
-                    container: 'body',
+                    container: this,
                     placement: 'left',
                     trigger: 'focus',
                     content: function () {

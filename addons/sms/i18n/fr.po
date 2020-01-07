@@ -11,14 +11,16 @@
 # Martin Trigaux, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
+# Jonathan <jcs@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Jonathan <jcs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +31,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "# Destinataires invalides"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "# Destinataires valides"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -54,7 +56,7 @@ msgstr ""
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
-msgstr ""
+msgstr "%s destinataires invalides"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -234,6 +236,16 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
 msgid "Customer"
 msgstr "Client"
+
+#. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr ""
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear ${object.display_name} this is an automated SMS."
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -452,13 +464,13 @@ msgstr "Dans la queue"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "Crédit Insuffisant"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid number"
-msgstr ""
+msgstr "Numéro invalide"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -606,7 +618,7 @@ msgstr "Partenaire"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Mixin de la Liste Noire de Téléphones"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -813,7 +825,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Numéro Aseptisé"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search

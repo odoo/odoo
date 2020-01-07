@@ -9,19 +9,20 @@
 # Minh Nguyen <ndminh210994@gmail.com>, 2019
 # Martin Trigaux, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:48+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -399,7 +400,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Người quản trị"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -475,7 +476,9 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "Đã lưu"
@@ -590,6 +593,10 @@ msgstr "Cơ sở"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
+#: model:project.task,legend_blocked:project.project_task_19
+#: model:project.task,legend_blocked:project.project_task_24
+#: model:project.task,legend_blocked:project.project_task_3
+#: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -602,6 +609,8 @@ msgstr "Cơ sở"
 #: model:project.task,legend_blocked:project.project_task_data_6
 #: model:project.task,legend_blocked:project.project_task_data_7
 #: model:project.task,legend_blocked:project.project_task_data_9
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model:project.task.type,legend_blocked:project.project_stage_data_0
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
@@ -617,9 +626,28 @@ msgid "Brainstorm"
 msgstr "Brainstorm"
 
 #. module: project
+#: model:project.task,legend_done:project.project_task_10
+#: model:project.task,legend_done:project.project_task_11
+#: model:project.task,legend_done:project.project_task_2
+#: model:project.task,legend_done:project.project_task_21
+#: model:project.task,legend_done:project.project_task_22
+#: model:project.task,legend_done:project.project_task_4
+#: model:project.task,legend_done:project.project_task_5
+#: model:project.task,legend_done:project.project_task_6
+#: model:project.task,legend_done:project.project_task_7
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz hoặc đặt là hoàn tất"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Bởi người chuyên trách"
+
+#. module: project
+#: model:project.task.type,name:project.project_stage_3
+msgid "Cancelled"
+msgstr "Đã hủy"
 
 #. module: project
 #. openerp-web
@@ -903,6 +931,11 @@ msgid "Daily"
 msgstr "Hàng ngày"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
+msgid "Date Deadline Formatted"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
 msgstr "Ngày"
@@ -1022,6 +1055,7 @@ msgstr "Tài liệu"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Hoàn thành"
@@ -1118,11 +1152,6 @@ msgstr ""
 "Mọi người đều có thể đề xuất ý tưởng và biên tập viên đánh dấu những ý tưởng"
 " hay nhất là %s. Đính kèmtất cả các tài liệu hoặc liên kết đến nhiệm vụ trực"
 " tiếp, để có tất cả thông tin vềmột nghiên cứu tập trung."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Exception Activities"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1406,6 +1435,25 @@ msgstr "Quan trọng"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
+#: model:project.task,legend_normal:project.project_task_1
+#: model:project.task,legend_normal:project.project_task_10
+#: model:project.task,legend_normal:project.project_task_11
+#: model:project.task,legend_normal:project.project_task_12
+#: model:project.task,legend_normal:project.project_task_19
+#: model:project.task,legend_normal:project.project_task_2
+#: model:project.task,legend_normal:project.project_task_20
+#: model:project.task,legend_normal:project.project_task_21
+#: model:project.task,legend_normal:project.project_task_22
+#: model:project.task,legend_normal:project.project_task_24
+#: model:project.task,legend_normal:project.project_task_25
+#: model:project.task,legend_normal:project.project_task_26
+#: model:project.task,legend_normal:project.project_task_3
+#: model:project.task,legend_normal:project.project_task_4
+#: model:project.task,legend_normal:project.project_task_5
+#: model:project.task,legend_normal:project.project_task_6
+#: model:project.task,legend_normal:project.project_task_7
+#: model:project.task,legend_normal:project.project_task_8
+#: model:project.task,legend_normal:project.project_task_9
 #: model:project.task,legend_normal:project.project_task_data_0
 #: model:project.task,legend_normal:project.project_task_data_1
 #: model:project.task,legend_normal:project.project_task_data_11
@@ -1418,9 +1466,14 @@ msgstr "Quan trọng"
 #: model:project.task,legend_normal:project.project_task_data_6
 #: model:project.task,legend_normal:project.project_task_data_7
 #: model:project.task,legend_normal:project.project_task_data_9
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
 #: model:project.task.type,legend_normal:project.project_stage_data_0
 #: model:project.task.type,legend_normal:project.project_stage_data_1
 #: model:project.task.type,legend_normal:project.project_stage_data_2
+#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "Đang thực hiện"
@@ -1710,6 +1763,20 @@ msgid "Name of the tasks :"
 msgstr "Tên tác vụ:"
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_task_10
+#: model:project.task,legend_blocked:project.project_task_11
+#: model:project.task,legend_blocked:project.project_task_2
+#: model:project.task,legend_blocked:project.project_task_21
+#: model:project.task,legend_blocked:project.project_task_22
+#: model:project.task,legend_blocked:project.project_task_4
+#: model:project.task,legend_blocked:project.project_task_5
+#: model:project.task,legend_blocked:project.project_task_6
+#: model:project.task,legend_blocked:project.project_task_7
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Cần trợ giúp về tính năng hoặc kỹ thuật"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -1810,6 +1877,17 @@ msgid "Normal"
 msgstr "Thông thường"
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_task_1
+#: model:project.task,legend_blocked:project.project_task_12
+#: model:project.task,legend_blocked:project.project_task_20
+#: model:project.task,legend_blocked:project.project_task_25
+#: model:project.task,legend_blocked:project.project_task_26
+#: model:project.task,legend_blocked:project.project_task_9
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Chưa Thẩm định"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 msgid "Number of Actions"
@@ -1834,7 +1912,7 @@ msgstr "Số tài liệu được đính kèm"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Số lỗi"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -2164,6 +2242,11 @@ msgid "Projects"
 msgstr "Dự án"
 
 #. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr "Dự án & Nhiệm vụ"
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
 msgstr "Hàng Quý"
@@ -2255,6 +2338,15 @@ msgstr "Xếp hạng của %s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: model:project.task,legend_done:project.project_task_1
+#: model:project.task,legend_done:project.project_task_12
+#: model:project.task,legend_done:project.project_task_20
+#: model:project.task,legend_done:project.project_task_24
+#: model:project.task,legend_done:project.project_task_25
+#: model:project.task,legend_done:project.project_task_26
+#: model:project.task,legend_done:project.project_task_3
+#: model:project.task,legend_done:project.project_task_8
+#: model:project.task,legend_done:project.project_task_9
 #: model:project.task,legend_done:project.project_task_data_0
 #: model:project.task,legend_done:project.project_task_data_1
 #: model:project.task,legend_done:project.project_task_data_11
@@ -2267,6 +2359,8 @@ msgstr "Xếp hạng của %s"
 #: model:project.task,legend_done:project.project_task_data_6
 #: model:project.task,legend_done:project.project_task_data_7
 #: model:project.task,legend_done:project.project_task_data_9
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
@@ -2278,6 +2372,12 @@ msgstr "Sẵn sàng giai đoạn kế tiếp"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for next stage"
 msgstr "Sẵn sàng cho giai đoạn kế tiếp"
+
+#. module: project
+#: model:project.task,legend_done:project.project_task_19
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Sẵn sàng mở lại"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -2358,7 +2458,7 @@ msgstr "Người phụ trách"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Lỗi gửi SMS"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -2810,14 +2910,14 @@ msgid "There are no projects."
 msgstr "Ở đây không có dự án."
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
+msgid "There are no ratings for this object at the moment"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
 msgstr "Ở đây không có tác vụ."
-
-#. module: project
-#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
-msgid "There is no rating for this object at the moment"
-msgstr "Hiện tại không có đánh giá nào cho đối tượng này"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -2896,6 +2996,11 @@ msgid "Title"
 msgstr "Xưng hô"
 
 #. module: project
+#: model:project.task.type,name:project.project_stage_0
+msgid "To Do"
+msgstr "Cần làm"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2941,7 +3046,7 @@ msgstr "Hai lần một Tháng"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3123,24 +3228,12 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot create recursive tasks."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
 "Bạn không thể xóa một dự án có chứa các nhiệm vụ. Bạn có thể lưu trữ nó "
 "hoặcđầu tiên xóa tất cả các nhiệm vụ của nó."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Your task must be in the same company as its project."
-msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

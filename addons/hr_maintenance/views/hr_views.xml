@@ -25,8 +25,9 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="employee_id" invisible="1"/>
                 <button name="%(maintenance.hr_equipment_action)d"
-                    context="{'search_default_my':1}"
+                    context="{'search_default_employee_id': employee_id, 'default_employee_id': employee_id}"
                     class="o_stat_button"
                     icon="fa-cubes"
                     type="action">

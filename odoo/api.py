@@ -1,34 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-""" This module provides the elements for managing two different API styles,
-    namely the "traditional" and "record" styles.
+"""The Odoo API module defines Odoo Environments and method decorators.
 
-    In the "traditional" style, parameters like the database cursor, user id,
-    context dictionary and record ids (usually denoted as ``cr``, ``uid``,
-    ``context``, ``ids``) are passed explicitly to all methods. In the "record"
-    style, those parameters are hidden into model instances, which gives it a
-    more object-oriented feel.
-
-    For instance, the statements::
-
-        model = self.pool.get(MODEL)
-        ids = model.search(cr, uid, DOMAIN, context=context)
-        for rec in model.browse(cr, uid, ids, context=context):
-            print rec.name
-        model.write(cr, uid, ids, VALUES, context=context)
-
-    may also be written as::
-
-        env = Environment(cr, uid, context) # cr, uid, context wrapped in env
-        model = env[MODEL]                  # retrieve an instance of MODEL
-        recs = model.search(DOMAIN)         # search returns a recordset
-        for rec in recs:                    # iterate over the records
-            print rec.name
-        recs.write(VALUES)                  # update all records in recs
-
-    Methods written in the "traditional" style are automatically decorated,
-    following some heuristics based on parameter names.
+.. todo:: Document this module
 """
 
 __all__ = [
@@ -51,6 +26,7 @@ from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
 import odoo
+from .tools.translate import _
 from odoo.tools import frozendict, classproperty, lazy_property, StackMap
 from odoo.exceptions import CacheMiss
 
@@ -123,8 +99,9 @@ def propagate(method1, method2):
 
 
 def constrains(*args):
-    """ Decorates a constraint checker. Each argument must be a field name
-    used in the check::
+    """Decorate a constraint checker.
+
+    Each argument must be a field name used in the check::
 
         @api.constrains('name', 'description')
         def _check_description(self):
@@ -134,14 +111,14 @@ def constrains(*args):
 
     Invoked on the records on which one of the named fields has been modified.
 
-    Should raise :class:`~odoo.exceptions.ValidationError` if the
+    Should raise :exc:`~odoo.exceptions.ValidationError` if the
     validation failed.
 
     .. warning::
 
         ``@constrains`` only supports simple field names, dotted names
         (fields of relational fields e.g. ``partner_id.customer``) are not
-        supported and will be ignored
+        supported and will be ignored.
 
         ``@constrains`` will be triggered only if the declared fields in the
         decorated method are included in the ``create`` or ``write`` call.
@@ -155,44 +132,51 @@ def constrains(*args):
 
 
 def onchange(*args):
-    """ Return a decorator to decorate an onchange method for given fields.
-        Each argument must be a field name::
+    """Return a decorator to decorate an onchange method for given fields.
 
-            @api.onchange('partner_id')
-            def _onchange_partner(self):
-                self.message = "Dear %s" % (self.partner_id.name or "")
+    In the form views where the field appears, the method will be called
+    when one of the given fields is modified. The method is invoked on a
+    pseudo-record that contains the values present in the form. Field
+    assignments on that record are automatically sent back to the client.
 
-        In the form views where the field appears, the method will be called
-        when one of the given fields is modified. The method is invoked on a
-        pseudo-record that contains the values present in the form. Field
-        assignments on that record are automatically sent back to the client.
+    Each argument must be a field name::
 
-        The method may return a dictionary for changing field domains and pop up
-        a warning message, like in the old API::
+        @api.onchange('partner_id')
+        def _onchange_partner(self):
+            self.message = "Dear %s" % (self.partner_id.name or "")
 
-            return {
-                'domain': {'other_id': [('partner_id', '=', partner_id)]},
-                'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
-            }
-            If the type is set to notification, the warning will be displayed in a notification.
-            Otherwise it will be displayed in a dialog as default.
+    .. code-block:: python
 
-        .. danger::
+        return {
+            'domain': {'other_id': [('partner_id', '=', partner_id)]},
+            'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
+        }
 
-            Since ``@onchange`` returns a recordset of pseudo-records,
-            calling any one of the CRUD methods
-            (:meth:`create`, :meth:`read`, :meth:`write`, :meth:`unlink`)
-            on the aforementioned recordset is undefined behaviour,
-            as they potentially do not exist in the database yet.
+    If the type is set to notification, the warning will be displayed in a notification.
+    Otherwise it will be displayed in a dialog as default.
 
-            Instead, simply set the record's field like shown in the example
-            above or call the :meth:`update` method.
+    .. warning::
 
-        .. warning::
+        ``@onchange`` only supports simple field names, dotted names
+        (fields of relational fields e.g. ``partner_id.tz``) are not
+        supported and will be ignored
 
-            ``@onchange`` only supports simple field names, dotted names
-            (fields of relational fields e.g. ``partner_id.tz``) are not
-            supported and will be ignored
+    .. danger::
+
+        Since ``@onchange`` returns a recordset of pseudo-records,
+        calling any one of the CRUD methods
+        (:meth:`create`, :meth:`read`, :meth:`write`, :meth:`unlink`)
+        on the aforementioned recordset is undefined behaviour,
+        as they potentially do not exist in the database yet.
+
+        Instead, simply set the record's field like shown in the example
+        above or call the :meth:`update` method.
+
+    .. warning::
+
+        It is not possible for a ``one2many`` or ``many2many`` field to modify
+        itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
+
     """
     return attrsetter('_onchange', args)
 
@@ -224,25 +208,26 @@ def depends(*args):
 
 def depends_context(*args):
     """ Return a decorator that specifies the context dependencies of a
-        non-stored "compute" method.  Each argument is a key in the context's
-        dictionary::
+    non-stored "compute" method.  Each argument is a key in the context's
+    dictionary::
 
-            price = fields.Float(compute='_compute_product_price')
+        price = fields.Float(compute='_compute_product_price')
 
-            @api.depends_context('pricelist')
-            def _compute_product_price(self):
-                for product in self:
-                    if product.env.context.get('pricelist'):
-                        pricelist = self.env['product.pricelist'].browse(product.env.context['pricelist'])
-                    else:
-                        pricelist = self.env['product.pricelist'].get_default_pricelist()
-                    product.price = pricelist.get_products_price(product).get(product.id, 0.0)
+        @api.depends_context('pricelist')
+        def _compute_product_price(self):
+            for product in self:
+                if product.env.context.get('pricelist'):
+                    pricelist = self.env['product.pricelist'].browse(product.env.context['pricelist'])
+                else:
+                    pricelist = self.env['product.pricelist'].get_default_pricelist()
+                product.price = pricelist.get_products_price(product).get(product.id, 0.0)
 
-        All dependencies must be hashable.  The following keys have special
-        support:
-         - 'force_company' (value in context or current company id),
-         - 'uid' (current user id and superuser flag),
-         - 'active_test' (value in env.context or value in field.context).
+    All dependencies must be hashable.  The following keys have special
+    support:
+
+    * `force_company` (value in context or current company id),
+    * `uid` (current user id and superuser flag),
+    * `active_test` (value in env.context or value in field.context).
     """
     return attrsetter('_depends_context', args)
 
@@ -509,6 +494,9 @@ class Environment(Mapping):
             :param user: optional user/user id to change the current user
             :param context: optional context dictionary to change the current context
             :param su: optional boolean to change the superuser mode
+            :type context: dict
+            :type user: int or :class:`~odoo.addons.base.models.res_users`
+            :type su: bool
         """
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
@@ -517,7 +505,7 @@ class Environment(Mapping):
         return Environment(cr, uid, context, su)
 
     def ref(self, xml_id, raise_if_not_found=True):
-        """ return the record corresponding to the given ``xml_id`` """
+        """Return the record corresponding to the given ``xml_id``."""
         return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
 
     def is_superuser(self):
@@ -536,44 +524,87 @@ class Environment(Mapping):
 
     @lazy_property
     def user(self):
-        """ return the current user (as an instance) """
+        """Return the current user (as an instance).
+
+        :rtype: :class:`~odoo.addons.base.models.res_users`"""
         return self(su=True)['res.users'].browse(self.uid)
 
     @lazy_property
     def company(self):
-        """ return the company in which the user is logged in (as an instance) """
-        company_ids = self.context.get('allowed_company_ids', False)
+        """Return the current company (as an instance).
+
+        If not specified in the context (`allowed_company_ids`),
+        fallback on current user main company.
+
+        :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
+        :return: current company (default=`self.user.company_id`)
+        :rtype: res.company
+
+        .. warning::
+
+            No sanity checks applied in sudo mode !
+            When in sudo mode, a user can access any company,
+            even if not in his allowed companies.
+
+            This allows to trigger inter-company modifications,
+            even if the current user doesn't have access to
+            the targeted company.
+        """
+        company_ids = self.context.get('allowed_company_ids', [])
         if company_ids:
-            company_id = int(company_ids[0])
-            if company_id in self.user.company_ids.ids:
-                return self['res.company'].browse(company_id)
+            if not self.su:
+                user_company_ids = self.user.company_ids.ids
+                if any(cid not in user_company_ids for cid in company_ids):
+                    raise AccessError(_("Access to unauthorized or invalid companies."))
+            return self['res.company'].browse(company_ids[0])
         return self.user.company_id
 
     @lazy_property
     def companies(self):
-        """ return a recordset of the enabled companies by the user """
-        try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
-            allowed_company_ids = self.context.get('allowed_company_ids')
-            # Prevent the user to enable companies for which he doesn't have any access
-            users_company_ids = self.user.company_ids.ids
-            allowed_company_ids = [company_id for company_id in allowed_company_ids if company_id in users_company_ids]
-        except Exception:
-            # By setting the default companies to all user companies instead of the main one
-            # we save a lot of potential trouble in all "out of context" calls, such as
-            # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
-            # have access to these other companies. The risk of exposing foreign records
-            # (wrt to the context) is low because all normal RPCs will have a proper
-            # allowed_company_ids.
-            # Examples:
-            #   - when printing a report for several records from several companies
-            #   - when accessing to a record from the notification email template
-            #   - when loading an binary image on a template
-            allowed_company_ids = self.user.company_ids.ids
-        return self['res.company'].browse(allowed_company_ids)
+        """Return a recordset of the enabled companies by the user.
+
+        If not specified in the context(`allowed_company_ids`),
+        fallback on current user companies.
+
+        :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
+        :return: current companies (default=`self.user.company_ids`)
+        :rtype: res.company
+
+        .. warning::
+
+            No sanity checks applied in sudo mode !
+            When in sudo mode, a user can access any company,
+            even if not in his allowed companies.
+
+            This allows to trigger inter-company modifications,
+            even if the current user doesn't have access to
+            the targeted company.
+        """
+        company_ids = self.context.get('allowed_company_ids', [])
+        if company_ids:
+            if not self.su:
+                user_company_ids = self.user.company_ids.ids
+                if any(cid not in user_company_ids for cid in company_ids):
+                    raise AccessError(_("Access to unauthorized or invalid companies."))
+            return self['res.company'].browse(company_ids)
+        # By setting the default companies to all user companies instead of the main one
+        # we save a lot of potential trouble in all "out of context" calls, such as
+        # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
+        # have access to these other companies. The risk of exposing foreign records
+        # (wrt to the context) is low because all normal RPCs will have a proper
+        # allowed_company_ids.
+        # Examples:
+        #   - when printing a report for several records from several companies
+        #   - when accessing to a record from the notification email template
+        #   - when loading an binary image on a template
+        return self.user.company_ids
 
     @property
     def lang(self):
-        """ return the current language code """
+        """Return the current language code.
+
+        :rtype: str
+        """
         return self.context.get('lang')
 
     def clear(self):

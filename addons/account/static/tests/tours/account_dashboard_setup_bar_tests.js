@@ -11,16 +11,9 @@ odoo.define('account.dashboard.setup.tour', function (require) {
         url: '/web',
     }, [tour.STEPS.SHOW_APPS_MENU_ITEM,
     {
+        id: 'account_menu_click',
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
         position: 'bottom',
-        edition: 'community'
-    }, {
-        trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
-        position: 'bottom',
-        edition: 'enterprise'
-    }, {
-        trigger: 'a:contains(' + _t("Customer Invoices") + ')',
-        edition: 'enterprise'
     }, {
         trigger: '.o_data_row:first',
         extra_trigger: '.breadcrumb',

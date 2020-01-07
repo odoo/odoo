@@ -848,7 +848,8 @@ models.PosModel = models.PosModel.extend({
         options = options || {};
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
-        return rpc.query({
+        return new Promise( function(resolve, reject) {
+            rpc.query({
                 model: 'pos.order',
                 method: 'get_table_draft_orders',
                 args: [table_id],
@@ -856,7 +857,15 @@ models.PosModel = models.PosModel.extend({
             }, {
                 timeout: timeout,
                 shadow: false,
-            })
+            }).then(function(orders){
+                orders.forEach(function(order) {
+                    order.multiprint_resume = JSON.parse(order.multiprint_resume? order.multiprint_resume: false);
+                });
+                resolve(orders);
+            }).catch(function(err) {
+                reject(err);
+            });
+        });
     },
 
     /**
@@ -959,11 +968,9 @@ models.PosModel = models.PosModel.extend({
                         }
                     });
                     server_orders.forEach(function(server_order){
-                        if (server_order.lines.length){
-                            var new_order = new models.Order({},{pos: self, json: server_order});
-                            self.get("orders").add(new_order);
-                            new_order.save_to_db();
-                        }
+                        var new_order = new models.Order({},{pos: self, json: server_order});
+                        self.get("orders").add(new_order);
+                        new_order.save_to_db();
                     })
                     if (!ids_to_remove.length) {
                         self.set_synch('connected');

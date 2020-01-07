@@ -83,7 +83,10 @@ class SaleOrder(models.Model):
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
         # Remove needed quantity from reward quantity if same reward and rule product
         if program._is_valid_product(program.reward_product_id):
-            reward_product_qty = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            # number of times the program should be applied
+            program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            # multipled by the reward qty
+            reward_product_qty = program.reward_product_quantity * program_in_order
         else:
             reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
 
@@ -371,9 +374,11 @@ class SaleOrder(models.Model):
         coupons_to_remove.write({'state': 'new'})
 
         # Unbind promotion and coupon programs which requirements are not met anymore
-        order.no_code_promo_program_ids -= programs_to_remove
-        order.code_promo_program_id -= programs_to_remove
-        order.applied_coupon_ids -= coupons_to_remove
+        if programs_to_remove:
+            order.no_code_promo_program_ids -= programs_to_remove
+            order.code_promo_program_id -= programs_to_remove
+        if coupons_to_remove:
+            order.applied_coupon_ids -= coupons_to_remove
 
         # Remove their reward lines
         invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)

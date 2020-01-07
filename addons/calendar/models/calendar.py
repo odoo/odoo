@@ -159,7 +159,7 @@ class Attendee(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False, force_event_id=None):
         """ Send mail for event invitation to event attendees.
             :param template_xmlid: xml id of the email template to use to send the invitation
             :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
@@ -173,7 +173,7 @@ class Attendee(models.Model):
         invitation_template = self.env.ref(template_xmlid)
 
         # get ics file for all meetings
-        ics_files = self.mapped('event_id')._get_ics_file()
+        ics_files = force_event_id._get_ics_file() if force_event_id else self.mapped('event_id')._get_ics_file()
 
         # prepare rendering context for mail template
         colors = {
@@ -187,7 +187,8 @@ class Attendee(models.Model):
             'color': colors,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
-            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069')
+            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069'),
+            'force_event_id': force_event_id,
         })
         invitation_template = invitation_template.with_context(rendering_context)
 
@@ -196,7 +197,8 @@ class Attendee(models.Model):
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
-                ics_file = ics_files.get(attendee.event_id.id)
+                event_id = force_event_id.id if force_event_id else attendee.event_id.id
+                ics_file = ics_files.get(event_id)
 
                 email_values = {
                     'model': None,  # We don't want to have the mail in the tchatter while in queue!
@@ -440,7 +442,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.alarm_type == 'email':
-            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True, force_event_id=meeting)
         return result
 
     def do_notif_reminder(self, alert):
@@ -454,6 +456,7 @@ class AlarmManager(models.AbstractModel):
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {
+                'alarm_id': alarm.id,
                 'event_id': meeting.id,
                 'title': meeting.name,
                 'message': message,
@@ -717,7 +720,7 @@ class Meeting(models.Model):
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
-            duration = date + timedelta(hours=zduration)
+            duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
             display_time = _(u"%s at (%s To %s) (%s)") % (
                 date_str,
@@ -754,6 +757,9 @@ class Meeting(models.Model):
                     event.is_highlighted = True
                 else:
                     event.is_highlighted = False
+        else:
+            for event in self:
+                event.is_highlighted = False
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
@@ -943,7 +949,11 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
+            # Round the duration (in hours) to the minute to avoid weird situations where the event
+            # stops at 4:19:59, later displayed as 4:19.
+            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            if self.allday:
+                self.stop -= timedelta(seconds=1)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
@@ -1032,6 +1042,9 @@ class Meeting(models.Model):
                     'email': partner.email,
                     'event_id': meeting.id,
                 }
+
+                if self._context.get('google_internal_event_id', False):
+                    values['google_internal_event_id'] = self._context.get('google_internal_event_id')
 
                 # current user don't have to accept his own meeting
                 if partner == self.env.user.partner_id:
@@ -1677,13 +1690,13 @@ class Meeting(models.Model):
             if r['privacy'] == 'private':
                 for f in r:
                     recurrent_fields = self._get_recurrent_fields()
-                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
+                    public_fields = list(set(recurrent_fields + ['id', 'active', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
                     if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
                         else:
                             r[f] = False
-                    if f == 'name':
+                    if f in ['name', 'display_name']:
                         r[f] = _('Busy')
 
         for r in result:

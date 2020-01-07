@@ -17,14 +17,15 @@
 # Tina Milas, 2019
 # Martin Trigaux, 2019
 # Bole <bole@dajmi5.com>, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
+"Last-Translator: Milan Tribuson <one.mile.code@gmail.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -541,7 +542,7 @@ msgstr "Aktivnosti"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
@@ -611,7 +612,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -657,14 +658,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Sva vraćena knjiženja"
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"All the products currently reserved in the picking are already in a pack. "
-"Please add products to the picking to create a new pack."
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -716,11 +709,17 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Arhivirano"
@@ -743,11 +742,6 @@ msgid "As soon as possible"
 msgstr "Što prije moguće"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign"
-msgstr "Dodijeli"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
 msgstr "Dodjeljeni vlasnik"
@@ -763,13 +757,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
-#: model:ir.actions.server,name:stock.action_assign_a_responsible
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign a Responsible"
 msgstr ""
 
 #. module: stock
@@ -933,6 +920,12 @@ msgstr ""
 " ne koriste označite kao neaktivne."
 
 #. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Kalendarski pogled"
@@ -957,7 +950,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
@@ -1688,6 +1680,7 @@ msgstr "Adresa dostave"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2042,11 +2035,6 @@ msgid ""
 "            from a vendor, Odoo will move products from the Vendor\n"
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Exception Activities"
 msgstr ""
 
 #. module: stock
@@ -2408,7 +2396,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -2428,7 +2416,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_error
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
@@ -3620,7 +3608,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4091,6 +4079,12 @@ msgstr "Dokument je već procesiran"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Please add 'Done' qantitites to the picking to create a new pack."
 msgstr ""
 
 #. module: stock
@@ -4685,6 +4679,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -5070,7 +5065,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -5407,7 +5402,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -5507,6 +5502,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -6100,21 +6099,21 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "This note will show up on delivery orders."
+msgid "This note is added to delivery orders."
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on internal transfer orders (e.g. where to pick the "
+"This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on receipt orders (e.g. where to store the product in"
-" the warehouse)."
+"This note is added to receipt orders (e.g. where to store the product in the"
+" warehouse)."
 msgstr ""
 
 #. module: stock
@@ -6359,7 +6358,7 @@ msgstr "Tip operacije"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -6411,6 +6410,12 @@ msgstr "Jedinična cijena"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
 msgstr "Jedinica mjere"
+
+#. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6721,6 +6726,7 @@ msgstr "Upozorenje!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
 msgstr "Upozorenja"
 
@@ -7241,7 +7247,7 @@ msgstr "npr. PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "in"
-msgstr ""
+msgstr "u"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

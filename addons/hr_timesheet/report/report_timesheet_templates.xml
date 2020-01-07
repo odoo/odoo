@@ -6,15 +6,19 @@
                 <t t-set="show_project" t-value="len(docs.mapped('project_id')) > 1"/>
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row">
+                    <div class="row" style="margin-top:10px;">
                         <div class="col-lg-12">
                             <h2>
-                                <span>Timesheet Entries</span>
+                                <span>Timesheet Entries
+                                    <t t-if="len(docs.mapped('project_id')) == 1">
+                                        for the <t t-esc="docs.mapped('project_id')[0].name"/> Project
+                                    </t>
+                                </span>
                             </h2>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="margin-top:10px;">
                         <div class="col-lg-12">
                             <table class="table table-sm">
                                 <thead>
@@ -22,7 +26,8 @@
                                         <th><span>Date</span></th>
                                         <th><span>Responsible</span></th>
                                         <th><span>Description</span></th>
-                                        <th t-if="show_task"><t t-if="show_project">Project - </t>Task</th>
+                                        <th t-if="show_project">Project</th>
+                                        <th t-if="show_task">Task</th>
                                         <th class="text-right"><span>Time</span></th>
                                     </tr>
                                </thead>
@@ -37,9 +42,10 @@
                                         <td >
                                             <span t-field="l.name" t-options="{'widget': 'text'}"/>
                                         </td>
+                                        <td t-if="show_project">
+                                            <span t-field="l.project_id.name"/>
+                                        </td>
                                         <td t-if="show_task">
-                                            <t t-if="show_project"><span t-field="l.project_id.name"/></t>
-                                            <t t-if="show_project and l.task_id"> - </t>
                                             <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
                                         </td>
                                         <td class="text-right">
@@ -49,6 +55,7 @@
                                     <tr>
                                         <td />
                                         <td />
+                                        <td t-if="show_project"/>
                                         <td t-if="show_task"/>
                                         <td class="text-right"><strong>Total</strong></td>
                                         <td class="text-right"><strong t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/></td>

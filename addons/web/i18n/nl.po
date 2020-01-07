@@ -7,19 +7,20 @@
 # wilcobergacker <wilcobergacker@gmail.com>, 2019
 # Melroy van den Berg <webmaster1989@gmail.com>, 2019
 # Volluta <volluta@tutanota.com>, 2019
-# Martin Trigaux, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -465,7 +466,7 @@ msgstr "Uw eigen handtekening"
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Adopt and Sign"
-msgstr "Adopteer en teken"
+msgstr "Goedkeuren en tekenen"
 
 #. module: web
 #. openerp-web
@@ -1397,7 +1398,7 @@ msgstr "Dupliceer"
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #. module: web
 #. openerp-web
@@ -1481,7 +1482,7 @@ msgstr "Fout, uw wachtwoord is niet gewijzigd!"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Esc to discard"
-msgstr "Esc om te verwerpen"
+msgstr "Esc om af te breken"
 
 #. module: web
 #. openerp-web
@@ -1815,7 +1816,7 @@ msgstr "Druk op ENTER om OP TE SLAAN"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr "Druk op ESCAPE om te VERWERPEN"
+msgstr "Druk op ESCAPE om te AF TE BREKEN"
 
 #. module: web
 #. openerp-web
@@ -2265,6 +2266,8 @@ msgid ""
 "Module %s not loaded or inexistent, or templates of addon being loaded (%s) "
 "are misordered"
 msgstr ""
+"Module %s niet geladen of niet aanwezig, of sjablonen van add-on die worden "
+"geladen (%s) zijn verkeerd geordend"
 
 #. module: web
 #. openerp-web
@@ -2438,6 +2441,7 @@ msgstr "Geen resultaten om te tonen..."
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
 msgstr ""
+"Geen sjabloon gevonden om van over te erven. Module %s en sjabloonnaam %s"
 
 #. module: web
 #. openerp-web
@@ -2446,6 +2450,13 @@ msgstr ""
 #, python-format
 msgid "No valid record to save"
 msgstr "Geen geldig record om te bewaren"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/core/utils.js:0
+#, python-format
+msgid "Node [%s] is not a JSONified XML node"
+msgstr "Node [%s] is geen JSONified XML node"
 
 #. module: web
 #. openerp-web
@@ -3032,7 +3043,7 @@ msgstr "Verwijderen"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Remove Cover Image"
-msgstr "Verwijder afbeelding"
+msgstr "Verwijder omslagafbeelding"
 
 #. module: web
 #. openerp-web
@@ -3335,7 +3346,7 @@ msgstr "Instellen standaardwaarden"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Set a Cover Image"
-msgstr "Afbeelding"
+msgstr "Omslagafbeelding instellen"
 
 #. module: web
 #. openerp-web
@@ -3539,6 +3550,8 @@ msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
+"De inhoud van deze cel is te lang voor een XLSX-bestand (meer dan %s "
+"tekens). Gebruik de CSV-indeling voor deze export."
 
 #. module: web
 #. openerp-web
@@ -3643,6 +3656,8 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"Er zijn te veel rijen (%s rijen, limiet: %s) om te exporteren als Excel "
+"2007-2013 (.xlsx) -indeling. Overweeg de export te splitsen."
 
 #. module: web
 #. openerp-web
@@ -3749,6 +3764,8 @@ msgid ""
 "Timezone Mismatch : This timezone is different from that of your browser.\n"
 "Please, set the same timezone as your browser's to avoid time discrepancies in your system."
 msgstr ""
+"Tijdzone komt niet overeen: deze tijdzone verschilt van die van uw browser.\n"
+"Stel alsjeblieft dezelfde tijdzone in als je browser om tijdafwijkingen in je systeem te voorkomen."
 
 #. module: web
 #. openerp-web
@@ -3812,6 +3829,8 @@ msgid ""
 "Try to add some records, or make sure that there is at least one measure and"
 " no active filter in the search bar."
 msgstr ""
+"Probeer enkele records toe te voegen of zorg ervoor dat er ten minste één "
+"meetwaarde en geen actief filter in de zoekbalk staat."
 
 #. module: web
 #. openerp-web
@@ -3821,6 +3840,8 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                active filter in the search bar."
 msgstr ""
+"Probeer enkele records toe te voegen of zorg ervoor dat er geen\n"
+"actief filter is in de zoekbalk."
 
 #. module: web
 #. openerp-web
@@ -4226,6 +4247,8 @@ msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
 msgstr ""
+"U moet dit nieuwe record opslaan voordat u de vertaling bewerkt. Wilt u "
+"doorgaan?"
 
 #. module: web
 #. openerp-web
@@ -4276,19 +4299,6 @@ msgstr ""
 #, python-format
 msgid "Your name"
 msgstr "Uw naam"
-
-#. module: web
-#: code:addons/web/controllers/main.py:0
-#, python-format
-msgid ""
-"Your password is the default (admin)! If this system is exposed to untrusted"
-" users it is important to change it immediately for security reasons. I will"
-" keep nagging you about it!"
-msgstr ""
-"Uw wachtwoord is het standaard (admin)! Als dit systeem wordt blootgesteld "
-"aan niet-vertrouwde gebruikers, is het belangrijk om het om "
-"veiligheidsredenen onmiddellijk te wijzigen. Ik zal je er blijven over "
-"zeuren ;-) !"
 
 #. module: web
 #. openerp-web

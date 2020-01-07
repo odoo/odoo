@@ -1,44 +1,10 @@
 :banner: banners/web_controllers.jpg
 
+.. _reference/controllers:
+
 ===============
 Web Controllers
 ===============
-
-.. _reference/http/routing:
-
-Routing
-=======
-
-.. autofunction:: odoo.http.route
-
-.. _reference/http/request:
-
-Request
-=======
-
-The request object is automatically set on :data:`odoo.http.request` at
-the start of the request
-
-.. autoclass:: odoo.http.WebRequest
-    :members:
-    :member-order: bysource
-.. autoclass:: odoo.http.HttpRequest
-    :members:
-.. autoclass:: odoo.http.JsonRequest
-    :members:
-
-Response
-========
-
-.. autoclass:: odoo.http.Response
-    :members:
-    :member-order: bysource
-
-    .. maybe set this to document all the fine methods on Werkzeug's Response
-       object? (it works)
-       :inherited-members:
-
-.. _reference/http/controllers:
 
 Controllers
 ===========
@@ -51,11 +17,8 @@ no database created, or no database selected).
 Controllers thus provide their own extension mechanism, separate from that of
 models:
 
-Controllers are created by :ref:`inheriting <python:tut-inheritance>` from
-
-.. autoclass:: odoo.http.Controller
-
-and defining methods decorated with :func:`~odoo.http.route`::
+Controllers are created by :ref:`inheriting <python:tut-inheritance>` from :class:`~odoo.http.Controller`.
+Routes are defined through methods decorated with :func:`~odoo.http.route`::
 
     class MyController(odoo.http.Controller):
         @route('/some_url', auth='public')
@@ -85,3 +48,40 @@ class and override relevant methods, re-exposing them if necessary::
 
   will change ``/some_url`` from public authentication to user (requiring a
   log-in)
+
+API
+===
+
+.. _reference/http/routing:
+
+Routing
+-------
+
+.. autofunction:: odoo.http.route
+
+.. _reference/http/request:
+
+Request
+-------
+
+The request object is automatically set on :data:`odoo.http.request` at
+the start of the request
+
+.. autoclass:: odoo.http.WebRequest
+    :members:
+    :member-order: bysource
+.. autoclass:: odoo.http.HttpRequest
+    :members:
+.. autoclass:: odoo.http.JsonRequest
+    :members:
+
+Response
+--------
+
+.. autoclass:: odoo.http.Response
+    :members:
+    :member-order: bysource
+
+    .. maybe set this to document all the fine methods on Werkzeug's Response
+       object? (it works)
+       :inherited-members:

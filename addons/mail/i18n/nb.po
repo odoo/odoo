@@ -3,17 +3,17 @@
 # 	* mail
 # 
 # Translators:
-# Jorunn D. Newth, 2019
 # Marius Stedjan <marius@stedjan.com>, 2019
 # Martin Trigaux, 2019
+# Jorunn D. Newth, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Jorunn D. Newth, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -777,6 +777,7 @@ msgid "Apply"
 msgstr "Bruk"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
 msgid "Archived"
@@ -2139,11 +2140,6 @@ msgid "Exception"
 msgstr "Avvik"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
-msgid "Exception Activities"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
 msgstr "Utvidede filtre..."
@@ -3143,6 +3139,7 @@ msgstr "Epostaktivitetstype"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
+#: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Blacklist"
 msgstr ""
 
@@ -4409,6 +4406,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Please wait..."
 msgstr ""
@@ -6269,6 +6267,11 @@ msgid "assigned you an activity"
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "styremøter"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -6424,6 +6427,11 @@ msgid "or"
 msgstr "eller"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_widget.js:0
 #, python-format
@@ -6473,6 +6481,11 @@ msgstr "avgrenset til følgere"
 #, python-format
 msgid "restricted to known authors"
 msgstr "avgrenset til kjente forfattere"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "salg"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

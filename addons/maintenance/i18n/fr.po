@@ -9,20 +9,23 @@
 # Nathan Grognet <ngr@odoo.com>, 2019
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
-# Doryan R, 2019
-# Martin Trigaux, 2019
+# a270031086f2a0d3514bc0cb507b48f6, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Inès Gérardy <ige@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# e2f <projects@e2f.com>, 2019
+# Martin Trigaux, 2019
+# Fabien Pinckaers <fp@openerp.com>, 2019
+# Oriane Malburny <oma@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +101,12 @@ msgid ""
 msgstr ""
 "Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
 "défaut lors de la création des nouveaux enregistrements pour cet alias."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr "Ordinateur Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -210,7 +219,9 @@ msgstr "Archiver"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Archived"
 msgstr "Archivé"
@@ -294,6 +305,11 @@ msgstr "Commentaires"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__company_id
 msgid "Company"
 msgstr "Société"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_computer
+msgid "Computers"
+msgstr "Ordinateurs"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
@@ -455,6 +471,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
+"Alias de courriel pour cette catégorie d'équipement. Les nouveaux courriles "
+"vont automatiquement créer un nouvel équipement sous cette catégorie."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -511,12 +529,6 @@ msgid "Equipments"
 msgstr "Équipements"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Exception Activities"
-msgstr "Activités d'Exception"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__fold
 msgid "Folded in Maintenance Pipe"
@@ -567,6 +579,17 @@ msgstr "Activités futures"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "Regrouper par..."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Imprimante HP Inkjet"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
+msgstr "Ordinateur HP"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
@@ -754,7 +777,7 @@ msgstr "Equipement de maintenance"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
-msgstr ""
+msgstr "Catégorie d'équipment de maintenance"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -771,7 +794,7 @@ msgstr "Demande de maintenance créée"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Maintenance Request Search"
-msgstr ""
+msgstr "Recherche de requête de maintenance"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
@@ -852,9 +875,19 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_metrology
+msgid "Metrology"
+msgstr "Métrologie"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr "Modèle"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr "Moniteurs"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1018,6 +1051,11 @@ msgstr ""
 "(parent_model) et task (modèle))"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr "Téléphones"
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1045,6 +1083,11 @@ msgstr "Maintenance préventive – %s"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
 msgstr "Fréquence de maintenance préventive"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_printer
+msgid "Printers"
+msgstr "Imprimantes"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
@@ -1150,6 +1193,13 @@ msgid "Responsible User"
 msgstr "Responsable"
 
 #. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Écran Samsung 15\""
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
 msgstr "Planifié"
@@ -1208,6 +1258,11 @@ msgstr ""
 "actions est pour aujourd'hui ou avant"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_software
+msgid "Software"
+msgstr "Logiciel"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stage"
@@ -1241,6 +1296,11 @@ msgstr ""
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "Etat modifié"
+
+#. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
+msgid "Subcontractor"
+msgstr "Sous-traitant"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name

@@ -7,7 +7,6 @@
 # Saban Yildiz <sabany@projetgrup.com>, 2019
 # Mehmet Demirel <mdemirell@gmail.com>, 2019
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
@@ -18,14 +17,16 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # Martin Trigaux, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Yedigen, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
+"Last-Translator: Yedigen, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +107,7 @@ msgstr "%s (kopya)"
 #: code:addons/stock/wizard/stock_picking_responsible.py:0
 #, python-format
 msgid "%s has a restricted access to %s"
-msgstr ""
+msgstr "%s  kısıtlı erişime sahip%s"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -133,6 +134,7 @@ msgstr "%s: Transit Konum"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
+"'Teslimat Fişi - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -142,12 +144,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "'Konum - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr ""
+msgstr "'Lot-Seri - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
@@ -199,6 +201,8 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"            Manuel işlem gerekli olabilir."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -346,7 +350,7 @@ msgstr "<span class=\"o_stat_text\">Stokta</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Operasyonlar</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -382,7 +386,7 @@ msgstr "<span><strong>Depo Adresi:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Assign Serial Numbers</span>"
-msgstr ""
+msgstr "<span>Seri Numaralarını Ata</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -408,7 +412,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Sayılan Miktar</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -444,18 +448,18 @@ msgstr "<strong>Min miktar :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Stok Miktar</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order:</strong>"
-msgstr ""
+msgstr "<strong>Sipariş:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr ""
+msgstr "<strong>Paket Tipi:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -465,7 +469,7 @@ msgstr "<strong>Paket</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product Barcode</strong>"
-msgstr ""
+msgstr "<strong>Ürün Barkodu</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -493,17 +497,17 @@ msgstr "<strong>Miktar</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr ""
+msgstr "<strong>Planlanan Tarih:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date:</strong>"
-msgstr ""
+msgstr "<strong>Sevkiyat Tarihi:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Durumu:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -545,7 +549,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "Bir iş ortağı üzerinde bir uyarı yapılandırılabilir (Stok)"
+msgstr "İş Ortakları Üzerinde Uyarı Oluşturma (Stok)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
@@ -653,7 +657,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Yönetici"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -699,14 +703,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Tüm iade hareketleri"
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"All the products currently reserved in the picking are already in a pack. "
-"Please add products to the picking to create a new pack."
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -758,11 +754,17 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Arşivlendi"
@@ -787,11 +789,6 @@ msgid "As soon as possible"
 msgstr "Mümkün olduğunca kısa sürede"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign"
-msgstr "Ata"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
 msgstr "Sahip Ata"
@@ -799,7 +796,7 @@ msgstr "Sahip Ata"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
-msgstr ""
+msgstr "Sorumlu Ata"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_assign_serial_numbers
@@ -807,14 +804,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
-#: model:ir.actions.server,name:stock.action_assign_a_responsible
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign a Responsible"
-msgstr "Bir Sorumlu Ata"
+msgstr "Seri Numaralarını Ata"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -982,6 +972,12 @@ msgstr ""
 "gizleyebilirsiniz."
 
 #. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Takvimi Göster"
@@ -1006,7 +1002,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
@@ -1590,7 +1585,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Date"
-msgstr "Mail"
+msgstr "Tarih"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_tree
@@ -1757,6 +1752,7 @@ msgstr "Teslim Adresi"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -1793,7 +1789,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Demand"
-msgstr ""
+msgstr "Talep"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2117,11 +2113,6 @@ msgstr ""
 "                Odoo ürünleri Tedarikçi konumundan Stok konumuna\n"
 "                taşıyacaktır. Her rapor fiziksel, iş ortağı ya da sanal\n"
 "                konumlarda yapılabilir."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Exception Activities"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2824,7 +2815,7 @@ msgstr "Sayım Farkı"
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Stok düzeltmeleri"
+msgstr "Stok Düzeltmeleri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__date
@@ -3719,7 +3710,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Number of errors"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -3750,7 +3741,7 @@ msgstr "Stokta"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Stok Miktarı"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4200,6 +4191,12 @@ msgstr "Planlanan Transfer"
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
+msgid "Please add 'Done' qantitites to the picking to create a new pack."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
 msgid "Please add some items to move."
 msgstr ""
 
@@ -4391,7 +4388,7 @@ msgstr "Ürün Paketlemeleri"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Ürün Miktarı Güncellendi"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -4800,6 +4797,7 @@ msgstr "Mal Kabul Rotası"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -4808,7 +4806,7 @@ msgstr "Mal Kabul"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Receive From"
-msgstr ""
+msgstr "Alın Yapılan"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -6284,21 +6282,21 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "This note will show up on delivery orders."
-msgstr "Buraya yazacağınız açıklamalar teslimatlarda görünecektir."
+msgid "This note is added to delivery orders."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on internal transfer orders (e.g. where to pick the "
+"This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on receipt orders (e.g. where to store the product in"
-" the warehouse)."
+"This note is added to receipt orders (e.g. where to store the product in the"
+" warehouse)."
 msgstr ""
 
 #. module: stock
@@ -6608,6 +6606,12 @@ msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "Adet"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "Ölçü Birimleri"
@@ -6691,7 +6695,7 @@ msgstr "Ürün Miktarını Güncelle"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Update Quantity"
-msgstr ""
+msgstr " Miktarını Güncelle"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__2
@@ -6916,6 +6920,7 @@ msgstr "Uyarı!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
 msgstr "Uyarılar"
 

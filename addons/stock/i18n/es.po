@@ -14,7 +14,6 @@
 # Margarita Gutierrez <ana.gutierrez@jarsa.com.mx>, 2019
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2019
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2019
 # Nans Lefebvre <len@odoo.com>, 2019
@@ -30,7 +29,6 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2019
 # Antonio Trueba, 2019
-# Gelo Joga Landoo <gj@landoo.es>, 2019
 # Miquel Torner <miq@odoo.com>, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
@@ -38,13 +36,14 @@
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -715,14 +714,6 @@ msgid "All returned moves"
 msgstr "Todas las devoluciones"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"All the products currently reserved in the picking are already in a pack. "
-"Please add products to the picking to create a new pack."
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
 msgstr "Ubicación permitida"
@@ -774,11 +765,17 @@ msgstr ""
 "predeterminadas del producto."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Archivado"
@@ -803,11 +800,6 @@ msgid "As soon as possible"
 msgstr "Lo antes posible"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign"
-msgstr "Asignar"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
 msgstr "Asignar propietario"
@@ -824,13 +816,6 @@ msgstr "Asignar responsable"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
 msgstr "Asignar números de serie"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
-#: model:ir.actions.server,name:stock.action_assign_a_responsible
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign a Responsible"
-msgstr "Asignar un responsable"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -998,6 +983,12 @@ msgstr ""
 "Si el campo activo se desmarca, permite ocultar la ubicación sin eliminarla."
 
 #. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "Caja de Administración de Cable"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Vista calendario"
@@ -1022,7 +1013,6 @@ msgstr "No se puede encontrar ninguna ruta genérica %s."
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
@@ -1782,6 +1772,7 @@ msgstr "Dirección de entrega"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2144,11 +2135,6 @@ msgstr ""
 "            de un proveedor, Odoo moverá los productos de la ubicación del\n"
 "            Vendedor a la ubicación de Stock. Se puede analizar informes\n"
 "            por ubicaciones físicas, de terceros o virtuales."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Exception Activities"
-msgstr "Actividades de Excepción"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -4258,6 +4244,12 @@ msgstr "Transferencia planeada"
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
+msgid "Please add 'Done' qantitites to the picking to create a new pack."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
 msgid "Please add some items to move."
 msgstr "Por favor agregue algunos items para procesar movimiento."
 
@@ -4862,6 +4854,7 @@ msgstr "Ruta de recepción"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6379,26 +6372,22 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "This note will show up on delivery orders."
-msgstr "Esta nota aparecerá en las órdenes de entrega."
+msgid "This note is added to delivery orders."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on internal transfer orders (e.g. where to pick the "
+"This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"Esta nota aparecerá en las órdenes de transferencia interna (ej, dónde "
-"recoger el producto en el almacén)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on receipt orders (e.g. where to store the product in"
-" the warehouse)."
+"This note is added to receipt orders (e.g. where to store the product in the"
+" warehouse)."
 msgstr ""
-"Esta nota aparecerá en los albaranes de entrada (ej, dónde almacenar el "
-"producto)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -6714,6 +6703,12 @@ msgid "Unit of Measure"
 msgstr "Unidad de medida"
 
 #. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "Unidades"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "Unidades de medida"
@@ -7022,6 +7017,7 @@ msgstr "¡Alerta!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
 msgstr "Avisos"
 

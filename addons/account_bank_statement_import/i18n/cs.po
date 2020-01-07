@@ -87,7 +87,7 @@ msgstr "Aktivity"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekorace výjimky aktivity"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
@@ -347,6 +347,14 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
@@ -710,13 +718,13 @@ msgstr ""
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any statement."
-msgstr "Tento soubor neobsahuje žádné příkazy."
+msgid "This file doesn't contain any statement for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any transaction."
+msgid "This file doesn't contain any transaction for account %s."
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -727,7 +735,7 @@ msgstr "Typ"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ zaznamenané výjimečné aktivity."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread

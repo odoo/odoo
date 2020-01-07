@@ -106,9 +106,7 @@ var EditorMenuBar = Widget.extend({
 
         // Snippets menu
         if (self.snippetsMenu) {
-            // TODO improve this, the editor can be relocated so here,
-            // 'insertAfter(this.$el)' won't work.
-            defs.push(this.snippetsMenu.appendTo(this.$el.parent()));
+            defs.push(this.snippetsMenu.insertAfter(this.$el));
         }
         this.rte.editable().find('*').off('mousedown mouseup click');
 
@@ -253,7 +251,6 @@ var EditorMenuBar = Widget.extend({
                         res_model: resModel,
                         res_id: resID,
                         name: name,
-                        datas_fname: name,
                         datas: datas,
                         mimetype: mimetype,
                         url: originalSrc, // To save the original image that was cropped

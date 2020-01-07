@@ -196,7 +196,7 @@
         <div class="btn-group o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
                 <button class="btn btn-primary"
-                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id))"
+                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id) || state.st_line.journal_id === undefined)"
                         t-att-data-reconcile-model-id="reconcileModel.id">
                     <t t-esc="reconcileModel.name"/>
                 </button>
@@ -223,11 +223,11 @@
                     <td class="o_td_label"><label class="o_form_label">Taxes</label></td>
                     <td class="o_td_field"></td>
                 </tr>
-                <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
+                <tr class="create_analytic_account_id" t-if="group_acc">
                     <td class="o_td_label"><label class="o_form_label">Analytic Acc.</label></td>
                     <td class="o_td_field"></td>
                 </tr>
-                <tr class="create_analytic_tag_ids" groups="analytic.group_analytic_tags">
+                <tr class="create_analytic_tag_ids" t-if="group_tags">
                     <td class="o_td_label"><label class="o_form_label">Analytic Tags.</label></td>
                     <td class="o_td_field"></td>
                 </tr>
@@ -296,7 +296,7 @@
     <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
         <td class="cell_account_code"><t t-esc="line.account_code"/>&#8203;</td> <!-- zero width space to make empty lines the height of the text -->
         <td class="cell_due_date">
-            <t t-if="typeof(line.id) != 'number' &amp;&amp; line.amount">
+            <t t-if="typeof(line.id) != 'number' &amp;&amp; line.id">
                 <span class="badge badge-secondary">New</span>
             </t>
             <t t-else="" t-esc="line.date_maturity || line.date"/>

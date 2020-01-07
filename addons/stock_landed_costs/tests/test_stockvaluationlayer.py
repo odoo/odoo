@@ -90,6 +90,7 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
 
         self.assertEqual(self.product1.value_svl, 380)
         self.assertEqual(self.product1.quantity_svl, 19)
+        self.assertEqual(self.product1.standard_price, 20)
 
     def test_negative_1(self):
         self.product1.standard_price = 10
@@ -176,6 +177,18 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
         self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), [3.0, 1.85, -1.62, -1.62, -1.61])
         self.assertEqual(self.product1.value_svl, 0)
         self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_in_and_out_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=100, create_picking=True)
+        self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 1000)
+        lc1 = self._make_lc(move1, 100)
+        self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 1100)
+        lc2 = self._make_lc(move1, 50)
+        self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 1150)
+        self.assertEqual(self.product1.value_svl, 1150)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        move2 = self._make_out_move(self.product1, 1)
+        self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
 
 
 class TestStockValuationLCAVCO(TestStockValuationLC):

@@ -74,8 +74,8 @@
                                 </div>
                             </button>
                         </div>
-                        <widget name="web_ribbon" text="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
-                        <widget name="web_ribbon" text="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
+                        <widget name="web_ribbon" title="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                             <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
@@ -745,7 +745,7 @@
             <field name="arch" type="xml">
                 <form string="Channel">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name"/>

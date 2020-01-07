@@ -16,14 +16,16 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
 # Tina Milas, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
+"POT-Creation-Date: 2019-10-07 07:14+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +156,7 @@ msgstr "<strong>Ukupno</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>Jamstvo:</strong>"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -169,7 +171,7 @@ msgstr "Aktivnosti"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
@@ -482,7 +484,7 @@ msgstr "Ikona"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
@@ -494,7 +496,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -720,7 +722,7 @@ msgstr "Broj akcija"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
@@ -929,6 +931,12 @@ msgid "Repair Reference"
 msgstr "Popravak br."
 
 #. module: repair
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
@@ -1002,7 +1010,7 @@ msgstr "Odgovorna osoba"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1039,7 +1047,7 @@ msgstr "Postavi na nacrt"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
@@ -1066,6 +1074,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
@@ -1191,7 +1203,7 @@ msgstr "Vrsta"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1210,6 +1222,12 @@ msgstr "Jedinična cijena"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Jedinica mjere"
+
+#. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Units"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread

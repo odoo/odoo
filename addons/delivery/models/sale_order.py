@@ -48,6 +48,7 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
 
         for order in self:
+            order.carrier_id = carrier.id
             order._create_delivery_line(carrier, amount)
         return True
 
@@ -121,14 +122,14 @@ class SaleOrder(models.Model):
             post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
-    @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
-                 'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')
-    def _get_invoiced(self):
-        super(SaleOrder, self)._get_invoiced()
+    @api.depends('order_line.is_delivery', 'order_line.is_downpayment',
+                 'order_line.product_id.invoice_policy')
+    def _get_invoice_status(self):
+        super()._get_invoice_status()
         for order in self:
-            order_line = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type)
-            if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_line):
-                order.update({'invoice_status': 'no'})
+            order_lines = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type)
+            if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
+                order.invoice_status = 'no'
 
 
 class SaleOrderLine(models.Model):

@@ -11,17 +11,18 @@
 # fanha99 <fanha99@hotmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
+"POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +90,13 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+
+#. module: sale
+#: model:product.product,description_sale:sale.product_product_4e
+#: model:product.product,description_sale:sale.product_product_4f
+#: model:product.template,description_sale:sale.product_product_4e_product_template
+msgid "160x80cm, with large legs."
+msgstr "160x80cm, với chân lớn."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -336,16 +344,6 @@ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Lợi thế của bạn</b></small>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<small>Quotations:</small>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<small>Revenues:</small>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
@@ -427,7 +425,7 @@ msgstr "<span>Khi ký đề xuất này, tôi đồng ý với các điều kho�
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>G.Giá.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -468,7 +466,7 @@ msgstr "<strong class=\"mr16\">Thành tiền</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Người bán</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -750,6 +748,12 @@ msgid "Amount Before Discount"
 msgstr "Tổng Trước Chiết khấu"
 
 #. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "Số tiền không khớp (%s)"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
 msgstr "Giá trị các báo giá chờ xuất hoá đơn"
@@ -849,13 +853,6 @@ msgstr "Dựa vào ID khách hàng"
 #: model:ir.model.fields.selection,name:sale.selection__payment_acquirer__so_reference_type__so_name
 msgid "Based on Document Reference"
 msgstr "Dựa vào tham chiếu tài liệu"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__validity_date
-msgid ""
-"Beyond this date, the customer is no longer able to accept the quotation "
-"from the portal."
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1140,6 +1137,12 @@ msgid "Currency Rate"
 msgstr "Tỷ giá"
 
 #. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
+msgid "Custom"
+msgstr "Tùy chỉnh"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
 msgstr ""
@@ -1214,6 +1217,13 @@ msgstr "Thuế bán hàng"
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "Khách hàng"
+
+#. module: sale
+#: model:product.product,name:sale.product_product_4e
+#: model:product.product,name:sale.product_product_4f
+#: model:product.template,name:sale.product_product_4e_product_template
+msgid "Customizable Desk (CONFIG)"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1326,11 +1336,6 @@ msgid "Delivery address for current invoice."
 msgstr "Địa chỉ giao hàng cho hoá đơn hiện hành."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__partner_shipping_id
-msgid "Delivery address for current sales order."
-msgstr "Địa chỉ giao hàng cho đơn hàng hiện tại."
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
@@ -1338,6 +1343,12 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Đặt cọc"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
@@ -1359,7 +1370,7 @@ msgstr "Nội dung số"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr ""
+msgstr "CK.%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1492,11 +1503,6 @@ msgstr "Mẫu email"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Exception Activities"
 msgstr ""
 
 #. module: sale
@@ -1731,6 +1737,11 @@ msgstr ""
 "các thanh toán thuê bao sẽ được tự động thực hiện."
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
+msgid "If you change the pricelist, only newly added lines will be affected."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
 msgstr ""
@@ -1823,11 +1834,6 @@ msgstr "Xuất hoá đơn Đơn hàng"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_status
 msgid "Invoice Status"
 msgstr "Tình trạng hóa đơn"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__partner_invoice_id
-msgid "Invoice address for current sales order."
-msgstr "Địa chỉ xuất hoá đơn cho đơn hàng hiện tại."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2294,7 +2300,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Số lỗi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2551,14 +2557,10 @@ msgstr "Thanh toán &amp; Xác nhận"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #, python-format
 msgid "Pay Now"
 msgstr "Thanh toán Ngay"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Pay now"
-msgstr "Trả ngay"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2622,11 +2624,6 @@ msgid "Payment terms"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__payment_term_id
-msgid "Payment terms applies to all invoices issued from this order."
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
 msgstr ""
@@ -2668,13 +2665,6 @@ msgstr "In Thành tiền"
 #: model:ir.model.fields,field_description:sale.field_sale_report__pricelist_id
 msgid "Pricelist"
 msgstr "Bảng giá"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
-msgid ""
-"Pricelist for current order. If you change the pricelist, only new lines "
-"will consider this pricelist."
-msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2908,6 +2898,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
 msgstr "Báo giá"
@@ -3022,6 +3013,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
 msgstr ""
 
@@ -3033,7 +3025,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Lỗi gửi SMS"
 
 #. module: sale
 #. openerp-web
@@ -3065,6 +3057,11 @@ msgstr "Đơn bán hàng"
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
 msgstr "Cửa sổ thanh toán"
+
+#. module: sale
+#: model:utm.source,name:sale.utm_source_sale_order_0
+msgid "Sale Promotion 1"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3702,6 +3699,20 @@ msgid "The order is not in a state requiring customer signature."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "The ordered quantity has been updated."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr "Các giao tiếp thanh toán của lệnh bán này."
@@ -3951,7 +3962,7 @@ msgstr "Tên loại"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -3992,6 +4003,15 @@ msgstr "Đơn Giá:"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "Đơn vị tính"
+
+#. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.product,uom_name:sale.product_product_4e
+#: model:product.product,uom_name:sale.product_product_4f
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+#: model:product.template,uom_name:sale.product_product_4e_product_template
+msgid "Units"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4161,12 +4181,6 @@ msgstr ""
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Giá trị nhập sai!"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__partner_id
-#: model:ir.model.fields,help:sale.field_sale_order_line__order_partner_id
-msgid "You can find a customer from their name, email, tax ID or reference."
-msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

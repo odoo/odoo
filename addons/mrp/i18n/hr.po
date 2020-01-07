@@ -10,20 +10,22 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
-# Tina Milas, 2019
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Bole <bole@dajmi5.com>, 2019
+# Tina Milas, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
+"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +123,12 @@ msgstr ""
 msgid ""
 ".\n"
 "            Manual actions may be needed."
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk_leg
+#: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
 msgstr ""
 
 #. module: mrp
@@ -394,7 +402,7 @@ msgstr "Aktivnosti"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_exception_decoration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -435,7 +443,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -503,7 +511,10 @@ msgid "Approve"
 msgstr "Odobri"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
@@ -595,7 +606,6 @@ msgid "BOM lines of the referred bom"
 msgstr "Stavke sastavnice od sastavnice na koju se odnose"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
 msgstr "Barkod"
@@ -763,6 +773,12 @@ msgstr "Detalji sastavnice"
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_bolt
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "Matica"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
@@ -1294,6 +1310,24 @@ msgid "Draft"
 msgstr "Nacrt"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_drawer
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_case
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_drawer_drawer
+#: model:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
@@ -1357,14 +1391,6 @@ msgstr "Završni datum"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_line__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-msgid "Exception Activities"
 msgstr ""
 
 #. module: mrp
@@ -1633,7 +1659,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_icon
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
@@ -1665,7 +1691,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -1923,6 +1949,12 @@ msgstr "Kasni"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Late Activities"
 msgstr "Posljednje aktivnosti"
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_wood_ply
+#: model:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2407,7 +2439,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -2726,6 +2758,12 @@ msgid "Planning"
 msgstr "Planiranje"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_plastic_laminate
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
@@ -2737,6 +2775,18 @@ msgstr ""
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
 "from zero."
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_ply
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_ply_veneer
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
 msgstr ""
 
 #. module: mrp
@@ -3096,7 +3146,6 @@ msgstr "Količine za obradu"
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #, python-format
 msgid "Quantity:"
 msgstr "Količina:"
@@ -3283,7 +3332,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_sms_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
@@ -3342,6 +3391,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
 msgid "Scraps"
 msgstr "Otpisi"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_screw
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -3430,11 +3485,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk_head
+#: model:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr "Puno drvo je izdržljivi prirodni materijal."
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk
+#: model:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
 msgstr ""
 
 #. module: mrp
@@ -3500,6 +3567,18 @@ msgid "Specify cost of work center per hour."
 msgstr "Specificirajte trošak radnog centra po satu."
 
 #. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk_screw
+#: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk_bolt
+#: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__date_start
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
@@ -3548,6 +3627,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_type_id
@@ -3626,6 +3709,36 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table (MTO)"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_table_kit
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_leg
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_head
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_table_kit
+#: model:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
 msgstr ""
 
 #. module: mrp
@@ -3807,6 +3920,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"Ovo se polje koristi za definiranje u kojoj vremenskoj zoni će resursi "
+"raditi."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
@@ -3966,6 +4081,12 @@ msgid "Today Activities"
 msgstr "Današnje aktivnosti"
 
 #. module: mrp
+#: model:product.product,description:mrp.product_product_wood_wear
+#: model:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
 msgstr ""
@@ -4048,7 +4169,7 @@ msgstr "Tip operacije"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4115,6 +4236,36 @@ msgid ""
 "inventory control"
 msgstr ""
 "Jedinica mjere (Jedinica mjere) je jedinica mjerenja za upravljanje zalihama"
+
+#. module: mrp
+#: model:product.product,uom_name:mrp.product_product_computer_desk
+#: model:product.product,uom_name:mrp.product_product_computer_desk_bolt
+#: model:product.product,uom_name:mrp.product_product_computer_desk_head
+#: model:product.product,uom_name:mrp.product_product_computer_desk_leg
+#: model:product.product,uom_name:mrp.product_product_computer_desk_screw
+#: model:product.product,uom_name:mrp.product_product_drawer_case
+#: model:product.product,uom_name:mrp.product_product_drawer_drawer
+#: model:product.product,uom_name:mrp.product_product_plastic_laminate
+#: model:product.product,uom_name:mrp.product_product_ply_veneer
+#: model:product.product,uom_name:mrp.product_product_table_kit
+#: model:product.product,uom_name:mrp.product_product_wood_panel
+#: model:product.product,uom_name:mrp.product_product_wood_ply
+#: model:product.product,uom_name:mrp.product_product_wood_wear
+#: model:product.template,uom_name:mrp.product_product_computer_desk_bolt_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_head_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_leg_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_screw_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_case_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_drawer_product_template
+#: model:product.template,uom_name:mrp.product_product_plastic_laminate_product_template
+#: model:product.template,uom_name:mrp.product_product_ply_veneer_product_template
+#: model:product.template,uom_name:mrp.product_product_table_kit_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_panel_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
+msgid "Units"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4272,6 +4423,17 @@ msgid "Warning"
 msgstr "Upozorenje"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Warnings"
+msgstr "Upozorenja"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_wear
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__website_message_ids
@@ -4314,6 +4476,12 @@ msgstr ""
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_panel
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
 msgstr ""
 
 #. module: mrp
@@ -4610,6 +4778,12 @@ msgstr ""
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
 "numbers encoded."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
 msgstr ""
 
 #. module: mrp

@@ -8,22 +8,30 @@
 # 老窦 北京 <2662059195@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # Xiaohai <pengyb@gmail.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Martin Trigaux, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
+# e2f <projects@e2f.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# waveyeung <waveyeung@qq.com>, 2019
+# Rona Lin <ssauapw@qq.com>, 2019
+# Gary Wei <Gary.wei@elico-corp.com>, 2019
+# bf2549c5415a9287249cba2b8a5823c7, 2019
+# keecome <7017511@qq.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:41+0000\n"
+"POT-Creation-Date: 2019-10-18 09:47+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,8 +52,9 @@ msgstr "%s (副本)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.report_event_registration_badge
-msgid "'Registration Event - %s' % (object.name).replace('/','')"
-msgstr "'Registration Event - %s' % (object.name).replace('/','')"
+msgid ""
+"'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -61,6 +70,50 @@ msgid ""
 msgstr ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        到</b>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>Business Room</b> - To discuss implementation methodologies, best sales "
+"practices, etc."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
+"new developers."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>The Design Fair is preceded by 2 days of Training Sessions for "
+"experts!</b><br> We propose 3 different training sessions, 2 days each."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>The plenary sessions in the morning will be shorter</b> and we will give "
+"more time for thematical meetings, conferences, workshops and tutorial "
+"sessions in the afternoon."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>The whole event is open to all public!</b> <br>We ask a participation fee"
+" of 49.50€ for the costs for the 3 days (coffee breaks, catering, drinks and"
+" a surprising concert and beer party).<br> For those who don't want to "
+"contribute, there is a free ticket, therefore, catering and access to "
+"evening events aren't included."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "<b>Workshop Room</b> - Mainly for developers."
+msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -92,6 +145,13 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
+"are in <b>English</b>!"
 msgstr ""
 
 #. module: event
@@ -131,6 +191,13 @@ msgstr ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                        到\n"
 "                                    </span>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">SPEAKER</span>"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -182,14 +249,14 @@ msgid ""
 "                    <div>\n"
 "                        Hello ${object.name or ''},<br/>\n"
 "                        We are happy to confirm your registration to the event\n"
-"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
 "                        for attendee ${object.name}.\n"
 "                    </div>\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
 "                    </div>\n"
@@ -372,14 +439,14 @@ msgid ""
 "                    <div>\n"
 "                        Hello ${object.name},<br/>\n"
 "                        We are excited to remind you that the event\n"
-"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
 "                        is starting <strong>${object.get_date_range_str()}</strong>.\n"
 "                    </div>\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
 "                    </div>\n"
@@ -592,6 +659,11 @@ msgid "After the event"
 msgstr "事件之后"
 
 #. module: event
+#: model:event.event,name:event.event_6
+msgid "An unpublished event"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
 msgstr "已归档"
@@ -602,6 +674,15 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr "是否确定要取消这个活动？所有链接的参与者也将被取消。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"At just 13 years old, John DOE was already starting to develop his first "
+"business applications for customers. After mastering civil engineering, he "
+"founded TinyERP. This was the first phase of OpenERP which would later "
+"became Odoo, the most installed open-source business software worldwide."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -707,9 +788,21 @@ msgid "Before the event"
 msgstr "在事件之前"
 
 #. module: event
+#: model:event.event,subtitle:event.event_5
+msgid ""
+"Bring your outdoor field hockey season to the next level by taking the field"
+" at this 9th annual Field Hockey tournament."
+msgstr ""
+
+#. module: event
+#: model:event.event,name:event.event_4
+msgid "Business workshops"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -735,12 +828,20 @@ msgid "Category"
 msgstr "类别"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"Chamber Works reserves the right to cancel, re-name or re-locate the event "
+"or change the dates on which it is held."
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
 msgstr "附言"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
 #: model:ir.model.fields,field_description:event.field_event_registration__company_id
 msgid "Company"
@@ -751,6 +852,22 @@ msgstr "公司"
 #, python-format
 msgid "Compose Email"
 msgstr "撰写邮件"
+
+#. module: event
+#: model:event.type,name:event.event_type_2
+msgid "Conference"
+msgstr "会议"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+#: model:event.event,name:event.event_2
+msgid "Conference for Architects"
+msgstr "建筑师会议"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
+msgstr "将在 6 个房间举办会议、研讨会和培训："
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -868,6 +985,16 @@ msgid "Description"
 msgstr "说明"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Design Fair Los Angeles"
+msgstr "洛杉矶设计博览会"
+
+#. module: event
+#: model:event.event,subtitle:event.event_4
+msgid "Discover how to grow a sustainable business with our experts."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
 #: model:ir.model.fields,field_description:event.field_event_mail__display_name
@@ -894,6 +1021,13 @@ msgid "Dropdown menu"
 msgstr "下拉菜单"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"During this conference, our team will give a detailed overview of our "
+"business applications. You’ll know all the benefits of using it."
+msgstr "在该会议中，我们的团队将会非常详细的介绍我们的业务应用。你将会了解到使用该应用的优点。"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
 msgid "Email"
 msgstr "EMail"
@@ -913,6 +1047,11 @@ msgstr "结束日期"
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
 msgid "End Date Located"
 msgstr "定位最后日期"
+
+#. module: event
+#: model:event.event,subtitle:event.event_2
+msgid "Enhance your architectural business and improve professional skills."
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1096,10 +1235,18 @@ msgid "Events in New state"
 msgstr "在新建状态的活动"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_search
-#: model_terms:ir.ui.view,arch_db:event.view_registration_search
-msgid "Exception Activities"
-msgstr "例外活动"
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"Every year we invite our community, partners and end-users to come and meet "
+"us! It's the ideal event to get together and present new features, roadmap "
+"of future versions, achievements of the software, workshops, training "
+"sessions, etc...."
+msgstr ""
+
+#. module: event
+#: model:event.type,name:event.event_type_1
+msgid "Exhibition"
+msgstr "展览"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1110,6 +1257,11 @@ msgstr "预期"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
 msgstr "预计的与会者"
+
+#. module: event
+#: model:event.event,subtitle:event.event_3
+msgid "Experience live music, local food and beverages."
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1135,6 +1287,12 @@ msgid "Followers (Partners)"
 msgstr "关注者(业务伙伴)"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+#: model_terms:event.event,description:event.event_2
+msgid "For any additional information, please contact us at"
+msgstr "对于任何额外的信息，请和我们取得联系"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
@@ -1150,16 +1308,41 @@ msgid ""
 msgstr "对于每一个事件你都可以定义一个最小的座位数（与会者）如果注册的人数没有达到这个数目，该时间讲不被确认（最小值设为0将不受该条件限制）"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Functional flow of the main applications;"
+msgstr "主要应用的功能流程；"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Future Activities"
 msgstr "未来活动"
 
 #. module: event
+#: model:event.event,subtitle:event.event_0
+msgid "Get Inspired • Stay Connected • Have Fun"
+msgstr ""
+
+#. module: event
+#: model:event.event,name:event.event_1
+msgid "Great Reno Ballon Race"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
 msgstr "分组"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Having attended this conference, participants should be able to:"
+msgstr "已出席本次会议的参加者应能："
+
+#. module: event
+#: model:event.event,name:event.event_5
+msgid "Hockey Tournament"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1217,6 +1400,16 @@ msgstr ""
 "如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"If you wish to make a presentation, please send your topic proposal as soon "
+"as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany (dot) "
+"com. The presentations should be, for example, a presentation of a community"
+" module, a case study, methodology feedback, technical, etc. Each "
+"presentation must be in English."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__now
 msgid "Immediately"
@@ -1227,6 +1420,11 @@ msgstr "马上"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
 msgstr "间隔"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Introduction, CRM, Sales Management"
+msgstr "简介，CRM，销售管理"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -1248,6 +1446,16 @@ msgstr "当你选择这个活动，将选择默认最大值"
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
 msgid "It will select this default minimum value when you choose this event"
 msgstr "当你选择这个活动，将选择默认最小值"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "John DOE"
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Join us for this 3-day Event"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
@@ -1302,6 +1510,11 @@ msgstr "限制的"
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
 msgstr "有限名额"
+
+#. module: event
+#: model:event.event,name:event.event_3
+msgid "Live Music Festival"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
@@ -1505,6 +1718,11 @@ msgid "Number of unread messages"
 msgstr "未读消息数量"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Objectives"
+msgstr "目标"
+
+#. module: event
 #: model:event.type,name:event.event_type_data_online
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online"
@@ -1544,6 +1762,13 @@ msgid ""
 msgstr "网络研讨会等在线活动不需要特定的位置，并进行在线托管。"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"OpenElec Applications reserves the right to cancel, re-name or re-locate the"
+" event or change the dates on which it is held."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 msgid "Organizer"
 msgstr "组织者"
@@ -1567,6 +1792,27 @@ msgstr "电话"
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
 msgstr "实体活动"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Point of Sale (POS), Introduction to report customization."
+msgstr "销售点（POS），报告定制介绍。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+#: model_terms:event.event,description:event.event_2
+msgid "Program"
+msgstr "方案"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Project management, Human resources, Contract management."
+msgstr "项目管理、人力资源、合同管理。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
+msgstr "采购、销售和采购管理、财务会计。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration__origin
@@ -1693,6 +1939,11 @@ msgid "Sell tickets with sales orders"
 msgstr "凭销售订单售票"
 
 #. module: event
+#: model:event.type,name:event.event_type_0
+msgid "Seminar"
+msgstr "研讨会"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
 #: model:ir.model.fields,field_description:event.field_event_type_mail__notification_type
 msgid "Send"
@@ -1730,6 +1981,11 @@ msgid "Settings"
 msgstr "设置"
 
 #. module: event
+#: model:event.type,name:event.event_type_3
+msgid "Show"
+msgstr "显示"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records which has next action date is before today"
@@ -1739,6 +1995,11 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
 msgid "Source Document"
 msgstr "源文档"
+
+#. module: event
+#: model:event.type,name:event.event_type_5
+msgid "Sport"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -1757,7 +2018,7 @@ msgstr "定位开始日期"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
-msgstr "省份"
+msgstr "状态"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_state
@@ -1774,6 +2035,13 @@ msgstr ""
 " 计划：未来活动。"
 
 #. module: event
+#: model:event.event,subtitle:event.event_1
+msgid ""
+"The Great Reno Balloon Race is the world's largest free hot-air ballooning "
+"event."
+msgstr ""
+
+#. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
@@ -1786,6 +2054,14 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr "已经有参与者参加过这项活动。如果您想取消此项活动，请将其重置为草稿。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"This event is also an opportunity to showcase our partners' case studies, "
+"methodology or developments. Be there and see directly from the source the "
+"features of the version 12!"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
@@ -1822,6 +2098,11 @@ msgid "Tracks and Agenda"
 msgstr "耿宗并计划"
 
 #. module: event
+#: model:event.type,name:event.event_type_4
+msgid "Training"
+msgstr "培训"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
 msgstr "触发器"
@@ -1855,6 +2136,11 @@ msgstr "未确认"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "未确认的席位预订"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "了解不同的模块"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -1918,6 +2204,11 @@ msgid "WARNING: Event Scheduler Error for event: %s"
 msgstr "警告: 活动安排存在错误: %s"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
+msgstr "仓库管理、制造（MRP）和销售。导入/导出。"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
@@ -1934,6 +2225,11 @@ msgstr "网上沟通记录"
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
 msgstr "周"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -1961,6 +2257,16 @@ msgstr "你的登记在${object.event_id.name}"
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "events@odoo.com"
+msgstr "events@odoo.com"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "events@yourcompany.com"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:0

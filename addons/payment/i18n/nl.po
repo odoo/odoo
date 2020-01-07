@@ -3,20 +3,20 @@
 # 	* payment
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
+"POT-Creation-Date: 2019-10-18 09:47+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +119,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(Extra kosten zijn van toepassing)</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -141,6 +141,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"> How to configure your PayPal "
 "account</span>"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"> Hoe uw PayPal-account te "
+"configureren</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -153,6 +155,9 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>Begin direct met verkopen zonder een account; Er wordt een e-mail "
+"verzonden door Paypal om uw nieuwe account te maken en uw betalingen te "
+"innen.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -444,8 +449,8 @@ msgstr "Geannuleerde betalingen"
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
-msgid "Cannot set-up the payment"
-msgstr "Kan de betaling niet verwerken"
+msgid "Cannot setup the payment"
+msgstr "Kan de betaling niet opzetten"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -483,7 +488,7 @@ msgstr "Kies een betalinsgmethode"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Choose your default customer payment method."
-msgstr ""
+msgstr "Kies uw standaard betaalmethode voor klanten."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -617,12 +622,12 @@ msgstr "Creditcard (aangeboden via Adyen)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_alipay
 msgid "Credit Card (powered by Alipay)"
-msgstr ""
+msgstr "Credit Card (mogelijk gemaakt door Alipay)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_authorize
 msgid "Credit Card (powered by Authorize)"
-msgstr ""
+msgstr "Credit Card (mogelijk gemaakt door Authorize)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_buckaroo
@@ -642,22 +647,22 @@ msgstr "Creditcard (aangeboden door PayU Latam)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payu
 msgid "Credit Card (powered by PayUmoney)"
-msgstr ""
+msgstr "Credit Card (mogelijk gemaakt door PayUmoney)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_sips
 msgid "Credit Card (powered by Sips)"
-msgstr ""
+msgstr "Credit Card (mogelijk gemaakt door Sips)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit Card (powered by Stripe)"
-msgstr ""
+msgstr "Credit Card (mogelijk gemaakt door Stripe)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "Credit card (via Stripe)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
@@ -668,7 +673,7 @@ msgstr "Valuta"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__manual
 msgid "Custom Payment Form"
-msgstr ""
+msgstr "Aangepast betalingsformulier"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__manual
@@ -833,7 +838,7 @@ msgstr "Van"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "Genereer betaallink"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
@@ -893,13 +898,13 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "If not defined, the acquirer name will be used."
-msgstr ""
+msgstr "Indien niet gedefinieerd, wordt de provider-naam gebruikt."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
-msgid "If, the payment hasn't been confirmed you can contact us."
+msgid "If the payment hasn't been confirmed you can contact us."
 msgstr "Indien de betaling niet bevestigd is kan u ons contacteren."
 
 #. module: payment
@@ -921,6 +926,10 @@ msgid ""
 "             acquirer. Watch out, test and production modes require\n"
 "             different credentials."
 msgstr ""
+"In de testmodus wordt een nepbetaling verwerkt via een test\n"
+"betalingsinterface. Deze modus wordt aanbevolen bij het instellen van de\n"
+"betaalprovider. Kijk uit, test- en productiemodi vereisen\n"
+"verschillende inloggegevens."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -987,7 +996,7 @@ msgstr "Boekingen"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "Journal where the successful transactions will be posted"
-msgstr ""
+msgstr "Dagboek waar de succesvolle transacties worden geboekt"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
@@ -1057,7 +1066,7 @@ msgstr "Beheer uw betaalmethodes"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
 msgid "Manual"
-msgstr "Manueel"
+msgstr "Handmatig"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -1085,6 +1094,7 @@ msgstr "Bericht"
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
 msgid "Message displayed if payment is authorized."
 msgstr ""
+"Bericht dat wordt weergegeven nadat het betalingsproces geauthoriseerd is."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
@@ -1358,7 +1368,7 @@ msgstr "Betaal icoon"
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr "Betaal iconen"
+msgstr "Betaaliconen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
@@ -1490,7 +1500,7 @@ msgstr "U dient een betalingsverwerker te configureren."
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please make a payment to:"
-msgstr "Gelieve een betaling te maken naar:"
+msgstr "Voer een betaling uit aan:"
 
 #. module: payment
 #. openerp-web
@@ -1510,7 +1520,7 @@ msgstr "Selecteer de optie om een nieuwe betaalmethode toe te voegen."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
-msgstr ""
+msgstr "Stel een bedrag in dat kleiner is dan %s."
 
 #. module: payment
 #. openerp-web
@@ -1580,7 +1590,7 @@ msgstr "Gerelateerde document model"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Required fields not filled: %s"
-msgstr ""
+msgstr "Vereiste velden niet ingevuld: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
@@ -1626,7 +1636,7 @@ msgstr "Opslaan van kaartgegevens ondersteund"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Select countries. Leave empty to use everywhere."
-msgstr ""
+msgstr "Selecteer laden. Laat leeg om alle landen te gebruiken."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1689,7 +1699,7 @@ msgstr "Sips"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__state
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "State"
-msgstr "Provincie / Staat"
+msgstr "Status"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1720,7 +1730,7 @@ msgstr "Stripe geheime sleutel"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr "Ondersteunde betaal iconen"
+msgstr "Ondersteunde betaaliconen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
@@ -1804,7 +1814,7 @@ msgstr "De transactie %s met %s voor %s is bezig."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
-msgstr ""
+msgstr "Het bedrag van de betaling moet positief zijn."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1813,6 +1823,8 @@ msgid ""
 "This Transaction was automatically processed & refunded in order to validate"
 " a new credit card."
 msgstr ""
+"Deze transactie is automatisch verwerkt en terugbetaald om een nieuwe "
+"creditcard te valideren."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1880,6 +1892,8 @@ msgid ""
 "Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.\n"
 "        Without this check, the validity will be verified at the very first transaction."
 msgstr ""
+"Activeer een transactie van 1 valuta-eenheid en de terugbetaling ervan om de geldigheid van nieuwe creditcards te controleren die in het klantenportaal zijn ingevoerd.\n"
+"         Zonder deze controle wordt de geldigheid bij de allereerste transactie geverifieerd."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1992,23 +2006,17 @@ msgstr "We konden uw betaling niet vinden, maar maak uw geen zorgen."
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to redirect you to the payment form."
 msgstr "We kunnen u niet omleiden naar het betalingsformulier."
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to redirect you to the payment form. "
-msgstr "We konden u niet omleiden naar het betalingsformulier."
-
-#. module: payment
-#. openerp-web
 #: code:addons/payment/static/src/js/payment_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "We verwerken uw betaling, een moment geduld..."
 
 #. module: payment
 #. openerp-web
@@ -2139,7 +2147,7 @@ msgstr "Uw betaling is ontvangen maar moet handmatig bevestigd worden."
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
+msgstr "Uw betaling is succesvol verwerkt maar wacht op goedkeuring."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2157,7 +2165,7 @@ msgstr ""
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr ""
+msgstr "Uw betaling is succesvol verwerkt. Bedankt!"
 
 #. module: payment
 #. openerp-web

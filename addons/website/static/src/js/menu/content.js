@@ -368,10 +368,10 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options, data) {
+    init: function (parent, options, editable, data) {
         this._super(parent, _.extend({
             title: _t("Add a menu item"),
-        }, options || {}), _.extend({
+        }, options || {}), editable, _.extend({
             needLabel: true,
             text: data.name || '',
             isNewWindow: data.new_window,
@@ -598,7 +598,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     _onAddMenuButtonClick: function (ev) {
         var menuType = ev.currentTarget.dataset.type;
-        var dialog = new MenuEntryDialog(this, {}, {
+        var dialog = new MenuEntryDialog(this, {}, null, {
             menuType: menuType,
         });
         dialog.on('save', this, link => {
@@ -646,7 +646,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var menuID = $menu.data('menu-id');
         var menu = this.flat[menuID];
         if (menu) {
-            var dialog = new MenuEntryDialog(this, {}, _.extend({
+            var dialog = new MenuEntryDialog(this, {}, null, _.extend({
                 menuType: menu.fields['is_mega_menu'] ? 'mega' : undefined,
             }, menu.fields));
             dialog.on('save', this, link => {

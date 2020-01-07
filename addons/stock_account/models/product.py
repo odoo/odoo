@@ -249,7 +249,7 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].search([
+        candidates = self.env['stock.valuation.layer'].sudo().search([
             ('product_id', '=', self.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', company.id),
@@ -257,10 +257,10 @@ class ProductProduct(models.Model):
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
-            new_standard_price = candidate.unit_cost
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
             candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+            new_standard_price = candidate_unit_cost
             value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
             value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
             new_remaining_value = candidate.remaining_value - value_taken_on_candidate
@@ -375,12 +375,16 @@ class ProductProduct(models.Model):
                 'unit_cost': 0,
                 'quantity': 0,
                 'remaining_qty': 0,
-                'description': 'vacuum',
                 'stock_move_id': move.id,
                 'company_id': move.company_id.id,
                 'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
+
+            # If some negative stock were fixed, we need to recompute the standard price.
+            product = self.with_context(force_company=company.id)
+            if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+                product.sudo().write({'standard_price': product.value_svl / product.quantity_svl})
 
             # Create the account move.
             if self.valuation != 'real_time':

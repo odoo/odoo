@@ -6,6 +6,7 @@ import functools
 import itertools
 import logging
 import psycopg2
+import datetime
 
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
@@ -409,7 +410,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or '')),
+            key=lambda p: (p.active, (p.create_date or datetime.datetime(1970, 1, 1))),
             reverse=True,
         )
 

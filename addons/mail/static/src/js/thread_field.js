@@ -112,7 +112,10 @@ var ThreadField = AbstractField.extend({
      */
     _fetchAndRenderThread: function (options) {
         var self = this;
-        if (!this._documentThread) {
+        if (!this._isMessagingReady) {
+            self._threadWidget.renderLoading();
+            return Promise.resolve();
+        } else if (!this._documentThread) {
             var thread = new CreateModeDocumentThread();
             options = { isCreateMode: true };
             self._threadWidget.render(thread, options);
@@ -199,6 +202,7 @@ var ThreadField = AbstractField.extend({
             return;
         }
         this._setDocumentThread();
+        this._render();
     },
     /**
      * @private
