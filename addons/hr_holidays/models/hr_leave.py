@@ -930,7 +930,7 @@ class HolidaysRequest(models.Model):
                 if state == 'draft':
                     if holiday.state == 'refuse':
                         raise UserError(_('Only a Time Off Manager can reset a refused leave.'))
-                    if holiday.date_from.date() <= fields.Date.today():
+                    if holiday.date_from and holiday.date_from.date() <= fields.Date.today():
                         raise UserError(_('Only a Time Off Manager can reset a started leave.'))
                     if holiday.employee_id != current_employee:
                         raise UserError(_('Only a Time Off Manager can reset other people leaves.'))
