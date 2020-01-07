@@ -722,7 +722,7 @@ class MrpProduction(models.Model):
                 to_date = workcenter.resource_calendar_id.plan_hours(duration_expected / 60.0, from_date, compute_leaves=True, resource=workcenter.resource_id, domain=[('time_type', 'in', ['leave', 'other'])])
 
                 # Check if this workcenter is better than the previous ones
-                if to_date < best_finished_date:
+                if to_date and to_date < best_finished_date:
                     best_start_date = from_date
                     best_finished_date = to_date
                     best_workcenter = workcenter
