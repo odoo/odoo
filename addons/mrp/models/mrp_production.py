@@ -929,14 +929,15 @@ class MrpProduction(models.Model):
                         documents[key] += [value]
             if documents:
                 documents_by_production[production] = documents
+            # log an activity on Parent MO if child MO is cancelled.
+            finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            if finish_moves:
+                production._log_downside_manufactured_quantity({finish_move: (production.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
 
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
 
-        # log an activity on Parent MO if child MO is cancelled.
-        if finish_moves:
-            self._log_downside_manufactured_quantity({finish_move: (self.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
         (finish_moves | raw_moves)._action_cancel()
         picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         picking_ids.action_cancel()
