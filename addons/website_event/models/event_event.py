@@ -29,7 +29,7 @@ class Event(models.Model):
     website_published = fields.Boolean(tracking=True)
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_blue", "opacity": "0.4", "resize_class": "o_half_screen_height"}')
+        default='{"background-image": "none", "opacity": "0.4", "resize_class": "o_half_screen_height"}')
     website_menu = fields.Boolean(
         'Dedicated Menu', copy=False,
         help="Creates menus Introduction, Location and Register on the page "
