@@ -158,7 +158,6 @@ list of filtered posts (by date or tag).
         <t t-if="blog or first_post" t-call="website.record_cover">
             <t t-set="_record" t-value="blog or first_post"/>
             <t t-set="use_filters" t-value="True"/>
-            <t t-set="use_text_size" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
 
@@ -234,7 +233,6 @@ list of filtered posts (by date or tag).
                     <t t-set="_record" t-value="blog_post"/>
                     <t t-set="use_filters" t-value="True"/>
                     <t t-set="use_size" t-value="True"/>
-                    <t t-set="use_text_size" t-value="True"/>
                     <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
@@ -437,7 +435,6 @@ list of filtered posts (by date or tag).
 
                         <a id="o_wblog_next_post_info" class="d-none"
                            t-att-data-size="_cp.get('resize_class')"
-                           t-att-data-text="_cp.get('text_size_class')"
                            t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
 
                         <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
