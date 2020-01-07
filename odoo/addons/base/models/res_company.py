@@ -104,7 +104,6 @@ class Company(models.Model):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
@@ -114,15 +113,14 @@ class Company(models.Model):
         if hasattr(sup, 'init'):
             sup.init()
 
-    def _get_company_address_fields(self, partner):
-        return {
-            'street'     : partner.street,
-            'street2'    : partner.street2,
-            'city'       : partner.city,
-            'zip'        : partner.zip,
-            'state_id'   : partner.state_id,
-            'country_id' : partner.country_id,
-        }
+    def _get_company_address_field_names(self):
+        """ Return a list of fields coming from the address partner to match
+        on company address fields. Fields are labeled same on both models. """
+        return ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+
+    def _get_company_address_update(self, partner):
+        return dict((fname, partner[fname])
+                    for fname in self._get_company_address_field_names())
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
@@ -131,7 +129,7 @@ class Company(models.Model):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
                 partner = company.partner_id.browse(address_data['contact']).sudo()
-                company.update(company._get_company_address_fields(partner))
+                company.update(company._get_company_address_update(partner))
 
     def _inverse_street(self):
         for company in self:
@@ -247,7 +245,14 @@ class Company(models.Model):
             if not currency.active:
                 currency.write({'active': True})
 
-        return super(Company, self).write(values)
+        res = super(Company, self).write(values)
+
+        # invalidate company cache to recompute address based on updated partner
+        company_address_fields = self._get_company_address_field_names()
+        company_address_fields_upd = set(company_address_fields) & set(values.keys())
+        if company_address_fields_upd:
+            self.invalidate_cache(fnames=company_address_fields)
+        return res
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
