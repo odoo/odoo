@@ -1026,13 +1026,13 @@ take the following attributes:
 
   * Possible values for scale ``week`` are (default: ``day:half``):
 
-    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM)
+    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM of the previous day, 10:32 PM becomes 12:00 PM of the current day)
 
     ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
 
   * Possible values for scale ``month`` are (default: ``day:half``):
 
-    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM)
+    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM of the previous day, 10:32 PM becomes 12:00 PM of the current day)
 
     ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
 
