@@ -52,7 +52,7 @@ class HrEmployeePrivate(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user", default="male", tracking=True)
+    ], groups="hr.group_hr_user", tracking=True)
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
