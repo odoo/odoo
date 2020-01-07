@@ -468,7 +468,11 @@
         <div class="row d-flex mb-2 mx-0">
             <div class="h4">
                 <small class="text-muted">
+<<<<<<< HEAD
                     <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_sequence_handler fa fa-bars mr-1 text-muted" t-if="slide.channel_id.can_upload and not slide_completed" />
+=======
+                    <i class="d-none d-xl-inline o_wslides_js_quiz_sequence_handler fa fa-bars mr-1" t-if="slide.channel_id.can_upload and not slide_completed" />
+>>>>>>> c77e5e75b7b... temp
                     <t t-if="question_index != NoneType"><span class="o_wslides_quiz_question_sequence" t-esc="question_index+1"/>.</t>
                     <t t-else=""><span class="o_wslides_quiz_question_sequence" t-esc="question['sequence']"/>.</t>
                 </small>
@@ -509,11 +513,11 @@
     <div class="o_wslides_js_lesson_quiz_new_question row mt-3">
         <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_quiz btn btn-light border ml-3 #{'d-none ' if slide.question_ids else ''}" role="button">
             <i class="fa fa-plus mr-2"/>
-            <span class="d-none d-sm-inline-block">Add Quiz</span>
+            <span>Add Quiz</span>
         </a>
         <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_question btn btn-light border ml-3 #{'' if slide.question_ids else 'd-none '}" role="button">
             <i class="fa fa-plus mr-2"/>
-            <span class="d-none d-sm-inline-block">Add Question</span>
+            <span>Add Question</span>
         </a>
     </div>
 </template>
