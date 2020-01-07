@@ -151,7 +151,6 @@ var WysiwygMultizone = Wysiwyg.extend({
             'background-color': el.dataset.filterColor,
             'opacity': el.dataset.filterValue,
             'resize_class': el.dataset.coverClass,
-            'text_size_class': el.dataset.textSizeClass,
             'text_align_class': el.dataset.textAlignClass,
         };
 

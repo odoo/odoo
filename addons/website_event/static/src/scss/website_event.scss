@@ -1,26 +1,3 @@
-$o-wevent-event-title-sizes-variants: (
-    tiny: (
-        title: $display4-size*0.6,
-        subtitle: $lead-font-size
-    ),
-    small: (
-        title: $display4-size*0.75,
-        subtitle: $lead-font-size
-    ),
-    big: (
-        title: $display3-size,
-        subtitle: $lead-font-size*1.25
-    ),
-    huge: (
-        title: $display2-size,
-        subtitle: $lead-font-size*1.5
-    ),
-    hero: (
-        title: $display1-size,
-        subtitle: $lead-font-size*1.75
-    )
-) !default;
-
 .o_wevent_event_searchbar_form {
     flex: 0 0 100%;
 
@@ -190,17 +167,6 @@ $o-wevent-event-title-sizes-variants: (
         .o_wevent_event_subtitle {
             font-weight: $lead-font-weight;
             @include font-size($lead-font-size);
-        }
-    }
-
-    @each $size, $map in $o-wevent-event-title-sizes-variants {
-        .o_record_cover_font_#{$size} .o_wevent_event_title {
-            .o_wevent_event_name {
-                @include font-size(map-get($map, title));
-            }
-            .o_wevent_event_subtitle {
-                @include font-size(map-get($map, subtitle));
-            }
         }
     }
 
