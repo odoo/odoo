@@ -34,6 +34,11 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
         product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
         product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
 
+        self.assertEqual(product_landed_cost_1.value_svl, 0)
+        self.assertEqual(product_landed_cost_1.quantity_svl, 0)
+        self.assertEqual(product_landed_cost_2.value_svl, 0)
+        self.assertEqual(product_landed_cost_2.quantity_svl, 0)
+
         picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
 
         # I create 2 picking moving those products
@@ -85,6 +90,11 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
         picking_landed_cost_2.action_assign()
         picking_landed_cost_2.move_lines.quantity_done = 10
         picking_landed_cost_2.button_validate()
+
+        self.assertEqual(product_landed_cost_1.value_svl, 0)
+        self.assertEqual(product_landed_cost_1.quantity_svl, -5)
+        self.assertEqual(product_landed_cost_2.value_svl, 0)
+        self.assertEqual(product_landed_cost_2.quantity_svl, -10)
 
         # I create a landed cost for those 2 pickings
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
@@ -142,3 +152,10 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
         self.assertEqual(stock_landed_cost_1.state, "done")
         self.assertTrue(stock_landed_cost_1.account_move_id)
         self.assertEqual(len(stock_landed_cost_1.account_move_id.line_ids), 48)
+
+        lc_value = sum(stock_landed_cost_1.account_move_id.line_ids.filtered(lambda aml: aml.account_id.name.startswith('Expenses')).mapped('debit'))
+        product_value = abs(product_landed_cost_1.value_svl) + abs(product_landed_cost_2.value_svl)
+        self.assertEqual(lc_value, product_value)
+
+        self.assertEqual(len(picking_landed_cost_1.move_lines.stock_valuation_layer_ids), 5)
+        self.assertEqual(len(picking_landed_cost_2.move_lines.stock_valuation_layer_ids), 5)
