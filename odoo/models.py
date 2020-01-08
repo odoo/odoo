@@ -6017,7 +6017,7 @@ Record ids: %(records)s
         snapshot0 = Snapshot(record, nametree)
 
         # store changed values in cache, and update snapshot0
-        record._update_cache(changed_values, validate=False)
+        record._update_cache(changed_values, validate=True)
         for name in names:
             snapshot0.fetch(name)
 
