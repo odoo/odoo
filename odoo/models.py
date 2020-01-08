@@ -5665,10 +5665,8 @@ Record ids: %(records)s
     def __int__(self):
         return self.id or 0
 
-    def __str__(self):
-        return "%s%s" % (self._name, getattr(self, '_ids', ""))
     def __repr__(self):
-        return str(self)
+        return "%s%s" % (self._name, getattr(self, '_ids', ""))
 
     def __hash__(self):
         if hasattr(self, '_ids'):
