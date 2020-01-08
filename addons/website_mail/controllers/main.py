@@ -11,7 +11,12 @@ class WebsiteMail(http.Controller):
         # TDE FIXME: check this method with new followers
         res_id = int(id)
         is_follower = message_is_follower == 'on'
-        record = request.env[object].browse(res_id)
+        record = request.env[object].browse(res_id).exists()
+        if not record:
+            return False
+
+        record.check_access_rights('read')
+        record.check_access_rule('read')
 
         # search partner_id
         if request.env.user != request.website.user_id:
@@ -24,11 +29,9 @@ class WebsiteMail(http.Controller):
                 partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
         # add or remove follower
         if is_follower:
-            record.check_access_rule('read')
             record.sudo().message_unsubscribe(partner_ids)
             return False
         else:
-            record.check_access_rule('read')
             # add partner to session
             request.session['partner_id'] = partner_ids[0]
             record.sudo().message_subscribe(partner_ids)
@@ -48,14 +51,13 @@ class WebsiteMail(http.Controller):
             'is_user': user != public_user,
             'email': partner.email if partner else "",
             'is_follower': False,
-            'alias_name': False,
         }
 
-        record = request.env[model].sudo().browse(int(res_id))
-        if record and partner:
-            values['is_follower'] = bool(request.env['mail.followers'].search_count([
+        record_sudo = request.env[model].sudo().browse(int(res_id))
+        if partner and record_sudo.exists():
+            values['is_follower'] = bool(request.env['mail.followers'].sudo().search_count([
                 ('res_model', '=', model),
-                ('res_id', '=', record.id),
+                ('res_id', '=', record_sudo.id),
                 ('partner_id', '=', partner.id)
             ]))
         return values

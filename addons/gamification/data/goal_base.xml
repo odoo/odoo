@@ -280,15 +280,6 @@ Thank you,
             <field name="action_id" eval="ref('action_new_simplified_res_users')" />
         </record>
 
-        <record model="gamification.goal.definition" id="definition_nbr_following">
-            <field name="name">Mail Group Following</field>
-            <field name="description">Follow mail.channels to receive news</field>
-            <field name="computation_mode">python</field>
-            <field name="compute_code">result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])</field>
-            <field name="action_id" eval="ref('mail.mail_channel_action_view')" />
-        </record>
-
-
         <!-- challenges -->
         <record model="gamification.challenge" id="challenge_base_discover">
             <field name="name">Complete your Profile</field>

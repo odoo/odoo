@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_registry = require('web.field_registry');
+var session = require('web.session');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -43,7 +44,6 @@ var Followers = AbstractField.extend({
         this.subtypes = [];
         this.data_subtype = {};
         this._isFollower = undefined;
-        var session = this.getSession();
         this.partnerID = session.partner_id;
 
         this.dp = new concurrency.DropPrevious();
@@ -113,14 +113,14 @@ var Followers = AbstractField.extend({
         $(QWeb.render('mail.Followers.add_more', {widget: this})).appendTo($followers_list);
         var $follower_li;
         _.each(this.followers, function (record) {
-            if(!record.active) {
+            if (!record.is_active) {
                 record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
             } else {
                 record.title = record.name;
             }
 
             $follower_li = $(QWeb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_128'}),
+                'record': record,
                 'widget': self})
             );
             $follower_li.appendTo($followers_list);
@@ -199,28 +199,37 @@ var Followers = AbstractField.extend({
         return str;
     },
     _readFollowers: function () {
-        var self = this;
         var missing_ids = _.difference(this.value.res_ids, _.pluck(this.followers, 'id'));
         var def;
         if (missing_ids.length) {
             def = this._rpc({
                     route: '/mail/read_followers',
-                    params: { follower_ids: missing_ids, res_model: this.model, context: {} }  // empty context to be overridden in session.js with 'allowed_company_ids'
+                    params: { follower_ids: missing_ids, context: {} } // empty context to be overridden in session.js with 'allowed_company_ids'
                 });
         }
-        return Promise.resolve(def).then(function (results) {
+        return Promise.resolve(def).then((results) => {
             if (results) {
-                self.followers = _.uniq(results.followers.concat(self.followers), 'id');
+                // Preprocess records
+                _.each(results.followers, (record) => {
+                    var resModel = record.partner_id ? 'res.partner' : 'mail.channel';
+                    var resId = record.partner_id ? record.partner_id : record.channel_id;
+                    record.res_id = resId;
+                    record.res_model = resModel;
+                    record.avatar_url = '/web/image/' + resModel + '/' + resId + '/image_128';
+                });
+                this.followers = _.uniq(results.followers.concat(this.followers), 'id');
                 if (results.subtypes) { //read_followers will return False if current user is not in the list
-                    self.subtypes = results.subtypes;
+                    this.subtypes = results.subtypes;
                 }
             }
             // filter out previously fetched followers that are no longer following
-            self.followers = _.filter(self.followers, function (follower) {
-                return _.contains(self.value.res_ids, follower.id);
+            this.followers = _.filter(this.followers, (follower) => {
+                return _.contains(this.value.res_ids, follower.id);
             });
-            var user_follower = _.filter(self.followers, function (rec) { return rec.is_uid; });
-            self._isFollower = user_follower.length >= 1;
+            var userFollower = _.filter(this.followers, (rec) => {
+                return this.partnerID === rec.partner_id;
+            });
+            this._isFollower = userFollower.length >= 1;
         });
     },
     _reload: function () {
@@ -361,7 +370,7 @@ var Followers = AbstractField.extend({
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
         this._rpc({
                 route: '/mail/read_subscription_data',
-                params: {res_model: this.model, follower_id: follower_id},
+                params: {follower_id: follower_id},
             })
             .then(function (data) {
                 var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel

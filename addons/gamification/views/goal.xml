@@ -249,7 +249,7 @@
                                 attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
                             <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"/>
                             <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                            <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"/>
+                            <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}"/>
                             <field name="condition" widget="radio"/>
                         </group>
                         <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">

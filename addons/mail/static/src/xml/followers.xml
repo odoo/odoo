@@ -30,12 +30,12 @@
         Partner or channel following the record
     -->
     <t t-name="mail.Followers.partner">
-        <div role="menuitem" t-attf-class="dropdown-item o_partner {{ !record.active ? 'o_inactive': '' }}">
+        <div role="menuitem" t-attf-class="dropdown-item o_partner {{ !record.is_active ? 'o_inactive': '' }}">
             <a class="o_mail_redirect text-truncate"
                 href="#"
                 t-att-title="record.title"
-                t-att-data-oe-model="record.res_model"
-                t-att-data-oe-id="record.res_id">
+                t-att-data-oe-model="record.partner_id ? 'res.partner' : 'mail.channel'"
+                t-att-data-oe-id="record.partner_id ? record.partner_id : record.channel_id">
                 <img t-att-src="record.avatar_url" alt="Avatar" class="o_image_64_cover"/>
                 <t t-esc="record.name"/>
             </a>
@@ -45,8 +45,8 @@
                 aria-label="Edit subscription"
                 role="img"
                 t-att-data-follower-id="record.id"
-                t-att-data-oe-id="record.res_id"
-                t-att-data-oe-model="record.res_model"/>
+                t-att-data-oe-id="record.partner_id ? record.partner_id : record.channel_id"
+                t-att-data-oe-model="record.partner_id ? 'res.partner' : 'mail.channel'"/>
             <button t-if="widget.isEditable"
                 class="btn btn-icon fa fa-remove o_remove_follower"
                 aria-label="Remove this follower"

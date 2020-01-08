@@ -82,13 +82,15 @@ class MailThread(models.AbstractModel):
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
     message_follower_ids = fields.One2many(
-        'mail.followers', 'res_id', string='Followers')
+        'mail.followers', 'res_id', string='Followers', groups='base.group_user')
     message_partner_ids = fields.Many2many(
         comodel_name='res.partner', string='Followers (Partners)',
-        compute='_get_followers', search='_search_follower_partners')
+        compute='_get_followers', search='_search_follower_partners',
+        groups='base.group_user')
     message_channel_ids = fields.Many2many(
         comodel_name='mail.channel', string='Followers (Channels)',
-        compute='_get_followers', search='_search_follower_channels')
+        compute='_get_followers', search='_search_follower_channels',
+        groups='base.group_user')
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
@@ -258,17 +260,16 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).create(vals_list)
 
+        threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe'):
-            default_followers = self.env['mail.followers']._add_default_followers(
-                self._name, [], self.env.user.partner_id.ids, customer_ids=[],
-                check_existing=False, existing_policy='skip')[0][0]
-            for values in vals_list:
-                message_follower_ids = values.get('message_follower_ids') or []
-                message_follower_ids += [(0, 0, fol_vals) for fol_vals in default_followers]
-                values['message_follower_ids'] = message_follower_ids
-
-        threads = super(MailThread, self).create(vals_list)
+            for thread in threads:
+                self.env['mail.followers']._insert_followers(
+                    thread._name, thread.ids, self.env.user.partner_id.ids,
+                    None, None, None,
+                    customer_ids=[],
+                    check_existing=False
+                )
 
         # auto_subscribe: take values and defaults into account
         create_values_list = {}
