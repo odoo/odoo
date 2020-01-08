@@ -431,7 +431,8 @@ class HolidaysRequest(models.Model):
                         start_dt = start_dt.replace(tzinfo=UTC)
                     if not end_dt.tzinfo:
                         end_dt = end_dt.replace(tzinfo=UTC)
-                    intervals = calendar._attendance_intervals(start_dt, end_dt, holiday.employee_id)
+                    intervals = calendar._attendance_intervals(start_dt, end_dt, holiday.employee_id) \
+                                - calendar._leave_intervals(start_dt, end_dt, None)  # Substract Global Leaves
                     number_of_hours = sum((stop - start).total_seconds() / 3600 for start, stop, dummy in intervals)
                 else:
                     number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
