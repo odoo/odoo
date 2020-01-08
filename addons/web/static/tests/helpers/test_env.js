@@ -58,6 +58,7 @@ odoo.define('web.test_env', async function (require) {
             device: Object.assign({
                 isMobile: false,
             }, env.device),
+            isDebug: env.isDebug || (() => false),
             qweb: new owl.QWeb({ templates: session.owlTemplates }),
             services: Object.assign({
                 ajax: { // for legacy subwidgets

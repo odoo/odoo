@@ -1,6 +1,7 @@
 odoo.define('mail.ActivityController', function (require) {
 "use strict";
 
+require('mail.Activity');
 var BasicController = require('web.BasicController');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
@@ -21,6 +22,18 @@ var ActivityController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @param parent
+     * @param model
+     * @param renderer
+     * @param {Object} params
+     * @param {String} params.title The title used in schedule activity dialog
+     */
+    init: function (parent, model, renderer, params) {
+        this._super.apply(this, arguments);
+        this.title = params.title;
+    },
+    /**
      * Overridden to remove the pager as it makes no sense in this view.
      *
      * @override
@@ -38,17 +51,16 @@ var ActivityController = BasicController.extend({
      */
     _onScheduleActivity: function () {
         var self = this;
-
         var state = this.model.get(this.handle);
         new ViewDialogs.SelectCreateDialog(this, {
             res_model: state.model,
             domain: this.model.originalDomain,
-            title: _.str.sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
+            title: _.str.sprintf(_t("Search: %s"), this.title),
             no_create: !this.activeActions.create,
             disable_multiple_selection: true,
             context: state.context,
             on_selected: function (record) {
-                var fakeRecord = self.renderer.getKanbanActivityData({}, record[0]);
+                var fakeRecord = state.getKanbanActivityData({}, record[0]);
                 var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
                 widget.scheduleActivity();
             },
@@ -79,7 +91,7 @@ var ActivityController = BasicController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} ev
+     * @param {CustomEvent} ev
      */
     _onSendMailTemplate: function (ev) {
         var templateID = ev.data.templateID;

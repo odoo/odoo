@@ -80,27 +80,31 @@ var KanbanColumnProgressBar = Widget.extend({
             // This should be executed when the progressbar is fully rendered
             // and is in the DOM, this happens to be always the case with
             // current use of progressbars
-
-            var subgroupCounts = {};
-            let allSubgroupCount = 0;
-            _.each(self.colors, function (val, key) {
-                var subgroupCount = self.columnState.progressBarValues.counts[key] || 0;
-                if (self.activeFilter === key && subgroupCount === 0) {
-                    self.activeFilter = false;
-                }
-                subgroupCounts[key] = subgroupCount;
-                allSubgroupCount += subgroupCount;
-            });
-            subgroupCounts.__false = self.columnState.count - allSubgroupCount;
-
-            self.groupCount = self.columnState.count;
-            self.subgroupCounts = subgroupCounts;
-            self.prevTotalCounterValue = self.totalCounterValue;
-            self.totalCounterValue = self.sumField ? (self.columnState.aggregateValues[self.sumField] || 0) : self.columnState.count;
-
+            self.computeCounters();
             self._notifyState();
             self._render();
         });
+    },
+    /**
+     * Computes the count of each sub group and the total count
+     */
+    computeCounters() {
+        const subgroupCounts = {};
+        let allSubgroupCount = 0;
+        for (const key of Object.keys(this.colors)) {
+            const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
+            if (this.activeFilter === key && subgroupCount === 0) {
+                this.activeFilter = false;
+            }
+            subgroupCounts[key] = subgroupCount;
+            allSubgroupCount += subgroupCount;
+        };
+        subgroupCounts.__false = this.columnState.count - allSubgroupCount;
+
+        this.groupCount = this.columnState.count;
+        this.subgroupCounts = subgroupCounts;
+        this.prevTotalCounterValue = this.totalCounterValue;
+        this.totalCounterValue = this.sumField ? (this.columnState.aggregateValues[this.sumField] || 0) : this.columnState.count;
     },
 
     //--------------------------------------------------------------------------
@@ -187,6 +191,7 @@ var KanbanColumnProgressBar = Widget.extend({
                 $bar.css('width', '');
             }
         });
+        this.$('.progress-bar').css('min-width', '');
         this.$('.progress-bar.o_bar_has_records').css('min-width', barMinWidth + '%');
 
         // Display and animate the counter number
