@@ -1255,6 +1255,8 @@ class AccountMoveLine(models.Model):
             #hackish workaround to write the amount_currency when assigning a payment to an invoice through the 'add' button
             #this is needed to compute the correct amount_residual_currency and potentially create an exchange difference entry
             self._update_check()
+        if ('analytic_account_id' in vals):
+            self.mapped('analytic_line_ids').write({'account_id': vals['analytic_account_id']})
         #when we set the expected payment date, log a note on the invoice_id related (if any)
         if vals.get('expected_pay_date') and self.invoice_id:
             str_expected_pay_date = vals['expected_pay_date']
