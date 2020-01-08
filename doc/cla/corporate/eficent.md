@@ -17,3 +17,6 @@ Lois Rilo lois.rilo@eficent.com https://github.com/lreficent
 Miquel Raich miquel.raich@eficent.com https://github.com/mreficent
 Jordi Ballester jordi.ballester@eficent.com https://github.com/jbeficent
 Hector Villarreal hector.villarreal@eficent.com https://github.com/hveficent
+
+NOTE: As of Dec 11th 2019, Eficent is rebranded to ForgeFlow, thus this CLA is
+only valid until that date, refer to forgeflow.md for the new CLA.
