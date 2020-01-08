@@ -17,3 +17,5 @@ Lois Rilo lois.rilo@forgeflow.com https://github.com/LoisRForgeFlow
 Miquel Raich miquel.raich@forgeflow.com https://github.com/MiquelRForgeFlow
 Jordi Ballester jordi.ballester@forgeflow.com https://github.com/JordiBForgeFlow
 Hector Villarreal hector.villarreal@forgeflow.com https://github.com/HviorForgeFlow
+Adria Gil Sorribes adria.gil@forgeflow.com https://github.com/AdriaGForgeFlow
+
