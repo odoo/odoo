@@ -9,21 +9,22 @@
  * .fail() returned the original promise.
  */
 Promise.prototype.guardedCatch = function (onRejected) {
-    const self = this;
-    return this.catch(function (reason) {
-        if (typeof onRejected !== 'function' || reason instanceof Error) {
-            // In the case the method was not given a proper rejection handler
-            // or that the original promise was rejected because of a common
-            // JS error, we let the rejection propagate by re-triggering it...
-            return Promise.reject(reason);
-        }
-        // ... otherwise the jQuery 'fail' method's behavior is desired: execute
-        // the rejection handler, ignores its result and async components and
-        // propagate the original promise result (ideally should return the
-        // original promise itself, but not possible using native promises) but
-        // keep the fact that it has been handled (do not return a new
-        // *unhandled* rejected promise).
-        onRejected.call(this, reason);
-        return self;
-    });
+    if (typeof onRejected === 'function') {
+        this.catch(function (reason) {
+            if (reason instanceof Error) {
+                // In the case the original promise was rejected because of a
+                // common JS error, we let the error propagate by re-triggering
+                // it. Note: this error won't be able to be caught with a
+                // subsequent catch though since the internal catch return here
+                // is not returned.
+                throw reason;
+            }
+            // ... otherwise execute the rejection handler, ignores its result
+            // and async components
+            onRejected.call(this, reason);
+        });
+    }
+    // In any case, the jQuery's fail method is desired: return the original
+    // promise.
+    return this;
 };
