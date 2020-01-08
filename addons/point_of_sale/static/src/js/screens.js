@@ -327,7 +327,6 @@ var ScaleScreenWidget = ScreenWidget.extend({
         this.hotkey_handler = function(event){
             if(event.which === 13){
                 self.order_product();
-                self.gui.show_screen(self.next_screen);
             }else if(event.which === 27){
                 self.gui.show_screen(self.previous_screen);
             }
@@ -340,8 +339,6 @@ var ScaleScreenWidget = ScreenWidget.extend({
         });
 
         this.$('.next,.buy-product').click(function(){
-            self.gui.show_screen(self.next_screen);
-            // add product *after* switching screen to scroll properly
             self.order_product();
         });
 
@@ -366,6 +363,8 @@ var ScaleScreenWidget = ScreenWidget.extend({
         return current_pricelist;
     },
     order_product: function(){
+        this.gui.show_screen(this.next_screen);
+        // add product *after* switching screen to scroll properly
         this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
     },
     get_product_name: function(){
