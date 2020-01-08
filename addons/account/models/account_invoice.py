@@ -535,8 +535,10 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get('journal_id') and vals.get('type'):
-            vals['journal_id'] = self.with_context(type=vals.get('type'))._default_journal().id
+        if vals.get('type'):
+            self = self.with_context(type=vals.get('type'))
+            if not vals.get('journal_id'):
+                vals['journal_id'] = self._default_journal().id
 
         onchanges = self._get_onchange_create()
         for onchange_method, changed_fields in onchanges.items():
