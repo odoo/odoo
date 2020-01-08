@@ -104,7 +104,7 @@ class CacheMiss(except_orm, KeyError):
     """
 
     def __init__(self, record, field):
-        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
+        super(CacheMiss, self).__init__("%r.%s" % (record, field.name))
 
 
 class MissingError(except_orm):
