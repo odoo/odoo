@@ -2,12 +2,12 @@
 
 <templates>
     <t t-name="AccountTaxGroupTemplate">
-        <table style="width: 100%;">
+        <table class="o_group o_inner_group oe_subtotal_footer border-0 my-0" style="min-width: 100%;">
             <tbody>
                 <t t-foreach="lines" t-as="line">
                     <tr>
-                        <td class="oe_tax_group_name">
-                            <t t-esc="line[0]"/>:
+                        <td class="o_td_label oe_tax_group_name">
+                            <label class="o_form_label" t-esc="line[0]"/>
                         </td>
                         <td class="oe_tax_group_editable" t-att-data-tax-group-id="line[6]">
                             <t t-if="displayEditWidget">
