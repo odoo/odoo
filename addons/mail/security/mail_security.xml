@@ -14,16 +14,6 @@
         </record>
     </data>
     <data noupdate="1">
-        <record id="mail_followers_read_write_own" model="ir.rule">
-            <field name="name">mail.followers: write its own entries</field>
-            <field name="model_id" ref="model_mail_followers"/>
-            <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
-            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="perm_read" eval="False"/>
-        </record>
-
         <record id="ir_rule_mail_notifications_group_user" model="ir.rule">
             <field name="name">mail.notifications: group_user: write its own entries</field>
             <field name="model_id" ref="model_mail_notification"/>
