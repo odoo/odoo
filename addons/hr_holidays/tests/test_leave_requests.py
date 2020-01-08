@@ -194,6 +194,9 @@ class TestLeaveRequests(TestHrHolidaysBase):
         self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
 
     def test_number_of_hours_display(self):
+        # Test that the field number_of_hours_dispay doesn't change
+        # after time off validation, as it takes the attendances
+        # minus the resource leaves to compute that field.
         calendar = self.env['resource.calendar'].create({
             'name': 'Monday Morning Else Full Time 38h/week',
             'hours_per_day': 7.6,
@@ -254,3 +257,53 @@ class TestLeaveRequests(TestHrHolidaysBase):
         self.assertEqual(leave2.number_of_hours_display, 4)
         leave2.action_validate()
         self.assertEqual(leave2.number_of_hours_display, 4)
+
+    def test_number_of_hours_display_global_leave(self):
+        # Check that the field number_of_hours_display
+        # takes the global leaves into account, even
+        # after validation
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Classic 40h/week',
+            'hours_per_day': 8.0,
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ],
+            'global_leave_ids': [(0, 0, {
+                'name': 'Christmas Leave',
+                'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
+                'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),
+                'resource_id': False,
+                'time_type': 'leave',
+            })]
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+        self.env.user.company_id.resource_calendar_id = calendar
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick',
+            'request_unit': 'hour',
+            'validation_type': 'both',
+            'allocation_type': 'no',
+        })
+        leave1 = self.env['hr.leave'].create({
+            'name': 'Sick 1 week during christmas snif',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': fields.Datetime.from_string('2019-12-23 06:00:00'),
+            'date_to': fields.Datetime.from_string('2019-12-27 20:00:00'),
+            'number_of_days': 5,
+        })
+        self.assertEqual(leave1.number_of_hours_display, 24)
+        leave1.action_approve()
+        self.assertEqual(leave1.number_of_hours_display, 24)
+        leave1.action_validate()
+        self.assertEqual(leave1.number_of_hours_display, 24)
