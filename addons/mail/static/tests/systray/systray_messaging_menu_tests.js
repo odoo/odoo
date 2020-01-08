@@ -1106,5 +1106,42 @@ QUnit.test('messaging menu widget: click twice preview on slow message_fetch sho
     messagingMenu.destroy();
 });
 
+QUnit.test('no code injection in message body preview', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.message'].records[0].body =
+        `<p><script>throw new Error('CodeInjectionError');</script></p>`;
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should display a preview"
+    );
+    assert.strictEqual(
+        messagingMenu.$('.o_preview_name').text().trim(),
+        "general",
+        "should display correct name of channel in preview"
+    );
+    assert.strictEqual(
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, ""),
+        "Me:thrownewError('CodeInjectionError');",
+        "should display correct uninjected last message inline content"
+    );
+    assert.containsNone(
+        messagingMenu.$('.o_last_message_preview'),
+        'script',
+        "last message inline content should not have any code injection"
+    );
+
+    messagingMenu.destroy();
+});
+
 });
 });
