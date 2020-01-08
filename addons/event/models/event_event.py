@@ -5,6 +5,7 @@ import logging
 import pytz
 
 from odoo import _, api, fields, models
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import html_translate
@@ -65,8 +66,7 @@ class EventType(models.Model):
         'Online Event', help='Online events like webinars do not require a specific location and are hosted online.')
     use_timezone = fields.Boolean('Use Default Timezone')
     default_timezone = fields.Selection(
-        '_tz_get', string='Timezone',
-        default=lambda self: self.env.user.tz)
+        _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
     use_hashtag = fields.Boolean('Use Default Hashtag')
     default_hashtag = fields.Char('Twitter Hashtag')
@@ -82,10 +82,6 @@ class EventType(models.Model):
         if not self.has_seats_limitation:
             self.default_registration_min = 0
             self.default_registration_max = 0
-
-    @api.model
-    def _tz_get(self):
-        return [(x, x) for x in pytz.all_timezones]
 
 
 class EventEvent(models.Model):
@@ -165,7 +161,9 @@ class EventEvent(models.Model):
         readonly=False)
     event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     # Date fields
-    date_tz = fields.Selection('_tz_get', string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
+    date_tz = fields.Selection(
+        _tz_get, string='Timezone', required=True,
+        default=lambda self: self.env.user.tz or 'UTC')
     date_begin = fields.Datetime(
         string='Start Date', required=True,
         tracking=True)
@@ -238,10 +236,6 @@ class EventEvent(models.Model):
                 event.kanban_state_label = event.stage_id.legend_blocked
             else:
                 event.kanban_state_label = event.stage_id.legend_done
-
-    @api.model
-    def _tz_get(self):
-        return [(x, x) for x in pytz.all_timezones]
 
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
