@@ -90,7 +90,7 @@ class ResConfigSettings(models.TransientModel):
 
     def inverse_has_google_maps(self):
         if not self.has_google_maps:
-            self.google_maps_api_key = False
+            self.website_id.google_maps_api_key = False
 
     def inverse_has_google_analytics_dashboard(self):
         if not self.has_google_analytics_dashboard:
