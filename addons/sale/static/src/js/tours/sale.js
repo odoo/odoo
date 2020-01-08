@@ -39,6 +39,9 @@ tour.register('sale_tour', {
     content: _t("Click here to add some products or services to your quotation."),
     position: "bottom",
 }, {
+    trigger: ".o_data_row",
+    auto: true,
+}, {
     trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly."),
