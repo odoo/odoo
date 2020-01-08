@@ -1,18 +1,42 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.tools import float_compare
+from odoo import api, fields, models, _
 
 
-class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
 
-    def _get_document_iterate_key(self, move_raw_id):
-        iterate_key = super(MrpProduction, self)._get_document_iterate_key(move_raw_id)
-        if not iterate_key and move_raw_id.created_purchase_line_id:
-            iterate_key = 'created_purchase_line_id'
-        return iterate_key
+    mrp_production_count = fields.Integer(
+        "Count of MO Source",
+        compute='_compute_mrp_production_count',
+        groups='mrp.group_mrp_user')
+
+    @api.depends('order_line.move_dest_ids.group_id.mrp_production_id')
+    def _compute_mrp_production_count(self):
+        for purchase in self:
+            purchase.mrp_production_count = len(purchase.order_line.move_dest_ids.group_id.mrp_production_id)
+
+    def action_view_mrp_productions(self):
+        self.ensure_one()
+        mrp_production_ids = self.order_line.move_dest_ids.group_id.mrp_production_id.ids
+        action = {
+            'res_model': 'mrp.production',
+            'type': 'ir.actions.act_window',
+        }
+        if len(mrp_production_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': mrp_production_ids[0],
+            })
+        else:
+            action.update({
+                'name': _("Manufacturing Source of %s" % self.name),
+                'domain': [('id', 'in', mrp_production_ids)],
+                'view_mode': 'tree,form',
+            })
+        return action
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
@@ -33,13 +57,3 @@ class PurchaseOrderLine(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]
-
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
-        vals = super(StockMove, self)._prepare_phantom_move_values(bom_line, product_qty, quantity_done)
-        if self.purchase_line_id:
-            vals['purchase_line_id'] = self.purchase_line_id.id
-        return vals
-
