@@ -7,27 +7,16 @@
 
     <!-- Event Type -->
     <record id="event_type_0" model="event.type">
-        <field name="name">Seminar</field>
-    </record>
-
-    <record id="event_type_1" model="event.type">
         <field name="name">Exhibition</field>
+        <field name="use_mail_schedule" eval="False"/>
     </record>
-
-    <record id="event_type_2" model="event.type">
-        <field name="name">Conference</field>
-    </record>
-
-    <record id="event_type_3" model="event.type">
-        <field name="name">Show</field>
-    </record>
-
-    <record id="event_type_4" model="event.type">
+    <record id="event_type_1" model="event.type">
         <field name="name">Training</field>
+        <field name="use_mail_schedule" eval="True"/>
     </record>
-
-    <record id="event_type_5" model="event.type">
+    <record id="event_type_2" model="event.type">
         <field name="name">Sport</field>
+        <field name="use_mail_schedule" eval="False"/>
     </record>
 
     <!-- Event -->
@@ -39,7 +28,7 @@
         <field name="seats_availability">limited</field>
         <field name="seats_max">500</field>
         <field name="address_id" ref="base.res_partner_1"/>
-        <field name="event_type_id" ref="event_type_1"/>
+        <field name="event_type_id" ref="event_type_0"/>
         <field name="stage_id" ref="event_stage_booked"/>
     </record>
 
@@ -48,7 +37,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=100)).strftime('%Y-%m-%d 20:15:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=101)).strftime('%Y-%m-%d 00:30:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_1"/>
+        <field name="event_type_id" ref="event_type_data_physical"/>
         <field name="address_id" ref="base.res_partner_1"/>
         <field name="seats_availability">unlimited</field>
         <field name="stage_id" ref="event_stage_booked"/>
@@ -59,7 +48,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 07:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_2"/>
+        <field name="event_type_id" ref="event_type_data_online"/>
         <field name="address_id" ref="base.res_partner_4"/>
         <field name="seats_availability">limited</field>
         <field name="seats_max">200</field>
@@ -71,7 +60,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=130)).strftime('%Y-%m-%d 20:15:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=133)).strftime('%Y-%m-%d 00:30:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_3"/>
+        <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="base.res_partner_3"/>
         <field name="seats_availability">unlimited</field>
         <field name="stage_id" ref="event_stage_announced"/>
@@ -82,7 +71,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=50)).strftime('%Y-%m-%d 18:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=50)).strftime('%Y-%m-%d 22:30:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_4"/>
+        <field name="event_type_id" ref="event_type_1"/>
         <field name="address_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_stage_announced"/>
     </record>
@@ -92,7 +81,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=370)).strftime('%Y-%m-%d 09:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=371)).strftime('%Y-%m-%d 17:00:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_5"/>
+        <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="base.res_partner_1"/>
     </record>
 
@@ -101,7 +90,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=30)).strftime('%Y-%m-%d 09:30:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=30)).strftime('%Y-%m-%d 17:30:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_1"/>
+        <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="base.res_partner_1"/>
     </record>
 
