@@ -977,6 +977,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.with_user(user1).tag_id, tag2)
         self.assertEqual(record.with_user(user2).tag_id, tag0)
 
+        # regression: duplicated records caused values to be browse(browse(id))
+        recs = record.create({}) + record + record
+        recs.invalidate_cache()
+        for rec in recs.with_user(user0):
+            self.assertIsInstance(rec.tag_id.id, int)
+
         # unlink value of a many2one (tag2), and check again
         tag2.unlink()
         self.assertEqual(record.with_user(user0).tag_id, tag1)
