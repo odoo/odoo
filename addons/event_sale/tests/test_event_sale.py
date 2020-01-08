@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 from odoo.tests import common
-from odoo.fields import Datetime
-from unittest.mock import patch
 
 
 class EventSaleTest(common.TransactionCase):
