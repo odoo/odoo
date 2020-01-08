@@ -553,6 +553,15 @@ var KanbanRecord = Widget.extend({
 
         var $action = $(event.currentTarget);
         var type = $action.data('type') || 'button';
+        var Dialog = require("web.Dialog");
+
+        var self = this;
+        function object_trigger_up () {
+            self.trigger_up('button_clicked', {
+                attrs: $action.data(),
+                record: self.state,
+            });
+        }
 
         switch (type) {
             case 'edit':
@@ -566,10 +575,15 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'action':
             case 'object':
-                this.trigger_up('button_clicked', {
-                    attrs: $action.data(),
-                    record: this.state,
-                });
+                var confirm = $(event.currentTarget).attr("confirm");
+                if (confirm) {
+                    Dialog.confirm(this, confirm, {
+                        confirm_callback: object_trigger_up
+                    });
+                }
+                else {
+                    object_trigger_up();
+                }
                 break;
             default:
                 this.do_warn("Kanban: no action for type : " + type);
