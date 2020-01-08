@@ -332,7 +332,7 @@ class AccountMove(models.Model):
             company_currency = self.company_id.currency_id
             has_foreign_currency = self.currency_id and self.currency_id != company_currency
 
-            for line in self.line_ids:
+            for line in self._get_lines_onchange_currency():
                 new_currency = has_foreign_currency and self.currency_id
                 line.currency_id = new_currency
 
@@ -886,6 +886,10 @@ class AccountMove(models.Model):
                 if invoice != invoice._origin:
                     invoice.invoice_line_ids = invoice.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
 
+    def _get_lines_onchange_currency(self):
+        # Override needed for COGS
+        return self.line_ids
+
     def onchange(self, values, field_name, field_onchange):
         # OVERRIDE
         # As the dynamic lines in this model are quite complex, we need to ensure some computations are done exactly
@@ -1267,11 +1271,12 @@ class AccountMove(models.Model):
             res = {}
             # There are as many tax line as there are repartition lines
             done_taxes = set()
+            done_groups = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes:
+                if tax_key_add_base not in done_taxes and line.tax_line_id.tax_group_id not in done_groups:
                     if line.currency_id != self.company_id.currency_id:
                         amount = self.company_id.currency_id._convert(line.tax_base_amount, line.currency_id, self.company_id, line.date)
                     else:
@@ -1279,6 +1284,7 @@ class AccountMove(models.Model):
                     res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
                     done_taxes.add(tax_key_add_base)
+                    done_groups.add(line.tax_line_id.tax_group_id)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -2053,7 +2059,7 @@ class AccountMove(models.Model):
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
-                date_msg = move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format)
+                date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s" % date_msg))
 
             if not move.partner_id:
@@ -2084,7 +2090,7 @@ class AccountMove(models.Model):
         self.mapped('line_ids').create_analytic_lines()
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
-                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format))))
+                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
 
             move.message_subscribe([p.id for p in [move.partner_id, move.commercial_partner_id] if p not in move.sudo().message_partner_ids])
 
@@ -3354,12 +3360,6 @@ class AccountMoveLine(models.Model):
                 partners = move.line_ids[-2:].mapped('partner_id')
                 if len(partners) == 1:
                     values['partner_id'] = partners.id
-
-            # Suggest default value for 'account_id'.
-            if 'account_id' in default_fields and not values.get('account_id'):
-                accounts = move.line_ids[-2:].mapped('account_id')
-                if len(accounts) == 1:
-                    values['account_id'] = accounts.id
         return values
 
     @api.depends('ref', 'move_id')

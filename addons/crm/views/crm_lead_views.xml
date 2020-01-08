@@ -392,7 +392,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Leads Generation" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
+                <calendar string="Leads Generation" create="0" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
                     <field name="planned_revenue"/>
                     <field name="partner_id" avatar_field="image_128"/>
                 </calendar>

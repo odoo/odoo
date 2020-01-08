@@ -668,12 +668,11 @@
                                     <group name="technical" colspan="2" class="mb-0">
                                         <field name="origin"/>
                                     </group>
-                                    <group name="utm_link" colspan="2"/>
-                                </group>
-                                <group string="Marketing" name="utm_link" groups="base.group_no_one">
-                                    <field name="campaign_id"/>
-                                    <field name="medium_id"/>
-                                    <field name="source_id"/>
+                                    <group name="utm_link" colspan="2" class="mt-0">
+                                        <field name="campaign_id"/>
+                                        <field name="medium_id"/>
+                                        <field name="source_id"/>
+                                    </group>
                                 </group>
                             </group>
                         </page>
@@ -1116,9 +1115,10 @@
         <record model="ir.ui.view" id="product_template_form_view_invoice_policy">
             <field name="name">product.template.invoice.policy</field>
             <field name="model">product.template</field>
+            <field name="priority">15</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='email_template_and_project']" position="before">
+                <xpath expr="//page[@name='sales']//group[@name='sale']" position="inside">
                     <group string="Invoicing" name="invoicing" invisible="1">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>

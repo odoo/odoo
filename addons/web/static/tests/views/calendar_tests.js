@@ -3078,6 +3078,102 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('edit record and attempt to create a record with "create" attribute set to false', async function (assert) {
+        assert.expect(8);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" '+
+                'event_open_popup="true" '+
+                'create="false" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month"/>',
+            archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {name: 'event 4 modified'}, "should update the record");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // editing existing events should still be possible
+        // click on an existing event to open the formViewDialog
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+
+        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
+        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_delete').length, "popover should have a delete button");
+        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_close').length, "popover should have a close button");
+
+        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+
+        assert.ok($('.modal-body').length, "should open the form view in dialog when click on edit");
+
+        await testUtils.fields.editInput($('.modal-body input:first'), 'event 4 modified');
+        await testUtils.dom.click($('.modal-footer button.btn:contains(Save)'));
+
+        assert.notOk($('.modal-body').length, "save button should close the modal");
+
+        // creating an event should not be possible
+        // attempt to create a new event with create set to false
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+
+        testUtils.dom.triggerMouseEvent($cell, "mousedown");
+        testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        await testUtils.nextTick();
+
+        assert.notOk($('.modal-sm').length, "shouldn't open a quick create dialog for creating a new event with create attribute set to false");
+
+        calendar.destroy();
+    });
+
+
+    QUnit.test('attempt to create record with "create" and "quick_add" attributes set to false', async function (assert) {
+        assert.expect(1);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" '+
+                'create="false" '+
+                'event_open_popup="true" '+
+                'quick_add="false" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // attempt to create a new event with create set to false
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(5) .fc-day:eq(2)');
+
+        testUtils.dom.triggerMouseEvent($cell, "mousedown");
+        testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        await testUtils.nextTick();
+
+        assert.strictEqual($('.modal').length, 0, "shouldn't open a form view for creating a new event with create attribute set to false");
+
+        calendar.destroy();
+    });
 });
 
 });
