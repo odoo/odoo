@@ -272,7 +272,19 @@ class Partner(models.Model):
             if partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
             else:
-                partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+                # Consider we have a partner which is a company and has a
+                # contact. The company also has an expired vat number set,
+                # which should be updated with a new valid one. Since vat
+                # is a commercial field the contact has the same old number.
+                # Only change the commercial partner if it's different.
+                # Otherwise this would trigger an update of the related field
+                # commercial_partner_country_id which is constrained by
+                # check_vat() from the module base_vat. That would trigger
+                # a premature run of the checker before the new vat number is
+                # synced to the contact and would thus fail the check for the
+                # contact and thus abort the whole operation.
+                if partner.commercial_partner_id != partner.parent_id.commercial_partner_id:
+                    partner.commercial_partner_id = partner.parent_id.commercial_partner_id
 
     @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
     def _compute_commercial_company_name(self):
