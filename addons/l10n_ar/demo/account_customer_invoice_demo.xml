@@ -80,6 +80,7 @@
     <!-- Invoice to cerro castor, fiscal position changes taxes to exempt -->
     <record id="demo_invoice_6" model="account.move">
         <field name="partner_id" ref="res_partner_cerrocastor"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">out_invoice</field>
@@ -99,6 +100,7 @@
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services) -->
     <record id="demo_invoice_7" model="account.move">
         <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">out_invoice</field>
@@ -197,6 +199,7 @@
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products) -->
     <record id="demo_invoice_14" model="account.move">
         <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">out_invoice</field>
@@ -211,6 +214,7 @@
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service) -->
     <record id="demo_invoice_15" model="account.move">
         <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">out_invoice</field>
@@ -225,6 +229,7 @@
     <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo) -->
     <record id="demo_invoice_16" model="account.move">
         <field name="partner_id" ref="res_partner_expresso"/>
+        <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">out_invoice</field>
