@@ -90,6 +90,7 @@
                 <div class="table-responsive">
                     <table class="table-striped table-bordered oe_import_grid bg-white" />
                 </div>
+                <h6 class="oe_padding">This is a preview of the first 10 rows of your file</h6>
             </div>
             <div class="o_view_nocontent">
                 <div class="o_nocontent_help">
@@ -133,7 +134,7 @@
         <thead>
             <tr t-if="headers" class="oe_import_grid-header">
                 <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
-                    ><span class="o_import_header_name"><t t-esc="header"/></span></td>
+                    ><span class="o_import_header_name o_single_line_text" t-att-title="header"><t t-esc="header"/></span></td>
             </tr>
             <tr class="oe_import_fields">
                 <!-- Iterate on first row to ensure we have all columns -->
@@ -144,8 +145,16 @@
         </thead>
         <tbody>
             <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
-                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
-                    ><t t-esc="cell"/></td>
+                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell">
+                    <!-- content can be displayed on several lines if it contains whitespaces -->
+                    <!-- in that case, we only display the 120 first characters -->
+                    <!-- otherwise, we let the text-overflow: ellipsis do the job -->
+                    <t t-set="multiline" t-value="cell.includes(' ')"/>
+                    <t t-set="content" t-value="(multiline &amp;&amp; cell.length &gt; 120) ? (cell.substring(0, 120) + '...') : cell"/>
+                    <span t-attf-class="#{multiline ? 'o_multi_line_text' : 'o_single_line_text'}">
+                        <t t-esc="content"/>
+                    </span>
+                </td>
             </tr>
         </tbody>
     </t>
