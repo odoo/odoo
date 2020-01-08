@@ -147,7 +147,7 @@
                     <field name="name"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_area oe_kanban_global_click o_kanban_attachment">
+                            <div t-attf-class="oe_kanban_global_area o_kanban_attachment {{ context.prevent_kanban_box_global_click ? '' : 'oe_kanban_global_click' }}">
                                 <div class="row">
                                     <div class="offset-10">
                                         <div class="o_dropdown_kanban dropdown" groups="base.group_user">
