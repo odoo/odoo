@@ -82,13 +82,23 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
-                to_log = {}
+                to_log = self.env['stock.move']
                 for order_line in order.order_line:
                     if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
-                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
-                if to_log:
-                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
-                    order._log_decrease_ordered_quantity(documents)
+                        to_log |= order_line.move_ids._decrease_initial_demand(pre_order_line_qty.get(order_line, 0.0) - order_line.product_uom_qty)
+                # if to_log:
+                #     documents = defaultdict(dict)
+                #     for move in to_log:
+                #         # todo change order_line
+                #         rendering_context = {move: order_line}
+                #         parent = move._delay_alert_get_documents()[0]
+                #         responsible = parent.user_id
+                #         documents[(parent, responsible)] = rendering_context, move
+                #     order._log_decrease_ordered_quantity(documents)
+                #         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
+                # if to_log:
+                #     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                #     order._log_decrease_ordered_quantity(documents)
         return res
 
     def _compute_json_popover(self):
@@ -406,17 +416,14 @@ class SaleOrderLine(models.Model):
         else:
             product_uom_qty_origin = 0
 
+        done_pickings = self.order_id.picking_ids.filtered(lambda picking: picking.state == 'done')
         if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < product_uom_qty_origin:
-            # Do not display this warning if the new quantity is below the delivered
-            # one; the `write` will raise an `UserError` anyway.
-            if self.product_uom_qty < self.qty_delivered:
-                return {}
-            warning_mess = {
-                'title': _('Ordered quantity decreased!'),
-                'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
-            }
-            return {'warning': warning_mess}
-        return {}
+            if self.product_uom_qty >= self.qty_delivered and done_pickings:
+                warning_mess = {
+                    'title': _('Ordered quantity decreased!'),
+                    'message': _('You are decreasing the ordered quantity! Do not forget to return the desire quantities of the following already validated transfer(s): %s.' % ','.join(done_pickings.mapped('name'))),
+                }
+                return {'warning': warning_mess}
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
