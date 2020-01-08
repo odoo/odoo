@@ -786,6 +786,11 @@ return AbstractRenderer.extend({
             // set dataset color
             var color = self._getColor(index);
             dataset.backgroundColor = color;
+            
+            if (self.state.inLineMode && dataset.label.endsWith(self.state.inLineMode)) {
+                dataset.type = 'line';
+                dataset.fill = false;
+            }
         });
 
         // prepare options

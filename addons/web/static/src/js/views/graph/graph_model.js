@@ -58,6 +58,7 @@ return AbstractModel.extend({
      * @param {string} params.comparisonTimeRangeDescription
      * @param {string} params.measure a valid field name
      * @param {'pie'|'bar'|'line'} params.mode
+     * @param {dataset label which ends with} params.inLineMode
      * @param {string} params.modelName
      * @param {string} params.timeRangeDescription
      * @returns {Promise} The promise does not return a handle, we don't need
@@ -81,8 +82,10 @@ return AbstractModel.extend({
             mode: params.context.graph_mode || params.mode,
             origins: [],
             stacked: params.stacked,
+            inLineMode: params.inLineMode,
             timeRange: params.timeRange,
             timeRangeDescription: params.timeRangeDescription,
+            
         };
         return this._loadGraph(this._getDomains());
     },
