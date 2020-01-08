@@ -212,7 +212,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
 
-    def test_update_date_planned(self):
+    def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
         tomorrow = datetime.today().replace(hour=9, microsecond=0) + timedelta(days=1)
         po = self.env['purchase.order'].create(self.po_vals)
@@ -245,3 +245,21 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p> \xa0 - Conference Chair from %s to %s </p><p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>' % (today.date(), tomorrow.date(), today.date(), tomorrow.date(), po.picking_ids.name),
             activity.note,
         )
+
+    def test_05_multi_company(self):
+        company_a = self.env.user.company_id
+        company_b = self.env['res.company'].create({
+            "name": "Test Company",
+            "currency_id": self.env['res.currency'].with_context(active_test=False).search([
+                ('id', '!=', company_a.currency_id.id),
+            ], limit=1).id
+        })
+        self.env.user.write({
+            'company_id': company_b.id,
+            'company_ids': [(4, company_b.id), (4, company_a.id)],
+        })
+        po = self.env['purchase.order'].create(dict(company_id=company_a.id, partner_id=self.partner_a.id))
+
+        self.assertEqual(po.company_id, company_a)
+        self.assertEqual(po.picking_type_id.warehouse_id.company_id, company_a)
+        self.assertEqual(po.currency_id, po.company_id.currency_id)
