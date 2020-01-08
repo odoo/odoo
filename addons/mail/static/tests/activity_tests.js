@@ -263,7 +263,8 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
 
 QUnit.test('activity view: activity widget', async function (assert) {
     assert.expect(16);
-    var activity = await createView({
+
+    const params = {
         View: ActivityView,
         model: 'task',
         data: this.data,
@@ -313,7 +314,10 @@ QUnit.test('activity view: activity widget', async function (assert) {
                 }
             },
         },
-    });
+    };
+
+    owl.Component.env = testUtils.mock.getMockedOwlEnv(params);
+    var activity = await createView(params);
     var today = activity.$('table tbody tr:first td:nth-child(2).today');
     var dropdown = today.find('.dropdown-menu.o_activity');
 
