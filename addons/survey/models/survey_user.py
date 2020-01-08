@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -361,19 +362,21 @@ class SurveyUserInputLine(models.Model):
                 answer.answer_is_correct = False
 
     @api.constrains('skipped', 'answer_type')
-    def _check_answered_or_skipped(self):
-        if any(line.skipped == bool(line.answer_type) for line in self):
-            raise ValidationError(_('A question is either skipped, either answered. Not both.'))
-
-    @api.constrains('answer_type')
-    def _check_answer_type(self):
+    def _check_answer_type_skipped(self):
         for line in self:
+            if (line.skipped == bool(line.answer_type)):
+                raise ValidationError(_('A question is either skipped, either answered. Not both.'))
+
+            # allow 0 for numerical box
+            if line.answer_type == 'numerical_box' and float_is_zero(line['value_numerical_box'], precision_digits=6):
+                continue
             if line.answer_type == 'suggestion':
                 field_name = 'suggested_answer_id'
             elif line.answer_type:
                 field_name = 'value_%s' % line.answer_type
-            else:
+            else:  # skipped
                 field_name = False
+
             if field_name and not line[field_name]:
                 raise ValidationError(_('The answer must be in the right type'))
 
