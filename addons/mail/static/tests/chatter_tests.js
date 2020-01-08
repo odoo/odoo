@@ -2490,11 +2490,11 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
                     this.data.partner.records[0].message_follower_ids = [1];
                     followers.push({
                         id: 1,
-                        is_uid: true,
                         name: "Admin",
                         email: "admin@example.com",
-                        res_id: resID,
-                        res_model: 'partner',
+                        partner_id: partnerID,
+                        channel_id: null,
+                        is_active: true
                     });
                 }
                 return Promise.resolve(true);
@@ -2558,18 +2558,18 @@ QUnit.test('followers widget: follow/unfollow confirmation dialog', async functi
     var partnerID = 2;
     var followers = [{
         id: 1,
-        is_uid: true,
         name: "Admin",
         email: "admin@example.com",
-        res_id: resID,
-        res_model: 'res.partner',
+        partner_id: partnerID,
+        channel_id: null,
+        is_active: true   
     }, {
         id: 2,
-        is_uid: true,
         name: "Demo",
         email: "demo@example.com",
-        res_id: 3,
-        res_model: 'res.partner',
+        partner_id: 1,
+        channel_id: null,
+        is_active: true
     }];
 
     var form = await createView({
@@ -2624,12 +2624,14 @@ QUnit.test('followers widget: do not display follower duplications', async funct
 
     this.data.partner.records[0].message_follower_ids = [1];
     var resID = 2;
+    var partnerID = 1;
     var followers = [{
         id: 1,
         name: "Admin",
         email: "admin@example.com",
-        res_id: resID,
-        res_model: 'partner',
+        partner_id: partnerID,
+        channel_id: null,
+        is_active: true   
     }];
     var def;
     var form = await createView({
@@ -2657,17 +2659,18 @@ QUnit.test('followers widget: do not display follower duplications', async funct
             return this._super.apply(this, arguments);
         },
         res_id: resID,
-        session: {partner_id: 1},
+        session: {partner_id: partnerID},
     });
 
 
     followers.push({
         id: 2,
-        is_uid: false,
         name: "A follower",
         email: "follower@example.com",
         res_id: resID,
-        res_model: 'partner',
+        partner_id: 555,
+        channel_id: null,
+        is_active: true
     });
     this.data.partner.records[0].message_follower_ids.push(2);
 
@@ -2695,23 +2698,23 @@ QUnit.test('followers widget: display inactive followers with a different style'
         id: 1,
         name: "Admin",
         email: "admin@example.com",
-        res_id: 101,
-        res_model: 'partner',
-        active: true,
+        partner_id: 101,
+        channel_id: false,
+        is_active: true,
     },{
         id: 2,
         name: "Active_partner",
         email: "active_partner@example.com",
-        res_id: 102,
-        res_model: 'partner',
-        active: true,
+        partner_id: 102,
+        channel_id: false,
+        is_active: true,
     },{
         id: 3,
         name: "Inactive_partner",
         email: "inactive_partner@example.com",
-        res_id: 103,
-        res_model: 'partner',
-        active: false,
+        partner_id: 103,
+        channel_id: false,
+        is_active: false,
     }];
 
     var form = await createView({
@@ -3002,11 +3005,9 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
     var followers = [];
     followers.push({
         id: 1,
-        is_uid: true,
         name: "Admin",
         email: "admin@example.com",
-        res_id: 5,
-        res_model: 'partner',
+        partner_id: 5,
     });
 
     var form = await createView({
@@ -3045,11 +3046,11 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
                 self.data.partner.records[0].message_follower_ids.push(2);
                 followers.push({
                     id: 2,
-                    is_uid: true,
                     name: "Demo User",
                     email: "demo-user@example.com",
-                    res_id: 8,
-                    res_model: 'partner',
+                    partner_id: 8,
+                    channel_id: false,
+                    is_active: true
                 });
 
                 // post a legit message so that it does not crashes
@@ -3187,14 +3188,16 @@ QUnit.test('chatter: mention prefetched partners (followers & employees)', async
                         id: 10,
                         name: 'FollowerUser1',
                         email: 'follower-user1@example.com',
-                        res_model: 'res.partner',
-                        res_id: 1,
+                        partner_id: 1,
+                        channel_id: null,
+                        is_active: true
                     }, {
                         id: 20,
                         name: 'FollowerUser2',
                         email: 'follower-user2@example.com',
-                        res_model: 'res.partner',
-                        res_id: 2,
+                        partner_id: 2,
+                        channel_id: null,
+                        is_active: true,
                     }],
                     subtypes: [],
                 });
