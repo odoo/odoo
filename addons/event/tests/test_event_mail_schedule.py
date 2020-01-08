@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, tools
+from odoo import fields
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.tools import mute_logger
 
@@ -11,7 +11,7 @@ from odoo.tools import mute_logger
 class TestMailSchedule(TestEventCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
-    def test_00_event_mail_schedule(self):
+    def test_event_mail_schedule(self):
         """ Test mail scheduling for events """
         now = fields.Datetime.now()
         event_date_begin = now + relativedelta(days=1)
