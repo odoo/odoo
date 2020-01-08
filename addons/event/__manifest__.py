@@ -21,7 +21,6 @@ Key Features
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
-        'wizard/event_confirm_view.xml',
         'views/event_views.xml',
         'views/event_stage_views.xml',
         'report/event_event_templates.xml',
