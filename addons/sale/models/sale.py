@@ -469,12 +469,15 @@ class SaleOrder(models.Model):
             .default_get(['journal_id'])['journal_id'])
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for this company.'))
-        invoice_vals = {
+        vinvoice = self.env['account.invoice'].new({'partner_id': self.partner_invoice_id.id})
+        # Get partner extra fields
+        vinvoice._onchange_partner_id()
+        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
+        invoice_vals.update({
             'name': self.client_order_ref or '',
             'origin': self.name,
             'type': 'out_invoice',
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
-            'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'journal_id': journal_id,
             'currency_id': self.pricelist_id.currency_id.id,
@@ -485,7 +488,7 @@ class SaleOrder(models.Model):
             'user_id': self.user_id and self.user_id.id,
             'team_id': self.team_id.id,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
-        }
+        })
         return invoice_vals
 
     @api.multi
@@ -534,13 +537,6 @@ class SaleOrder(models.Model):
             # Necessary to force computation of taxes. In account_invoice, they are triggered
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
-            # Idem for partner
-            so_payment_term_id = invoice.payment_term_id.id
-            fp_invoice = invoice.fiscal_position_id
-            invoice._onchange_partner_id()
-            invoice.fiscal_position_id = fp_invoice
-            # To keep the payment terms set on the SO
-            invoice.payment_term_id = so_payment_term_id
             invoice.message_post_with_view('mail.message_origin_link',
                 values={'self': invoice, 'origin': references[invoice]},
                 subtype_id=self.env.ref('mail.mt_note').id)
@@ -1545,7 +1541,7 @@ class SaleOrderLine(models.Model):
     def name_get(self):
         result = []
         for so_line in self.sudo():
-            name = '%s - %s' % (so_line.order_id.name, so_line.name.split('\n')[0] or so_line.product_id.name)
+            name = '%s - %s' % (so_line.order_id.name, (so_line.name and so_line.name.split('\n')[0]) or so_line.product_id.name)
             if so_line.order_partner_id.ref:
                 name = '%s (%s)' % (name, so_line.order_partner_id.ref)
             result.append((so_line.id, name))
