@@ -43,7 +43,7 @@ class SaleOrder(models.Model):
                 values['price_unit'] = ticket.price
             else:
                 values['price_unit'] = ticket.price_reduce
-            values['name'] = ticket.get_ticket_multiline_description_sale()
+            values['name'] = ticket._get_ticket_multiline_description_sale()
 
         # avoid writing related values that end up locking the product record
         values.pop('event_ok', None)

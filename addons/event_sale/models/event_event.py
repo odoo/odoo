@@ -84,15 +84,3 @@ class Event(models.Model):
         non_open_events = self.filtered(lambda event: not any(event.event_ticket_ids.mapped('sale_available')))
         non_open_events.event_registrations_open = False
         super(Event, self - non_open_events)._compute_event_registrations_open()
-
-    @api.depends('sale_order_lines_ids')
-    def _compute_sale_total_price(self):
-        for event in self:
-            event.sale_total_price = sum([
-                event.currency_id._convert(
-                    sale_order_line_id.price_reduce_taxexcl,
-                    sale_order_line_id.currency_id,
-                    sale_order_line_id.company_id,
-                    sale_order_line_id.order_id.date_order)
-                for sale_order_line_id in event.sale_order_lines_ids
-            ])
