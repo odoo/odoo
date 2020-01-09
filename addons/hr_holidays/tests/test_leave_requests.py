@@ -365,3 +365,24 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave1.number_of_hours_display, 24)
         leave1.action_validate()
         self.assertEqual(leave1.number_of_hours_display, 24)
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_defaults_with_timezones(self):
+        """ Make sure that leaves start with correct defaults for non-UTC timezones """
+        self.user_employee.tz = 'US/Pacific'
+
+        # Mimic what is done by the calendar widget when clicking on a day. It
+        # will take the local datetime from 7:00 to 19:00 and then convert it
+        # to UTC before sending it. Values here are for PST (UTC -8) and
+        # represent a leave on 2019/1/1 from 7:00 to 19:00 local time.
+        webclient_values = {
+            'date_from': datetime(2019, 1, 1, 15, 0, 0),
+            'date_to': datetime(2019, 1, 2, 3, 0), # note that this is the next day in UTC
+        }
+        values = self.env['hr.leave'].sudo(self.user_employee_id)._default_get_request_parameters(webclient_values)
+
+        # Dates should be local to the user, they do not and cannot be
+        # converted using the user's timezone.
+        first_of_january = date(2019, 1, 1)
+        self.assertEqual(values['request_date_from'], first_of_january)
+        self.assertEqual(values['request_date_to'], first_of_january)
