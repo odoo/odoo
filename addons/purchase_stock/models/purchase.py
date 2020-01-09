@@ -255,7 +255,7 @@ class PurchaseOrderLine(models.Model):
             if line.qty_received_method == 'stock_moves':
                 total = 0.0
                 for move in line.move_ids:
-                    if move.state == 'done':
+                    if move.state == 'done' and move.picking_code != 'internal':
                         if move.location_dest_id.usage == "supplier":
                             if move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
