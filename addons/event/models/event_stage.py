@@ -16,7 +16,6 @@ class EventStage(models.Model):
     pipe_end = fields.Boolean(
         string='End Stage', default=False,
         help='Events will be automatically be moved into this stage their are passed and event moved in the stage will be automatically greened')
-
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection.')
