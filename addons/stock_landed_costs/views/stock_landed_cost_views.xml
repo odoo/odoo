@@ -29,7 +29,8 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('state', '=', 'done'), ('picking_type_code', '!=', 'internal')]"/>
+                                <field name="allowed_picking_ids" invisible="1"/>
+                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('id', 'in', allowed_picking_ids)]"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>
