@@ -1935,7 +1935,7 @@ exports.Orderline = Backbone.Model.extend({
                 else if(tax.amount_type === 'fixed')
                     incl_fixed_amount += quantity * tax.amount
                 else{
-                    tax_amount = self._compute_all(tax, base, quantity);
+                    var tax_amount = self._compute_all(tax, base, quantity);
                     incl_fixed_amount += tax_amount;
                     cached_tax_amounts[i] = tax_amount;
                 }
