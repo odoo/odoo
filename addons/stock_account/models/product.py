@@ -55,9 +55,12 @@ class ProductTemplate(models.Model):
             if product_template.valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
+        # Check access right
+        if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+            raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
-            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves.post()
         return res
 
@@ -180,7 +183,7 @@ class ProductProduct(models.Model):
         """
         # Handle stock valuation layers.
 
-        if self.valuation == 'real_time' and not self.env['account.move'].check_access_rights('create', raise_exception=False):
+        if self.valuation == 'real_time' and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
             raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
 
         svl_vals_list = []
@@ -738,8 +741,11 @@ class ProductCategory(models.Model):
             if product_category.property_valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
+        # Check access right
+        if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+            raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
-            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves.post()
         return res
