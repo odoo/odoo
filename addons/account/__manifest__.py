@@ -62,6 +62,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_invoice_send_views.xml',
         'views/account_tax_report_views.xml',
         'report/account_hash_integrity_templates.xml',
+        'wizard/account_transfer_wizard.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -72,6 +73,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "static/src/xml/bills_tree_upload_views.xml",
         'static/src/xml/account_journal_activity.xml',
         'static/src/xml/tax_group.xml',
+        "static/src/xml/aml_preview_templates.xml",
     ],
     'installable': True,
     'application': True,

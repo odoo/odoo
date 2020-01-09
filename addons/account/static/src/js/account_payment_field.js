@@ -163,5 +163,5 @@ field_registry.add('payment', ShowPaymentLineWidget);
 return {
     ShowPaymentLineWidget: ShowPaymentLineWidget
 };
-    
+
 });
