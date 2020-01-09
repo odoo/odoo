@@ -263,6 +263,15 @@ class StockQuant(models.Model):
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
+        """Return the removal strategy for the given product and location.
+
+        :param product_id: product to get the removal strategy
+        :type product_id: :class:`~addons.stock.models.product.Product`
+        :param location_id: location to get the removal strategy
+        :type location_id: :class:`~addons.stock.models.stock_location.Location`
+        :return: the removal strategy
+        :rtype: string
+        """
         if product_id.categ_id.removal_strategy_id:
             return product_id.categ_id.removal_strategy_id.method
         loc = location_id
@@ -320,18 +329,21 @@ class StockQuant(models.Model):
         `reserved_quantity`, for the set of quants sharing the combination of `product_id,
         location_id` if `strict` is set to False or sharing the *exact same characteristics*
         otherwise.
+
         This method is called in the following usecases:
-            - when a stock move checks its availability
-            - when a stock move actually assign
-            - when editing a move line, to check if the new value is forced or not
-            - when validating a move line with some forced values and have to potentially unlink an
-              equivalent move line in another picking
+
+        - when a stock move checks its availability
+        - when a stock move actually assign
+        - when editing a move line, to check if the new value is forced or not
+        - when validating a move line with some forced values and have to potentially unlink an equivalent move line in another picking
+
         In the two first usecases, `strict` should be set to `False`, as we don't know what exact
         quants we'll reserve, and the characteristics are meaningless in this context.
         In the last ones, `strict` should be set to `True`, as we work on a specific set of
         characteristics.
 
-        :return: available quantity as a float
+        :return: available quantity
+        :rtype: float
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)

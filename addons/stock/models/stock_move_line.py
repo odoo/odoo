@@ -115,7 +115,7 @@ class StockMoveLine(models.Model):
                     self.product_uom_id = self.product_id.uom_id.id
 
     @api.onchange('lot_name', 'lot_id')
-    def onchange_serial_number(self):
+    def _onchange_serial_number(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
         help him. This includes:
             - automatically switch `qty_done` to 1.0

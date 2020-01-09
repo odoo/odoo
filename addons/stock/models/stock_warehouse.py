@@ -16,8 +16,8 @@ class Warehouse(models.Model):
     _description = "Warehouse"
     _order = 'sequence,id'
     _check_company_auto = True
-    # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
+    """ namedtuple used in helper methods generating values for routes"""
 
     name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env.company.name)
     active = fields.Boolean('Active', default=True)
@@ -91,6 +91,12 @@ class Warehouse(models.Model):
 
     @api.model
     def create(self, vals):
+        """Creates a new warehouse.
+
+        :param dict vals:
+        :returns: warehouse created
+        :rtype: :class:`Warehouse`
+        """
         # create view location for warehouse then create all locations
         loc_vals = {'name': _(vals.get('code')), 'usage': 'view',
                     'location_id': self.env.ref('stock.stock_location_locations').id}
@@ -126,6 +132,7 @@ class Warehouse(models.Model):
         return warehouse
 
     def write(self, vals):
+        """ blablabla """
         if 'company_id' in vals:
             for warehouse in self:
                 if warehouse.company_id.id != vals['company_id']:
