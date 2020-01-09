@@ -53,16 +53,11 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
     },
 
     /**
-     * Create the print request for webPRNT from a canvas
-     * 
      * @override
      */
-    process_canvas: function (canvas) {
-        if (this.printer) {
-            this.printer.addTextAlign(this.printer.ALIGN_CENTER);
-            this.printer.addImage(canvas.getContext('2d'), 0, 0, canvas.width, canvas.height);
-            this.printer.addCut();
-        }
+    htmlToImg: function (receipt) {
+        $('.pos-receipt-print').html(receipt);
+        return domtoimage.toCanvas($('.pos-receipt-print>.pos-receipt')[0], { bgcolor: '#fff' });
     },
 
     /**
@@ -78,8 +73,11 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
     /**
      * @override
      */
-    send_printing_job: function () {
+    send_printing_job: function (canvas) {
         if (this.printer) {
+            this.printer.addTextAlign(this.printer.ALIGN_CENTER);
+            this.printer.addImage(canvas.getContext('2d'), 0, 0, canvas.width, canvas.height);
+            this.printer.addCut();
             this.printer.send();
         }
     },

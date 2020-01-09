@@ -33,33 +33,15 @@ var PrinterMixin = {
     },
 
     /**
-     * Generate a jpeg image from a canvas
-     * @param {DOMElement} canvas 
-     */
-    process_canvas: function (canvas) {
-        return canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,','');
-    },
-
-    /**
      * Renders the html as an image to print it
      * @param {String} receipt: The receipt to be printed, in HTML
      */
     htmlToImg: function (receipt) {
-        var self = this;
         $('.pos-receipt-print').html(receipt);
-        var promise = new Promise(function (resolve, reject) {
-            self.receipt = $('.pos-receipt-print>.pos-receipt');
-            html2canvas(self.receipt[0], {
-                onparsed: function(queue) {
-                    queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
-                },
-                onrendered: function (canvas) {
-                    $('.pos-receipt-print').empty();
-                    resolve(self.process_canvas(canvas));
-                } 
-            })
+        this.receipt = $('.pos-receipt-print>.pos-receipt');
+        return domtoimage.toPng(this.receipt[0], { bgcolor: '#fff' }).then(function (img) {
+            return img.replace('data:image/png;base64,', '');
         });
-        return promise;
     },
 
     _onIoTActionResult: function (data){
