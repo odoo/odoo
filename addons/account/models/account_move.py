@@ -2182,6 +2182,8 @@ class AccountMove(models.Model):
         lang = get_lang(self.env)
         if template and template.lang:
             lang = template._render_template(template.lang, 'account.move', self.id)
+        else:
+            lang = lang.code
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
         ctx = dict(
             default_model='account.move',
