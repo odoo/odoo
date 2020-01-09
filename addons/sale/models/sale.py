@@ -112,10 +112,6 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    def _get_payment_type(self):
-        self.ensure_one()
-        return 'form'
-
     def _search_invoice_ids(self, operator, value):
         return ['&', ('order_line.invoice_lines.move_id.type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
 
