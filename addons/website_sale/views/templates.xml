@@ -533,17 +533,22 @@
                                 </div>
                             </div>
                             <hr />
-                            <p class="text-muted">
-                              30-day money-back guarantee<br />
-                              Free Shipping in U.S.<br />
-                              Buy now, get in 2 days
-                            </p>
+                            <t t-call="website_sale.product_custom_text"/>
                         </div>
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
             </div>
         </t>
+    </template>
+
+    <!-- Dedicated template to not prevent updates on main view -->
+    <template id="product_custom_text" name="Product Custom Text">
+        <p class="text-muted">
+            30-day money-back guarantee<br/>
+            Free Shipping in U.S.<br/>
+            Buy now, get in 2 days
+        </p>
     </template>
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Image Zoom">
