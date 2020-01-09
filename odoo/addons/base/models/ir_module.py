@@ -727,6 +727,8 @@ class Module(models.Model):
                 mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
+            if updated_values.keys() & {'shortdesc', 'description', 'summary'}:
+                mod._update_translations()
             mod._update_dependencies(terp.get('depends', []))
             mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
