@@ -280,12 +280,18 @@ const UserValueWidget = Widget.extend({
         this._methodsParams = _.extend({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
         this._dependencies = [];
+        this._triggerWidgetsNames = [];
+        this._triggerWidgetsValues = [];
 
         for (const key in this.el.dataset) {
             const dataValue = this.el.dataset[key].trim();
 
             if (key === 'dependencies') {
                 this._dependencies.push(...dataValue.split(/\s*,\s*/g));
+            } else if (key === 'trigger') {
+                this._triggerWidgetsNames.push(...dataValue.split(/\s*,\s*/g));
+            } else if (key === 'triggerValue') {
+                this._triggerWidgetsValues.push(...dataValue.split(/\s*,\s*/g));
             } else if (validMethodNames.includes(key)) {
                 this._methodsNames.push(key);
                 this._methodsParams.optionsPossibleValues[key] = dataValue.split(/\s*\|\s*/g);
@@ -318,8 +324,9 @@ const UserValueWidget = Widget.extend({
     },
     /**
      * @param {boolean} [previewMode=false]
+     * @param {boolean} [isSimulatedEvent=false]
      */
-    notifyValueChange: function (previewMode) {
+    notifyValueChange: function (previewMode, isSimulatedEvent) {
         // If the widget has no associated method, it should not notify user
         // value changes
         if (!this._methodsNames.length) {
@@ -339,6 +346,7 @@ const UserValueWidget = Widget.extend({
 
         const data = {
             previewMode: previewMode || false,
+            isSimulatedEvent: !!isSimulatedEvent,
         };
         // TODO improve this. The preview state has to be updated only when the
         // actual option _select is gonna be called... but this is delayed by a
@@ -465,6 +473,16 @@ const UserValueWidget = Widget.extend({
      */
     _onUserValueNotification: function (ev) {
         ev.data.widget = this;
+
+        if (!ev.data.triggerWidgetsNames) {
+            ev.data.triggerWidgetsNames = [];
+        }
+        ev.data.triggerWidgetsNames.push(...this._triggerWidgetsNames);
+
+        if (!ev.data.triggerWidgetsValues) {
+            ev.data.triggerWidgetsValues = [];
+        }
+        ev.data.triggerWidgetsValues.push(...this._triggerWidgetsValues);
     },
     /**
      * Should be called when an user event on the widget indicates a value
@@ -2001,15 +2019,17 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Event} ev
      */
     _onUserValueUpdate: function (ev) {
+        ev.stopPropagation();
+        const widget = ev.data.widget;
         const previewMode = ev.data.previewMode;
 
-        ev.stopPropagation();
+        // Ask a mutexed snippet update according to the widget value change
+        const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
         this.trigger_up('snippet_edition_request', {exec: async () => {
             if (ev.data.prepare) {
                 ev.data.prepare();
             }
 
-            const widget = ev.data.widget;
             if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
                 // TODO the flag should be fetched through widget params somehow
                 return;
@@ -2017,7 +2037,7 @@ const SnippetOptionWidget = Widget.extend({
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
-            if (!previewMode) {
+            if (shouldRecordUndo) {
                 this.trigger_up('request_history_undo_record', {$target: this.$target});
             }
 
@@ -2035,6 +2055,38 @@ const SnippetOptionWidget = Widget.extend({
                 });
             });
         }});
+
+        // Check linked widgets: force their value and simulate a notification
+        const triggerWidgetsNames = ev.data.triggerWidgetsNames;
+        const triggerWidgetsValues = ev.data.triggerWidgetsValues;
+        for (let i = 0, l = triggerWidgetsNames.length; i < l; i++) {
+            const widgetName = triggerWidgetsNames[i];
+            const widgetValue = triggerWidgetsValues[i];
+
+            let linkedWidget = null;
+            this.trigger_up('user_value_widget_request', {
+                name: widgetName,
+                onSuccess: _widget => linkedWidget = _widget,
+            });
+            if (linkedWidget) {
+                if (widgetValue !== undefined) {
+                    // FIXME right now only make this work supposing it is a
+                    // colorpicker widget with big big hacks, this should be
+                    // improved a lot
+                    const normValue = this._normalizeWidgetValue(widgetValue);
+                    if (previewMode === true) {
+                        linkedWidget._previewColor = normValue;
+                    } else if (previewMode === false) {
+                        linkedWidget._previewColor = false;
+                        linkedWidget._value = normValue;
+                    } else {
+                        linkedWidget._previewColor = false;
+                    }
+                }
+
+                linkedWidget.notifyValueChange(previewMode, true);
+            }
+        }
     },
 });
 const registry = {};
