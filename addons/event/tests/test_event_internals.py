@@ -16,7 +16,7 @@ class TestEventData(TestEventCommon):
 
     @users('user_eventmanager')
     def test_event_date_computation(self):
-        self.patcher = patch('odoo.addons.event.models.event.fields.Datetime', wraps=FieldsDatetime)
+        self.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
         self.mock_datetime = self.patcher.start()
         self.mock_datetime.now.return_value = datetime(2020, 1, 31, 8, 0, 0)
 
