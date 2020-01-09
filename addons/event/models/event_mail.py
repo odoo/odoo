@@ -40,8 +40,13 @@ class EventTypeMail(models.Model):
     interval_type = fields.Selection([
         ('after_sub', 'After each registration'),
         ('before_event', 'Before the event'),
-        ('after_event', 'After the event')],
+        ('after_event', 'After the event'),
+        ('stage_update', 'On stage update')],
         string='Trigger', default="before_event", required=True)
+    trigger_stage_id = fields.Many2one(
+        'event.stage', string='Stage', readonly=False,
+        store=True, copy=True, compute='_compute_trigger_stage_id',
+        help='Used when the interval type is "On stage update". When the event is moved into this stage, the event mail will be triggered.')
     template_id = fields.Many2one(
         'mail.template', string='Email Template',
         domain=[('model', '=', 'event.registration')], ondelete='restrict',
@@ -51,7 +56,13 @@ class EventTypeMail(models.Model):
     def _get_event_mail_fields_whitelist(self):
         """ Whitelist of fields that are copied from event_type_mail_ids to event_mail_ids when
         changing the event_type_id field of event.event """
-        return ['notification_type', 'template_id', 'interval_nbr', 'interval_unit', 'interval_type']
+        return ['notification_type', 'template_id', 'interval_nbr', 'interval_unit', 'interval_type', 'trigger_stage_id']
+
+    @api.depends('interval_type')
+    def _compute_trigger_stage_id(self):
+        for mail in self:
+            if not mail.trigger_stage_id or mail.interval_type != 'stage_update':
+                mail.trigger_stage_id = False
 
 
 class EventMailScheduler(models.Model):
@@ -74,32 +85,50 @@ class EventMailScheduler(models.Model):
     interval_type = fields.Selection([
         ('after_sub', 'After each registration'),
         ('before_event', 'Before the event'),
-        ('after_event', 'After the event')],
+        ('after_event', 'After the event'),
+        ('stage_update', 'On stage update')],
         string='Trigger ', default="before_event", required=True)
+    trigger_stage_id = fields.Many2one(
+        'event.stage', string='Stage', readonly=False,
+        store=True, copy=True, compute='_compute_trigger_stage_id',
+        help='Used when the interval type is "On stage update". When the event is moved into this stage, the event mail will be triggered.')
+    trigger_stage_date = fields.Datetime('Stage change date', help='Date when the event was moved to the sage', copy=False)
     template_id = fields.Many2one(
         'mail.template', string='Email Template',
         domain=[('model', '=', 'event.registration')], ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
-    scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)
-    mail_registration_ids = fields.One2many('event.mail.registration', 'scheduler_id')
+    scheduled_date = fields.Datetime(
+        'Scheduled Sent Mail', compute='_compute_scheduled_date', store=True,
+        help='Depending on the selected Trigger :\n'
+             '- After each registration : Date and time at which the event has been created (+ interval) \n'
+             '- After/Before the event & On stage update: Scheduled time of the email')
+    mail_registration_ids = fields.One2many('event.mail.registration', 'scheduler_id', copy=False)
     mail_sent = fields.Boolean('Mail Sent on Event', copy=False)
     done = fields.Boolean('Sent', compute='_compute_done', store=True)
+
+    @api.depends('interval_type')
+    def _compute_trigger_stage_id(self):
+        for mail in self:
+            if not mail.trigger_stage_id or mail.interval_type != 'stage_update':
+                mail.trigger_stage_id = False
 
     @api.depends('mail_sent', 'interval_type', 'event_id.registration_ids', 'mail_registration_ids')
     def _compute_done(self):
         for mail in self:
-            if mail.interval_type in ['before_event', 'after_event']:
+            if mail.interval_type in ['before_event', 'after_event', 'stage_update']:
                 mail.done = mail.mail_sent
             else:
                 mail.done = len(mail.mail_registration_ids) == len(mail.event_id.registration_ids) and all(mail.mail_sent for mail in mail.mail_registration_ids)
 
-    @api.depends('event_id.date_begin', 'interval_type', 'interval_unit', 'interval_nbr')
+    @api.depends('event_id.date_begin', 'interval_type', 'interval_unit', 'interval_nbr', 'trigger_stage_date')
     def _compute_scheduled_date(self):
         for mail in self:
             if mail.interval_type == 'after_sub':
                 date, sign = mail.event_id.create_date, 1
             elif mail.interval_type == 'before_event':
                 date, sign = mail.event_id.date_begin, -1
+            elif mail.interval_type == 'stage_update':
+                date, sign = mail.trigger_stage_date, 1
             else:
                 date, sign = mail.event_id.date_end, 1
 
