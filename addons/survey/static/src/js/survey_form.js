@@ -105,7 +105,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _onSubmit: function (event) {
         event.preventDefault();
         if ($(event.currentTarget).val() === 'previous') {
-            this._submitForm({'previous_id': $(event.currentTarget).data('previousId')});
+            this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')});
         } else {
             this._submitForm({});
         }
