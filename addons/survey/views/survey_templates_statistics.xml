@@ -65,7 +65,7 @@
     </template>
 
     <template id="survey_page_statistics_question" name="Question: result statistics">
-        <t t-set="question_scoring" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']"/>
+        <t t-set="question_scoring" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']"/>
         <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
         <t t-set="graph_data" t-value="question_data['graph_data']"/>
         <t t-set="table_data" t-value="question_data['table_data']"/>
@@ -75,13 +75,33 @@
             <div class="mr-auto">
                 <h5 t-field="question.title" class="mb-1"/>
                 <div t-if="question_scoring">
-                    <t t-if="len(question_data['right_answers']) >= 1">
-                        <span t-if="len(question_data['right_answers']) == 1">Right answer: </span>
-                        <span t-if="len(question_data['right_answers']) > 1">Right answers: </span>
+                    <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
+                        <t t-if="len(question_data['right_answers']) >= 1">
+                            <span t-if="len(question_data['right_answers']) == 1">Right answer: </span>
+                            <span t-if="len(question_data['right_answers']) > 1">Right answers: </span>
+                            <strong>
+                                <t t-foreach="question_data['right_answers']" t-as="answer">
+                                    <span t-if="answer_index != 0">, </span><span t-esc="answer.value"/>
+                                </t>
+                            </strong>
+                        </t>
+                    </t>
+                    <t t-if="question.is_scored_question">
+                        <span>Right answer:</span>
                         <strong>
-                            <t t-foreach="question_data['right_answers']" t-as="answer">
-                                <span t-if="answer_index != 0">, </span><span t-esc="answer.value"/>
+                            <t t-if="question.question_type == 'numerical_box'">
+                                <span t-esc="question.answer_numerical_box"/>
                             </t>
+                            <t t-if="question.question_type == 'date'">
+                                <span t-field="question.answer_date"/>
+                            </t>
+                            <t t-if="question.question_type == 'datetime'">
+                                <span t-field="question.answer_datetime"/>
+                            </t>
+                        </strong><br/>
+                        <span>Score:</span>
+                        <strong>
+                            <span t-esc="question.answer_score"/>
                         </strong>
                     </t>
                 </div>
@@ -93,10 +113,15 @@
             </t>
             <!-- Scoring info -->
             <t t-if="question_scoring">
-                <span class="badge badge-success ml-3"><span t-esc="len(question_data['right_inputs'])"></span> Correct</span>
-                <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
-                    <span t-esc="len(question_data['partial_inputs'])"></span> Partial
-                </span>
+                <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
+                    <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
+                    <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
+                        <span t-esc="question_data['partial_inputs_count']"></span> Partial
+                    </span>
+                </t>
+                <t t-if="question.is_scored_question">
+                    <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
+                </t>
             </t>
             <!-- Inputs info -->
             <span class="badge badge-info ml-3"><span t-esc="len(question_data['answer_input_done_ids'])"></span> Answered</span>
@@ -105,19 +130,18 @@
 
         <!-- Question Description -->
         <div class="ml-3 text-muted" t-field="question.description"/>
-
-        <t t-if="question.question_type in ['text_box', 'char_box', 'date', 'datetime']">
-            <t t-call="survey.question_result_text"/>
-        </t>
-        <t t-elif="question.question_type in ['numerical_box']">
-            <t t-call="survey.question_result_number"></t>
-        </t>
-        <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']">
-            <t t-call="survey.question_result_choice"></t>
-        </t>
-        <t t-elif="question.question_type in ['matrix']">
-            <t t-call="survey.question_result_matrix"></t>
-        </t>
+            <t t-if="question.question_type in ['text_box', 'char_box', 'date', 'datetime']">
+                <t t-call="survey.question_result_text"/>
+            </t>
+            <t t-elif="question.question_type in ['numerical_box']">
+                <t t-call="survey.question_result_number"></t>
+            </t>
+            <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']">
+                <t t-call="survey.question_result_choice"></t>
+            </t>
+            <t t-elif="question.question_type in ['matrix']">
+                <t t-call="survey.question_result_matrix"></t>
+            </t>
         </div>
     </template>
 
