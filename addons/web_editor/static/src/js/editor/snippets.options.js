@@ -925,13 +925,13 @@ const MultiUserValueWidget = UserValueWidget.extend({
 });
 
 const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
-    className: (ButtonUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
-    custom_events: {
+    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
+    custom_events: _.extend({}, SelectUserValueWidget.prototype.custom_events, {
         'color_picked': '_onColorPicked',
         'color_hover': '_onColorHovered',
         'color_leave': '_onColorLeft',
         'color_reset': '_onColorReset',
-    },
+    }),
 
     /**
      * @override
