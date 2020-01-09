@@ -2529,7 +2529,7 @@ class AccountMoveLine(models.Model):
                     )
                 )
             )''',
-            "The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited."
+            "The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited. Moreover, the currency field has to be left empty when the amount is expressed in the company currency."
         ),
     ]
 
