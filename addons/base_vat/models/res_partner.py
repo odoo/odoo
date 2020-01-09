@@ -136,7 +136,7 @@ class ResPartner(models.Model):
             # quick and partial off-line checksum validation
             check_func = self.simple_vat_check
         for partner in self:
-            if not partner.vat:
+            if not partner.vat or partner.commercial_partner_id != partner:
                 continue
             #check with country code as prefix of the TIN
             vat_country, vat_number = self._split_vat(partner.vat)
