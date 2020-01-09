@@ -1086,6 +1086,10 @@ take the following attributes:
   is not set, the gantt view will fall back to the id of the form view in the
   current action, if any.
 
+``dynamic_range``
+  if set, the gantt view will start at the first record, instead of starting
+  at the beginning of the year/month/day.
+
 ``thumbnails``
   This allows to display a thumbnail next to groups name if the group is a relationnal field.
   This expects a python dict which keys are the name of the field on the active model.
