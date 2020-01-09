@@ -281,7 +281,13 @@ class MrpWorkorder(models.Model):
         (self - treated).allowed_lots_domain = False
 
     def name_get(self):
-        return [(wo.id, "%s. %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
+        res = []
+        for wo in self:
+            if len(wo.production_id.workorder_ids) == 1:
+                res.append((wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)))
+            else:
+                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
+        return res
 
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
