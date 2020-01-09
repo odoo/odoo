@@ -11,3 +11,4 @@ from . import mail_template
 from . import mail_thread
 from . import res_config_settings
 from . import utm
+from . import res_company
