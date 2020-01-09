@@ -279,3 +279,23 @@ class ReqBool(models.Model):
     _name = _description = 'test_testing_utilities.req_bool'
 
     f_bool = fields.Boolean(required=True)
+
+class O2MChangesChildren(models.Model):
+    _name = _description = 'o2m_changes_children'
+
+    name = fields.Char()
+    v = fields.Integer()
+    line_ids = fields.One2many('o2m_changes_children.lines', 'parent_id')
+
+    @api.onchange('v')
+    def _onchange_v(self):
+        for record in self:
+            for line in record.line_ids:
+                line.v = record.v
+
+class O2MChangesChildrenLines(models.Model):
+    _name = _description = 'o2m_changes_children.lines'
+
+    parent_id = fields.Many2one('o2m_changes_children')
+    v = fields.Integer()
+    vv = fields.Integer()
