@@ -1220,7 +1220,7 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
      */
     _onWebsiteURLChosen: function () {
         $(this.inputEl).trigger('input');
-        this._notifyValueChange(false);
+        this.notifyValueChange(false);
     },
 });
 
