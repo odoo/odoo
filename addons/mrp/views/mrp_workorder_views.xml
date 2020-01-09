@@ -143,44 +143,38 @@
                     <group>
                         <field name="workcenter_id"/>
                         <field name="production_id" readonly="1"/>
-                        </group>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
+                </group>
                 <notebook>
                 <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                     <group>
-                        <group>
-                            <label for="date_planned_start" string="Planned Date"/>
-                            <div class="o_row">
-                                <field name="date_planned_start" class="mr8"/>
-                                <div attrs="{'invisible': [('date_planned_start', '=', False)]}" class="o_row">
-                                    <strong attrs="{'invisible': [('date_planned_finished', '=', False)]}" class="mr8">to</strong>
-                                    <strong class="oe_edit_only mr8" attrs="{'invisible': [('date_planned_finished', '!=', False)]}">to</strong>
-                                    <field name="date_planned_finished"/>
-                                </div>
-                                <field name="json_popover" widget="mrp_workorder_popover"/>
+                        <label for="date_planned_start" string="Planned Date"/>
+                        <div class="oe_inline">
+                            <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
+                            <strong class="mr8 oe_inline">to</strong>
+                            <field name="date_planned_finished" class="oe_inline" required="True"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2"/>
+                        </div>
+                        <label for="date_start" string="Effective Date" attrs="{'invisible': [('date_start', '=', False)]}"/>
+                        <div class="o_row" attrs="{'invisible': [('date_start', '=', False)]}">
+                            <field name="date_start" readonly="1"/>
+                            <div attrs="{'invisible': [('date_finished', '=', False)]}">
+                                <strong class="mr8">to</strong>
+                                <field name="date_finished" readonly="1"/>
                             </div>
-                            <label for="date_start" string="Effective Date"/>
-                            <div class="o_row">
-                                <field name="date_start" readonly="1"/>
-                                <div  attrs="{'invisible': [('date_finished', '=', False)]}">
-                                    <strong class="mr8">to</strong>
-                                    <field name="date_finished" readonly="1"/>
-                                </div>
-                            </div>
-                        </group>
-                        <group>
-                            <label for="duration_expected"/>
-                            <div>
-                                <field name="duration_expected" widget="float_time" class="oe_inline"/>
-                                minutes
-                            </div>
-                            <label for="duration"/>
-                            <div>
-                                <button style="pointer-events: none;" class="oe_inline badge badge-secondary">
-                                    <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
-                                </button>
-                            </div>
-                        </group>
+                        </div>
+                        <label for="duration_expected"/>
+                        <div>
+                            <field name="duration_expected" widget="float_time" class="oe_inline"/>
+                            minutes
+                        </div>
+                        <label for="duration"/>
+                        <div>
+                            <button style="pointer-events: none;" class="oe_inline badge badge-secondary">
+                                <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
+                            </button>
+                        </div>
                     </group>
                     <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
@@ -255,13 +249,6 @@
                     <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '=', 'pdf')]}"/>
                     <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '=', 'google_slide')]}"/>
                 </page>
-                <page string="Miscellaneous" name="workorder_page_misc" groups="mrp.group_mrp_manager">
-                    <group>
-                        <group>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                    </group>
-                </page>
                 </notebook>
             </sheet>
             <div class="oe_chatter" groups="mrp.group_mrp_manager">
@@ -270,6 +257,16 @@
                 <field name="message_ids" widget="mail_thread"/>
             </div>
             </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mrp_production_workorder_form_view_inherit_gantt">
+        <field name="name">mrp.production.work.order.form.gantt</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="time_ids" position="replace"/>
         </field>
     </record>
 
@@ -352,7 +349,8 @@
                 decoration-success="state == 'done'"
                 decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
                 color="workcenter_id"
-                display_unavailability="1">
+                display_unavailability="1"
+                form_view_id="%(mrp_production_workorder_form_view_inherit_gantt)d">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
@@ -386,7 +384,8 @@
                 decoration-success="state == 'done'"
                 decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
                 color="production_id"
-                display_unavailability="1">
+                display_unavailability="1"
+                form_view_id="mrp_production_workorder_form_view_inherit_gantt">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
