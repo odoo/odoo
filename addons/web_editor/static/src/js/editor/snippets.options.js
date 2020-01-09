@@ -317,6 +317,31 @@ const UserValueWidget = Widget.extend({
         }
     },
     /**
+     * @param {boolean} [previewMode=false]
+     */
+    notifyValueChange: function (previewMode) {
+        if (!this._methodsNames.length) {
+            return;
+        }
+
+        const data = {
+            widget: this,
+            previewMode: previewMode || false,
+        };
+        // TODO improve this. The preview state has to be updated only when the
+        // actual option _select is gonna be called... but this is delayed by a
+        // mutex. So, during test tours, we would notify both 'preview' and
+        // 'reset' before the 'preview' handling is done: and so the widget
+        // would be considered not in preview during that 'preview' handling.
+        if (previewMode === true) {
+            data.prepare = () => this.el.classList.add('o_we_preview');
+        } else if (previewMode === 'reset') {
+            data.prepare = () => this.el.classList.remove('o_we_preview');
+        }
+
+        this.trigger_up('user_value_update', data);
+    },
+    /**
      * Adds the given widget to the known list of user value sub-widgets (useful
      * for container widgets).
      *
@@ -373,32 +398,6 @@ const UserValueWidget = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {boolean} [previewMode=false]
-     */
-    _notifyValueChange: function (previewMode) {
-        if (!this._methodsNames.length) {
-            return;
-        }
-
-        const data = {
-            widget: this,
-            previewMode: previewMode || false,
-        };
-        // TODO improve this. The preview state has to be updated only when the
-        // actual option _select is gonna be called... but this is delayed by a
-        // mutex. So, during test tours, we would notify both 'preview' and
-        // 'reset' before the 'preview' handling is done: and so the widget
-        // would be considered not in preview during that 'preview' handling.
-        if (previewMode === true) {
-            data.prepare = () => this.el.classList.add('o_we_preview');
-        } else if (previewMode === 'reset') {
-            data.prepare = () => this.el.classList.remove('o_we_preview');
-        }
-
-        this.trigger_up('user_value_update', data);
-    },
-    /**
      * Updates the UI to match the user value the widget currently holds (this
      * method is called by @see updateUI and does not perform a check to verify
      * if the UI can be updated).
@@ -432,7 +431,7 @@ const UserValueWidget = Widget.extend({
         }
         ev.preventDefault();
 
-        this._notifyValueChange(false);
+        this.notifyValueChange(false);
     },
     /**
      * Allows container widgets to add additional data if needed.
@@ -456,7 +455,7 @@ const UserValueWidget = Widget.extend({
         }
         ev.preventDefault();
 
-        this._notifyValueChange(true);
+        this.notifyValueChange(true);
     },
     /**
      * Should be called when an user event on the widget indicates a value
@@ -474,7 +473,7 @@ const UserValueWidget = Widget.extend({
         }
         ev.preventDefault();
 
-        this._notifyValueChange('reset');
+        this.notifyValueChange('reset');
     },
 });
 
@@ -1018,7 +1017,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     _onColorPicked: function (ev) {
         this._previewColor = false;
         this._value = ev.data.color;
-        this._notifyValueChange(false);
+        this.notifyValueChange(false);
     },
     /**
      * Called when a color button is entered -> previews the background color.
@@ -1028,7 +1027,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onColorHovered: function (ev) {
         this._previewColor = ev.data.color;
-        this._notifyValueChange(true);
+        this.notifyValueChange(true);
     },
     /**
      * Called when a color button is left -> cancels the preview.
@@ -1038,7 +1037,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onColorLeft: function (ev) {
         this._previewColor = false;
-        this._notifyValueChange('reset');
+        this.notifyValueChange('reset');
     },
     /**
      * Called when the color reset button is clicked -> removes all color
@@ -1048,7 +1047,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onColorReset: function () {
         this._value = '';
-        this._notifyValueChange(false);
+        this.notifyValueChange(false);
     },
 });
 
@@ -1135,7 +1134,7 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
                 this._value = dummyEl.getAttribute('src');
                 this.isVideo = false;
             }
-            this._notifyValueChange(false);
+            this.notifyValueChange(false);
         });
     },
     /**
@@ -1146,7 +1145,7 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
     _onRemoveImage: function (ev) {
         this._value = '';
         this.isVideo = false;
-        this._notifyValueChange(false);
+        this.notifyValueChange(false);
     },
 });
 
