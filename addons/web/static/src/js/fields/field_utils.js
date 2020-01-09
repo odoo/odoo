@@ -432,12 +432,10 @@ function parseDate(value, field, options) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
-        if (date.year() >= 1900) {
-            date.toJSON = function () {
-                return this.clone().locale('en').format('YYYY-MM-DD');
-            };
-            return date;
-        }
+        date.toJSON = function () {
+            return this.clone().locale('en').format('YYYY-MM-DD');
+        };
+        return date;
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
 }
@@ -479,12 +477,10 @@ function parseDateTime(value, field, options) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
-        if (datetime.year() >= 1900) {
-            datetime.toJSON = function () {
-                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
-            };
-            return datetime;
-        }
+        datetime.toJSON = function () {
+            return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
+        };
+        return datetime;
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }

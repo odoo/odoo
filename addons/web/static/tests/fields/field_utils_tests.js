@@ -300,7 +300,7 @@ QUnit.test('parse percentage', function(assert) {
 });
 
 QUnit.test('parse datetime', function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     var originalParameters = _.clone(core._t.database.parameters);
     var originalLocale = moment.locale();
@@ -328,7 +328,6 @@ QUnit.test('parse datetime', function (assert) {
     moment.locale('englishForTest');
     _.extend(core._t.database.parameters, {date_format: '%m/%d/%Y', time_format: '%H:%M:%S'});
     assert.throws(function () {fieldUtils.parse.datetime("13/01/2019 12:00:00", {}, {})}, /is not a correct/, "Wrongly formated dates should be invalids");
-    assert.throws(function () {fieldUtils.parse.datetime("1899-01-01 12:00:00", {}, {})}, /is not a correct/, "Dates before 1900 should be invalids");
 
     dateStr = '01/13/2019 10:05:45';
     date1 = fieldUtils.parse.datetime(dateStr);
