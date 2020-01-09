@@ -312,7 +312,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         check_company=True,
-        domain="[('product_id', '=', product_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('product_id', '=', product_id), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]")
     qty_to_consume = fields.Float('To Consume', digits='Product Unit of Measure')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     qty_done = fields.Float('Consumed', digits='Product Unit of Measure')

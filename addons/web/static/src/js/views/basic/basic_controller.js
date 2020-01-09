@@ -837,7 +837,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.translationDialog = new TranslationDialog(this, {
             domain: result.domain,
             searchName: result.context.search_default_name,
-            fieldName: record.fieldsInfo[record.viewType][ev.data.fieldName].name,
+            fieldName: ev.data.fieldName,
             userLanguageValue: ev.target.value || '',
             dataPointID: record.id,
             isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,

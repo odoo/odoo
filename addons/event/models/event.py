@@ -275,7 +275,7 @@ class EventEvent(models.Model):
             if self.event_type_id.event_type_mail_ids:
                 self.event_mail_ids = [(5, 0, 0)] + [
                     (0, 0, {
-                        attribute_name: line[attribute_name]
+                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
                         })
                     for line in self.event_type_id.event_type_mail_ids]

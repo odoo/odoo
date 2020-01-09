@@ -1870,6 +1870,33 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
         });
 
+        QUnit.test('call makeRecord with a reference field', async function (assert) {
+            assert.expect(2);
+            let rpcCount = 0;
+
+            const model = createModel({
+                Model: BasicModel,
+                data: this.data,
+                mockRPC: function (route, args) {
+                    rpcCount++;
+                    return this._super(route, args);
+                },
+            });
+
+            const field = this.data.partner.fields.reference;
+            const recordID = await model.makeRecord('coucou', [{
+                name: 'reference',
+                type: 'reference',
+                selection: field.selection,
+                value: 'product,37',
+            }]);
+            const record = model.get(recordID);
+            assert.deepEqual(record.data.reference.data, { id: 37, display_name: 'xphone' });
+            assert.strictEqual(rpcCount, 1);
+
+            model.destroy();
+        });
+
         QUnit.test('check id, active_id, active_ids, active_model values in record\'s context', async function (assert) {
             assert.expect(2);
 

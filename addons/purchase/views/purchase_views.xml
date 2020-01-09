@@ -186,6 +186,7 @@
                                     <field name="state" invisible="1"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="invoice_lines" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field
                                         name="product_id"
@@ -210,7 +211,7 @@
                                             'required': [('display_type', '=', False)]
                                         }"
                                         force_save="1" optional="show"/>
-                                    <field name="price_unit"/>
+                                    <field name="price_unit" attrs="{'readonly': [('invoice_lines', '!=', [])]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
