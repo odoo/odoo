@@ -339,7 +339,7 @@ class AccountMove(models.Model):
                 line.currency_id = new_currency
 
         self.line_ids._onchange_currency()
-        self._recompute_dynamic_lines()
+        self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
     @api.onchange('invoice_payment_ref')
     def _onchange_invoice_payment_ref(self):
@@ -424,7 +424,7 @@ class AccountMove(models.Model):
             'tag_ids': [(6, 0, tax_vals['tag_ids'])],
         }
 
-    def _recompute_tax_lines(self):
+    def _recompute_tax_lines(self, recompute_tax_base_amount=False):
         ''' Compute the dynamic tax lines of the journal entry.
 
         :param lines_map: The line_ids dispatched by type containing:
@@ -564,6 +564,8 @@ class AccountMove(models.Model):
 
             if not tax_line and not taxes_map_entry['grouping_dict']:
                 continue
+            elif tax_line and recompute_tax_base_amount:
+                tax_line.tax_base_amount = tax_base_amount
             elif tax_line and not taxes_map_entry['grouping_dict']:
                 # The tax line is no longer used, drop it.
                 self.line_ids -= tax_line
@@ -850,7 +852,7 @@ class AccountMove(models.Model):
             self.invoice_payment_ref = new_terms_lines[-1].name or ''
             self.invoice_date_due = new_terms_lines[-1].date_maturity
 
-    def _recompute_dynamic_lines(self, recompute_all_taxes=False):
+    def _recompute_dynamic_lines(self, recompute_all_taxes=False, recompute_tax_base_amount=False):
         ''' Recompute all lines that depend of others.
 
         For example, tax lines depends of base lines (lines having tax_ids set). This is also the case of cash rounding
@@ -870,6 +872,8 @@ class AccountMove(models.Model):
             # Compute taxes.
             if recompute_all_taxes:
                 invoice._recompute_tax_lines()
+            if recompute_tax_base_amount:
+                invoice._recompute_tax_lines(recompute_tax_base_amount=True)
 
             if invoice.is_invoice(include_receipts=True):
 
