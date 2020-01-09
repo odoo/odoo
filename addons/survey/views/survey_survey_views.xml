@@ -7,11 +7,14 @@
         <field name="arch" type="xml">
             <form string="Survey" class="o_survey_form">
                 <field name="id" invisible="1"/>
+                <field name="user_input_current_session" invisible="1"/>
                 <header>
                     <button name="action_open" string="Start Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('id', '=', False)]}"/>
                     <button name="action_send_survey" string="Share" type="object" class="oe_highlight" states="open"/>
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       attrs="{'invisible': ['|', ('state', '=', 'draft'), ('answer_done_count', '&lt;=', 0)]}"/>
+                    <button name="action_start_input_session" string="Create Live Session" type="object"
+                        attrs="{'invisible': [('questions_layout', '!=', 'page_per_question')]}"/>
                     <button name="action_draft" string="Set to draft" type="object" states="closed"/>
                     <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('state', '=', 'closed'), ('id', '=', False)]}"/>
                     <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
@@ -39,6 +42,13 @@
                             class="oe_stat_button"
                             icon="fa-pencil-square-o">
                             <field string="Answers" name="answer_done_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_user_input_session"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-users"
+                            attrs="{'invisible': [('user_input_session_count', '=', 0)]}">
+                            <field string="Sessions" name="user_input_session_count" widget="statinfo"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

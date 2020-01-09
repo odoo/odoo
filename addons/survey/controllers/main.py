@@ -223,10 +223,15 @@ class Survey(http.Controller):
             else:
                 return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
+        current_session_state = answer_sudo.user_input_session_id.state if answer_sudo.user_input_session_id else False
         # Select the right page
-        if answer_sudo.state == 'new':  # Intro page
+        if answer_sudo.state == 'new' and current_session_state != 'in_progress':  # Intro page
             data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
-            return request.render('survey.survey_page_start', data)
+            if current_session_state == 'ready' and not answer_token:
+                # force the answer_token to avoid re-creating answers on refresh
+                return request.redirect('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))
+            else:
+                return request.render('survey.survey_page_start', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
 
@@ -338,7 +343,7 @@ class Survey(http.Controller):
                 comment = prepared_questions[question.id]['comment']
                 answer_sudo.save_lines(question, answer, comment)
 
-        if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
+        if (not answer_sudo.user_input_session_id and answer_sudo.is_time_limit_reached) or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
         elif 'previous_page_id' in post:
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
@@ -480,8 +485,11 @@ class Survey(http.Controller):
     # REPORTING SURVEY ROUTES
     # ------------------------------------------------------------
 
-    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
-    def survey_report(self, survey, answer_token=None, **post):
+    @http.route([
+        '/survey/results/<model("survey.survey"):survey>',
+        '/survey/results/<model("survey.survey"):survey>/<model("survey.user_input_session"):session>'],
+        type='http', auth='user', website=True)
+    def survey_report(self, survey, session=None, answer_token=None, **post):
         """ Display survey Results & Statistics for given survey.
 
         New structure: {
@@ -492,21 +500,27 @@ class Survey(http.Controller):
             'search_finished': either filter on finished inputs only or not,
         }
         """
-        user_input_lines, search_filters = self._extract_filters_data(survey, post)
+        user_input_lines, search_filters = self._extract_filters_data(survey, session, post)
         survey_data = survey._prepare_statistics(user_input_lines)
         question_and_page_data = survey.question_and_page_ids._prepare_statistics(user_input_lines)
 
-        return request.render('survey.survey_page_statistics', {
+        template_values = {
             # survey and its statistics
+            'session': session,
             'survey': survey,
             'question_and_page_data': question_and_page_data,
             'survey_data': survey_data,
             # search
             'search_filters': search_filters,
             'search_finished': post.get('finished') == 'true',
-        })
+        }
 
-    def _extract_filters_data(self, survey, post):
+        if session and session.competitive_mode:
+            template_values['ranking'] = session._prepare_ranking_values()
+
+        return request.render('survey.survey_page_statistics', template_values)
+
+    def _extract_filters_data(self, survey, session, post):
         search_filters = []
         line_filter_domain, line_choices = [], []
         for data in post.get('filters', '').split('|'):
@@ -533,6 +547,10 @@ class Survey(http.Controller):
             line_filter_domain = expression.AND([[('suggested_answer_id', 'in', line_choices)], line_filter_domain])
 
         user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
+
+        if session:
+            user_input_domain = expression.AND([[('id', 'in', session.answer_ids.ids)], user_input_domain])
+
         if line_filter_domain:
             matching_line_ids = request.env['survey.user_input.line'].sudo().search(line_filter_domain).ids
             user_input_domain = expression.AND([

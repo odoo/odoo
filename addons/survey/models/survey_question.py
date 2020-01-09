@@ -82,6 +82,9 @@ class SurveyQuestion(models.Model):
     save_as_email = fields.Boolean(
         "Save as user email", compute='_compute_save_as_email', readonly=False, store=True,
         help="If checked, this option will save the user's answer as its email address.")
+    save_as_nickname = fields.Boolean(
+        "Save as user nickname", compute='_compute_save_as_nickname', readonly=False, store=True,
+        help="If checked, this option will save the user's answer as its nickname.")
     # -- simple choice / multiple choice / matrix
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
@@ -180,6 +183,12 @@ class SurveyQuestion(models.Model):
         for question in self:
             if question.question_type != 'char_box' or not question.validation_email:
                 question.save_as_email = False
+
+    @api.depends('question_type')
+    def _compute_save_as_nickname(self):
+        for question in self:
+            if question.question_type != 'char_box':
+                question.save_as_nickname = False
 
     # Validation methods
     def validate_question(self, answer, comment=None):
@@ -427,7 +436,7 @@ class SurveyQuestion(models.Model):
         return {
             'numerical_max': max(all_values, default=0),
             'numerical_min': min(all_values, default=0),
-            'numerical_average': round(lines_sum / len(all_values) or 1, 2),
+            'numerical_average': round(lines_sum / (len(all_values) or 1), 2),
             'numerical_common_lines': collections.Counter(all_values).most_common(5),
         }
 

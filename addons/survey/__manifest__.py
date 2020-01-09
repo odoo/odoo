@@ -37,6 +37,7 @@ sent mails with personal token for the invitation of the survey.
         'views/survey_templates.xml',
         'views/survey_templates_management.xml',
         'views/survey_templates_statistics.xml',
+        'views/survey_templates_user_input_session.xml',
         'views/gamification_badge_views.xml',
         'wizard/survey_invite_views.xml',
         'views/res_partner_views.xml',
