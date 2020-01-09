@@ -609,31 +609,13 @@ class SaleOrder(models.Model):
                 new_invoice_vals_list.append(ref_invoice_vals)
             invoice_vals_list = new_invoice_vals_list
 
-        # 3) Manage 'final' parameter: transform out_invoice to out_refund if negative.
-        out_invoice_vals_list = []
-        refund_invoice_vals_list = []
+        # 3) Create invoices.
+        moves = self.env['account.move'].with_context(default_type='out_invoice').create(invoice_vals_list)
+        # 4) Some moves might actually be refunds: convert them if the total amount is negative
+        # We do this after the moves have been created since we need taxes, etc. to know if the total
+        # is actually negative or not
         if final:
-            for invoice_vals in invoice_vals_list:
-                if sum(l[2]['quantity'] * l[2]['price_unit'] for l in invoice_vals['invoice_line_ids']) < 0:
-                    for l in invoice_vals['invoice_line_ids']:
-                        l[2]['quantity'] = -l[2]['quantity']
-                    invoice_vals['type'] = 'out_refund'
-                    refund_invoice_vals_list.append(invoice_vals)
-                else:
-                    out_invoice_vals_list.append(invoice_vals)
-        else:
-            out_invoice_vals_list = invoice_vals_list
-
-        if invoice_vals['type'] in self.env['account.move'].get_outbound_types():
-            invoice_bank_id = self.partner_id.bank_ids[:1]
-        else:
-            invoice_bank_id = self.company_id.partner_id.bank_ids[:1]
-
-        invoice_vals['invoice_partner_bank_id'] = invoice_bank_id
-
-        # Create invoices.
-        moves = self.env['account.move'].with_context(default_type='out_invoice').create(out_invoice_vals_list)
-        moves += self.env['account.move'].with_context(default_type='out_refund').create(refund_invoice_vals_list)
+            moves.filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
         for move in moves:
             move.message_post_with_view('mail.message_origin_link',
                 values={'self': move, 'origin': move.line_ids.mapped('sale_line_ids.order_id')},
