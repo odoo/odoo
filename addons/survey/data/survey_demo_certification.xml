@@ -196,40 +196,40 @@
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_1">
             <field name="question_id" ref="vendor_certification_page_2_question_1"/>
             <field name="sequence">1</field>
-            <field name="value">20$</field>
+            <field name="value">$20</field>
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_2">
             <field name="question_id" ref="vendor_certification_page_2_question_1"/>
             <field name="sequence">2</field>
-            <field name="value">50$</field>
+            <field name="value">$50</field>
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_3">
             <field name="question_id" ref="vendor_certification_page_2_question_1"/>
             <field name="sequence">3</field>
-            <field name="value">80$</field>
+            <field name="value">$80</field>
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_4">
             <field name="question_id" ref="vendor_certification_page_2_question_1"/>
             <field name="sequence">4</field>
-            <field name="value">100$</field>
+            <field name="value">$100</field>
             <field name="is_correct" eval="True" />
             <field name="answer_score">2.0</field>
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_5">
             <field name="question_id" ref="vendor_certification_page_2_question_1"/>
             <field name="sequence">5</field>
-            <field name="value">200$</field>
+            <field name="value">$200</field>
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_6">
             <field name="question_id" ref="vendor_certification_page_2_question_1"/>
             <field name="sequence">6</field>
-            <field name="value">300$</field>
+            <field name="value">$300</field>
         </record>
         <!-- Question and predefined answer 7 -->
         <record model="survey.question" id="vendor_certification_page_2_question_2">
             <field name="survey_id" ref="vendor_certification" />
             <field name="sequence">9</field>
-            <field name="title">Select all the the products that sell for 100$ or more</field>
+            <field name="title">Select all the the products that sell for $100 or more</field>
             <field name="question_type">multiple_choice</field>
             <field name="column_nb">2</field>
         </record>
@@ -304,6 +304,70 @@
             <field name="question_id" ref="vendor_certification_page_2_question_3"/>
             <field name="sequence">5</field>
             <field name="value">A lot overpriced</field>
+        </record>
+        <!-- Page 3 -->
+        <record model="survey.question" id="vendor_certification_page_3">
+            <field name="title">Policies</field>
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="is_page" eval="True"/>
+            <field name="question_type" eval="False" />
+            <field name="sequence">11</field>
+            <field name="description">&lt;p&gt;Test your knowledge of our policies.&lt;/p&gt;</field>
+        </record>
+        <!-- Question and predefined answer 9 -->
+        <record model="survey.question" id="vendor_certification_page_3_question_1">
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="sequence">12</field>
+            <field name="title">How many days is our money-back guarantee?</field>
+            <field name="question_type">numerical_box</field>
+            <field name="is_scored_question" eval="True" />
+            <field name="answer_numerical_box">30</field>
+            <field name="answer_score">1.0</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <!-- Question and predefined answer 10 -->
+        <record model="survey.question" id="vendor_certification_page_3_question_2">
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="sequence">13</field>
+            <field name="title">If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it?</field>
+            <field name="question_type">date</field>
+            <field name="is_scored_question" eval="True" />
+            <field name="answer_date">2020-01-08</field>
+            <field name="answer_score">1.0</field>
+        </record>
+        <!-- Question and predefined answer 11 -->
+        <record model="survey.question" id="vendor_certification_page_3_question_3">
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="sequence">14</field>
+            <field name="title">If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?</field>
+            <field name="question_type">datetime</field>
+            <field name="is_scored_question" eval="True" />
+            <field name="answer_datetime">2021-01-07 00:00:01</field>
+            <field name="answer_score">1.0</field>
+        </record>
+        <!-- Question and predefined answer 12 -->
+        <record model="survey.question" id="vendor_certification_page_3_question_4">
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="sequence">15</field>
+            <field name="title">What day to you think is best for us to start having an annual sale (not rated)?</field>
+            <field name="question_type">date</field>
+            <field name="answer_score">0</field>
+        </record>
+        <!-- Question and predefined answer 13 -->
+        <record model="survey.question" id="vendor_certification_page_3_question_5">
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="sequence">16</field>
+            <field name="title">What day and time do you think most customers are most likely to call customer service (not rated)?</field>
+            <field name="question_type">datetime</field>
+            <field name="answer_score">0</field>
+        </record>
+        <!-- Question and predefined answer 14 -->
+        <record model="survey.question" id="vendor_certification_page_3_question_6">
+            <field name="survey_id" ref="vendor_certification" />
+            <field name="sequence">17</field>
+            <field name="title">How many chairs do you think we should aim to sell in a year (not rated)?</field>
+            <field name="question_type">numerical_box</field>
+            <field name="answer_score">0</field>
         </record>
 
         <record model="survey.user_input" id="survey_vendor_certification_answer_1">
