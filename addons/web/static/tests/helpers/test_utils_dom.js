@@ -20,9 +20,9 @@ var concurrency = require('web.concurrency');
  *
  * @returns {Promise}
  */
-function returnAfterNextAnimationFrame() {
-    return new Promise(async resolve => {
-        await concurrency.delay(0);
+async function returnAfterNextAnimationFrame() {
+    await concurrency.delay(0);
+    await new Promise(resolve => {
         window.requestAnimationFrame(resolve);
     });
 }
