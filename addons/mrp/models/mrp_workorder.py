@@ -767,7 +767,8 @@ class MrpWorkorder(models.Model):
                 AND wo2.state IN ('pending','ready')
                 AND wo1.id != wo2.id
                 AND wo1.workcenter_id = wo2.workcenter_id
-                AND (wo2.date_planned_start, wo2.date_planned_finished) OVERLAPS (wo1.date_planned_start, wo1.date_planned_finished)
+                AND (DATE_TRUNC('second', wo2.date_planned_start), DATE_TRUNC('second', wo2.date_planned_finished))
+                    OVERLAPS (DATE_TRUNC('second', wo1.date_planned_start), DATE_TRUNC('second', wo1.date_planned_finished))
         """
         self.env.cr.execute(sql, [tuple(self.ids)])
         res = defaultdict(list)
