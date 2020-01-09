@@ -111,9 +111,7 @@ function createPropertyProxy(obj, propertyName, value) {
 const UserValueWidget = Widget.extend({
     className: 'o_we_user_value_widget',
     custom_events: {
-        'user_value_change': '_onUserValueNotification',
-        'user_value_preview': '_onUserValueNotification',
-        'user_value_reset': '_onUserValueNotification',
+        'user_value_update': '_onUserValueNotification',
     },
 
     /**
@@ -385,35 +383,20 @@ const UserValueWidget = Widget.extend({
 
         const data = {
             widget: this,
+            previewMode: previewMode || false,
         };
-        switch (previewMode) {
-            case undefined:
-            case false: {
-                this.trigger_up('user_value_change', data);
-                break;
-            }
-            case true: {
-                // TODO improve this. The preview state has to be updated only
-                // when the actual option _select is gonna be called... but this
-                // is delayed by a mutex. So, during test tours, we would notify
-                // both 'preview' and 'reset' before the 'preview' handling is
-                // done: and so the widget would be considered not in preview
-                // during that preview action handling.
-                data.prepare = () => this.el.classList.add('o_we_preview');
-                this.trigger_up('user_value_preview', data);
-                break;
-            }
-            default: {
-                // TODO improve this. The preview state has to be updated only
-                // when the actual option _select is gonna be called... but this
-                // is delayed by a mutex. So, during test tours, we would notify
-                // both 'preview' and 'reset' before the 'preview' handling is
-                // done: and so the widget would be considered not in preview
-                // during that preview action handling.
-                data.prepare = () => this.el.classList.remove('o_we_preview');
-                this.trigger_up('user_value_reset', data);
-            }
+        // TODO improve this. The preview state has to be updated only when the
+        // actual option _select is gonna be called... but this is delayed by a
+        // mutex. So, during test tours, we would notify both 'preview' and
+        // 'reset' before the 'preview' handling is done: and so the widget
+        // would be considered not in preview during that 'preview' handling.
+        if (previewMode === true) {
+            data.prepare = () => this.el.classList.add('o_we_preview');
+        } else if (previewMode === 'reset') {
+            data.prepare = () => this.el.classList.remove('o_we_preview');
         }
+
+        this.trigger_up('user_value_update', data);
     },
     /**
      * Updates the UI to match the user value the widget currently holds (this
@@ -1309,9 +1292,7 @@ const userValueWidgetsRegistry = {
 const SnippetOptionWidget = Widget.extend({
     tagName: 'we-customizeblock-option',
     custom_events: {
-        'user_value_change': '_onOptionSelection',
-        'user_value_preview': '_onOptionPreview',
-        'user_value_reset': '_onOptionCancel',
+        'user_value_update': '_onUserValueUpdate',
     },
     /**
      * Indicates if the option should be displayed in the button group at the
@@ -1844,45 +1825,6 @@ const SnippetOptionWidget = Widget.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} ev
-     * @param {boolean|string} previewMode
-     */
-    _handleUserValueEvent: function (ev, previewMode) {
-        ev.stopPropagation();
-        this.trigger_up('snippet_edition_request', {exec: async () => {
-            if (ev.data.prepare) {
-                ev.data.prepare();
-            }
-
-            const widget = ev.data.widget;
-            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
-                // TODO the flag should be fetched through widget params somehow
-                return;
-            }
-
-            // If it is not preview mode, the user selected the option for good
-            // (so record the action)
-            if (!previewMode) {
-                this.trigger_up('request_history_undo_record', {$target: this.$target});
-            }
-
-            // Call widget option methods and update $target
-            await this._select(previewMode, widget);
-            this.$target.trigger('content_changed');
-
-            await new Promise(resolve => {
-                // Will update the UI of the correct widgets for all options
-                // related to the same $target/editor if necessary
-                this.trigger_up('snippet_option_update', {
-                    widget: widget,
-                    previewMode: previewMode,
-                    onSuccess: () => resolve(),
-                });
-            });
-        }});
-    },
-    /**
-     * @private
      * @param {*}
      * @returns {string}
      */
@@ -2039,34 +1981,46 @@ const SnippetOptionWidget = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when a option link is entered or an option input content is being
-     * modified -> activates the related option in preview mode.
+     * Called when a widget notifies a preview/change/reset.
      *
      * @private
      * @param {Event} ev
      */
-    _onOptionPreview: function (ev) {
-        this._handleUserValueEvent(ev, true);
-    },
-    /**
-     * Called when an option link is clicked or an option input content is
-     * validated -> activates the related option.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onOptionSelection: function (ev) {
-        this._handleUserValueEvent(ev, false);
-    },
-    /**
-     * Called when an option link/menu is left -> reactivate the options that
-     * were activated before previews.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onOptionCancel: function (ev) {
-        this._handleUserValueEvent(ev, 'reset');
+    _onUserValueUpdate: function (ev) {
+        const previewMode = ev.data.previewMode;
+
+        ev.stopPropagation();
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            if (ev.data.prepare) {
+                ev.data.prepare();
+            }
+
+            const widget = ev.data.widget;
+            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
+                // TODO the flag should be fetched through widget params somehow
+                return;
+            }
+
+            // If it is not preview mode, the user selected the option for good
+            // (so record the action)
+            if (!previewMode) {
+                this.trigger_up('request_history_undo_record', {$target: this.$target});
+            }
+
+            // Call widget option methods and update $target
+            await this._select(previewMode, widget);
+            this.$target.trigger('content_changed');
+
+            await new Promise(resolve => {
+                // Will update the UI of the correct widgets for all options
+                // related to the same $target/editor if necessary
+                this.trigger_up('snippet_option_update', {
+                    widget: widget,
+                    previewMode: previewMode,
+                    onSuccess: () => resolve(),
+                });
+            });
+        }});
     },
 });
 const registry = {};
