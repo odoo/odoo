@@ -182,7 +182,8 @@ class StockPicking(models.Model):
         self.ensure_one()
         sale_order = self.sale_id
         if sale_order.invoice_shipping_on_delivery:
-            sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
+            carrier_price = self.carrier_price * (1.0 + (float(self.carrier_id.margin) / 100.0))
+            sale_order._create_delivery_line(self.carrier_id, carrier_price)
 
     @api.multi
     def open_website_url(self):
