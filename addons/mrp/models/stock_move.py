@@ -346,13 +346,14 @@ class StockMove(models.Model):
             return 0.0
 
     def _decrease_initial_demand(self, qty):
+        done_move_to_return = []
         finished_moves = self.env['stock.move']
         for move in self:
             if move.production_id and move.state not in ('done, cancel'):
-                if qty < move.production_id.product_qty - move.production_id.qty_produced:
+                try:
                     move.production_id._update_quantity(move.production_id.product_qty - qty)
                     finished_moves |= move
-                else:
+                except UserError:
                     # Set activity on MO
-                    pass
-        return super(StockMove, self - finished_moves)._decrease_initial_demand(qty)
+                    done_move_to_return.append((move, move.production_id))
+        return done_move_to_return + super(StockMove, self - finished_moves)._decrease_initial_demand(qty)

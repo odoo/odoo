@@ -1615,13 +1615,13 @@ class StockMove(models.Model):
                 move.procure_method = 'make_to_stock'
 
     def _decrease_initial_demand(self, qty):
-        done_move_to_return = self.env['stock.move']
+        done_move_to_return = []
         for move in self:
             if move.state in ('done', 'cancel'):
-                done_move_to_return |= move
+                done_move_to_return.append((move, move.picking_id))
                 continue
             move.product_uom_qty -= qty
-            done_move_to_return |= move.move_orig_ids._decrease_initial_demand(qty)
+            done_move_to_return += move.move_orig_ids._decrease_initial_demand(qty)
             # In case a move has more than 1 not-done move_orig, we don't want to
             # propagate several times the quantity so we stop it
             break

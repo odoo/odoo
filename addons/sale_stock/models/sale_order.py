@@ -82,23 +82,19 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
-                to_log = self.env['stock.move']
+                to_log = {}
+                issues = []
                 for order_line in order.order_line:
                     if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
-                        to_log |= order_line.move_ids._decrease_initial_demand(pre_order_line_qty.get(order_line, 0.0) - order_line.product_uom_qty)
-                # if to_log:
-                #     documents = defaultdict(dict)
-                #     for move in to_log:
-                #         # todo change order_line
-                #         rendering_context = {move: order_line}
-                #         parent = move._delay_alert_get_documents()[0]
-                #         responsible = parent.user_id
-                #         documents[(parent, responsible)] = rendering_context, move
-                #     order._log_decrease_ordered_quantity(documents)
-                #         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
-                # if to_log:
-                #     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
-                #     order._log_decrease_ordered_quantity(documents)
+                        issue = order_line.move_ids._decrease_initial_demand(pre_order_line_qty.get(order_line, 0.0) - order_line.product_uom_qty)
+                        if issue:
+                            issues += issue
+                            to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
+                if to_log:
+                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                    issues_parent = [i[1] for i in issues]
+                    documents = {d_key: d_value for d_key, d_value in documents.items() if d_key[0] in issues_parent}
+                    order._log_decrease_ordered_quantity(documents)
         return res
 
     def _compute_json_popover(self):
