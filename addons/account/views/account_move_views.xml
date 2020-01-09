@@ -153,7 +153,7 @@
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
                     <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
-                    <field name="full_reconcile_id" optional="show"/>
+                    <field name="matching_number" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
@@ -181,7 +181,7 @@
                     <field name="ref" optional="hide"/>
                     <field name="name"/>
                     <field name="reconciled" invisible="1"/>
-                    <field name="full_reconcile_id" string="Matching" optional="show"/>
+                    <field name="matching_number" string="Matching" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
@@ -214,7 +214,7 @@
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="matching_number" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tax_ids" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="tag_ids" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
@@ -229,7 +229,7 @@
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="ref" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="matching_number" position="attributes"><attribute name="optional">hide</attribute></field>
             </field>
         </record>
 
@@ -275,7 +275,7 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
-                <field name="full_reconcile_id" position="after">
+                <field name="matching_number" position="after">
                     <field name="tax_line_id" string="Tax"/>
                     <field name="tax_base_amount" sum="Total Base Amount"/>
                     <field name="tax_audit"/>
@@ -283,7 +283,7 @@
                 </field>
                 <field name="date_maturity" position="replace"/>
                 <field name="analytic_account_id" position="replace"/>
-                <field name="full_reconcile_id" position="replace"/>
+                <field name="matching_number" position="replace"/>
                 <field name="debit" position="replace"/>
                 <field name="credit" position="replace"/>
             </field>
@@ -1396,6 +1396,17 @@ if records:
             <field name="state">code</field>
             <field name="code">
                 action = env.company._action_check_hash_integrity()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_move_transfer_accounts">
+            <field name="name">Transfer Entries</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="binding_model_id" ref="account.model_account_move_line" />
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_transfer_accounts_wizard()
             </field>
         </record>
 
