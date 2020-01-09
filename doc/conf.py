@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys, os
 import sphinx
+import mock
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -11,6 +12,16 @@ sys.path.insert(0,
         os.path.join(DIR, '_extensions')))
 # put current odoo's source on PYTHONPATH for autodoc
 sys.path.insert(0, os.path.abspath(os.path.join(DIR, '..')))
+
+# Specify here the addons modules needed for sphinx build
+# Due to the specific odoo architecture,
+# Other modules are imported as "from odoo.addons. ... import
+# Whereas sphinx only knows base in odoo.addons, not all the modules
+MOCK_MODULES = [
+    'odoo.addons.web.controllers.main', # needed for stock controllers when building stock doc
+]
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = mock.Mock()
 
 # -- General configuration -----------------------------------------------------
 
