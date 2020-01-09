@@ -5,60 +5,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class EventType(models.Model):
-    _inherit = 'event.type'
-
-    use_questions = fields.Boolean('Questions to Attendees')
-    question_ids = fields.One2many(
-        'event.question', 'event_type_id',
-        string='Questions', copy=True)
-
-
-class EventEvent(models.Model):
-    """ Override Event model to add optional questions when buying tickets. """
-    _inherit = 'event.event'
-
-    question_ids = fields.One2many('event.question', 'event_id', 'Questions', copy=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('is_individual', '=', False)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('is_individual', '=', True)])
-
-    @api.onchange('event_type_id')
-    def _onchange_type(self):
-        super(EventEvent, self)._onchange_type()
-        if self.event_type_id.use_questions and self.event_type_id.question_ids:
-            self.question_ids = [(5, 0, 0)] + [
-                (0, 0, {
-                    'title': question.title,
-                    'sequence': question.sequence,
-                    'is_individual': question.is_individual,
-                })
-                for question in self.event_type_id.question_ids
-            ]
-
-
-class EventRegistrationAnswer(models.Model):
-    ''' This m2m table has to be explicitly instanciated as we need unique ids
-    in the reporting view event.question.report.
-
-    This model is purely technical. '''
-
-    _name = 'event.registration.answer'
-    _table = 'event_registration_answer'
-    _description = 'Event Registration Answer'
-
-    event_answer_id = fields.Many2one('event.answer', required=True, ondelete='cascade')
-    event_registration_id = fields.Many2one('event.registration', required=True, ondelete='cascade')
-
-
-class EventRegistration(models.Model):
-    """ Store answers on attendees. """
-    _inherit = 'event.registration'
-
-    answer_ids = fields.Many2many('event.answer', 'event_registration_answer', string='Answers')
-
-
 class EventQuestion(models.Model):
     _name = 'event.question'
     _rec_name = 'title'
