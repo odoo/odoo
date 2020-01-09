@@ -625,7 +625,7 @@ return AbstractRenderer.extend({
         if (filterIndex < arrFilters.length) {
             var options = arrFilters[filterIndex];
             if (!_.find(options.filters, function (f) {return f.display == null || f.display;})) {
-                return;
+                return this._renderFiltersOneByOne(filterIndex + 1);
             }
 
             var self = this;
