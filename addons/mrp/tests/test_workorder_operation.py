@@ -1447,13 +1447,17 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertEqual(wo2.state, 'pending')
         self.assertEqual(wo3.state, 'pending')
 
+        self.assertFalse(wo1.id in wo1._get_conflicted_workorder_ids(), "Shouldn't conflict")
+        self.assertFalse(wo2.id in wo2._get_conflicted_workorder_ids(), "Shouldn't conflict")
+        self.assertFalse(wo3.id in wo3._get_conflicted_workorder_ids(), "Shouldn't conflict")
+
         # Conflicted with wo1
         wo2.write({'date_planned_start': wo1.date_planned_start, 'date_planned_finished': wo1.date_planned_finished})
         # Bad order of workorders (wo3-wo1-wo2) + Late
         wo3.write({'date_planned_start': wo1.date_planned_start - timedelta(weeks=1), 'date_planned_finished': wo1.date_planned_finished - timedelta(weeks=1)})
 
-        self.assertEqual(wo2.id in wo2._get_conflicted_workorder_ids(), True, "Should conflict with wo1")
-        self.assertEqual(wo1.id in wo1._get_conflicted_workorder_ids(), True, "Should conflict with wo2")
+        self.assertTrue(wo2.id in wo2._get_conflicted_workorder_ids(), "Should conflict with wo1")
+        self.assertTrue(wo1.id in wo1._get_conflicted_workorder_ids(), "Should conflict with wo2")
 
         self.assertTrue('text-danger' in wo2.json_popover, "Popover should in be in red (due to conflict)")
         self.assertTrue('text-danger' in wo3.json_popover, "Popover should in be in red (due to bad order of wo)")
