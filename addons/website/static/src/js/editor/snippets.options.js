@@ -1217,10 +1217,11 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
      * Called when the autocomplete change the input value.
      *
      * @private
+     * @param {OdooEvent} ev
      */
-    _onWebsiteURLChosen: function () {
+    _onWebsiteURLChosen: function (ev) {
         $(this.inputEl).trigger('input');
-        this.notifyValueChange(false);
+        this._onUserValueChange(ev);
     },
 });
 
