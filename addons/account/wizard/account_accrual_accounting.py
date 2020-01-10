@@ -62,6 +62,7 @@ class AccrualAccountingWizard(models.TransientModel):
         rec['account_type'] = active_move_line_ids[0].account_id.user_type_id.internal_group
         return rec
 
+<<<<<<< HEAD
     @api.depends('active_move_line_ids', 'journal_id', 'revenue_accrual_account', 'expense_accrual_account', 'percentage', 'date', 'account_type')
     def _compute_data(self):
         for record in self:
@@ -130,8 +131,51 @@ class AccrualAccountingWizard(models.TransientModel):
                         'account_id': accrual_account.id,
                         'partner_id': aml.partner_id.id,
                     }),
+=======
+    def amend_entries(self):
+        # set the accrual account on the selected journal items
+        accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
+
+        # Generate journal entries.
+        move_data = {}
+        for aml in self.active_move_line_ids:
+            ref1 = _('Accrual Adjusting Entry (%s%% recognized) for invoice: %s') % (self.percentage, aml.move_id.name)
+            ref2 = _('Accrual Adjusting Entry (%s%% recognized) for invoice: %s') % (100 - self.percentage, aml.move_id.name)
+            move_data.setdefault(aml.move_id, (
+                [
+                    # Values to create moves.
+                    {
+                        'date': self.date,
+                        'ref': ref1,
+                        'journal_id': self.journal_id.id,
+                        'line_ids': [],
+                    },
+                    {
+                        'date': aml.move_id.date,
+                        'ref': ref2,
+                        'journal_id': self.journal_id.id,
+                        'line_ids': [],
+                    },
+                ], [
+                    # Messages to log on the chatter.
+                    (_('Accrual Adjusting Entry ({percent}% recognized) for invoice:') + ' <a href=# data-oe-model=account.move data-oe-id={id}>{name}</a>').format(
+                        percent=self.percentage,
+                        id=aml.move_id.id,
+                        name=aml.move_id.name,
+                    ),
+                    (_('Accrual Adjusting Entry ({percent}% recognized) for invoice:') + ' <a href=# data-oe-model=account.move data-oe-id={id}>{name}</a>').format(
+                        percent=100 - self.percentage,
+                        id=aml.move_id.id,
+                        name=aml.move_id.name,
+                    ),
+                    (_('Accrual Adjusting Entries ({percent}%% recognized) have been created for this invoice on {date}') + ' <a href=# data-oe-model=account.move data-oe-id=%(first_id)d>%(first_name)s</a> and <a href=# data-oe-model=account.move data-oe-id=%(second_id)d>%(second_name)s</a>').format(
+                        percent=self.percentage,
+                        date=format_date(self.env, self.date),
+                    ),
+>>>>>>> 13ad41901fd... temp
                 ]
 
+<<<<<<< HEAD
             # complete the account.move data
             for move in record.active_move_line_ids.move_id:
                 def format_strings(string):
@@ -211,6 +255,34 @@ class AccrualAccountingWizard(models.TransientModel):
         accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
         data = json.loads(self.data)
         move_vals, log_messages = (data['move_vals'], data['log_messages'])
+=======
+            move_data[aml.move_id][0][1]['line_ids'] += [
+                (0, 0, {
+                    'name': aml.name,
+                    'debit': reported_credit,
+                    'credit': reported_debit,
+                    'amount_currency': -reported_amount_currency,
+                    'currency_id': aml.currency_id.id,
+                    'account_id': aml.account_id.id,
+                    'partner_id': aml.partner_id.id,
+                }),
+                (0, 0, {
+                    'name': ref2,
+                    'debit': reported_debit,
+                    'credit': reported_credit,
+                    'amount_currency': reported_amount_currency,
+                    'currency_id': aml.currency_id.id,
+                    'account_id': accrual_account.id,
+                    'partner_id': aml.partner_id.id,
+                }),
+            ]
+
+        move_vals = []
+        log_messages = []
+        for v in move_data.values():
+            move_vals += v[0]
+            log_messages += v[1]
+>>>>>>> 13ad41901fd... temp
 
         created_moves = self.env['account.move'].create(move_vals)
         created_moves.post()
@@ -222,14 +294,23 @@ class AccrualAccountingWizard(models.TransientModel):
 
             to_reconcile = accrual_moves.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)
             to_reconcile.reconcile()
+<<<<<<< HEAD
             move.message_post(body=log_messages[index//2]['origin'] % {
+=======
+            move.message_post(body=log_messages[index//2 + 2] % {
+>>>>>>> 13ad41901fd... temp
                 'first_id': accrual_moves[0].id,
                 'first_name': accrual_moves[0].name,
                 'second_id': accrual_moves[1].id,
                 'second_name': accrual_moves[1].name,
             })
+<<<<<<< HEAD
             accrual_moves[0].message_post(body=log_messages[index//2]['new_date'])
             accrual_moves[1].message_post(body=log_messages[index//2]['original_date'])
+=======
+            accrual_moves[0].message_post(body=log_messages[index//2 + 0])
+            accrual_moves[1].message_post(body=log_messages[index//2 + 1])
+>>>>>>> 13ad41901fd... temp
             index += 2
 
         # open the generated entries
