@@ -238,7 +238,7 @@
                     <footer
                             t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
                         <span class="text-danger"
-                            t-if="event.seats_availability == 'limited' and not event.seats_available">
+                            t-if="event.seats_limited and not event.seats_available">
                             Sold Out
                         </span>
                     </footer>
@@ -587,8 +587,8 @@
                                 <select t-if="not ticket.is_expired and ticket.sale_available"
                                     t-attf-name="nb_register-#{ticket.id}"
                                     class="custom-select">
-                                    <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                    <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
+                                    <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
                                         <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
@@ -603,7 +603,7 @@
                     </div>
                     <div class="row no-gutters">
                         <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">Register<t t-if="event.seats_availability != 'unlimited'">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
+                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">Register<t t-if="event.seats_limited">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
                         </div>
                     </div>
                 </div>
@@ -620,8 +620,8 @@
                                 <span class="text-dark font-weight-bold align-middle pr-2">Qty</span>
                                 <link itemprop="availability" content="http://schema.org/InStock"/>
                                 <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="w-auto custom-select">
-                                    <t t-set="seats_max_ticket" t-value="(not tickets or tickets.seats_availability == 'unlimited' or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
-                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                    <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
+                                    <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event) if tickets else seats_max_event"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
                                         <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>

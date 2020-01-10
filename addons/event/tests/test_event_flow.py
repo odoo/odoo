@@ -82,7 +82,7 @@ class TestEventFlow(TestEventCommon):
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
             'seats_max': 2,
-            'seats_availability': 'limited',
+            'seats_limited': True,
         })
         self.assertTrue(test_event.auto_confirm)
 
@@ -124,7 +124,7 @@ class TestEventFlow(TestEventCommon):
             'name': 'TestEvent',
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
-            'seats_availability': 'limited',
+            'seats_limited': True,
             'seats_max': 10,
         })
         self.assertFalse(test_event.auto_confirm)
