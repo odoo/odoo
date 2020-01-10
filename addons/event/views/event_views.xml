@@ -222,15 +222,10 @@
                                     context="{'show_address': 1}"
                                     options='{"always_reload": True}'/>
                                 <field name="auto_confirm"/>
-                            </group>
-                            <group>
-                                <label for="seats_availability"/>
+                                <label for="seats_limited" string="Limit Registrations"/>
                                 <div>
-                                    <field name="seats_availability" widget='radio'/>
-                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to
-                                    </span>
-                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                    <field name="seats_limited"/>
+                                    <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/> Attendees</span>
                                 </div>
                             </group>
                         </group>
@@ -535,7 +530,7 @@
                                 <field name="event_ticket_id"
                                     domain="[
                                         ('event_id', '=', event_id),
-                                        '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                                        '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
                                     ]"
                                     attrs="{'invisible': [('event_id', '=', False)]}"
                                     options="{'no_open': True, 'no_create': True}"/>

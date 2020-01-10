@@ -75,7 +75,7 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="date_begin" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d 08:00:00')"/>
         <field name="date_end" eval="(DateTime.now() + timedelta(days=14)).strftime('%Y-%m-%d 18:00:00')"/>
-        <field name="seats_availability">limited</field>
+        <field name="seats_limited">True</field>
         <field name="seats_max">50</field>
         <field name="address_id" ref="event.res_partner_location_2"/>
         <field name="date_tz">US/Pacific</field>
@@ -168,7 +168,7 @@
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_data_online"/>
         <field name="address_id" ref="event.res_partner_location_2"/>
-        <field name="seats_availability">limited</field>
+        <field name="seats_limited">True</field>
         <field name="seats_max">200</field>
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_1])]"/>
@@ -241,7 +241,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="date_begin" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d 18:00:00')"/>
         <field name="date_end" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d 22:30:00')"/>
-        <field name="seats_availability">limited</field>
+        <field name="seats_limited">True</field>
         <field name="seats_max">4</field>
         <field name="address_id" ref="event.res_partner_location_2"/>
         <field name="date_tz">US/Pacific</field>
