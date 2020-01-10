@@ -7,7 +7,6 @@ from odoo.tools.translate import _
 
 
 class Lead2OpportunityPartner(models.TransientModel):
-
     _name = 'crm.lead2opportunity.partner'
     _description = 'Convert Lead to Opportunity (not in mass)'
     _inherit = 'crm.partner.binding'
@@ -26,7 +25,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             lead = self.env['crm.lead'].browse(self._context['active_id'])
             email = lead.partner_id.email if lead.partner_id else lead.email_from
 
-            tomerge.update(self._get_duplicated_leads(partner_id, email, include_lost=True).ids)
+            tomerge.update(self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=True).ids)
 
             if 'action' in fields and not result.get('action'):
                 result['action'] = 'exist' if partner_id else 'create'
@@ -72,11 +71,6 @@ class Lead2OpportunityPartner(models.TransientModel):
             if not user_in_team:
                 values = self.env['crm.lead']._onchange_user_values(self.user_id.id if self.user_id else False)
                 self.team_id = values.get('team_id', False)
-
-    @api.model
-    def _get_duplicated_leads(self, partner_id, email, include_lost=False):
-        """ Search for opportunities that have the same partner and that arent done or cancelled """
-        return self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
 
     # NOTE JEM : is it the good place to test this ?
     @api.model

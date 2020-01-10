@@ -43,7 +43,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
         partner_ids = [(lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from) for lead in active_leads]
         partners_duplicated_leads = {}
         for partner_id, email in partner_ids:
-            duplicated_leads = self._get_duplicated_leads(partner_id, email)
+            duplicated_leads = self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=False)
             if len(duplicated_leads) > 1:
                 partners_duplicated_leads.setdefault((partner_id, email), []).extend(duplicated_leads)
 
@@ -77,7 +77,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             for lead_id in lead_selected:
                 if lead_id not in merged_lead_ids:
                     lead = self.env['crm.lead'].browse(lead_id)
-                    duplicated_leads = self._get_duplicated_leads(lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from)
+                    duplicated_leads = self.env['crm.lead']._get_duplicated_leads_by_emails(lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from, include_lost=False)
                     if len(duplicated_leads) > 1:
                         lead = duplicated_leads.merge_opportunity()
                         merged_lead_ids.update(duplicated_leads.ids)
