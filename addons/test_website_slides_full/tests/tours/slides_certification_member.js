@@ -86,11 +86,10 @@ var buyCertificationSteps = [{
 
 var failCertificationSteps = [{
     content: 'eLearning: start certification',
-    trigger: 'a:contains("Start Certification")'
+    trigger: 'button:contains("Start Certification")'
 }, { // Question: What type of wood is the best for furniture?
     content: 'Survey: selecting answer "Fir"',
-    trigger: 'div.js_question-wrapper:contains("What type of wood is the best for furniture") select',
-    run: 'text Fir',
+    trigger: 'div.js_question-wrapper:contains("What type of wood is the best for furniture") label:contains("Fir") input',
 }, { // Question: Select all the furniture shown in the video
     content: 'Survey: ticking answer "Table"',
     trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Table") input'
@@ -109,11 +108,10 @@ var retrySteps = [{
 
 var succeedCertificationSteps = [{
     content: 'eLearning: start certification',
-    trigger: 'a:contains("Start Certification")'
+    trigger: 'button:contains("Start Certification")'
 }, { // Question: What type of wood is the best for furniture?
     content: 'Survey: selecting answer "Oak"',
-    trigger: 'div.js_question-wrapper:contains("What type of wood is the best for furniture") select',
-    run: 'text Oak',
+    trigger: 'div.js_question-wrapper:contains("What type of wood is the best for furniture") label:contains("Oak") input',
 }, { // Question: Select all the furniture shown in the video
     content: 'Survey: ticking answer "Chair"',
     trigger: 'div.js_question-wrapper:contains("Select all the furniture shown in the video") label:contains("Chair") input'
