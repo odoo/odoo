@@ -1941,7 +1941,7 @@ class AccountMove(models.Model):
                         account_id = line_vals['account_id']
                     else:
                         tax = invoice_repartition_line.invoice_tax_id
-                        base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids)[0]
+                        base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids.flatten_taxes_hierarchy())[0]
                         account_id = base_line.account_id.id
 
                 line_vals.update({
@@ -2585,10 +2585,6 @@ class AccountMoveLine(models.Model):
         if self.product_uom_id != self.product_id.uom_id:
             price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
 
-        company = self.move_id.company_id
-        if self.move_id.currency_id != company.currency_id:
-            price_unit = company.currency_id._convert(
-                price_unit, self.move_id.currency_id, company, self.move_id.date)
         return price_unit
 
     def _get_computed_account(self):
@@ -2636,7 +2632,7 @@ class AccountMoveLine(models.Model):
         if self.company_id and tax_ids:
             tax_ids = tax_ids.filtered(lambda tax: tax.company_id == self.company_id)
 
-        return self.move_id.fiscal_position_id.map_tax(tax_ids, partner=self.partner_id)
+        return tax_ids
 
     def _get_computed_uom(self):
         self.ensure_one()
@@ -2835,10 +2831,40 @@ class AccountMoveLine(models.Model):
             line.product_uom_id = line._get_computed_uom()
             line.price_unit = line._get_computed_price_unit()
 
+            # Manage the fiscal position after that and adapt the price_unit.
+            # E.g. mapping a price-included-tax to a price-excluded-tax must
+            # remove the tax amount from the price_unit.
+            # However, mapping a price-included tax to another price-included tax must preserve the balance but
+            # adapt the price_unit to the new tax.
+            # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
+            # 100 as balance but set 120 as price_unit.
+            if line.tax_ids and line.move_id.fiscal_position_id:
+                line.price_unit = line._get_price_total_and_subtotal()['price_subtotal']
+                line.tax_ids = line.move_id.fiscal_position_id.map_tax(line.tax_ids._origin, partner=line.move_id.partner_id)
+                accounting_vals = line._get_fields_onchange_subtotal(price_subtotal=line.price_unit, currency=line.move_id.company_currency_id)
+                balance = accounting_vals['debit'] - accounting_vals['credit']
+                line.price_unit = line._get_fields_onchange_balance(balance=balance).get('price_unit', line.price_unit)
+
+            # Convert the unit price to the invoice's currency.
+            company = line.move_id.company_id
+            line.price_unit = company.currency_id._convert(line.price_unit, line.move_id.currency_id, company, line.move_id.date)
+
     @api.onchange('product_uom_id')
     def _onchange_uom_id(self):
         ''' Recompute the 'price_unit' depending of the unit of measure. '''
-        self.price_unit = self._get_computed_price_unit()
+        price_unit = self._get_computed_price_unit()
+
+        # See '_onchange_product_id' for details.
+        taxes = self._get_computed_taxes()
+        if taxes and self.move_id.fiscal_position_id:
+            price_subtotal = self._get_price_total_and_subtotal(price_unit=price_unit, taxes=taxes)['price_subtotal']
+            accounting_vals = self._get_fields_onchange_subtotal(price_subtotal=price_subtotal, currency=self.move_id.company_currency_id)
+            balance = accounting_vals['debit'] - accounting_vals['credit']
+            price_unit = self._get_fields_onchange_balance(balance=balance).get('price_unit', price_unit)
+
+        # Convert the unit price to the invoice's currency.
+        company = self.move_id.company_id
+        self.price_unit = company.currency_id._convert(price_unit, self.move_id.currency_id, company, self.move_id.date)
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
@@ -2846,7 +2872,12 @@ class AccountMoveLine(models.Model):
         /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
         '''
         if not self.display_type and (self.account_id.tax_ids or not self.tax_ids):
-            self.tax_ids = self._get_computed_taxes()
+            taxes = self._get_computed_taxes()
+
+            if taxes and self.move_id.fiscal_position_id:
+                taxes = self.move_id.fiscal_position_id.map_tax(taxes, partner=self.partner_id)
+
+            self.tax_ids = taxes
 
     def _onchange_balance(self):
         for line in self:
@@ -3150,8 +3181,9 @@ class AccountMoveLine(models.Model):
                 tax = repartition_line.invoice_tax_id or repartition_line.refund_tax_id
                 vals['tax_exigible'] = tax.tax_exigibility == 'on_invoice'
             elif vals.get('tax_ids'):
-                taxes = self.resolve_2many_commands('tax_ids', vals['tax_ids'])
-                vals['tax_exigible'] = not any([tax['tax_exigibility'] == 'on_payment' for tax in taxes])
+                tax_ids = [v['id'] for v in self.resolve_2many_commands('tax_ids', vals['tax_ids'], fields=['id'])]
+                taxes = self.env['account.tax'].browse(tax_ids).flatten_taxes_hierarchy()
+                vals['tax_exigible'] = not any(tax.tax_exigibility == 'on_payment' for tax in taxes)
 
         lines = super(AccountMoveLine, self).create(vals_list)
 
@@ -4182,11 +4214,12 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
 
-                    if any([tax.tax_exigibility == 'on_payment' for tax in line.tax_ids]):
+                    taxes_payment_exigible = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.tax_exigibility == 'on_payment')
+                    if taxes_payment_exigible:
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
-                        for tax in line.tax_ids.filtered(lambda t: t.tax_exigibility == 'on_payment'):
+                        for tax in taxes_payment_exigible:
                             account_id = self._get_tax_cash_basis_base_account(line, tax)
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
