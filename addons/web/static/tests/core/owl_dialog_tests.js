@@ -50,7 +50,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     subtitle="state.subtitle"
                     technical="state.technical"
                     title="state.title"
-                    t-on-dialog_closed="_onDialogClosed"
+                    t-on-dialog-closed="_onDialogClosed"
                     >
                     <SubComponent text="state.textContent"/>
                     <t t-set="buttons">
@@ -169,7 +169,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 <div>
                     <Dialog t-foreach="dialogIds" t-as="dialogId" t-key="dialogId"
                         contentClass="'dialog_' + dialogId"
-                        t-on-dialog_closed="_onDialogClosed(dialogId)"
+                        t-on-dialog-closed="_onDialogClosed(dialogId)"
                     />
                 </div>`;
 

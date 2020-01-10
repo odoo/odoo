@@ -101,7 +101,7 @@ odoo.define('web.OwlDialog', function (require) {
          * @private
          */
         _close() {
-            this.trigger('dialog_closed');
+            this.trigger('dialog-closed');
         }
 
         /**
@@ -153,7 +153,7 @@ odoo.define('web.OwlDialog', function (require) {
                 $(this.mainButton)
                     .tooltip({
                         delay: { show: 200, hide: 0 },
-                        title: () => this.env.qweb.render('DialogButton.tooltip', {
+                        title: () => this.env.qweb.renderToString('DialogButton.tooltip', {
                             title: this.mainButton.innerText.toUpperCase(),
                         }),
                         trigger: 'manual',
