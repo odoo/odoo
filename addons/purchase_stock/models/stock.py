@@ -103,6 +103,18 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
+    def _decrease_initial_demand(self, qty):
+        done_move_to_return = []
+        finished_moves = self.env['stock.move']
+        for move in self:
+            if move.created_purchase_line_id and move.state not in ('done, cancel'):
+                if move.created_purchase_line_id.state == 'draft':
+                    move.created_purchase_line_id.product_qty -= qty
+                    finished_moves |= move
+                else:
+                    done_move_to_return.append((move, move.created_purchase_line_id.order_id))
+        return done_move_to_return + super(StockMove, self - finished_moves)._decrease_initial_demand(qty)
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
