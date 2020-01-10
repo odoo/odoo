@@ -8,7 +8,7 @@ tour.register('test_survey_prefill', {
     url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae'
 },
 [{      // Page-1
-        trigger: 'a.btn.btn-primary.btn-lg:contains("Start Survey")',
+        trigger: 'button.btn.btn-primary.btn-lg:contains("Start Survey")',
     }, { // Question: Where do you live ?
         trigger: 'div.js_question-wrapper:contains("Where do you live ?") input',
         run: 'text Grand-Rosiere',

@@ -10,7 +10,7 @@ tour.register('test_survey', {
     // Page-1
     {
         content: 'Click on Start',
-        trigger: 'a.btn:contains("Start")',
+        trigger: 'button.btn:contains("Start")',
     }, {
         content: 'Answer Where do you live',
         trigger: 'div.js_question-wrapper:contains("Where do you live") input',

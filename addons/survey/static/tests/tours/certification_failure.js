@@ -1,6 +1,17 @@
 odoo.define('survey.tour_test_certification_failure', function (require) {
 'use strict';
 
+var SurveyFormWidget = require('survey.form');
+/**
+ * Speed up fade-in fade-out to avoid useless delay in tests.
+ */
+SurveyFormWidget.include({
+    _submitForm: function () {
+        this.fadeInOutDelay = 0;
+        return this._super.apply(this, arguments);
+    }
+});
+
 /**
  * This tour will test that, for the demo certification allowing 2 attempts, a user can
  * try and fail twice and will no longer be able to take the certification.
@@ -10,7 +21,7 @@ var tour = require('web_tour.tour');
 
 var failSteps = [{ // Page-1
     content: "Clicking on Start Certification",
-    trigger: 'a.btn.btn-primary.btn-lg:contains("Start Certification")',
+    trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
 }, { // Question: Do we sell Acoustic Bloc Screens?
     content: "Selecting answer 'No'",
     trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") label:contains("No") input',
