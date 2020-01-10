@@ -240,8 +240,11 @@ var Dialog = Widget.extend({
             return;
         }
 
-        // Notifies OwlDialog to adjust focus/active properties on owl dialogs
-        OwlDialog.hide(this);
+        // Notifies OwlDialog to adjust focus/active properties on owl dialogs.
+        // Only has to be done if the dialog has been opened (has an el).
+        if (this.el) {
+            OwlDialog.hide(this);
+        }
 
         // Triggers the onForceClose event if the callback is defined
         if (this.onForceClose) {
