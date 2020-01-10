@@ -8,9 +8,6 @@
 Inventory
 =========
 
-
-
-
 Products
 ========
 
@@ -19,8 +16,19 @@ Products
 .. autoclass:: Product()
     :members:
 
+    .. automethod:: addons.product.models.product.ProductProduct.toggle_active
+
+.. VFE NOTE
+
+    toggle_active is shown as Product.toggle_active because
+    addons.stock.models.product.toggle_active should refer to models.Model.toggle_active
+    as sphinx sees it.
+    This won't happen for methods defined only once on the model.
+
 .. autoclass:: ProductTemplate()
     :members:
+
+    .. automethod:: addons.product.models.product_template.ProductTemplate.create
 
 Warehouse
 =========

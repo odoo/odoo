@@ -358,7 +358,7 @@ class ProductTemplate(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
+        """ Store the initial standard price in order to be able to retrieve the cost of a product template for a given date"""
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
             templates._create_variant_ids()

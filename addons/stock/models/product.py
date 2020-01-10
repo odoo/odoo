@@ -387,6 +387,7 @@ class Product(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
+        """Bla bla bla """
         res = super(Product, self).view_header_get(view_id, view_type)
         if not res and self._context.get('active_id') and self._context.get('active_model') == 'stock.location':
             res = '%s%s' % (_('Products: '), self.env['stock.location'].browse(self._context['active_id']).name)
@@ -682,6 +683,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('tracking')
     def onchange_tracking(self):
+        """Hö Hö Hö"""
         return self.mapped('product_variant_ids').onchange_tracking()
 
     @api.onchange('type')
