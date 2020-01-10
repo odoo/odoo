@@ -634,6 +634,10 @@
                 <search string="Event Registration">
                     <field name="id" string="Registration ID"/>
                     <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
+                    <filter string="Ongoing Events" name="ongoing_events"
+                            domain="[('event_begin_date', '&lt;', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+                                     ('event_end_date', '&gt;', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                    <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
