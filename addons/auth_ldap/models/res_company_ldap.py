@@ -78,6 +78,22 @@ class CompanyLDAP(models.Model):
             connection.start_tls_s()
         return connection
 
+    def _get_entry(self, conf, login):
+        filter, dn, entry = False, False, False
+        try:
+            filter = filter_format(conf['ldap_filter'], (login,))
+        except TypeError:
+            _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
+        if filter:
+            results = self._query(conf, tools.ustr(filter))
+
+            # Get rid of (None, attrs) for searchResultReference replies
+            results = [i for i in results if i[0]]
+            if len(results) == 1:
+                entry = results[0]
+                dn = results[0][0]
+        return dn, entry
+
     def _authenticate(self, conf, login, password):
         """
         Authenticate a user against the specified LDAP server.
@@ -95,23 +111,13 @@ class CompanyLDAP(models.Model):
         if not password:
             return False
 
-        entry = False
-        try:
-            filter = filter_format(conf['ldap_filter'], (login,))
-        except TypeError:
-            _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
+        dn, entry = self._get_entry(conf, login)
+        if not dn:
             return False
         try:
-            results = self._query(conf, tools.ustr(filter))
-
-            # Get rid of (None, attrs) for searchResultReference replies
-            results = [i for i in results if i[0]]
-            if len(results) == 1:
-                dn = results[0][0]
-                conn = self._connect(conf)
-                conn.simple_bind_s(dn, to_text(password))
-                conn.unbind()
-                entry = results[0]
+            conn = self._connect(conf)
+            conn.simple_bind_s(dn, to_text(password))
+            conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             return False
         except ldap.LDAPError as e:
@@ -200,3 +206,20 @@ class CompanyLDAP(models.Model):
                 return SudoUser.create(values).id
 
         raise AccessDenied(_("No local user found for LDAP login and not configured to create one"))
+
+    def _change_password(self, conf, login, old_passwd, new_passwd):
+        changed = False
+        dn, entry = self._get_entry(conf, login)
+        if not dn:
+            return False
+        try:
+            conn = self._connect(conf)
+            conn.simple_bind_s(dn, to_text(old_passwd))
+            conn.passwd_s(dn, old_passwd, new_passwd)
+            changed = True
+            conn.unbind()
+        except ldap.INVALID_CREDENTIALS:
+            pass
+        except ldap.LDAPError as e:
+            _logger.error('An LDAP exception occurred: %s', e)
+        return changed
