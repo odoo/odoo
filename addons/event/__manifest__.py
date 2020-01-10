@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
-    'version': '1.4',
+    'version': '1.5',
     'website': 'https://www.odoo.com/page/events',
     'category': 'Marketing/Events',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
@@ -44,4 +44,7 @@ Key Features
     ],
     'installable': True,
     'auto_install': False,
+    'qweb': [
+        'static/src/xml/field_icon_selection.xml',
+    ],
 }

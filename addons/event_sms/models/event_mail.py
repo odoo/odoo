@@ -45,6 +45,9 @@ class EventMailScheduler(models.Model):
                         mass_keep_log=True
                     )
                     mail.write({'mail_sent': True})
+
+                    mail.mail_count_done = len(mail.event_id.registration_ids.filtered(lambda reg: reg.state != 'cancel'))
+
         return super(EventMailScheduler, self).execute()
 
 
