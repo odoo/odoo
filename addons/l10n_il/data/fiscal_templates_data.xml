@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_fiscal_position_israel_retention_10" model="account.fiscal.position.template">
+        <field name="name">Retention 10%</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.il"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+    <record id="account_fiscal_position_tax_israel_retention_10" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_inputs_retention_10"/>
+        <field name="position_id" ref="account_fiscal_position_israel_retention_10"/>
+    </record>
+
+    <record id="account_fiscal_position_israel_retention_25" model="account.fiscal.position.template">
+        <field name="name">Retention 25%</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.il"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+    <record id="account_fiscal_position_tax_israel_retention_25" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_inputs_retention_25"/>
+        <field name="position_id" ref="account_fiscal_position_israel_retention_25"/>
+    </record>
+
+    <record id="account_fiscal_position_israel_retention_30" model="account.fiscal.position.template">
+        <field name="name">Retention 30%</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.il"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+    <record id="account_fiscal_position_tax_israel_retention_30" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_inputs_retention_30"/>
+        <field name="position_id" ref="account_fiscal_position_israel_retention_30"/>
+    </record>
+
+    <record id="account_fiscal_position_israel_retention_35" model="account.fiscal.position.template">
+        <field name="name">Retention 35%</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.il"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+    <record id="account_fiscal_position_tax_israel_retention_35" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_inputs_retention_35"/>
+        <field name="position_id" ref="account_fiscal_position_israel_retention_35"/>
+    </record>
+
+</odoo>
