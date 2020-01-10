@@ -220,10 +220,6 @@ var FileWidget = SearchableMediaWidget.extend({
     search: function (needle, noRender) {
         var self = this;
         const domain = this._getAttachmentsDomain(needle);
-        console.log(domain);
-        window.rpc = this._rpc.bind(this);
-        window.options = this.options;
-        window.domain = domain;
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
@@ -235,7 +231,6 @@ var FileWidget = SearchableMediaWidget.extend({
                 context: this.options.context,
             },
         }).then(function (attachments) {
-            console.log('returned attachments', attachments);
             self.attachments = _.chain(attachments)
                 .sortBy(function (r) {
                     if (r.is_favorite) {
@@ -319,16 +314,12 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Array} "ir.attachment" odoo domain.
      */
     _getAttachmentsDomain: function (needle) {
-        console.log('options', this.options);
         var domain = this.options.attachmentIDs && this.options.attachmentIDs.length ? ['|', ['id', 'in', this.options.attachmentIDs]] : [];
         // Show attachments on the current record
         var attachedDocumentDomain = [
-            '&', '&',
+            '&',
             ['res_model', '=', this.options.res_model],
             ['res_id', '=', this.options.res_id | 0],
-            // By default, only attachment that have no res_field show up,
-            // so we have to specify that we also want attachments on the current field.
-            ['res_field', 'in', [this.options.res_field, false]],
         ];
         // if the records is not yet created, do not see the documents of other users
         if (!this.options.res_id) {
