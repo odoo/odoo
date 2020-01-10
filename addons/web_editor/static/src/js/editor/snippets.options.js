@@ -1071,10 +1071,14 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const ImagepickerUserValueWidget = UserValueWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     tagName: 'we-imagepicker',
     events: {
         'click .o_we_edit_image': '_onEditImage',
         'click .o_we_remove_image': '_onRemoveImage',
+        'click .o_we_alter_image': '_onAlterImage',
+        'click .o_we_apply_alter': '_onApplyAlter',
+        'input input.custom-range': '_onQualityChange',
     },
 
     /**
@@ -1093,8 +1097,14 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
         this.removeImageButton.classList.add('o_we_remove_image', 'fa', 'fa-fw', 'fa-times');
         this.removeImageButton.title = _t("Remove");
 
+        this.alterImageButton = document.createElement('we-button');
+        this.alterImageButton.classList.add('o_we_alter_image', 'fa', 'fa-fw', 'fa-magic');
+        this.alterImageButton.title = _t("Alter");
+
+        this.containerEl.appendChild(this.alterImageButton);
         this.containerEl.appendChild(this.editImageButton);
         this.containerEl.appendChild(this.removeImageButton);
+        this.$el.addClass('flex-wrap');
     },
     /**
      * @override
@@ -1112,7 +1122,7 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
      */
     _updateUI: async function () {
         await this._super(...arguments);
-        this.removeImageButton.classList.toggle('d-none', !this.isActive());
+        [this.removeImageButton, this.alterImageButton].forEach(b => b.classList.toggle('d-none', !this.isActive()));
     },
 
     //--------------------------------------------------------------------------
@@ -1165,6 +1175,38 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
         this._value = '';
         this.isVideo = false;
         this._notifyValueChange(false);
+    },
+    /**
+     * Called when the alter image button is clicked.
+     *
+     * @private
+     */
+    _onAlterImage: async function (ev) {
+        this.$('.o_we_alter_image').addClass('d-none');
+        this.$('.o_we_alter_image_options').remove();
+        this.$el.append($(qweb.render('web_editor.image_quality_option')));
+        const img = document.createElement('img');
+        img.src = this._value;
+        await new Promise(resolve => img.addEventListener('load', resolve));
+        const cv = document.createElement('canvas');
+        cv.width = img.naturalWidth;
+        cv.height = img.naturalHeight;
+        cv.getContext('2d').drawImage(img, 0, 0);
+        this.cv = cv;
+        this.mutex = new (require('web.concurrency').MutexedDropPrevious)();
+    },
+    _onApplyAlter: function () {
+        this.$('.o_we_alter_image_options').remove();
+        this.$('.o_we_alter_image').removeClass('d-none');
+    },
+    _onQualityChange: function (ev) {
+        this.mutex.exec(async () => {
+            const blob = await new Promise(resolve => this.cv.toBlob(resolve, 'image/jpeg', +ev.target.value / 100));
+            console.log("blob", blob);
+            this._value = URL.createObjectURL(blob);
+            console.log('objurl', this._value);
+            this._notifyValueChange(false);
+        });
     },
 });
 
@@ -2402,14 +2444,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _updateWidthSelection: async function () {
-        const availableWidths = this.imageManager.computeAvailableWidths();
-        await this._rerenderXML(() => {
-            const $xml = $(qweb.render('web_editor.image_quality_option'));
-            $xml.find('we-select').append(_.map(availableWidths, (labels, width) =>
-                $(`<we-button data-select-width="${width}">${width} ${labels.length ? `(${labels.join(', ')})` : ''}</we-button>`)
-            ));
-            return this.$originalUIElements.clone(true).add($xml);
-        });
+        // const availableWidths = this.imageManager.computeAvailableWidths();
+        // await this._rerenderXML(() => {
+        //     const $xml = $(qweb.render('web_editor.image_quality_option'));
+        //     $xml.find('we-select').append(_.map(availableWidths, (labels, width) =>
+        //         $(`<we-button data-select-width="${width}">${width} ${labels.length ? `(${labels.join(', ')})` : ''}</we-button>`)
+        //     ));
+        //     return this.$originalUIElements.clone(true).add($xml);
+        // });
     },
     /**
      * Updates the image's weight in the UI.
@@ -2448,26 +2490,19 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
 /**
  * Handles the edition of non-background images.
  */
-registry.Image = ImageHandlerOption.extend({
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-        this.imageManager = new ImageManager(this.$target[0], this._rpc.bind(this));
-        this.imageManager.onUpdateAttachment(() => this._updateWidthSelection());
-        // Update cover when image is changed or resized (unfortunately, also happens)
-        // on quality change but this doesn't seem to affect performance enough to care.
-        this.$target.on('load.image_option', () => this.trigger_up('cover_update'));
-        await this.imageManager.loadAttachment();
+registry.Image = SnippetOptionWidget.extend({
+    src: function (previewMode, widgetValue, params) {
+        console.log('setting src to', widgetValue);
+        this.$target[0].src = widgetValue;
     },
     /**
      * @override
      */
-    destroy: function () {
-        // Maybe should make ImageManager into a widget and register it as subwidget so this is automatic?
-        this.imageManager.destroy();
-        this.$target.off('.image_option');
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'src') {
+            return this.$target.attr('src');
+        }
+        return this._super(...arguments);
     },
 });
 /**

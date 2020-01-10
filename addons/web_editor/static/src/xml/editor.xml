@@ -28,13 +28,14 @@
 
     <!-- Image quality and size options -->
     <t t-name="web_editor.image_quality_option">
-        <div class="o_we_optimize_option">
+        <div class="o_we_alter_image_options w-100 d-flex flex-column align-items-stretch">
             <div class="o_we_quality_option">
                 <div class="d-flex justify-content-between pb-0 mb-0"><span>Quality</span><span class="o_we_image_file_size"></span></div>
                 <input class="custom-range pt-0 mt-0" type="range" min="1" max="100" value="80"/>
             </div>
             <!-- This select is filled at runtime with available widths -->
             <we-select string="Width" class="o_we_inline" data-no-preview="true"/>
+            <we-button class="o_we_apply_alter">Apply</we-button>
         </div>
     </t>
 </templates>
