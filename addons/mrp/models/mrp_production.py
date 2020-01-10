@@ -677,9 +677,7 @@ class MrpProduction(models.Model):
             old_qty = move[0].product_uom_qty
             remaining_qty = move[0].raw_material_production_id.product_qty - move[0].raw_material_production_id.qty_produced
             if quantity > 0:
-                move[0]._decrease_reserved_quanity(quantity)
-                move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
-                move[0]._recompute_state()
+                move[0].write({'product_uom_qty': quantity})
                 move[0]._action_assign()
                 return move[0], old_qty, quantity
             else:
