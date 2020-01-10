@@ -4838,6 +4838,33 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('readonly set by modifier do not break many2many_tags', async function (assert) {
+        assert.expect(0);
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                obj.timmy = [[6, false, [12]]];
+            },
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                      '<sheet>' +
+                          '<field name="bar"/>' +
+                          '<field name="timmy" widget="many2many_tags" attrs="{\'readonly\': [(\'bar\',\'=\',True)]}"/>' +
+                      '</sheet>' +
+                  '</form>',
+            res_id: 5,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
+
+        form.destroy();
+    });
+
     QUnit.test('check if id and active_id are defined', async function (assert) {
         assert.expect(2);
 
