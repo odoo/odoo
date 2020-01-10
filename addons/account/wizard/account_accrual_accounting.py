@@ -114,18 +114,18 @@ class AccrualAccountingWizard(models.TransientModel):
                 move_data[aml.move_id]['move_vals']['original_date']['line_ids'] += [
                     (0, 0, {
                         'name': aml.name,
-                        'debit': aml.debit - reported_debit,
-                        'credit': aml.credit - reported_credit,
-                        'amount_currency': aml.amount_currency - reported_amount_currency,
+                        'debit': reported_credit,
+                        'credit': reported_debit,
+                        'amount_currency': -reported_amount_currency,
                         'currency_id': aml.currency_id.id,
                         'account_id': aml.account_id.id,
                         'partner_id': aml.partner_id.id,
                     }),
                     (0, 0, {
                         'name': _('Accrual Adjusting Entry'),
-                        'debit': aml.credit - reported_credit,
-                        'credit': aml.debit - reported_debit,
-                        'amount_currency': reported_amount_currency - aml.amount_currency,
+                        'debit': reported_debit,
+                        'credit': reported_credit,
+                        'amount_currency': reported_amount_currency,
                         'currency_id': aml.currency_id.id,
                         'account_id': accrual_account.id,
                         'partner_id': aml.partner_id.id,
@@ -174,7 +174,7 @@ class AccrualAccountingWizard(models.TransientModel):
                     }
 
             move_vals = [m for o in move_data.values() for m in o['move_vals'].values()]
-            log_messages = [m for o in move_data.values() for m in o['log_messages'].values()]
+            log_messages = [o['log_messages'] for o in move_data.values()]
 
             record.data = json.dumps({
                 'move_vals': move_vals,
@@ -212,29 +212,25 @@ class AccrualAccountingWizard(models.TransientModel):
         data = json.loads(self.data)
         move_vals, log_messages = (data['move_vals'], data['log_messages'])
 
-        # Update the account of selected journal items.
-        self.active_move_line_ids.write({'account_id': accrual_account.id})
-
         created_moves = self.env['account.move'].create(move_vals)
         created_moves.post()
 
         # Reconcile.
         index = 0
         for move in self.active_move_line_ids.mapped('move_id'):
-            if self.percentage < 100:
-                accrual_moves = created_moves[index:index + 2]
-                index += 2
-            else:
-                accrual_moves = created_moves[index:index + 1]
-                index += 1
+            accrual_moves = created_moves[index:index + 2]
 
-            to_reconcile = self.active_move_line_ids.filtered(lambda line: line.move_id == move)
-            to_reconcile += accrual_moves.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account and not line.reconciled)
+            to_reconcile = accrual_moves.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)
             to_reconcile.reconcile()
-
-        # Log messages.
-        for created_move, log_message in zip(created_moves, log_messages):
-            created_move.message_post(body=log_message)
+            move.message_post(body=log_messages[index//2]['origin'] % {
+                'first_id': accrual_moves[0].id,
+                'first_name': accrual_moves[0].name,
+                'second_id': accrual_moves[1].id,
+                'second_name': accrual_moves[1].name,
+            })
+            accrual_moves[0].message_post(body=log_messages[index//2]['new_date'])
+            accrual_moves[1].message_post(body=log_messages[index//2]['original_date'])
+            index += 2
 
         # open the generated entries
         action = {
