@@ -319,7 +319,8 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Array} "ir.attachment" odoo domain.
      */
     _getAttachmentsDomain: function (needle) {
-        var domain = [];
+        console.log('options', this.options);
+        var domain = this.options.attachmentIDs && this.options.attachmentIDs.length ? ['|', ['id', 'in', this.options.attachmentIDs]] : [];
         // Show attachments on the current record
         var attachedDocumentDomain = [
             '&', '&',
