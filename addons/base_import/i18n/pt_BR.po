@@ -33,7 +33,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr "%d registros importados com sucesso"
+msgstr "%d registros foram importados com sucesso"
 
 #. module: base_import
 #. openerp-web
@@ -63,10 +63,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"Um problema desconhecido ocorreu durante a importação (possivelmente conexão"
-" perdida, limite de dados ou de memória excedido). Por favor, tente "
-"novamente no caso do problema ser transitório. Se o problema continuar "
-"ocorrendo, tente dividir o arquivo ao invés de importá-lo de uma única vez."
+"Ocorreu um problema desconhecido durante a importação (possível perda de conexão, dados"
+"limite excedido ou limites de memória excedidos). Tente novamente caso o problema seja"
+"transitório. Se o problema persistir, tente dividir o arquivo em vez de"
+"importe-o imediatamente."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -81,7 +81,7 @@ msgstr "Importação Base"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr "Mapeamento da Importação Base"
+msgstr "Mapeamento de importação base"
 
 #. module: base_import
 #. openerp-web
@@ -100,12 +100,12 @@ msgstr "A coluna %s contém valores incorretos (valor: %s)"
 #: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "Coluna %s contém valores incorretos. Erro na linha %d: %s"
+msgstr "A coluna %s contém valores incorretos. Erro na linha %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr "Nome da Coluna"
+msgstr "Nome da coluna"
 
 #. module: base_import
 #. openerp-web
@@ -122,15 +122,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
-"Não foi possível recuperar a URL: %(url)s [%(field_name)s: "
-"L%(line_number)d]: %(error)s"
+"Não foi possível recuperar a URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr "Cria se não existir"
+msgstr "Criar se não existir"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -183,9 +183,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
-"Cria novos registros se eles não forem encontrados (ao invés de falhar a "
-"importação). Note que o valor na coluna será usado como o 'nome' do novo "
-"registro, assumindo que seja suficiente para criá-lo."
+"Cria novos registros se eles não puderem ser encontrados (em vez de falhar na importação). "
+"Observe que o valor na coluna será usado como o 'nome' do novo registro, "
+"e assume que isso é suficiente para criar o registro."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -212,7 +212,7 @@ msgstr "Formato da Data"
 #: code:addons/base_import/static/src/js/import_action.js:84
 #, python-format
 msgid "Datetime Format:"
-msgstr "Format Data/Hora:"
+msgstr "Formato de data e hora:"
 
 #. module: base_import
 #. openerp-web
@@ -306,8 +306,7 @@ msgstr "Tudo parece válido."
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
-"Arquivos Excel são recomendados, pois a formatação dos campos é automática."
+msgstr "Arquivos Excel são recomendados, pois a formatação dos campos é automática."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -346,22 +345,21 @@ msgstr "O tamanho do arquivo excede o máximo configurado (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Arquivo para checar e/ou importar, formato binário(não base64)"
+msgstr "Arquivo para checar e/ou importar, formato binário (não base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
-"Para arquivos CSV, você pode precisar selecionar o delimitador correto."
+msgstr "Para arquivos CSV, você pode precisar selecionar o delimitador correto."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr "Opções de Formatação..."
+msgstr "Opções de formatação…"
 
 #. module: base_import
 #. openerp-web
@@ -443,6 +441,9 @@ msgid ""
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
 msgstr ""
+"Se o modelo usa relações pai / filho, calculando o                          "
+"a relação pai / filho ocorre em todas as linhas e leva a uma importação mais lenta."
+"                     Adiar pode acelerar a importação."
 
 #. module: base_import
 #. openerp-web
@@ -471,7 +472,7 @@ msgstr "Importar Arquivo"
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "Importação concluída"
 
 #. module: base_import
 #. openerp-web
@@ -636,7 +637,7 @@ msgstr "Recarregar Arquivo"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr "Modelo Res"
+msgstr "Modelo RES"
 
 #. module: base_import
 #. openerp-web
@@ -690,7 +691,7 @@ msgstr "Tab"
 #: code:addons/base_import/static/src/xml/base_import.xml:99
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Importação de teste"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
