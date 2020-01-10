@@ -1,6 +1,17 @@
 odoo.define('survey.tour_test_certification_success', function (require) {
 'use strict';
 
+var SurveyFormWidget = require('survey.form');
+/**
+ * Speed up fade-in fade-out to avoid useless delay in tests.
+ */
+SurveyFormWidget.include({
+    _submitForm: function () {
+        this.fadeInOutDelay = 0;
+        return this._super.apply(this, arguments);
+    }
+});
+
 var tour = require('web_tour.tour');
 
 tour.register('test_certification_success', {
@@ -9,7 +20,7 @@ tour.register('test_certification_success', {
 },
 [{ // Page-1
         content: "Clicking on Start Certification",
-        trigger: 'a.btn.btn-primary.btn-lg:contains("Start Certification")',
+        trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
     }, { // Question: Do we sell Acoustic Bloc Screens?
         content: "Selecting answer 'Yes'",
         trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") label:contains("Yes") input',
