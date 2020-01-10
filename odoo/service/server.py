@@ -20,7 +20,6 @@ import unittest
 import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
-from odoo.tests.common import OdooSuite
 
 if os.name == 'posix':
     # Unix only for workers
@@ -1160,6 +1159,7 @@ def _reexec(updated_modules=None):
     os.execve(sys.executable, args, os.environ)
 
 def load_test_file_py(registry, test_file):
+    from odoo.tests.common import OdooSuite
     threading.currentThread().testing = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
