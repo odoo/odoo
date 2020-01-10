@@ -1534,8 +1534,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             line.price_unit = 10.0
         sale_order = sale_form.save()
 
-        with self.assertRaises(UserError):
-            sale_order.action_confirm()
+        sale_order.action_confirm()
 
         mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
 
