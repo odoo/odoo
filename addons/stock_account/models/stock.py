@@ -597,6 +597,11 @@ class StockMove(models.Model):
         else:
             ref = self.picking_id.name
 
+        if self._context.get('force_company'):
+            company_id = self._context['force_company']
+        else:
+            company_id = self.env.user.company_id.id
+
         debit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -607,6 +612,7 @@ class StockMove(models.Model):
             'debit': debit_value if debit_value > 0 else 0,
             'credit': -debit_value if debit_value < 0 else 0,
             'account_id': debit_account_id,
+            'company_id': company_id,
         }
 
         credit_line_vals = {
@@ -619,6 +625,7 @@ class StockMove(models.Model):
             'credit': credit_value if credit_value > 0 else 0,
             'debit': -credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
+            'company_id': company_id,
         }
 
         rslt = {'credit_line_vals': credit_line_vals, 'debit_line_vals': debit_line_vals}
@@ -642,6 +649,7 @@ class StockMove(models.Model):
                 'credit': diff_amount > 0 and diff_amount or 0,
                 'debit': diff_amount < 0 and -diff_amount or 0,
                 'account_id': price_diff_account.id,
+                'company_id': company_id,
             }
         return rslt
 
