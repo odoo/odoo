@@ -1464,7 +1464,7 @@
                         <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp;
                             line.get_unit_display_price() != line.get_lst_price()">
                             <s>
-                                <t t-esc="widget.format_currency(line.get_lst_price(),'Product Price')" />
+                                <t t-esc="widget.format_currency(line.get_fixed_lst_price(),'Product Price')" />
                             </s>
                             <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
                         </t>
