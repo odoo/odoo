@@ -296,7 +296,7 @@ class WebsiteEventController(http.Controller):
     def registration_new(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         availability_check = True
-        if event.seats_availability == 'limited':
+        if event.seats_limited:
             ordered_seats = 0
             for ticket in tickets:
                 ordered_seats += ticket['quantity']

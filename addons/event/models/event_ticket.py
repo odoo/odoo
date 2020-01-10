@@ -19,18 +19,17 @@ class EventTemplateTicket(models.Model):
     event_type_id = fields.Many2one(
         'event.type', string='Event Category', ondelete='cascade', required=True)
     # seats
-    seats_availability = fields.Selection([
-        ('limited', 'Limited'), ('unlimited', 'Unlimited')], string='Seats Limit',
-        readonly=True, store=True, compute='_compute_seats_availability')
+    seats_limited = fields.Boolean(string='Seats Limit', readonly=True, store=True,
+                                   compute='_compute_seats_limited')
     seats_max = fields.Integer(
         string='Maximum Seats',
         help="Define the number of available tickets. If you have too many registrations you will "
              "not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
 
     @api.depends('seats_max')
-    def _compute_seats_availability(self):
+    def _compute_seats_limited(self):
         for ticket in self:
-            ticket.seats_availability = 'limited' if ticket.seats_max else 'unlimited'
+            ticket.seats_limited = ticket.seats_max
 
     @api.model
     def _get_event_ticket_fields_whitelist(self):

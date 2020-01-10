@@ -20,7 +20,7 @@
                         domain="[
                             ('event_id', '=', event_id),
                             ('product_id','=',product_id),
-                            '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                            '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
                         ]"
                         attrs="{
                             'invisible': [('event_id', '=', False)],
