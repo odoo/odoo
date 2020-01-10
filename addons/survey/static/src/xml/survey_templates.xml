@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="survey.survey_breadcrumb_template">
+    <ol class="breadcrumb justify-content-end"
+        t-att-data-can-go-back="can_go_back"
+        t-att-data-page-ids="page_ids"
+        t-att-data-page-titles="JSON.stringify(page_titles)">
+        <t t-foreach='page_ids' t-as='breadcrumb_page_id'>
+            <li t-att-class="'breadcrumb-item' + (breadcrumb_page_id === current_page_id ? ' active' : '')"
+                t-att-data-page-id="breadcrumb_page_id"
+                t-att-data-page-title="page_titles[breadcrumb_page_id]">
+                <t t-if="current_page_id === breadcrumb_page_id">
+                    <!-- Users can only go back and not forward -->
+                    <!-- As soon as we reach the current page, set "can_go_back" to False -->
+                    <t t-set="can_go_back" t-value="false" />
+                </t>
+                <t t-if="can_go_back">
+                    <a href="#">
+                        <span t-esc='page_titles[breadcrumb_page_id]' />
+                    </a>
+                </t>
+                <t t-else="">
+                    <span t-esc='page_titles[breadcrumb_page_id]' />
+                </t>
+            </li>
+        </t>
+    </ol>
+</t>
+
+</templates>

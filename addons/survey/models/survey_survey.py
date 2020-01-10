@@ -49,6 +49,10 @@ class Survey(models.Model):
         ('random', 'Randomized per section')],
         string="Selection", required=True, default='all',
         help="If randomized is selected, add the number of random questions next to the section.")
+    progression_mode = fields.Selection([
+        ('percent', 'Percentage'),
+        ('number', 'Number')], string='Progression Mode', default='percent',
+        help="If Number is selected, it will display the number of questions answered on the total number of question to answer.")
     # attendees
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
@@ -100,6 +104,8 @@ class Survey(models.Model):
     certification_give_badge = fields.Boolean('Give Badge')
     certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
+    # Design config
+    image = fields.Binary("Background Image")
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
