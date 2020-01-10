@@ -329,7 +329,7 @@
 
         <template id="message_activity_assigned">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
-    <span t-field="activity.create_user_id.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
+    <span t-field="activity.sudo().create_user_id.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
     <t t-if="activity.summary">(<span t-field="activity.summary"/>)</t>
     on <span t-field="activity.res_name"/>
     to close for <span t-field="activity.date_deadline"/>.<br />
