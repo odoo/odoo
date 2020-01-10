@@ -43,4 +43,7 @@ Key Features
     ],
     'installable': True,
     'auto_install': False,
+    'qweb': [
+        'static/src/xml/field_icon_selection.xml',
+    ],
 }

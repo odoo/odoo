@@ -271,7 +271,10 @@
                                         <field name="trigger_stage_id" options="{'no_create': True}"
                                             attrs="{'required': [('interval_type', '=', 'stage_update')], 'readonly':[('interval_type','!=','stage_update')]}"/>
                                         <field name="scheduled_date" groups="base.group_no_one" string="Schedule date"/>
-                                        <field name="done"/>
+                                        <field name="done" invisible="1"/>
+                                        <field name="contact_count"/>
+                                        <field name="event_mail_state" widget="icon_selection" string=" "
+                                            options="{'sent': 'fa-check', 'scheduled': 'fa-hourglass-half', 'running': 'fa-cogs'}"/>
                                     </tree>
                                 </field>
                             </page>
@@ -794,7 +797,10 @@
                     <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                     <field name="scheduled_date"/>
                     <field name="mail_sent" string="Sent"/>
-                    <field name="done"/>
+                    <field name="done" invisible="1"/>
+                    <field name="contact_count"/>
+                    <field name="event_mail_state" widget="icon_selection" string=" "
+                        options="{'sent': 'fa-check', 'scheduled': 'fa-hourglass-half', 'running': 'fa-cogs'}"/>
                 </tree>
             </field>
         </record>
