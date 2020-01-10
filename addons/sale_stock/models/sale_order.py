@@ -83,17 +83,15 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
-                issues = []
+                docs_to_log = []
                 for order_line in order.order_line:
                     if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
-                        issue = order_line.move_ids._decrease_initial_demand(pre_order_line_qty.get(order_line, 0.0) - order_line.product_uom_qty)
-                        if issue:
-                            issues += issue
+                        docs = order_line.move_ids._decrease_initial_demand(pre_order_line_qty.get(order_line, 0.0) - order_line.product_uom_qty)
+                        if docs:
+                            docs_to_log += docs
                             to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
-                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
-                    issues_parent = [i[1] for i in issues]
-                    documents = {d_key: d_value for d_key, d_value in documents.items() if d_key[0] in issues_parent}
+                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP', whitelist=docs_to_log)
                     order._log_decrease_ordered_quantity(documents)
         return res
 

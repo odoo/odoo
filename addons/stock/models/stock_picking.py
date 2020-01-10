@@ -985,7 +985,7 @@ class Picking(models.Model):
                 backorders |= backorder_picking
         return backorders
 
-    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
+    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False, whitelist=False):
         """ Generic method to log activity. To use with
         _log_activity method. It either log on uppermost
         ongoing documents or following documents. This method
@@ -1008,6 +1008,8 @@ class Picking(models.Model):
         :param sorted_method method, groupby_method: Only need when
         stream is 'DOWN', it should sort/group by tuple(object on
         which the activity is log, the responsible for this object)
+        :param whitelist list: list of stock_moves that can be logged
+        with an activity
         """
         if self.env.context.get('skip_activity'):
             return {}
@@ -1031,6 +1033,8 @@ class Picking(models.Model):
             grouped_moves = {}
             for visited_move in origin_objects.mapped(stream_field):
                 for document, responsible, visited in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name]):
+                    if whitelist and document not in [rec[1] for rec in whitelist]:
+                        continue
                     if grouped_moves.get((document, responsible)):
                         grouped_moves[(document, responsible)] |= visited_move
                         visited_documents[(document, responsible)] |= visited
