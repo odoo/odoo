@@ -127,8 +127,7 @@ class EventTicket(models.Model):
     price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
     price_reduce_taxinc = fields.Float(compute='_get_price_reduce_tax', string='Price Reduce Tax inc')
     # seats fields
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
-        string='Available Seat', required=True, store=True, compute='_compute_seats', default="limited")
+    seats_limited = fields.Boolean(string='Available Seat', required=True, store=True, compute='_compute_seats', default=True)
     seats_max = fields.Integer(string='Maximum Available Seats',
        help="Define the number of available tickets. If you have too much registrations you will "
             "not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
@@ -176,7 +175,7 @@ class EventTicket(models.Model):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0 + compute seats availability
         for ticket in self:
-            ticket.seats_availability = 'unlimited' if ticket.seats_max == 0 else 'limited'
+            ticket.seats_limited = False if ticket.seats_max == 0 else True
             ticket.seats_unconfirmed = ticket.seats_reserved = ticket.seats_used = ticket.seats_available = 0
         # aggregate registrations by ticket and by state
         if self.ids:

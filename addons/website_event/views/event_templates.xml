@@ -527,7 +527,7 @@
         <div id="o_wevent_tickets" class="bg-white rounded shadow-sm">
             <t t-set="quantity">
                 <select name="nb_register-0" class="custom-select w-auto">
-                    <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available+1)" t-as="nb">
+                    <t t-foreach="range(0, (not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available+1)" t-as="nb">
                         <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>
                     </t>
                 </select>

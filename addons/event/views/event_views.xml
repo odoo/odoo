@@ -249,13 +249,10 @@
                             </group>
                             <group>
                                 <field name="seats_min"/>
-                                <label for="seats_availability"/>
+                                <label for="seats_limited"/>
                                 <div>
-                                    <field name="seats_availability" widget='radio'/>
-                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to
-                                    </span>
-                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                    <field name="seats_limited" class="oe_edit_only"/>
+                                    <field name="seats_max" attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}" class="oe_inline"/>
                                 </div>
                             </group>
                             <group class="w-100">

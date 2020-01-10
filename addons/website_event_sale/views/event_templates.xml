@@ -10,8 +10,8 @@
 <template id="index" inherit_id="website_event.events_list" name="Event's Ticket">
     <xpath expr="//div[@t-foreach='event_ids']//footer" position="inside">
         <t t-if="event.event_registrations_open and event.event_ticket_ids">
-            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="text-danger">Sold Out</span>
-            <span t-if="event.seats_availability == 'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="text-muted">
+            <span t-if="event.seats_limited and not event.seats_available" class="text-danger">Sold Out</span>
+            <span t-if="event.seats_limited and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="text-muted">
                 <em>Only <t t-esc="event.seats_available"/> Remaining</em>
             </span>
         </t>
@@ -57,8 +57,8 @@
                             <span t-if="not ticket.price and not editable" class="font-weight-bold text-uppercase">Free</span>
                             <t t-if="not ticket.is_expired and ticket.sale_available">
                                 <select t-attf-name="nb_register-#{ticket.id}" class="w-auto ml-auto custom-select">
-                                    <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                    <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
+                                    <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
                                         <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
@@ -101,8 +101,8 @@
                 </t>
                 <t t-if="not tickets.is_expired and tickets.sale_available" t-set="quantity">
                     <select t-attf-name="nb_register-#{tickets.id}" class="w-auto custom-select">
-                        <t t-set="seats_max_ticket" t-value="(tickets.seats_availability == 'unlimited' or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
-                        <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                        <t t-set="seats_max_ticket" t-value="(not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
+                        <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                         <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
                         <t t-foreach="range(0, seats_max)" t-as="nb">
                             <option t-esc="nb" t-att-selected="len(tickets) == 1 and nb == 1 and 'selected'"/>
