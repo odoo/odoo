@@ -19,7 +19,7 @@
         "data/account_fiscal_position_tax_template.xml",
         "data/account_fiscal_position_account_template.xml",
         "data/account_chart_template_configure.xml",
-        "data/res_bank.csv",
+        "data/res.bank.csv",
         "views/res_partner_views.xml",
     ],
     "active": False
