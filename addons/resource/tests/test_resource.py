@@ -147,6 +147,13 @@ class TestCalendar(TestResourceCommon):
         hours = self.calendar_jean.get_work_hours_count(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jean.tz),
+            exclude_global_leaves=True
+        )
+        self.assertEqual(hours, 40)
+
+        hours = self.calendar_jean.get_work_hours_count(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
+            datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jean.tz),
             compute_leaves=False,
         )
         self.assertEqual(hours, 40)
