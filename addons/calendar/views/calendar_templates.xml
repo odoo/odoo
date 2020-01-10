@@ -42,6 +42,8 @@
                             <span class="float-right badge badge-info">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
                                 <t t-if="attendee.state == 'declined'">No I'm not going.</t>
+                                <t t-if="attendee.state == 'tentative'">Tentative</t>
+                                <t t-if="attendee.state == 'needsAction'">No feedback yet</t>
                             </span>
                         </div>
 
@@ -68,6 +70,10 @@
                                             </li>
                                         </ul>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td><t t-esc="event.description or '-'"/></td>
                                 </tr>
                             </table>
                         </div>
