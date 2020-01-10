@@ -118,12 +118,13 @@
                             <field name="website_url" invisible="1"/>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <field name="kanban_state" widget="state_selection"/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" placeholder="e.g. Inspiring Business Talk"/>
+                                <field name="kanban_state" widget="state_selection" class="ml-3"/>
                             </h1>
                         </div>
                         <group>
@@ -201,7 +202,7 @@
                 <p class="o_view_nocontent_smiling_face">
                   Add a new track
                 </p><p>
-                  Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                  Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
@@ -215,24 +216,24 @@
               <p class="o_view_nocontent_smiling_face">
                 Add a new track
               </p><p>
-                Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
               </p>
             </field>
         </record>
 
         <menuitem
             id="menu_event_track"
-            name="Event Tracks"
+            name="Tracks"
             action="action_event_track"
             parent="event.event_main_menu"
             groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
-            <field name="name">Event Locations</field>
+            <field name="name">Event Rooms</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <form string="Event Location">
+                <form string="Event Rooms">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -243,23 +244,23 @@
         </record>
 
         <record model="ir.ui.view" id="view_event_location_tree">
-            <field name="name">Event Location</field>
+            <field name="name">Event Rooms</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <tree string="Event Location" editable="bottom">
+                <tree string="Event Rooms" editable="bottom">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_event_track_location">
-            <field name="name">Event Locations</field>
+            <field name="name">Event Rooms</field>
             <field name="res_model">event.track.location</field>
         </record>
 
         <menuitem
             id="menu_event_track_location"
-            name="Locations"
+            name="Rooms"
             action="action_event_track_location"
             parent="event.menu_event_configuration"/>
 

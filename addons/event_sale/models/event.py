@@ -306,6 +306,7 @@ class EventRegistration(models.Model):
         if self.event_ticket_id.product_id.image_128:
             res['image'] = '/web/image/product.product/%s/image_128' % self.event_ticket_id.product_id.id
         information = res.setdefault('information', {})
+        information.append((_('Event'), self.event_id.name))
         information.append((_('Name'), self.name))
         information.append((_('Ticket'), self.event_ticket_id.name or _('None')))
         order = self.sale_order_id.sudo()
