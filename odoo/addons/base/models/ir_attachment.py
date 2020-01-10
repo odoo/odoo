@@ -326,6 +326,8 @@ class IrAttachment(models.Model):
         In the 'document' module, it is overriden to relax this hard rule, since
         more complex ones apply there.
         """
+        if self.env.user._is_superuser():
+            return True
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         require_employee = False
@@ -399,7 +401,7 @@ class IrAttachment(models.Model):
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)
 
-        if self.env.user._is_system():
+        if self.env.user._is_superuser():
             # rules do not apply for the superuser
             return len(ids) if count else ids
 
