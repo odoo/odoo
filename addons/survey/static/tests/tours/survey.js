@@ -10,7 +10,7 @@ tour.register('test_survey', {
     // Page-1
     {
         content: 'Click on Start',
-        trigger: 'a.btn:contains("Start")',
+        trigger: 'button.btn:contains("Start")',
     }, {
         content: 'Answer Where do you live',
         trigger: 'div.js_question-wrapper:contains("Where do you live") input',
@@ -21,11 +21,7 @@ tour.register('test_survey', {
         run: 'text 05/05/1980',
     }, {
         content: 'Answer How frequently do you buy products online',
-        trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online") select',
-        run: function () {
-            var $select = $('div.js_question-wrapper:contains("How frequently do you buy products online") select');
-            $select.val($('option:contains("Once a month")').val());
-        }
+        trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online") label:contains("Once a month") input',
     }, {
         content: 'Answer How many times did you order products on our website',
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website") input',

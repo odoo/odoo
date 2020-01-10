@@ -10,3 +10,20 @@
 .js_question-wrapper {
     padding-bottom: 25px;
 }
+
+.o_survey_breadcrumb_container {
+    min-height: 3rem;
+    background-color: #e9ecef;
+}
+
+.o_survey_error, .o_survey_question_error {
+    overflow: hidden;
+    height: 0px;
+    border: 0px;
+    padding: 0rem 0.75rem;
+    transition: height .5s ease;
+    line-height: 4rem;
+    &.slide_in {
+        height: 4rem;
+    }
+}
