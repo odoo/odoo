@@ -1535,10 +1535,20 @@ var UrlWidget = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
+        // Clean-up the URL to get a correct href value
+        // From https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
+        var href = (this.value || '').trim();
+        if (/^(:\/\/)/.test(href)){
+            href = 'http' + href;
+        }
+        if (!/^(f|ht)tps?:\/\//i.test(href)){
+            href = 'http://' + href;
+        }
+
         this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
-            .attr('href', this.value);
+            .attr('href', href);
     },
 
     //--------------------------------------------------------------------------

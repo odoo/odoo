@@ -1568,7 +1568,7 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
             "should have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'yop',
+        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://yop',
             "should have proper href link");
         assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'target', '_blank',
             "should have target attribute set to _blank");
@@ -1589,7 +1589,7 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickSave(form);
         assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
             "should still have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'limbo',
+        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://limbo',
             "should have proper new href link");
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'limbo',
             'the new value should be displayed');
@@ -1629,7 +1629,7 @@ QUnit.module('basic_fields', {
             "should have 5 cells");
         assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
             "should have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'yop',
+        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://yop',
             "should have proper href link");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text");
@@ -1648,7 +1648,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
             "should still have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'brolo',
+        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://brolo',
             "should have proper new href link");
         assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().text(), 'brolo',
             "value should be properly updated");
