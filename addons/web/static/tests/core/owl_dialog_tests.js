@@ -191,6 +191,13 @@ odoo.define('web.owl_dialog_tests', function (require) {
             // Dialog 5 : Owl
             parent.dialogIds.push(5);
             await testUtils.nextTick();
+            // Dialog 6 : Legacy (unopened)
+            const unopenedModal = new LegacyDialog(null, {});
+            await testUtils.nextTick();
+
+            // Manually closes the last legacy dialog. Should not affect the other
+            // existing dialogs (3 owl and 2 legacy).
+            unopenedModal.close();
 
             let modals = document.querySelectorAll('.modal');
             assert.ok(modals[modals.length - 1].classList.contains('o_active_modal'),
