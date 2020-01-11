@@ -1,16 +1,51 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 from odoo import fields, tools
 from odoo.addons.account.tests.common import AccountTestCommon
+=======
+from odoo import fields
+from odoo.addons.account.tests.account_test_savepoint import AccountingSavepointCase
+>>>>>>> 3bf931abc6d... temp
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
+<<<<<<< HEAD
 class TestReconciliationMatchingRules(AccountTestCommon):
+=======
+class TestReconciliationMatchingRules(AccountingSavepointCase):
+
+    @classmethod
+    def _create_invoice_line(cls, amount, partner, type):
+        ''' Create an invoice on the fly.'''
+        invoice_form = Form(cls.env['account.move'].with_context(default_type=type))
+        invoice_form.invoice_date = fields.Date.from_string('2019-09-01')
+        invoice_form.partner_id = partner
+        with invoice_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.name = 'xxxx'
+            invoice_line_form.quantity = 1
+            invoice_line_form.price_unit = amount
+            invoice_line_form.tax_ids.clear()
+        invoice = invoice_form.save()
+        invoice.post()
+        lines = invoice.line_ids
+        return lines.filtered(lambda l: l.account_id.user_type_id.type in ('receivable', 'payable'))
+
+    def _check_statement_matching(self, rules, expected_values, statements=None):
+        if statements is None:
+            statements = self.bank_st + self.cash_st
+        statement_lines = statements.mapped('line_ids').sorted()
+        matching_values = rules._apply_rules(statement_lines)
+        for st_line_id, values in matching_values.items():
+            values.pop('reconciled_lines', None)
+            self.assertDictEqual(values, expected_values[st_line_id])
+>>>>>>> 3bf931abc6d... temp
 
     @classmethod
     def setUpClass(cls):
         super(TestReconciliationMatchingRules, cls).setUpClass()
+<<<<<<< HEAD
         cls.company = cls.env.user.company_id
         cls.account_pay = cls.a_pay
         cls.account_liq = cls.bnk
@@ -18,10 +53,24 @@ class TestReconciliationMatchingRules(AccountTestCommon):
 
         cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
         cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})
+=======
+        
+        cls.account_pay = cls.company_data['default_account_payable']
+        cls.account_rcv = cls.company_data['default_account_receivable']
+        cls.account_bnk = cls.company_data['default_journal_bank'].default_debit_account_id
+        cls.account_cash = cls.company_data['default_journal_cash'].default_debit_account_id
+
+        cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1'})
+        cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2'})
+
+        # Generate invoice starting at a fixed sequence to avoid matching multiple lines depending the current date.
+        cls.company_data['default_journal_sale'].sequence_id._get_current_sequence(sequence_date='2019-01-01').number_next = 5
+>>>>>>> 3bf931abc6d... temp
 
         cls.invoice_line_1 = cls._create_invoice_line(100, cls.partner_1, 'out_invoice')
         cls.invoice_line_2 = cls._create_invoice_line(200, cls.partner_1, 'out_invoice')
         cls.invoice_line_3 = cls._create_invoice_line(300, cls.partner_1, 'in_refund')
+<<<<<<< HEAD
         cls.invoice_line_3.move_id.name = "RBILL/2018/0013" # Without demo data, avoid to match with the first invoice
         cls.invoice_line_4 = cls._create_invoice_line(1000, cls.partner_2, 'in_invoice')
 
@@ -46,6 +95,13 @@ class TestReconciliationMatchingRules(AccountTestCommon):
 
         cls.rule_1 = cls.rule_0.copy()
         cls.rule_1.account_id = current_assets_account
+=======
+        cls.invoice_line_4 = cls._create_invoice_line(1000, cls.partner_2, 'in_invoice')
+
+        cls.rule_0 = cls.env['account.reconcile.model'].search([('company_id', '=', cls.company_data['company'].id), ('rule_type', '=', 'invoice_matching')])
+        cls.rule_1 = cls.rule_0.copy()
+        cls.rule_1.account_id = cls.company_data['default_account_revenue']
+>>>>>>> 3bf931abc6d... temp
         cls.rule_1.match_partner = True
         cls.rule_1.match_partner_ids |= cls.partner_1 + cls.partner_2
         cls.rule_2 = cls.env['account.reconcile.model'].create({
@@ -53,9 +109,10 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'rule_type': 'writeoff_suggestion',
             'match_partner': True,
             'match_partner_ids': [],
-            'account_id': current_assets_account.id,
+            'account_id': cls.company_data['default_account_revenue'].id,
         })
 
+<<<<<<< HEAD
         invoice_number = cls.invoice_line_1.move_id.name
 
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
@@ -66,6 +123,14 @@ class TestReconciliationMatchingRules(AccountTestCommon):
         cls.bank_line_1 = cls.env['account.bank.statement.line'].create({
             'statement_id': cls.bank_st.id,
             'name': 'invoice %s-%s' % (invoice_number.split('/')[1], invoice_number.split('/')[2]),
+=======
+        cls.bank_st = cls.env['account.bank.statement'].create({
+            'name': 'test bank journal', 'journal_id': cls.company_data['default_journal_bank'].id,
+        })
+        cls.bank_line_1 = cls.env['account.bank.statement.line'].create({
+            'statement_id': cls.bank_st.id,
+            'name': 'invoice 2019-0005',
+>>>>>>> 3bf931abc6d... temp
             'partner_id': cls.partner_1.id,
             'amount': 100,
             'sequence': 1,
@@ -78,9 +143,14 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'sequence': 2,
         })
 
+<<<<<<< HEAD
         cash_journal = cls.env['account.journal'].search([('type', '=', 'cash'), ('company_id', '=', cls.company.id)], limit=1)
         cls.cash_st = cls.env['account.bank.statement'].create({
             'name': 'test cash journal', 'journal_id': cash_journal.id,
+=======
+        cls.cash_st = cls.env['account.bank.statement'].create({
+            'name': 'test cash journal', 'journal_id': cls.company_data['default_journal_cash'].id,
+>>>>>>> 3bf931abc6d... temp
         })
         cls.cash_line_1 = cls.env['account.bank.statement.line'].create({
             'statement_id': cls.cash_st.id,
@@ -365,12 +435,12 @@ class TestReconciliationMatchingRules(AccountTestCommon):
         AccountMove = self.env['account.move']
         move = AccountMove.create({
             'name': 'To Revert',
-            'journal_id': self.bank_journal.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
         })
 
         partner = self.env['res.partner'].create({'name': 'Eugene'})
         AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
-        payment_payable_line = AccountMoveLine.create({
+        AccountMoveLine.create({
             'account_id': self.account_pay.id,
             'move_id': move.id,
             'partner_id': partner.id,
@@ -378,7 +448,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'debit': 10,
         })
         payment_bnk_line = AccountMoveLine.create({
-            'account_id': self.account_liq.id,
+            'account_id': self.account_bnk.id,
             'move_id': move.id,
             'partner_id': partner.id,
             'name': 'I\'m gonna cut you into little pieces',
@@ -391,7 +461,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
         self.assertTrue(move_reversed.exists())
 
         bank_st = self.env['account.bank.statement'].create({
-            'name': 'test bank journal', 'journal_id': self.bank_journal.id,
+            'name': 'test bank journal', 'journal_id': self.company_data['default_journal_bank'].id,
         })
         bank_st.journal_id.default_credit_account_id = payment_bnk_line.account_id
         bank_st.journal_id.default_debit_account_id = payment_bnk_line.account_id
