@@ -10544,8 +10544,10 @@ msgstr "如果是多幣別的分錄，幣別會用另外一個選項的幣別呈
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited."
-msgstr "當科目是借方時，用第二幣別標識的總金額必須是正的，當科目是貸方時，用第二幣別標識的總金額必須是正的。"
+" is debited and negative when account is credited. Moreover, the currency "
+"field has to be left empty when the amount is expressed in the company "
+"currency."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0

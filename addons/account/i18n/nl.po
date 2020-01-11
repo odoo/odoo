@@ -19,7 +19,7 @@
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Peter Koenderink <peterkoenderink@gmail.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
@@ -2883,9 +2883,9 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"Wijzigen van uw bedrijfsnaam is niet toegestaan van zodra facturen werden "
-"uitgegeven voor uw rekening. U dient u in verbinding te stellen met de "
-"leverancier van deze software."
+"Wijzigen van uw bedrijfsnaam is niet toegestaan omdat er al facturen zijn "
+"uitgegeven voor uw account. Neem rechtstreeks contact met ons op voor deze "
+"bewerking."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -5248,7 +5248,7 @@ msgstr "Gegenereerde boekingen"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr "Algemene afschriften"
+msgstr "Algemene rapportages"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -8077,7 +8077,7 @@ msgstr "Relatie is ingesteld en gematched"
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Saldilijst per relatie"
+msgstr "Saldilijst per klant/leverancier"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -10476,7 +10476,7 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"BTW rapportregels waarvan de '+' label wordt toegewezen om regels te "
+"BTW rapportregels waarvan het '+' label wordt toegewezen om regels te "
 "verplaatsen door deze verdelingsregel"
 
 #. module: account
@@ -10485,7 +10485,7 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"BTW rapportregels waarvan de '-' label wordt toegewezen om regels te "
+"BTW rapportregels waarvan het '-' label wordt toegewezen om regels te "
 "verplaatsen door deze verdelingsregel"
 
 #. module: account
@@ -10909,10 +10909,10 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited."
+" is debited and negative when account is credited. Moreover, the currency "
+"field has to be left empty when the amount is expressed in the company "
+"currency."
 msgstr ""
-"Het bedrag in de secundaire valuta moet positief zijn bij debet en negatief "
-"bij credit."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11102,8 +11102,7 @@ msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
 msgstr ""
-"Het veld 'Klant' is vereist, gelieve het aan te vullen om de klant factuur "
-"te valideren."
+"Het veld 'Klant' is verplicht, vul dit in om de klantfactuur te bevestigen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11112,8 +11111,8 @@ msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
-"Het veld 'Leverancier' is verplicht, gelieve het te vervolledigen om de "
-"leveranciersfactuur te bevestigen."
+"Het veld 'Leverancier' is verplicht, vul dit in om de leveranciersfactuur te"
+" bevestigen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -11530,8 +11529,8 @@ msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
 msgstr ""
-"Er is geen transfer rekening ingesteld in de boekhoud instellingen. Gelieve "
-"een een transfer rekening in te stellen om deze verrichting te bevestigen. "
+"Er is geen tussenrekening ingesteld in de instellingen van de boekhouding. "
+"Definieer er een om deze boeking te kunnen bevestigen. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -12996,9 +12995,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"U kunt geen factuur bevestigen met een negatief totaalbedrag. U dient "
-"hiervoor een credit factuur aan te maken. Gebruik het actiemenu om het om te"
-" zetten in een creditfactuur."
+"U kunt geen factuur bevestigen met een negatief totaalbedrag. Maak hiervoor "
+"een creditfactuur aan. Gebruik het actiemenu om deze factuur om te zetten in"
+" een creditfactuur."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13022,14 +13021,13 @@ msgstr "U dient een reeks aan te maken voor %s in uw bedrijf."
 msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
-msgstr ""
-"Gelieve een Ínterne transfer rekening' te definieren in uw kas register."
+msgstr "Maak een 'tussenrekening' aan in uw kas register."
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "You must first define an opening move."
-msgstr "U dient een eerste verrichting definieren/boeken."
+msgstr "Maak eerst een openingsbalans aan."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13052,9 +13050,9 @@ msgid ""
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
 msgstr ""
-"U dient de 'wisselkoersrekening' in te stellen in de financiële "
-"instellingen, om automatisch de boekingen te kunnen maken voor "
-"koersverschillen tussen verschillende valuta's."
+"Stel de 'wisselkoersrekening' in, in de financiële instellingen, om "
+"automatisch de boekingen te kunnen maken voor koersverschillen tussen "
+"verschillende valuta's."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
