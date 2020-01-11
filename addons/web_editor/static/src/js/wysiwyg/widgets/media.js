@@ -214,10 +214,14 @@ var FileWidget = SearchableMediaWidget.extend({
     },
     /**
      * @override
+     * @param needle
      * @param {boolean} noRender: if true, do not render the found attachments
+     * @param {integer} offset: query offset for search_read
      */
-    search: function (needle, noRender) {
+    search: function (needle, noRender, offset) {
         var self = this;
+        if (offset === undefined)
+            offset = 0;
 
         return this._rpc({
             model: 'ir.attachment',
@@ -228,27 +232,31 @@ var FileWidget = SearchableMediaWidget.extend({
                 fields: ['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'],
                 order: [{name: 'id', asc: false}],
                 context: this.options.context,
+                limit: 40,
+                offset: offset
             },
         }).then(function (attachments) {
-            self.attachments = _.chain(attachments)
-                .sortBy(function (r) {
-                    if (_.any(self.options.firstFilters, function (filter) {
-                        var regex = new RegExp(filter, 'i');
-                        return r.name && r.name.match(regex);
-                    })) {
-                        return -1;
-                    }
-                    if (_.any(self.options.lastFilters, function (filter) {
-                        var regex = new RegExp(filter, 'i');
-                        return r.name && r.name.match(regex);
-                    })) {
-                        return 1;
-                    }
-                    return 0;
-                })
-                .value();
-            if (!noRender) {
-                self._renderImages();
+            if (attachments.length) {
+                self.attachments = _.chain(self.attachments.concat(attachments))
+                    .sortBy(function (r) {
+                        if (_.any(self.options.firstFilters, function (filter) {
+                            var regex = new RegExp(filter, 'i');
+                            return r.name && r.name.match(regex);
+                        })) {
+                            return -1;
+                        }
+                        if (_.any(self.options.lastFilters, function (filter) {
+                            var regex = new RegExp(filter, 'i');
+                            return r.name && r.name.match(regex);
+                        })) {
+                            return 1;
+                        }
+                        return 0;
+                    })
+                    .value();
+                if (!noRender) {
+                    self._renderImages();
+                }
             }
         });
     },
@@ -429,8 +437,13 @@ var FileWidget = SearchableMediaWidget.extend({
         this._highlightSelected();
 
         // adapt load more
-        var noLoadMoreButton = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY >= this.attachments.length;
         var noMoreImgToLoad = this.numberOfAttachmentsToDisplay >= this.attachments.length;
+        if (noMoreImgToLoad) {
+            this.search([], false, this.numberOfAttachmentsToDisplay)
+        }
+        var noLoadMoreButton = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY >= this.attachments.length;
+
+
         this.$('.o_load_done_msg').toggleClass('d-none', noLoadMoreButton || !noMoreImgToLoad);
         this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
     },
