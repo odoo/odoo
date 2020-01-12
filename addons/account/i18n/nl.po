@@ -20,9 +20,9 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Laura Koedam <lko@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-16 10:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Maxim Vandenbroucke <mxv@odoo.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +157,7 @@ msgstr "30 Dagen"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "30% direct, resterend saldo na 60 Dagen"
+msgstr "30% direct, resterend saldo na 60 dagen"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -2747,7 +2747,7 @@ msgstr "Kasverschil kostenrekening"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income Account"
-msgstr "Cash Verschil Inkomstenrekening"
+msgstr "Cash verschil inkomstenrekening"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -2836,9 +2836,9 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"Wijzigen van uw bedrijfsnaam is niet toegestaan van zodra facturen werden "
-"uitgegeven voor uw rekening. Contacteer ons rechtstreeks aub in verband met "
-"deze verwerking."
+"Wijzigen van uw bedrijfsnaam is niet toegestaan omdat er al facturen zijn "
+"uitgegeven voor uw account. Neem rechtstreeks contact met ons op voor deze "
+"bewerking."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -4090,8 +4090,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Definieer de kleinste munteenheid van de valuta waarmee cash betaald mee kan"
-" worden"
+"Definieer de kleinste munteenheid van de valuta waarmee cash betaald kan "
+"worden"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
@@ -5234,7 +5234,7 @@ msgstr "Heeft facturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "Heeft Afgeletterde Boekingen"
+msgstr "Heeft afgeletterde boekingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -5920,7 +5920,7 @@ msgstr "Factuur partnerweergavenaam"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_icon
 msgid "Invoice Partner Icon"
-msgstr "Factuur Partner Icoon"
+msgstr "Factuur relatie icoon"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payments_widget
@@ -6775,7 +6775,7 @@ msgstr "Blokkeerdatum voor niet adviseurs"
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr "Vergrendel ingevoerde gegevens met Hash"
+msgstr "Vergrendel ingevoerde gegevens met hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -7857,7 +7857,7 @@ msgstr "Relatie is ingesteld en gematched"
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Saldilijst per relatie"
+msgstr "Saldilijst per klant/leverancier"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -8765,13 +8765,13 @@ msgstr "Verdeling voor facturen"
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition for Refund Invoices"
-msgstr "Verdeling voor terugbetalingsfacturen"
+msgstr "Verdeling voor creditfacturen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,help:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition when the tax is used on a refund"
-msgstr "Verdeling wanneer de belasting wordt gebruikt voor een terugbetaling"
+msgstr "Verdeling wanneer de BTW wordt gebruikt voor een creditfactuur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
@@ -10560,6 +10560,14 @@ msgid "The account %s (%s) is deprecated."
 msgstr "Deze rekening %s (%s) is vervallen"
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The account is already in use in a 'sale' or 'purchase' journal. This means "
+"that the account's type couldn't be 'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -10602,10 +10610,10 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited."
+" is debited and negative when account is credited. Moreover, the currency "
+"field has to be left empty when the amount is expressed in the company "
+"currency."
 msgstr ""
-"Het bedrag in de secundaire valuta moet positief zijn bij debet en negatief "
-"bij credit."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10795,8 +10803,7 @@ msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
 msgstr ""
-"Het veld 'Klant' is vereist, gelieve het aan te vullen om de klant factuur "
-"te valideren."
+"Het veld 'Klant' is verplicht, vul dit in om de klantfactuur te bevestigen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10805,8 +10812,8 @@ msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
-"Het veld 'Leverancier' is verplicht, gelieve het te vervolledigen om de "
-"leveranciersfactuur te bevestigen."
+"Het veld 'Leverancier' is verplicht, vul dit in om de leveranciersfactuur te"
+" bevestigen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -11202,6 +11209,14 @@ msgid "The tie-breaking rule used for float rounding operations"
 msgstr "De bindende regel die wordt gebruikt voor afrondingen"
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The type of the journal's default credit/debit account shouldn't be "
+"'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
 msgstr "Er zijn momenteel geen facturen en betalingen voor uw account."
@@ -11229,8 +11244,8 @@ msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
 msgstr ""
-"Er is geen transfer rekening ingesteld in de boekhoud instellingen. Gelieve "
-"een een transfer rekening in te stellen om deze verrichting te bevestigen. "
+"Er is geen tussenrekening ingesteld in de instellingen van de boekhouding. "
+"Definieer er een om deze boeking te kunnen bevestigen. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -12576,7 +12591,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "U kunt een BTW kasbasisboeking niet terug zetten nar concept."
+msgstr "U kunt een BTW kasbasisboeking niet terugzetten naar concept."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12642,9 +12657,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"U kunt geen factuur bevestigen met een negatief totaalbedrag. U dient "
-"hiervoor een credit factuur aan te maken. Gebruik het actiemenu om het om te"
-" zetten in een creditfactuur."
+"U kunt geen factuur bevestigen met een negatief totaalbedrag. Maak hiervoor "
+"een creditfactuur aan. Gebruik het actiemenu om deze factuur om te zetten in"
+" een creditfactuur."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12663,14 +12678,13 @@ msgstr "U dient een reeks aan te maken voor %s in uw bedrijf."
 msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
-msgstr ""
-"Gelieve een Ínterne transfer rekening' te definieren in uw kas register."
+msgstr "Maak een 'tussenrekening' aan in uw kas register."
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "You must first define an opening move."
-msgstr "Uw moet een eerste verrichting definieren/boeken."
+msgstr "Maak eerst een openingsbalans aan."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

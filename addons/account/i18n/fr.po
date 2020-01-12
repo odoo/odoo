@@ -87,7 +87,7 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
 # Herve GUERIN <herve.guerin@auguria.fr>, 2019
-# Romaric PINSET LEPRETRE, 2019
+# romrik_, 2019
 # 
 msgid ""
 msgstr ""
@@ -95,7 +95,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-16 10:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Romaric PINSET LEPRETRE, 2019\n"
+"Last-Translator: romrik_, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10611,6 +10611,14 @@ msgid "The account %s (%s) is deprecated."
 msgstr "Le compte %s (%s) est déprécié."
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The account is already in use in a 'sale' or 'purchase' journal. This means "
+"that the account's type couldn't be 'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -10655,10 +10663,10 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited."
+" is debited and negative when account is credited. Moreover, the currency "
+"field has to be left empty when the amount is expressed in the company "
+"currency."
 msgstr ""
-"Le montant en devise doit être négatif pour un montant au crédit et positif "
-"pour un montant au débit."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11215,6 +11223,14 @@ msgid "The tie-breaking rule used for float rounding operations"
 msgstr ""
 "Règle utilisée en cas d'égalité pour les opérations d'arrondi de nombre "
 "décimal"
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"The type of the journal's default credit/debit account shouldn't be "
+"'receivable' or 'payable'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
