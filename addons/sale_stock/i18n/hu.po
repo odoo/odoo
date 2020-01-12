@@ -7,9 +7,9 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
 # Martin Trigaux, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
 # krnkris, 2019
 # Tamás Németh <ntomasz81@gmail.com>, 2019
+# gezza <geza.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +123,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"A termék konfigurációjától függően a kiszállított mennyiség az alábbi módokon számítható:\n"
+"  - Manuális: a mennyiség kézi megadása a soron\n"
+"  - Analitikus kiadás: a mennyiség a könyvelésre küldött kiadások összesítéséből számítódik\n"
+"  - Időnyilvántartás: a mennyiség az értékesítési rendelés soraihoz kapcsolt feladatokra rögzített órák összege\n"
+"  - Készletmozgások: a mennyiség a jóváhagyott kigyűjtések mennyisége\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -163,7 +168,7 @@ msgstr "Elérhető"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "Értékesítési rendelés sorain specifikus útvonal alkalmazása"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -173,7 +178,7 @@ msgstr "Vállalatok"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Az első szállítási rendelés elvégzésének dátuma"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -227,7 +232,7 @@ msgstr "Vásárlói megrendelések kapcsolódó számláin az Incoterms megjelen
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Incoterm megjelenítése rendeléseken és számlákon"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -235,6 +240,8 @@ msgstr ""
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+"Ne felejtse el megváltoztatni a partner a következő szállítási rendeléseken:"
+" %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -244,12 +251,12 @@ msgstr "Teljesítés kelte"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "Kivétel merült fel a kigyűjtésen:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Kivétel merült fel értékesítési rendelés kapcsán:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -292,7 +299,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Érintett transzfer(ek):"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -412,7 +419,7 @@ msgstr "Csomag"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Kigyűjtési politika"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
@@ -457,7 +464,7 @@ msgstr "Útvonal"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Értékesítés sor"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
@@ -569,7 +576,7 @@ msgstr "Készlet szabály"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Készletszabály riport"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule

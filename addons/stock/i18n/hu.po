@@ -589,6 +589,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Útvonal műveletek létrehozása és testreszabása a raktárakhoz kapcsolódó termékmozgásokhoz, pld: lepakolás > minőségellenőrzés > készlet útvonal beérkező termékekhez, vagy kigyűjtés > csomagolás > kiszállítás útvonal kimenő termékekhez. \n"
+"Megadhatóak továbbá elhelyezési stratégiák is a raktár lokációkhoz, melyek segítségével a bejövő termékeket automatikusan specifikus alárendelt lokációkra lehet küldeni (pld: specifikus tárolók, polcok, stb.)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -599,6 +601,8 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Útvonal műveletek létrehozása és testreszabása a raktárakhoz kapcsolódó termékmozgásokhoz, pld: lepakolás > minőségellenőrzés > készlet útvonal beérkező termékekhez, vagy kigyűjtés > csomagolás > kiszállítás útvonal kimenő termékekhez. \n"
+"Megadhatóak továbbá elhelyezési stratégiák is a raktár lokációkhoz, melyek segítségével a bejövő termékeket automatikusan specifikus alárendelt lokációkra lehet küldeni (pld: specifikus tárolók, polcok, stb.)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1005,6 +1009,8 @@ msgid ""
 "Cannot set the done quantity from this stock move, work directly with the "
 "move lines."
 msgstr ""
+"Az elvégzett mennyiség nem állíható közvetlenül a mozgáson, csak a mozgás "
+"sorokon."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1268,7 +1274,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr ""
+msgstr "Visszamaradt kigyújtések száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
@@ -1335,6 +1341,8 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
+"Hozzon létre visszamaradt rendelést ha fel szeretné dolgozni a fennmaradt mennyiségeket.\n"
+"Ne hozzon létre visszamaradt rendelést, ha nem szeretné feldolgozni a fennmaradt termékeket."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -1771,17 +1779,17 @@ msgstr "Leírás"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr ""
+msgstr "Leírás kiszállítási rendelésekhez"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr ""
+msgstr "Leírás belső transzferekhez"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr ""
+msgstr "Leírás beérkezésekhez"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
@@ -2068,6 +2076,10 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
+"Minden készlet művelet termékeket mozgat egy adott lokációról egy másik "
+"lokációra. Például ha termék érkeznek egy beszállítótól, akkor a rendszer a "
+"Beszállító lokációról mozgat terméket a Készlet lokációra. Minden egyes "
+"riportok lehet futtatható a fizikai, partner vagy virtuális lokációkra is."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2288,7 +2300,7 @@ msgstr "Jövőbeni beérkeztetések"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
-msgstr ""
+msgstr "Teljes nyomonkövethetőség a beszállítóktól a vevőkig"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2493,6 +2505,8 @@ msgid ""
 "If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
 "If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
 msgstr ""
+"Ha nincs még jóváhagyva a leltár, akkor az elméleti mennyiségek ellenőrzésének dátuma.\n"
+"Ha már jóváhagyásra került a leltár, akkor a készlet kiigazíások jóváhagyásának dátuma."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2500,6 +2514,9 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
+"Ha a kigyűjtés nincs zárolva, akkor szerkeszthető az eredeti igény "
+"(piszkozat kigyűjtések esetén) vagy az elvégzett mennyiség (elvégzett "
+"kigyűjtések esetén)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -2553,7 +2570,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr ""
+msgstr "Ha ki van jelölve, akkor lehetővé válik teljes csomagok kiválasztása."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -2878,7 +2895,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
-msgstr ""
+msgstr "Elvégzett mennyiség szerkeszthető"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3316,6 +3333,7 @@ msgstr "Beviteli és Kiviteli (Push & Pull) készlet folyamatok kezelése"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
 msgstr ""
+"Termékcsomagolások kezelése (pld: 6 üveges csomag, 10 darabos doboz, stb.)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3418,7 +3436,7 @@ msgstr "Mozgás részletek"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_entire_packs
 msgid "Move Entire Packages"
-msgstr ""
+msgstr "Teljes csomagok mozgatása"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_ids
@@ -3497,7 +3515,7 @@ msgstr "Név"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Negative Forecasted Quantity"
-msgstr ""
+msgstr "Negatív előrejelzett mennyiség"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -3762,7 +3780,7 @@ msgstr "Műveletek típusai"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr ""
+msgstr "Csomag nélküli műveletek"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -3924,6 +3942,7 @@ msgstr "Csomagolás típusa"
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
 msgstr ""
+"Termékek csomagolása, küldése kimeneti helyre majd kézbesítése (3 lépés)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -3942,7 +3961,7 @@ msgstr "Csomag"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr ""
+msgstr "Csomag vonalkód (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_template
@@ -3952,25 +3971,25 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr ""
+msgstr "Csomag vonalkód tartalommal"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_level.py:0
 #, python-format
 msgid "Package Content"
-msgstr ""
+msgstr "Csomag tartalom"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids
 msgid "Package Level"
-msgstr ""
+msgstr "Csomag szint"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
 msgid "Package Level Ids Details"
-msgstr ""
+msgstr "Csomag szint azonosító részletek"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4315,7 +4334,7 @@ msgstr "Termék mozgások"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Termékmozgások (Készletmozgás sor)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
@@ -4343,7 +4362,7 @@ msgstr ""
 #: model:ir.actions.report,name:stock.action_report_stock_rule
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Product Routes Report"
-msgstr ""
+msgstr "Termékútvonal riport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4485,12 +4504,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr ""
+msgstr "Csomagba helyezés"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr ""
+msgstr "Termékek csomagba helyezése (pld: dobozok) és nyomonkövetése"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
@@ -4520,7 +4539,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr ""
+msgstr "Elhelyezés:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
@@ -4643,6 +4662,9 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Bejövő termékek tervezett mennyisége.\n"
+"Egy készlet lokáció kontextusában tartalmazza a lokációra, vagy annak alárendelt lokcáióira beérkező termékeket.\n"
+"Egy raktár kontextusában tartalmazza a raktár, vagy alárendeltjei készlet lokációjára beérkező termékeket. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -4652,6 +4674,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"Kimenő termékek tervezett mennyisége.\n"
+"Egy készlet lokáció kontextusában tartalmazza a lokációról, vagy annak alárendelt lokcáióiról kimenő termékeket.\n"
+"Egy raktár kontextusában tartalmazza a raktár, vagy alárendeltjei készlet lokációjáról kimenő termékeket. \n"
+"Egyéb esetekben a 'belső' típusú lokációkról kimenő termékeket mutatja."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -4668,6 +4694,8 @@ msgid ""
 "Quantity of reserved products in this quant, in the default unit of measure "
 "of the product"
 msgstr ""
+"Lefoglalt termékek mennyisége ebben a kvantban a termék alapértelmezett "
+"mértékegységében"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__outdated
@@ -4691,11 +4719,12 @@ msgstr "Kvantok"
 #, python-format
 msgid "Quants cannot be created for consumables or services."
 msgstr ""
+"Nem hozhatók létre kvantok fogyóeszköz és szolgáltatás típusú termékekhez."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr ""
+msgstr "Fenmmaradt kigyűjtések értékelése"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_late
@@ -4718,7 +4747,7 @@ msgstr "Tényleges mennyiség"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_qty
 msgid "Real Reserved Quantity"
-msgstr ""
+msgstr "Tényleges lefoglalt mennyiség"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
@@ -4834,7 +4863,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
-msgstr ""
+msgstr "Lotok, csomagok, lokációk regisztrálása"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4947,7 +4976,7 @@ msgstr "Lefoglalt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
-msgstr ""
+msgstr "Lefoglalt mennyiség"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_procurement_jit
@@ -5199,6 +5228,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
+"A selejtezés eltávolítja a terméket a készletről. A termék\n"
+"                egy selejtezési lokációra kerül, ami használható riportálási célokra is."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5632,12 +5663,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "Készletcsomag cél"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr ""
+msgstr "Készlet csomag szint"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -5650,12 +5681,12 @@ msgstr "Készlet kiszedés"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_view_graph
 msgid "Stock Quant"
-msgstr ""
+msgstr "Készlet kvant"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
 msgid "Stock Quantity History"
-msgstr ""
+msgstr "Készletmennyiség történet"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
@@ -5671,12 +5702,12 @@ msgstr "Készlet szabály"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_rules_report
 msgid "Stock Rules Report"
-msgstr ""
+msgstr "Készletszabály riport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Készletszabály riport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -5691,7 +5722,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock moves not in package"
-msgstr ""
+msgstr "Csomagon kívűli készletmozgások"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -5972,6 +6003,8 @@ msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
+"A beszerzési mennyiség erre a többszörösre lesz felkerekítve. Ha 0, akkor a "
+"pontos mennyiség kerül használatra."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -5988,6 +6021,10 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
+"A(z) \"%s\" termék elvégzett mennyisége nem felel meg a(z)"
+"                                   defined on the unit of measure \"%s\".  "
+"Változtassa meg vagy az elvégzett mennyiséget, vagy a mértékegység "
+"kerekítési pontosságát."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6118,6 +6155,8 @@ msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
+"Az összes regisztrált lot/szériaszám listája.\n"
+"            Egy lot/szériaszám kiválasztása utána megtekinthető annak termékéhez kapcsolódó nyomonkövetés."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -6145,7 +6184,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "This is used to correct the product quantities you have in stock."
-msgstr ""
+msgstr "A készleten található mennyiségek korrekciójára használható."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -6788,12 +6827,12 @@ msgstr "Raktárak"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr ""
+msgstr "Elégtelen készlet figyelmezetetés"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr ""
+msgstr "Elégtelen selejt mennyiség figyelmeztetés"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -6907,6 +6946,9 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
+"Ha a kigyűjtés még nem került jóváhagyásra, akkor lehetővé teszi a kezdeti "
+"igény megváltoztatását. Ha a kigyűjtés elvégzésre került, akkor lehetővé "
+"teszi az elvégzett mennyiség megváltoztatását."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -6970,6 +7012,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Nem lehetséges a lot/szériaszámhoz kapcsolt termék megváltoztatása, ha már "
+"kapcsolódó készletmozgások kerültek létrehozásra, mivel ez ellentmondásokat "
+"okozhat a készletnyilvántartásban."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -6985,7 +7030,7 @@ msgstr ""
 msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
-msgstr ""
+msgstr "Különböző lokációkra tartó termékeket próbál egy csomagba rakni."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6997,6 +7042,10 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
+"Olyan mértékegységet használ, ami kisebb, mint a készletezéshez használt "
+"mértékegység. Ez kerekítési problémákat okozhat a lefoglalt mennyiségeknél. "
+"Használja a kisebb mértékegységet a készlet értékeléséhez vagy változtassa "
+"meg a kerekítési pontosságot egy kisebb értékre (pld: 0.00001)"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -7023,6 +7072,8 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
+"Nem lehet termékmozgást törölni, ha a kigyűjtés már elvégzésre került. Csak "
+"az elvégzett mennyiségek korrekciója megengedett."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7106,6 +7157,9 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
+"Nem lehet megváltoztatni a mértékegységet, mivel már vannak készletmozgások "
+"ehhez a termékhez. A mértékegység megváltoztatásához archiválja ezt a "
+"terméket és hozzon létre egy újat."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:0
@@ -7126,6 +7180,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
+"Nem mozgathatja ugyanazt a csomag tartalmat egynél többször ugyanabban a "
+"transzferben, illetve nem oszthatja fel ugyanazt a csomagot két lokációra."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7187,6 +7243,9 @@ msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
+"Nem lehet jóváhagyni transzfert, ha nincsenek lefoglalt vagy elvégzett "
+"mennyiségek. A transzfer kényszerítéséhez váltson szerkesztő módba és adja "
+"meg kézzel az elvégzett mennyiségeket."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -7351,7 +7410,7 @@ msgstr "benne"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "is not available in sufficient quantity"
-msgstr ""
+msgstr "nem elérhető a szükséges mennyiségben"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form

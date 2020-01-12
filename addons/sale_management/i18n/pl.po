@@ -14,16 +14,16 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
 # Maksym <ms@myodoo.pl>, 2019
+# Paweł Wodyński <pw@myodoo.pl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2019\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,6 +83,7 @@ msgid "All Sales"
 msgstr ""
 
 #. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Archived"
 msgstr "Archiwalne"
@@ -231,6 +232,8 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"Niedozwolony produkt, cena jednostkowa, ilość i JM w wierszu oferty "
+"sprzedaży niepodlegającej rozliczeniu"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -301,7 +304,7 @@ msgstr "Pozycje"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "Brak wymaganego produktu i JM w pozycji oferty sprzedaży"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note

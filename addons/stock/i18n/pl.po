@@ -12,9 +12,7 @@
 # Maksym <ms@myodoo.pl>, 2019
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
-# Patryk Openglobe <patryk.walentowicz@openglobe.pl>, 2019
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2019
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
 # Tomasz Leppich <t.leppich@gmail.com>, 2019
@@ -26,6 +24,7 @@
 # Martin Trigaux, 2019
 # Natalia Gros <nag@odoo.com>, 2019
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2019
+# Paweł Wodyński <pw@myodoo.pl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Grzegorz Krukar <grzegorzgk1@gmail.com>, 2019\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +50,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> UoM Produktu to %s (%s) - UoM Przesunięcia to %s (%s)"
+"%s --> JM Produktu to %s (%s) - JM Przesunięcia to %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -178,6 +177,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Nowość: Gdy przesunięcie zapasów zostanie utworzone i jeszcze nie potwierdzone.\n"
+"* Oczekiwanie na inną operację: Stan ten można zaobserwować, gdy przesunięcie oczekuje na inną, na przykład w przykuty przepływu.\n"
+"* Oczekiwanie na dostępność: Ten stan jest osiągany, gdy rozwiązanie problemu dotyczącego zamówień nie jest proste. Może to wymagać uruchomienia harmonogramu, komponentu do wyprodukowania ...\n"
+"* Dostępne: Gdy produkty są zarezerwowane, jest ustawione na „Dostępne”.\n"
+"* Gotowe: Gdy przesyłka jest przetwarzana, stan to „Gotowe”."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -838,7 +842,7 @@ msgstr "Tworzenie pobrania częściowego"
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Pobranie częściowe"
+msgstr "Pobrania częściowe"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -1674,12 +1678,12 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Delivered Qty"
-msgstr "Ilość bieżąca"
+msgstr "Ilość dostarczona"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 msgid "Delivery"
-msgstr "Wydanie zewnętrzne"
+msgstr "Dostawa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2459,7 +2463,9 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr "Odznaczając pole Aktywne możesz ukryć ścieżkę bez jej usuwania."
+msgstr ""
+"Jeśli opcja jest niezaznaczona, to marszruta będzie ukryta (i nie będziesz "
+"jej musiał usuwać)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__date
@@ -2510,7 +2516,7 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"Jeśli to zaznaczone, będziesz mógł wybrać numery partii / serii. Możesz "
+"Jeśli jest zaznaczone, będziesz mógł wybrać numery partii / serii. Możesz "
 "także zdecydować, aby nie umieszczać partii w tym typie operacji. Oznacza "
 "to, że utworzy zapas bez partii lub nie wprowadzi ograniczenia na pobranej "
 "partii."
@@ -2760,7 +2766,7 @@ msgstr "Pozycja inwentaryzacji"
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Inventory Lines"
-msgstr "Pozycja"
+msgstr "Pozycje inwentaryzacji"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -2791,7 +2797,7 @@ msgstr "Odnośnik inwentaryzacji"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
-msgstr "Raport"
+msgstr "Raport inwentaryzacji"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -4080,12 +4086,12 @@ msgstr "Pobranie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "Pobranie"
+msgstr "Listy pobrań"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Wydruk operacji"
+msgstr "Operacje pobrania"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -4823,13 +4829,13 @@ msgstr "Wydawanie"
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location__removal_strategy_id
 msgid "Removal Strategy"
-msgstr "Strategia wydawania"
+msgstr "Strategia usuwania"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr "Strategia wydawania %s nie jest zaimplementowana."
+msgstr "Strategia usuwania %s nie jest zaimplementowana."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_max_qty
@@ -4841,7 +4847,7 @@ msgstr "Ponowne zamówienie ilości Max"
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__reordering_min_qty
 msgid "Reordering Min Qty"
-msgstr "Ponowne zamówienie ilość Min"
+msgstr "Ponowne zamówienie ilości Min"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
@@ -5194,7 +5200,7 @@ msgstr "Przeszukuj zapotrzebowania."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr "szukaj odpadów"
+msgstr "Szukaj Odpadów"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__categ_id
@@ -5956,6 +5962,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Żądana operacja nie może zostać przetworzona z powodu błędu programowania, "
+"który ustawia pole `product_qty` zamiast` product_uom_qty`."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_date
@@ -6442,7 +6450,7 @@ msgstr "Jednostka Miary"
 #: model:product.product,uom_name:stock.product_cable_management_box
 #: model:product.template,uom_name:stock.product_cable_management_box_product_template
 msgid "Units"
-msgstr ""
+msgstr "Jednostki"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6457,7 +6465,7 @@ msgstr "Jednostki miary"
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
-msgstr "Jednostki miary"
+msgstr "Jednostki miar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -6853,7 +6861,7 @@ msgid ""
 "Max Quantity."
 msgstr ""
 "Kiedy zapas wirtualny będzie mniejszy niż Ilość minimalna z tego pola, to "
-"odoo wygeneruje zapotrzebowanie na taką ilość, aby ilość spodziewana doszła "
+"Odoo wygeneruje zapotrzebowanie na taką ilość, aby ilość spodziewana doszła "
 "do Ilości maksymalnej."
 
 #. module: stock
@@ -7026,6 +7034,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Nie można zmienić stosunku tej jednostki miary, ponieważ niektóre produkty z"
+" tą JM zostały już przeniesione lub są obecnie zarezerwowane."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7262,7 +7272,7 @@ msgstr "dni"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr "Roczna inwentaryzacja"
+msgstr "np. Roczna inwentaryzacja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

@@ -10515,8 +10515,10 @@ msgstr "다중 통화 항목일 경우, 다른 선택 통화로 금액이 표시
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited."
-msgstr "보조 통화로 표시된 금액은 계정을 인출했을 때는 양수이고 계정에 입금되었을 때는 음수여야 합니다."
+" is debited and negative when account is credited. Moreover, the currency "
+"field has to be left empty when the amount is expressed in the company "
+"currency."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
