@@ -6,7 +6,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2018
 # Martin Trigaux, 2019
-# Dorin Hongu <dhongu@gmail.com>, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,7 +221,7 @@ msgstr ""
 "        % if object.state=='paid':\n"
 "            Această factură este deja plătită .\n"
 "        % else:\n"
-"            Vă rugăm să trimiteți plata cât mai curând posibil.\n"
+"            Vă rugăm să faceți plata cât mai curând posibil.\n"
 "        % endif\n"
 "        <br/><br/>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
@@ -294,6 +294,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"<strong>Email în masă </strong> pentru\n"
+"<span>înregistrările selectate</span>\n"
+"</span>\n"
+"<span>Urmăritorii documentului și</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -488,7 +493,7 @@ msgstr "<span> La </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
-msgstr ""
+msgstr "<span>Suma plătită</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -548,7 +553,7 @@ msgstr "<span>Operațiuni</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>Suma inițială</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3867,6 +3872,10 @@ msgid ""
 "greater than the last day of a month, this number will instead select the "
 "last day of this month."
 msgstr ""
+"Ziua lunii în care factura trebuie să ajungă la termen. Dacă este zero sau "
+"negativă, această valoare va fi ignorată și nu va fi setată nicio zi "
+"specifică. Dacă este mai mare decât ultima zi a unei luni, acest număr va "
+"selecta în schimb la ultima zi a acelei luni."
 
 #. module: account
 #: code:addons/account/models/company.py:51
@@ -3883,7 +3892,7 @@ msgid ""
 msgstr ""
 "Stimate Domn/Doamnă,\n"
 "\n"
-"Înregistrările noastre indică faptul ca aveți unele plăți încă scadente. Găsiți toate detaliile mai jos.\n"
+"Înregistrările noastre indică faptul că aveți unele plăți încă scadente. Găsiți toate detaliile mai jos.\n"
 "Dacă suma a fost deja plătită, vă rugăm să ignorați acest aviz. În cazul contrar, vă rugam să efectuați plata restantă descrisă mai jos.\n"
 "Dacă aveți întrebări în legătură cu contul dumneavoastră, vă rugam să ne contactați.\n"
 "\n"
@@ -11169,7 +11178,7 @@ msgstr "Valoare fără taxe în moneda companiei"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed_invoice_signed
 msgid "Untaxed Amount in Invoice Currency"
-msgstr ""
+msgstr "Valoare fără taxe în moneda facturii"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
