@@ -22,10 +22,10 @@
 # Martin Trigaux, 2018
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
-# Maksym <ms@myodoo.pl>, 2018
-# Paweł Wodyński <pw@myodoo.pl>, 2018
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2019
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
+# Maksym <ms@myodoo.pl>, 2020
+# Paweł Wodyński <pw@myodoo.pl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +87,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Wersja robocza: jeszcze niepotwierdzona i nie zostanie zaplanowana do momentu potwierdzenia.\n"
+" * Oczekiwanie na inną operację: oczekiwanie na ukończenie kolejnej operacji.\n"
+" * Oczekiwanie: produkt nie jest gotowy do wysłania, ponieważ nie może zostać zarezerwowany.\n"
+" * Gotowe: produkty są zarezerwowane i gotowe do wysłania. Jeśli wybrana została polityka wysyłkowa „Jak najszybciej”, wysyłka następuje natychmiast po zarezerwowaniu.\n"
+" * Gotowe: przetwarzanie zakończone, nie można go już modyfikować ani anulować.\n"
+" * Anulowano: operacja anulowana, nie można jej już zatwierdzić."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -115,6 +121,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* New: When the stock move is created and not yet confirmed.\n"
+"* Oczekiwanie na inną operację: Oznacza, że operacja oczekuje na inną, na przykład w łańcuchowym przepływie.\n"
+"* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"
+"* Available: When products are reserved, it is set to 'Available'.\n"
+"* Done: When the shipment is processed, the state is 'Done'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -5042,7 +5053,7 @@ msgid ""
 msgstr ""
 "Wybór \"Ostrzeżenie\" spowoduje ostrzeżenie użytkownika informacją. Wybór "
 "\"Informacja blokująca\" spowoduje wyświetlenie wyjątku z tekstem informacji"
-" i zablowowanie dalszego działania. Informację wpisz w następnym polu."
+" i zablokowanie dalszego działania. Informację wpisz w następnym polu."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5756,6 +5767,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Żądana operacja nie może zostać przetworzona z powodu błędu programowania, "
+"który ustawia pole `product_qty` zamiast` product_uom_qty`."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway
@@ -6753,6 +6766,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Nie można zmienić stosunku tej jednostki miary, ponieważ niektóre produkty z"
+" tą JM zostały już przeniesione lub są obecnie zarezerwowane."
 
 #. module: stock
 #: code:addons/stock/models/product.py:536
@@ -6869,6 +6884,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
+"Nie zarejestrowałeś jeszcze <i>wykonanych </i>ilości, klikając przycisk <i>zastosuj</i>\n"
+"                        Odoo przetworzy wszystkie <i>zarezerwowane</i> ilości."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
