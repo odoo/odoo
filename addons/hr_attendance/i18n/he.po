@@ -10,7 +10,7 @@
 # ExcaliberX <excaliberx@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:17+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,38 +30,38 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:55
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr ""
+msgstr "זמן היציאה לא יכול להיות מוקדם יותר מזמן הכניסה."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:29
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s מ %(check_in)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:34
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr ""
+msgstr "%(empl_name)s מ %(check_in)s ל %(check_out)s"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">נוכחות</span>"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr ""
+msgstr "תפוח אחד ביום מרחיק את הביקור אצל הרופא"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:106
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr ""
+msgstr "עוד יום עבודה טוב! נתראה בקרוב!"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -78,7 +78,7 @@ msgstr "נוכחות"
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "ניתוח נתוני נוכחות"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -94,7 +94,7 @@ msgstr "נוכחות"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
-msgstr ""
+msgstr "מספר תג"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -103,6 +103,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"לא ניתן ליצור רשומת נוכחות חדשה עבור%(empl_name)s, העובד לא ביצע יציאה מאז "
+"%(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -112,6 +114,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"לא ניתן ליצור רשומת נוכחות חדשה עבור %(empl_name)s, העובד כבר ביצע כניסה "
+"ב%(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:108
@@ -131,12 +135,12 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
-msgstr ""
+msgstr "כניסה"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "כניסה / יציאה"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
@@ -160,7 +164,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "כניסה/יציאה"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -269,19 +273,19 @@ msgstr "עובד"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 msgid "Employee Image"
-msgstr ""
+msgstr "תמונת עובד"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
-msgstr ""
+msgstr "קוד סודי של עובד"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Employee attendances"
-msgstr ""
+msgstr "נוכחות עובדים"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
@@ -297,7 +301,7 @@ msgstr "עובדים"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr ""
+msgstr "אפשר שימוש בקוד סודי"
 
 #. module: hr_attendance
 #. openerp-web
@@ -416,7 +420,7 @@ msgstr "מזהה"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "מזהה המשמש לזיהוי עובד"
 
 #. module: hr_attendance
 #. openerp-web
@@ -440,7 +444,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "נוכחות אחרונה"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
@@ -486,12 +490,12 @@ msgstr "חודש"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr ""
+msgstr "הנוכחות שלי"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr ""
+msgstr "אין יציאה"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
@@ -507,17 +511,17 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr ""
+msgstr "פקיד בכיר"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
 msgid "PIN"
-msgstr ""
+msgstr "קוד סודי"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
-msgstr ""
+msgstr "קוד סודי המשמש לכניסה / יציאה במצב קיוסק (אם מופעל בתצורה)."
 
 #. module: hr_attendance
 #. openerp-web
@@ -549,7 +553,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
-msgstr ""
+msgstr "הדפס תג"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -561,7 +565,7 @@ msgstr "דיווח"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Scan your badge"
-msgstr ""
+msgstr "סרוק את התג שלך"
 
 #. module: hr_attendance
 #. openerp-web
@@ -584,25 +588,25 @@ msgstr "הגדרות"
 #: code:addons/hr_attendance/models/hr_employee.py:155
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "קיבוץ כזה אסור."
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
-msgstr ""
+msgstr "מזהה התג חייב להיות ייחודי, זה כבר משויך לעובד אחר."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:63
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "הקוד הסודי חייב להיות רצף של ספרות."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "רשומות הנוכחות של העובדים שלך יוצגו כאן."
 
 #. module: hr_attendance
 #. openerp-web
@@ -675,7 +679,7 @@ msgstr "ברוך הבא ל"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
 msgid "Worked Hours"
-msgstr ""
+msgstr "שעות עבודה"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:79

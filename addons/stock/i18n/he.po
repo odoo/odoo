@@ -843,7 +843,7 @@ msgstr "חל על המחסן "
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Applied On"
-msgstr ""
+msgstr "חל על"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_incoterms_view_search
@@ -7863,3 +7863,9 @@ msgstr "עם לחצן <i>האמות</i> "
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ אפס כמויות"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""

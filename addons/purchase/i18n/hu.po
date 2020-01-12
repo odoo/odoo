@@ -7,8 +7,8 @@
 # krnkris, 2017
 # Martin Trigaux, 2017
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
 # Tamás Németh <ntomasz81@gmail.com>, 2019
+# gezza <geza.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -721,7 +721,7 @@ msgstr "Kétszeresen jóváhagyott mennyiség"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "Követő mozgások"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -999,6 +999,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Beszállítói átfutási idő hibahatára. Amikor a rendszer Beszerzési rendelést "
+"generál termékek újrarendelése során, akkor a rendelés ennyi nappal korábbra"
+" kerül ütemezésre a váratlan beszállítói késések kezelése érdekében."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1045,7 +1048,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Várható szállítási dátumok előre mozgatása"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1613,7 +1616,7 @@ msgstr "Árajánlat kérés #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr ""
+msgstr "Beszállítók közvetlenül a vevők számára szállítsanak"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1817,6 +1820,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"A beszerzési rendelés mennyiségei kisebbek, mint a számlázott mennyiségek. "
+"Esetleg jóváírás kérhető."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1847,6 +1852,8 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
+"Nem található beszállító ehhez a termékhez: %s. Adjon meg beszállítót a "
+"termékhez."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1877,6 +1884,11 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Elérhetővé teszi a dropshipping útvonalat a termékek számára, mely során a "
+"beszállítók közvetlenül a vevőknek szállítanak ki. Egy termék dropship "
+"generálni fog egy beszerzési ajánlatkérést, amikor az értékesítési rendelés "
+"megerősítésre került. Ez egy igény alapú munkafolyamat. A kért szállítási "
+"cím a vevő szállítási címe lesz a saját raktár helyett."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1928,7 +1940,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "Meghatározza a művelet típusát a bejövő szállítmányokhoz"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter

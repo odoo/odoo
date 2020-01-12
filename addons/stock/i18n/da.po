@@ -15,6 +15,7 @@
 # Martin Trigaux, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
+# Simon Andersen <simon@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>, 2019\n"
+"Last-Translator: Simon Andersen <simon@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3650,7 +3651,7 @@ msgstr "Lot/serienummer"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial :"
-msgstr ""
+msgstr "Lot/Serienr. :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -7924,3 +7925,9 @@ msgstr "med <i>Validér</i> knappen"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Sæt antal til 0"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""

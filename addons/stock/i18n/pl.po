@@ -12,7 +12,6 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
-# zbik2607 <darek@krokus.com.pl>, 2017
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
 # Karol Rybak <karolrybak85@gmail.com>, 2017
 # Patryk Openglobe <patryk.walentowicz@openglobe.pl>, 2017
@@ -21,9 +20,11 @@
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2018
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
-# Paweł Wodyński <pw@myodoo.pl>, 2018
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
+# Maksym <ms@myodoo.pl>, 2020
+# Paweł Wodyński <pw@myodoo.pl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,6 +86,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Wersja robocza: jeszcze niepotwierdzona i nie zostanie zaplanowana do momentu potwierdzenia.\n"
+" * Oczekiwanie na kolejną operację: oczekiwanie na ukończenie kolejnej operacji (np. przepływach wykonywanych na zamówienie).\n"
+" * Oczekiwanie: produkt nie jest gotowy do wysłania, ponieważ nie możne zostać zarezerwowany.\n"
+" * Gotowy: produkty są zastrzeżone i gotowe do wysłania. Jeśli wybrana jest polityka wysyłkowa „Jak najszybciej”, dzieje się to, gdy tylko coś zostanie zarezerwowane.\n"
+" * Gotowe: przetwarzanie zakończone, nie można go już modyfikować ani anulować.\n"
+" * Anulowane: zostało anulowane, nie można go już potwierdzić."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -113,6 +120,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* New: When the stock move is created and not yet confirmed.\n"
+"* Oczekiwanie na inną operację: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
+"* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"
+"* Available: When products are reserved, it is set to 'Available'.\n"
+"* Done: When the shipment is processed, the state is 'Done'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -6376,6 +6388,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Żądana operacja nie może zostać przetworzona z powodu błędu programowania, "
+"który ustawia pole `product_qty` zamiast` product_uom_qty`."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:151
@@ -7409,6 +7423,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Nie można zmienić stosunku tej jednostki miary, ponieważ niektóre produkty z"
+" tą JM zostały już przeniesione lub są obecnie zarezerwowane."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:75
@@ -7831,3 +7847,9 @@ msgstr "przyciskiem <i>Zatwierdź</i>"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Ustaw ilości na 0"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""
