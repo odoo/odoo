@@ -9,7 +9,8 @@
                 <group>
                     <group>
                         <field name="project_id" readonly="1"/>
-                        <field name="partner_id"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                     </group>
                     <group>
                         <field name="billable_type" widget="radio"/>
