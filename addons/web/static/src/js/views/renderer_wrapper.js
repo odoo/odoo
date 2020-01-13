@@ -39,6 +39,14 @@ odoo.define('web.RendererWrapper', function (require) {
             }
         }
 
+        on_attach_callback() {
+            this.__callMounted();
+        }
+
+        on_detach_callback() {
+            this.__callWillUnmount();
+        }
+
         setParent() { }
 
         getLocalState() { }

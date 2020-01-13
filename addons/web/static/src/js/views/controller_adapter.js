@@ -4,12 +4,6 @@ odoo.define('web.ControllerAdapter', function (require) {
 var AbstractController = require('web.AbstractController');
 
 var ControllerAdapter = AbstractController.extend({
-    on_attach_callback: function () {
-        this.renderer.__callMounted();
-    },
-    on_detach_callback: function () {
-        this.renderer.__callWillUnmount();
-    },
 
     /**
      * @override
