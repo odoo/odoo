@@ -1,10 +1,15 @@
 odoo.define("base.abstract_controller_tests", function (require) {
 "use strict";
 
+const { xml } = owl.tags;
+
 var testUtils = require("web.test_utils");
 var createView = testUtils.createView;
 var BasicView = require("web.BasicView");
 var BasicRenderer = require("web.BasicRenderer");
+const AbstractRenderer = require('web.AbstractRendererOwl');
+const ControllerAdapter = require('web.ControllerAdapter');
+const RendererWrapper = require('web.RendererWrapper');
 
 function getHtmlRenderer(html) {
     return BasicRenderer.extend({
@@ -14,6 +19,21 @@ function getHtmlRenderer(html) {
         }
     });
 }
+
+function getOwlView(owlRenderer, viewType) {
+    viewType = viewType || "test";
+    return BasicView.extend({
+        viewType: viewType,
+        config: _.extend({}, BasicView.prototype.config, {
+            Renderer: owlRenderer,
+            Controller: ControllerAdapter.extend({})
+        }),
+        getRenderer() {
+            return new RendererWrapper(null, {}, this.config.Renderer);
+        }
+    });
+}
+
 function getHtmlView(html, viewType) {
     viewType = viewType || "test";
     return BasicView.extend({
@@ -78,5 +98,28 @@ QUnit.module("Views", {
         view.destroy();
     }
     );
+    
+    QUnit.test('OWL Renderer correctly destroyed', async function (assert) {
+        assert.expect(2);
+
+        class Renderer extends AbstractRenderer {
+            __destroy() {
+                assert.step("destroy");
+                super.__destroy();
+            }
+        }
+        Renderer.template = xml`<div>Test</div>`;
+
+        var view = await createView({
+            View: getOwlView(Renderer, "test"),
+            data: this.data,
+            model: "test_model",
+            arch: "<test/>",
+        });
+        view.destroy();
+
+        assert.verifySteps(["destroy"]);
+
+    });
 });
 });
