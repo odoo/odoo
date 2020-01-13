@@ -1179,6 +1179,7 @@ class MailThread(models.AbstractModel):
             e.split('@')[0].lower()
             for e in tools.email_split(rcpt_tos)
         ]
+        rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
         # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
         if bounce_alias and any(email.startswith(bounce_alias) for email in email_to_localparts):
@@ -1240,12 +1241,14 @@ class MailThread(models.AbstractModel):
 
         # 1.1 Handle forward to an alias with a different model: do not consider it as a reply
         if is_a_reply and reply_model and reply_thread_id:
-            alias_count = Alias.search_count([
+            other_model_aliases = Alias.search([
                 ('alias_name', '!=', False),
                 ('alias_name', 'in', email_to_localparts),
                 ("alias_model_id.model", "!=", reply_model),
             ])
-            is_a_reply = alias_count == 0
+            if other_model_aliases:
+                is_a_reply = False
+                rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
 
         if is_a_reply:
             model, thread_id = mail_messages.model, mail_messages.res_id
@@ -1282,7 +1285,7 @@ class MailThread(models.AbstractModel):
                 self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.user.company_id.email)
                 return []
 
-            dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
+            dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_valid_localparts)])
             if dest_aliases:
                 routes = []
                 for alias in dest_aliases:
