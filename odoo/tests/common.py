@@ -1488,7 +1488,7 @@ class Form(object):
                         context['•parent•'] = self._values
                         vs = {
                             k: v for k, v in items
-                            if all_fields or nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=context)
+                            if (all_fields and k != 'id') or nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=context)
                         }
                     v.append((c, rid, vs))
 
