@@ -641,6 +641,11 @@ class Task(models.Model):
             self.company_id = self.project_id.company_id
         else:
             self.stage_id = False
+    
+    @api.onchange('company_id')
+    def _onchange_task_company(self):
+        if self.project_id.company_id != self.company_id:
+            self.project_id = False
 
     @api.constrains('parent_id', 'child_ids')
     def _check_subtask_level(self):
