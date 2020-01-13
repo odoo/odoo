@@ -13,6 +13,14 @@ var ControllerAdapter = AbstractController.extend({
 
     /**
      * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.renderer.destroy();
+    },
+
+    /**
+     * @override
      * */
     updateRendererState: async function (props) {
         let prom;
