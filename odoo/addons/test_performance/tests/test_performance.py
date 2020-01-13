@@ -50,7 +50,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=2, demo=2):
             # without cache
             for record in records:
                 record.partner_id.country_id.name
@@ -94,12 +94,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # create N lines on rec1: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(2):
             rec1.write({'line_ids': [(0, 0, {'value': 0})]})
         self.assertEqual(len(rec1.line_ids), 1)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(17):
+        with self.assertQueryCount(16):
             rec1.write({'line_ids': [(0, 0, {'value': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.line_ids), 12)
 
@@ -107,12 +107,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # update N lines: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(8):
+        with self.assertQueryCount(7):
             rec1.write({'line_ids': [(1, line.id, {'value': 42}) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(28):
+        with self.assertQueryCount(27):
             rec1.write({'line_ids': [(1, line.id, {'value': 42 + line.id}) for line in lines[1:]]})
         self.assertEqual(rec1.line_ids, lines)
 
@@ -149,24 +149,24 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # link N lines from rec1 to rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(2):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertEqual(rec2.line_ids, lines)
 
@@ -177,7 +177,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertFalse(rec2.line_ids)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 
@@ -186,17 +186,17 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # set N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(8):
+        with self.assertQueryCount(5):
             rec2.write({'line_ids': [(6, 0, lines[0].ids)]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(5):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertEqual(rec2.line_ids, lines)
 
