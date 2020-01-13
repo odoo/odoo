@@ -572,6 +572,10 @@ class Picking(models.Model):
         package_level_done.write({'is_done': False})
         moves._action_assign()
         package_level_done.write({'is_done': True})
+        for move in moves.filtered(lambda m: m.package_level_id):
+            line_dest_location = move.mapped('move_line_ids.location_dest_id')
+            if len(line_dest_location) == 1:
+                move.package_level_id.write({'location_dest_id': line_dest_location.id})
         return True
 
     @api.multi
