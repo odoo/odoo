@@ -9,7 +9,7 @@ var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 var websiteRootData = require('website.root');
 var Widget = require('web.Widget');
-var seo = require('website.seo')
+var SeoConfigurator = require('website.seo').SeoConfigurator;
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -954,7 +954,7 @@ var PageManagement = Widget.extend({
         'click a.js_page_properties': '_onPagePropertiesButtonClick',
         'click a.js_clone_page': '_onClonePageButtonClick',
         'click a.js_delete_page': '_onDeletePageButtonClick',
-        'click a.fa-search': '_onSeoButtonClick',
+        'click a.js_seo_configurator': '_onSeoConfiguratorButtonClick',
     },
 
     //--------------------------------------------------------------------------
@@ -975,26 +975,40 @@ var PageManagement = Widget.extend({
             args: [moID],
         });
     },
-
-    _getHTML: function(url){
-        var self = this,
-            xhr = new XMLHttpRequest();
-
-        xhr.onload = function () {
-            new seo.SeoConfigurator(self, {
-                targetPage: $(this.response.documentElement),
-            }).open();
-        }
-        xhr.open('GET', url, true);
-        xhr.responseType = 'document';
-        xhr.send();
+    /**
+     * Retrieving an HTML resource as a DOM using XMLHttpRequest
+     *
+     * @private
+     * @param {String} url
+     */
+    _getHtmlResource: function (url) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                return new SeoConfigurator(self, {
+                    targetPage: $(this.response.documentElement),
+                }).open();
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'document';
+            xhr.onerror = reject;
+            xhr.send();
+        });
     },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    _onSeoButtonClick : function(ev){
-        this._getHTML(window.location.origin + ev.currentTarget.dataset.url);
+    /**
+     * Open an SEO Configurator to promote the current page on the web
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSeoConfiguratorButtonClick : function (ev) {
+        this._getHtmlResource(window.location.origin + ev.currentTarget.dataset.url);
     },
     _onPagePropertiesButtonClick: function (ev) {
         var moID = $(ev.currentTarget).data('id');
