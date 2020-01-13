@@ -641,7 +641,7 @@ var SeoConfigurator = Dialog.extend({
                 {text: _t('Discard'), close: true},
             ],
         });
-        this.$targetPage = options.targetPage;
+        this.$targetPage = options.$targetPage;
         this._super(parent, options);
     },
     start: function () {
@@ -755,19 +755,7 @@ var SeoConfigurator = Dialog.extend({
                 seoObject = value;
             },
         });
-        return this.$targetPage ? this.getTargetPageObject() : seoObject;
-    },
-    //getSeoObject only search in loaded page in Dom so we are finding main object in target page.
-    getTargetPageObject: function () {
-        var repr = this.$targetPage[0].dataset.mainObject;
-        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
-        if (!match) {
-            return null;
-        }
-        return {
-            model: match[1],
-            id: match[2] | 0,
-        };
+        return this.$targetPage ? this._getTargetPageSeoObject() : seoObject;
     },
     loadMetaData: function () {
         var obj = this.getSeoObject() || this.getMainObject();
@@ -826,8 +814,27 @@ var SeoConfigurator = Dialog.extend({
             self.metaImageSelector.setDescription(description);
         });
     },
-});
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
+    /**
+     * getSeoObject only search in loaded page in Dom so we are finding main object in target page.
+     *
+     * @private
+     */
+    _getTargetPageSeoObject: function () {
+        var repr = this.$targetPage[0].dataset.mainObject;
+        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
+    },
+});
 
 var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {

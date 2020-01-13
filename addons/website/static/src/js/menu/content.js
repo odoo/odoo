@@ -987,7 +987,7 @@ var PageManagement = Widget.extend({
             var xhr = new XMLHttpRequest();
             xhr.onload = function () {
                 return new SeoConfigurator(self, {
-                    targetPage: $(this.response.documentElement),
+                    $targetPage: $(this.response.documentElement),
                 }).open();
             };
             xhr.open('GET', url);
