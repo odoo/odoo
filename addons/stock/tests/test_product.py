@@ -15,15 +15,15 @@ class TestVirtualAvailable(TestStockCommon):
         # and playing with owners is not possible for consumables.
         self.product_3.type = 'product'
 
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product_3.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'quantity': 30.0})
+            'inventory_quantity': 30.0})
 
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product_3.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'quantity': 10.0,
+            'inventory_quantity': 10.0,
             'owner_id': self.user_stock_user.partner_id.id})
 
         self.picking_out = self.env['stock.picking'].create({
@@ -52,6 +52,7 @@ class TestVirtualAvailable(TestStockCommon):
             'picking_id': self.picking_out_2.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id})
+        self.env = self.env(user=self.user_stock_user)
 
     def test_without_owner(self):
         self.assertAlmostEqual(40.0, self.product_3.virtual_available)

@@ -10,25 +10,25 @@ class TestPacking(TestPackingCommon):
     def setUpClass(cls):
         super(TestPacking, cls).setUpClass()
         cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
-        cls.product_aw = cls.env['product.product'].create({
+        cls.product_aw = cls.env['product.product'].with_user(cls.user_stock_manager).create({
             'name': 'Product AW',
             'type': 'product',
             'weight': 2.4,
             'uom_id': cls.uom_kg.id,
             'uom_po_id': cls.uom_kg.id
         })
-        cls.product_bw = cls.env['product.product'].create({
+        cls.product_bw = cls.env['product.product'].with_user(cls.user_stock_manager).create({
             'name': 'Product BW',
             'type': 'product',
             'weight': 0.3,
             'uom_id': cls.uom_kg.id,
             'uom_po_id': cls.uom_kg.id
         })
-        test_carrier_product = cls.env['product.product'].create({
+        test_carrier_product = cls.env['product.product'].with_user(cls.user_stock_manager).create({
             'name': 'Test carrier product',
             'type': 'service',
         })
-        cls.test_carrier = cls.env['delivery.carrier'].create({
+        cls.test_carrier = cls.env['delivery.carrier'].with_user(cls.user_stock_manager).create({
             'name': 'Test carrier',
             'delivery_type': 'fixed',
             'product_id': test_carrier_product.id,
@@ -42,7 +42,7 @@ class TestPacking(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 20.0)
 
         picking_ship = self.env['stock.picking'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'partner_id': self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'A partner'}).id,
             'picking_type_id': self.warehouse.out_type_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,

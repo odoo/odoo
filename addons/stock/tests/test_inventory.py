@@ -8,6 +8,23 @@ class TestInventory(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestInventory, cls).setUpClass()
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
         cls.pack_location.active = True
@@ -24,6 +41,7 @@ class TestInventory(SavepointCase):
             'tracking': 'serial',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.env = cls.env(user=cls.user_stock_user)
 
     def test_inventory_1(self):
         """ Check that making an inventory adjustment to remove all products from stock is working
@@ -44,7 +62,7 @@ class TestInventory(SavepointCase):
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 100)
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
@@ -76,7 +94,7 @@ class TestInventory(SavepointCase):
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1), 1.0)
@@ -111,7 +129,7 @@ class TestInventory(SavepointCase):
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
         with self.assertRaises(ValidationError):
-            inventory.action_validate()
+            inventory.with_user(self.user_stock_manager).action_validate()
 
     def test_inventory_4(self):
         """ Check that even if a product is tracked by serial number, it's possible to add
@@ -147,7 +165,7 @@ class TestInventory(SavepointCase):
             'location_id': self.stock_location.id,
         })
         self.assertEqual(len(inventory.line_ids), 2)
-        res_dict_for_warning_lot = inventory.action_validate()
+        res_dict_for_warning_lot = inventory.with_user(self.user_stock_manager).action_validate()
         wizard_warning_lot = self.env[(res_dict_for_warning_lot.get('res_model'))].browse(res_dict_for_warning_lot.get('res_id'))
         wizard_warning_lot.action_confirm()
 
@@ -162,7 +180,7 @@ class TestInventory(SavepointCase):
     def test_inventory_5(self):
         """ Check that assigning an owner does work.
         """
-        owner1 = self.env['res.partner'].create({'name': 'test_inventory_5'})
+        owner1 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'test_inventory_5'})
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
@@ -181,7 +199,7 @@ class TestInventory(SavepointCase):
         })
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
 
         quant = self.env['stock.quant']._gather(self.product1, self.stock_location)
         self.assertEqual(len(quant), 1)
@@ -206,7 +224,7 @@ class TestInventory(SavepointCase):
             'product_qty': 10,
             'location_id': self.stock_location.id
         })
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
 
         # Make a chain of two moves, validate the first and check that 10 products are reserved
@@ -248,7 +266,7 @@ class TestInventory(SavepointCase):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 8
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         self.assertEqual(self.env['stock.quant']._gather(self.product1, self.pack_location).quantity, 8.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0)
         self.assertEqual(move_pack_cust.state, 'partially_available')
@@ -268,7 +286,7 @@ class TestInventory(SavepointCase):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 10
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 2)
 
@@ -291,17 +309,16 @@ class TestInventory(SavepointCase):
     def test_inventory_7(self):
         """ Check that duplicated quants create a single inventory line.
         """
-        owner1 = self.env['res.partner'].create({'name': 'test_inventory_7'})
+        owner1 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'test_inventory_7'})
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'owner_id': owner1.id,
             'location_id': self.stock_location.id,
             'quantity': 1,
-            'reserved_quantity': 0,
         }
-        self.env['stock.quant'].create(vals)
-        self.env['stock.quant'].create(vals)
+
+        self.env['stock.quant'].sudo().create(vals)
+        self.env['stock.quant'].sudo().create(vals)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
 
@@ -318,12 +335,10 @@ class TestInventory(SavepointCase):
         """ Check inventory lines product quantity is 0 when inventory is
         started with `prefill_counted_quantity` disable.
         """
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         })
         inventory_form = Form(self.env['stock.inventory'].with_context(
                 default_prefill_counted_quantity='zero',
@@ -342,44 +357,36 @@ class TestInventory(SavepointCase):
         like a new inventory.
         """
         # Creates some records needed for the test...
-        product2 = self.env['product.product'].create({
+        product2 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product B',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
-        loc1 = self.env['stock.location'].create({
+        loc1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'SafeRoom A',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
         # Adds some quants.
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': loc1.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         })
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         })
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': product2.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': loc1.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         })
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': product2.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         })
         # Creates the inventory and configures if for product1
         inventory_form = Form(self.env['stock.inventory'], view='stock.view_inventory_form')
@@ -392,7 +399,7 @@ class TestInventory(SavepointCase):
             self.assertEqual(line.product_id.id, self.product1.id)
 
         # Cancels the inventory and changes for product2 in its setup.
-        inventory.action_cancel_draft()
+        inventory.with_user(self.user_stock_manager).action_cancel_draft()
         inventory_form = Form(inventory)
         inventory_form.product_ids.remove(self.product1.id)
         inventory_form.product_ids.add(product2)
@@ -410,9 +417,9 @@ class TestInventory(SavepointCase):
         vals = {
             'product_id': self.product1.id,
             'location_id': self.stock_location.id,
-            'quantity': 42,
+            'inventory_quantity': 42,
         }
-        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
         # Generate new inventory, its line must have a theoretical
         # quantity to 42 and a counted quantity to 42.
         inventory = self.env['stock.inventory'].create({
@@ -447,12 +454,10 @@ class TestInventory(SavepointCase):
         # Set initial quantity to 7
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         }
-        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
@@ -472,7 +477,7 @@ class TestInventory(SavepointCase):
             'location_id': self.stock_location.id,
             'inventory_quantity': 5,
         }
-        self.env['stock.quant'].with_context(inventory_mode=True).create(vals)
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
         self.assertEqual(inventory.line_ids.outdated, True)
         self.assertEqual(inventory.line_ids.theoretical_qty, 7)
         # Refreshes inventory line and expects quantity was recomputed to 5
@@ -488,12 +493,10 @@ class TestInventory(SavepointCase):
         # Set initial quantity to 7
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         }
-        quant = self.env['stock.quant'].create(vals)
+        quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
@@ -520,12 +523,10 @@ class TestInventory(SavepointCase):
         # Set initial quantity to 10
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 10,
-            'reserved_quantity': 0,
+            'inventory_quantity': 10,
         }
-        quant = self.env['stock.quant'].create(vals)
+        quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
@@ -541,7 +542,7 @@ class TestInventory(SavepointCase):
         self.assertEqual(inventory.line_ids.outdated, True)
         # Don't refresh inventory line but valid it, and expect quantity is
         # still equal to 15
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         self.assertEqual(inventory.line_ids.theoretical_qty, 10)
         self.assertEqual(quant.quantity, 15)
 
@@ -552,12 +553,10 @@ class TestInventory(SavepointCase):
         # Set initial quantity to 10
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 10,
-            'reserved_quantity': 0,
+            'inventory_quantity': 10,
         }
-        quant = self.env['stock.quant'].create(vals)
+        quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
@@ -574,7 +573,7 @@ class TestInventory(SavepointCase):
         # Don't refresh inventory line but changes its value and valid it, and
         # expects quantity is correctly adapted (15 + inventory line diff)
         inventory.line_ids.product_qty = 12
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         self.assertEqual(inventory.line_ids.theoretical_qty, 10)
         self.assertEqual(quant.quantity, 17)
 
@@ -586,12 +585,10 @@ class TestInventory(SavepointCase):
         # Set initial quantity to 7
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         }
-        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
 
         inventory_1 = self.env['stock.inventory'].create({
             'name': 'product1',
@@ -610,7 +607,7 @@ class TestInventory(SavepointCase):
 
         # Set product quantity to 8 in inventory 2 then validates it
         inventory_2.line_ids.product_qty = 8
-        inventory_2.action_validate()
+        inventory_2.with_user(self.user_stock_manager).action_validate()
         # Expects line of inventory 1 is now marked as outdated
         self.assertEqual(inventory_1.line_ids.outdated, True)
         self.assertEqual(inventory_1.line_ids.theoretical_qty, 7)
@@ -625,12 +622,10 @@ class TestInventory(SavepointCase):
         # Set initial quantity to 7 and create inventory adjustment for product1
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         }
-        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
             'location_ids': [(4, self.stock_location.id)],
@@ -640,19 +635,17 @@ class TestInventory(SavepointCase):
         self.assertEqual(inventory.line_ids.outdated, False)
 
         # Create quant for product3
-        product3 = self.env['product.product'].create({
+        product3 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product C',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         vals = {
             'product_id': product3.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'inventory_quantity': 22,
-            'reserved_quantity': 0,
         }
-        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create(vals)
         # Expect inventory line is still up to date
         self.assertEqual(inventory.line_ids.outdated, False)
 
@@ -662,24 +655,20 @@ class TestInventory(SavepointCase):
         validated.
         """
         # Set initial quantity for product1 and product3
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 7,
-            'reserved_quantity': 0,
+            'inventory_quantity': 7,
         })
-        product3 = self.env['product.product'].create({
+        product3 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product C',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': product3.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 10,
-            'reserved_quantity': 0,
+            'inventory_quantity': 10,
         })
 
         inventory_1 = self.env['stock.inventory'].create({
@@ -698,7 +687,7 @@ class TestInventory(SavepointCase):
 
         # Set product3 quantity to 16 in inventory 2 then validates it
         inventory_2.line_ids.product_qty = 16
-        inventory_2.action_validate()
+        inventory_2.with_user(self.user_stock_manager).action_validate()
         # Expect line of inventory 1 is still up to date
         self.assertEqual(inventory_1.line_ids.outdated, False)
 
@@ -738,11 +727,11 @@ class TestInventory(SavepointCase):
         self.assertEqual(line_ids_p2[0].location_id.id, self.stock_location.id)
 
         # location_ids UNSET + product_ids SET
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Warhouse',
             'code': 'WAR'
         })
-        child_loc = self.env['stock.location'].create({
+        child_loc = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': "ChildLOC",
             'usage': 'internal',
             'location_id': warehouse.lot_stock_id.id
@@ -780,12 +769,10 @@ class TestInventory(SavepointCase):
         self.assertEqual(line_ids_p2[0].theoretical_qty, 0)
 
         # location_ids SET + product_ids SET but when product in one locations but no the other
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
-            'quantity': 10,
-            'reserved_quantity': 0,
+            'inventory_quantity': 10,
         })
         inventory = self.env['stock.inventory'].create({
             'name': 'loc SET - pro SET',

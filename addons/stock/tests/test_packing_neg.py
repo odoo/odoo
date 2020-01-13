@@ -6,19 +6,39 @@ from odoo.tests.common import TransactionCase
 
 class TestPackingNeg(TransactionCase):
 
+    def setUp(cls):
+        super(TestPackingNeg, cls).setUp()
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+        cls.env = cls.env(user=cls.user_stock_user)
+
     def test_packing_neg(self):
-        res_partner_2 = self.env['res.partner'].create({
+        res_partner_2 = self.env['res.partner'].with_user(self.user_stock_manager).create({
             'name': 'Deco Addict',
             'email': 'deco.addict82@example.com',
         })
 
-        res_partner_4 = self.env['res.partner'].create({
+        res_partner_4 = self.env['res.partner'].with_user(self.user_stock_manager).create({
             'name': 'Ready Mat',
             'email': 'ready.mat28@example.com',
         })
 
         # Create a new "negative" storable product
-        product_neg = self.env['product.product'].create({
+        product_neg = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Negative product',
             'type': 'product',
             'categ_id': self.ref('product.product_category_1'),

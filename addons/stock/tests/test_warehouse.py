@@ -10,11 +10,12 @@ class TestWarehouse(TestStockCommon):
 
     def setUp(self):
         super(TestWarehouse, self).setUp()
-        self.partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+        self.partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Deco Addict'})
+        self.env = self.env(user=self.user_stock_user)
 
     def test_inventory_product(self):
         self.product_1.type = 'product'
-        product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+        product_1_quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product_1.id,
             'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
@@ -151,7 +152,7 @@ class TestWarehouse(TestStockCommon):
 
     def test_inventory_adjustment_and_negative_quants_1(self):
         """Make sure negative quants from returns get wiped out with an inventory adjustment"""
-        productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        productA = self.env['product.product'].with_user(self.user_stock_manager).with_user(self.user_stock_manager).create({'name': 'Product A', 'type': 'product'})
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
 
@@ -193,7 +194,7 @@ class TestWarehouse(TestStockCommon):
 
     def test_inventory_adjustment_and_negative_quants_2(self):
         """Make sure negative quants get wiped out with an inventory adjustment"""
-        productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        productA = self.env['product.product'].with_user(self.user_stock_manager).create({'name': 'Product A', 'type': 'product'})
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
         location_loss = productA.property_stock_inventory
@@ -228,7 +229,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
         self.assertEqual(inventory.line_ids.theoretical_qty, -1, "Theoretical quantity should be -1.")
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
 
         # The inventory adjustment should have created one
         self.assertEqual(len(inventory.move_ids), 1)
@@ -251,18 +252,18 @@ class TestWarehouse(TestStockCommon):
         Create the move from Shop to Customer and ensure that all the pull
         rules are triggered in order to complete the move chain to Stock.
         """
-        warehouse_stock = self.env['stock.warehouse'].create({
+        warehouse_stock = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Stock.',
             'code': 'STK',
         })
 
-        warehouse_distribution = self.env['stock.warehouse'].create({
+        warehouse_distribution = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Dist.',
             'code': 'DIST',
             'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
         })
 
-        warehouse_shop = self.env['stock.warehouse'].create({
+        warehouse_shop = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Shop',
             'code': 'SHOP',
             'resupply_wh_ids': [(6, 0, [warehouse_distribution.id])]
@@ -278,7 +279,7 @@ class TestWarehouse(TestStockCommon):
         # dist warehouses.
         route_dist_to_shop.rule_ids.write({'procure_method': 'make_to_order'})
 
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Fakir',
             'type': 'product',
             'route_ids': [(4, route_id) for route_id in [route_stock_to_dist.id, route_dist_to_shop.id, self.env.ref('stock.route_warehouse0_mto').id]],
@@ -327,23 +328,23 @@ class TestWarehouse(TestStockCommon):
         """
         customer_location = self.env.ref('stock.stock_location_customers')
 
-        warehouse_distribution_wavre = self.env['stock.warehouse'].create({
+        warehouse_distribution_wavre = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Stock Wavre.',
             'code': 'WV',
         })
 
-        warehouse_shop_wavre = self.env['stock.warehouse'].create({
+        warehouse_shop_wavre = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Shop Wavre',
             'code': 'SHWV',
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_wavre.id])]
         })
 
-        warehouse_distribution_namur = self.env['stock.warehouse'].create({
+        warehouse_distribution_namur = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Stock Namur.',
             'code': 'NM',
         })
 
-        warehouse_shop_namur = self.env['stock.warehouse'].create({
+        warehouse_shop_namur = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Shop Namur',
             'code': 'SHNM',
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_namur.id])]
@@ -352,7 +353,7 @@ class TestWarehouse(TestStockCommon):
         route_shop_namur = warehouse_shop_namur.resupply_route_ids
         route_shop_wavre = warehouse_shop_wavre.resupply_route_ids
         # The product contains the 2 resupply routes.
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Fakir',
             'type': 'product',
             'route_ids': [(4, route_id) for route_id in [route_shop_namur.id, route_shop_wavre.id, self.env.ref('stock.route_warehouse0_mto').id]],
@@ -452,18 +453,18 @@ class TestWarehouse(TestStockCommon):
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
-        partner = self.env['res.partner'].create({'name': 'Chicago partner'})
-        company = self.env['res.company'].create({
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Chicago partner'})
+        company = self.env['res.company'].sudo().create({
             'name': 'My Company (Chicago)1',
             'currency_id': self.ref('base.USD')
         })
-        self.env['stock.warehouse'].create({
+        self.env['stock.warehouse'].sudo().create({
             'name': 'Chicago Warehouse2',
             'company_id': company.id,
             'code': 'Chic2',
             'partner_id': partner.id
         })
-        wh = self.env["stock.warehouse"].search([])
+        wh = self.env["stock.warehouse"].sudo().search([])
 
         assert len(set(wh.mapped("company_id.id"))) > 1
 
@@ -479,12 +480,12 @@ class TestWarehouse(TestStockCommon):
         Archive it and check that locations, picking types, routes, rules are
         correclty active or archive.
         """
-        wh = Form(self.env['stock.warehouse'])
+        wh = Form(self.env['stock.warehouse'].with_user(self.user_stock_manager))
         wh.name = "The attic of Willy"
         wh.code = "WIL"
         warehouse = wh.save()
 
-        custom_location = Form(self.env['stock.location'])
+        custom_location = Form(self.env['stock.location'].with_user(self.user_stock_manager))
         custom_location.name = "A Trunk"
         custom_location.location_id = warehouse.lot_stock_id
         custom_location = custom_location.save()
@@ -538,7 +539,7 @@ class TestWarehouse(TestStockCommon):
         self.assertFalse(warehouse.pack_type_id.active)
 
     def test_toggle_active_warehouse_2(self):
-        wh = Form(self.env['stock.warehouse'])
+        wh = Form(self.env['stock.warehouse'].with_user(self.user_stock_manager))
         wh.name = "The attic of Willy"
         wh.code = "WIL"
         wh.reception_steps = "two_steps"
@@ -547,7 +548,7 @@ class TestWarehouse(TestStockCommon):
 
         warehouse.resupply_wh_ids = [(6, 0, [self.warehouse_1.id])]
 
-        custom_location = Form(self.env['stock.location'])
+        custom_location = Form(self.env['stock.location'].with_user(self.user_stock_manager))
         custom_location.name = "A Trunk"
         custom_location.location_id = warehouse.lot_stock_id
         custom_location = custom_location.save()
@@ -557,7 +558,7 @@ class TestWarehouse(TestStockCommon):
             'warehouse_ids': [(4, self.warehouse_1.id)]
         })
 
-        route = Form(self.env['stock.location.route'])
+        route = Form(self.env['stock.location.route'].with_user(self.user_stock_manager))
         route.name = "Stair"
         route = route.save()
 

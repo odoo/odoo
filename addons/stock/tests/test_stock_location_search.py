@@ -6,6 +6,23 @@ from odoo.tests import common
 class TestStockLocationSearch(common.TransactionCase):
     def setUp(self):
         super(TestStockLocationSearch, self).setUp()
+        user_group_stock_user = self.env.ref('stock.group_stock_user')
+        user_group_stock_manager = self.env.ref('stock.group_stock_manager')
+
+        Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        self.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        self.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         self.location = self.env['stock.location']
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.sublocation = self.env['stock.location'].create({
@@ -16,6 +33,7 @@ class TestStockLocationSearch(common.TransactionCase):
         self.location_barcode_id = self.sublocation.id
         self.barcode = self.sublocation.barcode
         self.name = self.sublocation.name
+        self.env = self.env(user=self.user_stock_user)
 
     def test_10_location_search_by_barcode(self):
         """Search stock location by barcode"""

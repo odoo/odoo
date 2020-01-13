@@ -35,6 +35,25 @@ class TestStockCommon(common.SavepointCase):
         cls.categ_unit = cls.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
 
+        # stock-related user groups
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        # User Data: stock user and stock
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         # Product Created A, B, C, D
         cls.productA = cls.ProductObj.create({'name': 'Product A', 'type': 'product'})
         cls.productB = cls.ProductObj.create({'name': 'Product B', 'type': 'product'})

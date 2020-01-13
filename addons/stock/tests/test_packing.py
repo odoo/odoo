@@ -12,6 +12,23 @@ class TestPackingCommon(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestPackingCommon, cls).setUpClass()
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.warehouse = cls.env['stock.warehouse'].search([('lot_stock_id', '=', cls.stock_location.id)], limit=1)
         cls.warehouse.write({'delivery_steps': 'pick_pack_ship'})
@@ -21,6 +38,7 @@ class TestPackingCommon(SavepointCase):
 
         cls.productA = cls.env['product.product'].create({'name': 'Product A', 'type': 'product'})
         cls.productB = cls.env['product.product'].create({'name': 'Product B', 'type': 'product'})
+        cls.env = cls.env(user=cls.user_stock_user)
 
 
 class TestPacking(TestPackingCommon):
@@ -70,9 +88,9 @@ class TestPacking(TestPackingCommon):
         packing_picking = pack_move_a.picking_id
         shipping_picking = ship_move_a.picking_id
 
-        pick_picking.picking_type_id.show_entire_packs = True
-        packing_picking.picking_type_id.show_entire_packs = True
-        shipping_picking.picking_type_id.show_entire_packs = True
+        pick_picking.with_user(self.user_stock_manager).picking_type_id.show_entire_packs = True
+        packing_picking.with_user(self.user_stock_manager).picking_type_id.show_entire_packs = True
+        shipping_picking.with_user(self.user_stock_manager).picking_type_id.show_entire_packs = True
 
         pick_picking.action_assign()
         self.assertEqual(len(pick_picking.move_ids_without_package), 2)
@@ -105,7 +123,7 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
-        picking.picking_type_id.show_entire_packs = True
+        picking.picking_type_id.with_user(self.user_stock_manager).show_entire_packs = True
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
@@ -157,7 +175,7 @@ class TestPacking(TestPackingCommon):
             is reserved.
         """
         pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -206,12 +224,12 @@ class TestPacking(TestPackingCommon):
             location to all the move lines
         """
         self.warehouse.in_type_id.show_reserved = True
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -286,11 +304,11 @@ class TestPacking(TestPackingCommon):
         location_dict = {
             'location_id': self.stock_location.id,
         }
-        quant = self.env['stock.quant'].create({
+        quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             **location_dict,
-            **{'product_id': self.productA.id, 'quantity': 355.4},  # important number
+            **{'product_id': self.productA.id, 'inventory_quantity': 355.4},  # important number
         })
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.quant.package'].sudo().create({
             **location_dict, **{'quant_ids': [(6, 0, [quant.id])]},
         })
         location_dict.update({
@@ -323,11 +341,11 @@ class TestPacking(TestPackingCommon):
         """ Generate two move lines going to different location in the same
         package.
         """
-        shelf1 = self.env['stock.location'].create({
+        shelf1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': self.stock_location.id,
             'name': 'Shelf 1',
         })
-        shelf2 = self.env['stock.location'].create({
+        shelf2 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': self.stock_location.id,
             'name': 'Shelf 2',
         })
@@ -386,18 +404,18 @@ class TestPacking(TestPackingCommon):
         self.warehouse.int_type_id.show_reserved = True
 
         # Creates two new locations for putaway.
-        location_form = Form(self.env['stock.location'])
+        location_form = Form(self.env['stock.location'].with_user(self.user_stock_manager))
         location_form.name = 'Shelf A'
         location_form.location_id = self.stock_location
         loc_shelf_A = location_form.save()
 
         # Creates a new putaway rule for productA and productB.
-        putaway_A = self.env['stock.putaway.rule'].create({
+        putaway_A = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
         })
-        putaway_B = self.env['stock.putaway.rule'].create({
+        putaway_B = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.productB.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
@@ -518,22 +536,22 @@ class TestPacking(TestPackingCommon):
         self.warehouse.int_type_id.show_reserved = True
 
         # Creates two new locations for putaway.
-        location_form = Form(self.env['stock.location'])
+        location_form = Form(self.env['stock.location'].with_user(self.user_stock_manager))
         location_form.name = 'Shelf A'
         location_form.location_id = self.stock_location
         loc_shelf_A = location_form.save()
-        location_form = Form(self.env['stock.location'])
+        location_form = Form(self.env['stock.location'].with_user(self.user_stock_manager))
         location_form.name = 'Shelf B'
         location_form.location_id = self.stock_location
         loc_shelf_B = location_form.save()
 
         # Creates a new putaway rule for productA and productB.
-        putaway_A = self.env['stock.putaway.rule'].create({
+        putaway_A = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
         })
-        putaway_B = self.env['stock.putaway.rule'].create({
+        putaway_B = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.productB.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_B.id,

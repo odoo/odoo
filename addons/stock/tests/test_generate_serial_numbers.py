@@ -9,6 +9,24 @@ class StockGenerate(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(StockGenerate, cls).setUpClass()
+        user_group_employee = cls.env.ref('base.group_user')
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         Product = cls.env['product.product']
         cls.product_serial = Product.create({
             'name': 'Tracked by SN',
@@ -33,6 +51,7 @@ class StockGenerate(SavepointCase):
         })
 
         cls.Wizard = cls.env['stock.assign.serial']
+        cls.env = cls.env(user=cls.user_stock_user)
 
     def get_new_move(self, nbre_of_lines):
         move_lines_val = []
@@ -225,7 +244,7 @@ class StockGenerate(SavepointCase):
         set in fonction of defined putaway rules.
         """
         nbre_of_lines = 4
-        shelf_location = self.env['stock.location'].create({
+        shelf_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.location_dest.id,
@@ -250,7 +269,7 @@ class StockGenerate(SavepointCase):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
         # Creates a putaway rule
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.product_serial.id,
             'location_in_id': self.location_dest.id,
             'location_out_id': shelf_location.id,

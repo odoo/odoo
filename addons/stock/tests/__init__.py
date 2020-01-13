@@ -15,5 +15,4 @@ from . import test_robustness
 from . import test_packing
 from . import test_packing_neg
 from . import test_proc_rule
-from . import test_wise_operator
 from . import test_report

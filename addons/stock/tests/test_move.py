@@ -10,6 +10,23 @@ class StockMove(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
@@ -45,6 +62,7 @@ class StockMove(SavepointCase):
             'type': 'consu',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.env = cls.env(user=cls.user_stock_user)
 
     def gather_relevant(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
@@ -673,13 +691,13 @@ class StockMove(SavepointCase):
         """
         # This test will apply a putaway strategy on the stock location to put everything
         # incoming in the sublocation shelf1.
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
         # putaway from stock to shelf1
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'category_id': self.env.ref('product.product_category_all').id,
             'location_in_id': self.stock_location.id,
             'location_out_id': shelf1_location.id,
@@ -710,13 +728,13 @@ class StockMove(SavepointCase):
         """
         # This test will apply a putaway strategy by product on the stock location to put everything
         # incoming in the sublocation shelf1.
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
         # putaway from stock to shelf1
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.product.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': shelf1_location.id,
@@ -748,22 +766,22 @@ class StockMove(SavepointCase):
         # This test will apply both the putaway strategy by product and category. We check here
         # that the putaway by product takes precedence.
 
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway_category = self.env['stock.putaway.rule'].create({
+        putaway_category = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'category_id': self.env.ref('product.product_category_all').id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': shelf1_location.id,
         })
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.product.id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': shelf2_location.id,
@@ -799,23 +817,23 @@ class StockMove(SavepointCase):
         # that if a putaway by product is not matched, the fallback to the category is correctly
         # done.
 
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
         # putaway from stock to shelf1
-        putaway_category = self.env['stock.putaway.rule'].create({
+        putaway_category = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'category_id': self.env.ref('product.product_category_all').id,
             'location_in_id': self.stock_location.id,
             'location_out_id': shelf1_location.id,
         })
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.product_consu.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': shelf2_location.id,
@@ -851,12 +869,12 @@ class StockMove(SavepointCase):
         # We check here that the putaway by category works when the category is
         # set on parent category of the product.
 
-        shelf_location = self.env['stock.location'].create({
+        shelf_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'category_id': self.env.ref('product.product_category_all').id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': shelf_location.id,
@@ -889,26 +907,26 @@ class StockMove(SavepointCase):
         # This test will apply two putaway strategies by category. We check here
         # that the most specific putaway takes precedence.
 
-        child_category = self.env['product.category'].create({
+        child_category = self.env['product.category'].with_user(self.user_stock_manager).create({
             'name': 'child_category',
             'parent_id': self.ref('product.product_category_all'),
         })
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway_category_all = self.env['stock.putaway.rule'].create({
+        putaway_category_all = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'category_id': self.env.ref('product.product_category_all').id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': shelf1_location.id,
         })
-        putaway_category_office_furn = self.env['stock.putaway.rule'].create({
+        putaway_category_office_furn = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'category_id': child_category.id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': shelf2_location.id,
@@ -944,24 +962,24 @@ class StockMove(SavepointCase):
         The putaway is on Floor1 to send to Shelf2
         A move from supplier to Rack1 should send to shelf2
         """
-        floor1 = self.env['stock.location'].create({
+        floor1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'floor1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        rack1 = self.env['stock.location'].create({
+        rack1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'rack1',
             'usage': 'internal',
             'location_id': floor1.id,
         })
-        shelf2 = self.env['stock.location'].create({
+        shelf2 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': rack1.id,
         })
 
         # putaway floor1 -> shelf2
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.product.id,
             'location_in_id': floor1.id,
             'location_out_id': shelf2.id,
@@ -1424,7 +1442,7 @@ class StockMove(SavepointCase):
         """
         # make some stock
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 3)
-        self.env['stock.quant'].create({
+        self.env['stock.quant'].sudo().create({
             'product_id': self.product.id,
             'location_id': self.stock_location.id,
             'quantity': 2,
@@ -1461,14 +1479,14 @@ class StockMove(SavepointCase):
     def test_unreserve_6(self):
         """ In a situation with a negative and a positive quant, reserve and unreserve.
         """
-        q1 = self.env['stock.quant'].create({
+        q1 = self.env['stock.quant'].sudo().create({
             'product_id': self.product.id,
             'location_id': self.stock_location.id,
             'quantity': -10,
             'reserved_quantity': 0,
         })
 
-        q2 = self.env['stock.quant'].create({
+        q2 = self.env['stock.quant'].sudo().create({
             'product_id': self.product.id,
             'location_id': self.stock_location.id,
             'quantity': 30.0,
@@ -1503,7 +1521,7 @@ class StockMove(SavepointCase):
         """ Check the unreservation of a stock move delete only stock move lines
         without quantity done.
         """
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'product',
             'tracking': 'serial',
             'type': 'product',
@@ -1516,7 +1534,7 @@ class StockMove(SavepointCase):
         } for x in range(5)])
 
         for serial in serial_numbers:
-            self.env['stock.quant'].create({
+            self.env['stock.quant'].sudo().create({
                 'product_id': product.id,
                 'location_id': self.stock_location.id,
                 'quantity': 1.0,
@@ -2066,7 +2084,7 @@ class StockMove(SavepointCase):
         second only validate 2 and create a backorder for the last one. Check that the reservation
         is correctly cleared up for the last one.
         """
-        uom_3units = self.env['uom.uom'].create({
+        uom_3units = self.env['uom.uom'].with_user(self.user_stock_manager).create({
             'name': '3 units',
             'category_id': self.uom_unit.category_id.id,
             'factor_inv': 3,
@@ -2436,12 +2454,12 @@ class StockMove(SavepointCase):
         directly adapts the reservation. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is available.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -2556,8 +2574,8 @@ class StockMove(SavepointCase):
         """ Test that editing a stock move line linked to an owned product correctly and directly
         adapts the reservation. In this case, we edit the owner to another available one.
         """
-        owner1 = self.env['res.partner'].create({'name': 'test_edit_reserved_move_line_4_1'})
-        owner2 = self.env['res.partner'].create({'name': 'test_edit_reserved_move_line_4_2'})
+        owner1 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'test_edit_reserved_move_line_4_1'})
+        owner2 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'test_edit_reserved_move_line_4_2'})
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, owner_id=owner1)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, owner_id=owner2)
@@ -2637,12 +2655,12 @@ class StockMove(SavepointCase):
         directly adapts the reservation. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is NOT available.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -2800,12 +2818,12 @@ class StockMove(SavepointCase):
         directly adapts the transfer. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is available.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -2926,8 +2944,8 @@ class StockMove(SavepointCase):
         """ Test that editing a done stock move line linked to an owned product correctly and directly
         adapts the transfer. In this case, we edit the owner to another available one.
         """
-        owner1 = self.env['res.partner'].create({'name': 'test_edit_reserved_move_line_4_1'})
-        owner2 = self.env['res.partner'].create({'name': 'test_edit_reserved_move_line_4_2'})
+        owner1 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'test_edit_reserved_move_line_4_1'})
+        owner2 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'test_edit_reserved_move_line_4_2'})
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, owner_id=owner1)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, owner_id=owner2)
@@ -3009,12 +3027,12 @@ class StockMove(SavepointCase):
         directly adapts the transfer. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is NOT available.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -3054,12 +3072,12 @@ class StockMove(SavepointCase):
         product to another sublocation where a product is NOT available because it has been reserved
         by another move.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -3111,7 +3129,7 @@ class StockMove(SavepointCase):
         directly adapts the transfer. In this case, we increment the quantity done (and we do not
         have more in stock.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -3151,7 +3169,7 @@ class StockMove(SavepointCase):
         """ Test that editing a done stock move line linked to an untracked product correctly and
         directly adapts the transfer. In this case, we "cancel" the move by zeroing the qty done.
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -3216,7 +3234,7 @@ class StockMove(SavepointCase):
     def test_edit_done_move_line_11(self):
         """ Add a move line and check if the quant is updated
         """
-        owner = self.env['res.partner'].create({'name': 'Jean'})
+        owner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Jean'})
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -3334,7 +3352,7 @@ class StockMove(SavepointCase):
         """ In a picking with a single available move, clicking on validate without filling any
         quantities should open a wizard asking to process all the reservation (so, the whole move).
         """
-        partner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Jean'})
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -3365,7 +3383,7 @@ class StockMove(SavepointCase):
         the creation of a backorder. If the backorder is created, it should contain the quantities
         not processed.
         """
-        partner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Jean'})
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 5.0)
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
@@ -3412,7 +3430,7 @@ class StockMove(SavepointCase):
         another one asking for the creation of a backorder. If the backorder is created, it should
         contain the quantities not processed.
         """
-        product5 = self.env['product.product'].create({
+        product5 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product 5',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
@@ -3473,7 +3491,7 @@ class StockMove(SavepointCase):
         """ In a picking with a single available tracked by lot move, clicking on validate without
         filling any quantities should pop up the immediate transfer wizard.
         """
-        partner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Jean'})
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
@@ -3551,8 +3569,8 @@ class StockMove(SavepointCase):
         # should raise because no serial numbers were specified
         self.assertRaises(UserError, picking.button_validate)
 
-        picking_type_id.use_create_lots = False
-        picking_type_id.use_existing_lots = False
+        picking_type_id.with_user(self.user_stock_manager).use_create_lots = False
+        picking_type_id.with_user(self.user_stock_manager).use_existing_lots = False
         picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
@@ -3567,8 +3585,8 @@ class StockMove(SavepointCase):
         on the second move more than the reservation, a wizard will ask him to confirm.
         """
         picking_type = self.env.ref('stock.picking_type_in')
-        picking_type.use_create_lots = True
-        picking_type.use_existing_lots = False
+        picking_type.with_user(self.user_stock_manager).use_create_lots = True
+        picking_type.with_user(self.user_stock_manager).use_existing_lots = False
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -3611,7 +3629,7 @@ class StockMove(SavepointCase):
         quantities should display an UserError telling the user he cannot process a picking without
         any processed quantity.
         """
-        partner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Jean'})
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -3644,7 +3662,7 @@ class StockMove(SavepointCase):
 
     def test_immediate_validate_8(self):
         """Validate three receipts at once."""
-        partner = self.env['res.partner'].create({'name': 'Pierre'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Pierre'})
         receipt1 = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -3822,7 +3840,7 @@ class StockMove(SavepointCase):
         updated.
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
-        partner = self.env['res.partner'].create({'name': 'Kimberley'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Kimberley'})
         picking = self.env['stock.picking'].create({
             'name': 'A single picking with one move to scrap',
             'location_id': self.stock_location.id,
@@ -3867,7 +3885,7 @@ class StockMove(SavepointCase):
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 4)
 
         # try to reserve a dozen
-        partner = self.env['res.partner'].create({'name': 'Kimberley'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Kimberley'})
         picking = self.env['stock.picking'].create({
             'name': 'A single picking with one move to scrap',
             'location_id': self.stock_location.id,
@@ -4024,7 +4042,7 @@ class StockMove(SavepointCase):
         from odoo.fields import Datetime
         from datetime import timedelta
         initial_in_date_lot1 = Datetime.now() - timedelta(days=5)
-        quant_lot1.in_date = initial_in_date_lot1
+        quant_lot1.sudo().in_date = initial_in_date_lot1
 
         # Move one quant to pack location
         move3 = self.env['stock.move'].create({
@@ -4135,7 +4153,7 @@ class StockMove(SavepointCase):
         from odoo.fields import Datetime
         from datetime import timedelta
         initial_in_date_lot1 = Datetime.now() - timedelta(days=5)
-        quant_lot1.in_date = initial_in_date_lot1
+        quant_lot1.sudo().in_date = initial_in_date_lot1
 
         # Move one quant to pack location
         move3 = self.env['stock.move'].create({
@@ -4391,7 +4409,7 @@ class StockMove(SavepointCase):
         """Check that reserving moves without done quantity
         adding in same package.
         """
-        product1 = self.env['product.product'].create({
+        product1 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product B',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
@@ -4438,7 +4456,7 @@ class StockMove(SavepointCase):
         another reserving move with done quantity adding in different
         package.
         """
-        product1 = self.env['product.product'].create({
+        product1 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product B',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,

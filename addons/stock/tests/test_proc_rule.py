@@ -12,17 +12,35 @@ class TestProcRule(TransactionCase):
     def setUp(self):
         super(TestProcRule, self).setUp()
 
+        user_group_stock_user = self.env.ref('stock.group_stock_user')
+        user_group_stock_manager = self.env.ref('stock.group_stock_manager')
+
+        Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        self.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        self.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         self.uom_unit = self.env.ref('uom.product_uom_unit')
         self.product = self.env['product.product'].create({
             'name': 'Desk Combination',
             'type': 'consu',
         })
         self.partner = self.env['res.partner'].create({'name': 'Partner'})
+        self.env = self.env(user=self.user_stock_user)
 
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will
         # generate a move from Stock for every procurement created in Output
-        product_route = self.env['stock.location.route'].create({
+        product_route = self.env['stock.location.route'].with_user(self.user_stock_manager).create({
             'name': 'Stock -> output route',
             'product_selectable': True,
             'rule_ids': [(0, 0, {
@@ -169,7 +187,7 @@ class TestProcRule(TransactionCase):
 
     def test_reordering_rule_1(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
-        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_user(self.user_stock_manager))
         orderpoint_form.product_id = self.product
         orderpoint_form.location_id = warehouse.lot_stock_id
         orderpoint_form.product_min_qty = 0.0
@@ -224,18 +242,18 @@ class TestProcRuleLoad(TransactionCase):
         warehouse.reception_steps = 'three_steps'
         supplier_loc = self.env.ref('stock.stock_location_suppliers')
         stock_loc = warehouse.lot_stock_id
-        shelf1 = self.env['stock.location'].create({
+        shelf1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': stock_loc.id,
             'usage': 'internal',
             'name': 'shelf1'
         })
-        shelf2 = self.env['stock.location'].create({
+        shelf2 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': stock_loc.id,
             'usage': 'internal',
             'name': 'shelf2'
         })
 
-        products = self.env['product.product'].create([{'name': i, 'type': 'product'} for i in range(500)])
+        products = self.env['product.product'].with_user(self.user_stock_manager).create([{'name': i, 'type': 'product'} for i in range(500)])
         self.env['stock.warehouse.orderpoint'].create([{
             'product_id': products[i // 2].id,
             'location_id': (i % 2 == 0) and shelf1.id or shelf2.id,
@@ -272,7 +290,7 @@ class TestProcRuleLoad(TransactionCase):
             'picking_type_id': warehouse.in_type_id.id,
         })
 
-        wrong_route = self.env['stock.location.route'].create({
+        wrong_route = self.env['stock.location.route'].with_user(self.user_stock_manager).create({
             'name': 'Wrong Route',
         })
         self.env['stock.rule'].create({

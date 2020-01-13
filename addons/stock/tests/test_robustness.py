@@ -9,6 +9,23 @@ class TestRobustness(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestRobustness, cls).setUpClass()
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
@@ -18,6 +35,7 @@ class TestRobustness(SavepointCase):
             'type': 'product',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.env = cls.env(user=cls.user_stock_user)
 
     def test_uom_factor(self):
         """ Changing the factor of a unit of measure shouldn't be allowed while
@@ -151,13 +169,13 @@ class TestRobustness(SavepointCase):
         """ Make sure it isn't possible to create a move line with a lot incompatible with its
         product.
         """
-        product1 = self.env['product.product'].create({
+        product1 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product 1',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
         })
-        product2 = self.env['product.product'].create({
+        product2 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product 2',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,

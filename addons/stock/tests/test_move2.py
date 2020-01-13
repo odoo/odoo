@@ -9,6 +9,10 @@ from odoo.tests import Form
 
 
 class TestPickShip(TestStockCommon):
+    def setUp(cls):
+        super(TestPickShip, cls).setUp()
+        cls.env = cls.env(user=cls.user_stock_user)
+
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
             'location_id': self.pack_location,
@@ -240,13 +244,13 @@ class TestPickShip(TestStockCommon):
         """
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
         stock_location = self.env['stock.location'].browse(self.stock_location)
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        warehouse_1.with_user(self.user_stock_manager).write({'delivery_steps': 'pick_pack_ship'})
+        warehouse_2 = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
-        warehouse_1.write({
+        warehouse_1.with_user(self.user_stock_manager).write({
             'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
         })
         resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
@@ -688,10 +692,10 @@ class TestPickShip(TestStockCommon):
         location and one in a return location that is located in another warehouse.
         """
         pick_location = self.env['stock.location'].browse(self.stock_location)
-        pick_location.return_location = True
+        pick_location.with_user(self.user_stock_manager).return_location = True
 
-        return_warehouse = self.env['stock.warehouse'].create({'name': 'return warehouse', 'code': 'rw'})
-        return_location = self.env['stock.location'].create({
+        return_warehouse = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({'name': 'return warehouse', 'code': 'rw'})
+        return_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'return internal',
             'usage': 'internal',
             'location_id': return_warehouse.view_location_id.id
@@ -737,8 +741,197 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, return_location), 5.0)
         self.assertEqual(len(self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('quantity', '!=', 0)])), 2)
 
+    def test_wise_operator(self):
+
+        # Create a new storable product
+        product_wise = self.env['product.product'].with_user(self.user_stock_manager).create({
+            'name': 'Wise Unit',
+            'type': 'product',
+            'categ_id': self.ref('product.product_category_1'),
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'uom_po_id': self.ref('uom.product_uom_unit'),
+        })
+
+        self.partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Deco Addict'})
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.shelf2 = self.env['stock.location'].with_user(self.user_stock_manager).create({
+            'name': 'Shelf 2',
+            'barcode': 1231985,
+            'location_id': warehouse.lot_stock_id.id
+        })
+        self.shelf1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
+            'name': 'Shelf 1',
+            'barcode': 1231892,
+            'location_id': warehouse.lot_stock_id.id
+        })
+
+        self.partner2 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Ready Mat'})
+
+        # Create an incoming picking for this product of 10 PCE from suppliers to stock
+        vals = {
+            'name': 'Incoming picking (wise unit)',
+            'partner_id': self.partner.id,
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
+            'move_lines': [(0, 0, {
+                'name': '/',
+                'product_id': product_wise.id,
+                'product_uom': product_wise.uom_id.id,
+                'product_uom_qty': 10.00,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.ref('stock.stock_location_stock'),
+            })],
+        }
+        pick1_wise = self.env['stock.picking'].create(vals)
+        pick1_wise.onchange_picking_type()
+        pick1_wise.move_lines.onchange_product_id()
+
+        # Confirm and assign picking and prepare partial
+        pick1_wise.action_confirm()
+        pick1_wise.action_assign()
+
+        # Put 4 pieces in shelf1 and 6 pieces in shelf2
+        package1 = self.env['stock.quant.package'].create({'name': 'Pack 1'})
+        pick1_wise.move_line_ids[0].write({
+            'result_package_id': package1.id,
+            'qty_done': 4,
+            'location_dest_id': self.shelf1.id
+        })
+        new_pack1 = self.env['stock.move.line'].create({
+            'product_id': product_wise.id,
+            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'picking_id': pick1_wise.id,
+            'qty_done': 6.0,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.shelf2.id
+        })
+
+        # Transfer the receipt
+        pick1_wise._action_done()
+
+        # Check the system created 3 quants
+        records = self.env['stock.quant'].search([('product_id', '=', product_wise.id)])
+        self.assertEqual(len(records.ids), 3, "The number of quants created is not correct")
+
+        # Make a delivery order of 5 pieces to the customer
+        vals = {
+            'name': 'outgoing picking 1 (wise unit)',
+            'partner_id': self.partner2.id,
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_lines': [(0, 0, {
+                'name': '/',
+                'product_id': product_wise.id,
+                'product_uom': product_wise.uom_id.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })],
+        }
+        delivery_order_wise1 = self.env['stock.picking'].create(vals)
+        delivery_order_wise1.onchange_picking_type()
+        delivery_order_wise1.move_lines.onchange_product_id()
+
+        # Assign and confirm
+        delivery_order_wise1.action_confirm()
+        delivery_order_wise1.action_assign()
+        self.assertEqual(delivery_order_wise1.state, 'assigned')
+
+        # Make a delivery order of 5 pieces to the customer
+        vals = {
+            'name': 'outgoing picking 2 (wise unit)',
+            'partner_id': self.partner2.id,
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_lines': [(0, 0, {
+                'name': '/',
+                'product_id': product_wise.id,
+                'product_uom': product_wise.uom_id.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })],
+        }
+        delivery_order_wise2 = self.env['stock.picking'].create(vals)
+        delivery_order_wise2.onchange_picking_type()
+        delivery_order_wise2.move_lines.onchange_product_id()
+
+        # Assign and confirm
+        delivery_order_wise2.action_confirm()
+        delivery_order_wise2.action_assign()
+        self.assertEqual(delivery_order_wise2.state, 'assigned')
+
+        # The operator is a wise guy and decides to do the opposite of what Odoo proposes.
+        # He uses the products reserved on picking 1 on picking 2 and vice versa
+        move1 = delivery_order_wise1.move_lines[0]
+        move2 = delivery_order_wise2.move_lines[0]
+        pack_ids1 = delivery_order_wise1.move_line_ids
+        pack_ids2 = delivery_order_wise2.move_line_ids
+
+        self.assertEqual(pack_ids1.location_id.id, self.shelf2.id)
+        self.assertEqual(set(pack_ids2.mapped('location_id.id')), set([
+            self.shelf1.id,
+            self.shelf2.id]))
+
+        # put the move lines from delivery_order_wise2 into delivery_order_wise1
+        for pack_id2 in pack_ids2:
+            new_pack_id1 = pack_id2.copy(default={'picking_id': delivery_order_wise1.id, 'move_id': move1.id})
+            new_pack_id1.qty_done = new_pack_id1.product_qty
+            new_pack_id1.with_context(bypass_reservation_update=True).product_uom_qty = 0
+
+        new_move_lines = delivery_order_wise1.move_line_ids.filtered(lambda p: p.qty_done)
+        self.assertEqual(sum(new_move_lines.mapped('product_qty')), 0)
+        self.assertEqual(sum(new_move_lines.mapped('qty_done')), 5)
+        self.assertEqual(set(new_move_lines.mapped('location_id.id')), set([
+            self.shelf1.id,
+            self.shelf2.id]))
+
+        # put the move line from delivery_order_wise1 into delivery_order_wise2
+        new_pack_id2 = pack_ids1.copy(default={'picking_id': delivery_order_wise2.id, 'move_id': move2.id})
+        new_pack_id2.qty_done = new_pack_id2.product_qty
+        new_pack_id2.with_context(bypass_reservation_update=True).product_uom_qty = 0
+
+        new_move_lines = delivery_order_wise2.move_line_ids.filtered(lambda p: p.qty_done)
+        self.assertEqual(len(new_move_lines), 1)
+        self.assertEqual(sum(new_move_lines.mapped('product_qty')), 0)
+        self.assertEqual(sum(new_move_lines.mapped('qty_done')), 5)
+        self.assertEqual(new_move_lines.location_id.id, self.shelf2.id)
+
+        # Process this picking
+        delivery_order_wise1._action_done()
+
+        # Check there was no negative quant created by this picking
+
+        records = self.env['stock.quant'].search([
+            ('product_id', '=', product_wise.id),
+            ('quantity', '<', 0.0),
+            ('location_id.id', '=', self.ref('stock.stock_location_stock'))])
+        self.assertEqual(len(records.ids), 0, 'This should not have created a negative quant')
+
+        # Check the other delivery order has changed its state back to ready
+        self.assertEqual(delivery_order_wise2.state, 'assigned', "Delivery order 2 should be back in ready state")
+
+        # Process the second picking
+        delivery_order_wise2._action_done()
+
+        # Check all quants are in Customers and there are no negative quants anymore
+        records = self.env['stock.quant'].search([
+            ('product_id', '=', product_wise.id),
+            ('location_id', '!=', self.ref('stock.stock_location_suppliers'))])
+        self.assertTrue(all([x.location_id.id == self.ref('stock.stock_location_customers') and x.quantity > 0.0 or
+                             x.location_id.id != self.ref('stock.stock_location_customers') and x.quantity == 0.0 for x in records]),
+                        "Negative quant or wrong location detected")
+
 
 class TestSinglePicking(TestStockCommon):
+    def setUp(cls):
+        super(TestSinglePicking, cls).setUp()
+        cls.env = cls.env(user=cls.user_stock_user)
+
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
         """
@@ -1147,7 +1340,7 @@ class TestSinglePicking(TestStockCommon):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 2
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1204,7 +1397,7 @@ class TestSinglePicking(TestStockCommon):
         inventory.action_start()
         inventory.line_ids.prod_lot_id = lot1
         inventory.line_ids.product_qty = 2
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1269,7 +1462,7 @@ class TestSinglePicking(TestStockCommon):
             'product_id': self.productA.id,
             'product_qty': 1,
         })
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1336,7 +1529,7 @@ class TestSinglePicking(TestStockCommon):
             'product_id': self.productA.id,
             'product_qty': 1,
         })
-        inventory.action_validate()
+        inventory.with_user(self.user_stock_manager).action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1352,7 +1545,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
         set to False and there's a move for a tracked product.
         """
-        self.env['stock.picking.type']\
+        self.env['stock.picking.type'].with_user(self.user_stock_manager)\
             .browse(self.picking_type_out)\
             .write({
                 'use_create_lots': False,
@@ -1385,7 +1578,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
         set to True and there's a move for a tracked product.
         """
-        self.env['stock.picking.type']\
+        self.env['stock.picking.type'].with_user(self.user_stock_manager)\
             .browse(self.picking_type_out)\
             .write({
                 'use_create_lots': True,
@@ -1425,7 +1618,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` is set to True and
         `use_existing_lot` is set to False and there's a move for a tracked product.
         """
-        self.env['stock.picking.type']\
+        self.env['stock.picking.type'].with_user(self.user_stock_manager)\
             .browse(self.picking_type_out)\
             .write({
                 'use_create_lots': True,
@@ -1465,7 +1658,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` is set to False and
         `use_existing_lot` is set to True and there's a move for a tracked product.
         """
-        self.env['stock.picking.type']\
+        self.env['stock.picking.type'].with_user(self.user_stock_manager)\
             .browse(self.picking_type_out)\
             .write({
                 'use_create_lots': False,
@@ -1646,7 +1839,7 @@ class TestSinglePicking(TestStockCommon):
                         Move Input-> QC - Move QC -> Stock
         Move receipt 2 /
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'TEST WAREHOUSE',
             'code': 'TEST1',
             'reception_steps': 'three_steps',
@@ -1773,7 +1966,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertFalse(back_order, 'There should be no back order')
 
     def test_unlink_move_1(self):
-        picking = Form(self.env['stock.picking'])
+        picking = Form(self.env['stock.picking'].with_user(self.user_stock_manager))
         ptout = self.env['stock.picking.type'].browse(self.picking_type_out)
         picking.picking_type_id = ptout
         with picking.move_ids_without_package.new() as move:
@@ -1783,7 +1976,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(picking.immediate_transfer, False)
         self.assertEqual(picking.state, 'draft')
 
-        picking = Form(picking)
+        picking = Form(picking.sudo())
         picking.move_ids_without_package.remove(0)
         picking = picking.save()
         self.assertEqual(len(picking.move_ids_without_package), 0)
@@ -1897,7 +2090,7 @@ class TestSinglePicking(TestStockCommon):
 
     def test_owner_1(self):
         """Make a receipt, set an owner and validate"""
-        owner1 = self.env['res.partner'].create({'name': 'owner'})
+        owner1 = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'owner'})
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
@@ -1934,13 +2127,13 @@ class TestSinglePicking(TestStockCommon):
         """ Checks picking's move lines will take in account the putaway rules
         to define the `location_dest_id`.
         """
-        partner = self.env['res.partner'].create({'name': 'Partner'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Partner'})
         supplier_location = self.env['stock.location'].browse(self.supplier_location)
-        stock_location = self.env['stock.location'].create({
+        stock_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'test-stock',
             'usage': 'internal',
         })
-        shelf_location = self.env['stock.location'].create({
+        shelf_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': stock_location.id,
@@ -1949,14 +2142,14 @@ class TestSinglePicking(TestStockCommon):
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.productA.id,
             'location_in_id': stock_location.id,
             'location_out_id': shelf_location.id,
         })
         # Changes config of receipt type to allow to edit move lines directly.
         picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
-        picking_type.show_operations = True
+        picking_type.with_user(self.user_stock_manager).show_operations = True
 
         receipt_form = Form(self.env['stock.picking'].with_context(
             force_detailed_view=True
@@ -1980,26 +2173,27 @@ class TestStockUOM(TestStockCommon):
         super(TestStockUOM, self).setUp()
         dp = self.env.ref('product.decimal_product_uom')
         dp.digits = 7
+        self.env = self.env(user=self.user_stock_user)
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
         # weight category
-        categ_test = self.env['uom.category'].create({'name': 'Bigger than tons'})
+        categ_test = self.env['uom.category'].with_user(self.user_stock_manager).create({'name': 'Bigger than tons'})
 
-        T_LBS = self.env['uom.uom'].create({
+        T_LBS = self.env['uom.uom'].with_user(self.user_stock_manager).create({
             'name': 'T-LBS',
             'category_id': categ_test.id,
             'uom_type': 'reference',
             'rounding': 0.01
         })
-        T_GT = self.env['uom.uom'].create({
+        T_GT = self.env['uom.uom'].with_user(self.user_stock_manager).create({
             'name': 'T-GT',
             'category_id': categ_test.id,
             'uom_type': 'bigger',
             'rounding': 0.0000001,
             'factor_inv': 2240.00,
         })
-        T_TEST = self.env['product.product'].create({
+        T_TEST = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'T_TEST',
             'type': 'product',
             'uom_id': T_LBS.id,
@@ -2053,7 +2247,7 @@ class TestRoutes(TestStockCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.partner = self.env['res.partner'].create({'name': 'Partner'})
+        self.partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Partner'})
 
     def _enable_pick_ship(self):
         self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
@@ -2164,7 +2358,7 @@ class TestRoutes(TestStockCommon):
         self._enable_pick_ship()
         stock_location = self.env.ref('stock.stock_location_stock')
 
-        push_location = self.env['stock.location'].create({
+        push_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': stock_location.location_id.id,
             'name': 'push location',
         })

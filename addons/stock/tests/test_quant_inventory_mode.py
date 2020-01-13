@@ -11,6 +11,23 @@ class TestEditableQuant(SavepointCase):
         super(TestEditableQuant, cls).setUpClass()
 
         # Shortcut to call `stock.quant` with `inventory mode` set in the context
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
+        user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_stock_user = Users.create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_user.id])]})
+        cls.user_stock_manager = Users.create({
+            'name': 'Julie Tablier',
+            'login': 'julie',
+            'email': 'j.j@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [user_group_stock_manager.id])]})
+
         cls.Quant = cls.env['stock.quant'].with_context(inventory_mode=True)
 
         Product = cls.env['product.product']
@@ -51,6 +68,7 @@ class TestEditableQuant(SavepointCase):
             'location_id': cls.stock.id,
         })
         cls.inventory_loss = cls.product.property_stock_inventory
+        cls.env = cls.env(user=cls.user_stock_user)
 
     def test_create_quant_1(self):
         """ Create a new quant who don't exist yet.
@@ -119,12 +137,12 @@ class TestEditableQuant(SavepointCase):
           - One with `quantity` (this one must be OK)
           - One with `inventory_quantity` (this one must be null)
         """
-        valid_quant = self.env['stock.quant'].create({
+        valid_quant = self.env['stock.quant'].sudo().create({
             'product_id': self.product.id,
             'location_id': self.room1.id,
             'quantity': 10,
         })
-        invalid_quant = self.env['stock.quant'].create({
+        invalid_quant = self.env['stock.quant'].sudo().create({
             'product_id': self.product2.id,
             'location_id': self.room1.id,
             'inventory_quantity': 20,
@@ -141,18 +159,18 @@ class TestEditableQuant(SavepointCase):
           - One with the two values (this one must raises an error as it enters in the inventory
             mode but user can't edit directly `quantity` in inventory mode)
         """
-        valid_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+        valid_quant = self.env['stock.quant'].sudo().with_context(inventory_mode=True).create({
             'product_id': self.product.id,
             'location_id': self.room1.id,
             'quantity': 10,
         })
-        inventoried_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+        inventoried_quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
             'product_id': self.product2.id,
             'location_id': self.room1.id,
             'inventory_quantity': 20,
         })
         with self.assertRaises(UserError):
-            invalid_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            invalid_quant = self.env['stock.quant'].with_user(self.user_stock_manager).with_context(inventory_mode=True).create({
                 'product_id': self.product.id,
                 'location_id': self.room2.id,
                 'quantity': 10,
@@ -197,9 +215,9 @@ class TestEditableQuant(SavepointCase):
         """ Try to edit a record without the inventory mode.
         Must raise an error.
         """
-        self.demo_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+        self.demo_user = self.env['res.users'].sudo().with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
             'name': 'Pauline Poivraisselle',
-            'login': 'pauline',
+            'login': 'paul',
             'email': 'p.p@example.com',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
         })
