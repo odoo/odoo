@@ -728,7 +728,7 @@
                                     <tree string="Registration mail" editable="bottom">
                                         <field name="registration_id"/>
                                         <field name="scheduled_date"/>
-                                        <field name="mail_sent"/>
+                                        <field name="mail_sent" string="Sent"/>
                                     </tree>
                                 </field>
                             </page>
@@ -747,7 +747,7 @@
                     <field name="notification_type" invisible="1"/>
                     <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                     <field name="scheduled_date"/>
-                    <field name="mail_sent"/>
+                    <field name="mail_sent" string="Sent"/>
                     <field name="done"/>
                 </tree>
             </field>
