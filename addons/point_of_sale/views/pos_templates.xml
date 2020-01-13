@@ -43,19 +43,13 @@
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.AbstractWebClient');
-                var web_client = new WebClient();
-
-                web_client._title_changed = function() {};
-                web_client.show_application = function() {
-                    return web_client.action_manager.do_action("pos.ui");
-                };
-
-                $(function () {
-                    web_client.setElement($(document.body));
-                    web_client.start();
-                });
-                return web_client;
+                // tours require web.web_client module in order to be loaded,
+                // thus we define this module and is used to start the application.
+                const { startPosApp } = require('point_of_sale.main');
+                const WebClient = require('web.AbstractWebClient');
+                const webClient = new WebClient();
+                startPosApp(webClient);
+                return webClient;
             });
         </script>
     </head>

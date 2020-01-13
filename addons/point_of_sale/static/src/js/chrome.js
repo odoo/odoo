@@ -5,12 +5,15 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
-var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager').CrashManager;
 var rpc = require('web.rpc');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
+var session = require('web.session');
+var field_utils = require('web.field_utils');
+var utils = require('web.utils');
+var round_di = utils.round_decimals;
 
 
 var _t = core._t;
@@ -575,16 +578,15 @@ var ClientScreenWidget = PosBaseWidget.extend({
 // - .gui which controls the switching between 
 //   screens and the showing/closing of popups
 
-var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
-    template: 'Chrome',
-    init: function() { 
-        var self = this;
-        this._super(arguments[0],{});
+class Chrome extends owl.Component {
+    constructor() {
+        super(...arguments);
+        this.$ = $;
 
         this.started  = new $.Deferred(); // resolves when DOM is online
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
 
-        this.pos = new models.PosModel(this.getSession(), {chrome:this});
+        this.pos = new models.PosModel(session, {chrome:this});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
@@ -595,23 +597,98 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         this.previous_touch_y_coordinate = -1;
 
         this.widget = {};   // contains references to subwidgets instances
+        this.widgets = [
+            {
+                name: 'order_selector',
+                widget: OrderSelectorWidget,
+                replace: '.placeholder-OrderSelectorWidget',
+            },
+            {
+                name: 'sale_details',
+                widget: SaleDetailsButton,
+                append: '.pos-rightheader',
+                condition: function() {
+                    return this.pos.proxy.printer;
+                },
+            },
+            {
+                name: 'proxy_status',
+                widget: ProxyStatusWidget,
+                append: '.pos-rightheader',
+                condition: function() {
+                    return this.pos.config.use_proxy;
+                },
+            },
+            {
+                name: 'screen_status',
+                widget: ClientScreenWidget,
+                append: '.pos-rightheader',
+                condition: function() {
+                    return this.pos.config.use_proxy;
+                },
+            },
+            {
+                name: 'notification',
+                widget: SynchNotificationWidget,
+                append: '.pos-rightheader',
+            },
+            {
+                name: 'close_button',
+                widget: HeaderButtonWidget,
+                append: '.pos-rightheader',
+                args: {
+                    label: _t('Close'),
+                    action: function() {
+                        this.$el.addClass('close_button');
+                        var self = this;
+                        if (!this.confirmed) {
+                            this.$el.addClass('confirm');
+                            this.$el.text(_t('Confirm'));
+                            this.confirmed = setTimeout(function() {
+                                self.$el.removeClass('confirm');
+                                self.$el.text(_t('Close'));
+                                self.confirmed = false;
+                            }, 2000);
+                        } else {
+                            clearTimeout(this.confirmed);
+                            this.gui.close();
+                        }
+                    },
+                },
+            },
+            {
+                name: 'username',
+                widget: UsernameWidget,
+                replace: '.placeholder-UsernameWidget',
+            },
+            {
+                name: 'keyboard',
+                widget: keyboard.OnscreenKeyboardWidget,
+                replace: '.placeholder-OnscreenKeyboardWidget',
+            },
+            {
+                name: 'debug',
+                widget: DebugWidget,
+                append: '.pos-content',
+            },
+        ];
 
         this.cleanup_dom();
-        this.pos.ready.then(function(){
-            self.build_chrome();
-            self.build_widgets();
-            self.disable_rubberbanding();
-            self.disable_backpace_back();
-            self.ready.resolve();
-            self.loading_hide();
-            self.replace_crashmanager();
-            self.pos.push_order();
-        }).guardedCatch(function (err) { // error when loading models data from the backend
-            self.loading_error(err);
+        this.pos.ready.then(() => {
+            this.build_chrome();
+            this.build_widgets();
+            this.disable_rubberbanding();
+            this.disable_backpace_back();
+            this.ready.resolve();
+            this.loading_hide();
+            this.replace_crashmanager();
+            this.pos.push_order();
+        }).guardedCatch((err) => { // error when loading models data from the backend
+            this.loading_error(err);
         });
-    },
+    }
 
-    cleanup_dom:  function() {
+    cleanup_dom() {
         // remove default webclient handlers that induce click delay
         $(document).off();
         $(window).off();
@@ -619,9 +696,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         $('body').off();
         // The above lines removed the bindings, but we really need them for the barcode
         BarcodeEvents.start();
-    },
+    }
 
-    build_chrome: function() { 
+    build_chrome() { 
         var self = this;
 
         if ($.browser.chrome) {
@@ -631,8 +708,6 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             }
         }
 
-        this.renderElement();
-
         this.$('.pos-logo').click(function(){
             self.click_logo();
         });
@@ -640,21 +715,21 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         if(this.pos.config.iface_big_scrollbars){
             this.$el.addClass('big-scrollbars');
         }
-    },
+    }
 
     // displays a system error with the error-traceback
     // popup.
-    show_error: function(error) {
+    show_error(error) {
         this.gui.show_popup('error-traceback',{
             'title': error.message,
             'body':  error.message + '\n' + error.data.debug + '\n',
         });
-    },
+    }
 
     // replaces the error handling of the existing crashmanager which
     // uses jquery dialog to display the error, to use the pos popup
     // instead
-    replace_crashmanager: function() {
+    replace_crashmanager() {
         var self = this;
         CrashManager.include({
             show_error: function(error) {
@@ -665,9 +740,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
                 }
             },
         });
-    },
+    }
 
-    click_logo: function() {
+    click_logo() {
         if (this.pos.debug) {
             this.widget.debug.show();
         } else {
@@ -688,9 +763,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
                 }
             }
         }
-    },
+    }
 
-        _scrollable: function(element, scrolling_down){
+        _scrollable(element, scrolling_down){
             var $element = $(element);
             var scrollable = true;
 
@@ -701,9 +776,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             }
 
             return scrollable;
-        },
+        }
 
-    disable_rubberbanding: function(){
+    disable_rubberbanding(){
             var self = this;
 
             document.body.addEventListener('touchstart', function(event){
@@ -730,18 +805,18 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             }
             event.preventDefault();
         });
-    },
+    }
 
     // prevent backspace from performing a 'back' navigation
-    disable_backpace_back: function() {
+    disable_backpace_back() {
        $(document).on("keydown", function (e) {
            if (e.which === 8 && !$(e.target).is("input, textarea")) {
                e.preventDefault();
            }
        });
-    },
+    }
 
-    loading_error: function(err){
+    loading_error(err){
         var self = this;
 
         var title = err.message;
@@ -770,12 +845,12 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         popup.css({ zindex: 9001 });
 
         popup.appendTo(this.$el);
-    },
-    loading_progress: function(fac){
+    }
+    loading_progress(fac){
         this.$('.loader .loader-feedback').removeClass('oe_hidden');
         this.$('.loader .progress').removeClass('oe_hidden').css({'width': ''+Math.floor(fac*100)+'%'});
-    },
-    loading_message: function(msg,progress){
+    }
+    loading_message(msg, progress) {
         this.$('.loader .loader-feedback').removeClass('oe_hidden');
         this.$('.loader .message').text(msg);
         if (typeof progress !== 'undefined') {
@@ -783,8 +858,8 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         } else {
             this.$('.loader .progress').addClass('oe_hidden');
         }
-    },
-    loading_skip: function(callback){
+    }
+    loading_skip(callback){
         if(callback){
             this.$('.loader .loader-feedback').removeClass('oe_hidden');
             this.$('.loader .button.skip').removeClass('oe_hidden');
@@ -793,77 +868,16 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         }else{
             this.$('.loader .button.skip').addClass('oe_hidden');
         }
-    },
-    loading_hide: function(){
+    }
+    loading_hide(){
         var self = this;
         this.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
-    },
-    loading_show: function(){
+    }
+    loading_show(){
         this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
-    },
-    widgets: [
-        {
-            'name':   'order_selector',
-            'widget': OrderSelectorWidget,
-            'replace':  '.placeholder-OrderSelectorWidget',
-        },{
-            'name':   'sale_details',
-            'widget': SaleDetailsButton,
-            'append':  '.pos-rightheader',
-            'condition': function(){ return this.pos.proxy.printer; },
-        },{
-            'name':   'proxy_status',
-            'widget': ProxyStatusWidget,
-            'append':  '.pos-rightheader',
-            'condition': function(){ return this.pos.config.use_proxy; },
-        },{
-            'name': 'screen_status',
-            'widget': ClientScreenWidget,
-            'append': '.pos-rightheader',
-            'condition': function(){ return this.pos.config.use_proxy; },
-        },{
-            'name':   'notification',
-            'widget': SynchNotificationWidget,
-            'append':  '.pos-rightheader',
-        },{
-            'name':   'close_button',
-            'widget': HeaderButtonWidget,
-            'append':  '.pos-rightheader',
-            'args': {
-                label: _t('Close'),
-                action: function(){ 
-                    this.$el.addClass('close_button');
-                    var self = this;
-                    if (!this.confirmed) {
-                        this.$el.addClass('confirm');
-                        this.$el.text(_t('Confirm'));
-                        this.confirmed = setTimeout(function(){
-                            self.$el.removeClass('confirm');
-                            self.$el.text(_t('Close'));
-                            self.confirmed = false;
-                        },2000);
-                    } else {
-                        clearTimeout(this.confirmed);
-                        this.gui.close();
-                    }
-                },
-            }
-        },{
-            'name':   'username',
-            'widget': UsernameWidget,
-            'replace':  '.placeholder-UsernameWidget',
-        },{
-            'name':  'keyboard',
-            'widget': keyboard.OnscreenKeyboardWidget,
-            'replace': '.placeholder-OnscreenKeyboardWidget',
-        },{
-            'name':  'debug',
-            'widget': DebugWidget,
-            'append': '.pos-content',
-        },
-    ],
+    }
 
-    load_widgets: function(widgets) {
+    load_widgets(widgets) {
         for (var i = 0; i < widgets.length; i++) {
             var widget = widgets[i];
             if ( !widget.condition || widget.condition.call(this) ) {
@@ -881,10 +895,10 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
                 this.widget[widget.name] = w;
             }
         }
-    },
+    }
 
     // This method instantiates all the screens, widgets, etc.
-    build_widgets: function() {
+    build_widgets() {
         var self = this;
         this.load_widgets(this.widgets);
 
@@ -914,13 +928,74 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         this.gui.set_startup_screen('products');
         this.gui.set_default_screen('products');
 
-    },
+    }
 
-    destroy: function() {
+    destroy() {
         this.pos.destroy();
         this._super();
     }
-});
+
+    format_currency(amount, precision) {
+        var currency =
+            this.pos && this.pos.currency
+                ? this.pos.currency
+                : { symbol: '$', position: 'after', rounding: 0.01, decimals: 2 };
+
+        amount = this.format_currency_no_symbol(amount, precision);
+
+        if (currency.position === 'after') {
+            return amount + ' ' + (currency.symbol || '');
+        } else {
+            return (currency.symbol || '') + ' ' + amount;
+        }
+    }
+    format_currency_no_symbol(amount, precision) {
+        var currency =
+            this.pos && this.pos.currency
+                ? this.pos.currency
+                : { symbol: '$', position: 'after', rounding: 0.01, decimals: 2 };
+        var decimals = currency.decimals;
+
+        if (precision && this.pos.dp[precision] !== undefined) {
+            decimals = this.pos.dp[precision];
+        }
+
+        if (typeof amount === 'number') {
+            amount = round_di(amount, decimals).toFixed(decimals);
+            amount = field_utils.format.float(round_di(amount, decimals), {
+                digits: [69, decimals],
+            });
+        }
+
+        return amount;
+    }
+    show() {
+        this.$el.removeClass('oe_hidden');
+    }
+    hide() {
+        this.$el.addClass('oe_hidden');
+    }
+    format_pr(value, precision) {
+        var decimals =
+            precision > 0
+                ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10)))
+                : 0;
+        return value.toFixed(decimals);
+    }
+    format_fixed(value, integer_width, decimal_width) {
+        value = value.toFixed(decimal_width || 0);
+        var width = value.indexOf('.');
+        if (width < 0) {
+            width = value.length;
+        }
+        var missing = integer_width - width;
+        while (missing > 0) {
+            value = '0' + value;
+            missing--;
+        }
+        return value;
+    }
+}
 
 return {
     Chrome: Chrome,
