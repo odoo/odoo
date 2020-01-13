@@ -36,7 +36,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.archiveEnabled = params.archiveEnabled;
+        this.archiveEnabled = params.archiveEnabled && model._auto;
         this.confirmOnDelete = params.confirmOnDelete;
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
