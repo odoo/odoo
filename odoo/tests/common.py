@@ -1475,7 +1475,11 @@ class Form(object):
                         vs['•parent•'] = self._values
                         vs = {
                             k: v for k, v in items
+<<<<<<< HEAD
                             if nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=vs)
+=======
+                            if (all_fields and k != 'id') or nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=context)
+>>>>>>> 417be450b50... temp
                         }
                     v.append((c, rid, vs))
 
