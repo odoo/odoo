@@ -27,7 +27,7 @@
             <field name="name">crm.activity.report.tree</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <tree default_order="date desc">
+                <tree default_order="date desc" create="false" delete="false">
                     <field name="date"/>
                     <field name="author_id"/>
                     <field name="mail_activity_type_id"/>
