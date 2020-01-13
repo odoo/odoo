@@ -467,6 +467,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -502,6 +503,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
