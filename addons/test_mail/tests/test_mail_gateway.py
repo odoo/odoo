@@ -431,9 +431,8 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(new_rec._name, new_alias_2.alias_model_id.model)
         # No new post on test_record, no new record in mail.test.simple either
         self.assertEqual(len(self.test_record.message_ids), 1, 'message_process: should not post on replied record as forward should bypass it')
-        # TDE FIXME: if forward, all alias are applied, should probably not
-        # new_simple = self.env['mail.test.simple'].search([('name', '=', 'Test Subject')])
-        # self.assertEqual(len(new_simple), 0, 'message_process: a new mail.test should not have been created')
+        new_simple = self.env['mail.test.simple'].search([('name', '=', 'Test Subject')])
+        self.assertEqual(len(new_simple), 0, 'message_process: a new mail.test should not have been created')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_alias_forward_bypass_reply_second(self):
@@ -459,9 +458,8 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(new_rec._name, new_alias_2.alias_model_id.model)
         # No new post on test_record, no new record in mail.test.simple either
         self.assertEqual(len(self.test_record.message_ids), 1, 'message_process: should not post on replied record as forward should bypass it')
-        # TDE FIXME: if forward, all alias are applied, should probably not
-        # new_simple = self.env['mail.test.simple'].search([('name', '=', 'Test Subject')])
-        # self.assertEqual(len(new_simple), 0, 'message_process: a new mail.test should not have been created')
+        new_simple = self.env['mail.test.simple'].search([('name', '=', 'Test Subject')])
+        self.assertEqual(len(new_simple), 0, 'message_process: a new mail.test should not have been created')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_alias_forward_bypass_update_alias(self):
@@ -488,8 +486,8 @@ class TestMailgateway(TestMailCommon):
         # Forward created a new record in mail.test
         self.assertEqual(len(new_rec), 1, 'message_process: a new mail.test should have been created')
         self.assertEqual(new_rec._name, new_alias_2.alias_model_id.model)
-        # TDE FIXME No new post on test_record, no new record in mail.test.simple either
-        # self.assertEqual(len(self.test_record.message_ids), 1, 'message_process: should not post on replied record as forward should bypass it')
+        # No new post on test_record, no new record in mail.test.simple either
+        self.assertEqual(len(self.test_record.message_ids), 1, 'message_process: should not post on replied record as forward should bypass it')
         # No new record on first alias model
         new_simple = self.env['mail.test.gateway'].search([('name', '=', 'Test Subject')])
         self.assertEqual(len(new_simple), 0, 'message_process: a new mail.test should not have been created')
