@@ -35,7 +35,7 @@ tour.register('sale_tour', {
     in_modal: false,
 }, {
     trigger: ".o_field_x2many_list_row_add > a",
-    extra_trigger: ".o_sale_order",
+    extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
     content: _t("Click here to add some products or services to your quotation."),
     position: "bottom",
 }, {
