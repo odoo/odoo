@@ -448,6 +448,7 @@ QUnit.module('fields', {}, function () {
                 'read', // relational record in dialog
                 'write', // save relational record from dialog
                 'read', // relational field (updated)
+                'read', // main record
                 'search_read', // list view in dialog
                 'read', // relational field (updated)
                 'write', // save main record

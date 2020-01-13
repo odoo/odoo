@@ -260,7 +260,7 @@ var FormViewDialog = ViewDialog.extend({
         var self = this;
         return this.form_view.saveRecord(this.form_view.handle, {
             stayInEdit: true,
-            reload: false,
+            reload: true,
             savePoint: this.shouldSaveLocally,
             viewType: 'form',
         }).then(function (changedFields) {
