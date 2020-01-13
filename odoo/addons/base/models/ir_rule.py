@@ -63,11 +63,6 @@ class IrRule(models.Model):
             rule['global'] = not rule.groups
 
     @api.constrains('model_id')
-    def _check_model_transience(self):
-        if any(self.env[rule.model_id.model].is_transient() for rule in self):
-            raise ValidationError(_('Rules can not be applied on Transient models.'))
-
-    @api.constrains('model_id')
     def _check_model_name(self):
         # Don't allow rules on rules records (this model).
         if any(rule.model_id.model == self._name for rule in self):
