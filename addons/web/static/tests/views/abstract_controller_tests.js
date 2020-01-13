@@ -121,5 +121,21 @@ QUnit.module("Views", {
         assert.verifySteps(["destroy"]);
 
     });
+
+    QUnit.test('Correctly set focus to search panel with Owl Renderer', async function (assert) {
+        assert.expect(1);
+
+        class Renderer extends AbstractRenderer { }
+        Renderer.template = xml`<div>Test</div>`;
+
+        var view = await createView({
+            View: getOwlView(Renderer, "test"),
+            data: this.data,
+            model: "test_model",
+            arch: "<test/>",
+        });
+        assert.hasClass(document.activeElement, "o_searchview_input");
+        view.destroy();
+    });
 });
 });
