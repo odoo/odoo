@@ -117,7 +117,8 @@ class Partner(models.Model):
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id,
             'auto_delete': mail_auto_delete,
-            'references': message.parent_id.message_id if message.parent_id else False
+            # due to ir.rule, user have no right to access parent message if message is not published
+            'references': message.parent_id.sudo().message_id if message.parent_id else False,
         }
         if record:
             base_mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(message, records=record))

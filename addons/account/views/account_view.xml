@@ -1168,7 +1168,7 @@
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}" groups="account.group_account_user">
                                     <field name="account_id"/>
-                                    <field name="refund_account_id"/>
+                                    <field name="refund_account_id" attrs="{'required':[('type_tax_use','=','sale'), ('account_id','!=', False)]}"/>
                                 </group>
                             </group>
                             <field name="children_tax_ids"
@@ -1283,7 +1283,7 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     </group>
                                 </group>
