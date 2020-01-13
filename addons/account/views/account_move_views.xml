@@ -68,11 +68,16 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
+<<<<<<< HEAD
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
                                             domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                                             attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
                                             widget="many2many_tags"/>
+=======
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+>>>>>>> 94d5bb2ae73... temp
                                     </group>
                                 </group>
                             </page>
