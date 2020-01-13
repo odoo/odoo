@@ -332,6 +332,9 @@ class Registry(Mapping):
 
     def post_constraint(self, func, *args, **kwargs):
         """ Call the given function, and delay it if it fails during an upgrade. """
+        if kwargs.pop("postpone", False):
+            self._constraint_queue.append(partial(func, *args, **kwargs))
+            return
         try:
             func(*args, **kwargs)
         except Exception as e:
