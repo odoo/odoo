@@ -214,7 +214,7 @@ class TestSurveyCommon(common.SavepointCase):
         return self.url_open('/survey/start/%s' % survey.access_token)
 
     def _access_page(self, survey, token):
-        return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
+        return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
     def _access_submit(self, survey, token, post_data):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
