@@ -717,7 +717,7 @@ var SeoConfigurator = Dialog.extend({
         var self = this;
         var data = {};
         if (this.canEditTitle) {
-            data.website_meta_title = this.metaTitleDescription.getTitle();
+            data.website_meta_title = this.metaTitleDescription.$title.val();
         }
         if (this.canEditDescription) {
             data.website_meta_description = this.metaTitleDescription.$description.val();
