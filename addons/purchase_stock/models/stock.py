@@ -107,12 +107,14 @@ class StockMove(models.Model):
         done_move_to_return = []
         finished_moves = self.env['stock.move']
         for move in self:
-            if move.created_purchase_line_id and move.state not in ('done, cancel'):
-                if move.created_purchase_line_id.state == 'draft':
-                    move.created_purchase_line_id.product_qty -= qty
+            if move.purchase_line_id and move.state not in ('done, cancel'):
+                if move.purchase_line_id.state == 'draft':
+                    move.purchase_line_id.product_qty -= qty
                     finished_moves |= move
                 else:
-                    done_move_to_return.append((move, move.created_purchase_line_id.order_id))
+                    done_move_to_return.append((move, move.purchase_line_id.order_id))
+                    extra_move_vals = move._prepare_extra_move_vals(qty)
+                    move.copy(default=extra_move_vals)
         return done_move_to_return + super(StockMove, self - finished_moves)._decrease_initial_demand(qty)
 
 
