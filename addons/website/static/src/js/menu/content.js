@@ -1011,7 +1011,7 @@ var PageManagement = Widget.extend({
         return this._getHtmlResource(window.location.origin + ev.currentTarget.dataset.url).then(function (configurator) {
             configurator.open();
         }).catch(function (error) {
-            console.log(error.message);
+            console.error(error.message, error.stack);
             return false;
         });
     },

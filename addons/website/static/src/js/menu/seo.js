@@ -217,41 +217,41 @@ var Preview = Widget.extend({
 });
 
 var HtmlPage = Class.extend(mixins.PropertiesMixin, {
-    init: function (targetPage) {
+    init: function ($targetPage) {
         //Check if there is a external page passed else assign the loaded one.
-        this.page = targetPage || $(document.documentElement);
+        this.$targetPage = $targetPage || $(document.documentElement);
         mixins.PropertiesMixin.init.call(this);
         this.initTitle = this.title();
-        this.defaultTitle = this.page.find('meta[name="default_title"]').attr('content');
+        this.defaultTitle = this.$targetPage.find('meta[name="default_title"]').attr('content');
         this.initDescription = this.description();
     },
     url: function () {
-        return this.page[0].baseURI;
+        return this.$targetPage[0].baseURI;
     },
     title: function () {
-        return this.page.find('title').text().trim();
+        return this.$targetPage.find('title').text().trim();
     },
     changeTitle: function (title) {
         // TODO create tag if missing
-        this.page.find('title').text(title.trim() || this.defaultTitle);
+        this.$targetPage.find('title').text(title.trim() || this.defaultTitle);
         this.trigger('title-changed', title);
     },
     description: function () {
-        return (this.page.find('meta[name=description]').attr('content') || '').trim();
+        return (this.$targetPage.find('meta[name=description]').attr('content') || '').trim();
     },
     changeDescription: function (description) {
         // TODO create tag if missing
-        this.page.find('meta[name=description]').attr('content', description);
+        this.$targetPage.find('meta[name=description]').attr('content', description);
         this.trigger('description-changed', description);
     },
     keywords: function () {
-        var $keywords = this.page.find('meta[name=keywords]');
+        var $keywords = this.$targetPage.find('meta[name=keywords]');
         var parsed = ($keywords.length > 0) && $keywords.attr('content') && $keywords.attr('content').split(',');
         return (parsed && parsed[0]) ? parsed: [];
     },
     changeKeywords: function (keywords) {
         // TODO create tag if missing
-        this.page.find('meta[name=keywords]').attr('content', keywords.join(','));
+        this.$targetPage.find('meta[name=keywords]').attr('content', keywords.join(','));
     },
     headers: function (tag) {
         return $('#wrap '+tag).map(function () {
@@ -260,9 +260,9 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         });
     },
     getOgMeta: function () {
-        var ogImageUrl = this.page.find('meta[property="og:image"]').attr('content');
-        var title = this.page.find('meta[property="og:title"]').attr('content');
-        var description = this.page.find('meta[property="og:description"]').attr('content');
+        var ogImageUrl = this.$targetPage.find('meta[property="og:image"]').attr('content');
+        var title = this.$targetPage.find('meta[property="og:title"]').attr('content');
+        var description = this.$targetPage.find('meta[property="og:description"]').attr('content');
         return {
             ogImageUrl: ogImageUrl && ogImageUrl.replace(window.location.origin, ''),
             metaTitle: title,
@@ -270,7 +270,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         };
     },
     images: function () {
-        return this.page.find("#wrap img").map(function () {
+        return this.$targetPage.find("#wrap img").map(function () {
             var $img = $(this);
             return  {
                 src: $img.attr('src'),
@@ -279,16 +279,16 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         });
     },
     company: function () {
-        return $('html').attr('data-oe-company-name');
+        return this.$targetPage.attr('data-oe-company-name');
     },
     bodyText: function () {
-        return $('body').children().not('.oe_seo_configuration').text();
+        return this.$targetPage.find('body').children().not('.oe_seo_configuration').text();
     },
     heading1: function () {
-        return $('body').children().not('.oe_seo_configuration').find('h1').text();
+        return this.$targetPage.find('body').children().not('.oe_seo_configuration').find('h1').text();
     },
     heading2: function () {
-        return $('body').children().not('.oe_seo_configuration').find('h2').text();
+        return this.$targetPage.find('body').children().not('.oe_seo_configuration').find('h2').text();
     },
     isInBody: function (text) {
         return new RegExp(WORD_SEPARATORS_REGEX + text + WORD_SEPARATORS_REGEX, 'gi').test(this.bodyText());
