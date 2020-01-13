@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.l10n_vn_viettel</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="analytic" position="after">
+                <h2>Vietnamese Localization</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box" groups="account.group_account_user">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Invoicing</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="text-muted">
+                                Configuration to send the invoices to Viettel <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_vn_type" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_vn_type"/>
+                                    <label for="l10n_vn_template_code" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_vn_template_code"/>
+                                    <label for="l10n_vn_series" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_vn_series"/>
+                                    <label for="l10n_vn_authority" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_vn_authority"/>
+                                    <label for="l10n_vn_base_url" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_vn_base_url"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" groups="account.group_account_user">
+                        <div class="o_setting_left_pane">
+                            <field name="group_l10n_vn_send_validated_invoice"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="group_l10n_vn_send_validated_invoice"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
