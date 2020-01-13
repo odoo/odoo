@@ -208,7 +208,10 @@ var ActivityRenderer = AbstractRenderer.extend({
                 var def = widget.appendTo($td).then(function () {
                     // replace clock by closest deadline
                     var $date = $('<div class="o_closest_deadline">');
-                    var date = new Date(activity_group.o_closest_deadline);
+                    // split the year/month/day to create a date (to have a date, no tz, instead of a datetime, tz dependant)
+                    var splitDate = activity_group.o_closest_deadline.split('-');
+                    // the value representing the month, ranges from 0 for January up to 11 for December.
+                    var date = new Date(splitDate[0], splitDate[1]-1, splitDate[2]);
                     // To remove year only if current year
                     if (moment().year() === moment(date).year()) {
                         $date.text(date.toLocaleDateString(moment().locale(), { day: 'numeric', month: 'short' }));
