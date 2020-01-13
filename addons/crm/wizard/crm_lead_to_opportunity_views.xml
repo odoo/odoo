@@ -15,13 +15,12 @@
                 <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                     <field name="opportunity_ids" nolabel="1">
                         <tree>
-                            <field name="create_date"/>
+                            <field name="create_date" widget="date"/>
                             <field name="name"/>
                             <field name="type"/>
                             <field name="contact_name"/>
                             <field name="country_id" invisible="context.get('invisible_country', True)"/>
                             <field name="email_from"/>
-                            <field name="phone"/>
                             <field name="stage_id"/>
                             <field name="user_id"/>
                             <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
