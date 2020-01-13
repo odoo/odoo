@@ -443,16 +443,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             env = api.Environment(cr, SUPERUSER_ID, {})
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                if model in registry and not registry[model]._abstract and not registry[model]._transient:
+                if model in registry and not registry[model]._abstract:
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,base.group_user,1,0,0,0',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
-
-            # Temporary warning while we remove access rights on osv_memory objects, as they have
-            # been replaced by owner-only access rights
-            cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
-            for (model, name) in cr.fetchall():
-                if model in registry and registry[model]._transient:
-                    _logger.warning('The transient model %s (%s) should not have explicit access rules!', model, name)
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
