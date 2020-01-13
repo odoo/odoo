@@ -986,9 +986,9 @@ var PageManagement = Widget.extend({
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
             xhr.onload = function () {
-                return new SeoConfigurator(self, {
+                resolve(new SeoConfigurator(self, {
                     $targetPage: $(this.response.documentElement),
-                }).open();
+                }));
             };
             xhr.open('GET', url);
             xhr.responseType = 'document';
@@ -1008,7 +1008,12 @@ var PageManagement = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onSeoConfiguratorButtonClick : function (ev) {
-        this._getHtmlResource(window.location.origin + ev.currentTarget.dataset.url);
+        return this._getHtmlResource(window.location.origin + ev.currentTarget.dataset.url).then(function (configurator) {
+            configurator.open();
+        }).catch(function (error) {
+            console.log(error.message);
+            return false;
+        });
     },
     _onPagePropertiesButtonClick: function (ev) {
         var moID = $(ev.currentTarget).data('id');
