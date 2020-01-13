@@ -95,7 +95,8 @@ class AccountMove(models.Model):
                 raise UserError(_('No sequence or document number linked to invoice id %s') % rec.id)
             if rec.type in ('in_receipt', 'out_receipt'):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
-            rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
+            if not rec.l10n_latam_document_number:
+                rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
         return super().post()
 
     @api.constrains('name', 'journal_id', 'state')
