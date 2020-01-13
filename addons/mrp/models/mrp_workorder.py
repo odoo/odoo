@@ -159,7 +159,7 @@ class MrpWorkorder(models.Model):
                 previous_wo = previous_wo_dict.get(wo.id)
                 prev_start = previous_wo and previous_wo['date_planned_start'] or False
                 prev_finished = previous_wo and previous_wo['date_planned_finished'] or False
-                if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_finished):
+                if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_start):
                     infos.append({
                         'color': 'text-primary',
                         'msg': _("Waiting the previous work order, planned from %s to %s") % (
@@ -171,7 +171,7 @@ class MrpWorkorder(models.Model):
                         'color': 'text-warning',
                         'msg': _("The work order should have already been processed.")
                     })
-                if prev_start and prev_start > wo.date_planned_finished:
+                if prev_start and prev_start > wo.date_planned_start:
                     infos.append({
                         'color': 'text-danger',
                         'msg': _("Scheduled before the previous work order, planned from %s to %s") % (

@@ -743,9 +743,6 @@ class MrpProduction(models.Model):
             order._plan_workorders()
         return True
 
-    def _get_start_date(self):
-        return self.date_planned_start or datetime.datetime.now()
-
     def _plan_workorders(self, replan=False):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
@@ -758,9 +755,12 @@ class MrpProduction(models.Model):
         # Schedule all work orders (new ones and those already created)
         qty_to_produce = max(self.product_qty - self.qty_produced, 0)
         qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
-        start_date = self._get_start_date()
+        start_date = self.date_planned_start
         if replan:
             workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ['ready', 'pending'])
+            # We plan the manufacturing order according to its `date_planned_start`, but if
+            # `date_planned_start` is in the past, we plan it as soon as possible.
+            start_date = max(start_date, datetime.datetime.now())
             workorder_ids.leave_id.unlink()
         else:
             workorder_ids = self.workorder_ids
@@ -775,14 +775,10 @@ class MrpProduction(models.Model):
                 cycle_number = float_round(qty_to_produce / workcenter.capacity, precision_digits=0, rounding_method='UP')
                 duration_expected = workcenter.time_start + workcenter.time_stop + cycle_number * time_cycle * 100.0 / workcenter.time_efficiency
 
-                # get first free slot
-                # planning 0 hours gives the start of the next attendance
-                from_date = workcenter.resource_calendar_id.plan_hours(0, start_date, compute_leaves=True, resource=workcenter.resource_id, domain=[('time_type', 'in', ['leave', 'other'])])
+                from_date, to_date = workcenter._get_first_available_slot(start_date, duration_expected)
                 # If the workcenter is unavailable, try planning on the next one
-                if from_date is False:
+                if not from_date:
                     continue
-                to_date = workcenter.resource_calendar_id.plan_hours(duration_expected / 60.0, from_date, compute_leaves=True, resource=workcenter.resource_id, domain=[('time_type', 'in', ['leave', 'other'])])
-
                 # Check if this workcenter is better than the previous ones
                 if to_date and to_date < best_finished_date:
                     best_start_date = from_date
