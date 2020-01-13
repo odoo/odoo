@@ -269,30 +269,30 @@ odoo.define('website_form_editor', function (require) {
                 records: [
                     {
                         id: 'Option 1',
-                        display_name: 'Option 1'
+                        display_name: _t('Option 1')
                     },
                     {
                         id: 'Option 2',
-                        display_name: 'Option 2'
+                        display_name: _t('Option 2')
                     },
                     {
                         id: 'Option 3',
-                        display_name: 'Option 3'
+                        display_name: _t('Option 3')
                     }
                 ],
                 // Default values for selection fields
                 selection: [
                     [
                         'Option 1',
-                        'Option 1'
+                        _t('Option 1')
                     ],
                     [
                         'Option 2',
-                        'Option 2'
+                        _t('Option 2')
                     ],
                     [
                         'Option 3',
-                        'Option 3'
+                        _t('Option 3')
                     ],
                 ]
             });
@@ -551,7 +551,7 @@ odoo.define('website_form_editor', function (require) {
     // Disable duplicate button for model fields
     options.registry['website_form_editor_field_model'] = disable_overlay_button_option.extend({
         start: function () {
-            this.disable_button('clone', 'You can\'t duplicate a model field.');
+            this.disable_button('clone', _t('You can\'t duplicate a model field.'));
             return this._super.apply(this, arguments);
         }
     });
@@ -559,7 +559,7 @@ odoo.define('website_form_editor', function (require) {
     // Disable delete button for model required fields
     options.registry['website_form_editor_field_required'] = disable_overlay_button_option.extend({
         start: function () {
-            this.disable_button('remove', 'You can\'t remove a field that is required by the model itself.');
+            this.disable_button('remove', _t('You can\'t remove a field that is required by the model itself.'));
             return this._super.apply(this, arguments);
         }
     });
@@ -567,7 +567,7 @@ odoo.define('website_form_editor', function (require) {
     // Disable duplicate button for non-custom checkboxes and radio buttons
     options.registry['website_form_editor_field_x2many'] =disable_overlay_button_option.extend({
         start: function () {
-            this.disable_button('clone', 'You can\'t duplicate an item which refers to an actual record.');
+            this.disable_button('clone', _t('You can\'t duplicate an item which refers to an actual record.'));
             return this._super.apply(this, arguments);
         }
     });
