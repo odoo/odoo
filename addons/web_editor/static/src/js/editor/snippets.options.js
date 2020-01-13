@@ -983,7 +983,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     getValue: function (methodName) {
-        return this._previewColor || this._super(...arguments);
+        if (typeof this._previewColor === 'string') {
+            return this._previewColor;
+        }
+        return this._super(...arguments);
     },
     /**
      * @override
