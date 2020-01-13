@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import collections
 import babel.dates
 import re
 import werkzeug
@@ -311,14 +312,16 @@ class WebsiteEventController(http.Controller):
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
 
-        :param details: posted data from frontend registration form, like
+        :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
-        registration_fields = request.env['event.registration']._fields
+        allowed_fields = {'name', 'phone', 'email', 'mobile', 'event_id', 'partner_id', 'event_ticket_id'}
+        registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         registrations = {}
         global_values = {}
         for key, value in form_details.items():
-            counter, field_name = key.split('-', 1)
+            counter, attr_name = key.split('-', 1)
+            field_name = attr_name.split('-')[0]
             if field_name not in registration_fields:
                 continue
             elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
@@ -327,12 +330,13 @@ class WebsiteEventController(http.Controller):
                 value = value
 
             if counter == '0':
-                global_values[field_name] = value
+                global_values[attr_name] = value
             else:
-                registrations.setdefault(counter, dict())[field_name] = value
+                registrations.setdefault(counter, dict())[attr_name] = value
         for key, value in global_values.items():
             for registration in registrations.values():
                 registration[key] = value
+
         return list(registrations.values())
 
     def _create_attendees_from_registration_post(self, event, registration_data):
