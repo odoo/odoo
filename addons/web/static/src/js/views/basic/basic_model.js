@@ -1536,7 +1536,7 @@ var BasicModel = AbstractModel.extend({
         // but directly in the data (as the co-model isn't fixed)
         var coModel = field.type === 'reference' ? data.model : field.relation;
         var def;
-        if (rel_data.display_name === undefined) {
+        if (rel_data.display_name === undefined || rel_data.display_name === false) {
             // TODO: refactor this to use _fetchNameGet
             def = this._rpc({
                     model: coModel,
