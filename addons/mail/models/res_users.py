@@ -18,7 +18,7 @@ class Users(models.Model):
     _inherit = ['res.users']
     _description = 'Users'
 
-    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
+    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null",
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
     alias_contact = fields.Selection(

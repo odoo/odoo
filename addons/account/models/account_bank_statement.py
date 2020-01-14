@@ -252,7 +252,7 @@ class AccountBankStatement(models.Model):
     move_line_count = fields.Integer(compute="_get_move_line_count")
 
     all_lines_reconciled = fields.Boolean(compute='_check_lines_reconciled')
-    user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     cashbox_start_id = fields.Many2one('account.bank.statement.cashbox', string="Starting Cashbox")
     cashbox_end_id = fields.Many2one('account.bank.statement.cashbox', string="Ending Cashbox")
     is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")

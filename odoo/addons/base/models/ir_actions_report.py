@@ -105,7 +105,7 @@ class IrActionsReport(models.Model):
         ' downloaded by the user.')
     report_name = fields.Char(string='Template Name', required=True,
                               help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name.")
-    report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
+    report_file = fields.Char(string='Report File', store=True,
                               help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
     groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")

@@ -11,4 +11,4 @@ class ResCompany(models.Model):
         ('no_send', 'Do not digitalize bills'),
         ('manual_send', "Digitalize bills on demand only"),
         ('auto_send', 'Digitalize all bills automatically')], string="Send mode on expense attachments",
-        required=False, default='auto_send')
+        default='auto_send')

@@ -16,7 +16,7 @@ class Notification(models.Model):
     mail_message_id = fields.Many2one(
         'mail.message', 'Message', index=True, ondelete='cascade', required=True)
     res_partner_id = fields.Many2one(
-        'res.partner', 'Needaction Recipient', index=True, ondelete='cascade', required=False)
+        'res.partner', 'Needaction Recipient', index=True, ondelete='cascade')
     is_read = fields.Boolean('Is Read', index=True)
     notification_type = fields.Selection([
         ('inbox', 'Inbox'), ('email', 'Email')], string='Notification Type',

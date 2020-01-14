@@ -19,7 +19,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     date_invoice_timesheet = fields.Date(
         string='Invoice Timesheets Up To This Date',
         default=fields.Date.context_today,
-        required=False,
         help="Only timesheets not yet invoiced (and validated, if applicable) up to this date included will be invoiced. If no date is indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.")
     invoicing_timesheet_enabled = fields.Boolean(default=_default_invoicing_timesheet_enabled)
 
