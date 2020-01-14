@@ -97,9 +97,6 @@ class StockScrap(models.Model):
             raise UserError(_('You cannot delete a scrap which is done.'))
         return super(StockScrap, self).unlink()
 
-    def _get_origin_moves(self):
-        return self.picking_id and self.picking_id.move_lines.filtered(lambda x: x.product_id == self.product_id)
-
     def _prepare_move_values(self):
         self.ensure_one()
         location_id = self.location_id.id
