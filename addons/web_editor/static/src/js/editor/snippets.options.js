@@ -8,7 +8,6 @@ var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
 var weWidgets = require('wysiwyg.widgets');
-const ImageManager = require('web_editor.ImageManager');
 const MutexedDropPrevious = require('web.concurrency').MutexedDropPrevious;
 
 var qweb = core.qweb;
@@ -1071,113 +1070,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
-const ImagepickerUserValueWidget = UserValueWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
-    events: {
-        'click .o_we_edit_image': '_onEditImage',
-        'click .o_we_remove_image': '_onRemoveImage',
-        'input input.custom-range': '_onQualityChange',
-    },
-
-    /**
-     * @override
-     */
-    getMethodsParams: function (methodName) {
-        return _.extend({isVideo: this.isVideo}, this._super(...arguments));
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when the edit background button is clicked.
-     *
-     * @private
-     */
-    _onEditImage: function (ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
-        dummyEl.src = this._value;
-        if (this.isVideo) {
-            // Allows the mediaDialog to select the video tab immediately.
-            dummyEl.classList.add('media_iframe_video');
-        }
-        const $editable = this.$target.closest('.o_editable');
-        const mediaDialog = new weWidgets.MediaDialog(this, {
-            noIcons: true,
-            noDocuments: true,
-            noVideos: !this.allowVideos,
-            isForBgVideo: true,
-            res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),
-            firstFilters: this.firstFilters,
-        }, dummyEl).open();
-        mediaDialog.on('save', this, data => {
-            if (data.bgVideoSrc) {
-                this._value = data.bgVideoSrc;
-                this.isVideo = true;
-            } else {
-                // Accessing the value directly through dummyEl.src converts the url to absolute
-                // using getAttribute allows us to keep the url as it was inserted in the DOM
-                // which can be useful to compare it to values stored in db.
-                this._value = dummyEl.getAttribute('src');
-                this.isVideo = false;
-            }
-            this._notifyValueChange(false);
-        });
-    },
-    /**
-     * Called when the remove background button is clicked.
-     *
-     * @private
-     */
-    _onRemoveImage: function (ev) {
-        this._value = '';
-        this.isVideo = false;
-        this._notifyValueChange(false);
-    },
-    /**
-     * Called when the alter image button is clicked.
-     *
-     * @private
-     */
-    _onAlterImage: async function (ev) {
-        const img = document.createElement('img');
-        this.originalValue = this._value;
-        await new Promise((resolve, reject) => {
-            img.addEventListener('load', resolve);
-            img.addEventListener('error', reject);
-            img.src = this._value || null;
-        }).then(console.log).catch(console.log);
-        const cv = document.createElement('canvas');
-        cv.width = img.naturalWidth;
-        cv.height = img.naturalHeight;
-        cv.getContext('2d').drawImage(img, 0, 0);
-        this.cv = cv;
-        this.mutex = new MutexedDropPrevious();
-        this.$('.o_we_alter_image').addClass('d-none');
-        this.$('.o_we_alter_image_options').addClass('d-flex');
-    },
-    _onApplyAlter: function () {
-        this.$('.o_we_alter_image').removeClass('d-none');
-        this.$('.o_we_alter_image_options').removeClass('d-flex');
-        this._notifyValueChange(false);
-    },
-    _onDiscardAlter: function () {
-        this.$('.o_we_alter_image').removeClass('d-none');
-        this.$('.o_we_alter_image_options').removeClass('d-flex');
-        this._value = this.originalValue;
-        this._notifyValueChange('reset');
-    },
-    _onQualityChange: function (ev) {
-        this._value = this.cv.toDataURL('image/jpeg', +ev.target.value / 100);
-        // Preview mode because we don't want to record undo
-        // (also, that would crash because summernote is trying to restore selection on input type range which doesn't support it.)
-        this._notifyValueChange(true);
-    },
-});
-
 const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     events: { // Explicitely not consider all InputUserValueWidget events
         'blur input': '_onInputBlur',
@@ -1309,7 +1201,6 @@ const userValueWidgetsRegistry = {
     'we-multi': MultiUserValueWidget,
     'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
-    'we-imagepicker': ImagepickerUserValueWidget,
 };
 
 /**
@@ -1959,7 +1850,9 @@ const SnippetOptionWidget = Widget.extend({
 
         const validMethodNames = [];
         for (const key in this) {
-            validMethodNames.push(key);
+            if (typeof this[key] === 'function') {
+                validMethodNames.push(key);
+            }
         }
         this._userValueWidgets.forEach(widget => {
             widget.loadMethodsData(validMethodNames);
@@ -2344,44 +2237,54 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     events: _.extend({}, SnippetOptionWidget.prototype.events || {}, {
         'input .custom-range': '_onQualityChange',
     }),
+    // Static default image settings.
+    defaultSettings: Object.freeze({
+        quality: 100,
+        filter: '#00000000',
+    }),
 
     /**
      * @override
      */
-    willStart: function () {
-        const $el = this._super(...arguments);
-        this.img = document.createElement('img');
-        this.quality = 100;
-        return $el;
-    },
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-        this.allowVideos = this.el.dataset.allowVideos;
-        this.firstFilters = (this.el.dataset.firstFilters || '').split(',').filter(s => s !== '');
-        // We don't want to update the preview for every intermediate value if
-        // the user drags the input thumb.
+    willStart: async function () {
+        const _super = this._super.bind(this);
         this._onQualityChange = _.debounce(this._onQualityChange.bind(this), 200);
-        this._loadDataFromTarget();
-        await this.applyOptions(false);
+        this.settings = await this._loadDataFromTarget();
+        await this._changeSrc(await this._applyOptions());
+        await _super(...arguments);
     },
     /**
      * @override
      */
-    cleanForSave: function () {
+    cleanForSave: async function () {
         this._tagElement();
+        // FIXME: make new route that will take originalSrc to determine model, id.
+        // and delete the previous attachment in that slot if applicable.
+        const dataURL = await this._applyOptions();
+        if (dataURL === this.settings.originalSrc) {
+            return;
+        }
+        const $editable = this.$target.closest('.o_editable');
+        const newAttachment = await this._rpc({
+            route: '/web_editor/attachment/add_data',
+            params: {
+                'name': 'dataURL_attachment',
+                'data': dataURL.split(',')[1],
+                'res_id': $editable.data('oe-id'),
+                'res_model': $editable.data('oe-model'),
+            },
+        });
+        await this._changeSrc(`/web/image/${newAttachment.id}/${newAttachment.name}`);
     },
     /**
-    * @override
-    */
+     * @override
+     */
     updateUI: async function () {
         await this._super(...arguments);
-        this._acquireUIElements();
         this._updateWeight();
-        this.$el.find('.o_we_quality_option, we-select, we-colorpicker')
-            .toggleClass('d-none', !this.canModifyImage);
+        this.$el.find('input.custom-range').val(this.settings.quality);
+        // Quality option is not a UserValueWidget so visibility is manual.
+        this.$el.find('.o_we_quality_option').toggleClass('d-none', !this.canModifyImage);
     },
 
     //--------------------------------------------------------------------------
@@ -2389,56 +2292,72 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Handles changes to the width select.
-     *
-     * @private
-     * @see this.selectClass for parameters
-     */
-    selectWidth: function (previewMode, value, $opt) {
-        // FIXME: stub
-    },
-    /**
      * Opens a media dialog to pick a different image.
-     *
-     * @private
      */
     editImage: function (ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
-        dummyEl.src = this._value;
-        if (this.isVideo) {
-            // Allows the mediaDialog to select the video tab immediately.
-            dummyEl.classList.add('media_iframe_video');
-        }
-        const $editable = this.$target.closest('.o_editable');
-        const mediaDialog = new weWidgets.MediaDialog(this, {
-            noIcons: true,
-            noDocuments: true,
-            noVideos: !this.allowVideos,
-            isForBgVideo: true,
-            res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),
-            firstFilters: this.firstFilters,
-        }, dummyEl).open();
-        mediaDialog.on('save', this, data => {
-            if (data.bgVideoSrc) {
-                this.changeSrc(false, data.bgVideoSrc, {isVideo: true});
-            } else {
-                this.settings.originalSrc = dummyEl.getAttribute('src');
-                this.changeSrc(false, this.settings.originalSrc, {isVideo: false});
+        return new Promise(resolve => {
+            // Need a dummy element for the media dialog to modify.
+            const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
+            dummyEl.src = this._value;
+            if (this.isVideo) {
+                // Allows the mediaDialog to select the video tab immediately.
+                dummyEl.classList.add('media_iframe_video');
             }
+            const $editable = this.$target.closest('.o_editable');
+            const mediaDialog = new weWidgets.MediaDialog(this, {
+                noIcons: true,
+                noDocuments: true,
+                noVideos: !this.allowVideos,
+                isForBgVideo: true,
+                res_model: $editable.data('oe-model'),
+                res_id: $editable.data('oe-id'),
+                firstFilters: this.firstFilters,
+            }, dummyEl).open();
+            mediaDialog.on('save', this, async data => {
+                if (data.bgVideoSrc) {
+                    // FIXME: review this
+                    // this._changeSrc(data.bgVideoSrc, {isVideo: true});
+                } else {
+                    const originalSrc = dummyEl.getAttribute('src');
+                    await this._changeSrc(originalSrc);
+                    const width = await this._computeOptimizedWidth(originalSrc);
+                    this.settings = _.defaults({originalSrc, width, quality: 80}, this.defaultSettings);
+                    await this._rerenderXML();
+                    this.$el.find('input.custom-range').val(this.settings.quality);
+                    await this._changeSrc(await this._applyOptions());
+                }
+                resolve();
+            });
+            mediaDialog.on('cancel', this, resolve);
         });
-    },
-    changeSrc: function () {
-        throw new Error('Options extending ImageHandlerOption should implement the changeSrc method.');
     },
     /**
      * Removes the currently set image.
-     *
-     * @private
      */
-    removeImage: function (ev) {
-        this.changeSrc('', false);
+    removeImage: async function (ev) {
+        await this._changeSrc('');
+    },
+    /**
+     * Puts a color filter on the image.
+     */
+    filter: async function (previewMode, widgetValue, params) {
+        switch (previewMode) {
+            case false:
+                this.prevFilter = widgetValue;
+                break;
+            case 'reset':
+                widgetValue = this.prevFilter;
+                break;
+        }
+        this.settings.filter = widgetValue || this.defaultSettings.filter;
+        await this._changeSrc(await this._applyOptions(), previewMode);
+    },
+    /**
+     * Puts a color filter on the image.
+     */
+    width: async function (previewMode, widgetValue, params) {
+        this.settings.width = parseInt(widgetValue);
+        await this._changeSrc(await this._applyOptions());
     },
 
     //--------------------------------------------------------------------------
@@ -2446,32 +2365,159 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Acquire the UI elements that need to be updated.
-     *
-     * @private
+     * @override
      */
-    _acquireUIElements: function () {
-        this.$optimizeOption = this.$el.find('.o_we_optimize_option');
-        this.$qualityOption = this.$el.find('.o_we_quality_option');
-        this.$qualityInput = this.$qualityOption.find('input');
-        this.$fileSize = this.$el.find('.o_we_image_file_size');
-        this.$widthSelect = this.$el.find('we-select');
+    _computeWidgetState: function (methodName, params) {
+        const {filter, originalSrc, width} = this.settings;
+        switch (methodName) {
+            case 'filter':
+                return filter;
+            case 'editImage':
+                return originalSrc ? 'true' : '';
+            case 'width':
+                return width;
+        }
+        return this._super(...arguments);
     },
     /**
-     * Updates the selection with the available widths.
+     * @override
+     */
+    _computeWidgetVisibility: function (widgetName, params) {
+        if (['filter', 'width'].includes(widgetName)) {
+            return this.canModifyImage;
+        } else if (widgetName === 'remove') {
+            return !!this.settings.originalSrc;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Called by the option when the image src needs to be updated,
+     * if you extend this option you HAVE to override this method.
+     */
+    _changeSrc: async function (value, previewMode) {
+        if (!value && !previewMode) {
+            this.settings = _.extend({}, this.defaultSettings);
+            this.canModifyImage = false;
+        }
+    },
+    /**
+     * Applies all selected options on the original image and call _changeSrc
+     * with a dataURL containing the result.
+     *
+     * @private
+     * @returns {string} URL to the new image (or original URL if incompatible)
+     */
+    _applyOptions: async function () {
+        const {quality, originalSrc, width, filter} = this.settings;
+        this.canModifyImage = true;
+        try {
+            const img = await this._loadImage(originalSrc);
+            const {naturalWidth, naturalHeight} = img;
+            if (naturalWidth === 0) {
+                throw new Error(`Couldn't load image: ${img.src}`);
+            }
+            const canvas = document.createElement('canvas');
+            // Width
+            this.originalWidth = naturalWidth;
+            canvas.width = width;
+            canvas.height = naturalHeight * canvas.width / naturalWidth;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, naturalWidth, naturalHeight, 0, 0, canvas.width, canvas.height);
+            // Color filter
+            ctx.fillStyle = this._colorToCss(filter);
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Quality
+            const dataURL = canvas.toDataURL('image/jpeg', quality / 100);
+            this.weight = dataURL.split(',')[1].length / 4 * 3;
+            return dataURL;
+        } catch (error) {
+            // Can't load image for whatever reason (usually an invalid src) OR
+            // SecurityError, canvas is tainted with cross-origin data,
+            // so we cannot read the dataURL. Need to disable options.
+            console.warn(error);
+            this.canModifyImage = false;
+            return originalSrc;
+        }
+    },
+    /**
+     * Fills the width select with the available widths.
+     *
+     * @override
+     */
+    _renderCustomXML: async function (uiFragment) {
+        const widthSelect = uiFragment.querySelector('.o_we_width_select');
+        const availableWidths = await this._computeAvailableWidths();
+        Object.entries(availableWidths).forEach(([width, labels]) => {
+            widthSelect.appendChild($(`<we-button data-width="${width}">${width} ${labels.length ? `(${labels.join(', ')})` : ''}</we-button>`)[0]);
+        });
+    },
+    /**
+     * Returns an object containing the available widths for the image, where
+     * the keys are the widths themselves, and values are an array of labels.
      *
      * @private
      */
-    _updateWidthSelection: async function () {
-        // FIXME: stub
-        // const availableWidths = this.imageManager.computeAvailableWidths();
-        // await this._rerenderXML(() => {
-        //     const $xml = $(qweb.render('web_editor.image_quality_option'));
-        //     $xml.find('we-select').append(_.map(availableWidths, (labels, width) =>
-        //         $(`<we-button data-select-width="${width}">${width} ${labels.length ? `(${labels.join(', ')})` : ''}</we-button>`)
-        //     ));
-        //     return this.$originalUIElements.clone(true).add($xml);
-        // });
+    _computeAvailableWidths: async function () {
+        const {originalSrc} = this.settings;
+        const originalWidth = (await this._loadImage(originalSrc)).naturalWidth;
+        const optimizedWidth = await this._computeOptimizedWidth(originalSrc);
+        const widths = [128, 256, 512, 1024, 1920, optimizedWidth, originalWidth];
+        const widthsAndLabels = Object.fromEntries(widths.map(w => [w, []]));
+        widthsAndLabels[optimizedWidth].push(_t("recommended"));
+        widthsAndLabels[originalWidth].push(_t("original"));
+        Object.keys(widthsAndLabels).forEach(width => {
+            if (width > originalWidth) {
+                delete widthsAndLabels[width];
+            }
+        });
+        return widthsAndLabels;
+    },
+    /**
+     * Computes the image's maximum display width.
+     *
+     * @private
+     */
+    _computeOptimizedWidth: function () {
+        const displayWidth = this.$target[0].clientWidth;
+        // If the image is in a column, it might get bigger on smaller screens.
+        // We use col-lg for this in most (all?) snippets.
+        if (this.$target.closest('[class*="col-lg"]').length) {
+            // A container's maximum inner width is 690px on the md breakpoint
+            // Might want to extract those values from the css somehow?
+            if (this.$target.closest('.container').length) {
+                return Math.min(1920, Math.max(displayWidth, 690));
+            }
+            // A container-fluid's max inner width is 962px on the md breakpoint
+            return Math.min(1920, Math.max(displayWidth, 962));
+        }
+        // If it's not in a col-lg, it's *probably* not going to change size depending on breakpoints
+        return displayWidth;
+    },
+    /**
+     * Saves the edit data onto the target as data attributes.
+     *
+     * @private
+     */
+    _tagElement: function () {
+        ['quality', 'originalSrc', 'filter'].forEach(property => {
+            delete this.$target[0].dataset[property];
+            if (this.settings[property] !== this.defaultSettings[property]) {
+                this.$target[0].dataset[property] = this.settings[property];
+            }
+        });
+    },
+    /**
+     * Loads the edit data from the target.
+     *
+     * @private
+     */
+    _loadDataFromTarget: async function () {
+        const settings = {};
+        ['quality', 'originalSrc', 'filter'].forEach(property => {
+            settings[property] = this.$target[0].dataset[property];
+        });
+        _.defaults(settings, this.defaultSettings);
+        return settings;
     },
     /**
      * Updates the image's weight in the UI.
@@ -2479,84 +2525,35 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _updateWeight: async function () {
-        this.$fileSize.text(`${(this.weight / 1024).toFixed(2)}kb`);
-    },
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        switch (methodName) {
-            case 'filter':
-                return this.settings.filter;
-        }
-        return this._super(...arguments);
+        this.$el.find('.o_we_image_file_size')
+            .text(`${(this.weight / 1024).toFixed(0)} kb`);
     },
 
     //--------------------------------------------------------------------------
-    // Handlers
+    // Utils
     //--------------------------------------------------------------------------
 
     /**
-     * Handles changes to the quality range input.
+     * Creates an img element and returns a promise that resolves to it once the
+     * image is loaded.
      *
      * @private
      */
-    _onQualityChange: async function (ev) {
-        this.settings.quality = ev.target.value;
-        await this.applyOptions();
-        this._updateWeight();
-    },
-    /**
-     * Applies all selected options on the original image and call changeSrc
-     * with an src to the result.
-     *
-     * @private
-     * @param {true|false|'reset'} previewMode
-     */
-    applyOptions: async function (previewMode) {
-        const {quality, originalSrc} = this.settings;
-        this.canModifyImage = true;
+    _loadImage: async function (src, img = document.createElement('img')) {
         try {
             await new Promise((resolve, reject) => {
-                this.img.addEventListener('load', resolve, {once: true});
-                this.img.addEventListener('error', reject, {once: true});
-                this.img.src = originalSrc;
+                img.addEventListener('load', resolve, {once: true});
+                img.addEventListener('error', reject, {once: true});
+                img.src = src;
             });
-        } catch (error) {
-            console.error('The image couldn\'t be loaded', error.target);
-            this.canModifyImage = false;
-            return;
+        } catch (e) {
+            console.warn(e);
         }
-        const canvas = document.createElement('canvas');
-        canvas.width = this.img.naturalWidth;
-        canvas.height = this.img.naturalHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(this.img, 0, 0);
-        // Canvas now contains copy of the image, start modifications
-        // Color filter:
-        ctx.fillStyle = this._colorToCss(this.settings.filter);
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Apply quality and set as current image src
-        let dataURL = '';
-        try {
-            dataURL = canvas.toDataURL('image/jpeg', quality / 100);
-        } catch (error) {
-            // SecurityError, canvas is tainted with cross-origin data,
-            // need to disable options.
-            console.log('SecurityError, this image shouldn\'t have options available');
-            this.canModifyImage = false;
-            return;
-        }
-        this.weight = dataURL.split(',')[1].length / 4 * 3;
-        this.changeSrc(previewMode, dataURL);
-    },
-    filter: function (previewMode, widgetValue, params) {
-        this.settings.filter = widgetValue;
-        return this.applyOptions(previewMode);
+        return img;
     },
     /**
-     * Ensures the color is an actual css color. In case of a color variable,
-     * the color will be mapped to hexa.
+     * Converts a color from the colorpicker widget to a css color usable by
+     * the CanvasRenderingContext2D.
      *
      * @private
      * @param {string} color
@@ -2569,50 +2566,50 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const style = window.getComputedStyle(document.documentElement);
         return style.getPropertyValue('--' + color).trim();
     },
-    _tagElement: function () {
-        ['quality', 'originalSrc', 'filter'].forEach(property => {
-            if (this.settings[property] !== this.initialSettings[property]) {
-                this.$target[0].dataset[property] = this.settings[property];
-            }
-        });
-    },
-    _loadDataFromTarget: function () {
-        this.initialSettings = {};
-        ['quality', 'originalSrc', 'filter'].forEach(property => {
-            this.initialSettings[property] = this.$target[0].dataset[property];
-        });
-        _.defaults(this.initialSettings, {
-            quality: 100,
-            filter: '#00000000',
-        });
-        this.settings = _.extend({}, this.initialSettings);
-        this.$el.find('input.custom-range').val(this.settings.quality);
+
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles changes to the quality range input. Since this doesn't use a
+     * UserValueWidget it needs to update the UI manually.
+     *
+     * @private
+     */
+    _onQualityChange: async function (ev) {
+        this.settings.quality = parseInt(ev.target.value);
+        await this._changeSrc(await this._applyOptions());
+        this._updateWeight();
     },
 });
 /**
  * Handles the edition of non-background images.
  */
 registry.Image = ImageHandlerOption.extend({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
-    changeSrc: function (previewMode, src) {
-        this.$target[0].src = src;
+    _changeSrc: async function (src) {
+        await this._super(...arguments);
+        await this._loadImage(src, this.$target[0]);
     },
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
-        if (methodName === 'src') {
-            return this.$target.attr('src');
+    _loadDataFromTarget: async function () {
+        const settings = await this._super(...arguments);
+        settings.initialSrc = this.$target[0].getAttribute('src');
+        if (!settings.originalSrc) {
+            settings.originalSrc = settings.initialSrc;
         }
-        return this._super(...arguments);
-    },
-    _loadDataFromTarget: function () {
-        this._super(...arguments);
-        if (!this.settings.originalSrc) {
-            this.settings.originalSrc = this.$target[0].src;
-        }
+        settings.width = this.$target[0].naturalWidth;
+        return settings;
     },
 });
 /**
@@ -2627,30 +2624,28 @@ registry.background = ImageHandlerOption.extend({
         // Initialize background and events
         this.bindBackgroundEvents();
     },
-    _loadDataFromTarget: function () {
-        this._super(...arguments);
-        if (!this.settings.originalSrc) {
-            this.settings.originalSrc = this._getSrcFromCssValue();
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
     /**
-     * Handles a background change.
-     *
-     * @see this.selectClass for parameters
+     * @override
      */
-    changeSrc: async function (previewMode, src, params) {
-        this._setCustomBackground(src, previewMode);
+    cleanForSave: async function () {
+        if (this.__customImageSrc === '') {
+            this.settings = _.extend({}, this.defaultSettings);
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    setTarget: async function () {
+        await this._super(...arguments);
+        // TODO should be automatic for all options as equal to the start method
+        this.bindBackgroundEvents();
+    },
     /**
      * Attaches events so that when a background-color is set, the background
      * image is removed.
@@ -2662,18 +2657,80 @@ registry.background = ImageHandlerOption.extend({
         this.$target.off('.background-option')
             .on('background-color-event.background-option', this._onBackgroundColorUpdate.bind(this));
     },
-    /**
-     * @override
-     */
-    setTarget: async function () {
-        await this._super(...arguments);
-        // TODO should be automatic for all options as equal to the start method
-        this.bindBackgroundEvents();
-        this.img.src = this._getSrcFromCssValue();
-    },
 
     //--------------------------------------------------------------------------
     // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _changeSrc: async function (src, previewMode = false) {
+        await this._super(...arguments);
+        this._setCustomBackground(src, previewMode);
+    },
+    /**
+     * For backgrounds, the display width is usually smaller than the maximum
+     * display width, so we override this to return the original image's width
+     * capped at 1920.
+     *
+     * @override
+     */
+    _computeOptimizedWidth: async function (src) {
+        const naturalWidth = (await this._loadImage(src)).naturalWidth;
+        return Math.min(1920, naturalWidth);
+    },
+    /**
+     * @override
+     */
+    _loadDataFromTarget: async function () {
+        const settings = await this._super(...arguments);
+        settings.initialSrc = this._getSrcFromCssValue();
+        if (!settings.originalSrc) {
+            settings.originalSrc = settings.initialSrc;
+        }
+        settings.width = (await this._loadImage(settings.initialSrc)).naturalWidth;
+        return settings;
+    },
+    /**
+     * Sets the given value as custom background image.
+     *
+     * @private
+     * @param {string} value
+     * @returns {Promise}
+     */
+    _setCustomBackground: async function (value, previewMode) {
+        switch (previewMode) {
+            case false:
+                this.__customImageSrc = value;
+                break;
+            case 'reset':
+                value = this.__customImageSrc;
+                break;
+        }
+        if (value) {
+            this.$target.css('background-image', `url('${value}')`);
+            this.$target.addClass('oe_img_bg');
+        } else {
+            this.$target.css('background-image', '');
+            this.$target.removeClass('oe_img_bg');
+        }
+        // This is called once in the willStart, at which point this._methodsNames
+        // isn't yet loaded, and snippet_option_update relies on them.
+        if (this.$el) {
+            await new Promise(resolve => {
+                // Will update the UI of the correct widgets for all options
+                // related to the same $target/editor
+                this.trigger_up('snippet_option_update', {
+                    previewMode: previewMode,
+                    onSuccess: resolve,
+                });
+            });
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Utils
     //--------------------------------------------------------------------------
 
     /**
@@ -2684,46 +2741,9 @@ registry.background = ImageHandlerOption.extend({
      * @param {string} value
      * @returns {string}
      */
-    _getSrcFromCssValue: function (value) {
-        if (value === undefined) {
-            value = this.$target[0].style.backgroundImage;
-        }
+    _getSrcFromCssValue: function (value = this.$target[0].style.backgroundImage) {
         var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
         return value && value.replace(srcValueWrapper, '') || '';
-    },
-    /**
-     * Sets the given value as custom background image.
-     *
-     * @private
-     * @param {string} value
-     * @returns {Promise}
-     */
-    _setCustomBackground: async function (value, previewMode) {
-        if (value) {
-            this.$target.css('background-image', `url('${value}')`);
-            this.$target.addClass('oe_img_bg');
-        } else {
-            this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg');
-        }
-        await new Promise(resolve => {
-            // Will update the UI of the correct widgets for all options
-            // related to the same $target/editor
-            this.trigger_up('snippet_option_update', {
-                previewMode: previewMode,
-                onSuccess: () => resolve(),
-            });
-        });
-    },
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName) {
-        switch (methodName) {
-            case 'src':
-                return this._getSrcFromCssValue();
-        }
-        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -2745,10 +2765,7 @@ registry.background = ImageHandlerOption.extend({
         if (ev.currentTarget !== ev.target) {
             return false;
         }
-        if (previewMode === false) {
-            this.__customImageSrc = undefined;
-        }
-        await this.background(previewMode, '', {});
+        await this._changeSrc('', previewMode);
         return true;
     },
 });

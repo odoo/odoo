@@ -219,13 +219,12 @@ var FileWidget = SearchableMediaWidget.extend({
      */
     search: function (needle, noRender) {
         var self = this;
-        const domain = this._getAttachmentsDomain(needle);
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
             args: [],
             kwargs: {
-                domain: domain,
+                domain: this._getAttachmentsDomain(needle),
                 fields: ['name', 'description', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'is_favorite'],
                 order: [{name: 'create_date', asc: false}],
                 context: this.options.context,
@@ -321,7 +320,7 @@ var FileWidget = SearchableMediaWidget.extend({
             ['res_model', '=', this.options.res_model],
             ['res_id', '=', this.options.res_id | 0],
         ];
-        // if the records is not yet created, do not see the documents of other users
+        // if the record is not yet created, do not see the documents of other users
         if (!this.options.res_id) {
             attachedDocumentDomain.unshift('&');
             attachedDocumentDomain.push(['create_uid', '=', this.options.user_id]);
@@ -342,7 +341,7 @@ var FileWidget = SearchableMediaWidget.extend({
         domain = ['|', ['public', '=', true]].concat(domain);
 
         // The following are restrictions on the matched set, they add nothing:
-        // Must match the desired mime types
+        // Must match one of the desired mime types
         domain = domain.concat(this.options.mimetypeDomain);
         // Must match the search string
         if (needle && needle.length) {
@@ -409,11 +408,9 @@ var FileWidget = SearchableMediaWidget.extend({
             this._renderExisting(attachments.map(attachment => {
                 // Use a resizing url for binary attachments so they load faster
                 if (attachment.type === 'binary') {
-                    return _.extend(
-                        {},
-                        attachment,
-                        {thumbnail: `/web/image/${attachment.id}/${encodeURIComponent(attachment.name)}?width=292`},
-                    );
+                    return _.extend({
+                        thumbnail: `/web/image/${attachment.id}/${encodeURIComponent(attachment.name)}?width=292`
+                    }, attachment);
                 }
                 return attachment;
             }))
@@ -666,7 +663,7 @@ var FileWidget = SearchableMediaWidget.extend({
                 ids: [id],
             },
         });
-        ev.currentTarget.classList.toggle('active');
+        ev.currentTarget.classList.toggle('active', isFavorite);
         const attachment = _.findWhere(this.attachments, {id: id});
         attachment.is_favorite = isFavorite;
     },

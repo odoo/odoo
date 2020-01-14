@@ -105,16 +105,16 @@
 <template id="option_imagepicker">
     <we-row t-att-string="title" class="o_we_inline">
         <we-button class="o_we_crop_image fa fa-fw fa-crop" data-crop-image="" data-no-preview="true"/>
-        <we-button class="o_we_edit_image fa fa-fw fa-edit" data-edit-image="" t-att-data-allow-videos="allow_videos" data-no-preview="true"/>
-        <we-button class="o_we_remove_image fa fa-fw fa-times" data-remove-image="" data-no-preview="true"/>
+        <we-button class="o_we_edit_image fa fa-fw fa-edit" data-edit-image="true" t-att-data-allow-videos="allow_videos" data-no-preview="true"/>
+        <we-button class="o_we_remove_image fa fa-fw fa-times" data-remove-image="" data-no-preview="true" data-name="remove"/>
     </we-row>
     <we-row string="Quality" class="o_we_inline o_we_quality_option">
         <span class="o_we_image_file_size"/>
         <input class="custom-range pt-0 mt-0" type="range" min="1" max="100"/>
     </we-row>
     <!-- This select is filled at runtime with available widths -->
-    <we-select string="Width" class="o_we_inline" data-no-preview="true"/>
-    <we-colorpicker string="Filter" data-filter=""/>
+    <we-select string="Width" class="o_we_inline o_we_width_select" data-no-preview="true" data-name="width"/>
+    <we-colorpicker string="Filter" data-filter="" data-name="filter"/>
 </template>
 
 <template id="snippet_options">

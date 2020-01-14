@@ -172,7 +172,7 @@ var EditorMenuBar = Widget.extend({
             await this.snippetsMenu.cleanForSave();
         }
 
-        await Promise.all([this._saveCroppedImages(), this._unlinkUnusedOptimizedImages()]);
+        await this._saveCroppedImages();
         await this.rte.save();
 
         if (reload !== false) {
@@ -273,17 +273,6 @@ var EditorMenuBar = Widget.extend({
             }
         });
         return Promise.all(defs);
-    },
-    _unlinkUnusedOptimizedImages: function () {
-        return Promise.all(_.map(this.rte.editable().find('[data-unlink-attachment]'), async img => {
-            console.log("unlinking attachment with id", img.dataset.unlinkAttachment);
-            await this._rpc({
-                model: 'ir.attachment',
-                method: 'unlink',
-                args: [parseInt(img.dataset.unlinkAttachment)],
-            });
-            delete img.dataset.unlinkAttachment;
-        }));
     },
 
     //--------------------------------------------------------------------------

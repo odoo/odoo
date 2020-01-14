@@ -990,7 +990,6 @@ var SnippetsMenu = Widget.extend({
     cleanForSave: async function () {
         await this._activateSnippet(false);
         this.trigger_up('ready_to_clean_for_save');
-        await this._cleanEditors();
         await this._destroyEditors();
 
         this.getEditableArea().find('[contentEditable]')
@@ -1292,13 +1291,8 @@ var SnippetsMenu = Widget.extend({
     /**
      * @private
      */
-    _cleanEditors: function () {
-        return Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.cleanForSave()));
-    },
-    /**
-     * @private
-     */
     _destroyEditors: async function () {
+        await Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.cleanForSave()));
         await Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.destroy()));
         this.snippetEditors.splice(0);
     },

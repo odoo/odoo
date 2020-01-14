@@ -177,10 +177,9 @@ class Web_Editor(http.Controller):
             original = attachment
             attachment = attachment.copy()
             if attachment.url:
-                # Need to make the url unique for this optimization level and size
+                # FIXME: need to handle unsplash attachments!
                 attachment.url += '-q=%sw=%sh=%s' % (quality, width, height)
             attachment.original_id = original
-            attachment.quality = quality
         data = {}
         if name:
             data['name'] = name
@@ -273,6 +272,9 @@ class Web_Editor(http.Controller):
         if data:
             attachment_data['datas'] = data
         elif url:
+            # FIXME: should probably not be doing requests to detect mimetype
+            # if mimetype is only used for filtering it might be fine to always
+            # use image/jpeg even if it's wrong.
             try:
                 req = requests.head(url);
                 attachment_data.update({'mimetype': req.headers['content-type']})
