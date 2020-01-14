@@ -331,7 +331,7 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'fifo'
         for move in self.filtered(lambda move:
                                   move.with_company(move.company_id).product_id.cost_method == 'fifo'
-                                  and float_is_zero(move.product_id.quantity_svl, precision_rounding=move.product_id.uom_id.rounding)):
+                                  and float_is_zero(move.product_id.sudo().quantity_svl, precision_rounding=move.product_id.uom_id.rounding)):
             move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': move._get_price_unit()})
 
     def _get_accounting_data_for_valuation(self):
