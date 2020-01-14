@@ -257,10 +257,6 @@ class StockQuant(models.Model):
             if quant.location_id.usage == 'view':
                 raise ValidationError(_('You cannot take products from or deliver products to a location of type "view".'))
 
-    def _compute_name(self):
-        for quant in self:
-            quant.name = '%s: %s%s' % (quant.lot_id.name or quant.product_id.code or '', quant.quantity, quant.product_id.uom_id.name)
-
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
         if product_id.categ_id.removal_strategy_id:
@@ -741,21 +737,5 @@ class QuantPackage(models.Model):
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 
-    def view_content_package(self):
-        action = self.env['ir.actions.act_window'].for_xml_id('stock', 'quantsact')
-        action['domain'] = [('id', 'in', self._get_contained_quants().ids)]
-        return action
-
     def _get_contained_quants(self):
         return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
-
-    def _get_all_products_quantities(self):
-        '''This function computes the different product quantities for the given package
-        '''
-        # TDE CLEANME: probably to move somewhere else, like in pack op
-        res = {}
-        for quant in self._get_contained_quants():
-            if quant.product_id not in res:
-                res[quant.product_id] = 0
-            res[quant.product_id] += quant.quantity
-        return res

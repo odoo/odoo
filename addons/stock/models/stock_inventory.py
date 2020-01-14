@@ -527,9 +527,6 @@ class InventoryLine(models.Model):
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
 
-    def _refresh_inventory(self):
-        return self[0].inventory_id.action_open_inventory_lines()
-
     def action_refresh_quantity(self):
         filtered_lines = self.filtered(lambda l: l.state != 'done')
         for line in filtered_lines:
