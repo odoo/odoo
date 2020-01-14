@@ -45,6 +45,30 @@ class View(models.Model):
         for view in self:
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
+    def create(self, vals_list):
+        """
+        SOC for ir.ui.view creation. If a view is created without a website_id,
+        it should get one if one is present in the context. Also check that
+        an explicit website_id in create values matches the one in the context.
+        """
+        website_id = self.env.context.get('website_id', False)
+        if not website_id:
+            return super().create(vals_list)
+
+        if 'website_id' not in vals_list:
+            # Automatic addition of website ID during view creation if not
+            # specified but present in the context
+            vals_list['website_id'] = website_id
+        else:
+            # If website ID specified, automatic check that it is the same as
+            # the one in the context. Otherwise raise an error.
+            new_website_id = vals_list['website_id']
+            if not new_website_id:
+                raise ValueError(f"Trying to create a generic view from a website {website_id} environment")
+            elif new_website_id != website_id:
+                raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
+        return super().create(vals_list)
+
     def name_get(self):
         if (not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website')) or \
                 not self._context.get('display_website'):
