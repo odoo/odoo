@@ -1278,12 +1278,11 @@ class AccountMove(models.Model):
             res = {}
             # There are as many tax line as there are repartition lines
             done_taxes = set()
-            done_groups = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes and line.tax_line_id.tax_group_id not in done_groups:
+                if tax_key_add_base not in done_taxes:
                     if line.currency_id != self.company_id.currency_id:
                         amount = self.company_id.currency_id._convert(line.tax_base_amount, line.currency_id, self.company_id, line.date)
                     else:
@@ -1291,7 +1290,6 @@ class AccountMove(models.Model):
                     res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
                     done_taxes.add(tax_key_add_base)
-                    done_groups.add(line.tax_line_id.tax_group_id)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
