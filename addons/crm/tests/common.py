@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
+from odoo.fields import Datetime
 from odoo.tests.common import SavepointCase
 
 INCOMING_EMAIL = """Return-Path: {return_path}
@@ -88,18 +91,24 @@ class TestCrmCommon(MailCase, SavepointCase):
         })
         cls.stage_team1_won = cls.env['crm.stage'].create({
             'name': 'Won',
+            'sequence': 70,
             'team_id': cls.sales_team_1.id,
             'is_won': True,
-            'sequence': 70,
         })
         cls.stage_gen_1 = cls.env['crm.stage'].create({
             'name': 'Generic stage',
             'sequence': 3,
             'team_id': False,
         })
+        cls.stage_gen_won = cls.env['crm.stage'].create({
+            'name': 'Generic Won',
+            'sequence': 30,
+            'team_id': False,
+            'is_won': True,
+        })
 
         cls.lead_1 = cls.env['crm.lead'].create({
-            'name': 'Club Office Furnitures',
+            'name': 'Nibbler Spacecraft Request',
             'type': 'lead',
             'user_id': cls.user_sales_leads.id,
             'team_id': cls.sales_team_1.id,
@@ -119,6 +128,8 @@ class TestCrmCommon(MailCase, SavepointCase):
         cls.contact_1 = cls.env['res.partner'].create({
             'name': 'Philip J Fry',
             'email': 'philip.j.fry@test.example.com',
+            'mobile': '+1 202 555 0122',
+            'phone': False,
             'parent_id': cls.contact_company_1.id,
             'is_company': False,
             'street': 'Actually the sewers',
@@ -136,3 +147,137 @@ class TestCrmCommon(MailCase, SavepointCase):
             'country_id': cls.env.ref('base.us').id,
             'zip': '97648',
         })
+
+    def _create_duplicates(self, lead, count=2):
+        leads = self.env['crm.lead']
+        for x in range(count):
+            leads |= self.env['crm.lead'].create({
+                'name': 'Dup-%02d-%s' % (x+1, lead.name),
+                'type': 'lead',
+                'user_id': False,
+                'team_id': lead.team_id.id,
+                'contact_name': 'Duplicate %02d of %s' % (x+1, lead.contact_name),
+                'email_from': lead.email_from,
+            })
+        return leads
+
+
+class TestLeadConvertCommon(TestCrmCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestLeadConvertCommon, cls).setUpClass()
+        # Sales Team organization
+        # Role: M (team member) R (team manager)
+        # SALESMAN---------------sales_team_1-----sales_team_convert
+        # admin------------------M----------------/
+        # user_sales_manager-----R----------------R
+        # user_sales_leads-------M----------------/
+        # user_sales_salesman----/----------------M
+
+        # Stages Team organization
+        # Name-------------------ST-------------------Sequ
+        # stage_team1_1----------sales_team_1---------1
+        # stage_team1_2----------sales_team_1---------5
+        # stage_team1_won--------sales_team_1---------70
+        # stage_gen_1------------/--------------------3
+        # stage_gen_won----------/--------------------30
+        # stage_team_convert_1---sales_team_convert---1
+
+        cls.sales_team_convert = cls.env['crm.team'].create({
+            'name': 'Convert Sales Team',
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': cls.user_sales_manager.id,
+            'member_ids': [(4, cls.user_sales_salesman.id)],
+        })
+        cls.stage_team_convert_1 = cls.env['crm.stage'].create({
+            'name': 'New',
+            'sequence': 1,
+            'team_id': cls.sales_team_convert.id,
+        })
+
+        cls.lead_1.write({'date_open': Datetime.from_string('2020-01-15 11:30:00')})
+
+        cls.crm_lead_dt_patcher = patch('odoo.addons.crm.models.crm_lead.fields.Datetime', wraps=Datetime)
+        cls.crm_lead_dt_mock = cls.crm_lead_dt_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.crm_lead_dt_patcher.stop()
+        super(TestLeadConvertCommon, cls).tearDownClass()
+
+
+class TestLeadConvertMassCommon(TestLeadConvertCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestLeadConvertMassCommon, cls).setUpClass()
+        # Sales Team organization
+        # Role: M (team member) R (team manager)
+        # SALESMAN-------------------sales_team_1-----sales_team_convert
+        # admin----------------------M----------------/
+        # user_sales_manager---------R----------------R
+        # user_sales_leads-----------M----------------/
+        # user_sales_leads_convert---/----------------M  <-- NEW
+        # user_sales_salesman--------/----------------M
+
+        cls.user_sales_leads_convert = mail_new_test_user(
+            cls.env, login='user_sales_leads_convert',
+            name='Lucien Sales Leads Convert', email='crm_leads_2@test.example.com',
+            company_id=cls.env.ref("base.main_company").id,
+            notification_type='inbox',
+            groups='sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead',
+        )
+        cls.sales_team_convert.write({
+            'member_ids': [(4, cls.user_sales_leads_convert.id)]
+        })
+
+        cls.lead_w_partner = cls.env['crm.lead'].create({
+            'name': 'New1',
+            'type': 'lead',
+            'probability': 10,
+            'user_id': cls.user_sales_manager.id,
+            'stage_id': False,
+            'partner_id': cls.contact_1.id,
+        })
+        cls.lead_w_partner_company = cls.env['crm.lead'].create({
+            'name': 'New1',
+            'type': 'lead',
+            'probability': 15,
+            'user_id': cls.user_sales_manager.id,
+            'stage_id': cls.stage_team1_1.id,
+            'partner_id': cls.contact_company_1.id,
+            'contact_name': 'Hermes Conrad',
+            'email_from': 'hermes.conrad@test.example.com',
+        })
+        cls.lead_w_contact = cls.env['crm.lead'].create({
+            'name': 'LeadContact',
+            'type': 'lead',
+            'probability': 15,
+            'contact_name': 'TestContact',
+            'user_id': cls.user_sales_salesman.id,
+            'stage_id': cls.stage_gen_1.id,
+        })
+        cls.lead_w_email = cls.env['crm.lead'].create({
+            'name': 'LeadEmailAsContact',
+            'type': 'lead',
+            'probability': 15,
+            'email_from': 'contact.email@test.example.com',
+            'user_id': cls.user_sales_salesman.id,
+            'stage_id': cls.stage_gen_1.id,
+        })
+        cls.lead_w_email_lost = cls.env['crm.lead'].create({
+            'name': 'Lost',
+            'type': 'lead',
+            'probability': 15,
+            'email_from': 'strange.from@test.example.com',
+            'user_id': cls.user_sales_leads.id,
+            'stage_id': cls.stage_team1_2.id,
+            'active': False,
+        })
+        for l in (cls.lead_w_partner | cls.lead_w_partner_company | cls.lead_w_contact | cls.lead_w_email | cls.lead_w_email_lost):
+            l._onchange_user_id()
+            l.flush()
