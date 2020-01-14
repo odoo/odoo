@@ -214,3 +214,9 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
+
+    def unlink(self):
+        """ When using documents, on vendor bills the document_number is set manually by the number given from the vendor,
+        the odoo sequence is not used. In this case We allow to delete vendor bills with document_number/move_name """
+        self.filtered(lambda x: x.type in x.get_purchase_types() and x.state in ('draft', 'cancel') and x.l10n_latam_use_documents).write({'name': '/'})
+        return super().unlink()
