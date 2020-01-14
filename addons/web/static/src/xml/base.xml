@@ -28,7 +28,7 @@
 
 <t t-name="OwlDialog" owl="1">
     <Portal target="'body'">
-        <div class="o_dialog" t-on-focus="_onFocus">
+        <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick">
             <div t-if="props.backdrop" class="modal-backdrop show" t-on-click="_onBackdropClick"/>
             <div role="dialog" class="modal"
                 tabindex="-1"
