@@ -9,7 +9,12 @@ odoo.define('web.OwlCompatibility', function () {
      *  2) A legacy widget has to instantiate Owl components
      */
 
-    const { Component, tags } = owl;
+    const { Component, hooks, tags } = owl;
+    const { useSubEnv } = hooks;
+    const { xml } = tags;
+
+    const widgetSymbol = odoo.widgetSymbol;
+    const children = new WeakMap(); // associates legacy widgets with their Owl children
 
     /**
      * Case 1) An Owl component has to instantiate legacy widgets
@@ -252,7 +257,237 @@ odoo.define('web.OwlCompatibility', function () {
         }
     }
 
+
+    /**
+     * Case 2) A legacy widget has to instantiate Owl components
+     * ---------------------------------------------------------
+     *
+     * The WidgetAdapterMixin and the ComponentWrapper are meant to be used
+     * together when an Odoo legacy widget needs to instantiate Owl components.
+     * In this case, the widgets/components hierarchy would look like:
+     *
+     *             Legacy Widget + WidgetAdapterMixin
+     *                          |
+     *                 ComponentWrapper (Owl component)
+     *                          |
+     *                    Owl Component
+     *
+     * In this case, the parent legacy widget must use the WidgetAdapterMixin,
+     * which ensures that Owl hooks (mounted, willUnmount, destroy...) are
+     * properly called on the sub components. Moreover, it must instantiate a
+     * ComponentWrapper, and provide it the Owl component class to use alongside
+     * its props. This wrapper will ensure that the Owl component will be
+     * correctly updated (with willUpdateProps) like it would be if it was embed
+     * in an Owl hierarchy. Moreover, this wrapper automatically redirects all
+     * events triggered by the Owl component (or its descendants) to legacy
+     * custom events (trigger_up) on the parent legacy widget.
+
+     * For example:
+     *      class MyComponent extends Component {}
+     *      MyComponent.template = xml`<div>Owl component with value <t t-esc="props.value"/></div>`;
+     *      const MyWidget = Widget.extend(WidgetAdapterMixin, {
+     *          start() {
+     *              this.component = new ComponentWrapper(this, MyComponent, {value: 44});
+     *              return this.component.mount(this.el);
+     *          },
+     *          update() {
+     *              return this.component.update({value: 45});
+     *          },
+     *      });
+     */
+    const WidgetAdapterMixin = {
+        /**
+         * Calls __callMounted on each sub component, and its descendants (this
+         * function isn't recursive) when the widget is appended into the DOM.
+         */
+        on_attach_callback() {
+            function recursiveCallMounted(component) {
+                for (const key in component.__owl__.children) {
+                    recursiveCallMounted(component.__owl__.children[key]);
+                }
+                component.__callMounted();
+            }
+            for (const component of children.get(this) || []) {
+                recursiveCallMounted(component);
+            }
+        },
+        /**
+         * Calls __callWillUnmount on each sub component (this function is
+         * recursive and thus will be automatically called on its descendants)
+         * when the widget is removed/detached from the DOM.
+         */
+        on_detach_callback() {
+            for (const component of children.get(this) || []) {
+                component.__callWillUnmount();
+            }
+        },
+        /**
+         * Destroys each sub component when the widget is destroyed. We call the
+         * private __destroy function as there is no need to remove the el from
+         * the DOM (will be removed alongside this widget).
+         */
+        destroy() {
+            for (const component of children.get(this) || []) {
+                component.__destroy();
+            }
+            children.delete(this);
+        },
+    };
+    class ComponentWrapper extends Component {
+        /**
+         * Stores the reference of the instance in the parent (in __components).
+         * Also creates a sub environment with a function that will be called
+         * just before events are triggered (see component_extension.js). This
+         * allows to add DOM event listeners on-the-fly, to redirect those Owl
+         * custom (yet DOM) events to legacy custom events (trigger_up).
+         *
+         * @override
+         * @param {Widget|null} parent
+         * @param {Component} Component this is a Class, not an instance
+         * @param {Object} props
+         */
+        constructor(parent, Component, props) {
+            if (parent instanceof Component) {
+                throw new Error('ComponentWrapper must be used with a legacy Widget as parent');
+            }
+            super(null, props);
+            if (parent) {
+                this._register(parent);
+            }
+            useSubEnv({
+                [widgetSymbol]: this._addListener.bind(this)
+            });
+
+            this.parentWidget = parent;
+            this.Component = Component;
+            this.props = props || {};
+            this._handledEvents = new Set(); // Owl events we are redirecting
+        }
+
+        /**
+         * Define (empty) on_attach_callback (resp. on_detach_callback) on the
+         * Wrapper in case the parent would call them, for instance in
+         * on_attach_callback (resp. on_detach_callback). We only do that to
+         * prevent a crash, but the logic is already handled by the mixin.
+         */
+        on_attach_callback() {}
+        on_detach_callback() {}
+
+        /**
+         * Overrides to remove the reference to this component in the parent.
+         *
+         * @override
+         */
+        destroy() {
+            if (this.parentWidget) {
+                const index = children.get(this.parentWidget).indexOf(this);
+                children.get(this.parentWidget).splice(index, 1);
+            }
+            super.destroy();
+        }
+
+        /**
+         * Changes the parent of the wrapper component. This is a function of the
+         * legacy widgets (ParentedMixin), so we have to handle it someway.
+         * It simply removes the reference of this component in the current
+         * parent (if there was one), and adds the reference to the new one.
+         *
+         * We have at least one usecase for this: in views, the renderer is
+         * instantiated without parent, then a controller is instantiated with
+         * the renderer as argument, and finally, setParent is called to set the
+         * controller as parent of the renderer. This implies that Owl renderers
+         * can't trigger events in their constructor.
+         *
+         * @param {Widget} parent
+         */
+        setParent(parent) {
+            if (parent instanceof Component) {
+                throw new Error('ComponentWrapper must be used with a legacy Widget as parent');
+            }
+            this._register(parent);
+            if (this.parentWidget) {
+                const parentChildren = children.get(this.parentWidget);
+                parentChildren.splice(parentChildren.indexOf(this), 1);
+            }
+            this.parentWidget = parent;
+        }
+
+        /**
+         * Updates the props and re-render the component.
+         *
+         * @async
+         * @param {Object} props
+         * @return {Promise}
+         */
+        async update(props = {}) {
+            if (this.__owl__.isDestroyed) {
+                return new Promise(() => {});
+            }
+
+            Object.assign(this.props, props);
+
+            let prom;
+            if (this.__owl__.isMounted) {
+                prom = this.render();
+            } else {
+                // we may not be in the DOM, but actually want to be redrawn
+                // (e.g. we were detached from the DOM, and now we're going to
+                // be re-attached, but we need to be reloaded first). In this
+                // case, we have to fool Owl as it would skip the rendering if
+                // we simply call render.
+                const tmpEl = document.createElement('div');
+                this.el.parentElement.replaceChild(tmpEl, this.el);
+                prom = this.mount(tmpEl, { position: 'self' });
+            }
+            return prom;
+        }
+
+        /**
+         * Adds an event handler that will redirect the given Owl event to an
+         * Odoo legacy event. This function is called just before the event is
+         * actually triggered.
+         *
+         * @private
+         * @param {string} evType
+         */
+        _addListener(evType) {
+            if (this.parentWidget && !this._handledEvents.has(evType)) {
+                this._handledEvents.add(evType);
+                this.el.addEventListener(evType, ev => {
+                    // as the WrappeComponent has the same root node as the
+                    // actual sub Component, we have to check that the event
+                    // hasn't been stopped by that component (it would naturally
+                    // call stopPropagation, whereas it should actually call
+                    // stopImmediatePropagation to prevent from getting here)
+                    if (!ev.cancelBubble) {
+                        ev.stopPropagation();
+                        this.parentWidget.trigger_up(ev.type.replace(/-/g, '_'), ev.detail);
+                    }
+                });
+            }
+        }
+
+        /**
+         * Registers this instance as a child of the given parent in the
+         * 'children' weakMap.
+         *
+         * @private
+         * @param {Widget} parent
+         */
+        _register(parent) {
+            let parentChildren = children.get(parent);
+            if (!parentChildren) {
+                parentChildren = [];
+                children.set(parent, parentChildren);
+            }
+            parentChildren.push(this);
+        }
+    }
+    ComponentWrapper.template = xml`<t t-component="Component" t-props="props"/>`;
+
     return {
         ComponentAdapter,
+        ComponentWrapper,
+        WidgetAdapterMixin,
     };
 });
