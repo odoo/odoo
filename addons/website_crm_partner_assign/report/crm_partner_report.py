@@ -11,12 +11,12 @@ class CrmPartnerReportAssign(models.Model):
     _auto = False
     _description = "CRM Partnership Analysis"
 
-    partner_id = fields.Many2one('res.partner', 'Partner', required=False, readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)
-    activation = fields.Many2one('res.partner.activation', 'Activation', index=True)
+    activation = fields.Many2one('res.partner.activation', 'Activation', index=True, readonly=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
-    date_review = fields.Date('Latest Partner Review')
-    date_partnership = fields.Date('Partnership Date')
+    date_review = fields.Date('Latest Partner Review', readonly=True)
+    date_partnership = fields.Date('Partnership Date', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     nbr_opportunities = fields.Integer('# of Opportunity', readonly=True)
