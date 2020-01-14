@@ -870,34 +870,6 @@ class Lead(models.Model):
 
         return self.sorted(key=opps_key, reverse=reverse)
 
-    def get_duplicated_leads(self, partner_id, include_lost=False):
-        """ Search for opportunities that have the same partner and that arent done or cancelled
-            :param partner_id : partner to search
-        """
-        self.ensure_one()
-        email = self.partner_id.email or self.email_from
-        return self._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
-
-    @api.model
-    def _get_duplicated_leads_by_emails(self, partner_id, email, include_lost=False):
-        """ Search for opportunities that have the same partner and that arent done or cancelled """
-        if not email:
-            return self.env['crm.lead']
-        partner_match_domain = []
-        for email in set(email_split(email) + [email]):
-            partner_match_domain.append(('email_from', '=ilike', email))
-        if partner_id:
-            partner_match_domain.append(('partner_id', '=', partner_id))
-        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
-        if not partner_match_domain:
-            return self.env['crm.lead']
-        domain = partner_match_domain
-        if not include_lost:
-            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
-        else:
-            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
-        return self.search(domain)
-
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
             :param customer : res.partner record
@@ -931,11 +903,61 @@ class Lead(models.Model):
             lead.write(vals)
 
         if user_ids or team_id:
-            self.allocate_salesman(user_ids, team_id)
+            self.handle_salesmen_assignment(user_ids, team_id)
 
         return True
 
-    def _create_lead_partner_data(self, partner_name, is_company=False, parent_id=False):
+    def _get_lead_duplicates(self, partner=None, email=None, include_lost=False):
+        """ Search for leads that seem duplicated based on partner / email.
+
+        :param partner : optional customer when searching duplicated
+        :param email: email (possibly formatted) to search
+        :param boolean include_lost: if True, search for archived leads or
+          active opportunities. If False, search for active and not won leads
+          and opportunities;
+        """
+        if not email:
+            return self.env['crm.lead']
+        partner_match_domain = []
+        for email in set(email_split(email) + [email]):
+            partner_match_domain.append(('email_from', '=ilike', email))
+        if partner:
+            partner_match_domain.append(('partner_id', '=', partner.id))
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
+        if not partner_match_domain:
+            return self.env['crm.lead']
+        domain = partner_match_domain
+        if not include_lost:
+            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+        else:
+            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
+        return self.search(domain)
+
+    def _create_customer(self):
+        """ Create a partner from lead data and link it to the lead.
+
+        :return: newly-created partner browse record
+        """
+        Partner = self.env['res.partner']
+        contact_name = self.contact_name
+        if not contact_name:
+            contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
+
+        if self.partner_name:
+            partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
+        elif self.partner_id:
+            partner_company = self.partner_id
+        else:
+            partner_company = None
+
+        if contact_name:
+            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
+
+        if partner_company:
+            return partner_company
+        return Partner.create(self._prepare_customer_values(self.name, is_company=False))
+
+    def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
         """ Extract data from lead to create a partner.
 
         :param name : furtur name of the partner
@@ -967,107 +989,59 @@ class Lead(models.Model):
             'type': 'contact'
         }
 
-    def _create_lead_partner(self):
-        """ Create a partner from lead data
-            :returns res.partner record
-        """
-        Partner = self.env['res.partner']
-        contact_name = self.contact_name
-        if not contact_name:
-            contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
-
-        if self.partner_name:
-            partner_company = Partner.create(self._create_lead_partner_data(self.partner_name, is_company=True))
-        elif self.partner_id:
-            partner_company = self.partner_id
-        else:
-            partner_company = None
-
-        if contact_name:
-            return Partner.create(self._create_lead_partner_data(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
-
-        if partner_company:
-            return partner_company
-        return Partner.create(self._create_lead_partner_data(self.name, is_company=False))
-
     def _find_matching_partner(self):
-        """ Try to find a matching partner with available information on the Lead.
-            Like the customer's name, email, phone number, etc.
-            :return int partner_id if any, False otherwise
+        """ Try to find a matching partner with available information on the
+        lead, using notably customer's name, email, phone, ...
+
+        :return: partner browse record
         """
         self.ensure_one()
+        partner = self.partner_id
 
-        # find the best matching partner
-        Partner = self.env['res.partner']
-        if self.partner_id:  # a partner is set already
-            return self.partner_id.id
+        if not partner and self.email_from:
+            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
 
-        if self.email_from:  # search through the existing partners based on the lead's email
-            return Partner.search([('email', '=', self.email_from)], limit=1).id
+        if not partner:
+            # search through the existing partners based on the lead's partner or contact name
+            # to be aligned with _create_customer, search on lead's name as last possibility
+            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
+                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
+                if partner:
+                    break
 
-        search_criteria = False
-        if self.partner_name:  # search through the existing partners based on the lead's partner or contact name
-            search_criteria = self.partner_name
-        elif self.contact_name:
-            search_criteria = self.contact_name
-        elif self.name:  # to be aligned with _create_lead_partner, search on lead's name as last possibility
-            search_criteria = self.name
+        return partner
 
-        if search_criteria:
-            return Partner.search([('name', 'ilike', '%' + search_criteria + '%')], limit=1).id
+    def handle_partner_assignment(self, force_partner_id=False, create_missing=True):
+        """ Update customer (partner_id) of leads. Purpose is to set the same
+        partner on most leads; either through a newly created partner either
+        through a given partner_id.
 
-        return False
-
-    def handle_partner_assignation(self, action='create', partner_id=False):
-        """ Handle partner assignation during a lead conversion.
-
-        If action is 'create', create new partner with contact and assign lead to
-        new partner_id. Otherwise assign lead to the specified partner_id
-
-        TDE FIXME: docstring does not match code... code seems a bit random.
-
-        :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
-        :param int partner_id: partner to assign if any
-        :return: dict(lead_id: partner_id)
+        :param int force_partner_id: if set, update all leads to that customer;
+        :param create_missing: for leads without customer, create a new one
+          based on lead information;
         """
-        partner_ids = {}
         for lead in self:
-            if partner_id:
-                lead.partner_id = partner_id
-            if lead.partner_id:
-                partner_ids[lead.id] = lead.partner_id.id
-                continue
-            if action == 'create':
-                partner = lead._create_lead_partner()
-                partner_id = partner.id
-                partner.team_id = lead.team_id
-            partner_ids[lead.id] = partner_id
-        return partner_ids
+            if force_partner_id:
+                lead.partner_id = force_partner_id
+            if not lead.partner_id and create_missing:
+                partner = lead._create_customer()
+                lead.partner_id = partner.id
 
-    def allocate_salesman(self, user_ids=None, team_id=False):
+    def handle_salesmen_assignment(self, user_ids=None, team_id=False):
         """ Assign salesmen and salesteam to a batch of leads.  If there are more
-            leads than salesmen, these salesmen will be assigned in round-robin.
-            E.g.: 4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6).  They
-            will be assigned as followed: L1 - S1, L2 - S2, L3 - S3, L4 - S4,
-            L5 - S1, L6 - S2.
+        leads than salesmen, these salesmen will be assigned in round-robin. E.g.
+        4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6) will assigned as
+        following: L1 - S1, L2 - S2, L3 - S3, L4 - S4, L5 - S1, L6 - S2.
 
-            :param list ids: leads/opportunities ids to process
-            :param list user_ids: salesmen to assign
-            :param int team_id: salesteam to assign
-            :return bool
+        :param list user_ids: salesmen to assign
+        :param int team_id: salesteam to assign
         """
-        index = 0
-        for lead in self:
-            value = {}
-            if team_id:
-                value['team_id'] = team_id
+        update_vals = {'team_id': team_id} if team_id else {}
+        for index, lead in enumerate(self):
             if user_ids:
-                value['user_id'] = user_ids[index]
-                # Cycle through user_ids
-                index = (index + 1) % len(user_ids)
-            if value:
-                lead.write(value)
-        return True
+                update_vals['user_id'] = user_ids[index % len(user_ids)]
+            if update_vals:
+                lead.write(update_vals)
 
     # ------------------------------------------------------------
     # TOOLS
