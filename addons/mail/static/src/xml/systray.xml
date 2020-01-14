@@ -71,7 +71,7 @@
             </div>
         </t>
         <t t-foreach="activities" t-as="activity">
-            <div class="o_mail_preview o_systray_activity" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+            <div class="o_mail_preview o_systray_activity" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" t-att-data-domain="activity.domain" data-filter='my'>
                 <div t-if="activity.icon" class="o_mail_preview_image o_mail_preview_app">
                     <img t-att-src="activity.icon" alt="Activity"/>
                 </div>
@@ -87,7 +87,8 @@
                                     t-att-class="'o_mail_activity_action btn btn-link fa ' + action.icon"
                                     t-att-data-action_xmlid="action.action_xmlid"
                                     t-att-data-res_model="activity.model"
-                                    t-att-data-model_name="activity.name">
+                                    t-att-data-model_name="activity.name"
+                                    t-att-data-domain="activity.domain">
                                 </button>
                             </t>
                         </div>
