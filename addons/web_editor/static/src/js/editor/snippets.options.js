@@ -9,6 +9,7 @@ var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
 var weWidgets = require('wysiwyg.widgets');
 const ImageManager = require('web_editor.ImageManager');
+const MutexedDropPrevious = require('web.concurrency').MutexedDropPrevious;
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -1072,57 +1073,17 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 
 const ImagepickerUserValueWidget = UserValueWidget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
-    tagName: 'we-imagepicker',
     events: {
         'click .o_we_edit_image': '_onEditImage',
         'click .o_we_remove_image': '_onRemoveImage',
-        'click .o_we_alter_image': '_onAlterImage',
-        'click .o_we_apply_alter': '_onApplyAlter',
         'input input.custom-range': '_onQualityChange',
     },
 
     /**
      * @override
      */
-    start: async function () {
-        await this._super(...arguments);
-        const allowedSelector = this.el.dataset.allowVideos;
-        this.firstFilters = (this.el.dataset.firstFilters || '').split(',').filter(s => s !== '');
-        this.allowVideos = allowedSelector ? this.$target.is(allowedSelector) : false;
-
-        this.editImageButton = document.createElement('we-button');
-        this.editImageButton.classList.add('o_we_edit_image', 'fa', 'fa-fw', 'fa-edit');
-
-        this.removeImageButton = document.createElement('we-button');
-        this.removeImageButton.classList.add('o_we_remove_image', 'fa', 'fa-fw', 'fa-times');
-        this.removeImageButton.title = _t("Remove");
-
-        this.alterImageButton = document.createElement('we-button');
-        this.alterImageButton.classList.add('o_we_alter_image', 'fa', 'fa-fw', 'fa-magic');
-        this.alterImageButton.title = _t("Alter");
-
-        this.containerEl.appendChild(this.alterImageButton);
-        this.containerEl.appendChild(this.editImageButton);
-        this.containerEl.appendChild(this.removeImageButton);
-        this.$el.addClass('flex-wrap');
-    },
-    /**
-     * @override
-     */
     getMethodsParams: function (methodName) {
         return _.extend({isVideo: this.isVideo}, this._super(...arguments));
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super(...arguments);
-        [this.removeImageButton, this.alterImageButton].forEach(b => b.classList.toggle('d-none', !this.isActive()));
     },
 
     //--------------------------------------------------------------------------
@@ -1182,31 +1143,38 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _onAlterImage: async function (ev) {
-        this.$('.o_we_alter_image').addClass('d-none');
-        this.$('.o_we_alter_image_options').remove();
-        this.$el.append($(qweb.render('web_editor.image_quality_option')));
         const img = document.createElement('img');
-        img.src = this._value;
-        await new Promise(resolve => img.addEventListener('load', resolve));
+        this.originalValue = this._value;
+        await new Promise((resolve, reject) => {
+            img.addEventListener('load', resolve);
+            img.addEventListener('error', reject);
+            img.src = this._value || null;
+        }).then(console.log).catch(console.log);
         const cv = document.createElement('canvas');
         cv.width = img.naturalWidth;
         cv.height = img.naturalHeight;
         cv.getContext('2d').drawImage(img, 0, 0);
         this.cv = cv;
-        this.mutex = new (require('web.concurrency').MutexedDropPrevious)();
+        this.mutex = new MutexedDropPrevious();
+        this.$('.o_we_alter_image').addClass('d-none');
+        this.$('.o_we_alter_image_options').addClass('d-flex');
     },
     _onApplyAlter: function () {
-        this.$('.o_we_alter_image_options').remove();
         this.$('.o_we_alter_image').removeClass('d-none');
+        this.$('.o_we_alter_image_options').removeClass('d-flex');
+        this._notifyValueChange(false);
+    },
+    _onDiscardAlter: function () {
+        this.$('.o_we_alter_image').removeClass('d-none');
+        this.$('.o_we_alter_image_options').removeClass('d-flex');
+        this._value = this.originalValue;
+        this._notifyValueChange('reset');
     },
     _onQualityChange: function (ev) {
-        this.mutex.exec(async () => {
-            const blob = await new Promise(resolve => this.cv.toBlob(resolve, 'image/jpeg', +ev.target.value / 100));
-            console.log("blob", blob);
-            this._value = URL.createObjectURL(blob);
-            console.log('objurl', this._value);
-            this._notifyValueChange(false);
-        });
+        this._value = this.cv.toDataURL('image/jpeg', +ev.target.value / 100);
+        // Preview mode because we don't want to record undo
+        // (also, that would crash because summernote is trying to restore selection on input type range which doesn't support it.)
+        this._notifyValueChange(true);
     },
 });
 
@@ -2380,18 +2348,30 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @override
      */
+    willStart: function () {
+        const $el = this._super(...arguments);
+        this.img = document.createElement('img');
+        this.quality = 100;
+        return $el;
+    },
+    /**
+     * @override
+     */
     start: async function () {
         await this._super(...arguments);
-        this._acquireUIElements();
+        this.allowVideos = this.el.dataset.allowVideos;
+        this.firstFilters = (this.el.dataset.firstFilters || '').split(',').filter(s => s !== '');
         // We don't want to update the preview for every intermediate value if
         // the user drags the input thumb.
         this._onQualityChange = _.debounce(this._onQualityChange.bind(this), 200);
+        this._loadDataFromTarget();
+        await this.applyOptions(false);
     },
     /**
      * @override
      */
     cleanForSave: function () {
-        return this.imageManager.cleanForSave();
+        this._tagElement();
     },
     /**
     * @override
@@ -2399,13 +2379,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     updateUI: async function () {
         await this._super(...arguments);
         this._acquireUIElements();
-        const options = this.imageManager.getOptions();
-        this.$optimizeOption.toggleClass('d-none', !options.size && !options.quality);
-        this.$widthSelect.toggleClass('d-none', !options.size);
-        this.$qualityOption.toggleClass('d-none', !options.quality);
-
-        this.$qualityInput.val(this.imageManager.quality || 100);
         this._updateWeight();
+        this.$el.find('.o_we_quality_option, we-select, we-colorpicker')
+            .toggleClass('d-none', !this.canModifyImage);
     },
 
     //--------------------------------------------------------------------------
@@ -2419,7 +2395,50 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     selectWidth: function (previewMode, value, $opt) {
-        this.imageManager.changeImageWidth(parseInt(value));
+        // FIXME: stub
+    },
+    /**
+     * Opens a media dialog to pick a different image.
+     *
+     * @private
+     */
+    editImage: function (ev) {
+        // Need a dummy element for the media dialog to modify.
+        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
+        dummyEl.src = this._value;
+        if (this.isVideo) {
+            // Allows the mediaDialog to select the video tab immediately.
+            dummyEl.classList.add('media_iframe_video');
+        }
+        const $editable = this.$target.closest('.o_editable');
+        const mediaDialog = new weWidgets.MediaDialog(this, {
+            noIcons: true,
+            noDocuments: true,
+            noVideos: !this.allowVideos,
+            isForBgVideo: true,
+            res_model: $editable.data('oe-model'),
+            res_id: $editable.data('oe-id'),
+            firstFilters: this.firstFilters,
+        }, dummyEl).open();
+        mediaDialog.on('save', this, data => {
+            if (data.bgVideoSrc) {
+                this.changeSrc(false, data.bgVideoSrc, {isVideo: true});
+            } else {
+                this.settings.originalSrc = dummyEl.getAttribute('src');
+                this.changeSrc(false, this.settings.originalSrc, {isVideo: false});
+            }
+        });
+    },
+    changeSrc: function () {
+        throw new Error('Options extending ImageHandlerOption should implement the changeSrc method.');
+    },
+    /**
+     * Removes the currently set image.
+     *
+     * @private
+     */
+    removeImage: function (ev) {
+        this.changeSrc('', false);
     },
 
     //--------------------------------------------------------------------------
@@ -2444,6 +2463,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _updateWidthSelection: async function () {
+        // FIXME: stub
         // const availableWidths = this.imageManager.computeAvailableWidths();
         // await this._rerenderXML(() => {
         //     const $xml = $(qweb.render('web_editor.image_quality_option'));
@@ -2459,15 +2479,15 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _updateWeight: async function () {
-        const weight = await this.imageManager.getImageWeight();
-        this.$fileSize.text(`${(weight / 1024).toFixed(2)}kb`);
+        this.$fileSize.text(`${(this.weight / 1024).toFixed(2)}kb`);
     },
     /**
      * @override
      */
     _computeWidgetState: function (methodName, params) {
-        if (methodName === 'selectWidth') {
-            return this.imageManager.width;
+        switch (methodName) {
+            case 'filter':
+                return this.settings.filter;
         }
         return this._super(...arguments);
     },
@@ -2481,19 +2501,103 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      *
      * @private
      */
-    _onQualityChange: function (ev) {
-        // % 100 because we want 0 when quality is set to 100.
-        this.imageManager.changeImageQuality(parseInt(ev.target.value) % 100);
+    _onQualityChange: async function (ev) {
+        this.settings.quality = ev.target.value;
+        await this.applyOptions();
         this._updateWeight();
+    },
+    /**
+     * Applies all selected options on the original image and call changeSrc
+     * with an src to the result.
+     *
+     * @private
+     * @param {true|false|'reset'} previewMode
+     */
+    applyOptions: async function (previewMode) {
+        const {quality, originalSrc} = this.settings;
+        this.canModifyImage = true;
+        try {
+            await new Promise((resolve, reject) => {
+                this.img.addEventListener('load', resolve, {once: true});
+                this.img.addEventListener('error', reject, {once: true});
+                this.img.src = originalSrc;
+            });
+        } catch (error) {
+            console.error('The image couldn\'t be loaded', error.target);
+            this.canModifyImage = false;
+            return;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = this.img.naturalWidth;
+        canvas.height = this.img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(this.img, 0, 0);
+        // Canvas now contains copy of the image, start modifications
+        // Color filter:
+        ctx.fillStyle = this._colorToCss(this.settings.filter);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Apply quality and set as current image src
+        let dataURL = '';
+        try {
+            dataURL = canvas.toDataURL('image/jpeg', quality / 100);
+        } catch (error) {
+            // SecurityError, canvas is tainted with cross-origin data,
+            // need to disable options.
+            console.log('SecurityError, this image shouldn\'t have options available');
+            this.canModifyImage = false;
+            return;
+        }
+        this.weight = dataURL.split(',')[1].length / 4 * 3;
+        this.changeSrc(previewMode, dataURL);
+    },
+    filter: function (previewMode, widgetValue, params) {
+        this.settings.filter = widgetValue;
+        return this.applyOptions(previewMode);
+    },
+    /**
+     * Ensures the color is an actual css color. In case of a color variable,
+     * the color will be mapped to hexa.
+     *
+     * @private
+     * @param {string} color
+     * @returns {string}
+     */
+    _colorToCss: function (color) {
+        if (ColorpickerDialog.isCSSColor(color)) {
+            return color;
+        }
+        const style = window.getComputedStyle(document.documentElement);
+        return style.getPropertyValue('--' + color).trim();
+    },
+    _tagElement: function () {
+        ['quality', 'originalSrc', 'filter'].forEach(property => {
+            if (this.settings[property] !== this.initialSettings[property]) {
+                this.$target[0].dataset[property] = this.settings[property];
+            }
+        });
+    },
+    _loadDataFromTarget: function () {
+        this.initialSettings = {};
+        ['quality', 'originalSrc', 'filter'].forEach(property => {
+            this.initialSettings[property] = this.$target[0].dataset[property];
+        });
+        _.defaults(this.initialSettings, {
+            quality: 100,
+            filter: '#00000000',
+        });
+        this.settings = _.extend({}, this.initialSettings);
+        this.$el.find('input.custom-range').val(this.settings.quality);
     },
 });
 /**
  * Handles the edition of non-background images.
  */
-registry.Image = SnippetOptionWidget.extend({
-    src: function (previewMode, widgetValue, params) {
-        console.log('setting src to', widgetValue);
-        this.$target[0].src = widgetValue;
+registry.Image = ImageHandlerOption.extend({
+    /**
+     * @override
+     */
+    changeSrc: function (previewMode, src) {
+        this.$target[0].src = src;
     },
     /**
      * @override
@@ -2503,6 +2607,12 @@ registry.Image = SnippetOptionWidget.extend({
             return this.$target.attr('src');
         }
         return this._super(...arguments);
+    },
+    _loadDataFromTarget: function () {
+        this._super(...arguments);
+        if (!this.settings.originalSrc) {
+            this.settings.originalSrc = this.$target[0].src;
+        }
     },
 });
 /**
@@ -2514,26 +2624,14 @@ registry.background = ImageHandlerOption.extend({
      */
     start: async function () {
         await this._super(...arguments);
-
         // Initialize background and events
         this.bindBackgroundEvents();
-
-        // Image proxy for the background image
-        this.img = document.createElement('img');
-        this.img.classList.add('d-none');
-        this.img.src = this._getSrcFromCssValue();
-        this.imageManager = new ImageManager(this.img, this._rpc.bind(this));
-        // When the src of the image changes, set it as background.
-        new MutationObserver(mutations => mutations.forEach(mutation => {
-            // Waiting for the image to load can reduce or eliminate flickering.
-            this.img.addEventListener('load', () => {
-                this._setCustomBackground(this.img.getAttribute('src'));
-            }, {once: true});
-        })).observe(this.img, {attributes: true, attributeFilter: ['src']});
-        this.$target.append(this.img);
-
-        this.imageManager.onUpdateAttachment(() => this._updateWidthSelection());
-        await this.imageManager.loadAttachment();
+    },
+    _loadDataFromTarget: function () {
+        this._super(...arguments);
+        if (!this.settings.originalSrc) {
+            this.settings.originalSrc = this._getSrcFromCssValue();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2545,15 +2643,8 @@ registry.background = ImageHandlerOption.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: async function (previewMode, widgetValue, params) {
-        if (previewMode === 'reset') {
-            return this._setCustomBackground(this.img.getAttribute('src'), previewMode);
-        }
-        if (!previewMode) {
-            this.img.src = widgetValue;
-            return await this.imageManager.loadAttachment();
-        }
-        this._setCustomBackground(widgetValue, previewMode);
+    changeSrc: async function (previewMode, src, params) {
+        this._setCustomBackground(src, previewMode);
     },
 
     //--------------------------------------------------------------------------
@@ -2579,18 +2670,6 @@ registry.background = ImageHandlerOption.extend({
         // TODO should be automatic for all options as equal to the start method
         this.bindBackgroundEvents();
         this.img.src = this._getSrcFromCssValue();
-    },
-    /**
-     * @override
-     */
-    cleanForSave: async function () {
-        await this._super(...arguments);
-        this._setCustomBackground(this.img.attributes.src.value);
-        const toUnlink = this.img.dataset.unlinkAttachment;
-        if (toUnlink) {
-            this.$target[0].dataset.unlinkAttachment = toUnlink;
-        }
-        this.img.remove();
     },
 
     //--------------------------------------------------------------------------
@@ -2641,7 +2720,7 @@ registry.background = ImageHandlerOption.extend({
      */
     _computeWidgetState: function (methodName) {
         switch (methodName) {
-            case 'background':
+            case 'src':
                 return this._getSrcFromCssValue();
         }
         return this._super(...arguments);

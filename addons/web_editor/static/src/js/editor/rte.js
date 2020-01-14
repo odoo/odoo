@@ -447,7 +447,7 @@ var RTEWidget = Widget.extend({
         }
         history.recordUndo($editable, event, internal_history);
 
-        if (initialActiveElement && initialActiveElement !== document.activeElement && initialActiveElement.type !== "range") {
+        if (initialActiveElement && initialActiveElement !== document.activeElement) {
             initialActiveElement.focus();
             initialActiveElement.selectionStart = initialSelectionStart;
             initialActiveElement.selectionEnd = initialSelectionEnd;

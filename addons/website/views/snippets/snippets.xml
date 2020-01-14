@@ -102,6 +102,21 @@
     </xpath>
 </template>
 
+<template id="option_imagepicker">
+    <we-row t-att-string="title" class="o_we_inline">
+        <we-button class="o_we_crop_image fa fa-fw fa-crop" data-crop-image="" data-no-preview="true"/>
+        <we-button class="o_we_edit_image fa fa-fw fa-edit" data-edit-image="" t-att-data-allow-videos="allow_videos" data-no-preview="true"/>
+        <we-button class="o_we_remove_image fa fa-fw fa-times" data-remove-image="" data-no-preview="true"/>
+    </we-row>
+    <we-row string="Quality" class="o_we_inline o_we_quality_option">
+        <span class="o_we_image_file_size"/>
+        <input class="custom-range pt-0 mt-0" type="range" min="1" max="100"/>
+    </we-row>
+    <!-- This select is filled at runtime with available widths -->
+    <we-select string="Width" class="o_we_inline" data-no-preview="true"/>
+    <we-colorpicker string="Filter" data-filter=""/>
+</template>
+
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
@@ -220,14 +235,20 @@
     <div data-js="Image"
         data-selector="img"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
-        <we-imagepicker class="o_we_inline" string="Image" data-src=""/>
+        <t t-call="website.option_imagepicker">
+            <t t-set="title" t-value="'Image'"/>
+        </t>
     </div>
 
     <!-- Background Image -->
     <div data-js="background" string="Background"
         data-selector="section, .carousel-item"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item, .parallax">
-        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-allow-videos="*" data-first-filters="background"/>
+        <t t-call="website.option_imagepicker">
+            <t t-set="title" t-value="'Background'"/>
+            <t t-set="allow_videos" t-value="'true'"/>
+            <t t-set="first_filters" t-value="'background'"/>
+        </t>
     </div>
     <div data-js="background" string="Background" data-selector=".parallax" data-target=".s_parallax_bg">
         <we-imagepicker class="o_we_inline" string="Background" data-background="" data-first-filters="background"/>
