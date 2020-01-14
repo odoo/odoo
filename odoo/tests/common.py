@@ -167,7 +167,7 @@ class OdooSuite(unittest.suite.TestSuite):
     if sys.version_info < (3, 8):
         # Partial backport of bpo-24412, merged in CPython 3.8
 
-        def _handleClassSetup(self, test, result):
+        def _handleClassSetUp(self, test, result):
             previousClass = getattr(result, '_previousTestClass', None)
             currentClass = test.__class__
             if currentClass == previousClass:
