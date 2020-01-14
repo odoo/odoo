@@ -51,10 +51,8 @@ class WebsiteVisitor(models.Model):
             partners = sorted_leads.mapped('partner_id')
             if not partners:
                 main_lead = self.lead_ids[0]
-                partner_id = main_lead.handle_partner_assignation(action='create')[main_lead.id]
-                if not main_lead.partner_id:
-                    main_lead.partner_id = partner_id
-                self.partner_id = partner_id
+                main_lead.handle_partner_assignment(create_missing=True)
+                self.partner_id = main_lead.partner_id.id
             return True
         return check
 

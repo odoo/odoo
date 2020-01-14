@@ -8,6 +8,10 @@ from odoo.tests.common import tagged, users
 
 @tagged('lead_manage')
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
+    """
+    TODO: created partner (handle assignation) has team of lead
+    TODO: create partner has user_id  coming from wizard
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -244,7 +248,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates(self):
-        """ Test Lead._get_duplicated_leads_by_emails() """
+        """ Test Lead._get_lead_duplicates() """
 
         # Check: partner / email fallbacks
         self._create_duplicates(self.lead_1)
@@ -280,7 +284,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates_flow(self):
-        """ Test Lead._get_duplicated_leads_by_emails() + merge with active_test """
+        """ Test Lead._get_lead_duplicates() + merge with active_test """
 
         # Check: email formatting
         self.lead_1.write({
@@ -431,7 +435,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         self.assertEqual(mass_convert.user_id, self.user_sales_salesman)
         self.assertEqual(mass_convert.team_id, self.sales_team_convert)
 
-        mass_convert.mass_convert()
+        mass_convert.action_mass_convert()
         for lead in self.lead_1 | self.lead_w_partner:
             self.assertEqual(lead.type, 'opportunity')
             if lead == self.lead_w_partner:
@@ -447,7 +451,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         mass_convert.write({
             'user_ids': self.user_sales_salesman.ids,
         })
-        mass_convert.mass_convert()
+        mass_convert.action_mass_convert()
         self.assertEqual(self.lead_w_partner.user_id, self.user_sales_salesman)
         self.assertEqual(self.lead_1.user_id, self.user_sales_leads)  # existing value not forced
 
@@ -481,7 +485,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         self.assertEqual(mass_convert.name, 'convert')
         self.assertEqual(mass_convert.opportunity_ids, self.lead_1 | self.lead_w_partner)
 
-        mass_convert.mass_convert()
+        mass_convert.action_mass_convert()
 
         self.assertEqual(
             (lead_1_dups | lead_w_partner_dups).exists(),
@@ -508,7 +512,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         })
 
         # TDE FIXME: what happens if we mix people from different sales team ? currently nothing, to check
-        mass_convert.mass_convert()
+        mass_convert.action_mass_convert()
 
         for idx, lead in enumerate(self.leads - self.lead_w_email_lost):
             self.assertEqual(lead.type, 'opportunity')
