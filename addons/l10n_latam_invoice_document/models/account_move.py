@@ -89,14 +89,14 @@ class AccountMove(models.Model):
         with_latam_document_number.invoice_sequence_number_next = False
         return super(AccountMove, self - with_latam_document_number)._compute_invoice_sequence_number_next()
 
-    def post(self):
+    def action_post(self):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
             if not rec.l10n_latam_sequence_id:
                 raise UserError(_('No sequence or document number linked to invoice id %s') % rec.id)
             if rec.type in ('in_receipt', 'out_receipt'):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
             rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
-        return super().post()
+        return super().action_post()
 
     @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
