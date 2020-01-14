@@ -13,5 +13,8 @@ for customization purpose.
     'depends': ['web'],
     'installable': True,
     'auto_install': False,
-    'data': ['views/base_import_module_view.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/base_import_module_view.xml'
+    ],
 }
