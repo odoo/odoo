@@ -955,7 +955,7 @@ var MockServer = Class.extend({
             fields: kwargs.fields || args[1],
             offset: kwargs.offset || args[2],
             limit: kwargs.limit || args[3],
-            order: kwargs.order || args[4],
+            sort: kwargs.order || args[4],
             context: kwargs.context,
         });
         return result.records;
@@ -998,15 +998,30 @@ var MockServer = Class.extend({
             return result;
         });
         if (args.sort) {
-            // deal with sort on multiple fields (i.e. only consider the first)
+            // warning: only consider first level of sort
             args.sort = args.sort.split(',')[0];
             var fieldName = args.sort.split(' ')[0];
             var order = args.sort.split(' ')[1];
+            var sortField = self.data[args.model].fields[fieldName];
             processedRecords.sort(function (r1, r2) {
-                if (r1[fieldName] < r2[fieldName]) {
+                var v1 = r1[fieldName];
+                var v2 = r2[fieldName];
+                if (sortField.type === 'many2one') {
+                    var coRecords = self.data[sortField.relation].records;
+                    if (self.data[sortField.relation].fields.sequence) {
+                        // use sequence field of comodel to sort records
+                        v1 = coRecords.find(r => r.id === v1[0]).sequence;
+                        v2 = coRecords.find(r => r.id === v2[0]).sequence;
+                    } else {
+                        // sort by id
+                        v1 = v1[0];
+                        v2 = v2[0];
+                    }
+                }
+                if (v1 < v2) {
                     return order === 'ASC' ? -1 : 1;
                 }
-                if (r1[fieldName] > r2[fieldName]) {
+                if (v1 > v2) {
                     return order === 'ASC' ? 1 : -1;
                 }
                 return 0;
