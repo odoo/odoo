@@ -935,6 +935,95 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             widget.update(); // should not crash
         });
 
+        QUnit.test("sub component that triggers events", async function (assert) {
+            assert.expect(3);
+
+            class WidgetComponent extends Component {}
+            WidgetComponent.template = xml`<div>Component</div>`;
+
+            const MyWidget = WidgetAdapter.extend({
+                custom_events: _.extend({}, Widget.custom_events, {
+                    some_event: function (ev) {
+                        assert.step(ev.data.value);
+                    }
+                }),
+                start() {
+                    this.component = new ComponentWrapper(this, WidgetComponent, {});
+                    return this.component.mount(this.el);
+                },
+            });
+
+            const target = testUtils.prepareTarget();
+            const widget = new MyWidget();
+            await widget.appendTo(target);
+
+            widget.component.trigger('some_event', { value: 'a' });
+            widget.component.trigger('some-event', { value: 'b' }); // - are converted to _
+
+            assert.verifySteps(['a', 'b']);
+
+            widget.destroy();
+        });
+
+        QUnit.test("change parent of ComponentWrapper", async function (assert) {
+            assert.expect(7);
+
+            let myComponent;
+            let widget1;
+            let widget2;
+            class WidgetComponent extends Component {}
+            WidgetComponent.template = xml`<div>Component</div>`;
+            const MyWidget = WidgetAdapter.extend({
+                custom_events: _.extend({}, Widget.custom_events, {
+                    some_event: function (ev) {
+                        assert.strictEqual(this, ev.data.widget);
+                        assert.step(ev.data.value);
+                    }
+                }),
+            });
+            const Parent = Widget.extend({
+                start() {
+                    const proms = [];
+                    myComponent = new ComponentWrapper(null, WidgetComponent, {});
+                    widget1 = new MyWidget();
+                    widget2 = new MyWidget();
+                    proms.push(myComponent.mount(this.el));
+                    proms.push(widget1.appendTo(this.$el));
+                    proms.push(widget2.appendTo(this.$el));
+                    return Promise.all(proms);
+                }
+            });
+
+            const target = testUtils.prepareTarget();
+            const parent = new Parent();
+            await parent.appendTo(target);
+
+            // 1. No parent
+            myComponent.trigger('some-event', { value: 'a', widget: null });
+
+            assert.verifySteps([]);
+
+            // 2. No parent --> parent (widget1)
+            myComponent.unmount();
+            await myComponent.mount(widget1.el);
+            myComponent.setParent(widget1);
+
+            myComponent.trigger('some-event', { value: 'b', widget: widget1 });
+
+            assert.verifySteps(['b']);
+
+            // 3. Parent (widget1) --> new parent (widget2)
+            myComponent.unmount();
+            await myComponent.mount(widget2.el);
+            myComponent.setParent(widget2);
+
+            myComponent.trigger('some-event', { value: 'c', widget: widget2 });
+
+            assert.verifySteps(['c']);
+
+            parent.destroy();
+        });
+
         QUnit.module('Several layers of legacy widgets and Owl components');
 
         QUnit.test("Owl over legacy over Owl", async function (assert) {
