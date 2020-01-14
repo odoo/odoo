@@ -41,7 +41,7 @@ class TestCRMLead(TestCrmCommon):
 
         lead.action_set_won()
         self.assertEqual(lead.probability, 100.0)
-        self.assertEqual(lead.stage_id, self.stage_team1_won)
+        self.assertEqual(lead.stage_id, self.stage_gen_won)  # generic won stage has lower sequence than team won stage
 
     @users('user_sales_manager')
     def test_crm_team_alias(self):
