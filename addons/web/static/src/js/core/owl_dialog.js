@@ -31,6 +31,8 @@ odoo.define('web.OwlDialog', function () {
          *      should be rendered.
          * @param {string} [props.size='large'] 'extra-large', 'large', 'medium'
          *      or 'small'.
+         * @param {string} [props.stopClicks=true] whether the dialog should stop
+         *      the clicks propagation outside of itself.
          * @param {string} [props.subtitle='']
          * @param {string} [props.title='Odoo']
          * @param {boolean} [props.technical=true] If set to false, the modal will have
@@ -71,7 +73,7 @@ odoo.define('web.OwlDialog', function () {
             this._removeTooltips();
         }
 
-        async willUnmount() {
+        willUnmount() {
             this.env.bus.off('close_dialogs', this, this._close);
 
             this._removeTooltips();
@@ -126,6 +128,16 @@ odoo.define('web.OwlDialog', function () {
                 }
             } else {
                 this._close();
+            }
+        }
+
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClick(ev) {
+            if (this.props.stopClicks) {
+                ev.stopPropagation();
             }
         }
 
@@ -235,19 +247,21 @@ odoo.define('web.OwlDialog', function () {
         renderFooter: true,
         renderHeader: true,
         size: 'large',
+        stopClicks: true,
         technical: true,
         title: "Odoo",
     };
     Dialog.props = {
-        backdrop: { validate: b => ['static', true, false].includes(b), optional: 1 },
+        backdrop: { validate: b => ['static', true, false].includes(b) },
         contentClass: { type: String, optional: 1 },
         fullscreen: { type: Boolean, optional: 1 },
-        renderFooter: { type: Boolean, optional: 1 },
-        renderHeader: { type: Boolean, optional: 1 },
-        size: { validate: s => ['extra-large', 'large', 'medium', 'small'].includes(s), optional: 1 },
+        renderFooter: Boolean,
+        renderHeader: Boolean,
+        size: { validate: s => ['extra-large', 'large', 'medium', 'small'].includes(s) },
+        stopClicks: Boolean,
         subtitle: { type: String, optional: 1 },
-        technical: { type: Boolean, optional: 1 },
-        title: { type: String, optional: 1 },
+        technical: Boolean,
+        title: String,
     };
     Dialog.template = 'OwlDialog';
 
