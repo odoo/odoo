@@ -852,7 +852,7 @@ class Message(models.Model):
                 'subject': subject,
                 'body_html': body_html,
                 'author_id': self.env.user.partner_id.id,
-                'email_from': self.env.user.email_formatted or self.env.company_id.catchall_formatted,
+                'email_from': self.env.user.email_formatted or self.env.company.catchall_formatted,
                 'email_to': msg.email_from,
                 'auto_delete': True,
                 'state': 'outgoing'
