@@ -195,6 +195,10 @@
             <field name="arch" type="xml">
                 <form string="Events">
                     <header>
+                        <button name="action_invite_contacts" type="object" string="Invite"
+                                class="btn btn-primary" attrs="{'invisible': [('event_registrations_open', '=', False)]}"/>
+                        <button name="action_invite_contacts" type="object" string="Invite"
+                                class="btn btn-secondary" attrs="{'invisible': [('event_registrations_open', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
@@ -207,6 +211,7 @@
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
+                        <field name="event_registrations_open" invisible="1"/>
                         <field name="legend_blocked" invisible="1"/>
                         <field name="legend_normal" invisible="1"/>
                         <field name="legend_done" invisible="1"/>
@@ -477,6 +482,22 @@
                 Schedule and organize your events efficiently:
                 track registrations and participations, automate the confirmation emails, sell tickets, etc.
               </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_compose_event_invite">
+            <field name="name">mail.compose.message.form.event_invite</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form" />
+            <field name="priority">1000</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//span[@name='document_followers_text']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_ids']" position="attributes">
+                    <attribute name="placeholder">Add contacts to invite...</attribute>
+                </xpath>
             </field>
         </record>
 

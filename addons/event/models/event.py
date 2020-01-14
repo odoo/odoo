@@ -366,6 +366,29 @@ class EventEvent(models.Model):
         if first_ended_stage:
             self.write({'stage_id': first_ended_stage[0].id})
 
+    def action_invite_contacts(self):
+        self.ensure_one()
+        template = self.env.ref('event.event_invitation')
+        compose_form = self.env.ref('event.email_compose_event_invite')
+        ctx = dict(
+            default_model='event.event',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode='comment',
+            custom_layout="mail.mail_notification_light",
+        )
+        return {
+            'name': _('Invite Contacts'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
+
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for event in self:
             for attendee in event.registration_ids.filtered(filter_func):
