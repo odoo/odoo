@@ -220,7 +220,7 @@ class EventEvent(models.Model):
     @api.depends('date_end', 'seats_available', 'seats_availability', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
         for event in self:
-            event.event_registrations_open = (event.date_end > fields.Datetime.now()) and \
+            event.event_registrations_open = event.date_end and (event.date_end > fields.Datetime.now()) and \
                 (event.seats_available or event.seats_availability == 'unlimited') and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
