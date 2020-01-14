@@ -157,7 +157,7 @@ class TxPaypal(models.Model):
             invalid_parameters.append(('txn_id', data.get('txn_id'), self.acquirer_reference))
         # check what is buyed
         if float_compare(float(data.get('mc_gross', '0.0')), (self.amount + self.fees), 2) != 0:
-            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % self.amount))  # mc_gross is amount + fees
+            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % self.amount + self.fees))  # mc_gross is amount + fees
         if data.get('mc_currency') != self.currency_id.name:
             invalid_parameters.append(('mc_currency', data.get('mc_currency'), self.currency_id.name))
         if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), self.fees, 2) != 0:
