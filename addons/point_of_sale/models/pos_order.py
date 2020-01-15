@@ -187,7 +187,7 @@ class PosOrder(models.Model):
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
-            'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
 
