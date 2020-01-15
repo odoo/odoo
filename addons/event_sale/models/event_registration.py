@@ -25,6 +25,12 @@ class EventRegistration(models.Model):
                 res = False
         return res
 
+    def action_view_sale_order(self):
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['views'] = [(False, 'form')]
+        action['res_id'] = self.sale_order_id.id
+        return action
+
     @api.model
     def create(self, vals):
         if vals.get('sale_order_line_id'):
@@ -46,6 +52,12 @@ class EventRegistration(models.Model):
                 self.env['sale.order.line'].browse(vals['sale_order_line_id'])
             )
             vals.update(so_line_vals)
+
+        if vals.get('event_ticket_id'):
+            self.filtered(
+                lambda registration: registration.event_ticket_id and registration.event_ticket_id.id != vals['event_ticket_id']
+            )._sale_order_ticket_type_change_notify(self.env['event.event.ticket'].browse(vals['event_ticket_id']))
+
         return super(EventRegistration, self).write(vals)
 
     def _synchronize_so_line_values(self, so_line):
@@ -59,6 +71,22 @@ class EventRegistration(models.Model):
                 'sale_order_line_id': so_line.id,
             }
         return {}
+
+    def _sale_order_ticket_type_change_notify(self, new_event_ticket):
+        fallback_user_id = self.env.user.id if not self.env.user._is_public() else self.env.ref("base.user_admin").id
+        for registration in self:
+            render_context = {
+                'registration': registration,
+                'old_ticket_name': registration.event_ticket_id.name,
+                'new_ticket_name': new_event_ticket.name
+            }
+            user_id = registration.event_id.user_id.id or \
+                      registration.sale_order_id.user_id.id or \
+                      fallback_user_id
+            registration.sale_order_id.activity_schedule_with_view('mail.mail_activity_data_warning',
+                 user_id=user_id,
+                 views_or_xmlid='event_sale.event_ticket_id_change_exception',
+                 render_context=render_context)
 
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
