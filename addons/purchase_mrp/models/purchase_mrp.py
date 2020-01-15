@@ -10,8 +10,8 @@ class MrpProduction(models.Model):
 
     def _get_document_iterate_key(self, move_raw_id):
         iterate_key = super(MrpProduction, self)._get_document_iterate_key(move_raw_id)
-        if not iterate_key:
-            iterate_key = move_raw_id.created_purchase_line_id and 'created_purchase_line_id'
+        if not iterate_key and move_raw_id.created_purchase_line_id:
+            iterate_key = 'created_purchase_line_id'
         return iterate_key
 
 class PurchaseOrderLine(models.Model):
