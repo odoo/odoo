@@ -289,6 +289,8 @@ the login.
             common_config, "authenticate", asList(
                 db, username, password, emptyMap()));
 
+.. _webservices/odoo/calling_methods:
+
 Calling methods
 ===============
 
