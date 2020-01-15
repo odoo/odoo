@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
+
+    attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 
     def write(self, vals):
         """ Synchronize partner from SO to registrations. This is done notably
@@ -31,6 +33,24 @@ class SaleOrder(models.Model):
                     .with_context(default_sale_order_id=so.id) \
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
+
+    def action_view_attendee_list(self):
+        action = self.env.ref('event.event_registration_action_tree').read()[0]
+        action['domain'] = [('sale_order_id', 'in', self.ids)]
+        return action
+
+    def _compute_attendee_count(self):
+        sale_orders_data = self.env['event.registration'].read_group(
+            [('sale_order_id', 'in', self.ids)],
+            ['sale_order_id'], ['sale_order_id']
+        )
+        attendee_count_data = {
+            sale_order_data['sale_order_id'][0]:
+            sale_order_data['sale_order_id_count']
+            for sale_order_data in sale_orders_data
+        }
+        for sale_order in self:
+            sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
 
 class SaleOrderLine(models.Model):

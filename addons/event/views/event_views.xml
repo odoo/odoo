@@ -536,7 +536,7 @@
                     <field name="phone" optional="hide"/>
                     <field name="mobile" optional="hide"/>
                     <field name="event_id"/>
-                    <field name="event_ticket_id"/>
+                    <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
                     <field name="origin" optional="hide"/>
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
