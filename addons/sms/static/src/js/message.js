@@ -49,19 +49,11 @@ Message.include({
         return this.getSmsStatus() === 'error';
     },
     /**
-     * Update the status of a SMS
-     *
-     * @param {integer} smsID ID of the SMS to update
-     * @param {string} smsStatus New status of the SMS
+     * @override
      */
-    setSmsStatus: function (smsID, smsStatus) {
-        var self = this;
-        var sms = _.find(self._smsIds, function (sms) {
-            return sms[0] === smsID;
-        });
-        if (sms !== undefined && smsStatus !== undefined) {
-            sms[2] = smsStatus;
-        }
+    updateDataFromFailure: function (failureData) {
+        this._super(...arguments);
+        // TODO SEB this should update _smsIds/_smsStatus correctly (info is not even sent from the server)
     },
 
     //--------------------------------------------------------------------------

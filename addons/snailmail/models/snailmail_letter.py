@@ -349,34 +349,7 @@ class SnailmailLetter(models.Model):
         letters_send._snailmail_print()
 
     @api.model
-    def fetch_failed_letters(self):
-        failed_letters = self.search([('state', '=', 'error'), ('user_id.id', '=', self.env.user.id), ('res_id', '!=', 0), ('model', '!=', False)])
-        return failed_letters._format_snailmail_failures()
-
-    @api.model
     def _is_valid_address(self, record):
         record.ensure_one()
         required_keys = ['street', 'city', 'zip', 'country_id']
         return all(record[key] for key in required_keys)
-
-    def _format_snailmail_failures(self):
-        """
-        A shorter message to notify a failure update
-        """
-        failures_infos = []
-        for letter in self:
-            info = {
-                'message_id': letter.message_id.id,
-                'record_name': letter.message_id.record_name,
-                'model_name': self.env['ir.model']._get(letter.model).display_name,
-                'uuid': letter.message_id.message_id,
-                'res_id': letter.res_id,
-                'model': letter.model,
-                'last_message_date': letter.message_id.date,
-                'module_icon': '/snailmail/static/img/snailmail_failure.png',
-                'snailmail_status': letter.error_code if letter.state == 'error' else '',
-                'snailmail_error': letter.state == 'error',
-                'failure_type': 'snailmail',
-            }
-            failures_infos.append(info)
-        return failures_infos

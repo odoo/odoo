@@ -317,11 +317,7 @@ MailManager.include({
                 return msg.getID() === data.message_id;
             });
             if (message) {
-                if (isNewFailure) {
-                    message.updateCustomerEmailStatus('exception');
-                } else {
-                    message.updateCustomerEmailStatus('sent');
-                }
+                message.updateDataFromFailure(data);
                 self._updateMessageNotificationStatus(data, message);
                 self._mailBus.trigger('update_message', message);
             }

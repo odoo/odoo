@@ -523,12 +523,19 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             });
     },
     /**
-     * Update the customer email status
+     * Update message data based on failureData.
      *
-     * @param {string} newCustomerEmailStatus
+     * @param {object} failureData
      */
-    updateCustomerEmailStatus: function (newCustomerEmailStatus) {
-        this._customerEmailStatus = newCustomerEmailStatus;
+    updateDataFromFailure: function (failureData) {
+        var isNewFailure = _.some(failureData.notifications, function (notif) {
+            return notif[0] === 'exception' || notif[0] === 'bounce';
+        });
+        if (isNewFailure) {
+            this._customerEmailStatus = 'exception';
+        } else {
+            this._customerEmailStatus = 'sent';
+        }
     },
 
     //--------------------------------------------------------------------------

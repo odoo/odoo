@@ -30,7 +30,7 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
 
         this._documentID = data.res_id;
         this._documentModel = data.model;
-        this._failureType = data.failure_type || 'mail';
+        this._failureType = data.message_type;
         this._lastMessageDate = moment(); // by default: current datetime
         this._messageID = data.message_id;
         this._modelName = data.model_name;
@@ -87,12 +87,12 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     getPreview: function () {
         var preview = {
-            body: _t("An error occurred when sending an email"),
+            body: this._getPreviewBody(),
             date: this._lastMessageDate,
             documentID: this._documentID,
             documentModel: this._documentModel,
             id: 'mail_failure',
-            imageSRC: this._moduleIcon,
+            imageSRC: this._getPreviewImage(),
             title: this._modelName,
         };
         return preview;
@@ -104,6 +104,23 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     isLinkedToDocument: function () {
         return !!(this._documentModel && this._documentID);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @returns {string}
+     */
+    _getPreviewBody() {
+        return _t("An error occurred when sending an email.");
+    },
+    /**
+     * @returns {string}
+     */
+    _getPreviewImage() {
+        return '/mail/static/src/img/smiley/mailfailure.jpg';
     },
 });
 

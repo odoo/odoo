@@ -1,6 +1,7 @@
 
 from odoo import api, fields, models
 
+
 class Message(models.Model):
     _inherit = 'mail.message'
 
@@ -35,8 +36,3 @@ class Message(models.Model):
 
     def send_letter(self):
         self.mapped('letter_ids')._snailmail_print()
-
-    def message_fetch_failed(self):
-        res = super(Message, self).message_fetch_failed()
-        failed_letters = self.letter_ids.fetch_failed_letters()
-        return res + failed_letters
