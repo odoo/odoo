@@ -411,17 +411,15 @@ return AbstractRenderer.extend({
         }
     },
     /**
-     * Initialize the main calendar
+     * Return the Object options for FullCalendar
      *
      * @private
+     * @param {Object} fcOptions
+     * @return {Object}
      */
-    _initCalendar: function () {
+    _getFullCalendarOptions: function (fcOptions) {
         var self = this;
-
-        this.calendarElement = this.$(".o_calendar_widget")[0];
-        var locale = moment.locale();
-
-        var fc_options = $.extend({}, this.state.fc_options, {
+        return Object.assign({}, this.state.fc_options, {
             plugins: [
                 'moment',
                 'interaction',
@@ -546,7 +544,19 @@ return AbstractRenderer.extend({
             height: 'parent',
             unselectAuto: false,
             dir: _t.database.parameters.direction,
-            locale: locale,
+        }, fcOptions);
+    },
+    /**
+     * Initialize the main calendar
+     *
+     * @private
+     */
+    _initCalendar: function () {
+        this.calendarElement = this.$(".o_calendar_widget")[0];
+        var locale = moment.locale();
+
+        var fcOptions = this._getFullCalendarOptions({
+            locale: locale, // reset locale when fullcalendar has already been instanciated before now
         });
 
         this.calendar = new FullCalendar.Calendar(this.calendarElement, fcOptions);
