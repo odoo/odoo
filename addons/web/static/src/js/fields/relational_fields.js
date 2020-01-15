@@ -574,7 +574,10 @@ var FieldMany2One = AbstractField.extend({
             on_selected: function (records) {
                 self.reinitialize(records[0]);
                 self.activate();
-            }
+            },
+            on_closed: function () {
+                self.activate();
+            },
         })).open();
     },
     /**

@@ -916,6 +916,37 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one field navigation: closing create dialog should set focus back to many2one field', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="trululu"/></form>',
+            archs: {
+                'partner,false,form': '<form><field name="name"/></form>',
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        // open many2one autocomplete
+        form.$('.o_field_many2one input').click();
+        // we now check that the dropdown is open
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        assert.ok($dropdown.is(':visible'), "dropdown should be visible");
+
+        // click on create and edit option
+        testUtils.dom.click($dropdown.find('.o_m2o_dropdown_option:contains(Create and Edit)').mouseenter());
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        $('.modal .modal-footer .o_form_button_cancel').click(); // save in modal
+        assert.strictEqual(form.$('.o_field_many2one input')[0], document.activeElement,
+            "many2one should be focused back after dialog closed");
+
+        form.destroy();
+    });
+
     QUnit.test('many2one field and list navigation', function (assert) {
         assert.expect(3);
 

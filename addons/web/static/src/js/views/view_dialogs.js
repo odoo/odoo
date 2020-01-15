@@ -325,9 +325,14 @@ var SelectCreateDialog = ViewDialog.extend({
         this._super.apply(this, arguments);
         _.defaults(this.options, { initial_view: 'search' });
         this.on_selected = this.options.on_selected || (function () {});
+        this.on_closed = this.options.on_closed || (function () { });
         this.initial_ids = this.options.initial_ids;
     },
 
+    close: function () {
+        this._super.apply(this, arguments);
+        this.on_closed();
+    },
     open: function () {
         if (this.options.initial_view !== "search") {
             return this.create_edit_record();
