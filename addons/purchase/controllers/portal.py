@@ -27,7 +27,7 @@ class CustomerPortal(CustomerPortal):
         #
         def resize_to_48(b64source):
             if not b64source:
-                b64source = base64.b64encode(Binary().placeholder())
+                b64source = base64.b64encode(Binary.placeholder())
             return image_process(b64source, size=(48, 48))
 
         values = {
