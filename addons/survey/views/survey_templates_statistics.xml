@@ -130,11 +130,11 @@
 
         <!-- Question Description -->
         <div class="ml-3 text-muted" t-field="question.description"/>
-            <t t-if="question.question_type in ['text_box', 'char_box', 'date', 'datetime']">
+            <t t-if="question.question_type in ['text_box', 'char_box', 'datetime']">
                 <t t-call="survey.question_result_text"/>
             </t>
-            <t t-elif="question.question_type in ['numerical_box']">
-                <t t-call="survey.question_result_number"></t>
+            <t t-elif="question.question_type in ['numerical_box', 'date']">
+                <t t-call="survey.question_result_number_or_date"></t>
             </t>
             <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']">
                 <t t-call="survey.question_result_choice"></t>
@@ -145,7 +145,7 @@
         </div>
     </template>
 
-    <template id="question_result_text" name="Question: text result (text_box, char_box, date, datetime)">
+    <template id="question_result_text" name="Question: text result (text_box, char_box, datetime)">
         <table class="table table-hover table-sm" t-att-id="'survey_table_question_%d' % question.id">
             <thead>
                 <tr>
@@ -173,10 +173,6 @@
                                 <span t-if="no_print_url" t-field="input_line.value_char_box" />
                                 <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_char_box"></a>
                             </t>
-                            <t t-if="question.question_type == 'date'">
-                                <span t-if="no_print_url" t-field="input_line.value_date" />
-                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"></a>
-                            </t>
                             <t t-if="question.question_type == 'datetime'">
                                 <span t-if="no_print_url" t-field="input_line.value_datetime" />
                                 <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_datetime"></a>
@@ -189,12 +185,14 @@
         <t t-call="survey.question_table_pagination"/>
     </template>
 
-    <template id="question_result_number" name="Question: number result (numerical_box)">
-        <span class="float-right mt8">
-            <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="question_data['numerical_max']"></span>
-            <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="question_data['numerical_min']"></span>
-            <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="question_data['numerical_average']"></span>
-        </span>
+    <template id="question_result_number_or_date" name="Question: number or date result (numerical_box or date)">
+        <t t-if="question.question_type == 'numerical_box'">
+            <span class="float-right mt8">
+                <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="question_data['numerical_max']"></span>
+                <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="question_data['numerical_min']"></span>
+                <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="question_data['numerical_average']"></span>
+            </span>
+        </t>
 
         <ul class="nav nav-tabs d-print-none" role="tablist">
             <li class="nav-item">
@@ -222,8 +220,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="question_data['numerical_common_lines']" t-as="common_line">
-                            <td><span t-esc="common_line[0]"></span></td>
+                        <tr t-foreach="question_data['common_lines']" t-as="common_line">
+                            <td>
+                                <span t-if="question.question_type == 'numerical_box'" t-esc="common_line[0]"/>
+                                <span t-if="question.question_type == 'date'" t-esc="common_line[0]" t-options='{"widget": "date"}'/>
+                            </td>
                             <td><span t-esc="common_line[1]"></span></td>
                         </tr>
                     </tbody>
@@ -248,7 +249,10 @@
                                         </a>
                                     </t>
                                 </td>
-                                <td><span t-field="input_line.value_numerical_box"></span><br/></td>
+                                <td>
+                                    <a t-if="question.question_type == 'numerical_box'" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_numerical_box"/>
+                                    <a t-if="question.question_type == 'date'" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"/>
+                                </td>
                             </tr>
                         </t>
                     </tbody>
