@@ -1901,7 +1901,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record in grouped on date(time) field', async function (assert) {
-        assert.expect(6);
+        assert.expect(8);
 
         var kanban = await createView({
             View: KanbanView,
@@ -1930,8 +1930,13 @@ QUnit.module('Views', {
         await testUtils.kanban.clickCreate(kanban);
         assert.containsNone(kanban, '.o_kanban_quick_create',
             "should not have opened the quick create widget");
+        assert.ok(kanban.$('.o_kanban_group span.o_column_title:contains(Undefined)').length,
+            "column should have a default title for when no value is provided");
 
         await kanban.reload({groupBy: ['datetime']});
+
+        assert.ok(kanban.$('.o_kanban_group span.o_column_title:contains(Undefined)').length,
+            "column should have a default title for when no value is provided");
 
         assert.containsNone(kanban, '.o_kanban_header .o_kanban_quick_add i',
             "quick create should be disabled when grouped on a datetime field");
