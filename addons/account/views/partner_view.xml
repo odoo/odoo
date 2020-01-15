@@ -218,8 +218,8 @@
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='inactive']" position="before">
-                   <filter string="Customers" name="customer" domain="[('customer_rank','>', 0)]"/>
-                   <filter string="Vendors" name="supplier" domain="[('supplier_rank','>', 0)]"/>
+                   <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
+                   <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>
                 </xpath>
             </field>
