@@ -396,6 +396,11 @@ based upon the first one.
 Python
 ======
 
+.. warning::
+
+    Do not forget to read the :ref:`Security Pitfalls <reference/security/pitfalls>`
+    section as well to write secure code.
+
 PEP8 options
 ------------
 
@@ -636,73 +641,6 @@ If you need to create a key context influencing the behavior of some object,
 choice a good name, and eventually prefix it by the name of the module to
 isolate its impact. A good example are the keys of ``mail`` module :
 *mail_create_nosubscribe*, *mail_notrack*, *mail_notify_user_signature*, ...
-
-
-Do not bypass the ORM
-~~~~~~~~~~~~~~~~~~~~~
-You should never use the database cursor directly when the ORM can do the same
-thing! By doing so you are bypassing all the ORM features, possibly the
-transactions, access rights and so on.
-
-And chances are that you are also making the code harder to read and probably
-less secure.
-
-.. code-block:: python
-
-    # very very wrong
-    self.env.cr.execute('SELECT id FROM auction_lots WHERE auction_id in (' + ','.join(map(str, ids))+') AND state=%s AND obj_price > 0', ('draft',))
-    auction_lots_ids = [x[0] for x in self.env.cr.fetchall()]
-
-    # no injection, but still wrong
-    self.env.cr.execute('SELECT id FROM auction_lots WHERE auction_id in %s '\
-               'AND state=%s AND obj_price > 0', (tuple(ids), 'draft',))
-    auction_lots_ids = [x[0] for x in self.env.cr.fetchall()]
-
-    # better
-    auction_lots_ids = self.search([('auction_id','in',ids), ('state','=','draft'), ('obj_price','>',0)])
-
-
-No SQL injections, please !
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Care must be taken not to introduce SQL injections vulnerabilities when using
-manual SQL queries. The vulnerability is present when user input is either
-incorrectly filtered or badly quoted, allowing an attacker to introduce
-undesirable clauses to a SQL query (such as circumventing filters or
-executing UPDATE or DELETE commands).
-
-The best way to be safe is to never, NEVER use Python string concatenation (+)
-or string parameters interpolation (%) to pass variables to a SQL query string.
-
-The second reason, which is almost as important, is that it is the job of the
-database abstraction layer (psycopg2) to decide how to format query parameters,
-not your job! For example psycopg2 knows that when you pass a list of values
-it needs to format them as a comma-separated list, enclosed in parentheses !
-
-.. code-block:: python
-
-    # the following is very bad:
-    #   - it's a SQL injection vulnerability
-    #   - it's unreadable
-    #   - it's not your job to format the list of ids
-    self.env.cr.execute('SELECT distinct child_id FROM account_account_consol_rel ' +
-               'WHERE parent_id IN ('+','.join(map(str, ids))+')')
-
-    # better
-    self.env.cr.execute('SELECT DISTINCT child_id '\
-               'FROM account_account_consol_rel '\
-               'WHERE parent_id IN %s',
-               (tuple(ids),))
-
-This is very important, so please be careful also when refactoring, and most
-importantly do not copy these patterns!
-
-Here is a memorable example to help you remember what the issue is about (but
-do not copy the code there). Before continuing, please be sure to read the
-online documentation of pyscopg2 to learn of to use it properly:
-
-- The problem with query parameters (http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters)
-- How to pass parameters with psycopg2 (http://initd.org/psycopg/docs/usage.html#passing-parameters-to-sql-queries)
-- Advanced parameter types (http://initd.org/psycopg/docs/usage.html#adaptation-of-python-values-to-sql-types)
 
 
 Think extendable
