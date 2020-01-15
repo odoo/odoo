@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import fields, models
 
 
 class PurchaseRequisition(models.Model):
@@ -21,9 +21,19 @@ class PurchaseRequisition(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in, domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
 
     def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
-        res = super(PurchaseRequisition, self)._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
-        res['line_ids'][0][2]['move_dest_id'] = values.get('move_dest_ids') and values['move_dest_ids'][0].id or False
-        return res
+        return {
+            'origin': origin,
+            'date_end': values['date_planned'],
+            'user_id': False,
+            'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
+            'company_id': company_id.id,
+            'line_ids': [(0, 0, {
+                'product_id': product_id.id,
+                'product_uom_id': product_uom.id,
+                'product_qty': product_qty,
+                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False
+            })],
+        }
 
 
 class PurchaseRequisitionLine(models.Model):

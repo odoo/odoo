@@ -151,20 +151,6 @@ class PurchaseRequisition(models.Model):
                 requisition_line.supplier_info_ids.unlink()
         self.write({'state': 'done'})
 
-    def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
-        return{
-            'origin': origin,
-            'date_end': values['date_planned'],
-            'user_id': False,
-            'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
-            'company_id': company_id.id,
-            'line_ids': [(0, 0, {
-                'product_id': product_id.id,
-                'product_uom_id': product_uom.id,
-                'product_qty': product_qty,
-            })],
-        }
-
     def unlink(self):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
             raise UserError(_('You can only delete draft requisitions.'))
