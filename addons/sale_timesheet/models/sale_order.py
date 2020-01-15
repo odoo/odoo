@@ -124,7 +124,9 @@ class SaleOrderLine(models.Model):
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         domain = expression.AND([domain, [
             ('date', '<=', date),
-            ('timesheet_invoice_id', '=', False)]])
+            '|',
+            ('timesheet_invoice_id', '=', False),
+            ('timesheet_invoice_id.state', '=', 'cancel')]])
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
