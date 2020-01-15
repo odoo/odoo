@@ -10,7 +10,6 @@ odoo.define('web.CalendarController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
@@ -38,7 +37,6 @@ var CalendarController = AbstractController.extend({
         viewUpdated: '_onViewUpdated',
     }),
     events: _.extend({}, AbstractController.prototype.events, {
-        today_button_click: '_onTodayButtonClicked',
         'click button.o_calendar_button_new': '_onButtonNew',
         'click button.o_calendar_button_prev': '_onButtonNavigation',
         'click button.o_calendar_button_today': '_onButtonNavigation',
@@ -109,7 +107,7 @@ var CalendarController = AbstractController.extend({
      */
     _extractLastPartOfClassName(startClassName, classList) {
         var result;
-        classList.forEach(function(value){
+        classList.forEach(function (value) {
             if (value && value.indexOf(startClassName) === 0) {
                 result = value.substring(startClassName.length);
             }
@@ -134,9 +132,7 @@ var CalendarController = AbstractController.extend({
      * @return {{}}
      */
     _renderButtonsParameters() {
-        return {
-            isMobile: config.device.isMobile,
-        };
+        return {};
     },
     /**
      * @override
@@ -442,13 +438,6 @@ var CalendarController = AbstractController.extend({
                 self._onOpenCreate(event.data);
                 self.quickCreating = false;
             });
-    },
-    /**
-     * In mobile, we display a special 'Today' button on the bottom right corner
-     * of the control panel. Its click events are handled here.
-     */
-    _onTodayButtonClicked: function () {
-        this._move('today');
     },
     /**
      * @private

@@ -91,9 +91,7 @@
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
-            <t t-if="!isMobile">
-                <t t-call="CalendarView.navigation_buttons" />
-            </t>
+            <t t-call="CalendarView.navigation_buttons" />
             <t t-call="CalendarView.scale_buttons" />
         </div>
     </t>
@@ -110,15 +108,6 @@
             <button type="button" class="o_calendar_button_week btn btn-secondary">Week</button>
             <button type="button" class="o_calendar_button_month btn btn-secondary">Month</button>
         </div>
-    </t>
-
-    <t t-name="CalendarView.TodayButtonMobile">
-        <button class="btn btn-sm btn-link">
-            <span class="fa-stack o_calendar_button_today">
-                <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"/>
-                <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
-            </span>
-        </button>
     </t>
 
     <main t-name="CalendarView.quick_create" class="o_calendar_quick_create">
