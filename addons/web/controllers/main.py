@@ -1365,7 +1365,8 @@ class View(http.Controller):
 
 class Binary(http.Controller):
 
-    def placeholder(self, image='placeholder.png'):
+    @staticmethod
+    def placeholder(image='placeholder.png'):
         with tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb') as fd:
             return fd.read()
 
@@ -1442,10 +1443,17 @@ class Binary(http.Controller):
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
+        return Binary._content_image_get_response(status, headers, image_base64, field=field, download=download,
+                                                width=width, height=height, crop=crop, quality=quality,
+                                                placeholder=placeholder)
+
+    @staticmethod
+    def _content_image_get_response(status, headers, image_base64, field='datas', download=None,
+                                    width=0, height=0, crop=False, quality=0, placeholder='placeholder.png'):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
-            image_base64 = base64.b64encode(self.placeholder(image=placeholder))
+            image_base64 = base64.b64encode(Binary.placeholder(image=placeholder))
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
