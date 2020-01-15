@@ -57,7 +57,6 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         this.filters = options.filters;
         this.label = options.label;
         this.getColor = options.getColor;
-        this.isSwipeEnabled = true;
     },
     /**
      * @override
@@ -202,9 +201,6 @@ return AbstractRenderer.extend({
     start: function () {
         this._initSidebar();
         this._initCalendar();
-        if (config.device.isMobile) {
-            this._bindSwipe();
-        }
         return this._super();
     },
     /**
@@ -213,9 +209,6 @@ return AbstractRenderer.extend({
     on_attach_callback: function () {
         this._super(...arguments);
         this._isInDOM = true;
-        if (config.device.isMobile) {
-            this.$el.height($(window).height() - this.$el.offset().top);
-        }
         // BUG Test ????
         // this.$el.height($(window).height() - this.$el.offset().top);
         this.calendar.render();
@@ -325,32 +318,6 @@ return AbstractRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * Bind handlers to enable swipe navigation
-     *
-     * @private
-     */
-    _bindSwipe: function () {
-        var self = this;
-        var touchStartX;
-        var touchEndX;
-        this.calendarElement.addEventListener('touchstart', function (event) {
-            self.isSwipeEnabled = true;
-            touchStartX = event.touches[0].pageX;
-        });
-        this.calendarElement.addEventListener('touchend', function (event) {
-            if (!self.isSwipeEnabled) {
-                return;
-            }
-            touchEndX = event.changedTouches[0].pageX;
-            if (touchStartX - touchEndX > 100) {
-                self.trigger_up('next');
-            } else if (touchStartX - touchEndX < -100) {
-                self.trigger_up('prev');
-            }
-        });
-    },
-    /**
      * Convert the new format of Event from FullCalendar V4 to a Event FullCalendar V3
      * @param fc4Event
      * @return {Object} FullCalendar V3 Object Event
@@ -431,7 +398,6 @@ return AbstractRenderer.extend({
                 self.trigger_up('dropRecord', event);
             },
             eventResize: function (eventResizeInfo) {
-                self.isSwipeEnabled = false;
                 self._unselectEvent();
                 var event = self._convertEventToFC3Event(eventResizeInfo.event);
                 self.trigger_up('updateRecord', event);
@@ -456,7 +422,6 @@ return AbstractRenderer.extend({
                 self.calendar.unselect();
             },
             eventRender: function (info) {
-                self.isSwipeEnabled = false;
                 var event = info.event;
                 var element = $(info.el);
                 var view = info.view;
@@ -491,9 +456,6 @@ return AbstractRenderer.extend({
                     self.trigger_up('edit_event', {id: event.id});
                 });
             },
-            eventPositioned: function (){
-                self.isSwipeEnabled = false;
-            },
             datesRender: function (info) {
                 // compute mode from view.type which is either 'dayGridMonth', 'timeGridWeek' or 'timeGridDay'
                 var mode = info.view.type === 'dayGridMonth' ? 'month' : (info.view.type === 'timeGridWeek' ? 'week' : 'day');
@@ -519,7 +481,6 @@ return AbstractRenderer.extend({
                 self._unselectEvent();
             },
             eventResizeStart: function (mouseResizeInfo) {
-                self.isSwipeEnabled = false;
                 $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseResizeInfo.event.id)).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
@@ -538,7 +499,7 @@ return AbstractRenderer.extend({
                     columnHeaderFormat: 'ddd D'
                 },
                 dayGridMonth: {
-                    columnHeaderFormat: config.device.isMobile ? 'ddd' : 'dddd'
+                    columnHeaderFormat: 'dddd'
                 }
             },
             height: 'parent',
