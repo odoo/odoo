@@ -29,8 +29,8 @@ var OrderSelectorWidget = PosBaseWidget.extend({
     template: 'OrderSelectorWidget',
     init: function(parent, options) {
         this._super(parent, options);
-        this.pos.get('orders').bind('add remove change',this.renderElement,this);
-        this.pos.bind('change:selectedOrder',this.renderElement,this);
+        this.pos.get('orders').on('add remove change',this.renderElement,this);
+        this.pos.on('change:selectedOrder',this.renderElement,this);
     },
     get_order_by_uid: function(uid) {
         var orders = this.pos.get_order_list();
@@ -341,7 +341,7 @@ var SynchNotificationWidget = StatusWidget.extend({
     template: 'SynchNotificationWidget',
     start: function(){
         var self = this;
-        this.pos.bind('change:synch', function(pos,synch){
+        this.pos.on('change:synch', function(pos,synch){
             self.set_status(synch.state, synch.pending);
         });
         this.$el.click(function(){

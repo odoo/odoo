@@ -30,7 +30,7 @@ var Gui = core.Class.extend({
         this.chrome.ready.then(function(){
             self.close_other_tabs();
             self._show_first_screen();
-            self.pos.bind('change:selectedOrder', function(){
+            self.pos.on('change:selectedOrder', function(){
                 self.show_saved_screen(self.pos.get_order());
             });
         });

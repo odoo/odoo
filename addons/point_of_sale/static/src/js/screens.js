@@ -426,8 +426,8 @@ var NumpadWidget = PosBaseWidget.extend({
     },
     start: function() {
         this.applyAccessRights();
-        this.state.bind('change:mode', this.changedMode, this);
-        this.pos.bind('change:cashier', this.applyAccessRights, this);
+        this.state.on('change:mode', this.changedMode, this);
+        this.pos.on('change:cashier', this.applyAccessRights, this);
         this.changedMode();
         this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
         this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
@@ -477,7 +477,7 @@ var ActionpadWidget = PosBaseWidget.extend({
         var self = this;
         this._super(parent, options);
 
-        this.pos.bind('change:selectedClient', function() {
+        this.pos.on('change:selectedClient', function() {
             self.renderElement();
         });
     },
@@ -519,9 +519,9 @@ var OrderWidget = PosBaseWidget.extend({
 
         this.numpad_state = options.numpad_state;
         this.numpad_state.reset();
-        this.numpad_state.bind('set_value',   this.set_value, this);
+        this.numpad_state.on('set_value',   this.set_value, this);
 
-        this.pos.bind('change:selectedOrder', this.change_selected_order, this);
+        this.pos.on('change:selectedOrder', this.change_selected_order, this);
 
         this.line_click_handler = function(event){
             self.click_line(this.orderline, event);
@@ -570,7 +570,9 @@ var OrderWidget = PosBaseWidget.extend({
     orderline_remove: function(line){
         this.remove_orderline(line);
         this.numpad_state.reset();
-        this.update_summary();
+        // This method call is unnecessary because orderline_change is also called
+        // which already calls the update_summary.
+        // this.update_summary();
     },
     orderline_change: function(line){
         this.rerender_orderline(line);
@@ -578,18 +580,18 @@ var OrderWidget = PosBaseWidget.extend({
     },
     bind_order_events: function() {
         var order = this.pos.get_order();
-            order.unbind('change:client', this.update_summary, this);
-            order.bind('change:client',   this.update_summary, this);
-            order.unbind('change',        this.update_summary, this);
-            order.bind('change',          this.update_summary, this);
+            order.off('change:client', this.update_summary, this);
+            order.on('change:client',   this.update_summary, this);
+            order.off('change',        this.update_summary, this);
+            order.on('change',          this.update_summary, this);
 
         var lines = order.orderlines;
-            lines.unbind('add',     this.orderline_add,    this);
-            lines.bind('add',       this.orderline_add,    this);
-            lines.unbind('remove',  this.orderline_remove, this);
-            lines.bind('remove',    this.orderline_remove, this); 
-            lines.unbind('change',  this.orderline_change, this);
-            lines.bind('change',    this.orderline_change, this);
+            lines.off('add',     this.orderline_add,    this);
+            lines.on('add',       this.orderline_add,    this);
+            lines.off('remove',  this.orderline_remove, this);
+            lines.on('remove',    this.orderline_remove, this);
+            lines.off('change',  this.orderline_change, this);
+            lines.on('change',    this.orderline_change, this);
 
     },
     render_orderline: function(orderline){
@@ -897,11 +899,11 @@ var ProductListWidget = PosBaseWidget.extend({
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
 
-        this.pos.get('orders').bind('add remove change', function () {
+        this.pos.get('orders').on('add remove change', function () {
             self.renderElement();
         }, this);
 
-        this.pos.bind('change:selectedOrder', function () {
+        this.pos.on('change:selectedOrder', function () {
             this.renderElement();
         }, this);
     },
@@ -1821,7 +1823,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var self = this;
         this._super(parent, options);
 
-        this.pos.bind('change:selectedOrder',function(){
+        this.pos.on('change:selectedOrder',function(){
                 this.renderElement();
                 this.watch_order_changes();
             },this);
@@ -1888,7 +1890,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             event.preventDefault();
         };
 
-        this.pos.bind('change:selectedClient', function() {
+        this.pos.on('change:selectedClient', function() {
             self.customer_changed();
         }, this);
     },
@@ -2245,16 +2247,16 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var order = this.pos.get_order();
         if(this.old_order){
             this.old_order.stop_electronic_payment();
-            this.old_order.unbind(null, null, this);
-            this.old_order.paymentlines.unbind(null, null, this);
+            this.old_order.off(null, null, this);
+            this.old_order.paymentlines.off(null, null, this);
         }
         if (!order) {
             return;
         }
-        order.bind('all',function(){
+        order.on('all',function(){
             self.order_changes();
         });
-        order.paymentlines.bind('all', self.order_changes.bind(self));
+        order.paymentlines.on('all', self.order_changes.bind(self));
         this.old_order = order;
     },
     // called when the order is changed, used to show if
@@ -2481,11 +2483,11 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
     init: function (parent, options) {
         this._super(parent, options);
 
-        this.pos.get('orders').bind('add remove change', function () {
+        this.pos.get('orders').on('add remove change', function () {
             this.renderElement();
         }, this);
 
-        this.pos.bind('change:selectedOrder', function () {
+        this.pos.on('change:selectedOrder', function () {
             this.renderElement();
         }, this);
     },
@@ -2550,11 +2552,11 @@ var set_pricelist_button = ActionButtonWidget.extend({
     init: function (parent, options) {
         this._super(parent, options);
 
-        this.pos.get('orders').bind('add remove change', function () {
+        this.pos.get('orders').on('add remove change', function () {
             this.renderElement();
         }, this);
 
-        this.pos.bind('change:selectedOrder', function () {
+        this.pos.on('change:selectedOrder', function () {
             this.renderElement();
         }, this);
     },

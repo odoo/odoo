@@ -80,7 +80,7 @@ exports.PosModel = Backbone.Model.extend({
             'cashier':          null,
         });
 
-        this.get('orders').bind('remove', function(order,_unused_,options){
+        this.get('orders').on('remove', function(order,_unused_,options){
             self.on_removed_order(order,options.index,options.reason);
         });
 
@@ -89,8 +89,8 @@ exports.PosModel = Backbone.Model.extend({
             var order = self.get_order();
             this.set('selectedClient', order ? order.get_client() : null );
         }
-        this.get('orders').bind('add remove change', update_client, this);
-        this.bind('change:selectedOrder', update_client, this);
+        this.get('orders').on('add remove change', update_client, this);
+        this.on('change:selectedOrder', update_client, this);
 
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
@@ -1609,6 +1609,7 @@ exports.Orderline = Backbone.Model.extend({
     // selects or deselects this orderline
     set_selected: function(selected){
         this.selected = selected;
+        // this trigger also triggers the change event of the collection.
         this.trigger('change',this);
     },
     // returns true if this orderline is selected
@@ -2712,6 +2713,10 @@ exports.Order = Backbone.Model.extend({
     select_orderline: function(line){
         if(line){
             if(line !== this.selected_orderline){
+                // if line (new line to select) is not the same as the old
+                // selected_orderline, then we set the old line to false,
+                // and set the new line to true. Also, set the new line as
+                // the selected_orderline.
                 if(this.selected_orderline){
                     this.selected_orderline.set_selected(false);
                 }
