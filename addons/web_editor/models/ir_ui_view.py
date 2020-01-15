@@ -70,6 +70,7 @@ class IrUiView(models.Model):
         xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
         arch.append(xpath)
         structure = etree.Element(el.tag, attrib=el.attrib)
+        structure.text = el.text
         xpath.append(structure)
         for child in el.iterchildren(tag=etree.Element):
             structure.append(copy.deepcopy(child))
