@@ -135,7 +135,7 @@ class EventEvent(models.Model):
         string='Maximum Attendees Number',
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
-        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
+        [('unlimited', 'Unlimited'), ('limited', 'Limited')],
         'Maximum Attendees', required=True, default='unlimited')
     seats_min = fields.Integer(
         string='Minimum Attendees',
