@@ -26,7 +26,14 @@ class Alarm(models.Model):
     alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
-    duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
+    duration_minutes = fields.Integer('Duration in minutes', search='_search_duration_minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
+
+    def _search_duration_minutes(self, operator, value):
+        return ['|', '|',
+            '&', ('interval', '=', 'minutes'), ('duration', operator, value),
+            '&', ('interval', '=', 'hours'), ('duration', operator, value / 60),
+            '&', ('interval', '=', 'days'), ('duration', operator, value / 60 / 24),
+        ]
 
     @api.onchange('duration', 'interval', 'alarm_type')
     def _onchange_duration_interval(self):

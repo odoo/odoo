@@ -116,4 +116,6 @@ var AttendeeCalendarView = CalendarView.extend({
 
 viewRegistry.add('attendee_calendar', AttendeeCalendarView);
 
+return AttendeeCalendarView
+
 });

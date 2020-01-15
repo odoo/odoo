@@ -594,7 +594,7 @@ class Meeting(models.Model):
                 detached_events |= recurrence.calendar_event_ids
                 recurrence.calendar_event_ids.recurrence_id = False
                 recurrences_to_unlink |= recurrence
-        recurrences_to_unlink.unlink()
+        recurrences_to_unlink.with_context(archive_on_error=True).unlink()
         return detached_events - self
 
     def write(self, values):
@@ -627,7 +627,7 @@ class Meeting(models.Model):
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
         (detached_events & self).active = False
-        (detached_events - self).unlink()
+        (detached_events - self).with_context(archive_on_error=True).unlink()
 
         # Notify attendees if there is an alarm on the modified event, or if there was an alarm
         # that has just been removed, as it might have changed their next event notification
