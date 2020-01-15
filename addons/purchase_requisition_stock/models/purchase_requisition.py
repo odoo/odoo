@@ -31,6 +31,7 @@ class PurchaseRequisition(models.Model):
                 'product_id': product_id.id,
                 'product_uom_id': product_uom.id,
                 'product_qty': product_qty,
+                'product_description_variants': values.get('product_description_variants'),
                 'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False
             })],
         }

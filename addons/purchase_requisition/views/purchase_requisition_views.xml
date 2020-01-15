@@ -151,6 +151,7 @@
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" context="{'default_purchase_requisition': 'tenders'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_description_variants" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
