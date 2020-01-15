@@ -138,6 +138,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Prezado ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aqui está\n"
+"        % if ctx.get('proforma')\n"
+"            em anexo sua fatura pró-forma\n"
+"        % else\n"
+"            a ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        no valor de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Não hesite em contactar-nos se tiver alguma dúvida.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -305,8 +329,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
-msgstr ""
-"<span>Ao assinar esta proposta, concordo com os seguintes termos:</span>"
+msgstr "<span>Ao assinar esta proposta, concordo com os seguintes termos:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -487,6 +510,9 @@ msgid ""
 "                where you want to sell extra hours to the customer\n"
 "                because the initial hours have already been used."
 msgstr ""
+"Um exemplo típico são as horas de serviço pré-pagas,\n"
+"                onde você quer vender horas extras para o cliente\n"
+"                porque as horas iniciais já foram usadas."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1179,11 +1205,6 @@ msgstr "Validade Padrão da Cotação"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
 msgstr "Validade Padrão da Cotação (Dias)"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__use_sale_note
-msgid "Default Terms & Conditions"
-msgstr "Termos e Condições Padrão"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_note
@@ -2466,7 +2487,7 @@ msgstr "Pagar &amp; Confirmar"
 #: code:addons/sale/models/payment.py:160
 #, python-format
 msgid "Pay Now"
-msgstr "Pagar agora"
+msgstr "Pagar Agora"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3027,7 +3048,7 @@ msgstr "Avisos de Venda"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Venda integrada ao método de pagamento selecionado"
+msgstr "Venda onboarding método de pagamento selecionado"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
@@ -3042,7 +3063,7 @@ msgstr "Linha do pedido de venda"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Sales"
-msgstr "Vendas"
+msgstr "Comercial"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -3487,12 +3508,12 @@ msgstr "Estágio"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr "Estado da etapa do pedido de confirmação de integração"
+msgstr "Estado da etapa da ordem de confirmação do embarque"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr "Estado da integração do passo da cotação de exemplo"
+msgstr "Estado da etapa de orçamento das amostras a bordo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
@@ -4088,8 +4109,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
-"Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> para clientes "
-"<a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
+"Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> para o cliente <a"
+" href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
