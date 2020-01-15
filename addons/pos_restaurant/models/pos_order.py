@@ -83,6 +83,16 @@ class PosOrder(models.Model):
 
         for order_id, order_lines in groupby(extended_order_lines, key=lambda x:x[2]['order_id']):
             next(order for order in orders if order['id'] == order_id[0])['lines'] = list(order_lines)
+            
+    def _get_fields_for_payment_lines(self):
+        return [
+            'id',
+            'amount',
+            'pos_order_id',
+            'payment_method_id',
+            'payment_status'
+            ]
+        
 
     def _get_payment_lines(self, orders):
         """Add account_bank_statement_lines to the orders.
@@ -94,12 +104,7 @@ class PosOrder(models.Model):
         """
         payment_lines = self.env['pos.payment'].search_read(
                 domain = [('pos_order_id', 'in', [po['id'] for po in orders])],
-                fields = [
-                    'id',
-                    'amount',
-                    'pos_order_id',
-                    'payment_method_id',
-                    ])
+                fields = self._get_fields_for_payment_lines())
 
         extended_payment_lines = []
         for payment_line in payment_lines:
