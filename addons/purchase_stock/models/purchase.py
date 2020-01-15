@@ -458,5 +458,5 @@ class PurchaseOrderLine(models.Model):
             l.propagate_date_minimum_delta == values['propagate_date_minimum_delta'] and
             l.propagate_cancel == values['propagate_cancel'] and
             ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True) and
-            (values.get('product_description_variants') and l.name == description_picking or True))
+            (not values.get('product_description_variants') or l.name == description_picking))
         return lines and lines[0] or self.env['purchase.order.line']

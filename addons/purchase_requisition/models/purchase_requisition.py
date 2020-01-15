@@ -168,6 +168,7 @@ class PurchaseRequisitionLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
+    product_description_variants = fields.Char('Custom Description')
     price_unit = fields.Float(string='Unit Price', digits='Product Price')
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
@@ -243,6 +244,8 @@ class PurchaseRequisitionLine(models.Model):
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         self.ensure_one()
         requisition = self.requisition_id
+        if self.product_description_variants:
+            name += '\n' + self.product_description_variants
         if requisition.schedule_date:
             date_planned = datetime.combine(requisition.schedule_date, time.min)
         else:
