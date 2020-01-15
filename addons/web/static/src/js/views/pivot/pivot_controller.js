@@ -12,7 +12,7 @@ odoo.define('web.PivotController', function (require) {
      * view.
      */
 
-    const ControllerAdapter = require('web.ControllerAdapter');
+    const AbstractController = require('web.AbstractController');
     const core = require('web.core');
     const framework = require('web.framework');
     const session = require('web.session');
@@ -20,14 +20,15 @@ odoo.define('web.PivotController', function (require) {
     const _t = core._t;
     const QWeb = core.qweb;
 
-    const PivotController = ControllerAdapter.extend({
-        events: Object.assign({}, ControllerAdapter.prototype.events, {
+    const PivotController = AbstractController.extend({
+        custom_events: Object.assign({}, AbstractController.prototype.custom_events, {
             closed_header_click: '_onClosedHeaderClicked',
             open_view: '_onOpenView',
             opened_header_click: '_onOpenedHeaderClicked',
             sort_rows: '_onSortRows',
             groupby_menu_selection: '_onGroupByMenuSelection',
         }),
+
         /**
          * @override
          * @param parent
@@ -206,7 +207,7 @@ odoo.define('web.PivotController', function (require) {
          * @private
          * */
         _onOpenedHeaderClicked: function (ev) {
-            this.model.closeGroup(ev.detail.cell.groupId, ev.detail.type);
+            this.model.closeGroup(ev.data.cell.groupId, ev.data.type);
             this.update({}, { reload: false });
         },
         /**
@@ -214,9 +215,9 @@ odoo.define('web.PivotController', function (require) {
          * @private
          * */
         _onClosedHeaderClicked: async function (ev) {
-            const cell = ev.detail.cell;
+            const cell = ev.data.cell;
             const groupId = cell.groupId;
-            const type = ev.detail.type;
+            const type = ev.data.type;
 
             const group = {
                 rowValues: groupId[0],
@@ -245,8 +246,8 @@ odoo.define('web.PivotController', function (require) {
         _onGroupByMenuSelection: async function (ev) {
             ev.stopPropagation();
 
-            let groupBy = ev.detail.field.name;
-            const interval = ev.detail.interval;
+            let groupBy = ev.data.field.name;
+            const interval = ev.data.interval;
             if (interval) {
                 groupBy = groupBy + ':' + interval;
             }
@@ -260,7 +261,7 @@ odoo.define('web.PivotController', function (require) {
          */
         _onOpenView: function (ev) {
             ev.stopPropagation();
-            const cell = ev.detail;
+            const cell = ev.data;
             if (cell.value === undefined || this.initialState.disableLinking) {
                 return;
             }
@@ -297,10 +298,10 @@ odoo.define('web.PivotController', function (require) {
          */
         _onSortRows: function (ev) {
             this.model.sortRows({
-                groupId: ev.detail.groupId,
-                measure: ev.detail.measure,
-                order: (ev.detail.order || 'desc') === 'asc' ? 'desc' : 'asc',
-                originIndexes: ev.detail.originIndexes,
+                groupId: ev.data.groupId,
+                measure: ev.data.measure,
+                order: (ev.data.order || 'desc') === 'asc' ? 'desc' : 'asc',
+                originIndexes: ev.data.originIndexes,
             });
             this.update({}, { reload: false });
         },

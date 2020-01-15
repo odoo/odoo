@@ -11,7 +11,7 @@ var _t = core._t;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
-const oldEnv = PivotRenderer.env;
+
 /**
  * Helper function that returns, given a pivot instance, the values of the
  * table, separated by ','.
