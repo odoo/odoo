@@ -49,8 +49,12 @@ odoo.define('web.test_env', async function (require) {
             _t: env._t || (s => s),
             _lt: env._lt || (s => s),
             bus: new Bus(),
+            device: Object.assign({
+                isMobile: false,
+            }, env.device),
             qweb: new owl.QWeb({ templates: session.owlTemplates }),
             services: Object.assign({
+                getCookie() { },
                 rpc(params, options) {
                     const query = buildQuery(params);
                     return testEnv.session.rpc(query.route, query.params, options);
@@ -64,9 +68,6 @@ odoo.define('web.test_env', async function (require) {
                     throw new Error(`No method to perform RPC`);
                 },
             }, env.session),
-            device: Object.assign({
-                isMobile: false,
-            }, env.device),
         };
         const testEnv = Object.assign(proxiedEnv, defaultEnv);
         return testEnv;
