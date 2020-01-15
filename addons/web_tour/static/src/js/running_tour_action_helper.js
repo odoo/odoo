@@ -28,6 +28,9 @@ var RunningTourActionHelper = core.Class.extend({
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
     },
+    text_blur: function (text, element) {
+        this._text_blur(this._get_action_values(element), text);
+    },
     drag_and_drop: function (to, element) {
         this._drag_and_drop(this._get_action_values(element), to);
     },
@@ -105,6 +108,11 @@ var RunningTourActionHelper = core.Class.extend({
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
         values.$element.trigger("change");
+    },
+    _text_blur: function (values, text) {
+        this._text(values, text);
+        values.$element.trigger('focusout');
+        values.$element.trigger('blur');
     },
     _drag_and_drop: function (values, to) {
         var $to;
