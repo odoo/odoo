@@ -7,16 +7,22 @@ from odoo import models
 class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
-    def _prepare_visitor_send_sms_values(self):
-        visitor_sms_values = super(WebsiteVisitor, self)._prepare_visitor_send_sms_values()
-        if not visitor_sms_values:
+    def _check_for_sms_composer(self):
+        check = super(WebsiteVisitor, self)._check_for_sms_composer()
+        if not check and self.lead_ids:
+            sorted_leads = self.lead_ids.filtered(lambda l: l.mobile == self.mobile or l.phone == self.mobile)._sort_by_confidence_level(reverse=True)
+            if sorted_leads:
+                return True
+        return check
+
+    def _prepare_sms_composer_context(self):
+        if not self.partner_id and self.lead_ids:
             leads_with_number = self.lead_ids.filtered(lambda l: l.mobile == self.mobile or l.phone == self.mobile)._sort_by_confidence_level(reverse=True)
             if leads_with_number:
                 lead = leads_with_number[0]
                 return {
-                    'res_model': 'crm.lead',
-                    'res_id': lead.id,
-                    'partner_ids': [lead.id],
+                    'default_res_model': 'crm.lead',
+                    'default_res_id': lead.id,
                     'number_field_name': 'mobile' if lead.mobile == self.mobile else 'phone',
                 }
-        return visitor_sms_values
+        return super(WebsiteVisitor, self)._prepare_sms_composer_context()
