@@ -1050,7 +1050,7 @@ class IrModelRelation(models.Model):
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
-    model = fields.Many2one('ir.model', required=True, index=True)
+    model = fields.Many2one('ir.model', required=True, index=True, ondelete='cascade')
     module = fields.Many2one('ir.module.module', required=True, index=True)
     date_update = fields.Datetime(string='Update Date')
     date_init = fields.Datetime(string='Initialization Date')
