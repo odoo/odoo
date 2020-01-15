@@ -101,11 +101,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
         this.editModeEnable = true;
         await new EditorMenu(this).prependTo(document.body);
-        var $target = this._targetForEdition();
-        this.$editorMessageElements = $target
-            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
-            .not('[data-editor-message]')
-            .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+        this._addEditorMessage();
         var res = await new Promise(function (resolve, reject) {
             self.trigger_up('widgets_start_request', {
                 editableMode: true,
@@ -144,6 +140,19 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _targetForEdition: function () {
         return $('#wrapwrap'); // TODO should know about this element another way
+    },
+    /**
+     * Add editor message in empty oe_structure elements.
+     *
+     * @private
+     * @returns {JQuery}
+     */
+    _addEditorMessage: function () {
+        var $target = this._targetForEdition();
+        this.$editorMessageElements = $target
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .not('[data-editor-message]')
+            .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
     },
 
     //--------------------------------------------------------------------------
@@ -236,7 +245,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
-     * that is should start the public widgets for this snippet.
+     * that is should start the public widgets for this snippet. Add editor
+     * message in empty oe_structure elements.
      *
      * @private
      * @param {OdooEvent} ev
@@ -246,6 +256,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             editableMode: true,
             $target: ev.data.$target,
         });
+        this._addEditorMessage();
     },
 });
 
