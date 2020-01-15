@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
+
+    attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 
     def _action_confirm(self):
         res = super(SaleOrder, self)._action_confirm()
@@ -21,6 +23,18 @@ class SaleOrder(models.Model):
                     .with_context(default_sale_order_id=so.id) \
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
+
+    def action_view_attendee_list(self):
+        return {
+            "name": _("Attendees"),
+            "type": "ir.actions.act_window",
+            "res_model": "event.registration",
+            "view_mode": "tree",
+            "domain": [('sale_order_id', '=', self.id)]
+        }
+
+    def _compute_attendee_count(self):
+        self.attendee_count = sum(line.product_uom_qty for line in self.order_line if line.event_ok)
 
 
 class SaleOrderLine(models.Model):

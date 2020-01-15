@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="exception_event_ticket_id_changed" name="Message: Alert on event ticket id change">
+    <div>
+        <p>
+            Ticket changed on attendee:
+            <a href="#" data-oe-model="event.registration" t-att-data-oe-id="registration.id"><t t-esc="registration.name"/></a>.
+            Manual actions may be needed.
+        </p>
+        <div class="mt16">
+            <p>Exception:</p>
+            <ul>
+                <li>
+                    <a href="#" data-oe-model="event.registration" t-att-data-oe-id="registration.id"><t t-esc="registration.name"/></a>:
+                    Ticket changed from <strong><t t-esc="old_ticket"/></strong> to <strong><t t-esc="new_ticket"/></strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+</odoo>

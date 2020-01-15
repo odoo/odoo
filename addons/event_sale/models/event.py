@@ -244,7 +244,7 @@ class EventTicket(models.Model):
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', readonly=True, states={'draft': [('readonly', False)]})
+    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', tracking=True)
     # in addition to origin generic fields, add real relational fields to correctly
     # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
@@ -274,6 +274,14 @@ class EventRegistration(models.Model):
                 res = False
         return res
 
+    def action_view_sale_order(self):
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "view_mode": "form",
+            "res_id": self.sale_order_id.id,
+        }
+
     @api.model
     def create(self, vals):
         res = super(EventRegistration, self).create(vals)
@@ -282,6 +290,26 @@ class EventRegistration(models.Model):
                 values={'self': res, 'origin': res.sale_order_id},
                 subtype_id=self.env.ref('mail.mt_note').id)
         return res
+
+    def write(self, values):
+        if 'event_ticket_id' in values:
+            new_ticket_id = self.env['event.event.ticket'].browse(values['event_ticket_id'])
+            if self.event_ticket_id != new_ticket_id:
+                self._sale_order_ticket_type_change_notify(self, new_ticket_id)
+
+        result = super(EventRegistration, self).write(values)
+        return result
+
+    def _sale_order_ticket_type_change_notify(self, event_registration, new_ticket_id):
+        render_context = {
+            'registration': event_registration,
+            'old_ticket': event_registration.event_ticket_id.name,
+            'new_ticket': new_ticket_id.name
+        }
+        event_registration.sale_order_id.activity_schedule_with_view('mail.mail_activity_data_warning',
+            user_id=event_registration.event_id.user_id.id or self.env.ref("base.user_root").id,
+            views_or_xmlid='event_sale.exception_event_ticket_id_changed',
+            render_context=render_context)
 
     @api.model
     def _prepare_attendee_values(self, registration):
