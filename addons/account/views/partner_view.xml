@@ -166,13 +166,38 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="groups_id" eval="[(5,)]"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='banks']" position="after">
-                    <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
-                        <field name="currency_id" invisible="1"/>
-                        <field name="property_account_receivable_id"/>
-                        <field name="property_account_payable_id"/>
-                    </group>
-                </xpath>
+                <page name="sales_purchases" position="after">
+                    <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
+                        <group>
+                            <group string="Bank Accounts" name="banks" groups="account.group_account_invoice">
+                                <field name="bank_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="bank_id"/>
+                                        <field name="acc_number"/>
+                                        <field name="acc_holder_name" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <button type="action" class="btn-link"
+                                    name="%(base.action_res_partner_bank_account_form)d"
+                                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"
+                                    string="View accounts detail"
+                                    colspan="2"
+                                />
+                            </group>
+                            <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="property_account_receivable_id"/>
+                                <field name="property_account_payable_id"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Invoicing" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice">
+                        <div>
+                            <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
+                        </div>
+                    </page>
+                </page>
                 <xpath expr="//group[@name='misc']" position="before">
                     <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice">
                         <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
