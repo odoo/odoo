@@ -76,7 +76,7 @@ class ProjectTask(models.Model):
 
     def action_view_so(self):
         self.ensure_one()
-        so_ids = self._get_action_view_so_lines_ids()
+        so_ids = self._get_action_view_so_ids()
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
