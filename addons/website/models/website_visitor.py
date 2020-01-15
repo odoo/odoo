@@ -121,38 +121,39 @@ class WebsiteVisitor(models.Model):
             visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - visitor.last_connection_datetime))
             visitor.is_connected = (datetime.now() - visitor.last_connection_datetime) < timedelta(minutes=5)
 
-    def _prepare_visitor_send_mail_values(self):
-        if self.partner_id.email:
-            return {
-                'res_model': 'res.partner',
-                'res_id': self.partner_id.id,
-                'partner_ids': [self.partner_id.id],
-            }
-        return {}
+    def _check_for_message_composer(self):
+        """ Purpose of this method is to actualize visitor model prior to contacting
+        him. Used notably for inheritance purpose, when dealing with leads that
+        could update the visitor model. """
+        return bool(self.partner_id and self.partner_id.email)
+
+    def _prepare_message_composer_context(self):
+        return {
+            'default_model': 'res.partner',
+            'default_res_id': self.partner_id.id,
+            'default_partner_ids': [self.partner_id.id],
+        }
 
     def action_send_mail(self):
         self.ensure_one()
-        visitor_mail_values = self._prepare_visitor_send_mail_values()
-        if not visitor_mail_values:
-            raise UserError(_("There is no email linked this visitor."))
+        if not self._check_for_message_composer():
+            raise UserError(_("There is no contact and/or no email linked this visitor."))
+        visitor_composer_ctx = self._prepare_message_composer_context()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(
-            default_model=visitor_mail_values.get('res_model'),
-            default_res_id=visitor_mail_values.get('res_id'),
+        compose_ctx = dict(
             default_use_template=False,
-            default_partner_ids=[(6, 0, visitor_mail_values.get('partner_ids'))],
             default_composition_mode='comment',
-            default_reply_to=self.env.user.partner_id.email,
         )
+        compose_ctx.update(**visitor_composer_ctx)
         return {
-            'name': _('Compose Email'),
+            'name': _('Contact Visitor'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'views': [(compose_form.id, 'form')],
             'view_id': compose_form.id,
             'target': 'new',
-            'context': ctx,
+            'context': compose_ctx,
         }
 
     def _get_visitor_from_request(self, force_create=False):
