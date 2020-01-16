@@ -414,11 +414,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             var action_helper = new RunningTourActionHelper(tip.widget);
             do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
+            var tour = self.tours[tour_name];
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
                 var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
                 action_helper[m[1]](m[2]);
+            } else if (tour.current_step === tour.steps.length - 1) {
+                console.log('Tour %s: ignoring action (auto) of last step', tour_name);
             } else {
                 action_helper.auto();
             }
