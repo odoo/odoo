@@ -32,7 +32,7 @@
 </template>
 
 <!-- Index - OPTION - Sidebar -->
-<template id="opt_index_sidebar" inherit_id="website_event.index" active="True" customize_show="True" name="Show Sidebar">
+<template id="opt_index_sidebar" inherit_id="website_event.index" active="False" customize_show="True" name="Show Sidebar">
     <xpath expr="//div[@id='o_wevent_index_main_col']" position="after">
         <t t-call="website_event.index_sidebar"/>
     </xpath>
@@ -76,7 +76,7 @@
 </template>
 
 <!-- Filter - Category -->
-<template id="event_category" inherit_id="website_event.index_topbar" active="True" customize_show="True" name="Filter by Category">
+<template id="event_category" inherit_id="website_event.index_topbar" active="False" customize_show="True" name="Filter by Category">
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
         <li class="nav-item dropdown mr-2 my-1 my-lg-0">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
@@ -99,7 +99,7 @@
 </template>
 
 <!-- Filter - Location -->
-<template id="event_location" inherit_id="website_event.index_topbar" active="True" customize_show="True" name="Filter by Country">
+<template id="event_location" inherit_id="website_event.index_topbar" active="False" customize_show="True" name="Filter by Country">
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
         <li class="nav-item dropdown mr-2 my-1 my-lg-0">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
