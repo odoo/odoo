@@ -208,7 +208,7 @@ class account_journal(models.Model):
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
-            AND move.invoice_payment_state = 'not_paid'
+            AND move.payment_state in ('not_paid', 'partial')
             AND move.type IN %(invoice_types)s
         ''', {
             'invoice_types': tuple(self.env['account.move'].get_invoice_types(True)),
@@ -251,7 +251,7 @@ class account_journal(models.Model):
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
-            self.env['account.move'].flush(['amount_residual', 'currency_id', 'type', 'invoice_date', 'company_id', 'journal_id', 'date', 'state', 'invoice_payment_state'])
+            self.env['account.move'].flush(['amount_residual', 'currency_id', 'type', 'invoice_date', 'company_id', 'journal_id', 'date', 'state', 'payment_state'])
 
             (query, query_args) = self._get_open_bills_to_pay_query()
             self.env.cr.execute(query, query_args)
@@ -273,7 +273,7 @@ class account_journal(models.Model):
                 WHERE journal_id = %s
                 AND date <= %s
                 AND state = 'posted'
-                AND invoice_payment_state = 'not_paid'
+                AND payment_state in ('not_paid', 'partial')
                 AND type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
             '''
             self.env.cr.execute(query, (self.id, today))
@@ -331,7 +331,7 @@ class account_journal(models.Model):
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
-            AND move.invoice_payment_state = 'not_paid'
+            AND move.payment_state in ('not_paid', 'partial')
             AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
         ''', {'journal_id': self.id})
 
@@ -351,7 +351,7 @@ class account_journal(models.Model):
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'draft'
-            AND move.invoice_payment_state = 'not_paid'
+            AND move.payment_state in ('not_paid', 'partial')
             AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
         ''', {'journal_id': self.id})
 

@@ -90,21 +90,21 @@ class ProductProduct(models.Model):
             res[val.id]['date_to'] = date_to
             res[val.id]['invoice_state'] = invoice_state
             states = ()
-            invoice_payment_states = ()
+            payment_states = ()
             if invoice_state == 'paid':
                 states = ('posted',)
-                invoice_payment_states = ('paid',)
+                payment_states = ('paid',)
             elif invoice_state == 'open_paid':
                 states = ('posted',)
-                invoice_payment_states = ('not_paid', 'paid')
+                payment_states = ('not_paid', 'paid')
             elif invoice_state == 'draft_open_paid':
                 states = ('posted', 'draft')
-                invoice_payment_states = ('not_paid', 'paid')
+                payment_states = ('not_paid', 'paid')
             company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
             self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
-            self.env['account.move'].flush(['state', 'invoice_payment_state', 'type', 'invoice_date', 'company_id'])
+            self.env['account.move'].flush(['state', 'payment_state', 'type', 'invoice_date', 'company_id'])
             self.env['product.template'].flush(['list_price'])
             sqlstr = """
                 WITH currency_rate AS ({})
@@ -124,14 +124,14 @@ class ProductProduct(models.Model):
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(i.invoice_date, NOW())))
                 WHERE l.product_id = %s
                 AND i.state IN %s
-                AND i.invoice_payment_state IN %s
+                AND i.payment_state IN %s
                 AND i.type IN %s
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
                 AND l.display_type IS NULL
                 """.format(self.env['res.currency']._select_companies_rates())
             invoice_types = ('out_invoice', 'in_refund')
-            self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))
+            self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
@@ -139,7 +139,7 @@ class ProductProduct(models.Model):
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
             invoice_types = ('in_invoice', 'out_refund')
-            self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))
+            self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['purchase_num_invoiced'] = result[1] and result[1] or 0.0

@@ -122,7 +122,7 @@ class TestPayment(AccountTestCommon):
         self.assertAlmostEqual(payment.amount, 300)
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(payment.state, 'posted')
-        self.assertEqual(inv_1.invoice_payment_state, 'paid')
+        self.assertEqual(inv_1.payment_state, 'paid')
 
         rec_line = payment.move_line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
         self.assertRecordValues(payment.move_line_ids.sorted('credit'), [
@@ -249,7 +249,7 @@ class TestPayment(AccountTestCommon):
             {'account_id': self.account_payable.id, 'debit': 8.65, 'credit': 0.0, 'amount_currency': 13.22, 'currency_id': self.currency_usd_id},
         ])
         self.assertTrue(receivable_line.full_reconcile_id)
-        self.assertEqual(invoice.invoice_payment_state, 'paid')
+        self.assertEqual(invoice.payment_state, 'paid')
 
         # Use case:
         # Company is in EUR, create a vendor bill for 25 EUR and register payment of 25 USD.
@@ -277,7 +277,7 @@ class TestPayment(AccountTestCommon):
             {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 8.65, 'amount_currency': -13.22, 'currency_id': self.currency_usd_id},
         ])
         self.assertTrue(payable_line.full_reconcile_id)
-        self.assertEqual(invoice.invoice_payment_state, 'paid')
+        self.assertEqual(invoice.payment_state, 'paid')
 
     def test_payment_and_writeoff_out_refund(self):
         # Use case:
@@ -304,7 +304,7 @@ class TestPayment(AccountTestCommon):
             {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 90.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 10.0, 'amount_currency': 0.0, 'currency_id': False},
         ])
-        self.assertEqual(invoice.invoice_payment_state, 'paid')
+        self.assertEqual(invoice.payment_state, 'paid')
 
     def test_payment_and_writeoff_in_other_currency_2(self):
         # Use case:
@@ -351,7 +351,7 @@ class TestPayment(AccountTestCommon):
         ])
 
         #check the invoice status
-        self.assertEqual(invoice.invoice_payment_state, 'paid')
+        self.assertEqual(invoice.payment_state, 'paid')
 
     def test_payment_and_writeoff_in_other_currency_3(self):
         # Use case related in revision 20935462a0cabeb45480ce70114ff2f4e91eaf79
@@ -397,7 +397,7 @@ class TestPayment(AccountTestCommon):
 
         # Check the invoice status and the full reconciliation: the difference on the receivable account
         # should have been completed by an exchange rate difference entry
-        self.assertEqual(invoice.invoice_payment_state, 'paid')
+        self.assertEqual(invoice.payment_state, 'paid')
         self.assertTrue(receivable_line.full_reconcile_id)
 
     def test_post_at_bank_reconciliation_payment(self):
@@ -441,7 +441,7 @@ class TestPayment(AccountTestCommon):
         invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id)
         (payment_one.move_line_ids + payment_two.move_line_ids + invoice.line_ids).filtered(lambda x: x.account_id.user_type_id.type == 'receivable').reconcile()
 
-        self.assertEqual(invoice.invoice_payment_state, 'in_payment', "Invoice should be in 'in payment' state")
+        self.assertEqual(invoice.payment_state, 'in_payment', "Invoice should be in 'in payment' state")
 
         # Match the first payment with a bank statement line
         bank_statement_one = self.reconcile(payment_one.move_line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'liquidity'), 42)
@@ -450,7 +450,7 @@ class TestPayment(AccountTestCommon):
         self.assertEqual(payment_one.mapped('move_line_ids.move_id.state'), ['posted'], "After bank reconciliation, payment one's account.move should be posted.")
         self.assertEqual(payment_one.mapped('move_line_ids.move_id.date'), stmt_line_date_one, "After bank reconciliation, payment one's account.move should share the same date as the bank statement.")
         self.assertEqual([payment_one.payment_date], stmt_line_date_one, "After bank reconciliation, payment one should share the same date as the bank statement.")
-        self.assertEqual(invoice.invoice_payment_state, 'in_payment', "The invoice should still be 'in payment', not all its payments are reconciled with a statement")
+        self.assertEqual(invoice.payment_state, 'in_payment', "The invoice should still be 'in payment', not all its payments are reconciled with a statement")
 
         # Match the second payment with a bank statement line
         bank_statement_two = self.reconcile(payment_two.move_line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'liquidity'), 42)
@@ -461,7 +461,7 @@ class TestPayment(AccountTestCommon):
         self.assertEqual([payment_two.payment_date], stmt_line_date_two, "After bank reconciliation, payment two should share the same date as the bank statement.")
 
         # The invoice should now be paid
-        self.assertEqual(invoice.invoice_payment_state, 'paid', "Invoice should be in 'paid' state after having reconciled the two payments with a bank statement")
+        self.assertEqual(invoice.payment_state, 'paid', "Invoice should be in 'paid' state after having reconciled the two payments with a bank statement")
 
     def test_payment_draft_keep_name(self):
         payment = self.payment_model.create({

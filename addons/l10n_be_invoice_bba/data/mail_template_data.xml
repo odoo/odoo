@@ -10,7 +10,7 @@
             (${object.partner_id.parent_id.name})
         % endif
         <br /><br />
-        Here is, in attachment, your 
+        Here is, in attachment, your
         % if object.name:
             invoice <strong>${object.name}</strong>
         % else:
@@ -21,7 +21,7 @@
         % endif
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
-        % if object.invoice_payment_state=='paid':
+        % if object.payment_state=='paid':
             This invoice is already paid.
         % else:
             Please remit payment at your earliest convenience.

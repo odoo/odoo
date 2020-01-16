@@ -80,7 +80,7 @@ class CrmTeam(models.Model):
             FROM account_move move
             LEFT JOIN account_move_line line ON line.move_id = move.id
             WHERE move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
-            AND move.invoice_payment_state IN ('in_payment', 'paid')
+            AND move.payment_state IN ('in_payment', 'paid')
             AND move.state = 'posted'
             AND move.team_id IN %s
             AND move.date BETWEEN %s AND %s
@@ -96,7 +96,7 @@ class CrmTeam(models.Model):
         data_map = dict((v[0], v[1]) for v in self._cr.fetchall())
         for team in self:
             team.invoiced = data_map.get(team.id, 0.0)
-    
+
     def _graph_get_model(self):
         if self._context.get('in_sales_app'):
             return 'sale.report'

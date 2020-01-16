@@ -10,7 +10,7 @@
                 The user must capture/void the authorized transactions before registering a new payment.
                 -->
                 <xpath expr="//button[@id='account_invoice_payment_btn']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', '|', '|', ('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('authorized_transaction_ids', '!=', [])]}</attribute>
+                    <attribute name="attrs">{'invisible': ['|', '|', '|', ('state', '!=', 'posted'), ('payment_state', 'not in', ('partial', 'not_paid')), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('authorized_transaction_ids', '!=', [])]}</attribute>
                 </xpath>
                 <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
                     <field name="authorized_transaction_ids" invisible="1"/>

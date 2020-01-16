@@ -49,7 +49,7 @@ class TestBankStatementReconciliation(AccountTestCommon):
         self.assertTrue(rcv_mv_line.reconciled)
         self.assertTrue(counterpart_mv_line.reconciled)
         self.assertEqual(counterpart_mv_line.matched_credit_ids, rcv_mv_line.matched_debit_ids)
-        self.assertEqual(rcv_mv_line.move_id.invoice_payment_state, 'paid', "The related invoice's state should now be 'paid'")
+        self.assertEqual(rcv_mv_line.move_id.payment_state, 'paid', "The related invoice's state should now be 'paid'")
 
     def test_reconcile_with_write_off(self):
         pass

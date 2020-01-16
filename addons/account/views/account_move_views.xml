@@ -399,9 +399,9 @@
                     <field name="invoice_partner_display_name" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
                     <field name="invoice_date" optional="show" invisible="context.get('default_type') not in ('in_invoice', 'in_refund','in_receipt')" string="Bill Date"/>
                     <field name="invoice_date" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
-                    <field name="invoice_origin" optional="show" string="Source Document"/>
+                    <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="invoice_payment_ref" optional="hide" invisible="context.get('default_type') in ('out_invoice', 'out_refund','out_receipt')"/>
-                    <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
+                    <field name="invoice_user_id" optional="hide" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="invoice_date_due" optional="show"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
@@ -410,8 +410,8 @@
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="state" optional="show"/>
-                    <field name="invoice_payment_state" optional="hide"/>
+                    <field name="state" optional="hide"/>
+                    <field name="payment_state"/>
                     <field name="type" invisible="context.get('default_type', True)"/>
                 </tree>
             </field>
@@ -485,7 +485,7 @@
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_invoice_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
-                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
+                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('payment_state', 'not in', ('not_paid', 'partial')), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
                                 string="Register Payment"
                                 groups="account.group_account_invoice"/>
                         <!-- Preview (only customer invoices) -->
@@ -494,7 +494,7 @@
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice"
-                                attrs="{'invisible': ['|', ('type', '!=', 'entry'), ('state', '!=', 'posted')]}"/>
+                                attrs="{'invisible': ['|', ('type', '!=', 'entry'), '|', ('state', '!=', 'posted'), ('payment_state', '=', 'reversed')]}"/>
                         <button name="action_reverse" string='Add Credit Note'
                                 type='object' groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'in_invoice')), ('state', '!=', 'posted')]}"/>
@@ -516,12 +516,12 @@
                     </div>
                     <div groups="account.group_account_invoice"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('invoice_payment_state', '!=', 'not_paid')]}">
+                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('invoice_payment_state', '!=', 'not_paid')]}">
+                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
                     </div>
                     <sheet>
@@ -537,14 +537,19 @@
 
                         <!-- Payment status for invoices / receipts -->
                         <widget name="web_ribbon" title="Paid"
-                                attrs="{'invisible': ['|', ('invoice_payment_state', '!=', 'paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                attrs="{'invisible': ['|', ('payment_state', '!=', 'paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                         <widget name="web_ribbon" title="In Payment"
-                                attrs="{'invisible': ['|', ('invoice_payment_state', '!=', 'in_payment'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                attrs="{'invisible': ['|', ('payment_state', '!=', 'in_payment'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                        <widget name="web_ribbon" title="Partial"
+                                attrs="{'invisible': ['|', ('payment_state', '!=', 'partial'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                        <widget name="web_ribbon" title="Reversed"
+                                bg_color="bg-danger"
+                                attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"/>
 
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
                         <field name="type" invisible="1"/>
-                        <field name="invoice_payment_state" invisible="1" force_save="1"/>
+                        <field name="payment_state" invisible="1" force_save="1"/>
                         <field name="invoice_filter_type_domain" invisible="1"/>
                         <field name="company_currency_id" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -1038,6 +1043,8 @@
                     <filter string="Unposted" name="unposted" domain="[('state', '=', 'draft')]" help="Unposted Journal Entries"/>
                     <filter string="Posted" name="posted" domain="[('state', '=', 'posted')]" help="Posted Journal Entries"/>
                     <separator/>
+                    <filter string="Reversed" name="reversed" domain="[('payment_state', '=', 'reversed')]"/>
+                    <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
@@ -1077,13 +1084,15 @@
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter name="unpaid" string="Posted" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
+                    <filter name="unpaid" string="Posted" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
-                    <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
-                    <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
-                    <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>
+                    <filter name="in_payment" string="In Payment" domain="[('payment_state', '=', 'in_payment')]"/>
+                    <filter name="partial" string="Partially Paid" domain="[('payment_state', '=', 'partial')]"/>
+                    <filter name="paid" string="Paid" domain="[('payment_state', '=', 'paid')]"/>
+                    <filter name="reversed" string="Reversed" domain="[('payment_state', '=', 'reversed')]"/>
+                    <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
                     <filter name="due_date" string="Due Date" date="invoice_date_due"/>
