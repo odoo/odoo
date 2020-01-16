@@ -815,20 +815,65 @@ QUnit.module('relational_fields', {
         assert.expect(2);
 
         this.data.product.records = [];
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
-                    '<header><field name="product_id" widget="statusbar"/></header>' +
-                '</form>',
+            arch: `<form string="Partners">
+                    <header><field name="product_id" widget="statusbar"/></header>
+                </form>`,
             res_id: 1,
             config: {device: {isMobile: false}},
         });
 
-        assert.hasClass(form.$('.o_statusbar_status'), 'o_field_empty');
+        assert.doesNotHaveClass(form.$('.o_statusbar_status'), 'o_field_empty');
         assert.strictEqual(form.$('.o_statusbar_status').children().length, 0,
             'statusbar widget should be empty');
+        form.destroy();
+    });
+
+    QUnit.test('statusbar with required modifier', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <header><field name="product_id" widget="statusbar" required="1"/></header>
+                </form>`,
+            config: {device: {isMobile: false}},
+        });
+        testUtils.intercept(form, 'call_service', function (ev) {
+            assert.strictEqual(ev.data.service, 'notification',
+                "should display an 'invalid fields' notification");
+        }, true);
+
+        testUtils.form.clickSave(form);
+
+        assert.containsOnce(form, '.o_form_editable', 'view should still be in edit');
+
+        form.destroy();
+    });
+
+    QUnit.test('statusbar with no value in readonly', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <header><field name="product_id" widget="statusbar"/></header>
+                </form>`,
+            res_id: 1,
+            config: {device: {isMobile: false}},
+        });
+
+        assert.doesNotHaveClass(form.$('.o_statusbar_status'), 'o_field_empty');
+        assert.containsN(form, '.o_statusbar_status button:visible', 2);
+
         form.destroy();
     });
 
