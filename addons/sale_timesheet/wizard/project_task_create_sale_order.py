@@ -64,6 +64,7 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
         # create SO
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_id.id,
+            'company_id': self.task_id.company_id.id,
             'analytic_account_id': self.task_id.project_id.analytic_account_id.id,
         })
         sale_order.onchange_partner_id()
