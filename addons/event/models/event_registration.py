@@ -133,8 +133,6 @@ class EventRegistration(models.Model):
         return ret_list
 
     def _check_auto_confirmation(self):
-        if self._context.get('registration_force_draft'):
-            return False
         if any(not registration.event_id.auto_confirm or
                (not registration.event_id.seats_available and registration.event_id.seats_availability == 'limited') for registration in self):
             return False

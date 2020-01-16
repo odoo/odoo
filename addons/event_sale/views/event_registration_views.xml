@@ -35,6 +35,8 @@
                             class="oe_stat_button" icon="fa-usd" string="Sale Order">
                     </button>
                 </div>
+                <field name="is_paid" invisible="1"/>
+                <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
             </xpath>
             <group name="event" position="after">
                 <group string="Origin" groups="base.group_no_one">

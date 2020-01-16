@@ -8,6 +8,7 @@ from odoo.tools import float_is_zero
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
+    is_paid = fields.Boolean('Is Paid')
     # in addition to origin generic fields, add real relational fields to correctly
     # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
@@ -16,14 +17,6 @@ class EventRegistration(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
     source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
     medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
-
-    def _check_auto_confirmation(self):
-        res = super(EventRegistration, self)._check_auto_confirmation()
-        if res:
-            orders = self.env['sale.order'].search([('state', '=', 'draft'), ('id', 'in', self.mapped('sale_order_id').ids)], limit=1)
-            if orders:
-                res = False
-        return res
 
     def action_view_sale_order(self):
         action = self.env.ref('sale.action_orders').read()[0]
@@ -87,6 +80,9 @@ class EventRegistration(models.Model):
                  user_id=user_id,
                  views_or_xmlid='event_sale.event_ticket_id_change_exception',
                  render_context=render_context)
+
+    def _action_set_paid(self):
+        self.write({'is_paid': True})
 
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
