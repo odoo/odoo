@@ -106,6 +106,8 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.carrier_id:
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', 'like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
+            else:
+                picking.return_label_ids = False
 
     @api.depends('move_lines')
     def _cal_weight(self):
