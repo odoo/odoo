@@ -199,7 +199,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         # Check invoice's type and number
         self.assertEqual(invoice_refund.type, 'out_refund', 'The last created invoiced should be a customer invoice')
-        self.assertEqual(invoice_refund.invoice_payment_state, 'paid', 'Last Customer creadit note should be in paid state')
+        self.assertEqual(invoice_refund.payment_state, 'paid', 'Last Customer creadit note should be in paid state')
         self.assertEqual(self.sale_order.invoice_count, 2, "The SO should have 3 related invoices: the original, the refund, and the new one")
         self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.type == 'out_refund')), 1, "The SO should be linked to only one refund")
         self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.type == 'out_invoice')), 1, "The SO should be linked to only one customer invoices")

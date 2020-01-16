@@ -157,10 +157,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'refund_method': 'cancel',
         })
         refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
-        self.assertTrue(
-            invoice.invoice_payment_state == refund_invoice.invoice_payment_state == 'paid',
-            "Invoice and refund should both be in 'Paid' state"
-        )
+        self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state.")
+        self.assertEqual(refund_invoice.payment_state, 'paid', "Refund should be in 'paid' state.")
         self.check_reconciliation(refund_invoice, return_pick, operation='sale')
 
     def test_multiple_shipments_invoices(self):

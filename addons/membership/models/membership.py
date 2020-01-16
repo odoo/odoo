@@ -44,7 +44,7 @@ class MembershipLine(models.Model):
 
     @api.depends('account_invoice_id.state',
                  'account_invoice_id.amount_residual',
-                 'account_invoice_id.invoice_payment_state')
+                 'account_invoice_id.payment_state')
     def _compute_state(self):
         """Compute the state lines """
         if not self:
@@ -59,7 +59,7 @@ class MembershipLine(models.Model):
         reverse_map = dict(self._cr.fetchall())
         for line in self:
             move_state = line.account_invoice_id.state
-            payment_state = line.account_invoice_id.invoice_payment_state
+            payment_state = line.account_invoice_id.payment_state
 
             line.state = 'none'
             if move_state == 'draft':
@@ -72,7 +72,7 @@ class MembershipLine(models.Model):
                         line.state = 'paid'
                 elif payment_state == 'in_payment':
                     line.state = 'paid'
-                elif payment_state == 'not_paid':
+                elif payment_state in ('not_paid', 'partial'):
                     line.state = 'invoiced'
             elif move_state == 'cancel':
                 line.state = 'canceled'
