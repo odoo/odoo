@@ -17,11 +17,11 @@
           <div>WAITING FOR SWIPE</div>
         </t>
         <t t-if="! line.mercury_swipe_pending">
-          <t t-esc='line.name' />
+          <t t-esc='line.payment_method.name' />
         </t>
       </t>
       <t t-if="line.payment_method.is_cash_count">
-        <t t-esc='line.name' />
+        <t t-esc='line.payment_method.name' />
       </t>
     </t>
     <!-- if there is payment status, then it is terminal paymentline, so payment-terminal class should be added. -->
