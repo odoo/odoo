@@ -1914,6 +1914,29 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('fieldmany2many tags: quick create a new record', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+        });
+
+        assert.containsNone(form, '.o_field_many2manytags .badge');
+
+        await testUtils.fields.many2one.searchAndClickItem('timmy', {search: 'new value'});
+
+        assert.containsOnce(form, '.o_field_many2manytags .badge');
+
+        await testUtils.form.clickSave(form);
+
+        assert.strictEqual(form.el.querySelector('.o_field_many2manytags').innerText, 'new value');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldRadio');
 
     QUnit.test('fieldradio widget on a many2one in a new record', async function (assert) {

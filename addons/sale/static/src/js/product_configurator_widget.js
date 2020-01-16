@@ -109,24 +109,23 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      *
      * @override
      * @param {OdooEvent} ev
-     *   {boolean} ev.data.preventProductIdCheck prevent the product configurator widget
+     * @param {boolean} ev.data.preventProductIdCheck prevent the product configurator widget
      *     from looping forever when it needs to change the 'product_template_id'
      *
      * @private
      */
-    _onFieldChanged: function (ev) {
-        var self = this;
-
-        this._super.apply(this, arguments);
-
-        if (ev.data.changes && !ev.data.preventProductIdCheck && ev.data.changes.product_template_id) {
-            self._onTemplateChange(ev.data.changes.product_template_id.id, ev.data.dataPointID);
-        } else if (ev.data.changes && ev.data.changes.product_id) {
-            self._onProductChange(ev.data.changes.product_id.id, ev.data.dataPointID).then(function (wizardOpened) {
-                if (!wizardOpened) {
-                    self._onLineConfigured();
-                }
-            });
+    reset: async function (record, ev) {
+        await this._super(...arguments);
+        if (ev.target === this) {
+            if (ev.data.changes && !ev.data.preventProductIdCheck && ev.data.changes.product_template_id) {
+                this._onTemplateChange(record.data.product_template_id.data.id, ev.data.dataPointID);
+            } else if (ev.data.changes && ev.data.changes.product_id) {
+                this._onProductChange(record.data.product_id.data.id, ev.data.dataPointID).then(wizardOpened => {
+                    if (!wizardOpened) {
+                        this._onLineConfigured();
+                    }
+                });
+            }
         }
     },
 
