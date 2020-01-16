@@ -36,7 +36,7 @@ class WebsiteSaleDigital(CustomerPortal):
         if not 'sale_order' in response.qcontext:
             return response
         order = response.qcontext['sale_order']
-        invoiced_lines = request.env['account.move.line'].sudo().search([('move_id', 'in', order.invoice_ids.ids), ('move_id.invoice_payment_state', '=', 'paid')])
+        invoiced_lines = request.env['account.move.line'].sudo().search([('move_id', 'in', order.invoice_ids.ids), ('move_id.payment_state', '=', 'paid')])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
         if not order.amount_total:
             # in that case, we should add all download links to the products

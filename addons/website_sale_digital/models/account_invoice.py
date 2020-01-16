@@ -14,7 +14,7 @@ class AccountInvoiceLine(models.Model):
         # Get paid invoices
         purchases = self.sudo().search_read(
             domain=[
-                ('move_id.invoice_payment_state', '=', 'paid'),
+                ('move_id.payment_state', '=', 'paid'),
                 ('move_id.partner_id', '=', partner.id),
                 ('product_id', '!=', False),
             ],

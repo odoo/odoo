@@ -39,7 +39,7 @@ class Partner(models.Model):
 
     @api.depends('member_lines.account_invoice_line',
                  'member_lines.account_invoice_line.move_id.state',
-                 'member_lines.account_invoice_line.move_id.invoice_payment_state',
+                 'member_lines.account_invoice_line.move_id.payment_state',
                  'member_lines.account_invoice_line.move_id.partner_id',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',

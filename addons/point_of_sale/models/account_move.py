@@ -21,7 +21,7 @@ class AccountMove(models.Model):
         super(AccountMove, self)._compute_amount()
         pos_invoices = self.filtered(lambda i: i.type in ['out_invoice', 'out_refund'] and i.pos_order_ids)
         for invoice in pos_invoices:
-            invoice.invoice_payment_state = 'paid'
+            invoice.payment_state = 'paid'
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
