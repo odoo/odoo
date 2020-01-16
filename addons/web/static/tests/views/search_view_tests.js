@@ -1657,6 +1657,43 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('clicking outside the search view should closed the seach autocomplete dropdown', async function (assert) {
+        assert.expect(3);
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(10);
+        await testUtils.nextTick();
+
+        // press key 'a' to open search autocomplete
+        actionManager.$('.o_searchview_input').val('a');
+        actionManager.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        await testUtils.nextTick();
+        assert.containsOnce(actionManager, '.o_searchview_autocomplete',
+            'autocomplete dropdown should be visible');
+        // click on the body should close autocomplete dropdown
+        await testUtils.dom.click($('body'));
+        assert.containsNone($('.o_searchview_autocomplete'),
+            'clicking on outside the search view should close the dropdown');
+
+        // press key 'b' to open search autocomplete
+        actionManager.$('.o_searchview_input').val('b');
+        actionManager.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        await testUtils.nextTick();
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        await testUtils.nextTick();
+        // click on search autocomplete dropdown element should not close dropdown
+        await testUtils.dom.triggerMouseEvent(actionManager.$('.o_searchview_input_container a.o-expand'), "mousedown");
+        assert.containsOnce(actionManager, '.o_searchview_autocomplete',
+            'autocomplete dropdown should be visible on expanding searchview');
+
+        actionManager.destroy();
+    });
+
     QUnit.module('TimeRangeMenu');
 
     QUnit.test('time range menu stays hidden', async function (assert) {

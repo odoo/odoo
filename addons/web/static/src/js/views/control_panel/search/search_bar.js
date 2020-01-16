@@ -2,6 +2,7 @@ odoo.define('web.SearchBar', function (require) {
 "use strict";
 
 var AutoComplete = require('web.AutoComplete');
+const core = require('web.core');
 var searchBarAutocompleteRegistry = require('web.search_bar_autocomplete_sources_registry');
 var SearchFacet = require('web.SearchFacet');
 var Widget = require('web.Widget');
@@ -42,6 +43,10 @@ var SearchBar = Widget.extend({
     start: function () {
         this.$input = this.$('input');
         var self = this;
+
+        // close dropdown when user click outside the search view
+        core.bus.on('click', this, this._onWindowClicked.bind(this));
+
         var defs = [this._super.apply(this, arguments)];
         _.each(this.facets, function (facet) {
             defs.push(self._renderFacet(facet));
@@ -251,6 +256,15 @@ var SearchBar = Widget.extend({
                     this.trigger_up('reload');
                 }
                 break;
+        }
+    },
+    /**
+     * When a click happens outside the search view, we want to close the dropdown
+     */
+    _onWindowClicked(ev) {
+        if (this.autoComplete && !$(ev.target).closest('.o_searchview_input_container').length) {
+            this.autoComplete.close();
+            this.$input.val('');
         }
     },
 });
