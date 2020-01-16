@@ -821,7 +821,7 @@ class UoM(models.Model):
 
                 if stock_move_lines:
                     raise UserError(_(
-                        "You cannot change the ratio of this unit of mesure as some"
+                        "You cannot change the ratio of this unit of measure as some"
                         " products with this UoM have already been moved or are "
                         "currently reserved."
                     ))
