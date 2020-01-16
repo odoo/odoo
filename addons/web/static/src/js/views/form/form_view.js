@@ -37,6 +37,7 @@ var FormView = BasicView.extend({
         if (hasSidebar === undefined) {
             hasSidebar = params.hasSidebar;
         }
+        this.controllerParams.isFullscreen = params.isFullscreen;
         this.controllerParams.hasSidebar = hasSidebar;
         this.controllerParams.disableAutofocus = params.disable_autofocus;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
@@ -76,6 +77,7 @@ var FormView = BasicView.extend({
         params.footerToButtons = inDialog;
         params.hasSearchView = inDialog ? false : params.hasSearchView;
         params.hasSidebar = !inDialog && !inline;
+        params.isFullscreen = fullscreen;
         params.searchMenuTypes = inDialog ? [] : params.searchMenuTypes;
         if (inDialog || inline || fullscreen) {
             params.mode = 'edit';

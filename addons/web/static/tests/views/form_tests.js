@@ -6282,6 +6282,64 @@ QUnit.module('Views', {
         _t.database.multi_lang = multi_lang;
     });
 
+    QUnit.test('reverse breadcrumb should keep form in edit mode if target is fullscreen', async function (assert) {
+        assert.expect(6);
+
+        const archs = {
+            'partner,false,form': `<form string="Partners">
+                <field name="foo"/>
+                </form>`,
+            'partner,false,search': '<search></search>',
+            'partner,false,list': `<tree>
+                <field name="name"/>
+                </tree>`,
+        };
+
+        const actions = [{
+            id: 1,
+            name: 'Partner',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+            target: 'fullscreen',
+            res_id: 1,
+        }, {
+            id: 2,
+            name: 'Partner2',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        }];
+
+        const actionManager = await createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            debug: true,
+            intercepts: {
+                toggle_fullscreen: function () {
+                    assert.step('toggle_fullscreen');
+                },
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_form_editable',
+            "form should be in edit mode");
+
+        await actionManager.doAction(2);
+        await testUtils.dom.click(actionManager.$('.breadcrumb li a:first'));
+        assert.containsOnce(actionManager, '.o_form_editable',
+            "form should be in edit mode on reverse breadcrumb");
+        assert.verifySteps([
+            'toggle_fullscreen',
+            'toggle_fullscreen',
+            'toggle_fullscreen',
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('buttons are disabled until status bar action is resolved', async function (assert) {
         assert.expect(9);
 
