@@ -967,6 +967,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
             var parent = new StandaloneWidget(model);
+            model.setParent(parent);
             testUtils.mock.addMockEnvironment(parent, {
                 data: self.data,
                 mockRPC: function (route, args) {
