@@ -332,7 +332,7 @@
                     <field name="referred" invisible="1"/>
                     <field name="medium_id" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="tag_ids" optional="show" widget="many2many_tags"/>
+                    <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -613,7 +613,7 @@
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" />
-                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
