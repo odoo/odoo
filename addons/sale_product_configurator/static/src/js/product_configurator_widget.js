@@ -33,9 +33,11 @@ ProductConfiguratorWidget.include({
      * @override
      * @private
      */
-    _onFieldChanged: function (ev) {
-        this.restoreProductTemplateId = this.recordData.product_template_id;
-        this.optionalProducts = (ev.data && ev.data.optionalProducts) || this.optionalProducts;
+    reset: function (record, ev) {
+        if (ev.target === this) {
+            this.restoreProductTemplateId = this.recordData.product_template_id;
+            this.optionalProducts = (ev.data && ev.data.optionalProducts) || this.optionalProducts;
+        }
 
         this._super.apply(this, arguments);
     },

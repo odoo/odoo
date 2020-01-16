@@ -489,23 +489,12 @@ var FieldMany2One = AbstractField.extend({
                 dialog.on('closed', self, createDone);
             };
             if (self.nodeOptions.quick_create) {
-                var nameCreateDef = self._rpc({
-                    model: self.field.relation,
-                    method: 'name_create',
-                    args: [name],
-                    context: self.record.getContext(self.recordParams),
-                }).guardedCatch(function (reason) {
+                const prom = self.reinitialize({id: false, display_name: name});
+                prom.guardedCatch(reason => {
                     reason.event.preventDefault();
                     slowCreate();
                 });
-                self.dp.add(nameCreateDef)
-                    .then(function (result) {
-                        if (self.mode === "edit") {
-                            self.reinitialize({id: result[0], display_name: result[1]});
-                        }
-                        createDone();
-                    })
-                    .guardedCatch(reject);
+                self.dp.add(prom).then(createDone).guardedCatch(reject);
             } else {
                 slowCreate();
             }

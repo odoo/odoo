@@ -8741,6 +8741,56 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('one2many reset by onchange (of another field) while being edited', async function (assert) {
+            // In this test, we have a many2one and a one2many. The many2one has an onchange that
+            // updates the value of the one2many. We set a new value to the many2one (name_create)
+            // such that the onchange is delayed. During the name_create, we click to add a new row
+            // to the one2many. After a while, we unlock the name_create, which triggers the onchange
+            // and resets the one2many. At the end, we want the row to be in edition.
+            assert.expect(3);
+
+            const prom = testUtils.makeTestPromise();
+            this.data.partner.onchanges = {
+                trululu: obj => {
+                    obj.p = [[5]].concat(obj.p);
+                },
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="trululu"/>
+                        <field name="p">
+                            <tree editable="top"><field name="product_id" required="1"/></tree>
+                        </field>
+                    </form>`,
+                mockRPC: function (route, args) {
+                    const result = this._super.apply(this, arguments);
+                    if (args.method === 'name_create') {
+                        return prom.then(() => result);
+                    }
+                    return result;
+                },
+            });
+
+            // set a new value for trululu (will delay the onchange)
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {search: 'new value'});
+
+            // add a row in p
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsNone(form, '.o_data_row');
+
+            // resolve the name_create to trigger the onchange, and the reset of p
+            prom.resolve();
+            await testUtils.nextTick();
+            assert.containsOnce(form, '.o_data_row');
+            assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
+
+            form.destroy();
+        });
     });
 });
 });
