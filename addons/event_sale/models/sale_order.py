@@ -65,7 +65,7 @@ class SaleOrderLine(models.Model):
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
-    def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
+    def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None, mark_as_paid=False):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
@@ -76,6 +76,8 @@ class SaleOrderLine(models.Model):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
                 existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
+            if mark_as_paid:
+                existing_registrations.filtered(lambda self: not self.is_paid)._action_set_paid()
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
@@ -85,7 +87,7 @@ class SaleOrderLine(models.Model):
                     registration_vals = registration_data.pop()
                 # TDE CHECK: auto confirmation
                 registration_vals['sale_order_line_id'] = so_line.id
-                Registration.with_context(registration_force_draft=True).create(registration_vals)
+                Registration.create(registration_vals)
         return True
 
     @api.onchange('product_id')

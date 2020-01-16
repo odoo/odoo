@@ -12,5 +12,5 @@ class AccountMove(models.Model):
         paid confirm attendees. Attendees should indeed not be confirmed before
         full payment. """
         res = super(AccountMove, self).action_invoice_paid()
-        self.mapped('line_ids.sale_line_ids')._update_registrations(confirm=True)
+        self.mapped('line_ids.sale_line_ids')._update_registrations(confirm=True, mark_as_paid=True)
         return res
