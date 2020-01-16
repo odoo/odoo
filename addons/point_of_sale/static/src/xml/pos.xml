@@ -697,7 +697,7 @@
                                     <td class='col-change' ></td>
                                 </t>
 
-                                <td class='col-name' > <t t-esc='line.name' /> </td>
+                                <td class='col-name' > <t t-esc='line.payment_method.name' /> </td>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'reversed', 'reversing'].includes(line.payment_status)">
                                     <td/>
                                 </t>
