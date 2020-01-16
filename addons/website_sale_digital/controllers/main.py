@@ -45,7 +45,7 @@ class WebsiteSaleDigital(CustomerPortal):
 
         Attachment = request.env['ir.attachment'].sudo()
         purchased_products_attachments = {}
-        for product in products:
+        for product in products.filtered(lambda p: p.attachment_count):
             # Search for product attachments
             product_id = product.id
             template = product.product_tmpl_id
