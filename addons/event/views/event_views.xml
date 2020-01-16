@@ -86,6 +86,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" >
+                                <label for="tag_ids" string="Tags"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                            </div>
                         </div>
                         <h2>Attendees</h2>
                         <div class="row mt16 o_settings_container" name="event_type_attendees">
@@ -131,7 +135,7 @@
             <field name="name">event.type.tree</field>
             <field name="model">event.type</field>
             <field name="arch" type="xml">
-                <tree string="Event Category">
+                <tree string="Event Template">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </tree>
@@ -142,7 +146,7 @@
             <field name="name">event.type.search</field>
             <field name="model">event.type</field>
             <field name="arch" type="xml">
-                <search string="Event Categories">
+                <search string="Event Templates">
                     <field name="name"/>
                     <filter string="Online Event" name="online_event" help="Online Event" domain="[('is_online', '=', True)]"/>
                 </search>
@@ -150,7 +154,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
-            <field name="name">Event Categories</field>
+            <field name="name">Event Templates</field>
             <field name="res_model">event.type</field>
         </record>
 
@@ -227,6 +231,7 @@
                             </group>
                             <group>
                                 <field name="event_type_id" options="{'no_create':True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                 <field name="auto_confirm" groups="base.group_no_one"/>
                             </group>
                             <group>
@@ -446,7 +451,7 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Category" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
+                        <filter string="Template" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
                         <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}"/>
                         <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by': 'date_begin'}"/>
                     </group>
