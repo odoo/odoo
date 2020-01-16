@@ -269,11 +269,12 @@ class Property(models.Model):
             cr.execute(query, params + [sub_refs])
             result.update(cr.fetchall())
 
-        # remove default value, add missing values, and format them
-        default = result.pop(None, None)
-        for id in ids:
-            result[id] = clean(result.get(id, default))
-        return result
+        # determine all values and format them
+        default = result.get(None, None)
+        return {
+            id: clean(result.get(id, default))
+            for id in ids
+        }
 
     @api.model
     def set_multi(self, name, model, values, default_value=None):

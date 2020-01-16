@@ -53,7 +53,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby
+                   groupby, unique
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -5604,7 +5604,7 @@ Record ids: %(records)s
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        recs = self.browse(self._prefetch_ids)
+        recs = self.browse(unique(self._prefetch_ids))
         ids = [self.id]
         for record_id in self.env.cache.get_missing_ids(recs - self, field):
             if not record_id:
