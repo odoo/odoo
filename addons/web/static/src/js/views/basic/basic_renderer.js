@@ -662,7 +662,7 @@ var BasicRenderer = AbstractRenderer.extend({
                     element.$el.toggleClass('o_field_empty', !!(
                         record.data.id &&
                         (modifiers.readonly || mode === 'readonly') &&
-                        !element.widget.isSet()
+                        element.widget.isEmpty()
                     ));
                 },
                 keepBaseMode: !!options.keepBaseMode,
