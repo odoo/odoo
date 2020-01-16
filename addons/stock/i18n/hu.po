@@ -311,7 +311,7 @@ msgstr "<strong>Lokáció</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Lot/Sorszám</strong>"
+msgstr "<strong>Lot/szériaszám</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -465,7 +465,7 @@ msgstr "Tevékenység állapota"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
-msgstr "Új lot/sorszám hozzáadása"
+msgstr "Új lot/szériaszám hozzáadása"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -1191,7 +1191,7 @@ msgstr "Létrehozás dátuma"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "Új lot/sorszám létrehozása"
+msgstr "Új lot/szériaszám létrehozása"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
@@ -2589,7 +2589,7 @@ msgstr "Leltár dátum"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Leltár"
+msgstr "Készlet"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3043,7 +3043,7 @@ msgstr "Lot"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lot/sorszám"
+msgstr "Lot/szériaszám"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
@@ -3067,7 +3067,7 @@ msgstr "Lot/szériaszám :"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Lot/Serial Number"
-msgstr "Lot/sorszám"
+msgstr "Lot/szériaszám"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
@@ -5391,16 +5391,13 @@ msgstr "Forrás csomag:"
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
-"Készlet szett/Széria szám meghatározása egy  Szetteken/Széria számon lévő "
-"készletre való fókuszálásra."
+msgstr "Lot/szériaszám megadása annak készletére való összpontosításhoz."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
 msgstr ""
-"Tulajdonos meghatározása egy  egyéni tulajdonos birtokában lévő készletre "
-"való összpontosításhoz."
+"Tulajdonos megadása annak birtokában lévő készletre való összpontosításhoz."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__package_id
@@ -5418,8 +5415,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__product_id
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
-"Termék meghatározása egy  egyéni termék készletre való összpontosításhoz."
+msgstr "Termék megadása annak készletére való összpontosításhoz."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5951,8 +5947,8 @@ msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their current inventory value."
 msgstr ""
-"Ez az elemzés egy gyors áttekintést ad a terméke jelenlegi készlet "
-"szintjéről  és a jelenlegi raktár készlet értékéről."
+"Ez az elemzés gyors áttekintést ad a termékek jelenlegi készletszintjéről és"
+" készletértékéről."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -6094,8 +6090,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
-"Ez a raktár termékhely lesz használva, az alapértelmezett helyett, mint "
-"forrás termékhely amikor készlet készítéskor raktár mozgás lesz létrehozva."
+"Ez a készlet lokáció lesz használva az alapértelmezett helyett forrás "
+"lokációként leltározás során a készletmozgások generálásához."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -6699,8 +6695,8 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form.  It will take priority over the Warehouse route. "
 msgstr ""
-"Ha bejelölt, az útvonal kiválasztható lesz a Termék űrlap Leltárkészlet "
-"fülén. Elsőbbséget élvez a Raktár útvonalával szemben."
+"Ha bejelölt, az útvonal kiválasztható lesz a Termék űrlap Készlet fülén. "
+"Elsőbbséget élvez a Raktár útvonalával szemben."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
@@ -7045,8 +7041,8 @@ msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
 "numbers by doing an inventory.  "
 msgstr ""
-"Vannak olyan termékei melyeknek nincs készlet szett számai. Hozzárendelhet "
-"sorozat számokat egy készletezés elvégzésével."
+"Vannak olyan termékek készleten, melyeknek nincs lot/szériaszáma. "
+"Leltározással hozzárendelhet lot/szériaszámokat."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:869
@@ -7144,7 +7140,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr "Éves leltár készlet"
+msgstr "Éves leltár"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -7194,3 +7190,9 @@ msgstr "feldolgozott ehelyett: "
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Mennyiségek beállítása 0-ra"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""

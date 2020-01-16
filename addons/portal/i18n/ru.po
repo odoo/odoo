@@ -8,7 +8,8 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Oleg Kuryan <oleg@ventor.tech>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# ILMIR <karamov@it-projects.info>, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,23 +30,23 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:43
 #, python-format
 msgid "%d days overdue"
-msgstr "% D дней просрочено"
+msgstr "%d дней просрочено"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:277
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr "% S не является референсом отчета"
+msgstr " %s не является ссылкой для отчета"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
-msgstr "<b>Зарегистрируйтесь</b>"
+msgstr "<b>Войти</b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
-msgstr "<i class=\"fa fa-arrow-right\"/>Вернуться в режим редактирования</i>"
+msgstr "<i class=\"fa fa-arrow-right\"/>Вернуться в режим редактирования"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -64,12 +65,12 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/>редактировать</i>"
+msgstr "<i class=\"fa fa-pencil\"/>Редактировать"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr "<span class=\"small mr-1 navbar-text\">Фильтр по:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">Фильтровать по:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -84,7 +85,7 @@ msgstr "<span class=\"small mr-1 navbar-text\">Сортировать по:</spa
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr "<strong>открыть</strong>"
+msgstr "<strong>Открыть</strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -172,65 +173,88 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
-" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
-"align=\"center\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"padding: 16px; background-color: white; color: "
-"#454748; border-collapse:separate;\"><tbody><!-- HEADER --><tr><td "
-"align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
-"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
-"background-color: white; padding: 0px 8px 0px 8px; border-"
-"collapse:separate;\"><tr><td valign=\"middle\"> <span style=\"font-size: "
-"10px;\">Ваш аккаунт</span> <br/> <span style=\"font-size: 20px; font-weight:"
-" bold;\">$ {object.user_id.name}</span> </td><td valign=\"middle\" "
-"align=\"right\"><img "
-"src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: "
-"0px; margin: 0px; height: auto; width: 80px;\" alt=\"$ "
-"{Object.user_id.company_id.name}\"/></td></tr><tr><td colspan=\"2\" style"
-"=\"text-align:center;\"><hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px "
-"0px;\"/></td></tr></table></td></tr><!-- CONTENT --><tr><td align=\"center\""
-" style=\"min-width: 590px;\"><table border=\"0\" cellpadding=\"0\" "
-"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
-"white; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td "
-"valign=\"top\" style=\"font-size: 13px;\"><div> Уважаемый (ая) $ "
-"{object.user_id.name or &#39;&#39;}, <br/><br/> Вы получили доступ к $ "
-"{object.user_id.company_id.name} &#39;s портала. <br/> Ваши данные входа в "
-"учетную запись: <ul><li> Имя пользователя: $ {object.user_id.login or "
-"&#39;&#39;} </li><li> Портал <a href=\"${'portal_url' in ctx and "
-"ctx['portal_url'] or ''}\">$ { &#39;portal_url&#39; in ctx and ctx [ "
-"&#39;portal_url&#39;] or &#39;&#39;}</a> </li><li> База данных: $ { "
-"&#39;dbname&#39; in ctx and ctx [ &#39;dbname&#39;] or &#39;&#39;} "
-"</li></ul> Вы можете установить или изменить пароль с помощью следующей URL:"
-" <ul><li> <a href=\"${object.user_id.signup_url}\">$ "
-"{object.user_id.signup_url}</a> </li></ul> $ "
-"{Object.wizard_id.welcome_message or &#39;&#39;} </div></td></tr><tr><td "
-"style=\"text-align:center;\"><hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px "
-"0px;\"/></td></tr></table></td></tr><!-- FOOTER --><tr><td align=\"center\" "
-"style=\"min-width: 590px;\"><table border=\"0\" cellpadding=\"0\" "
-"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
-"white; font-size: 11px; padding: 0px 8px 0px 8px; border-"
-"collapse:separate;\"><tr><td valign=\"middle\" align=\"left\"> $ "
-"{Object.user_id.company_id.name} </td></tr><tr><td valign=\"middle\" "
-"align=\"left\" style=\"opacity: 0.7;\"> $ {Object.user_id.company_id.phone}%"
-" if object.user_id.company_id.email | <a href=\"'mailto:%s' % "
-"${object.user_id.company_id.email}\" style=\"text-decoration:none; color: "
-"#454748;\">$ {object.user_id.company_id.email}</a> % endif% if "
-"object.user_id.company_id.website | <a href=\"'%s' % "
-"${object.user_id.company_id.website}\" style=\"text-decoration:none; color: "
-"#454748;\">$ {object.user_id.company_id.website}</a> % endif "
-"</td></tr></table></td></tr></tbody></table></td></tr><!-- POWERED BY "
-"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
-"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
-"background-color: #F1F1F1; color: #454748; padding: 8px; border-"
-"collapse:separate;\"><tr><td style=\"text-align: center; font-size: 13px;\">"
-" сделано <a target=\"_blank\" "
-"href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" "
-"style=\"color: #875A7B;\">Odoo</a> </td></tr></table></td></tr></table>"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear ${object.user_id.name or ''},<br/> <br/>\n"
+"                        You have been given access to ${object.user_id.company_id.name}'s portal.<br/>\n"
+"                        Your login account data is:\n"
+"                        <ul>\n"
+"                            <li>Username: ${object.user_id.login or ''}</li>\n"
+"                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        You can set or change your password via the following url:\n"
+"                        <ul>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #. openerp-web
@@ -243,7 +267,7 @@ msgstr "Подтвердить и подписать"
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
-msgstr "предупреждение доступа"
+msgstr "Предупреждение доступа"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -258,7 +282,7 @@ msgstr "Добавьте контакты, чтобы поделиться до�
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr "Добавьте содержимого для отображения в электронной почте"
+msgstr "Добавьте еще содержимое для отображения в электронной письме"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -367,7 +391,7 @@ msgstr "Страна..."
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_date
@@ -384,7 +408,7 @@ msgstr "Ссылка на портал клиента"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "Уважаемый "
+msgstr "Уважаемый(ая)"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
@@ -399,27 +423,27 @@ msgstr "Отображаемое Имя"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr "Нарисуйте вашу подпись"
+msgstr "Укажите свою подпись"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:41
 #, python-format
 msgid "Due in %d days"
-msgstr "Через% d дней"
+msgstr "Через %d дней"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:39
 #, python-format
 msgid "Due today"
-msgstr "оплатить сегодня"
+msgstr "Оплатить сегодня"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr "Email"
+msgstr "Эл.адрес"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -454,7 +478,7 @@ msgstr "Номер"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__in_portal
 msgid "In Portal"
-msgstr "В портале"
+msgstr "На портале"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:201
@@ -467,7 +491,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:272
 #, python-format
 msgid "Invalid report type: %s"
-msgstr "Недействителен тип отчета:% s"
+msgstr "Неверный тип отчета: %s "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -516,7 +540,7 @@ msgstr "Логин пользовтеля"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
-msgstr "Выход"
+msgstr "Выйти"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -568,7 +592,7 @@ msgstr "Телефон"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr "Ссылка для доступа в портал"
+msgstr "Ссылка для доступа на портал"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -608,7 +632,7 @@ msgstr "Предыдущий"
 #: code:addons/portal/static/src/js/portal_chatter.js:109
 #, python-format
 msgid "Published on %s"
-msgstr "Опубликовано %s"
+msgstr "Опубликовано %s "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -633,7 +657,7 @@ msgstr "Поиск"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
 msgid "Security Token"
-msgstr "Маркер доступа"
+msgstr "Код доступа"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -670,7 +694,7 @@ msgstr "Поделиться документом"
 #: code:addons/portal/wizard/portal_wizard.py:97
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr "У некоторых контактов нет эл. почты: "
+msgstr "У некоторых контактов некорректный адрес эл. почты: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
@@ -701,7 +725,7 @@ msgstr "Улица"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr "Спасибо Вам!"
+msgstr "Спасибо!"
 
 #. module: portal
 #. openerp-web
@@ -724,13 +748,15 @@ msgstr "Это предварительный просмотр портала к
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr "Этот текст включается в эл. письмо новым пользователям портала."
+msgstr ""
+"Этот текст включается в эл. письмо, отправляемое новым пользователям "
+"портала."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Этот текст был включен в письмо, отправленное новому пользователю портала."
+"Этот текст включается в письмо, отправляемое новым пользователям портала."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -747,7 +773,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr "переключить фильтры"
+msgstr "Переключить фильтры"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -763,7 +789,7 @@ msgstr "Номер НДС"
 #: code:addons/portal/models/portal_mixin.py:83
 #, python-format
 msgid "View %s"
-msgstr "Посмотреть %s"
+msgstr "Посмотреть %s "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
@@ -830,12 +856,12 @@ msgstr "Напишите сообщение..."
 #: code:addons/portal/wizard/portal_share.py:71
 #, python-format
 msgid "You are invited to access %s"
-msgstr "Вам предлагается доступ% s"
+msgstr "Вам предоставлен доступ %s "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr "Вас пригласили получить доступ к такому документу:"
+msgstr "Вам предоставлен доступ к следующему документу:"
 
 #. module: portal
 #. openerp-web
@@ -863,7 +889,7 @@ msgstr "Ваши контактные данные"
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Details"
-msgstr "Ваше подробности"
+msgstr "Ваши данные"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -876,12 +902,12 @@ msgstr "Ваши документы"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr "Ваше Имя"
+msgstr "Ваше имя"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${object.user_id.company_id.name}"
-msgstr "Ваш аккаунт Odoo $ {object.user_id.company_id.name}"
+msgstr "Ваш аккаунт Odoo в ${object.user_id.company_id.name}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -919,7 +945,7 @@ msgstr "комментарии"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "logged in"
-msgstr "вошедший в"
+msgstr "залогинен"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -936,4 +962,4 @@ msgstr "выбрать..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "to post a comment."
-msgstr "чтобы отправить комментарий"
+msgstr "чтобы отправить комментарий."
