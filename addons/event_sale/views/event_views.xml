@@ -33,7 +33,11 @@
                             class="oe_stat_button" icon="fa-usd" string="Sale Order">
                     </button>
                 </xpath>
+                <xpath expr="//div[@name='button_box']" position="after">
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
+                </xpath>
                 <field name="event_id" position="after">
+                    <field name="is_paid" invisible="1"/>
                     <field
                         name="event_ticket_id"
                         domain="[

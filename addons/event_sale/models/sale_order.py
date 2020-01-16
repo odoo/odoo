@@ -19,6 +19,11 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
             if any(so.order_line.filtered(lambda line: line.event_id)):
+                registrations = self.env['event.registration'].search([('sale_order_id', '=', so.id)])
+                for registration in registrations:
+                    if registration.state == 'draft':
+                        registration.state = 'open'
+                registrations.is_paid = True
                 return self.env['ir.actions.act_window'] \
                     .with_context(default_sale_order_id=so.id) \
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')

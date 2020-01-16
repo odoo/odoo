@@ -245,6 +245,7 @@ class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', tracking=True)
+    is_paid = fields.Boolean('Is Paid', default=False)
     # in addition to origin generic fields, add real relational fields to correctly
     # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
