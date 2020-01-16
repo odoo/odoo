@@ -2709,7 +2709,27 @@ class TestNewSelectionFields(common.TransactionCase):
         self.assertEqual(uppercase.sensitive, 'A')
         self.assertNotEqual(lowercase.sensitive, uppercase.sensitive)
 
-    def test_xmlid_gen(self):
+    def test_normal_xmlid_gen(self):
+        f1 = self.env['test_new_api.selection']._fields['MY_FIELD']
+        f2 = self.env['test_new_api.selection']._fields['my_field']
+        self.assertEqual(f1.type, 'char')
+        self.assertEqual(f2.type, 'integer')
+
+        imf1 = self.env['ir.model.fields']._get('test_new_api.selection', 'MY_FIELD')
+        imf2 = self.env['ir.model.fields']._get('test_new_api.selection', 'my_field')
+        xmlids = (imf1 + imf2)._get_external_ids()
+
+        self.assertEqual(
+            xmlids.get(imf1.id),
+            ['test_new_api.field_test_new_api_selection__MY_FIELD'],
+        )
+
+        self.assertEqual(
+            xmlids.get(imf2.id),
+            ['test_new_api.field_test_new_api_selection__my_field'],
+        )
+
+    def test_selection_xmlid_gen(self):
         field = self.env['test_new_api.selection']._fields['sensitive']
         self.assertEqual(field.selection, [('a', 'Lowercase'), ('A', 'Uppercase')])
 
