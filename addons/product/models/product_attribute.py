@@ -247,6 +247,7 @@ class ProductTemplateAttributeLine(models.Model):
             values['value_ids'] = [(5, 0, 0)]
         res = super(ProductTemplateAttributeLine, self).write(values)
         if 'active' in values:
+            self.flush()
             self.env['product.template'].invalidate_cache(fnames=['attribute_line_ids'])
         # If coming from `create`, no need to update the values and the variants
         # before all lines are created.
