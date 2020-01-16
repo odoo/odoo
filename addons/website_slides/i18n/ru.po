@@ -12,7 +12,7 @@
 # Collex100, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,16 +114,16 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\"><p style=\"margin: 0px; padding: "
-"0px; font-size: 13px;\"> Поздравляем <br/><br/> $ {user.name} поделился $ "
-"{object.slide_type} <strong>$ {object.name}</strong> с тобой! <div "
+"0px; font-size: 13px;\"> Поздравляем <br/><br/> ${user.name} поделился "
+"${object.slide_type} <strong>${object.name}</strong> с тобой! <div "
 "style=\"margin: 16px 8px 16px 8px; text-align: center;\"> <a "
-"href=\"${object.website_url}\"><img alt=\"$ {Object.name}\" "
+"href=\"${object.website_url}\"><img alt=\"${Object.name}\" "
 "src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" "
 "style=\"height:auto; width:150px; margin: 16px;\"/></a> </div><div "
 "style=\"margin: 16px 8px 16px 8px; text-align: center;\"> <a "
 "href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: "
 "8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: "
-"5px;\">Посмотреть <strong>$ {object.name}</strong></a> </div></p></div>"
+"5px;\">Посмотреть <strong>${object.name}</strong></a> </div></p></div>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -145,17 +145,17 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\"><p style=\"margin: 0px; padding: "
-"0px; font-size: 13px;\"> Поздравляем <br/><br/> Новое $ {object.slide_type} "
-"<strong>$ {object.name}</strong> было опубликовано на $ "
-"{object.channel_id.name} в $ {format_tz (object.write_date, tz = user.tz)} "
+"0px; font-size: 13px;\"> Поздравляем <br/><br/> Новое ${object.slide_type} "
+"<strong>${object.name}</strong> было опубликовано на "
+"${object.channel_id.name} в ${format_tz (object.write_date, tz = user.tz)} "
 "<div style=\"margin: 16px 8px 16px 8px; text-align: center;\"> <a "
-"href=\"${object.website_url}\"><img alt=\"$ {Object.name}\" "
+"href=\"${object.website_url}\"><img alt=\"${Object.name}\" "
 "src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" "
 "style=\"height:auto; width:150px; margin: 16px;\"/></a> </div><div "
 "style=\"margin: 16px 8px 16px 8px; text-align: center;\"> <a "
 "href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: "
 "8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: "
-"5px;\">Посмотреть <strong>$ {object.name}</strong></a> </div></p></div>"
+"5px;\">Посмотреть <strong>${object.name}</strong></a> </div></p></div>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -569,7 +569,7 @@ msgid ""
 "Here is the received response: %s"
 msgstr ""
 "Не можете получить данные из URL-адреса. Документ или доступ право не предоставляется.\n"
-"Вот полученный ответ: %s"
+"Вот полученный ответ: %s "
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:330
@@ -579,7 +579,7 @@ msgid ""
 "%s"
 msgstr ""
 "Не удалось получить данные из URL. Документ или права доступа не доступны:\n"
-"%s"
+" %s "
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
@@ -936,7 +936,7 @@ msgid ""
 "Here is the error message: %s"
 msgstr ""
 "Внутренняя ошибка сервера, пожалуйста попробуйте позже или свяжитесь с администратором.\n"
-"Сообщение о ошибке: %s"
+"Сообщение о ошибке: %s "
 
 #. module: website_slides
 #. openerp-web
@@ -1247,8 +1247,8 @@ msgstr "Пожалуйста"
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
-"Пожалуйста <a href=\"/web?redirect=%s\">войдите</a> чтобы голосовать за этот"
-" слайд"
+"Пожалуйста <a href=\"/web?redirect= %s\">войдите</a> чтобы голосовать за "
+"этот слайд"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:333
@@ -1597,7 +1597,7 @@ msgid ""
 "href=\"/slides/slide/%s\">click here to view it </a>"
 msgstr ""
 "Это видео уже существует в этом канале <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">нажмите здесь для посмотра </a>"
+"href=\"/slides/slide/ %s\">нажмите здесь для посмотра </a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_thumb
