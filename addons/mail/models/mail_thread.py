@@ -575,6 +575,14 @@ class MailThread(models.AbstractModel):
     def _message_track_post_template(self, tracking):
         if not any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
             return True
+        # Clean the context to get rid of residual default_* keys
+        # that could cause issues afterward during the mail.message
+        # generation. Example: 'default_parent_id' would refer to
+        # the parent_id of the current record that was used during
+        # its creation, but could refer to wrong parent message id,
+        # leading to a traceback in case the related message_id
+        # doesn't exist
+        self = self.with_context(clean_context(self._context))
         templates = self._track_template(tracking)
         for field_name, (template, post_kwargs) in templates.items():
             if not template:
