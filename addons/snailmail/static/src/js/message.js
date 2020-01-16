@@ -66,12 +66,6 @@ Message.include({
     setSnailmailError: function (snailmailError) {
         this._snailmailError = snailmailError;
     },
-    /**
-     * @override
-     */
-    updateDataFromFailure: function (failureData) {
-        this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private

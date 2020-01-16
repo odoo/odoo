@@ -24,8 +24,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {Object} data
      * @param {string} [data.body = ""]
      * @param {(string|integer)[]} [data.channel_ids]
-     * @param {Object[]} [data.customer_email_data]
-     * @param {string} [data.customer_email_status]
+     * @param {Object[]} [data.notifications]
      * @param {string} [data.email_from]
      * @param {string} [data.info]
      * @param {string} [data.model]
@@ -60,12 +59,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @param {Object} data
-     */
-    addCustomerEmailData: function (data) {
-        this._customerEmailData.push(data);
-    },
     /**
      * @override
      * @return {string|undefined}
@@ -108,10 +101,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {Object[]|undefined}
      */
     getCustomerEmailData: function () {
-        if (!this.hasCustomerEmailData()) {
-            return undefined;
-        }
-        return this._customerEmailData;
+        return Object.values(this._notifications);
     },
     /**
      * Get the customer email status of this email, if any.
@@ -120,10 +110,13 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {string|undefined}
      */
     getCustomerEmailStatus: function () {
-        if (!this.hasCustomerEmailData()) {
-            return undefined;
+        var hasFailure = _.some(this.getCustomerEmailData(), function (notif) {
+            return notif[0] === 'exception' || notif[0] === 'bounce';
+        });
+        if (hasFailure) {
+            return 'exception';
         }
-        return this._customerEmailStatus;
+        return 'ready';
     },
     /**
      * Get the text to display for the author of the message
@@ -320,7 +313,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     hasCustomerEmailData: function () {
-        return !!(this._customerEmailData && (this._customerEmailData.length > 0));
+        return this.getCustomerEmailData().length > 0;
     },
     /**
      * State whether this message has an email of its sender.
@@ -528,14 +521,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {object} failureData
      */
     updateDataFromFailure: function (failureData) {
-        var isNewFailure = _.some(failureData.notifications, function (notif) {
-            return notif[0] === 'exception' || notif[0] === 'bounce';
-        });
-        if (isNewFailure) {
-            this._customerEmailStatus = 'exception';
-        } else {
-            this._customerEmailStatus = 'sent';
-        }
+        this._notifications = failureData.notifications;
     },
 
     //--------------------------------------------------------------------------
@@ -742,8 +728,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {Object} data
      * @param {string} [data.body = ""]
      * @param {(string|integer)[]} [data.channel_ids]
-     * @param {Object[]} [data.customer_email_data]
-     * @param {string} [data.customer_email_status]
+     * @param {Object[]} [data.notifications]
      * @param {string} [data.email_from]
      * @param {string} [data.info]
      * @param {string} [data.model]
@@ -758,9 +743,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.subtype_description]
      * @param {Object[]} [data.tracking_value_ids]
      */
-    _setInitialData: function (data){
-        this._customerEmailData = data.customer_email_data || [];
-        this._customerEmailStatus = data.customer_email_status;
+    _setInitialData: function (data) {
+        this._notifications = data.notifications || {};
         this._documentModel = data.model;
         this._documentName = data.record_name;
         this._documentID = data.res_id;

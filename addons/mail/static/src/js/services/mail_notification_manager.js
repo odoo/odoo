@@ -318,7 +318,6 @@ MailManager.include({
             });
             if (message) {
                 message.updateDataFromFailure(data);
-                self._updateMessageNotificationStatus(data, message);
                 self._mailBus.trigger('update_message', message);
             }
         });
@@ -552,28 +551,6 @@ MailManager.include({
     _listenOnBuses: function () {
         this._super.apply(this, arguments);
         this.call('bus_service', 'onNotification', this, this._onNotification);
-    },
-    /**
-     * Update the message notification status of message based on update_message
-     *
-     * @private
-     * @param {Object} data
-     * @param {Object[]} data.notifications
-     * @param {mail.model.Message} message
-     */
-    _updateMessageNotificationStatus: function (data, message) {
-        _.each(data.notifications, function (notif, id) {
-            var partnerName = notif[1];
-            var notifStatus = notif[0];
-            var res = _.find(message.getCustomerEmailData(), function (entry) {
-                return entry[0] === parseInt(id);
-            });
-            if (res) {
-                res[2] = notifStatus;
-            } else {
-                message.addCustomerEmailData([parseInt(id), partnerName, notifStatus]);
-            }
-        });
     },
 
     //--------------------------------------------------------------------------

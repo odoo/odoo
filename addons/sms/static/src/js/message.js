@@ -48,13 +48,6 @@ Message.include({
     isError: function () {
         return this.getSmsStatus() === 'error';
     },
-    /**
-     * @override
-     */
-    updateDataFromFailure: function (failureData) {
-        this._super(...arguments);
-        // TODO SEB this should update _smsIds/_smsStatus correctly (info is not even sent from the server)
-    },
 
     //--------------------------------------------------------------------------
     // Private

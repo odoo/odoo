@@ -954,6 +954,9 @@ class Message(models.Model):
         attachments = self.env['ir.attachment']
         message_ids = list(message_tree.keys())
         email_notification_tree = {}
+
+        message_notifications = self._format_mail_notifications()
+
         for message in message_tree.values():
             if message.author_id:
                 partners |= message.author_id
@@ -1002,19 +1005,10 @@ class Message(models.Model):
                 author = partner_tree[message.author_id.id]
             else:
                 author = (0, message.email_from)
-            customer_email_status = (
-                (all(n.notification_status == 'sent' for n in message.notification_ids if n.notification_type == 'email') and 'sent') or
-                (any(n.notification_status == 'exception' for n in message.notification_ids if n.notification_type == 'email') and 'exception') or
-                (any(n.notification_status == 'bounce' for n in message.notification_ids if n.notification_type == 'email') and 'bounce') or
-                'ready'
-            )
-            customer_email_data = []
-            for notification in email_notification_tree[message.id]:
-                customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.notification_status))
 
             has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
             if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
-                main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
+                main_attachment = self.env[message.model].browse(message.res_id).message_main_attachment_id
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
@@ -1025,10 +1019,10 @@ class Message(models.Model):
                 if tracking_value_id in tracking_tree:
                     tracking_value_ids.append(tracking_tree[tracking_value_id])
 
+            # TODO SEB should call message _format_mail_notifications
             message_dict.update({
                 'author_id': author,
-                'customer_email_status': customer_email_status,
-                'customer_email_data': customer_email_data,
+                'notifications': message_notifications.get(message_id, {}).get('notifications', {}),
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
@@ -1180,7 +1174,8 @@ class Message(models.Model):
         ])
         messages_notifications = defaultdict(lambda: self.env['mail.notification'].sudo())
         for notif in all_notifications:
-            messages_notifications[notif.mail_message_id.id] += notif
+            if notif.notification_type != 'inbox' and notif.res_partner_id.active:
+                messages_notifications[notif.mail_message_id.id] += notif
         return {
             message.id: {
                 'message_id': message.id,

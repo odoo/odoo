@@ -324,13 +324,13 @@
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
                         (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.displayEmailIcons and (message.hasCustomerEmailData() or ['exception', 'bounce'].indexOf(message._customerEmailStatus) > -1)" class="o_thread_tooltip_container">
+                    <span t-if="options.displayEmailIcons and message.hasCustomerEmailData()" class="o_thread_tooltip_container">
 
                         <t t-set="fatype" t-value="''"/>
                         <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
-                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope'" t-att-data-message-id="message.getID()"/>
+                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope' + fatype" t-att-data-message-id="message.getID()"/>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
@@ -454,13 +454,13 @@
     <t t-name="mail.widget.Thread.Message.MailTooltip">
         <div t-foreach="data" t-as="customerEmailData">
             <span class="d-inline-block text-center o_thread_tooltip_icon">
-                <i t-if="customerEmailData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
-                <i t-if="customerEmailData[2] === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
-                <i t-if="customerEmailData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
-                <i t-if="customerEmailData[2] === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
-                <i t-if="customerEmailData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+                <i t-if="customerEmailData.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="customerEmailData.notification_status === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="customerEmailData.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="customerEmailData.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="customerEmailData.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
             </span>
-            <span t-esc="customerEmailData[1]"/>
+            <span t-esc="customerEmailData.partner_name"/>
         </div>
     </t>
 
