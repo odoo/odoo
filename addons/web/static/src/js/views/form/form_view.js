@@ -37,6 +37,7 @@ var FormView = BasicView.extend({
         this.controllerParams.footerToButtons = params.footerToButtons;
         if ('action' in params && 'flags' in params.action) {
             this.controllerParams.footerToButtons = params.action.flags.footerToButtons;
+            this.controllerParams.isFullscreen = params.action.flags.isFullscreen;
         }
         var defaultButtons = 'default_buttons' in params ? params.default_buttons : true;
         this.controllerParams.defaultButtons = defaultButtons;

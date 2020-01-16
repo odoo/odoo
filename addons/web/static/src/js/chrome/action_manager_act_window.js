@@ -420,6 +420,7 @@ ActionManager.include({
             hasSidebar: !popup && !inline,
             headless: (popup || inline) && form,
             mode: (popup || inline || action.target === 'fullscreen') && 'edit',
+            isFullscreen: action.target === 'fullscreen',
         });
     },
     /**

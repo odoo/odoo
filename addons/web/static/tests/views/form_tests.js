@@ -6025,6 +6025,62 @@ QUnit.module('Views', {
         _t.database.multi_lang = multi_lang;
     });
 
+    QUnit.test('reverse breadcrumb sets form mode=edit if target is fullscreen', function (assert) {
+        assert.expect(6);
+
+        var archs = {
+            'partner,false,form': '<form string="Partners">' +
+                '<field name="foo"/>' +
+                '</form>',
+            'partner,false,search': '<search></search>',
+            'partner,false,list': '<tree>' +
+                '<field name="name"/>' +
+                '</tree>',
+        };
+
+        var actions = [{
+            id: 1,
+            name: 'Partner',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+            target: 'fullscreen',
+            res_id: 1,
+        }, {
+            id: 2,
+            name: 'Partner2',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function () {
+                    assert.step('toggle_fullscreen');
+                },
+            },
+        });
+        actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_form_editable',
+            "form should be in edit mode");
+
+        actionManager.doAction(2);
+        $('.o_control_panel .breadcrumb a:first').click();
+        assert.containsOnce(actionManager, '.o_form_editable',
+            "form should be in edit mode on reverse breadcrumb");
+        assert.verifySteps([
+            'toggle_fullscreen',
+            'toggle_fullscreen',
+            'toggle_fullscreen',
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('buttons are disabled until status bar action is resolved', function (assert) {
         assert.expect(9);
 

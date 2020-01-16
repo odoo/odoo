@@ -38,16 +38,19 @@ var FormController = BasicController.extend({
         this.footerToButtons = params.footerToButtons;
         this.defaultButtons = params.defaultButtons;
         this.hasSidebar = params.hasSidebar;
+        this.isFullscreen = params.isFullscreen;
         this.toolbarActions = params.toolbarActions || {};
     },
     /**
      * Force mode back to readonly. Whenever we leave a form view, it is saved,
      * and should no longer be in edit mode.
+     * However, there is an exception, if action target is fullscreen then form view
+     * is opened in fullscreen mode, so in this case mode will be edit.
      *
      * @override
      */
     willRestore: function () {
-        this.mode = 'readonly';
+        this.mode = this.isFullscreen ? 'edit' : 'readonly';
     },
 
     //--------------------------------------------------------------------------
