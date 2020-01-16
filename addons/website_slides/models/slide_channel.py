@@ -591,6 +591,23 @@ class Channel(models.Model):
     # Data / Misc
     # ---------------------------------------------------------
 
+    def _archive_category(self, category):
+        """ Archives the category and re-sequences the slides for current channel"""
+        channel_slides = self.slide_ids.with_context(no_compute_category=True)
+        category_slides = category.slide_ids.with_context(no_compute_category=True)
+        if category.slide_ids:
+            sequence = 0
+            # re-sequence the slides falling under category to be archived, in such way that they move to top
+            for slide_rec in category_slides:
+                slide_rec.write({'sequence': sequence, 'category_id': False})
+                sequence += 1
+            # re-sequence the remaining slides (along with their categories)
+            remaining_slides = channel_slides.filtered(lambda rec: rec not in (category_slides + category))
+            for slide_rec in remaining_slides:
+                slide_rec.sequence = sequence
+                sequence += 1
+        category.with_context(no_compute_category=True).active = False
+
     def _get_categorized_slides(self, base_domain, order, force_void=True, limit=False, offset=False):
         """ Return an ordered structure of slides by categories within a given
         base_domain that must fulfill slides. As a course structure is based on
@@ -653,7 +670,7 @@ class Channel(models.Model):
             index_of_next_category = ids_to_resequence.index(next_category_id)
             ids_to_resequence.insert(index_of_next_category, added_slide_id)
             for i, record in enumerate(self.env['slide.slide'].browse(ids_to_resequence)):
-                record.write({'sequence': i + 1})  # start at 1 to make people scream
+                record.with_context(no_compute_category=True).write({'sequence': i + 1})  # start at 1 to make people scream
         else:
             slide.write({
                 'sequence': self.env['slide.slide'].browse(ids_to_resequence[-1]).sequence + 1

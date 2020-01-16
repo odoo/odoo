@@ -790,6 +790,16 @@ class WebsiteSlides(WebsiteProfile):
 
         return False
 
+    @http.route('/slides/category/archive', type='json', auth='user', website=True)
+    def slide_category_archive(self, category_id):
+        """ This route allows channel publishers to archive categories.
+        It has to be done in sudo mode since only website_publishers can write on slides in ACLs """
+        category = request.env['slide.slide'].browse(category_id)
+        if category.channel_id.can_publish:
+            category.channel_id.sudo()._archive_category(category)
+            return True
+        return False
+
     @http.route('/slides/slide/toggle_is_preview', type='json', auth='user', website=True)
     def slide_preview(self, slide_id):
         slide = request.env['slide.slide'].browse(int(slide_id))
@@ -970,8 +980,7 @@ class WebsiteSlides(WebsiteProfile):
         channel = request.env['slide.channel'].browse(int(channel_id))
         if not channel.can_upload or not channel.can_publish:
             raise werkzeug.exceptions.NotFound()
-
-        request.env['slide.slide'].create(self._get_new_slide_category_values(channel, name))
+        request.env['slide.slide'].with_context(no_compute_category=True).create(self._get_new_slide_category_values(channel, name))
 
         return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
 
@@ -1041,7 +1050,7 @@ class WebsiteSlides(WebsiteProfile):
         try:
             values['user_id'] = request.env.uid
             values['is_published'] = values.get('is_published', False) and can_publish
-            slide = request.env['slide.slide'].sudo().create(values)
+            slide = request.env['slide.slide'].with_context(no_compute_category=True).sudo().create(values)
         except (UserError, AccessError) as e:
             _logger.error(e)
             return {'error': e.name}

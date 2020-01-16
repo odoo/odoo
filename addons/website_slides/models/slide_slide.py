@@ -216,6 +216,11 @@ class Slide(models.Model):
         Lists are manually sorted because when adding a new browse record order
         will not be correct as the added slide would actually end up at the
         first place no matter its sequence."""
+
+        # While doing front-end operations, we don't need to re-compute
+        # the category because that is already handled
+        if self.env.context.get('no_compute_category'):
+            return
         self.category_id = False  # initialize whatever the state
 
         channel_slides = {}
