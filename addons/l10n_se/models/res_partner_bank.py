@@ -49,7 +49,6 @@ class ResPartnerBank(models.Model):
         
         return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
-    @api.one
     @api.constrains('acc_number')
     def _check_giro(self):
         if (self.acc_type == 'plusgiro' or self.acc_type == 'bankgiro') and not validate_luhn(self.acc_number):
