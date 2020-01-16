@@ -622,7 +622,8 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
-
+        if isinstance(result, Response) and error is None:
+            return result
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
