@@ -12,7 +12,7 @@ from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, format_date
 
 
 class WebsiteEventController(http.Controller):
@@ -32,37 +32,35 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('country', 'all')
 
         website = request.website
+        today = datetime.today()
 
         def sdn(date):
             return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
 
         def sd(date):
             return fields.Datetime.to_string(date)
-        today = datetime.today()
+
+        def get_month_filter_domain(filter_name, months_delta):
+            first_day_of_the_month = today.replace(day=1)
+            filter_string = _('This month') if months_delta == 0 \
+                else format_date(request.env, value=today + relativedelta(months=months_delta),
+                                 date_format='LLLL', lang_code=get_lang(request.env).code).capitalize()
+            return [filter_name, filter_string, [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=months_delta))),
+                ("date_begin", "<", sd(first_day_of_the_month + relativedelta(months=months_delta+1)))],
+                0]
+
         dates = [
-            ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
+            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
                 ("date_end", ">", sd(today)),
                 ("date_begin", "<", sdn(today))],
                 0],
-            ['week', _('This Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=6-today.weekday())))],
-                0],
-            ['nextweek', _('Next Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=7-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=13-today.weekday())))],
-                0],
-            ['month', _('This month'), [
-                ("date_end", ">=", sd(today.replace(day=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
-                0],
-            ['nextmonth', _('Next month'), [
-                ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
-                0],
+            get_month_filter_domain('month', 0),
+            get_month_filter_domain('nextmonth1', 1),
+            get_month_filter_domain('nextmonth2', 2),
             ['old', _('Past Events'), [
-                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", "<", sd(today))],
                 0],
         ]
 
