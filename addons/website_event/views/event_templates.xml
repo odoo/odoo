@@ -181,8 +181,8 @@
     </t>
     <!-- List -->
     <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size} mb-4">
-        <article t-attf-class="#{opt_events_list_cards and 'card border-0 shadow-sm'}" itemscope="itemscope" itemtype="http://schema.org/Event">
-            <div class="row no-gutters">
+        <article t-attf-class="h-100 #{opt_events_list_cards and 'card border-0 shadow-sm'}" itemscope="itemscope" itemtype="http://schema.org/Event">
+            <div class="h-100 row no-gutters d-flex align-items-stretch">
                 <!-- Header -->
                 <header t-attf-class="overflow-hidden bg-secondary #{opt_events_list_columns and 'col-12 rounded-top' or 'col-sm-4 col-lg-3 rounded-left'} #{(not opt_events_list_cards) and 'rounded shadow'} #{(not opt_events_list_cards and not opt_events_list_columns) and 'rounded-top'}">
                     <!-- Image + Link -->
@@ -197,7 +197,9 @@
                             </div>
                             <!-- Participating -->
                             <small t-if="event.is_participating" class="o_wevent_participating bg-success">
-                                <i class="fa fa-check mr-2"/>Registered
+                                <i class="fa fa-check mr-2"/>
+                                Registered:
+                                <span t-esc="first_three_attendees_per_event[event.id]"/>
                             </small>
                             <!-- Unpublished -->
                             <small t-if="not event.website_published" class="o_wevent_unpublished bg-danger">
@@ -206,14 +208,17 @@
                         </t>
                     </a>
                 </header>
-                <div t-attf-class="#{opt_events_list_columns and 'col-12' or 'col'}">
+                <div t-attf-class="d-flex flex-column justify-content-bewteen #{opt_events_list_columns and 'col-12' or 'col'}">
                     <!-- Body -->
-                    <main t-attf-class="#{opt_events_list_cards and 'card-body' or (opt_events_list_columns and 'py-3' or 'px-4')}">
+                    <main t-attf-class="flex-grow-1 #{opt_events_list_cards and 'card-body' or (opt_events_list_columns and 'py-3' or 'px-4')}">
                         <!-- Title -->
                         <h5 t-attf-class="card-title mt-2 mb-0 text-truncate #{(not event.website_published) and 'text-danger'}">
-                            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-reset text-decoration-none" itemprop="url">
+                            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" 
+                                class="text-reset text-decoration-none" 
+                                itemprop="url">
                                 <span t-field="event.name" itemprop="name"/>
                             </a>
+                            <div class="badge badge-pill badge-info mt-2 pt4 pb4" t-if="event.is_online">Online</div>
                         </h5>
                         <!-- Organizer -->
                         <div t-if="event.organizer_id" class="mb-3">
@@ -227,6 +232,21 @@
                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                         </time>
+                        <!-- Organizer -->
+                        <div t-if="event.organizer_id" class="mb-3">
+                            <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
+                        </div>
+                        <!-- Location -->
+                        <div class="invisible" t-if="event.is_online">Online</div>
+                        <div t-if="not event.is_online" itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                        <div class="mt8 d-flex align-items-center">
+                            <t t-foreach="event.tag_ids" t-as="tag">
+                                <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
+                                    t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'}">
+                                    <span t-esc="tag.name"/>
+                                </a>
+                            </t>
+                        </div>
                     </main>
                     <!-- Footer -->
                     <footer t-attf-class="small #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
@@ -234,12 +254,6 @@
                             <span class="text-danger"
                                   t-if="event.seats_availability == 'limited' and not event.seats_available">
                                   Sold Out
-                            </span>
-                            <span class="text-muted"
-                                  t-if="event.seats_availability == 'limited' and
-                                        event.seats_available and
-                                        (event.seats_available &lt;5 or event.seats_available &lt;= ((event.seats_max or 0) / 4))">
-                                <em>Only <t t-esc="event.seats_available"/> Remaining</em>
                             </span>
                         </t>
                     </footer>
@@ -628,7 +642,7 @@
             </div>
         </div>
     </form>
-    <div t-elif="request.env.user.has_group('event.group_event_manager')" class="alert alert-info mb-5 o_website_event_configuration" role="status">
+    <div t-elif="request.env.user.has_group('event.group_event_manager')" class="alert alert-info mb-5 o_website_event_configuration o_not_editable" role="status">
         <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
             <i class="fa fa-pencil mr-2" role="img" aria-label="Create" title="Create"/><em>Configure Event Registration</em>
         </a>

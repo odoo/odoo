@@ -149,11 +149,16 @@ class WebsiteEventController(http.Controller):
 
         keep = QueryURL('/event', **{key: value for key, value in searches.items() if (key == 'search' or value != 'all')})
 
+        first_three_attendees_per_event = {}
+        for event in events:
+            first_three_attendees_per_event[event.id] = (',').join([registration.name.split(' ')[0] for registration in event.sudo().registration_ids[:3]])
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
+            'first_three_attendees_per_event': first_three_attendees_per_event,
             'dates': dates,
             'categories': request.env['event.tag.category'].search([]),
             'countries': countries,
