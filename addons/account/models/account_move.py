@@ -170,7 +170,8 @@ class AccountMove(models.Model):
     def button_cancel(self):
         for move in self:
             if not move.journal_id.update_posted:
-                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+                err_msg = _('Move name (id): %s (%s)') % (move.name, str(move.id))
+                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.\n%s.') % err_msg)
         if self.ids:
             self.check_access_rights('write')
             self.check_access_rule('write')
