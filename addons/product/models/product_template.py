@@ -171,6 +171,7 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
+    @api.depends_context('company')
     def _compute_cost_currency_id(self):
         for template in self:
             template.cost_currency_id = self.env.company.currency_id.id
