@@ -1,0 +1,48 @@
+odoo.define('point_of_sale.NumpadWidget', function(require) {
+    'use strict';
+
+    const { NumpadState } = require('point_of_sale.models');
+    const { Component } = owl;
+
+    class NumpadWidget extends Component {
+        constructor() {
+            super(...arguments);
+            this.state = new NumpadState();
+            this.pos = this.props.pos;
+        }
+        mounted() {
+            this.state.on('change:mode', () => {
+                this.render();
+            });
+            this.pos.on('change:cashier', () => {
+                this.applyPriceControlRights();
+            });
+        }
+        get hasPriceControlRights() {
+            const cashier = this.pos.get('cashier') || this.pos.get_cashier();
+            return !this.pos.config.restrict_price_control || cashier.role == 'manager';
+        }
+        applyPriceControlRights() {
+            if (this.hasPriceControlRights && this.state.get('mode') == 'price') {
+                this.state.changeMode('quantity');
+            }
+            this.render();
+        }
+        clickDeleteLastChar() {
+            return this.state.deleteLastChar();
+        }
+        clickSwitchSign() {
+            return this.state.switchSign();
+        }
+        clickAppendNewChar(event) {
+            const newChar = event.target.innerText || event.target.textContent;
+            return this.state.appendNewChar(newChar);
+        }
+        clickChangeMode(event) {
+            const newMode = event.target.attributes['data-mode'].nodeValue;
+            return this.state.changeMode(newMode);
+        }
+    }
+
+    return { NumpadWidget };
+});

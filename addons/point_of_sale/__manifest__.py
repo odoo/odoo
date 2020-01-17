@@ -49,6 +49,7 @@
     'qweb': [
         'static/src/xml/pos.xml',
         'static/src/components/OrderWidget/templates.xml',
+        'static/src/components/NumpadWidget/templates.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

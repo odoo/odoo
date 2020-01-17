@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="NumpadWidget" owl="1">
+        <div class="numpad">
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">1</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">2</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">3</button>
+            <button class="mode-button"
+                    t-att-class="{'selected-mode': state.get('mode')==='quantity'}"
+                    data-mode="quantity" t-on-click="clickChangeMode">Qty</button>
+            <br />
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">4</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">5</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">6</button>
+            <button class="mode-button"
+                    t-att-class="{'selected-mode': state.get('mode')==='discount'}"
+                    data-mode="discount" t-on-click="clickChangeMode">Disc</button>
+            <br />
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">7</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">8</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">9</button>
+            <button class="mode-button" t-att-class="{
+                    'selected-mode': state.get('mode')==='price',
+                    'disabled-mode': !hasPriceControlRights
+                }" t-att-disabled="!hasPriceControlRights" data-mode="price"
+                    t-on-click="clickChangeMode">Price</button>
+            <br />
+            <button class="input-button numpad-minus" t-on-click="clickSwitchSign">+/-</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">0</button>
+            <button class="input-button number-char" t-on-click="clickAppendNewChar">.</button>
+            <button class="input-button numpad-backspace" t-on-click="clickDeleteLastChar">
+                <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png"
+                     width="24" height="21" alt="Backspace" />
+            </button>
+        </div>
+    </t>
+
+</templates>
