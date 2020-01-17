@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -1123,6 +1124,63 @@ class StockMove(TransactionCase):
         move_receipt._action_assign()
         self.assertEqual(move_receipt.state, 'assigned')
         self.assertEqual(move_receipt.move_line_ids.product_uom_qty, 3)
+
+    def test_availability_10(self):
+        """ Checks if a move for tracked product is reserved then the lot id is
+        modified for an another lot without quantity, the move isn't assigned anymore.
+        Checks also the picking `show_check_availability` toggles correclty.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        warehouse.out_type_id.show_operations = True
+        # Creates two lots for product3.
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'tsn01',
+            'product_id': self.product3.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'tsn02',
+            'product_id': self.product3.id,
+        })
+        #  Set lot1 quantities to 10.
+        self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'lot_id': lot1.id,
+            'product_id': self.product3.id,
+            'quantity': 10,
+        })
+
+        # Create a delivery for product3, then confirms and assigns it.
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = warehouse.out_type_id
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product3
+            move.product_uom_qty = 10
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+        self.assertEqual(delivery.show_check_availability, True,
+            "Move not assigned -> 'Check Availability' must be visible.")
+
+        delivery.action_assign()
+        # Opens the Form and saves it to update the record's computed fields.
+        delivery_form = Form(delivery)
+        delivery = delivery_form.save()
+        move_lines = delivery.move_line_ids
+        self.assertEqual(len(move_lines), 1)
+        self.assertEqual(move_lines.lot_id.id, lot1.id)
+        self.assertEqual(move_lines.product_uom_qty, 10)
+        self.assertEqual(delivery.show_check_availability, False,
+            "Move assigned -> 'Check Availability' must be hidden.")
+
+        delivery_form = Form(delivery)
+        # Updates the delivery move line to change its `lot_id`.
+        with delivery_form.move_line_ids_without_package.edit(0) as move_line:
+            move_line.lot_id = lot2
+        delivery = delivery_form.save()
+        self.assertEqual(len(move_lines), 1)
+        self.assertEqual(move_lines.lot_id.id, lot2.id)
+        self.assertEqual(move_lines.product_uom_qty, 0)
+        self.assertEqual(delivery.show_check_availability, True,
+            "Move not assigned -> 'Check Availability' must be visible.")
 
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and

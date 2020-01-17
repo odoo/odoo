@@ -273,6 +273,16 @@ class StockMoveLine(models.Model):
                     if new_product_qty != ml.product_qty:
                         new_product_uom_qty = ml.product_id.uom_id._compute_quantity(new_product_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
+                        # After changed the quantity, checks it assigned moves are still really
+                        # assigned or if they must be reseted to confirmed/partially_available.
+                        for move in ml.mapped('move_id').filtered(lambda m: m.state == 'assigned'):
+                            qty = sum(move.move_line_ids.mapped('product_uom_qty'))
+                            rounding = move.product_uom.rounding
+                            if float_compare(move.reserved_availability, qty, precision_rounding=rounding) == 1:
+                                if float_is_zero(qty, precision_rounding=rounding):
+                                    move.state = 'confirmed'
+                                else:
+                                    move.state = 'partially_available'
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         next_moves = self.env['stock.move']
