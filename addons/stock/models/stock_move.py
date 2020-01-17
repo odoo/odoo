@@ -3,15 +3,16 @@
 
 from collections import defaultdict
 from datetime import datetime
-from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
-from re import findall as regex_findall, split as regex_split
+from re import findall as regex_findall
+from re import split as regex_split
 
-from odoo import api, fields, models, _, SUPERUSER_ID
+from dateutil import relativedelta
+
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
-from odoo.tools.float_utils import float_compare, float_round, float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
