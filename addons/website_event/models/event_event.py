@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 import werkzeug
 import json
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import UserError
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -15,27 +14,26 @@ class EventType(models.Model):
     _name = 'event.type'
     _inherit = ['event.type']
 
-    website_menu = fields.Boolean(
-        'Display a dedicated menu on Website')
+    website_menu = fields.Boolean('Display a dedicated menu on Website')
 
 
 class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin']
 
-    website_published = fields.Boolean(tracking=True)
-
+    # description
     subtitle = fields.Char('Event Subtitle', translate=True)
-
+    # registration
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
-
+    # website
+    website_published = fields.Boolean(tracking=True)
     cover_properties = fields.Text(
         'Cover Properties',
         default='{"background-image": "none", "background-color": "oe_blue", "opacity": "0.4", "resize_class": "o_half_screen_height"}')
-
-    website_menu = fields.Boolean('Dedicated Menu',
+    website_menu = fields.Boolean(
+        'Dedicated Menu', copy=False,
         help="Creates menus Introduction, Location and Register on the page "
-             " of the event on the website.", copy=False)
+             " of the event on the website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
     def _compute_is_participating(self):
