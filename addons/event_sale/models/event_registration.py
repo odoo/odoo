@@ -2,14 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 from odoo.tools import float_is_zero
 
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', readonly=True, states={'draft': [('readonly', False)]})
     # in addition to origin generic fields, add real relational fields to correctly
     # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
@@ -18,18 +16,6 @@ class EventRegistration(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
     source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
     medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
-
-    @api.onchange('event_id')
-    def _onchange_event_id(self):
-        # We reset the ticket when keeping it would lead to an inconstitent state.
-        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
-            self.event_ticket_id = None
-
-    @api.constrains('event_ticket_id', 'state')
-    def _check_ticket_seats_limit(self):
-        for record in self:
-            if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
-                raise ValidationError(_('No more available seats for this ticket'))
 
     def _check_auto_confirmation(self):
         res = super(EventRegistration, self)._check_auto_confirmation()
