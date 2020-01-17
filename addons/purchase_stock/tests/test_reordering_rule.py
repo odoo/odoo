@@ -27,6 +27,9 @@ class TestReorderingRule(SavepointCase):
             - Receive products in 2 steps
             - The product has a reordering rule
             - On the po generated, the source document should be the name of the reordering rule
+            - Increase the quantity on the RFQ, the extra quantity should follow the push rules
+            - Increase the quantity on the PO, the extra quantity should follow the push rules
+            - There should be one move supplier -> input and two moves input -> stock
         """
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         warehouse_1.write({'reception_steps': 'two_steps'})
@@ -61,12 +64,33 @@ class TestReorderingRule(SavepointCase):
 
         # On the po generated, the source document should be the name of the reordering rule
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
+        self.assertEqual(purchase_order.order_line.product_qty, 10)
+
+        # Increase the quantity on the RFQ before confirming it
+        purchase_order.order_line.product_qty = 12
+        purchase_order.button_confirm()
+
+        self.assertEqual(purchase_order.picking_ids.move_lines.filtered(lambda m: m.product_id == self.product_01).product_qty, 12)
+        next_picking = purchase_order.picking_ids.move_lines.move_dest_ids.picking_id
+        self.assertEqual(len(next_picking), 2)
+        self.assertEqual(next_picking[0].move_lines.filtered(lambda m: m.product_id == self.product_01).product_qty, 10)
+        self.assertEqual(next_picking[1].move_lines.filtered(lambda m: m.product_id == self.product_01).product_qty, 2)
+
+        # Increase the quantity on the PO
+        purchase_order.order_line.product_qty = 15
+        self.assertEqual(purchase_order.picking_ids.move_lines.product_qty, 15)
+        self.assertEqual(next_picking[0].move_lines.filtered(lambda m: m.product_id == self.product_01).product_qty, 10)
+        self.assertEqual(next_picking[1].move_lines.filtered(lambda m: m.product_id == self.product_01).product_qty, 5)
 
     def test_reordering_rule_2(self):
         """
             - Receive products in 1 steps
             - The product has two reordering rules, each one applying in a sublocation
             - Processing the purchase order should fulfill the two sublocations
+            - Increase the quantity on the RFQ for one of the POL, the extra quantity will go to
+              the original subloc since we don't know where to push it (no move dest)
+            - Increase the quantity on the PO, the extra quantity should follow the push rules and
+              thus go to stock
         """
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         subloc_1 = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': warehouse_1.lot_stock_id.id})
@@ -115,9 +139,17 @@ class TestReorderingRule(SavepointCase):
         self.assertTrue(purchase_order, 'No purchase order created.')
         self.assertEqual(len(purchase_order.order_line), 2, 'Not enough purchase order lines created.')
 
+        # increment the qty of the first po line
+        purchase_order.order_line.filtered(lambda pol: pol.orderpoint_id == order_point_1).product_qty = 15
         purchase_order.button_confirm()
-        res = purchase_order.picking_ids.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
-        self.assertEqual(self.product_01.with_context(location=subloc_1.id).virtual_available, 0)
+        self.assertEqual(self.product_01.with_context(location=subloc_1.id).virtual_available, 5)
         self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, 0)
 
+        # increment the qty of the second po line
+        purchase_order.order_line.filtered(lambda pol: pol.orderpoint_id == order_point_2).with_context(debug=True).product_qty = 15
+        self.assertEqual(self.product_01.with_context(location=subloc_1.id).virtual_available, 5)
+        self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, 0)
+        self.assertEqual(self.product_01.with_context(location=warehouse_1.lot_stock_id.id).virtual_available, 10)  # 5 on the main loc, 5 on subloc_1
+
+        self.assertEqual(purchase_order.picking_ids.move_lines[-1].product_qty, 5)
+        self.assertEqual(purchase_order.picking_ids.move_lines[-1].location_dest_id, warehouse_1.lot_stock_id)
