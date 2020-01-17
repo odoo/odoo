@@ -1742,7 +1742,8 @@ const SnippetOptionWidget = Widget.extend({
             }
 
             const dependencies = widget.getDependencies();
-            const dependenciesOK = !dependencies.length || dependencies.some(depName => {
+            const dependenciesData = [];
+            dependencies.forEach(depName => {
                 const toBeActive = (depName[0] !== '!');
                 if (!toBeActive) {
                     depName = depName.substr(1);
@@ -1753,7 +1754,15 @@ const SnippetOptionWidget = Widget.extend({
                     name: depName,
                     onSuccess: _widget => widget = _widget,
                 });
-                return widget && (widget.isActive() === toBeActive);
+                if (widget) {
+                    dependenciesData.push({
+                        widget: widget,
+                        toBeActive: toBeActive,
+                    });
+                }
+            });
+            const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
+                return (depData.widget.isActive() === depData.toBeActive);
             });
 
             widget.toggleVisibility(dependenciesOK);
