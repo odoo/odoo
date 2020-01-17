@@ -22,6 +22,9 @@ class EventRegistration(models.Model):
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
+    event_ticket_id = fields.Many2one(
+        'event.event.ticket', string='Event Ticket', readonly=True,
+        states={'draft': [('readonly', False)]})
     # attendee
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
@@ -43,11 +46,23 @@ class EventRegistration(models.Model):
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
 
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        # We reset the ticket when keeping it would lead to an inconstitent state.
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
+
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
         for registration in self:
             if registration.event_id.seats_availability == 'limited' and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
                 raise ValidationError(_('No more seats available for this event.'))
+
+    @api.constrains('event_ticket_id', 'state')
+    def _check_ticket_seats_limit(self):
+        for record in self:
+            if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
+                raise ValidationError(_('No more available seats for this ticket'))
 
     @api.onchange('partner_id')
     def _onchange_partner(self):
