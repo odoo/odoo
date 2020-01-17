@@ -110,7 +110,7 @@
             </thead>
             <tbody>
                 <t t-foreach="table_data" t-as="input_line">
-                    <tr t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
+                    <tr t-if="not input_line.skipped" t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
                         <td>
                             <a t-att-href="input_line.user_input_id.get_print_url()"><t t-esc="input_line_index + 1"></t></a>
                         </td>
@@ -185,7 +185,7 @@
                     </thead>
                     <tbody>
                         <t t-foreach="table_data" t-as="input_line">
-                            <tr t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
+                            <tr t-if="not input_line.skipped" t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
                                 <td>
                                     <a t-att-href="input_line.user_input_id.get_print_url()"><t t-esc="input_line_index + 1"></t></a>
                                 </td>
