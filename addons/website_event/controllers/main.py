@@ -43,30 +43,28 @@ class WebsiteEventController(http.Controller):
         def sd(date):
             return fields.Datetime.to_string(date)
         today = datetime.today()
+        first_day_of_the_month = today.replace(day=1)
+        datetime_format = '%Y-%m-%d 00:00:00'
         dates = [
-            ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
+            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
                 ("date_end", ">", sd(today)),
                 ("date_begin", "<", sdn(today))],
                 0],
-            ['week', _('This Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=6-today.weekday())))],
-                0],
-            ['nextweek', _('Next Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=7-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=13-today.weekday())))],
-                0],
             ['month', _('This month'), [
-                ("date_end", ">=", sd(today.replace(day=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", ">=", sd(first_day_of_the_month)),
+                ("date_begin", "<", (first_day_of_the_month + relativedelta(months=1)).strftime(datetime_format))],
                 0],
-            ['nextmonth', _('Next month'), [
-                ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
+            ['nextmonth1', _((today + relativedelta(months=1)).strftime('%B')), [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=1))),
+                ("date_begin", "<", (first_day_of_the_month + relativedelta(months=2)).strftime(datetime_format))],
+                0],
+            ['nextmonth2', _((today + relativedelta(months=2)).strftime('%B')), [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=2))),
+                ("date_begin", "<", (first_day_of_the_month + relativedelta(months=3)).strftime(datetime_format))],
                 0],
             ['old', _('Past Events'), [
-                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", "<", today.strftime(datetime_format))],
                 0],
         ]
 
@@ -151,7 +149,7 @@ class WebsiteEventController(http.Controller):
 
         first_three_attendees_per_event = {}
         for event in events:
-            first_three_attendees_per_event[event.id] = (',').join([registration.name.split(' ')[0] for registration in event.sudo().registration_ids[:3]])
+            first_three_attendees_per_event[event.id] = (', ').join([registration.name.split(' ')[0] for registration in event.sudo().registration_ids[:3]])
 
         values = {
             'current_date': current_date,

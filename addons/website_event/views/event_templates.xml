@@ -82,7 +82,7 @@
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-calendar"/>
                 <t t-if="current_date" t-esc="current_date"/>
-                <t t-else="">Next Events</t>
+                <t t-else="">Upcoming Events</t>
             </a>
             <div class="dropdown-menu">
                 <t t-foreach="dates" t-as="date">
@@ -224,9 +224,6 @@
                         <div t-if="event.organizer_id" class="mb-3">
                             <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
                         </div>
-                        <!-- Location -->
-                        <div t-if="event.is_online">Online</div>
-                        <div t-else="" itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                         <!-- Start Date & Time -->
                         <time itemprop="startDate" t-att-datetime="event.date_begin">
                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
