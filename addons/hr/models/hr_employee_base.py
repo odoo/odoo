@@ -31,7 +31,9 @@ class HrEmployeeBase(models.AbstractModel):
     parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help='Select the "Employee" who is the coach of this employee.\n'
+             'The "Coach" has no specific rights or responsibilities by default.')
     tz = fields.Selection(
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
