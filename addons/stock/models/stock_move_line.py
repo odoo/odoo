@@ -3,9 +3,9 @@
 
 from collections import Counter
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_round, float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 
 class StockMoveLine(models.Model):

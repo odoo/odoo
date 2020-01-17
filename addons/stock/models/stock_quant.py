@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import OperationalError, Error
+import logging
 
-from odoo import api, fields, models, _
+from psycopg2 import Error, OperationalError
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-
-import logging
 
 _logger = logging.getLogger(__name__)
 

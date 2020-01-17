@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+import operator as py_operator
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
-from datetime import datetime
-import operator as py_operator
 
 OPERATORS = {
     '<': py_operator.lt,

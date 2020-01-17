@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple, defaultdict
+import logging
+from collections import defaultdict, namedtuple
 from datetime import datetime, time
+
 from dateutil.relativedelta import relativedelta
-from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, _, api, fields, models, registry
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, frozendict, html_escape
-from odoo.exceptions import UserError
+from odoo.tools.misc import split_every
 
-import logging
 _logger = logging.getLogger(__name__)
 
 
