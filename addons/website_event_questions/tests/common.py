@@ -14,6 +14,7 @@ class TestEventQuestionCommon(TestEventCommon):
             'title': 'Question1',
             'event_type_id': cls.event_type_complex.id,
             'once_per_order': False,
+            'answer_type': 'selection',
             'answer_ids': [
                 (0, 0, {'name': 'Q1-Answer1'}),
                 (0, 0, {'name': 'Q1-Answer2'})
@@ -23,6 +24,7 @@ class TestEventQuestionCommon(TestEventCommon):
             'title': 'Question2',
             'event_type_id': cls.event_type_complex.id,
             'once_per_order': True,
+            'answer_type': 'selection',
             'answer_ids': [
                 (0, 0, {'name': 'Q2-Answer1'}),
                 (0, 0, {'name': 'Q2-Answer2'})

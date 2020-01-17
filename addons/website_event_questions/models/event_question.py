@@ -16,8 +16,9 @@ class EventQuestion(models.Model):
     event_id = fields.Many2one('event.event', 'Event', ondelete='cascade')
     answer_ids = fields.One2many('event.answer', 'question_id', "Answers", required=True, copy=True)
     sequence = fields.Integer(default=10)
-    once_per_order = fields.Boolean('Ask only once per order', help="If True, this question will be asked only once and its value propagated to every attendees."
+    once_per_order = fields.Boolean('Ask only once per order', default=True, help="If True, this question will be asked only once and its value propagated to every attendees."
                                                                     "If not it will be asked for every attendee of a reservation.")
+    answer_type = fields.Selection([('selection', 'Selection'), ('text', 'Text')], default="selection", string="Answer Type")
 
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):

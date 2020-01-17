@@ -44,7 +44,7 @@ var EventRegistrationForm = Widget.extend({
         var $button = $(ev.currentTarget).closest('[type="submit"]');
         var post = {};
         $('#registration_form table').siblings('.alert').remove();
-        $('#registration_form select').each(function () {
+        $('#registration_form select, #registration_form textarea').each(function () {
             post[$(this).attr('name')] = $(this).val();
         });
         var tickets_ordered = _.some(_.map(post, function (value, key) { return parseInt(value); }));
