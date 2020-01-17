@@ -598,6 +598,7 @@ class ProductTemplate(models.Model):
         # (eg. product.template: product_variant_ids)
         # We can't rely on existing invalidate_cache because of the savepoint
         # in _unlink_or_archive.
+        self.flush()
         self.invalidate_cache()
         return True
 
