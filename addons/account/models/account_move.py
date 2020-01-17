@@ -452,7 +452,7 @@ class AccountMove(models.Model):
             '''
             move = base_line.move_id
 
-            if move.is_invoice():
+            if move.is_invoice(include_receipts=True):
                 sign = -1 if move.is_inbound() else 1
                 quantity = base_line.quantity
                 if base_line.currency_id:
