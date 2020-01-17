@@ -435,10 +435,12 @@ class AccountInvoice(models.Model):
                 ran_num = str(uuid.uuid4().int)
                 identification_number = int(ran_num[:5] + ran_num[-5:])
             prefix = self.number
-        else:
-            #self.company_id.invoice_reference_type == 'partner'
+        elif self.company_id.invoice_reference_type == 'partner':
             identification_number = self.partner_id.id
             prefix = 'CUST'
+        else:
+            return ''
+
         return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
 
     # Load all Vendor Bill lines
