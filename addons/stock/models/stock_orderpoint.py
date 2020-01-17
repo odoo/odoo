@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, time
-from dateutil import relativedelta
 from json import dumps
 
-from odoo import api, fields, models, _
+from dateutil import relativedelta
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
