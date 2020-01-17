@@ -53,7 +53,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         workorder line in order to match the new quantity to consume for each
         component and their reserved quantity.
         """
-        if self.qty_producing <= 0:
+        if self.qty_producing < 0:
             raise UserError(_('You have to produce at least one %s.') % self.product_uom_id.name)
         line_values = self._update_workorder_lines()
         for values in line_values['to_create']:
