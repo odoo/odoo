@@ -347,11 +347,39 @@ class PurchaseOrderLine(models.Model):
         res = []
         if self.product_id.type not in ['product', 'consu']:
             return res
+
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
             qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-        template = {
+
+        move_dests = self.move_dest_ids
+        if not move_dests:
+            move_dests = self.move_ids.move_dest_ids
+
+        if not move_dests:
+            qty_to_attach = 0
+            qty_to_push = self.product_qty - qty
+        else:
+            move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
+                sum(move_dests.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier').mapped('product_qty')),
+                self.product_uom, rounding_method='HALF-UP')
+            qty_to_attach = move_dests_initial_demand - qty
+            qty_to_push = self.product_qty - move_dests_initial_demand
+
+        if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
+            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
+            res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
+        if float_compare(qty_to_push, 0.0, precision_rounding=self.product_uom.rounding) > 0:
+            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
+            extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
+            extra_move_vals['move_dest_ids'] = False  # don't attach
+            res.append(extra_move_vals)
+        return res
+
+    def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
+        self.ensure_one()
+        return {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
             'name': (self.name or '')[:2000],
@@ -360,7 +388,7 @@ class PurchaseOrderLine(models.Model):
             'date': self.order_id.date_order,
             'date_expected': self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': (self.orderpoint_id and not self.move_dest_ids) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
+            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
@@ -378,16 +406,9 @@ class PurchaseOrderLine(models.Model):
             'delay_alert': self.delay_alert,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
+            'product_uom_qty': product_uom_qty,
+            'product_uom': product_uom.id,
         }
-        diff_quantity = self.product_qty - qty
-        if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
-            po_line_uom = self.product_uom
-            quant_uom = self.product_id.uom_id
-            product_uom_qty, product_uom = po_line_uom._adjust_uom_quantities(diff_quantity, quant_uom)
-            template['product_uom_qty'] = product_uom_qty
-            template['product_uom'] = product_uom.id
-            res.append(template)
-        return res
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
@@ -406,6 +427,7 @@ class PurchaseOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):
                 values.append(val)
+            line.move_dest_ids.created_purchase_line_id = False
 
         moves = self.env['stock.move'].create(values)
         for move in moves:

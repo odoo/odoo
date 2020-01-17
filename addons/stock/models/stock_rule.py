@@ -207,7 +207,8 @@ class StockRule(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
-            'delay_alert': self.delay_alert
+            'delay_alert': self.delay_alert,
+            'procure_method': 'make_to_order',
         }
         return new_move_vals
 
