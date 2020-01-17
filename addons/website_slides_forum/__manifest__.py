@@ -13,6 +13,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/website_slides_forum_security.xml',
         'views/forum_views.xml',
         'views/slide_channel_views.xml',
         'views/website_slides_menu_views.xml',
