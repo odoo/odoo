@@ -151,22 +151,7 @@ tour.register('website_reset_password', {
     },
     {
         content: "check logged in, and reset admin website",
-        trigger: '.oe_topbar_name:contains("Admin")',
-        run: function () {
-            return rpc.query({
-                model: 'res.partner',
-                method: 'name_search',
-                kwargs: {'name': 'Admin'},
-            }).then(function (res) {
-                return rpc.query({
-                    'model': 'res.partner',
-                    'method': 'write',
-                    'args': [[res[0][0]], {
-                        'website_id': false,
-                    }],
-                });
-            });
-        },
+        trigger: '.oe_topbar_name:contains("Admin")'
     },
 ]);
 });
