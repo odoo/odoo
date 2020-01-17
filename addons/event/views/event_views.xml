@@ -107,6 +107,24 @@
                         </div>
                         <h2>Attendees</h2>
                         <div class="row mt16 o_settings_container" name="event_type_attendees">
+                            <div class="col-12 o_setting_box" name="event_type_attendees_tickets">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_ticket"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_ticket"/>
+                                    <div class="row mt16" attrs="{'invisible': [('use_ticket', '=', False)]}">
+                                        <div class="col">
+                                            <field name="event_type_ticket_ids"
+                                                class="w-100"
+                                                context="{
+                                                    'tree_view_ref': 'event.event_type_ticket_view_tree_from_type',
+                                                    'form_view_ref': 'event.event_type_ticket_view_form_from_type'
+                                                }"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" name="event_type_attendees_auto_confirm">
                                 <div class="o_setting_left_pane">
                                     <field name="auto_confirm"/>
@@ -259,6 +277,13 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Tickets" name="tickets">
+                                <field name="event_ticket_ids" context="{
+                                    'default_name': name,
+                                    'tree_view_ref': 'event.event_event_ticket_view_tree_from_event',
+                                    'form_view_ref': 'event.event_event_ticket_view_form_from_event',
+                                    'kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="tree,kanban"/>
+                            </page>
                             <page string="Communication" name="event_communication">
                                 <field name="event_mail_ids">
                                     <tree string="Communication" editable="bottom">
@@ -494,7 +519,8 @@
                     <field name="email" optional="hide"/>
                     <field name="phone" optional="hide"/>
                     <field name="mobile" optional="hide"/>
-                    <field name="event_id" />
+                    <field name="event_id"/>
+                    <field name="event_ticket_id"/>
                     <field name="origin" optional="hide"/>
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
@@ -531,6 +557,13 @@
                             </group>
                             <group string="Event Information" name="event">
                                 <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
+                                <field name="event_ticket_id"
+                                    domain="[
+                                        ('event_id', '=', event_id),
+                                        '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                                    ]"
+                                    attrs="{'invisible': [('event_id', '=', False)]}"
+                                    options="{'no_open': True, 'no_create': True}"/>
                                 <field name="date_open" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
                             </group>
@@ -643,6 +676,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
+                        <filter string="Ticket Type" name ="group_event_ticket_id" domain="[]" context="{'group_by': 'event_ticket_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
