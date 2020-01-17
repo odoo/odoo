@@ -3067,6 +3067,9 @@ exports.NumpadState = Backbone.Model.extend({
             }else{
                 this.trigger('set_value',this.get('buffer'));
             }
+        } else if (this.get('buffer') === "-0") {
+            this.set({ buffer: "0" });
+            this.trigger('set_value',this.get('buffer'));
         }else{
             var newBuffer = this.get('buffer').slice(0,-1) || "";
             this.set({ buffer: newBuffer });
