@@ -378,7 +378,7 @@ var SelectCreateDialog = ViewDialog.extend({
         var searchview = new SearchView(this, this.dataset, fields_views.search, options);
         searchview.prependTo($header).done(function () {
             var d = searchview.build_search_data();
-            if (self.initial_ids) {
+            if (self.initial_ids && !searchview.hasFavorites) {
                 d.domains.push([["id", "in", self.initial_ids]]);
                 self.initial_ids = undefined;
             }
