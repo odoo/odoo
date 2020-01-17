@@ -10,6 +10,15 @@
                     <field name="slide_channel_id" readonly="True"/>
                 </group>
             </xpath>
+            <xpath expr="//field[@name='privacy']" position="attributes">
+                <attribute name="attrs">{'invisible': [('slide_channel_id', '!=', False)], 'required': [('slide_channel_id', '!=', 'False')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='authorized_group_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('privacy', '!=', 'private'), ('slide_channel_id', '!=', False)], 'required': [('privacy', '=', 'private')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='privacy']" position="before">
+                <field name="visibility" attrs="{'invisible': [('slide_channel_id', '=', False)]}"/>
+            </xpath>
         </field>
     </record>
 
