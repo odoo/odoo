@@ -1745,4 +1745,28 @@
             </div>
         </div>
     </template>
+
+    <template id="opensearch_sale" inherit_id="website.layout" name="Open Search Sale link">
+        <xpath expr="//head" position="inside">
+            <link rel="search" t-attf-href="/opensearch-sale.xml" type="application/opensearchdescription+xml"/>
+        </xpath>
+    </template>
+
+    <record id="opensearch" model="website.page">
+        <field name="name">OpenSearch Sale</field>
+        <field name="type">qweb</field>
+        <field name="url">/opensearch-sale.xml</field>
+        <field name="website_indexed">False</field>
+        <field name="is_published">True</field>
+        <field name="key">website_sale.opensearch_sale</field>
+        <field name="arch" type="xml">
+            <t name="opensearch-sale">&lt;?xml version="1.0" encoding="utf-8"?>
+            <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+            <ShortName>Products</ShortName>
+            <Description>Products Search</Description>
+            <Url type="text/html" t-att-template="website.get_base_url() + '/shop/?search={searchTerms}'"></Url>
+            </OpenSearchDescription>
+            </t>
+        </field>
+    </record>
 </odoo>
