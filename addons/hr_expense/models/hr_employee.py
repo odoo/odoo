@@ -21,7 +21,8 @@ class Employee(models.Model):
         'res.users', string='Expense',
         domain=_group_hr_expense_user_domain,
         compute='_compute_expense_manager', store=True, readonly=False,
-        help="User responsible of expense approval. Should be Expense approver.")
+        help='Select the user responsible for approving "Expenses" of this employee.\n'
+             'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
 
     @api.depends('parent_id')
     def _compute_expense_manager(self):
