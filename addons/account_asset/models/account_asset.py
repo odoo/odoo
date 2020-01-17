@@ -418,9 +418,17 @@ class AccountAssetAsset(models.Model):
         depreciation_ids = self.env['account.asset.depreciation.line'].search([
             ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
             ('move_check', '=', False)])
+        batch_size = self.env.context.get('batch_size')
         if group_entries:
             return depreciation_ids.create_grouped_move()
-        return depreciation_ids.create_move()
+        move_ids = []
+        if batch_size:
+            for idx in range(0, len(depreciation_ids), batch_size):
+                move_ids += depreciation_ids[idx:idx+batch_size].create_move()
+                self.env.cr.commit()
+        else:
+            move_ids += depreciation_ids.create_move()
+        return move_ids
 
     @api.model
     def create(self, vals):
@@ -586,11 +594,13 @@ class AccountAssetDepreciationLine(models.Model):
         # preprocess the assets and lines in which a message should be posted,
         # and then post in batch will prevent the re-fetch of the same data over and over.
         assets_to_close = self.env['account.asset.asset']
+        no_log = self.env.context.get('no_log')
         for line in self:
             asset = line.asset_id
             if asset.currency_id.is_zero(asset.value_residual):
                 assets_to_close |= asset
-        self.log_message_when_posted()
+        if not no_log:
+            self.log_message_when_posted()
         assets_to_close.write({'state': 'close'})
         for asset in assets_to_close:
             asset.message_post(body=_("Document closed."))
