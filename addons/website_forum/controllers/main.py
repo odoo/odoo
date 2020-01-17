@@ -48,19 +48,26 @@ class WebsiteForum(WebsiteProfile):
         return request.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
-    def forum_create(self, forum_name="New Forum", forum_mode="questions", add_menu=False):
-        forum_id = request.env['forum.forum'].create({
+    def forum_create(self, forum_name="New Forum", forum_mode="questions", forum_privacy="public", forum_privacy_group=False, add_menu=False):
+        forum = {
             'name': forum_name,
             'mode': forum_mode,
+            'privacy': forum_privacy,
             'website_id': request.website.id,
-        })
+        }
+        if forum_privacy == 'private' and forum_privacy_group:
+            forum['authorized_group_id'] = forum_privacy_group
+        forum_id = request.env['forum.forum'].create(forum)
         if add_menu:
-            request.env['website.menu'].create({
+            group = [int(forum_privacy_group)] if forum_privacy == 'private' else [request.env.ref('base.group_portal').id, request.env.ref('base.group_user').id]
+            menu_id = request.env['website.menu'].create({
                 'name': forum_name,
                 'url': "/forum/%s" % slug(forum_id),
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
+                'group_ids': [(6, 0, group)]
             })
+            forum_id.menu_id = menu_id
         return "/forum/%s" % slug(forum_id)
 
     def sitemap_forum(env, rule, qs):

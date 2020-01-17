@@ -42,31 +42,40 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="mode" widget="radio" required="True"/>
-                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            <group>
+                                <field name="mode" widget="radio" required="True"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            </group>
                         </group>
                         <notebook>
                             <page name="options" string="Options">
                                 <group>
-                                    <group string="Order" name="group_order">
-                                        <field name="default_order"/>
+                                    <group string="Order and Visibility" name="group_order">
+                                        <field name="default_order" string="Default Sort"/>
+                                        <field name="privacy" widget="radio" attrs="{'required': True}"/>
+                                        <field name="authorized_group_id" options="{'no_create': True}" attrs="{'invisible': [('privacy', '!=', 'private')], 'required': [('privacy', '=', 'private')]}"/>
                                         <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
                                         <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
                                             (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
                                         </div>
                                     </group>
                                 </group>
+                                <group>
+                                    <field name="description" nolabel="1" placeholder="Description visible on website"/>
+                                </group>
                             </page>
                             <page name="karma_gains" string="Karma Gains">
                                 <group name="karma_gain_details">
-                                    <field name="karma_gen_question_new"/>
-                                    <field name="karma_gen_question_upvote"/>
-                                    <field name="karma_gen_question_downvote"/>
-                                    <field name="karma_gen_answer_upvote"/>
-                                    <field name="karma_gen_answer_downvote"/>
-                                    <field name="karma_gen_answer_accept"/>
-                                    <field name="karma_gen_answer_accepted"/>
-                                    <field name="karma_gen_answer_flagged"/>
+                                    <group>
+                                        <field name="karma_gen_question_new"/>
+                                        <field name="karma_gen_question_upvote"/>
+                                        <field name="karma_gen_question_downvote"/>
+                                        <field name="karma_gen_answer_upvote"/>
+                                        <field name="karma_gen_answer_downvote"/>
+                                        <field name="karma_gen_answer_accept"/>
+                                        <field name="karma_gen_answer_accepted"/>
+                                        <field name="karma_gen_answer_flagged"/>
+                                    </group>
                                 </group>
                             </page>
                             <page name="karma_rights" string="Karma Related Rights">
@@ -103,9 +112,6 @@
                                 </group>
                             </page>
                         </notebook>
-                        <group>
-                            <field name="description"/>
-                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
