@@ -127,8 +127,12 @@ var AttachmentBox = Widget.extend({
     /**
      * @private
      */
-    _onUploaded: function() {
-        this.trigger_up('reload_attachment_box');
+    _onUploaded: function(ev, response) {
+        if (response.error) {
+            this.do_warn(_t("Error"), _t("You are not allowed to upload an attachment here."));
+        } else {
+            this.trigger_up('reload_attachment_box');
+        }
     },
 });
 
