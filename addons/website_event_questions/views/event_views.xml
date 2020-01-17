@@ -7,8 +7,8 @@
     <field name="arch" type="xml">
         <form string="Question">
             <h1><field name="title" /></h1>
-            <field name="is_individual"/>
-            <label for="is_individual"/>
+            <field name="once_per_order"/>
+            <label for="once_per_order"/>
             <field name="answer_ids">
                 <tree editable="bottom">
                     <field name="sequence" widget="handle" />
@@ -66,7 +66,7 @@
                         <tree>
                             <field name="sequence" widget="handle" />
                             <field name="title"/>
-                            <field name="is_individual"/>
+                            <field name="once_per_order"/>
                             <field name="answer_ids"/>
                         </tree>
                     </field>
