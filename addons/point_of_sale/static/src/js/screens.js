@@ -38,6 +38,7 @@ var Printer = require('point_of_sale.Printer').Printer;
 
 const { OrderWidget } = require('point_of_sale.OrderWidget');
 const { NumpadWidget } = require('point_of_sale.NumpadWidget');
+const { ActionpadWidget } = require('point_of_sale.ActionpadWidget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -415,47 +416,6 @@ gui.define_screen({name: 'scale', widget: ScaleScreenWidget});
 // There product screens uses many sub-widgets,
 // the code follows.
 
-/* ---------- The Action Pad ---------- */
-
-// The action pad contains the payment button and the 
-// customer selection button
-
-var ActionpadWidget = PosBaseWidget.extend({
-    template: 'ActionpadWidget',
-    init: function(parent, options) {
-        var self = this;
-        this._super(parent, options);
-
-        this.pos.on('change:selectedClient', function() {
-            self.renderElement();
-        });
-    },
-    renderElement: function() {
-        var self = this;
-        this._super();
-        this.$('.pay').click(function(){
-            var order = self.pos.get_order();
-            var has_valid_product_lot = _.every(order.orderlines.models, function(line){
-                return line.has_valid_product_lot();
-            });
-            if(!has_valid_product_lot){
-                self.gui.show_popup('confirm',{
-                    'title': _t('Empty Serial/Lot Number'),
-                    'body':  _t('One or more product(s) required serial/lot number.'),
-                    confirm: function(){
-                        self.gui.show_screen('payment');
-                    },
-                });
-            }else{
-                self.gui.show_screen('payment');
-            }
-        });
-        this.$('.set-customer').click(function(){
-            self.gui.show_screen('clientlist');
-        });
-    }
-});
-
 /* ------ The Product Categories ------ */
 
 // Display and navigate the product categories.
@@ -819,8 +779,8 @@ var ProductScreenWidget = ScreenWidget.extend({
 
         var self = this;
 
-        this.actionpad = new ActionpadWidget(this,{});
-        this.actionpad.replace(this.$('.placeholder-ActionpadWidget'));
+        this.actionpad = new ActionpadWidget(null, { pos: this.pos, gui: this.gui });
+        this.actionpad.mount(this.$('.placeholder-ActionpadWidget')[0], {position: "self"});
 
         this.numpad = new NumpadWidget(null, { pos: this.pos });
         this.numpad.mount(this.$('.placeholder-NumpadWidget')[0], {position: "self"});
