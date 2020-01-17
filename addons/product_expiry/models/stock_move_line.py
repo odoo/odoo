@@ -14,8 +14,8 @@ class StockMoveLine(models.Model):
         ' become dangerous and must not be consumed.')
 
     @api.onchange('product_id', 'product_uom_id')
-    def onchange_product_id(self):
-        res = super(StockMoveLine, self).onchange_product_id()
+    def _onchange_product_id(self):
+        res = super(StockMoveLine, self)._onchange_product_id()
         if self.picking_type_use_create_lots:
             if self.product_id.use_expiration_date:
                 self.expiration_date = fields.Datetime.today() + datetime.timedelta(days=self.product_id.expiration_time)
