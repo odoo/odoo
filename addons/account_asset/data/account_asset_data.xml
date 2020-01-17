@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding='UTF-8'?>
-<odoo>
+<odoo noupdate="1">
+    <!--
+        For performance issues with this cron, one can modify the context
+        to execute _compute_entries by batches,
+        and avoid calling log_message_when_posted
+        e.g.
+        model.with_context(batch_size=10, no_log=True)._cron_generate_entries()
+    -->
 	<record id="account_asset_cron" model="ir.cron">
         <field name="name">Account Asset: Generate asset entries</field>
         <field name="model_id" ref="model_account_asset_asset"/>
         <field name="state">code</field>
         <field name="code">model._cron_generate_entries()</field>
         <field name="interval_number">1</field>
-        <field name="interval_type">months</field>
+        <field name="interval_type">weeks</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
     </record>
