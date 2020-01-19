@@ -8,7 +8,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Mark Lee <odoos@soti.33mail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "%d credits will be consumed to find %d companies."
-msgstr ""
+msgstr "%d 크레딧은 %d사를 찾기 위해 사용될 것입니다."
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
@@ -48,7 +48,7 @@ msgstr "<b>전화번호 :</b>"
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "<b>Timezone : </b>"
-msgstr "<b>시간대: </b>"
+msgstr "<b>시간대 : </b>"
 
 #. module: crm_iap_lead
 #: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
@@ -61,6 +61,13 @@ msgid ""
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>안녕하세요.</p>\n"
+"    <p>IAP 영업제안 생성 계정에 더 이상 크레딧이 없습니다.<br/>\n"
+"    CRM 앱 설정에서 IAP 영업제안 생성 계정의 크레딧을 충전할 수 있다.<br/></p>\n"
+"    <p>감사합니다.</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -72,6 +79,11 @@ msgid ""
 "            No leads could be generated according to your search criteria\n"
 "        </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            영업제안이 없습니다.\n"
+"        </p><p>\n"
+"            검색 기준에 따라 영업제안을 생성할 수 없습니다.\n"
+"        </p>"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -276,7 +288,7 @@ msgstr "크기로 필터링"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
 msgid "Food & Staples Retailing"
-msgstr "Food & Staples Retailing"
+msgstr "음식 전문 소매점"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_154
@@ -395,7 +407,7 @@ msgstr "최근 갱신일"
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
 msgid "Lead"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
@@ -410,7 +422,7 @@ msgstr "영업제안 크레딧"
 #. module: crm_iap_lead
 #: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr "리드 생성"
+msgstr "영업제안 생성"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -442,7 +454,7 @@ msgstr "영업제안/영업기회"
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Leads"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -680,7 +692,7 @@ msgstr "통신 서비스"
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "This makes a total of %d credits for this request."
-msgstr ""
+msgstr "이 요청에 대해 총 %d 크레딧이 제공됩니다."
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template

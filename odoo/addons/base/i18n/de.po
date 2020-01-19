@@ -44,6 +44,7 @@
 # Philip Kuß <philip.kuss@gmx.de>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
+# Florian Pose <fp@igh.de>, 2020
 # 
 msgid ""
 msgstr ""
@@ -51,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"Last-Translator: Florian Pose <fp@igh.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8356,7 +8357,7 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
-"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Frimen Adresse</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Firmenadresse</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Rechnungsaddresse</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Lieferaddresse</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Andere Addresse</b>\n"
@@ -8467,21 +8468,23 @@ msgid ""
 "<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
 "title=\"Enterprise\"/>"
 msgstr ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -8489,16 +8492,18 @@ msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
+"<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr ""
+msgstr "<span aria-label=\"Close\">&amp;times;</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -8562,6 +8567,8 @@ msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -10634,7 +10641,7 @@ msgstr "Bankadresse"
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
 msgid "Bank Identifier Code"
-msgstr "Bankleitzahl"
+msgstr "Bankleitzahl (BIC)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
@@ -23553,12 +23560,12 @@ msgstr "Qweb-Feld Ganzzahl"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "Qweb Field Many to One"
-msgstr ""
+msgstr "Qweb Field Many to One"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "Qweb Field Monetary"
-msgstr ""
+msgstr "Qweb Field Monetary"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
@@ -23583,7 +23590,7 @@ msgstr "Qweb Feld qweb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr ""
+msgstr "Qweb field many2many"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -25354,12 +25361,12 @@ msgstr "Einrichtung beginnen"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Status"
+msgstr "Bundesland"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "Bundesland Kodierung"
+msgstr "Regionalcode"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
@@ -27180,7 +27187,7 @@ msgstr "Twitter Wand"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
 msgid "Twitter scroller snippet in website"
-msgstr ""
+msgstr "Twitter scroller snippet in website"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__type
@@ -27294,12 +27301,12 @@ msgstr "UTM Trackers"
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_crm
 msgid "UTM and mass mailing on lead / opportunities"
-msgstr ""
+msgstr "UTM and mass mailing on lead / opportunities"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale
 msgid "UTM and mass mailing on sale orders"
-msgstr ""
+msgstr "UTM and mass mailing on sale orders"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
@@ -27721,7 +27728,7 @@ msgstr "Benutzer-Login"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "User Type"
-msgstr ""
+msgstr "User Type"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
@@ -27731,7 +27738,7 @@ msgstr "Benutzer Protokolleinträge"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "User types"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -28228,7 +28235,7 @@ msgstr "Website Mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_channel
 msgid "Website Mail Channels"
-msgstr ""
+msgstr "Website Mail Channels"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
@@ -29125,7 +29132,7 @@ msgstr "Auswahl"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "snailmail_account"
-msgstr ""
+msgstr "snailmail_account"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -29175,7 +29182,7 @@ msgstr "Test Übernahmen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits_depends
 msgid "test-inherits-depends"
-msgstr ""
+msgstr "test-inherits-depends"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
@@ -29185,7 +29192,7 @@ msgstr "Test Grenzen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_lint
 msgid "test-lint"
-msgstr ""
+msgstr "test-lint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import
@@ -29221,7 +29228,7 @@ msgstr "wahr"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_dashboard
 msgid "web_dashboard"
-msgstr ""
+msgstr "web_dashboard"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0

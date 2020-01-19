@@ -12,7 +12,7 @@
 # Martin Trigaux, 2019
 # Collex100, 2019
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,9 +52,9 @@ msgid ""
 "    % if email\n"
 "    <strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
-"% Set email = object.env [ &#39;crm.team&#39;]. Search ([( &#39;alias_name "
-"&quot;,&quot;! =&#39;, False)], limit = 1) .alias_id.display_name% if email "
-"<strong style=\"font-size: 16px;\">Попробуйте шлюз почты</strong>"
+"% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name\n"
+"    % if email\n"
+"    <strong style=\"font-size: 16px;\">Попробуйте шлюз электронной почты</strong>"
 
 #. module: crm
 #. openerp-web
@@ -934,7 +934,7 @@ msgid ""
 "Email sent to <strong>${email}</strong> generate opportunities in your "
 "pipeline.<br>"
 msgstr ""
-"Электронное письмо отправлено <strong>$ {email}</strong> создайте случаю в "
+"Электронное письмо отправлено <strong>${email}</strong> создайте случаю в "
 "вашем конвейере <br>"
 
 #. module: crm
@@ -1083,7 +1083,7 @@ msgstr "Назначение группы"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %s : %s"
-msgstr "От %s: %s"
+msgstr "От %s: %s "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2884,7 +2884,7 @@ msgstr "например https://www.odoo.com"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "or send an email to %s"
-msgstr "или отправить электронное письмо% s"
+msgstr "или отправить электронное письмо %s "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

@@ -335,6 +335,103 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"text-align: center\">\n"
+"                <h2>ברכות ואיחולים!</h2>\n"
+"                <div style=\"color:grey;\">קורות החיים שלך נבדקו באופן חיובי.</div>\n"
+"                <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/>\n"
+"            </div>\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                בדקנו את קורות החיים שלך והם משכו את\n"
+"                תשומת לבנו. כפי שאנחנו חושבים שאתה יכול להיות נהדר עבור\n"
+"                המשרה, פנייתך נרשמה בקצרה עבור\n"
+"                שיחה או ראיון.\n"
+"                <br/><br/>\n"
+"                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
+"                        <a href=\"${object.job_id.website_url}\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">תיאור המשרה</a>\n"
+"                    </div>\n"
+"                % endif\n"
+"\n"
+"                % if object.user_id:\n"
+"                    בקרוב ייצור איתך קשר:\n"
+"                    <table>\n"
+"                        <tr>\n"
+"                            <td width=\"75\">\n"
+"                                <img src=\"/web/image/res.users/${object.user_id.id}/image_128\" alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${object.user_id.name}</strong><br/>\n"
+"                                <span>דוא\"ל: ${object.user_id.email or ''}</span><br/>\n"
+"                                <span>טלפון: ${object.user_id.phone or ''}</span>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                % endif\n"
+"                נתראה בקרוב,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    -- <br/>\n"
+"                    צוות משאבי אנוש\n"
+"                    % if 'website_url' in object.job_id and object.job_id.website_url\n"
+"                        גלה את <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">כל המשרות שלנו</a>.<br/>\n"
+"                    % endif\n"
+"                </div>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>מה השלב הבא?</strong></h3>\n"
+"                אנחנו בדרך כלל <strong>משיבים לפניות תוך 3 ימים</strong>.\n"
+"                <br/><br/>\n"
+"                השלב הבא הוא שיחה או פגישה במשרדינו.\n"
+"                <br/>\n"
+"                תרגיש חופשי <strong>ליצור איתנו קשר אם אתה מעוניין\n"
+"                במשוב מהיר יותר</strong> או אם אינך מקבל עדכונים מאיתנו\n"
+"                מספיק מהר (פשוט השב להודעת דוא\"ל זו).\n"
+"                <br/>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                % set location = ''\n"
+"                % if object.job_id.address_id.name:\n"
+"                    <strong>${object.job_id.address_id.name}</strong><br/>\n"
+"                % endif\n"
+"                % if object.job_id.address_id.street:\n"
+"                    ${object.job_id.address_id.street}<br/>\n"
+"                    % set location = object.job_id.address_id.street\n"
+"                % endif\n"
+"                % if object.job_id.address_id.street2:\n"
+"                    ${object.job_id.address_id.street2}<br/>\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.city:\n"
+"                    ${object.job_id.address_id.city},\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.state_id.name:\n"
+"                    ${object.job_id.address_id.state_id.name},\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.zip:\n"
+"                    ${object.job_id.address_id.zip}\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                % endif\n"
+"                <br/>\n"
+"                % if object.job_id.address_id.country_id.name:\n"
+"                    ${object.job_id.address_id.country_id.name}<br/>\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                % endif\n"
+"                <br/>\n"
+"\n"
+"                % if object.job_id.address_id:\n"
+"                    <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                        <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                    </a>\n"
+"                % endif\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -382,6 +479,48 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                שלום,<br/><br/>\n"
+"                תודה על התעניינותך בהצטרפות לצוות\n"
+"                <b>${object.company_id.name}</b>.  רצינו\n"
+"                שתדע, למרות שקורות החיים שלך תחרותיים,\n"
+"                צוות הגיוס שלנו בדק את הפניה שלך <b>לא\n"
+"                בחר אותה לשיקול נוסף</b>.\n"
+"                <br/><br/>\n"
+"                שים לב כי גיוס הוא קשה ואנחנו יכולים לעשות טעויות.\n"
+"                אל תהסס להשיב להודעת דוא\"ל זו אם אתה\n"
+"                חושב שעשינו טעות, או אם אתה רוצה מידע נוסף\n"
+"                על ההחלטה שלנו.\n"
+"                <br/><br/>\n"
+"                עם זאת, אנו נשמור על קורות החיים שלך ונהיה איתך בקשר\n"
+"                 בנוגע הזדמנויות עתידיות שעשויות להיות\n"
+"                מתאימות יותר לכישורים ולנסיון שלך.\n"
+"                <br/><br/>\n"
+"                אנו מאחלים לכם כל טוב בחיפוש העבודה ומקווים\n"
+"                שתהיה לנו הזדמנות לשקול מועמדותך לתפקיד אחר\n"
+"                בעתיד.\n"
+"                <br/><br/>\n"
+"                תודה,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    % if object.user_id:\n"
+"                        -- <br/>\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        Phone: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        -- <br/>\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        צוות משאבי אנוש\n"
+"                    % endif\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -512,6 +651,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"מועמדים וקורות החיים המצורפים שלהם נוצרים באופן אוטומטי בעת שליחת דוא\"ל.\n"
+"                אם אתה מתקין את המודולים לניהול מסמכים, כל קורות החיים כלולים באינדקס באופן אוטומטי,\n"
+"                כך שתוכל לחפש בקלות בתוכן שלהם."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -520,6 +662,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"מועמדים וקורות החיים המצורפים שלהם נוצרים באופן אוטומטי בעת שליחת דוא\"ל.\n"
+"אם אתה מתקין את המודולים לניהול מסמכים, כל קורות החיים כלולים באינדקס באופן אוטומטי,\n"
+"כך שתוכל לחפש בקלות בתוכן שלהם."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -527,6 +672,8 @@ msgid ""
 "Applicants can send resume to this email address,<br/>it will create an "
 "application automatically"
 msgstr ""
+"מועמדים יכולים לשלוח קורות חיים לכתובת דוא\"ל זו,<br/>זה ייצר יישום באופן "
+"אוטומטי"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
@@ -564,7 +711,7 @@ msgstr "פניות עם אותו דוא\"ל"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
 msgid "Applied Job"
-msgstr ""
+msgstr "משרות שהוגשה אליהן פנייה"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
@@ -765,7 +912,7 @@ msgstr "צור משרה"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Create some aliases to track where applicants come from"
-msgstr ""
+msgstr "צור מספר כינויים כדי לעקוב מאיפה המועמדים מגיעים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
@@ -809,6 +956,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
+"הגדר כתובת קשר מסוימת למשרה זו. אם תשאיר אותה ריקה, כתובת הדוא\"ל המוגדרת "
+"כברירת מחדל בהגדרות משאבי אנוש תהיה בשימוש"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -817,6 +966,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
+"הגדר כאן למשל את השלבים שלך בתהליך הגיוס:\n"
+"            שיחת התאמה, ראיון ראשון, ראיון שני, סורב,\n"
+"            הועסק."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -918,6 +1070,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
+"אל תשכח לציין את המחלקה אם תהליך הגיוס שלך\n"
+"          שונה בהתאם למשרה."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -953,6 +1107,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"כינוי דוא\"ל למשרה זו. הודעות דוא\"ל חדשות ייצרו אוטומטית מועמדים חדשים "
+"למשרה זו."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
@@ -1023,12 +1179,12 @@ msgstr "משתמש מועדף"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Feedback of interviews..."
-msgstr ""
+msgstr "משוב על ראיונות ..."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
 msgid "First Interview"
-msgstr ""
+msgstr "ראיון ראשון"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__fold
@@ -1058,17 +1214,17 @@ msgstr "פעילויות עתידיות"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Generate email alias"
-msgstr ""
+msgstr "ייצר כינויי דוא\"ל"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
+msgstr "נותן את סדר הרצף בעת הצגת רשימת התארים."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr ""
+msgstr "נותן את סדר הרצף בעת הצגת רשימת שלבים."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -1153,6 +1309,7 @@ msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
+"אם מוגדרת, הודעה נרשמת על המועמד באמצעות התבנית כאשר המועמד מוגדר לשלב."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -1160,6 +1317,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
+"אם השדה הפעיל מוגדר כ- לא נכון, הוא יאפשר להסתיר את התיק מבלי להסיר אותו."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1192,13 +1350,13 @@ msgstr "בתהליך"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
-msgstr ""
+msgstr "התאמה ראשונית"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr ""
+msgstr "טפסי ראיון"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
@@ -1226,7 +1384,7 @@ msgstr "פניות למשרה"
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "קמפיין משרה"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
@@ -1236,7 +1394,7 @@ msgstr "מספר משרה"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__address_id
 msgid "Job Location"
-msgstr ""
+msgstr "מיקום משרה"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1263,12 +1421,12 @@ msgstr "משרות"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "פרסום משרה"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Job Specific"
-msgstr ""
+msgstr "משרה מסוימת"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1278,22 +1436,22 @@ msgstr "משרות"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Jobs - Recruitment Form"
-msgstr ""
+msgstr "משרות - טופס גיוס"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr ""
+msgstr "מקורות משרות"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
 msgid "Kanban Blocked"
-msgstr ""
+msgstr "קנבן נחסם"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
 msgid "Kanban Ongoing"
-msgstr ""
+msgstr "קנבן מתמשך"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
@@ -1303,12 +1461,12 @@ msgstr "מצב קנבן "
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
 msgid "Kanban Valid"
-msgstr ""
+msgstr "קנבן תקף"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
-msgstr ""
+msgstr "מדד משאבי אנוש ערך גיוס עמיתים חדשים "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
@@ -1365,7 +1523,7 @@ msgstr "בוא ניצור משרה."
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
-msgstr ""
+msgstr "בוא נסתכל על <b>צינור מידע של מועמדים</b> למשרה זו."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
@@ -1477,6 +1635,8 @@ msgid ""
 "New applicants can be generated from incoming emails. You just need to set "
 "email aliases in configuration of job positions.<br>"
 msgstr ""
+"ניתן ליצור מועמדים חדשים מהודעות דוא\"ל נכנסות. אתה רק צריך להגדיר כינויי "
+"דוא\"ל בתצורה של המשרות.<br>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
@@ -1545,7 +1705,7 @@ msgstr "מספר קבצים מצורפים"
 msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
-msgstr ""
+msgstr "מספר הפניות החדשות בתהליך (בדרך כלל בשלב הראשון של התהליך)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -1578,6 +1738,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo עוזר לך לעקוב אחר מועמדים בתהליך הגיוס\n"
+"                ואחר כל הפעולות: פגישות, ראיונות וכו'."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1585,6 +1747,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo עוזר לך לעקוב אחר מועמדים בתהליך הגיוס\n"
+"ואחר כל הפעולות: פגישות, ראיונות וכו'."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -1772,22 +1936,22 @@ msgstr "שגיאת שליחת SMS"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected
 msgid "Salary Expected by Applicant"
-msgstr ""
+msgstr "שכר מצופה על ידי המועמד"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
+msgstr "שכר מצופה על ידי המועמד, יתרונות נוספים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr ""
+msgstr "שכר שהוצע על ידי הארגון"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "שכר שהוצע על ידי הארגון, יתרונות נוספים"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1829,7 +1993,7 @@ msgstr "הגדרות"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Share Trackers"
-msgstr ""
+msgstr "שתף עוקבים"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1850,20 +2014,20 @@ msgstr "שם מקור"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "מקור המועמדים"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "מקורות המועמדים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
-msgstr ""
+msgstr "משרות מסוימות המשתמשות בשלב זה. משרות אחרות לא ישתמשו בשלב זה."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -1881,7 +2045,7 @@ msgstr "השלב השתנה"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Stage Definition"
-msgstr ""
+msgstr "הגדרת שלב"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__name
@@ -1898,7 +2062,7 @@ msgstr "השלב השתנה"
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
-msgstr ""
+msgstr "שלב המועמד בטרם היה בשלב הנוכחי. משמש לניתוח מקרים אבודים."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -1933,7 +2097,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application Name"
-msgstr ""
+msgstr "נושא / שם הפנייה"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -1957,12 +2121,12 @@ msgstr "תגיות"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "התאריך בו המועמד יהיה זמין להתחיל לעבוד"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+msgstr "שם תואר הגיוס חייב להיות ייחודי!"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -1970,6 +2134,8 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"כינויים אלה יכולים להיות דוא\"ל או כתובות אתר עבור כל מקור. כאשר המועמד יגיע"
+" לכאן דרך אחד מאלה תדע מאיפה הוא הגיע."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -2002,7 +2168,7 @@ msgstr "שלב זה מקופל בתצוגת הקנבן כאשר אין רשומ�
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "לגייס"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2012,7 +2178,7 @@ msgstr "פעילויות היום"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Tooltips"
-msgstr ""
+msgstr "ממשק חלונית"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2021,7 +2187,7 @@ msgstr ""
 msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
-msgstr ""
+msgstr "נסה לשלוח דוא\"ל לכתובת זו, היא תיצור פנייה באופן אוטומטי."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -2049,7 +2215,7 @@ msgstr "מספר הודעות שלא נקראו"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
-msgstr ""
+msgstr "השתמש בטפסי ראיון בתהליך הגיוס"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2058,13 +2224,15 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
 msgstr ""
+"השתמש בטפסי ראיון המותאמים לכל משרה במהלך תהליך הגיוס. בחר את הטופס לשימוש "
+"בטופס פרטי המשרה. זה מסתמך על יישום הסקר."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "השתמש בסרגל הניווט כדי <b>לחזור ללוח הבקרה</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
@@ -2082,7 +2250,7 @@ msgstr "טוב מאוד"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
-msgstr ""
+msgstr "רוצה <b>להתחיל לגייס</b> כמו מקצוען? <i>התחל כאן.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
@@ -2100,6 +2268,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                        of the default labels."
 msgstr ""
+"באפשרותך להגדיר כאן את התוויות שיוצגו עבור מצב קנבן במקום\n"
+"                        תוויות ברירת מחדל."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -2122,7 +2292,7 @@ msgstr "למשל: מנהל מכירות"
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
 msgid "hr.applicant.resumes.server"
-msgstr ""
+msgstr "hr.applicant.resumes.server"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
