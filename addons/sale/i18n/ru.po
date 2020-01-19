@@ -19,7 +19,7 @@
 # Martin Trigaux, 2019
 # Sergey Vilizhanin, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgid ""
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Предложение' or 'Заказ'} (Ссылка ${object.name or 'n/a' })"
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -565,7 +565,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "Журнал должен быть указан эквайером% s."
+msgstr "Журнал должен быть указан эквайером %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -764,7 +764,7 @@ msgstr "Сумма без скидки"
 #: code:addons/sale/models/payment.py:0
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr "Несоответствие количества (% s)"
+msgstr "Несоответствие количества (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -1470,7 +1470,7 @@ msgstr "Авансовый платеж (в процентах)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Авансовый платеж %s%%"
+msgstr "Авансовый платеж %s %%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1612,7 +1612,7 @@ msgstr "Запрещенные значения на неподходящем с
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr ""
+msgstr "Бесплатная регистрация"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1800,13 +1800,13 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr "Найдено недействителен токен! Эквайер токена% s! =% S"
+msgstr "Найдено недействителен токен! Эквайер токена %s ! = %s "
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr "Найдено недействителен токен! Партнер токена% s! =% S"
+msgstr "Найдено недействителен токен! Партнер токена %s ! = %s "
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -1989,13 +1989,13 @@ msgid ""
 "%s"
 msgstr ""
 "В заблокированном заказе запрещено редактировать следующие поля:\n"
-"%s"
+" %s "
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr "Запрещается подтверждать заказ на следующих этапах:% s"
+msgstr "Запрещается подтверждать заказ на следующих этапах:%s "
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2345,7 +2345,7 @@ msgstr "Количество непрочитанных сообщений"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
-msgstr ""
+msgstr "По приглашению"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2483,7 +2483,7 @@ msgstr "допродажа заказов"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr "Заказ подписан %s"
+msgstr "Заказ подписан %s "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -3692,6 +3692,14 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
+"%s\n"
+"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
 msgid ""
 "The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
@@ -3726,8 +3734,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
-"Заказ не подтвержден, несмотря ответа эквайера (% s): сумма заказа% r но "
-"эквайер ответил с% r."
+"Заказ не подтвержден, несмотря ответа эквайера (%s): сумма заказа %r но "
+"эквайер ответил с %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -3926,8 +3934,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Чтобы отправить приглашение в режиме B2B, откройте контакт или выберите "
-"несколько в списке и нажмите на &quot;Управление доступом к порталу&quot; в "
-"выпадающем меню * Действие *."
+"несколько в списке и нажмите на `Управление доступом к порталу` в выпадающем"
+" меню * Действие *."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4102,8 +4110,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
-"Допродажа <a href='#' data-oe-model='%s' data-oe-id='%d'>% s</a> для клиента"
-" <a href='#' data-oe-model='%s' data-oe-id='%s'>% s</a>"
+"Допродажа <a href='#' data-oe-model='%s' data-oe-id='%d'> %s </a> для "
+"клиента <a href='#' data-oe-model='%s' data-oe-id='%s'> %s </a>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4168,7 +4176,7 @@ msgstr "Предупреждение"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Предупреждение для %s"
+msgstr "Предупреждение для %s "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons

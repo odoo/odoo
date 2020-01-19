@@ -22,7 +22,7 @@
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,7 +84,7 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "%s (Copy)"
-msgstr "%s (Копия)"
+msgstr " %s (Копия)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -94,7 +94,7 @@ msgstr "%s (Копия)"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (копия)"
+msgstr " %s (копия)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -106,7 +106,7 @@ msgstr "(округление)"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "%s Sequence"
-msgstr "%s Последовательность"
+msgstr " %s Последовательность"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -867,9 +867,8 @@ msgid ""
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 "Пользователь не может иметь сразу налог B2B и B2C. Вам необходимо перейти в "
-"Общие настройки, и выбрать отображение цен на товарах или в режиме &quot;С "
-"НДС&quot; или в &quot;Без НДС&quot; (или дважды переключите режим, если вы "
-"уже в желаемом)."
+"Общие настройки, и выбрать отображение цен на товарах или в режиме `С НДС` "
+"или в `Без НДС` (или дважды переключите режим, если вы уже в желаемом)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -911,7 +910,7 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
-"Счет% s (% s) не позволяет согласования. Сначала измените настройки этого "
+"Счет %s  (%s ) не позволяет согласования. Сначала измените настройки этого "
 "счета, чтобы позволить согласования."
 
 #. module: account
@@ -2266,7 +2265,7 @@ msgstr "Банковская выписка"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Bank Statement %s"
-msgstr "Банковская выписка %s"
+msgstr "Банковская выписка %s "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -3584,7 +3583,7 @@ msgstr "Создано"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Created by: %s"
-msgstr "Он создал% s"
+msgstr "Он создал %s "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -4194,10 +4193,10 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"Определяет, где можно выбрать налог. Примечание: &quot;Нет&quot; означает, "
-"что налог не может быть использован сам по себе, однако он может быть "
-"использован в группе. &quot;Корректировки&quot; используется для "
-"осуществления налогового регулирования."
+"Определяет, где можно выбрать налог. Примечание: `Нет` означает, что налог "
+"не может быть использован сам по себе, однако он может быть использован в "
+"группе. `Корректировки` используется для осуществления налогового "
+"регулирования."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -5157,9 +5156,9 @@ msgid ""
 msgstr ""
 "Получите банковские выписки, которые автоматически импортируются каждые 4:00"
 " или в один клик, используя службы Yodlee и Plaid. После установки "
-"установите &quot;Банковские выписки&quot; на &quot;Синхронизация с "
-"банком&quot; в настройках банковского счета. Затем нажмите "
-"&quot;Настроить&quot; в онлайн счета, чтобы ввести банковские реквизиты."
+"установите `Банковские выписки` на `Синхронизация с банком` в настройках "
+"банковского счета. Затем нажмите `Настроить` в онлайн счета, чтобы ввести "
+"банковские реквизиты."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__sequence
@@ -7565,9 +7564,9 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"После установки установите &quot;Банковские выписки&quot; на &quot;Импорт "
-"файла&quot; в настройках банковского счета. Это придаст кнопку для импорта "
-"из информационной панели бухучета."
+"После установки установите `Банковские выписки` на `Импорт файла` в "
+"настройках банковского счета. Это придаст кнопку для импорта из "
+"информационной панели бухучета."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -7697,9 +7696,9 @@ msgid ""
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
 msgstr ""
-"Операция не разрешена. Поскольку ваш строку выписки уже получил в номер (% "
-"s), вы не можете полностью согласовать его с существующими записями журнала,"
-" иначе это сделает разрыв в нумерации. Вы должны забронировать запись и "
+"Операция не разрешена. Поскольку ваш строку выписки уже получил в номер (%s "
+"), вы не можете полностью согласовать его с существующими записями журнала, "
+"иначе это сделает разрыв в нумерации. Вы должны забронировать запись и "
 "сделать регулярное возвращение, если вы хотите его отменить."
 
 #. module: account
@@ -8249,7 +8248,7 @@ msgstr "Процент баланса"
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
-msgstr "Процент в строках Условия оплат &quot;должен быть от 0 до 100."
+msgstr "Процент в строках Условия оплат `должен быть от 0 до 100."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8550,7 +8549,7 @@ msgid ""
 "rules than 'invoice_matching'"
 msgstr ""
 "Ошибка программирования: Не может call _get_invoice_matching_query () для "
-"других правил, чем &quot;invoice_matching&quot;"
+"других правил, чем `invoice_matching`"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -8560,7 +8559,7 @@ msgid ""
 "rules than 'writeoff_suggestion'"
 msgstr ""
 "Ошибка программирования: Нельзя call _get_wo_suggestion_query () для других "
-"правил, чем &quot;writeoff_suggestion&quot;"
+"правил, чем `writeoff_suggestion`"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -8768,7 +8767,7 @@ msgstr "Запись операций в иностранной валюте"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr "Рекурсия найдена для налога &quot;% s&quot;."
+msgstr "Рекурсия найдена для налога ` %s `."
 
 #. module: account
 #. openerp-web
@@ -9063,7 +9062,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %s"
-msgstr "Сторнирования:% s"
+msgstr "Сторнирования:%s "
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
@@ -9595,8 +9594,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Установите активное значение &quot;Неверный&quot;, чтобы скрыть "
-"аналитический тег, не удаляя его."
+"Установите активное значение `Неверный`, чтобы скрыть аналитический тег, не "
+"удаляя его."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -10640,8 +10639,8 @@ msgid ""
 "The 'Internal Group' is used to filter accounts based on the internal group "
 "set on the account type."
 msgstr ""
-"&quot;Внутренняя группа&quot; используется для фильтрации счетов на основе "
-"внутреннего набора групп для типа счета."
+"`Внутренняя группа` используется для фильтрации счетов на основе внутреннего"
+" набора групп для типа счета."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_type
@@ -10660,7 +10659,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
-msgstr "Счет% s (% s) устарел."
+msgstr "Счет %s  (%s ) устарел."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -11162,8 +11161,8 @@ msgid ""
 msgstr ""
 "Модель согласования будет применена только тогда, когда метка: Содержит: "
 "Метка предложения должна содержать эту строку (нечувствителен). Не содержит:"
-" Отклонение &quot;содержит&quot;. * Сопоставление регулярного выражения: "
-"Определите свой регулярное выражение."
+" Отклонение `содержит`. * Сопоставление регулярного выражения: Определите "
+"свой регулярное выражение."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -11781,13 +11780,13 @@ msgstr "Перечислить"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Transfer from %s"
-msgstr "Трансфер из %s"
+msgstr "Трансфер из %s "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Transfer to %s"
-msgstr "Трансфер в %s"
+msgstr "Трансфер в %s "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12220,7 +12219,7 @@ msgstr "Предупреждение"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Предупреждение для %s"
+msgstr "Предупреждение для %s "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -12563,7 +12562,7 @@ msgid ""
 "(account code: %s)"
 msgstr ""
 "Вы не можете иметь счет, подлежащего получению / уплате, не подлежит "
-"согласованию. (Код счета:% s)"
+"согласованию. (Код счета:%s )"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12572,8 +12571,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"Вы не можете иметь более одного счета с &quot;прибыли текущего периода&quot;"
-" как тип. (Счета:% s)"
+"Вы не можете иметь более одного счета с `прибыли текущего периода` как тип. "
+"(Счета:%s )"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12749,8 +12748,8 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr ""
-"Вы должны определить &quot;Внутренний перевод счета&quot; в журнале вашего "
-"кассового аппарата."
+"Вы должны определить `Внутренний перевод счета` в журнале вашего кассового "
+"аппарата."
 
 #. module: account
 #: code:addons/account/models/account.py:0

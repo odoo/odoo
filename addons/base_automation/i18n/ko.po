@@ -4,12 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Goh Gangtai <gangtai.goh@gmail.com>, 2019
 # heejun lee <tkm01b@gmail.com>, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
-# Seongseok Shin <shinss61@hotmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# Seongseok Shin <shinss61@hotmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,7 +164,7 @@ msgstr "기본 자동화 : 쓰기 검사 문맥에 대한 규칙 테스트"
 #: model:base.automation,name:base_automation.test_rule_with_trigger
 #: model:ir.actions.server,name:base_automation.test_rule_with_trigger_ir_actions_server
 msgid "Base Automation: test rule with trigger"
-msgstr ""
+msgstr "기본 자동화 : 트리거를 사용하여 규칙 테스트"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
@@ -201,7 +200,7 @@ msgstr "바인딩 유형"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr "View 유형을 연결"
+msgstr "화면 유형을 연결"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -397,7 +396,7 @@ msgstr "최근 갱신일"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
 msgid "Lead"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__line_ids
@@ -429,7 +428,7 @@ msgstr "모델명"
 msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
-msgstr "생성 / 업데이트 된 모델을 기록하십시오. 이 필드를 설정하면 기본 모델과 다른 모델만 정의됩니다."
+msgstr "생성 / 업데이트된 모델을 기록하십시오. 이 필드를 설정하면 기본 모델과 다른 모델만 정의됩니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -588,7 +587,7 @@ msgstr ""
 msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
-msgstr ""
+msgstr "이러한 필드 중 하나가 업데이트된 경우에만 작업이 트리거됩니다. 비어있는 경우 모든 필드가 감시됩니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -598,7 +597,7 @@ msgstr "트리거 조건"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "작동일"
+msgstr "트리거 날짜"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
@@ -612,6 +611,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"서버 작업 유형입니다. 다음 값을 사용할 수 있습니다.\n"
+"- 'Python 코드 실행' : 실행될 Python 코드 블록입니다.\n"
+"- '작성 ': 새 값으로 새 레코드를 만듭니다.\n"
+"- '기록 업데이트' : 레코드의 값을 업데이트합니다.\n"
+"- '여러 작업 실행' : 여러 다른 서버 작업을 트리거하는 작업을 정의합니다.\n"
+"- '이메일 보내기' : 자동으로 이메일을 보냅니다(토론).\n"
+"- '팔로워 추가' : 레코드에 팔로워를 추가합니다(토론).\n"
+"- '다음 활동 만들기' : 활동을 만듭니다(토론)."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -632,7 +639,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr "달력 사용"
+msgstr "일정표 사용"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -644,8 +651,8 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "자동 작업을 사용하여 작업 자동 실행 다른 화면. \n"
-"                예 : 특정 사용자가 만든 리드는 특정 영업팀에 자동으로 설정됩니다. \n"
-"                14일이 지난 후에도 보류 상태인 리드는  자동 알림 이메일을 트리거합니다."
+"                예 : 특정 사용자가 만든 영업제안은 특정 영업팀에 자동으로 설정됩니다. \n"
+"                14일이 지난 후에도 보류 상태인 영업제안은 자동 미리 알림 이메일을 트리거합니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -693,7 +700,7 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"조건이 트리거되는시기. \n"
+"조건이 트리거 되는 시기. \n"
 "                                   존재하는 경우, 스케줄러에 의해 점검됩니다. 비어있는 경우 생성 및 업데이트 할 때 검사됩니다."
 
 #. module: base_automation

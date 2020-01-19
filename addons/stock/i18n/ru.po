@@ -18,7 +18,7 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Pavel Kedrinskiy <pavel.py3@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> ед.изм. продукта %s (%s) - ед.изм. перемещения %s (%s)"
+" %s --> ед.изм. продукта %s (%s) - ед.изм. перемещения %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -56,7 +56,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Блокировка: %s"
+"Блокировка: %s "
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -122,13 +122,13 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr "%s: Поставка товаров из %s"
+msgstr " %s: Поставка товаров из %s "
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:0
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: Место транзита"
+msgstr " %s: Место транзита"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -216,7 +216,7 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
-"<br> Необходимость создается <b>в% s</b> и запускаться правило для его "
+"<br> Необходимость создается <b>в %s </b> и запускаться правило для его "
 "выполнения."
 
 #. module: stock
@@ -993,7 +993,7 @@ msgstr "Не могу найти ни одного места хранения �
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any generic route %s."
-msgstr "Невозможно найти общий маршрут% s."
+msgstr "Невозможно найти общий маршрут %s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
@@ -2788,19 +2788,19 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr "Недопустимый левый операнд домена %s"
+msgstr "Недопустимый левый операнд домена %s "
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr "Недопустимый оператор домена %s"
+msgstr "Недопустимый оператор домена %s "
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr "Недопустимый операнд прав домена %s"
+msgstr "Недопустимый операнд прав домена %s "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -2960,14 +2960,14 @@ msgstr "Есть ли величина редактированной"
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr "Невозможно заказать больше товаров% s чем у вас на складе."
+msgstr "Невозможно заказать больше товаров %s чем у вас на складе."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
-msgstr "Невозможно восстановить больше товаров% s чем у вас на складе."
+msgstr "Невозможно восстановить больше товаров %s чем у вас на складе."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3668,7 +3668,7 @@ msgid ""
 "can be returned)."
 msgstr ""
 "Нет товаров для возврата (могут быть возвращены только строки в состоянии "
-"&quot;Выполнено&quot; и не полностью)."
+"`Выполнено` и не полностью)."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -3682,7 +3682,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "No source location defined on stock rule: %s!"
-msgstr "Местонахождение источника не определено по правилу запаса:% s!"
+msgstr "Местонахождение источника не определено по правилу запаса:%s !"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -4742,7 +4742,7 @@ msgstr ""
 " любых дочерних. В контексте с одним составом это включает товары, "
 "поступающие к местонахождению этого состава, или любого дочернего состава. В"
 " противном случае это включает товары, прибывающие к любому местонахождение "
-"склада с &quot;внутренним&quot; типом."
+"склада с `внутренним` типом."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -4757,7 +4757,7 @@ msgstr ""
 "это местонахождение, или любой из его дочерних складов. В контексте единого "
 "состава это включает товары, которые оставляют место расположения этого "
 "склада или любого его дочернего. В противном случае это включает в себя "
-"товары, оставляют любое местонахождение во &quot;внутреннем&quot; типу."
+"товары, оставляют любое местонахождение во `внутреннем` типу."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -5124,7 +5124,7 @@ msgstr "Вернуть строку комплектования"
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Return of %s"
-msgstr "Возвращение% s"
+msgstr "Возвращение %s "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -6008,9 +6008,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
-"Значение &#39;Ручная операция &quot;создаст движение запасов после текущего."
-" С помощью пункта &quot;Автоматически не приложены шага&quot; расположение "
-"заменяется в оригинальном перемещении."
+"Значение 'Ручная операция `создаст движение запасов после текущего. С "
+"помощью пункта `Автоматически не приложены шага` расположение заменяется в "
+"оригинальном перемещении."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -6019,7 +6019,7 @@ msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
-"Обратное заказ <a href=# data-oe-model=stock.picking data-oe-id=%d>% s</a> "
+"Обратное заказ <a href=# data-oe-model=stock.picking data-oe-id=%d> %s </a> "
 "был создан."
 
 #. module: stock
@@ -6129,9 +6129,9 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
-"Выполненная количество для товара &quot;% s&quot; не соблюдает точного "
-"округления, определенного на единицу измерения &quot;% s&quot;. Пожалуйста, "
-"измените проделанной количество или точность округления единицы измерения."
+"Выполненная количество для товара ` %s ` не соблюдает точного округления, "
+"определенного на единицу измерения ` %s `. Пожалуйста, измените проделанной "
+"количество или точность округления единицы измерения."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6319,7 +6319,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "This lot %s is incompatible with this product %s"
-msgstr "Эта партия% s несовместима с этим товаром% s"
+msgstr "Эта партия %s несовместима с этим товаром %s "
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -7062,8 +7062,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
-"Когда товары необходимые <b>в% s,</b> <br/> <b>% s</b> <b>создается% s</b> "
-"для удовлетворения потребности."
+"Когда товары необходимые <b>в %s,</b> <br/> <b> %s </b> <b>создается %s </b>"
+" для удовлетворения потребности."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -7072,8 +7072,8 @@ msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
 msgstr ""
-"Когда товары поступают <b>в% s,</b> <br/> <b>% s</b> создан для их "
-"<b>отправки% s.</b>"
+"Когда товары поступают <b>в %s,</b> <br/> <b> %s </b> создан для их "
+"<b>отправки %s.</b>"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -7160,8 +7160,8 @@ msgid ""
 " Lots/Serial Numbers\"."
 msgstr ""
 "Вам не разрешается создавать партийный или серийный номер с этим типом "
-"операции. Чтобы изменить это, перейдите к типу операции и отметьте "
-"&quot;Создать новые партийные / серийные номера&quot;."
+"операции. Чтобы изменить это, перейдите к типу операции и отметьте `Создать "
+"новые партийные / серийные номера`."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -7253,7 +7253,7 @@ msgstr "Вы можете удалить только черновик пере�
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
-"Вы можете обработать только 1.0% s товаров с уникальным серийным номером."
+"Вы можете обработать только 1.0 %s товаров с уникальным серийным номером."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -7356,7 +7356,7 @@ msgid ""
 "\t%s - qty: %s"
 msgstr ""
 "Вы не можете установить отрицательное количество продукта в строке описи:\n"
-"\t%s - qty: %s"
+"\t %s - qty: %s "
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7371,8 +7371,7 @@ msgstr ""
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr ""
-"Невозможно разбить складское перемещение, установленное на "
-"&quot;Выполнено&quot;."
+"Невозможно разбить складское перемещение, установленное на `Выполнено`."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7382,7 +7381,7 @@ msgid ""
 "\"view\"."
 msgstr ""
 "Вы не можете брать товары или доставлять товары к местонахождению типа "
-"&quot;просмотр&quot;."
+"`просмотр`."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7390,7 +7389,7 @@ msgstr ""
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Невозможно зарезервировать складское перемещение, установленное на "
-"&quot;Выполнено&quot;."
+"`Выполнено`."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7498,7 +7497,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
-msgstr "Вам необходимо предоставить партийный / серийный номер для товара% s."
+msgstr "Вам необходимо предоставить партийный / серийный номер для товара %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -7603,4 +7602,10 @@ msgstr "обрабатывается вместо"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
 msgstr ""

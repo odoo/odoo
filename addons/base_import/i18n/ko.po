@@ -9,7 +9,7 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,21 +30,21 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported..."
-msgstr "%d 자료가 성공적으로 입력되었습니다..."
+msgstr "%d 레코드가 성공적으로 입력되었습니다..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr "%d 자료테스트가 완료되었습니다..."
+msgstr "%d 레코드 테스트가 완료되었습니다..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records were successfully imported"
-msgstr "%d 자료가 성공적으로 입력되었습니다"
+msgstr "%d 레코드가 성공적으로 입력되었습니다"
 
 #. module: base_import
 #. openerp-web
@@ -95,7 +95,7 @@ msgstr "기본 가져 오기 매핑"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "배치 제한"
 
 #. module: base_import
 #. openerp-web
@@ -116,7 +116,7 @@ msgstr "취소"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr ""
+msgstr "'다시 시작'을 클릭하여 줄에서 다시 가져오기를 계속합니다."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -299,7 +299,7 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr "파일용량이 커서,일괄처리 방식으로 불러옵니다."
+msgstr "파일용량이 커서 일괄처리 방식으로 가져옵니다."
 
 #. module: base_import
 #. openerp-web
@@ -326,7 +326,7 @@ msgstr "모든 것이 적절합니다."
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr "자동으로 포맷을 생성하는데에 엑셀파일을 추천합니다."
+msgstr "필드 서식이 자동이므로 Excel 파일을 사용하는 것이 좋습니다."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -439,6 +439,7 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"모델이 openchatter를 사용하는 경우 기록 추적이 구독을 설정하고 가져오는 동안 알림을 보내지만 가져오기 속도가 느려집니다."
 
 #. module: base_import
 #. openerp-web
@@ -644,7 +645,7 @@ msgstr "Res 모델"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
-msgstr "계속 진행"
+msgstr "다시 시작"
 
 #. module: base_import
 #. openerp-web
@@ -706,7 +707,7 @@ msgstr "스페이스"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "줄에서 시작"
 
 #. module: base_import
 #. openerp-web
@@ -820,7 +821,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr "파일이 %d라인에 성공적으로 입력되었습니다."
+msgstr "파일이 %d줄에 성공적으로 입력되었습니다."
 
 #. module: base_import
 #. openerp-web
@@ -883,7 +884,7 @@ msgstr "값2"
 msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
-msgstr ""
+msgstr "경고 : 제목줄, 빈 줄 그리고 빈 셀로만 구성된 줄은 무시합니다."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -911,7 +912,7 @@ msgstr " 가져올 필드를 하나 이상 구성해야합니다."
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr ""
+msgstr " %d 다른 행에서 :"
 
 #. module: base_import
 #. openerp-web
