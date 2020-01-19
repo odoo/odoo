@@ -7,7 +7,7 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # שהאב חוסיין <shhab89@gmail.com>, 2018
 # Amit Spilman <amit@laylinetech.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,8 @@ msgid ""
 "<br/>\n"
 "                            on our services on \""
 msgstr ""
+"<br/>\n"
+"                            על השירותים שלנו ב \""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
@@ -36,27 +38,29 @@ msgid ""
 "<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
 "label=\"Thank you!\" title=\"Thank you!\"/>"
 msgstr ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">משאב</span>"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "אסימון גישה להגדרת דירוג הערך"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
-msgstr ""
+msgstr "הודעה משויכת בעת פרסום ביקורת. משמש בעיקר בתוספות אתרי אינטרנט."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
-msgstr ""
+msgstr "מחבר הדירוג"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -103,22 +107,22 @@ msgstr "מודל מסמך"
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "שרשור דוא\"ל"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
-msgstr ""
+msgstr "מופעל אם הדירוג מולא."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "דירוג מולא"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go to our website"
-msgstr ""
+msgstr "כנס לאתר שלנו"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -129,7 +133,7 @@ msgstr "קבץ לפי"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "מאוד לא מרוצה"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
@@ -140,7 +144,7 @@ msgstr "מזהה"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_id
 msgid "Identifier of the rated object"
-msgstr ""
+msgstr "מזהה של האובייקט המדורג"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
@@ -166,7 +170,7 @@ msgstr "תאריך עדכון אחרון"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Linked message"
-msgstr ""
+msgstr "הודעה מקושרת"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
@@ -176,63 +180,63 @@ msgstr "הודעה"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "דגם המשאב שאחריו"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "הדירוגים שלי"
 
 #. module: rating
 #: selection:rating.rating,rating_text:0
 msgid "No Rating yet"
-msgstr ""
+msgstr "אין דירוג עדיין"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "No rating yet"
-msgstr ""
+msgstr "אין דירוג עדיין"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
-msgstr ""
+msgstr "לא מרוצה"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "בעל המשאב המדורג"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "מסמך אב"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "דגם מסמך אב"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "שם מסמך אב"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "דגם מסמך אב קשור"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
-msgstr ""
+msgstr "משתמש מדורג"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 msgid "Rated person"
-msgstr ""
+msgstr "אדם מדורג"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
@@ -269,12 +273,12 @@ msgstr "דירוג ערך אחרון"
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr ""
+msgstr "Rating Mixin"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Number"
-msgstr ""
+msgstr "מספר דירוג"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
@@ -291,12 +295,12 @@ msgstr "כמות דירוגים"
 #. module: rating
 #: sql_constraint:rating.rating:0
 msgid "Rating should be between 0 to 10"
-msgstr ""
+msgstr "הדירוג צריך להיות בין 0 ל -10"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "ערך דירוג: 0 = לא מאושר, 10 = שמח"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -312,14 +316,14 @@ msgstr "סיבה לדירוג"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr ""
+msgstr "דגם מסמך קשור"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "דירוגים קשורים"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -329,13 +333,13 @@ msgstr "משאב"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr ""
+msgstr "שם משאב"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Satisfied"
-msgstr ""
+msgstr "מרוצה"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
@@ -351,7 +355,7 @@ msgstr "שלח משוב"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
-msgstr ""
+msgstr "נשלח ב"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -361,12 +365,12 @@ msgstr "תודה! אנחנו מעריכים את המשוב שלך"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "שם המשאב המדורג."
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "There is no rating for this object at the moment."
-msgstr ""
+msgstr "אין כרגע דירוג לאובייקט זה."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
@@ -376,12 +380,12 @@ msgstr "אנחנו מעריכים את המשוב שלך!"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Would be great if you can provide more information:"
-msgstr ""
+msgstr "יהיה נהדר אם אתה יכול לספק מידע נוסף:"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
-msgstr ""
+msgstr "הדירוג שלך נשלח."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -392,19 +396,19 @@ msgstr "על ידי"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
+msgstr "ל"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:21
 #, python-format
 msgid "highly dissatisfied"
-msgstr ""
+msgstr "מאוד לא מרוצה"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:20
 #, python-format
 msgid "not satisfied"
-msgstr ""
+msgstr "לא מרוצה"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
@@ -415,9 +419,9 @@ msgstr "ב־"
 #: code:addons/rating/controllers/main.py:22
 #, python-format
 msgid "satisfied"
-msgstr ""
+msgstr "מרוצה"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "you are"
-msgstr ""
+msgstr "אתה"
