@@ -33,12 +33,6 @@ class EventType(models.Model):
             'template_id': self.env.ref('event.event_subscription').id,
         }), (0, 0, {
             'notification_type': 'mail',
-            'interval_nbr': 1,
-            'interval_unit': 'days',
-            'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder').id,
-        }), (0, 0, {
-            'notification_type': 'mail',
             'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
@@ -270,7 +264,7 @@ class EventEvent(models.Model):
 
             self.is_online = self.event_type_id.is_online
 
-            if self.event_type_id.event_type_mail_ids:
+            if self.event_type_id.use_mail_schedule and self.event_type_id.event_type_mail_ids:
                 self.event_mail_ids = [(5, 0, 0)] + [
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
