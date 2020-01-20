@@ -58,7 +58,7 @@ class lang(osv.osv):
         if fail:
             lc = locale.getdefaultlocale()[0]
             msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-            _logger.warning(msg, lang, lc)
+            _logger.info(msg, lang, lc)
 
         if not lang_name:
             lang_name = tools.ALL_LANGUAGES.get(lang, lang)
