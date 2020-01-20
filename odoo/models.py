@@ -4859,7 +4859,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self:
             vals = [func(rec) for rec in self]
             if isinstance(vals[0], BaseModel):
-                return vals[0].union(*vals)         # union of all recordsets
+                prefetch = vals[0]._prefetch
+                return vals[0].union(*vals).with_prefetch(prefetch)  # union of all recordsets
             return vals
         else:
             vals = func(self)
