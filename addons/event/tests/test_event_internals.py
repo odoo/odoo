@@ -99,14 +99,15 @@ class TestEventData(TestEventCommon):
 
     @users('user_eventmanager')
     @mute_logger('odoo.models.unlink')
-    def test_event_type_configuration(self):
+    def test_event_configuration_from_type(self):
         self.assertEqual(self.env.user.tz, 'Europe/Brussels')
 
         event_type = self.event_type_complex.with_user(self.env.user)
         event_type.write({
             'use_mail_schedule': False,
         })
-        # self.assertEqual(event_type.event_type_mail_ids, self.env['event.type.mail'])  # TDE FIXME: currently crashing
+        # Event type does not use mail schedule but data is kept for compatibility and avoid recreating them
+        self.assertEqual(len(event_type.event_type_mail_ids), 2)
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -132,7 +133,7 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event.auto_confirm)
         self.assertEqual(event.twitter_hashtag, event_type.default_hashtag)
         self.assertFalse(event.is_online)
-        # self.assertEqual(event.event_mail_ids, self.env['event.mail'])  # TDE FIXME: currently crashing
+        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
         event_type.write({
             'use_mail_schedule': True,
