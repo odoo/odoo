@@ -261,7 +261,7 @@ class IrHttp(models.AbstractModel):
         for code, dummy in cls._get_language_codes():
             if code == lang:
                 return lang
-            if not short_match and code.startswith(short):
+            if not short_match and short == code.partition('_')[0].partition('@')[0]:
                 short_match = code
         return short_match
 
