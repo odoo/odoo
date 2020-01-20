@@ -63,12 +63,21 @@ class TestPingenSend(AccountingTestCase):
 
         response = requests.post(self.pingen_url, data=self.data, files=files)
         if 400 <= response.status_code <= 599:
+<<<<<<< HEAD
             msg = "%(code)s %(side)s Error: %(reason)s for url: %(url)s\n%(body)s" % {
                 'code': response.status_code,
                 'side': r"%s",
                 'reason': response.reason,
                 'url': self.pingen_url,
                 'body': response.text}
+=======
+            msg = "%(code)s %(side)s Error for url: %(url)s\n%(body)s" % {
+                'code': response.status_code,
+                'side': r"%s",
+                'url': response.url,
+                'body': response.text}
+
+>>>>>>> bcabbdb7635... temp
             if response.status_code <= 499:
                 raise requests.HTTPError(msg % "Client")
             else:
@@ -78,4 +87,8 @@ class TestPingenSend(AccountingTestCase):
         self.render_and_send('external_layout_standard')
         self.render_and_send('external_layout_background')
         self.render_and_send('external_layout_boxed')
+<<<<<<< HEAD
         self.render_and_send('external_layout_clean')
+=======
+        self.render_and_send('external_layout_clean')
+>>>>>>> bcabbdb7635... temp
