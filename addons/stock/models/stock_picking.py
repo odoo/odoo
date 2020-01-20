@@ -657,9 +657,6 @@ class Picking(models.Model):
         self.mapped('move_lines')\
             .filtered(lambda move: move.state == 'draft')\
             ._action_confirm()
-        # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-        self.filtered(lambda picking: not picking.immediate_transfer and picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
-            .mapped('move_lines')._action_assign()
         return True
 
     def action_assign(self):
