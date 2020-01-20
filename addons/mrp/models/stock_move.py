@@ -252,6 +252,10 @@ class StockMove(models.Model):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
 
+    def _should_bypass_reservation(self):
+        res = super(StockMove, self)._should_bypass_reservation()
+        return bool(res and not self.production_id)
+
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)

@@ -1766,6 +1766,7 @@ class TestRoutingAndKits(SavepointCase):
         self.bom_finished1.consumption = 'flexible'
         add_product = self.env['product.product'].create({
             'name': 'Additional',
+            'type': 'product',
         })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.finished1
@@ -1799,6 +1800,7 @@ class TestRoutingAndKits(SavepointCase):
         self.bom_finished1.consumption = 'flexible'
         add_product = self.env['product.product'].create({
             'name': 'Additional',
+            'type': 'product',
         })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.finished1

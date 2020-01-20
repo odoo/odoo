@@ -189,7 +189,10 @@ class StockRule(models.Model):
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
-            move.write({'move_dest_ids': [(4, new_move.id)]})
+            if new_move._should_bypass_reservation():
+                new_move.write({'procure_method': 'make_to_stock'})
+            if not new_move.location_id.should_bypass_reservation():
+                move.write({'move_dest_ids': [(4, new_move.id)]})
             new_move._action_confirm()
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -283,6 +286,11 @@ class StockRule(models.Model):
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
+
+        move_dest_ids = []
+        if not self.location_id.should_bypass_reservation():
+            move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
+
         move_values = {
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
@@ -292,7 +300,7 @@ class StockRule(models.Model):
             'partner_id': self.partner_address_id.id or (values.get('group_id', False) and values['group_id'].partner_id.id) or False,
             'location_id': self.location_src_id.id,
             'location_dest_id': location_id.id,
-            'move_dest_ids': values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or [],
+            'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
             'procure_method': self.procure_method,
             'origin': origin,

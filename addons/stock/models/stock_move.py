@@ -1016,9 +1016,12 @@ class StockMove(models.Model):
             moves._assign_picking()
         self._push_apply()
         self._check_company()
+        moves = self
         if merge:
-            return self._merge_moves(merge_into=merge_into)
-        return self
+            moves = self._merge_moves(merge_into=merge_into)
+        # call `_action_assign` on every confirmed move which location_id bypasses the reservation
+        moves.filtered(lambda move: move._should_bypass_reservation() and move.state == 'confirmed')._action_assign()
+        return moves
 
     def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other componenets that will be created from a stock rule
