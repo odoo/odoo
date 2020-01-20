@@ -163,6 +163,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
         })
         .guardedCatch(function (err, data) {
+            data = data || {statusText: err.message.message};
             return new Dialog(self, {
                 title: data.data ? data.data.arguments[0] : "",
                 $content: $('<div/>', {
