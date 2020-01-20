@@ -816,6 +816,23 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             record.reference = self.env['ir.model'].search([], limit=1)
 
+    def test_24_2_reference_computed_stored(self):
+        """ test reference fields.
+
+        Here we mixed the type of values to test a computed+stored
+        fields.Reference.
+        """
+        record1 = self.env['test_new_api.mixed'].create(
+            {'reference': self.env.user}
+        )
+        record2 = self.env['test_new_api.mixed'].create(
+            {'reference': self.env.user.partner_id}
+        )
+        # check computed values
+        (record1 | record2).recompute()
+        self.assertEqual(record1.reference2, self.env.user)
+        self.assertEqual(record2.reference2, self.env.user.partner_id)
+
     def test_25_related(self):
         """ test related fields. """
         message = self.env.ref('test_new_api.message_0_0')

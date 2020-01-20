@@ -302,6 +302,11 @@ class MixedModel(models.Model):
     lang = fields.Selection(string='Language', selection='_get_lang')
     reference = fields.Reference(string='Related Document',
         selection='_reference_models')
+    reference2 = fields.Reference(
+        string='Related Document 2',
+        compute='_compute_reference2',
+        store=True,
+        selection='_reference_models')
     comment1 = fields.Html(sanitize=False)
     comment2 = fields.Html(sanitize_attributes=True, strip_classes=False)
     comment3 = fields.Html(sanitize_attributes=True, strip_classes=True)
@@ -325,6 +330,12 @@ class MixedModel(models.Model):
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]
+
+    @api.depends('reference')
+    def _compute_reference2(self):
+        # this is a stored computed field
+        for record in self:
+            record.reference2 = record.reference
 
 
 class BoolModel(models.Model):
