@@ -1000,9 +1000,8 @@ class ChromeBrowser():
         return '%s(%s)' % (
             klass or objtype,
             ', '.join(
-                '%s=%r' % (p['name'], p['value'])
+                '%s=%s' % (p['name'], repr(p['value']) if p['type'] == 'string' else p['value'])
                 for p in arg.get('preview', {}).get('properties', [])
-                if p.get('name') is not None
                 if p.get('value') is not None
             )
         )
