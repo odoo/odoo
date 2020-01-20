@@ -21,9 +21,9 @@ class MailGroup(models.Model):
         except Exception:
             headers = {}
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self)),
-        headers['List-Subscribe'] = '<%s/groups>' % (base_url),
-        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,),
+        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self))
+        headers['List-Subscribe'] = '<%s/groups>' % (base_url)
+        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,)
         res['headers'] = repr(headers)
         return res
 
