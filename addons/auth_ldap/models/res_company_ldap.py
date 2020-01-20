@@ -71,11 +71,10 @@ class CompanyLDAP(models.Model):
         :return: an LDAP object
         """
 
-        uri = 'ldap://%s:%d' % (conf['ldap_server'], conf['ldap_server_port'])
+        protocol = conf['ldap_tls'] and 'ldaps' or 'ldap'
+        uri = '%s://%s:%d' % (protocol, conf['ldap_server'], conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
-        if conf['ldap_tls']:
-            connection.start_tls_s()
         return connection
 
     def _authenticate(self, conf, login, password):
