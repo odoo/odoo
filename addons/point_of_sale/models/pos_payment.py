@@ -26,6 +26,7 @@ class PosPayment(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='pos_order_id.company_id')
     card_type = fields.Char('Type of card used')
     transaction_id = fields.Char('Payment Transaction ID')
+    payment_status = fields.Char('Payment Status')
 
     @api.model
     def name_get(self):
