@@ -458,8 +458,14 @@ var RTEWidget = Widget.extend({
 
         if (initialActiveElement && initialActiveElement !== document.activeElement) {
             initialActiveElement.focus();
-            initialActiveElement.selectionStart = initialSelectionStart;
-            initialActiveElement.selectionEnd = initialSelectionEnd;
+            try {
+                initialActiveElement.selectionStart = initialSelectionStart;
+                initialActiveElement.selectionEnd = initialSelectionEnd;
+            } catch (e) {
+                // The active element might be of a type that
+                // does not support selection.
+                console.log('error', e);
+            }
         }
     },
     /**
