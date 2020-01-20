@@ -2256,13 +2256,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
     watch_order_changes: function() {
         var self = this;
         var order = this.pos.get_order();
-        if (!order) {
-            return;
-        }
         if(this.old_order){
             this.old_order.stop_electronic_payment();
             this.old_order.unbind(null, null, this);
             this.old_order.paymentlines.unbind(null, null, this);
+        }
+        if (!order) {
+            return;
         }
         order.bind('all',function(){
             self.order_changes();
