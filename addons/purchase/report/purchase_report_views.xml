@@ -51,8 +51,8 @@
         <field name="model">purchase.report</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
-                <filter string="Requests for Quotation" name="quotes" domain="[('state','=','draft')]"/>
-                <filter string="Purchase Orders" name="orders" domain="[('state','!=','draft'),('state','!=','cancel')]"/>
+                <filter string="Requests for Quotation" name="quotes" domain="[('state','in',('draft','sent'))]"/>
+                <filter string="Purchase Orders" name="orders" domain="[('state','!=','draft'), ('state','!=','sent'), ('state','!=','cancel')]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <group expand="0" string="Extended Filters">
