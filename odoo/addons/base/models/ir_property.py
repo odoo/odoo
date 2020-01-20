@@ -418,7 +418,13 @@ class Property(models.Model):
             elif value > 0 and operator == '<':
                 operator = '>='
                 include_zero = True
-
+        elif field.type == 'boolean':
+            if not value and operator == '=':
+                operator = '!='
+                include_zero = True
+            elif value and operator == '!=':
+                operator = '='
+                include_zero = True
 
         # retrieve the properties that match the condition
         domain = self._get_domain(name, model)
