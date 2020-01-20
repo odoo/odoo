@@ -79,7 +79,7 @@ var AddNewFavoriteMenu = Widget.extend({
         var isShared = $inputs[2].checked;
 
         if (!description.length){
-            this.do_warn(_t("Error"), _t("A name for your favorite is required."));
+            this.do_warn(_t("Error"), _t("A name for your favorite filter is required."));
             $inputs[0].focus();
             return;
         }
