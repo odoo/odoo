@@ -330,7 +330,7 @@
                         <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
-                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope'" t-att-data-message-id="message.getID()"/>
+                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope' + fatype" t-att-data-message-id="message.getID()"/>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
