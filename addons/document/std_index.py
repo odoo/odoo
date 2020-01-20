@@ -103,7 +103,7 @@ class DocIndex(indexer):
             return _to_unicode(data)
         except OSError:
             
-            _logger.warning("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
+            _logger.info("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
             _logger.debug("Trace of the failed file indexing attempt.", exc_info=True)
             return u''
     
@@ -171,7 +171,7 @@ class PdfIndex(indexer):
             (data, _) = pop.communicate()
             return _to_unicode(data)
         except OSError:
-            _logger.warning("Failed attempt to execute pdftotext. This program is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
+            _logger.info("Failed attempt to execute pdftotext. This program is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
             _logger.debug("Trace of the failed file indexing attempt.", exc_info=True)
             return u''
 
