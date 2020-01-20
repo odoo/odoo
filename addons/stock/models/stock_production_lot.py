@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class ProductionLot(models.Model):
     _name = 'stock.production.lot'
-    _inherit = ['mail.thread','mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True
 
@@ -85,7 +85,7 @@ class ProductionLot(models.Model):
     def _product_qty(self):
         for lot in self:
             # We only care for the quants in internal or transit locations.
-            quants = lot.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
+            quants = lot.quant_ids.filtered(lambda q: q.location_id.usage == 'internal' or (q.location_id.usage == 'transit' and q.location_id.company_id))
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def action_lot_open_quants(self):
