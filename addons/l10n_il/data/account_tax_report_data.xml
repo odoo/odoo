@@ -120,7 +120,7 @@
 
     <record id="account_tax_report_line_vat_due" model="account.tax.report.line">
         <field name="name">VAT DUE</field>
-        <field name="formula">(ILTAX_OUT_BALANCE_00 + ILTAX_OUT_BALANCE_PA) - (ILTAX_IN_BALANCE_17 + ILTAX_IN_BALANCE_2_3 + ILTAX_IN_BALANCE_1_4) - ILTAX_VAT_IN_FA</field>
+        <field name="formula">(ILTAX_OUT_BALANCE_00 + ILTAX_OUT_BALANCE_PA) - (ILTAX_IN_BALANCE_17 + ILTAX_IN_BALANCE_2_3 + ILTAX_IN_BALANCE_1_4 + ILTAX_IN_BALANCE_PA) - ILTAX_VAT_IN_FA</field>
         <field name="sequence">7</field>
         <field name="country_id" ref="base.il"/>
     </record>
