@@ -270,7 +270,7 @@
                                     <tree string="Communication" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="notification_type" invisible="1"/>
-                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}" context="{'default_model': 'event.registration'}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
