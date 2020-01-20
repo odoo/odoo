@@ -46,73 +46,68 @@ options.Class.include({
     },
 });
 
-// options.registry.background.include({
-//     background: async function (previewMode, widgetValue, params) {
-//         if (previewMode === 'reset' && this.videoSrc) {
-//             return this._setBgVideo(false, this.videoSrc);
-//         }
-// 
-//         const _super = this._super.bind(this);
-//         if (!params.isVideo) {
-//             await this._setBgVideo(previewMode, '');
-//             return _super(...arguments);
-//         }
-//         return this._setBgVideo(previewMode, widgetValue);
-//     },
-// 
-//     //--------------------------------------------------------------------------
-//     // Private
-//     //--------------------------------------------------------------------------
-// 
-//     /**
-//      * @override
-//      */
-//     _computeWidgetState: function (methodName) {
-//         if (methodName === 'background' && this.$target[0].classList.contains('o_background_video')) {
-//             return this.$('> .o_bg_video_container iframe').attr('src');
-//         }
-//         return this._super(...arguments);
-//     },
-//     /**
-//      * Updates the background video used by the snippet.
-//      *
-//      * @private
-//      * @see this.selectClass for parameters
-//      * @returns {Promise}
-//      */
-//     _setBgVideo: async function (previewMode, value) {
-//         this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
-// 
-//         if (previewMode !== false) {
-//             return;
-//         }
-// 
-//         this.videoSrc = value;
-//         var target = this.$target[0];
-//         target.classList.toggle('o_background_video', !!(value && value.length));
-//         if (value && value.length) {
-//             target.dataset.bgVideoSrc = value;
-//         } else {
-//             delete target.dataset.bgVideoSrc;
-//         }
-//         await this._refreshPublicWidgets();
-//     },
-// 
-//     //--------------------------------------------------------------------------
-//     // Handlers
-//     //--------------------------------------------------------------------------
-// 
-//     /**
-//      * @override
-//      */
-//      _onBackgroundColorUpdate: async function (ev, previewMode) {
-//         const ret = await this._super(...arguments);
-//         if (ret) {
-//             this._setBgVideo(previewMode, '');
-//         }
-//         return ret;
-//     },
-// });
+options.registry.background.include({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'editImage' && this.$target.is('.o_background_video')) {
+            return this.$target[0].dataset.bgVideoSrc;
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called on background-color update (useful to remove the background to be
+     * able to see the chosen color).
+     *
+     * @private
+     * @param {Event} ev
+     * @param {boolean|string} previewMode
+     * @returns {boolean} true if the color has been applied (removing the
+     *                    background)
+     */
+    _onBackgroundColorUpdate: async function (ev, previewMode) {
+        const ret = await this._super(...arguments);
+        if (ret && this.isVideo) {
+            const target = this.$target[0];
+            this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
+            if (previewMode === false) {
+                target.classList.remove('o_background_video');
+                delete target.dataset.bgVideoSrc;
+                await this._refreshPublicWidgets();
+            }
+        }
+        return ret;
+    },
+    /**
+     * Allows the use of background videos.
+     *
+     * @override
+     */
+    _onMediaDialogSave: async function (callback, data) {
+        const target = this.$target[0];
+        const {bgVideoSrc} = data;
+        target.classList.toggle('o_background_video', !!bgVideoSrc);
+        if (!bgVideoSrc) {
+            delete target.dataset.bgVideoSrc;
+            return this._super(...arguments);
+        }
+        this.canModifyImage = false;
+        this.isVideo = true;
+        await this._changeSrc('');
+        target.dataset.bgVideoSrc = bgVideoSrc;
+        callback();
+    },
+});
 
 options.registry.menu_data = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],

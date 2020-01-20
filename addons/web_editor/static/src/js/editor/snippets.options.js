@@ -1008,7 +1008,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _updateUI: async function (color) {
         await this._super(...arguments);
-
         this.colorPreviewEl.classList.remove(...this.colorPalette.getColorNames().map(c => 'bg-' + c));
         this.colorPreviewEl.style.removeProperty('background-color');
 
@@ -2572,6 +2571,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._changeSrc(await this._applyOptions());
         this._updateWeight();
     },
+    /**
+     * Handles saving in the MediaDialog.
+     *
+     * @private
+     */
     _onMediaDialogSave: async function (callback, data) {
         const originalSrc = data.getAttribute('src');
         await this._changeSrc(originalSrc);
@@ -2727,15 +2731,6 @@ registry.background = ImageHandlerOption.extend({
             });
         }
     },
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        if (methodName === 'editImage' && this.$target.is('.o_background_video')) {
-            return this.$target[0].dataset.bgVideoSrc;
-        }
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Utils
@@ -2773,38 +2768,8 @@ registry.background = ImageHandlerOption.extend({
         if (ev.currentTarget !== ev.target) {
             return false;
         }
-        if (this.isVideo) {
-            const target = this.$target[0];
-            this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
-            if (previewMode === false) {
-                target.classList.remove('o_background_video');
-                delete target.dataset.bgVideoSrc;
-                // FIXME: _refreshPublicWidgets is declared in website options.
-                await this._refreshPublicWidgets();
-            }
-            return true;
-        }
         await this._changeSrc('', previewMode);
         return true;
-    },
-    /**
-     * Allows the use of background videos.
-     *
-     * @override
-     */
-    _onMediaDialogSave: async function (callback, data) {
-        const target = this.$target[0];
-        const {bgVideoSrc} = data;
-        target.classList.toggle('o_background_video', !!bgVideoSrc);
-        if (bgVideoSrc) {
-            this.canModifyImage = false;
-            this.isVideo = true;
-            await this._changeSrc('');
-            target.dataset.bgVideoSrc = bgVideoSrc;
-            return callback();
-        }
-        delete target.dataset.bgVideoSrc;
-        return this._super(...arguments);
     },
 });
 
