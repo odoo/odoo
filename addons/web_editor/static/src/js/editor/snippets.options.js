@@ -2293,41 +2293,30 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
 
     /**
      * Opens a media dialog to pick a different image.
+     *
+     * @see this.selectClass for params
      */
-    editImage: function (ev) {
+    editImage: function (previewMode, widgetValue, params) {
+        const {originalSrc} = this.settings;
         return new Promise(resolve => {
             // Need a dummy element for the media dialog to modify.
             const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
-            dummyEl.src = this._value;
+            dummyEl.src = originalSrc;
             if (this.isVideo) {
-                // Allows the mediaDialog to select the video tab immediately.
+                // Used by mediaDialog to select the video tab immediately.
                 dummyEl.classList.add('media_iframe_video');
             }
             const $editable = this.$target.closest('.o_editable');
             const mediaDialog = new weWidgets.MediaDialog(this, {
                 noIcons: true,
                 noDocuments: true,
-                noVideos: !this.allowVideos,
+                noVideos: !params.allowVideos,
                 isForBgVideo: true,
                 res_model: $editable.data('oe-model'),
                 res_id: $editable.data('oe-id'),
                 firstFilters: this.firstFilters,
             }, dummyEl).open();
-            mediaDialog.on('save', this, async data => {
-                if (data.bgVideoSrc) {
-                    // FIXME: review this
-                    // this._changeSrc(data.bgVideoSrc, {isVideo: true});
-                } else {
-                    const originalSrc = dummyEl.getAttribute('src');
-                    await this._changeSrc(originalSrc);
-                    const width = await this._computeOptimizedWidth(originalSrc);
-                    this.settings = _.defaults({originalSrc, width, quality: 80}, this.defaultSettings);
-                    await this._rerenderXML();
-                    this.$el.find('input.custom-range').val(this.settings.quality);
-                    await this._changeSrc(await this._applyOptions());
-                }
-                resolve();
-            });
+            mediaDialog.on('save', this, this._onMediaDialogSave.bind(this, resolve));
             mediaDialog.on('cancel', this, resolve);
         });
     },
@@ -2583,6 +2572,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._changeSrc(await this._applyOptions());
         this._updateWeight();
     },
+    _onMediaDialogSave: async function (callback, data) {
+        const originalSrc = data.getAttribute('src');
+        await this._changeSrc(originalSrc);
+        const width = await this._computeOptimizedWidth(originalSrc);
+        this.settings = _.defaults({originalSrc, width, quality: 80}, this.defaultSettings);
+        await this._rerenderXML();
+        this.$el.find('input.custom-range').val(this.settings.quality);
+        await this._changeSrc(await this._applyOptions());
+        callback();
+    },
 });
 /**
  * Handles the edition of non-background images.
@@ -2728,6 +2727,15 @@ registry.background = ImageHandlerOption.extend({
             });
         }
     },
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'editImage' && this.$target.is('.o_background_video')) {
+            return this.$target[0].dataset.bgVideoSrc;
+        }
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Utils
@@ -2765,8 +2773,38 @@ registry.background = ImageHandlerOption.extend({
         if (ev.currentTarget !== ev.target) {
             return false;
         }
+        if (this.isVideo) {
+            const target = this.$target[0];
+            this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
+            if (previewMode === false) {
+                target.classList.remove('o_background_video');
+                delete target.dataset.bgVideoSrc;
+                // FIXME: _refreshPublicWidgets is declared in website options.
+                await this._refreshPublicWidgets();
+            }
+            return true;
+        }
         await this._changeSrc('', previewMode);
         return true;
+    },
+    /**
+     * Allows the use of background videos.
+     *
+     * @override
+     */
+    _onMediaDialogSave: async function (callback, data) {
+        const target = this.$target[0];
+        const {bgVideoSrc} = data;
+        target.classList.toggle('o_background_video', !!bgVideoSrc);
+        if (bgVideoSrc) {
+            this.canModifyImage = false;
+            this.isVideo = true;
+            await this._changeSrc('');
+            target.dataset.bgVideoSrc = bgVideoSrc;
+            return callback();
+        }
+        delete target.dataset.bgVideoSrc;
+        return this._super(...arguments);
     },
 });
 

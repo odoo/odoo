@@ -290,10 +290,12 @@
     <div id="so_main_colorpicker"
          data-selector="section, .carousel-item"
          data-exclude=".parallax, .o_gallery .carousel-item">
+         <!-- FIXME no-widget-refresh was not needed here before, WHY? -->
         <we-colorpicker string="Background Color"
             data-select-style="true"
             data-css-property="background-color"
-            data-color-prefix="bg-"/>
+            data-color-prefix="bg-"
+            data-no-widget-refresh="true"/>
     </div>
 
     <!-- FILTER | .s_parallax -->

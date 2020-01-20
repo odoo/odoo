@@ -46,73 +46,73 @@ options.Class.include({
     },
 });
 
-options.registry.background.include({
-    background: async function (previewMode, widgetValue, params) {
-        if (previewMode === 'reset' && this.videoSrc) {
-            return this._setBgVideo(false, this.videoSrc);
-        }
-
-        const _super = this._super.bind(this);
-        if (!params.isVideo) {
-            await this._setBgVideo(previewMode, '');
-            return _super(...arguments);
-        }
-        return this._setBgVideo(previewMode, widgetValue);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName) {
-        if (methodName === 'background' && this.$target[0].classList.contains('o_background_video')) {
-            return this.$('> .o_bg_video_container iframe').attr('src');
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * Updates the background video used by the snippet.
-     *
-     * @private
-     * @see this.selectClass for parameters
-     * @returns {Promise}
-     */
-    _setBgVideo: async function (previewMode, value) {
-        this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
-
-        if (previewMode !== false) {
-            return;
-        }
-
-        this.videoSrc = value;
-        var target = this.$target[0];
-        target.classList.toggle('o_background_video', !!(value && value.length));
-        if (value && value.length) {
-            target.dataset.bgVideoSrc = value;
-        } else {
-            delete target.dataset.bgVideoSrc;
-        }
-        await this._refreshPublicWidgets();
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-     _onBackgroundColorUpdate: async function (ev, previewMode) {
-        const ret = await this._super(...arguments);
-        if (ret) {
-            this._setBgVideo(previewMode, '');
-        }
-        return ret;
-    },
-});
+// options.registry.background.include({
+//     background: async function (previewMode, widgetValue, params) {
+//         if (previewMode === 'reset' && this.videoSrc) {
+//             return this._setBgVideo(false, this.videoSrc);
+//         }
+// 
+//         const _super = this._super.bind(this);
+//         if (!params.isVideo) {
+//             await this._setBgVideo(previewMode, '');
+//             return _super(...arguments);
+//         }
+//         return this._setBgVideo(previewMode, widgetValue);
+//     },
+// 
+//     //--------------------------------------------------------------------------
+//     // Private
+//     //--------------------------------------------------------------------------
+// 
+//     /**
+//      * @override
+//      */
+//     _computeWidgetState: function (methodName) {
+//         if (methodName === 'background' && this.$target[0].classList.contains('o_background_video')) {
+//             return this.$('> .o_bg_video_container iframe').attr('src');
+//         }
+//         return this._super(...arguments);
+//     },
+//     /**
+//      * Updates the background video used by the snippet.
+//      *
+//      * @private
+//      * @see this.selectClass for parameters
+//      * @returns {Promise}
+//      */
+//     _setBgVideo: async function (previewMode, value) {
+//         this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
+// 
+//         if (previewMode !== false) {
+//             return;
+//         }
+// 
+//         this.videoSrc = value;
+//         var target = this.$target[0];
+//         target.classList.toggle('o_background_video', !!(value && value.length));
+//         if (value && value.length) {
+//             target.dataset.bgVideoSrc = value;
+//         } else {
+//             delete target.dataset.bgVideoSrc;
+//         }
+//         await this._refreshPublicWidgets();
+//     },
+// 
+//     //--------------------------------------------------------------------------
+//     // Handlers
+//     //--------------------------------------------------------------------------
+// 
+//     /**
+//      * @override
+//      */
+//      _onBackgroundColorUpdate: async function (ev, previewMode) {
+//         const ret = await this._super(...arguments);
+//         if (ret) {
+//             this._setBgVideo(previewMode, '');
+//         }
+//         return ret;
+//     },
+// });
 
 options.registry.menu_data = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
