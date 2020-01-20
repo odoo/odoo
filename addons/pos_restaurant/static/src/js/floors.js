@@ -690,6 +690,38 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     },
 });
 
+screens.ProductScreenWidget.include({
+    show: function () {
+        var self = this;
+        this._super();
+        if (this.pos.config.iface_floorplan) {
+            this.$el.bind("mousemove mousedown touchstart click scroll keypress", function () {
+                self.set_idle_timer();
+            });
+            this.set_idle_timer();
+        }
+    },
+    hide: function () {
+        this._super();
+        if (this.pos.config.iface_floorplan) {
+            this.$el.unbind("mousemove mousedown touchstart click scroll keypress");
+            clearTimeout(this.idle_timer);
+        }
+    },
+    /**
+     * Set a timeout to go back to the floorplan and clear the previous timeout
+     *
+     * @param {number} timeout, optional timeout in miliseconds, default one minute.
+     */
+    set_idle_timer: function(timeout=60000) {
+        var self = this;
+        clearTimeout(this.idle_timer);
+        this.idle_timer = setTimeout(function () {
+            self.pos.set_table(null);
+        }, timeout);
+    },
+});
+
 gui.define_screen({
     'name': 'floors',
     'widget': FloorScreenWidget,
@@ -805,14 +837,7 @@ models.PosModel = models.PosModel.extend({
     after_load_server_data: function() {
         var res = _super_posmodel.after_load_server_data.call(this);
         if (this.config.iface_floorplan) {
-	    var self = this;
             this.table = null;
-	    $('.screen').not('.floor-screen').onmousemove = 	function() {self.set_idle_timer()};
-	    $('.screen').not('.floor-screen').onmousedown = 	function() {self.set_idle_timer()}; // touchscreen presses
-	    $('.screen').not('.floor-screen').ontouchstart = function() {self.set_idle_timer()};
-	    $('.screen').not('.floor-screen').onclick = 	function() {self.set_idle_timer()};     // touchpad clicks
-	    $('.screen').not('.floor-screen').onscroll = 	function() {self.set_idle_timer()};    // scrolling with arrow keys
-	    $('.screen').not('.floor-screen').onkeypress = 	function() {self.set_idle_timer()};
         }
         return res;
     },
@@ -859,28 +884,6 @@ models.PosModel = models.PosModel.extend({
             })
     },
 
-    /**
-     * Set or unset a timeout to go back to the floorplan.
-     *
-     * if deactivate is true unset the timeout, Else set a timeout to go back to the floorplan and
-     * force a sync of the current table.
-     * @param {bool} deactivate optional boolean, default false.
-     * @param {number} timeout, optional timeout in miliseconds, default one minute.
-     */
-    set_idle_timer: function(deactivate, timeout) {
-        timeout = timeout || 60000;
-        deactivate = deactivate || false;
-        if (this.idle_timer) {
-            clearTimeout(this.idle_timer);
-        }
-        var self = this;
-        if (deactivate) {
-            clearTimeout(this.idle_timer);
-        } else {
-            this.idle_timer = setTimeout(function(){self.set_table(null)}, timeout);
-        }
-    },
-
     transfer_order_to_table: function(table) {
         this.order_to_transfer_to_different_table.table = table;
         this.order_to_transfer_to_different_table.save_to_db();
@@ -901,7 +904,6 @@ models.PosModel = models.PosModel.extend({
     sync_from_server: function(table, table_orders, order_ids) {
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
-        this.set_idle_timer(true);
         var orders_to_sync = this.db.get_unpaid_orders_to_sync(order_ids);
         if (orders_to_sync.length) {
             this.set_synch('connecting', orders_to_sync.length);
@@ -946,7 +948,6 @@ models.PosModel = models.PosModel.extend({
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
 
         clearInterval(this.table_longpolling);
-        this.set_idle_timer();
 
         this.set_synch('connecting', 1);
         this._get_from_server(table.id).then(function (server_orders) {
