@@ -210,7 +210,9 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
+                    mail_ids.append(invitation_template.with_context(no_document=True).send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
+                else:
+                    mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
         if force_send and mail_ids:
             res = self.env['mail.mail'].browse(mail_ids).send()

@@ -1023,7 +1023,7 @@ exports.PosModel = Backbone.Model.extend({
                     }
                     self.set('failed',error);
                 }
-                console.error('Failed to send orders:', orders);
+                console.warn('Failed to send orders:', orders);
                 self.gui.show_sync_error_popup();
                 throw reason;
             });

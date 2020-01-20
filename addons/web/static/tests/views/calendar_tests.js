@@ -2595,8 +2595,8 @@ QUnit.module('Views', {
 
         // Create event (on 20 december)
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
-        testUtils.triggerMouseEvent($cell, "mousedown");
-        testUtils.triggerMouseEvent($cell, "mouseup");
+        await testUtils.triggerMouseEvent($cell, "mousedown");
+        await testUtils.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
         var $input = $('.modal-body input:first');
         await testUtils.fields.editInput($input, "An event");
