@@ -2668,9 +2668,24 @@ registry.background = ImageHandlerOption.extend({
     /**
      * @override
      */
-    _changeSrc: async function (src, previewMode = false) {
+    _changeSrc: async function (src, previewMode = false, noUpdate = false) {
         await this._super(...arguments);
-        this._setCustomBackground(src, previewMode);
+        switch (previewMode) {
+            case false:
+                this.__customImageSrc = src;
+                break;
+            case 'reset':
+                src = this.__customImageSrc;
+                break;
+        }
+
+        if (src) {
+            this.$target.css('background-image', `url('${src}')`);
+            this.$target.addClass('oe_img_bg');
+        } else {
+            this.$target.css('background-image', '');
+            this.$target.removeClass('oe_img_bg');
+        }
     },
     /**
      * For backgrounds, the display width is usually smaller than the maximum
@@ -2694,42 +2709,6 @@ registry.background = ImageHandlerOption.extend({
         }
         settings.width = (await this._loadImage(settings.initialSrc)).naturalWidth;
         return settings;
-    },
-    /**
-     * Sets the given value as custom background image.
-     *
-     * @private
-     * @param {string} value
-     * @returns {Promise}
-     */
-    _setCustomBackground: async function (value, previewMode) {
-        switch (previewMode) {
-            case false:
-                this.__customImageSrc = value;
-                break;
-            case 'reset':
-                value = this.__customImageSrc;
-                break;
-        }
-        if (value) {
-            this.$target.css('background-image', `url('${value}')`);
-            this.$target.addClass('oe_img_bg');
-        } else {
-            this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg');
-        }
-        // This is called once in the willStart, at which point this._methodsNames
-        // isn't yet loaded, and snippet_option_update relies on them.
-        if (this.$el) {
-            await new Promise(resolve => {
-                // Will update the UI of the correct widgets for all options
-                // related to the same $target/editor
-                this.trigger_up('snippet_option_update', {
-                    previewMode: previewMode,
-                    onSuccess: resolve,
-                });
-            });
-        }
     },
 
     //--------------------------------------------------------------------------

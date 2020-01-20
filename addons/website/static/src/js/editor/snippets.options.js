@@ -48,32 +48,11 @@ options.Class.include({
 
 options.registry.background.include({
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        if (methodName === 'editImage' && this.$target.is('.o_background_video')) {
-            return this.$target[0].dataset.bgVideoSrc;
-        }
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
-     * Called on background-color update (useful to remove the background to be
-     * able to see the chosen color).
-     *
-     * @private
-     * @param {Event} ev
-     * @param {boolean|string} previewMode
-     * @returns {boolean} true if the color has been applied (removing the
-     *                    background)
+     * @override
      */
     _onBackgroundColorUpdate: async function (ev, previewMode) {
         const ret = await this._super(...arguments);
@@ -83,7 +62,6 @@ options.registry.background.include({
             if (previewMode === false) {
                 target.classList.remove('o_background_video');
                 delete target.dataset.bgVideoSrc;
-                await this._refreshPublicWidgets();
             }
         }
         return ret;
@@ -104,6 +82,7 @@ options.registry.background.include({
         this.canModifyImage = false;
         this.isVideo = true;
         await this._changeSrc('');
+        this.settings.originalSrc = bgVideoSrc;
         target.dataset.bgVideoSrc = bgVideoSrc;
         callback();
     },
