@@ -1397,9 +1397,9 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectStyle: function (previewMode, widgetValue, params) {
+    selectStyle: async function (previewMode, widgetValue, params) {
         if (params.cssProperty === 'background-color') {
-            this.$target.trigger('background-color-event', previewMode);
+            await new Promise(resolve => this.$target.trigger('background-color-event', {previewMode, callback: resolve}));
         }
 
         const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
@@ -2742,13 +2742,14 @@ registry.background = ImageHandlerOption.extend({
      * @returns {boolean} true if the color has been applied (removing the
      *                    background)
      */
-    _onBackgroundColorUpdate: async function (ev, previewMode) {
+    _onBackgroundColorUpdate: async function (ev, data) {
+        const {previewMode, callback} = data;
         ev.stopPropagation();
         if (ev.currentTarget !== ev.target) {
-            return false;
+            return callback(false);
         }
         await this._changeSrc('', previewMode);
-        return true;
+        return callback(true);
     },
 });
 

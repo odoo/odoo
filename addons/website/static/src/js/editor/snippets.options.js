@@ -54,17 +54,17 @@ options.registry.background.include({
     /**
      * @override
      */
-    _onBackgroundColorUpdate: async function (ev, previewMode) {
-        const ret = await this._super(...arguments);
-        if (ret && this.isVideo) {
+    _onBackgroundColorUpdate: async function (ev, data) {
+        const {previewMode, callback} = data;
+        const ret = await new Promise(resolve => this._super(ev, _.extend(data, {callback: resolve})));
+        if (ret) {
             const target = this.$target[0];
-            this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
+            target.classList.toggle('o_background_video', previewMode === 'reset');
             if (previewMode === false) {
-                target.classList.remove('o_background_video');
                 delete target.dataset.bgVideoSrc;
             }
         }
-        return ret;
+        return callback(ret);
     },
     /**
      * Allows the use of background videos.
