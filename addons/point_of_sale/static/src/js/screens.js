@@ -39,6 +39,7 @@ var Printer = require('point_of_sale.Printer').Printer;
 const { OrderWidget } = require('point_of_sale.OrderWidget');
 const { NumpadWidget } = require('point_of_sale.NumpadWidget');
 const { ActionpadWidget } = require('point_of_sale.ActionpadWidget');
+const { ProductsWidget } = require('point_of_sale.ProductsWidget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -416,302 +417,6 @@ gui.define_screen({name: 'scale', widget: ScaleScreenWidget});
 // There product screens uses many sub-widgets,
 // the code follows.
 
-/* ------ The Product Categories ------ */
-
-// Display and navigate the product categories.
-// Also handles searches.
-//  - set_category() to change the displayed category
-//  - reset_category() to go to the root category
-//  - perform_search() to search for products
-//  - clear_search()   does what it says.
-
-var ProductCategoriesWidget = PosBaseWidget.extend({
-    template: 'ProductCategoriesWidget',
-    init: function(parent, options){
-        var self = this;
-        this._super(parent,options);
-        this.onlyWeightable = options.onlyWeightable || false;
-        this.category = this.pos.root_category;
-        this.breadcrumb = [];
-        this.subcategories = [];
-        this.product_list_widget = options.product_list_widget || null;
-        this.category_cache = new DomCache();
-        this.start_categ_id = this.pos.config.iface_start_categ_id ? this.pos.config.iface_start_categ_id[0] : 0;
-        this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
-        
-        this.switch_category_handler = function(event){
-            self.set_category(self.pos.db.get_category_by_id(Number(this.dataset.categoryId)));
-            self.renderElement();
-        };
-        
-        this.clear_search_handler = function(event){
-            self.clear_search();
-        };
-
-        var search_timeout  = null;
-        this.search_handler = function(event){
-            if(event.type == "keypress" || event.keyCode === 46 || event.keyCode === 8){
-                clearTimeout(search_timeout);
-
-                var searchbox = this;
-
-                search_timeout = setTimeout(function(){
-                    self.perform_search(self.category, searchbox.value, event.which === 13);
-                },200);
-            }
-        };
-    },
-
-    // changes the category. if undefined, sets to root category
-    set_category : function(category){
-        var db = this.pos.db;
-        if(!category){
-            this.category = db.get_category_by_id(db.root_category_id);
-        }else{
-            this.category = category;
-        }
-        this.breadcrumb = [];
-        var ancestors_ids = db.get_category_ancestors_ids(this.category.id);
-        for(var i = 1; i < ancestors_ids.length; i++){
-            this.breadcrumb.push(db.get_category_by_id(ancestors_ids[i]));
-        }
-        if(this.category.id !== db.root_category_id){
-            this.breadcrumb.push(this.category);
-        }
-        this.subcategories = db.get_category_by_id(db.get_category_childs_ids(this.category.id));
-    },
-
-    get_image_url: function(category){
-        return window.location.origin + '/web/image?model=pos.category&field=image_128&id='+category.id;
-    },
-
-    render_category: function( category, with_image ){
-        var cached = this.category_cache.get_node(category.id);
-        if(!cached){
-            if(with_image){
-                var image_url = this.get_image_url(category);
-                var category_html = QWeb.render('CategoryButton',{ 
-                        widget:  this, 
-                        category: category, 
-                        image_url: this.get_image_url(category),
-                    });
-                    category_html = _.str.trim(category_html);
-                var category_node = document.createElement('div');
-                    category_node.innerHTML = category_html;
-                    category_node = category_node.childNodes[0];
-            }else{
-                var category_html = QWeb.render('CategorySimpleButton',{ 
-                        widget:  this, 
-                        category: category, 
-                    });
-                    category_html = _.str.trim(category_html);
-                var category_node = document.createElement('div');
-                    category_node.innerHTML = category_html;
-                    category_node = category_node.childNodes[0];
-            }
-            this.category_cache.cache_node(category.id,category_node);
-            return category_node;
-        }
-        return cached; 
-    },
-
-    replace: function($target){
-        this.renderElement();
-        var target = $target[0];
-        target.parentNode.replaceChild(this.el,target);
-    },
-
-    renderElement: function(){
-
-        var el_str  = QWeb.render(this.template, {widget: this});
-        var el_node = document.createElement('div');
-
-        el_node.innerHTML = el_str;
-        el_node = el_node.childNodes[1];
-
-        if(this.el && this.el.parentNode){
-            this.el.parentNode.replaceChild(el_node,this.el);
-        }
-
-        this.el = el_node;
-
-        var withpics = this.pos.config.iface_display_categ_images;
-
-        var list_container = el_node.querySelector('.category-list');
-        if (list_container) { 
-            if (!withpics) {
-                list_container.classList.add('simple');
-            } else {
-                list_container.classList.remove('simple');
-            }
-            for(var i = 0, len = this.subcategories.length; i < len; i++){
-                list_container.appendChild(this.render_category(this.subcategories[i],withpics));
-            }
-        }
-
-        var buttons = el_node.querySelectorAll('.js-category-switch');
-        for(var i = 0; i < buttons.length; i++){
-            buttons[i].addEventListener('click',this.switch_category_handler);
-        }
-
-        var products = this.pos.db.get_product_by_category(this.category.id); 
-        this.product_list_widget.set_product_list(products); // FIXME: this should be moved elsewhere ... 
-
-        this.el.querySelector('.searchbox input').addEventListener('keypress',this.search_handler);
-
-        this.el.querySelector('.searchbox input').addEventListener('keydown',this.search_handler);
-
-        this.el.querySelector('.search-clear.right').addEventListener('click',this.clear_search_handler);
-
-        if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
-            this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
-        }
-    },
-    
-    // resets the current category to the root category
-    reset_category: function(){
-        this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
-        this.renderElement();
-    },
-
-    // empties the content of the search box
-    clear_search: function(){
-        var products = this.pos.db.get_product_by_category(this.category.id);
-        this.product_list_widget.set_product_list(products);
-        var input = this.el.querySelector('.searchbox input');
-            input.value = '';
-            input.focus();
-    },
-    perform_search: function(category, query, buy_result){
-        var products;
-        if(query){
-            products = this.pos.db.search_product_in_category(category.id,query);
-            if(buy_result && products.length === 1){
-                    this.pos.get_order().add_product(products[0]);
-                    this.clear_search();
-            }else{
-                this.product_list_widget.set_product_list(products, query);
-            }
-        }else{
-            products = this.pos.db.get_product_by_category(this.category.id);
-            this.product_list_widget.set_product_list(products, query);
-        }
-    },
-
-});
-
-/* --------- The Product List --------- */
-
-// Display the list of products. 
-// - change the list with .set_product_list()
-// - click_product_action(), passed as an option, tells
-//   what to do when a product is clicked. 
-
-var ProductListWidget = PosBaseWidget.extend({
-    template:'ProductListWidget',
-    init: function(parent, options) {
-        var self = this;
-        this._super(parent,options);
-        this.model = options.model;
-        this.productwidgets = [];
-        this.weight = options.weight || 0;
-        this.show_scale = options.show_scale || false;
-        this.next_screen = options.next_screen || false;
-        this.search_word = false;
-
-        this.click_product_handler = function(){
-            var product = self.pos.db.get_product_by_id(this.dataset.productId);
-            options.click_product_action(product);
-        };
-
-        this.keypress_product_handler = function(ev){
-            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
-            if (ev.which != 32) {
-                return;
-            }
-            ev.preventDefault();
-            var product = self.pos.db.get_product_by_id(this.dataset.productId);
-            options.click_product_action(product);
-        };
-
-        this.product_list = options.product_list || [];
-        this.product_cache = new DomCache();
-
-        this.pos.get('orders').on('add remove change', function () {
-            self.renderElement();
-        }, this);
-
-        this.pos.on('change:selectedOrder', function () {
-            this.renderElement();
-        }, this);
-    },
-    set_product_list: function(product_list, search_word){
-        this.product_list = product_list;
-        this.search_word = !!search_word ? search_word : false;
-        this.renderElement();
-    },
-    get_product_image_url: function(product){
-        return window.location.origin + '/web/image?model=product.product&field=image_128&id='+product.id;
-    },
-    replace: function($target){
-        this.renderElement();
-        var target = $target[0];
-        target.parentNode.replaceChild(this.el,target);
-    },
-    calculate_cache_key: function(product, pricelist){
-        return product.id + ',' + pricelist.id;
-    },
-    _get_active_pricelist: function(){
-        var current_order = this.pos.get_order();
-        var current_pricelist = this.pos.default_pricelist;
-
-        if (current_order) {
-            current_pricelist = current_order.pricelist;
-        }
-
-        return current_pricelist;
-    },
-    render_product: function(product){
-        var current_pricelist = this._get_active_pricelist();
-        var cache_key = this.calculate_cache_key(product, current_pricelist);
-        var cached = this.product_cache.get_node(cache_key);
-        if(!cached){
-            var image_url = this.get_product_image_url(product);
-            var product_html = QWeb.render('Product',{ 
-                    widget:  this, 
-                    product: product,
-                    pricelist: current_pricelist,
-                    image_url: this.get_product_image_url(product),
-                });
-            var product_node = document.createElement('div');
-            product_node.innerHTML = product_html;
-            product_node = product_node.childNodes[1];
-            this.product_cache.cache_node(cache_key,product_node);
-            return product_node;
-        }
-        return cached;
-    },
-
-    renderElement: function() {
-        var el_str  = QWeb.render(this.template, {widget: this});
-        var el_node = document.createElement('div');
-            el_node.innerHTML = el_str;
-            el_node = el_node.childNodes[1];
-
-        if(this.el && this.el.parentNode){
-            this.el.parentNode.replaceChild(el_node,this.el);
-        }
-        this.el = el_node;
-
-        var list_container = el_node.querySelector('.product-list');
-        for(var i = 0, len = this.product_list.length; i < len; i++){
-            var product_node = this.render_product(this.product_list[i]);
-            product_node.addEventListener('click',this.click_product_handler);
-            product_node.addEventListener('keypress',this.keypress_product_handler);
-            list_container.appendChild(product_node);
-        }
-    },
-});
 
 /* -------- The Action Buttons -------- */
 
@@ -777,8 +482,6 @@ var ProductScreenWidget = ScreenWidget.extend({
 
     start: function(){ 
 
-        var self = this;
-
         this.actionpad = new ActionpadWidget(null, { pos: this.pos, gui: this.gui });
         this.actionpad.mount(this.$('.placeholder-ActionpadWidget')[0], {position: "self"});
 
@@ -802,16 +505,11 @@ var ProductScreenWidget = ScreenWidget.extend({
             this.orderWidget.mount(this.$('.placeholder-OrderWidget')[0], {position: "self"})
         })
 
-        this.product_list_widget = new ProductListWidget(this,{
-            click_product_action: function(product){ self.click_product(product); },
-            product_list: this.pos.db.get_product_by_category(0)
+        this.productsWidget = new ProductsWidget(null, {
+            pos: this.pos,
+            clickProductHandler: product => this.click_product(product),
         });
-        this.product_list_widget.replace(this.$('.placeholder-ProductListWidget'));
-
-        this.product_categories_widget = new ProductCategoriesWidget(this,{
-            product_list_widget: this.product_list_widget,
-        });
-        this.product_categories_widget.replace(this.$('.placeholder-ProductCategoriesWidget'));
+        this.productsWidget.mount(this.$('.placeholder-ProductsWidget')[0], {position: "self"});
 
         this.action_buttons = {};
         var classes = action_button_classes;
@@ -840,7 +538,6 @@ var ProductScreenWidget = ScreenWidget.extend({
     show: function(reset){
         this._super();
         if (reset) {
-            this.product_categories_widget.reset_category();
             this.numpad.state.reset();
         }
         if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
@@ -2368,11 +2065,9 @@ return {
     OrderWidget: OrderWidget,
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
-    ProductListWidget: ProductListWidget,
     ClientListScreenWidget: ClientListScreenWidget,
     ActionpadWidget: ActionpadWidget,
     DomCache: DomCache,
-    ProductCategoriesWidget: ProductCategoriesWidget,
     ScaleScreenWidget: ScaleScreenWidget,
     set_fiscal_position_button: set_fiscal_position_button,
     set_pricelist_button: set_pricelist_button,
