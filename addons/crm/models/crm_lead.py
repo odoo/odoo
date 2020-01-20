@@ -150,7 +150,9 @@ class Lead(models.Model):
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     # External records
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
-    lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
+    lost_reason = fields.Many2one(
+        'crm.lost.reason', string='Lost Reason',
+        index=True, ondelete='restrict', tracking=True)
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
