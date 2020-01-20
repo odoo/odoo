@@ -157,7 +157,7 @@ class Location(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
 
 
 class Route(models.Model):
