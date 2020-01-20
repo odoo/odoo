@@ -2,11 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo.addons.event.tests.common import TestEventCommon
-from odoo.exceptions import AccessError
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
 from odoo.tools import mute_logger
@@ -100,6 +98,10 @@ class TestEventData(TestEventCommon):
     @users('user_eventmanager')
     @mute_logger('odoo.models.unlink')
     def test_event_configuration_from_type(self):
+        """ Test data computation of event coming from its event.type template.
+        Some one2many notably are duplicated from type configuration and some
+        advanced testing is required, notably mail schedulers. """
+
         self.assertEqual(self.env.user.tz, 'Europe/Brussels')
 
         event_type = self.event_type_complex.with_user(self.env.user)
@@ -148,97 +150,26 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.event_mail_ids.template_id, self.env.ref('event.event_reminder'))
 
 
-class TestEventSecurity(TestEventCommon):
-
-    @users('user_employee')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
-    def test_event_access_employee(self):
-        # employee can read events (sure ?)
-        event = self.event_0.with_user(self.env.user)
-        event.read(['name'])
-        # event.stage_id.read(['name', 'description'])
-        # event.event_type_id.read(['name', 'has_seats_limitation'])
-
-        with self.assertRaises(AccessError):
-            self.env['event.event'].create({
-                'name': 'TestEvent',
-                'date_begin': datetime.now() + relativedelta(days=-1),
-                'date_end': datetime.now() + relativedelta(days=1),
-                'seats_max': 10,
-            })
-
-        with self.assertRaises(AccessError):
-            event.write({
-                'name': 'TestEvent Modified',
-            })
-
-        with self.assertRaises(AccessError):
-            self.env['event.stage'].create({
-                'name': 'TestStage',
-            })
-
-    @users('user_eventuser')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
-    def test_event_access_event_user(self):
-        event = self.event_0.with_user(self.env.user)
-        event.read(['name', 'user_id', 'kanban_state_label'])
-
-        with self.assertRaises(AccessError):
-            self.env['event.event'].create({
-                'name': 'TestEvent',
-                'date_begin': datetime.now() + relativedelta(days=-1),
-                'date_end': datetime.now() + relativedelta(days=1),
-                'seats_max': 10,
-            })
-
-        with self.assertRaises(AccessError):
-            event.write({
-                'name': 'TestEvent Modified',
-            })
-
-        # with self.assertRaises(AccessError):
-        #     self.env['event.stage'].create({
-        #         'name': 'TestStage',
-        #     })
+class TestEventTypeData(TestEventCommon):
 
     @users('user_eventmanager')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
-    def test_event_access_event_manager(self):
-        # EventManager can do about everything
+    def test_event_type_fields(self):
+        """ Test event type fields synchronization """
+        # create test type and ensure its initial values
         event_type = self.env['event.type'].create({
-            'name': 'ManagerEventType',
-            'use_mail_schedule': True,
-            'event_type_mail_ids': [(5, 0), (0, 0, {
-                'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
-                'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
+            'name': 'Testing fields computation',
+            'has_seats_limitation': True,
+            'default_registration_min': 5,
+            'default_registration_max': 30,
         })
-        event = self.env['event.event'].create({
-            'name': 'ManagerEvent',
-            'date_begin': datetime.now() + relativedelta(days=-1),
-            'date_end': datetime.now() + relativedelta(days=1),
-        })
-        event.update({'event_type_id': event_type.id})
-        event._onchange_type()
-        event.flush()
+        event_type._onchange_has_seats_limitation()
+        self.assertTrue(event_type.has_seats_limitation)
+        self.assertEqual(event_type.default_registration_min, 5)
+        self.assertEqual(event_type.default_registration_max, 30)
 
-        registration = self.env['event.registration'].create({'event_id': event.id})
-        registration.write({'name': 'Myself'})
-
-        stage = self.env.ref('event.event_stage_done')
-        stage.write({'name': 'ManagerEnded'})
-        event.write({'stage_id': stage.id})
-
-        registration.unlink()
-        event.unlink()
-        stage.unlink()
-        event_type.unlink()
-
-        # Settings access rights required to enable some features
-        self.user_eventmanager.write({'groups_id': [
-            (3, self.env.ref('base.group_system').id),
-            (4, self.env.ref('base.group_erp_manager').id)
-        ]})
-        with self.assertRaises(AccessError):
-            event_config = self.env['res.config.settings'].with_user(self.user_eventmanager).create({
-            })
-            event_config.execute()
+        # reset seats limitation
+        event_type.write({'has_seats_limitation': False})
+        event_type._onchange_has_seats_limitation()
+        self.assertFalse(event_type.has_seats_limitation)
+        self.assertEqual(event_type.default_registration_min, 0)
+        self.assertEqual(event_type.default_registration_max, 0)
