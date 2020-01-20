@@ -135,6 +135,14 @@ class Partner(models.Model):
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
+    @api.model
+    def default_get(self, default_fields):
+        """Add the company of the parent as default if we are creating a child partner."""
+        values = super().default_get(default_fields)
+        if 'parent_id' in default_fields and values.get('parent_id'):
+            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+        return values
+
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}
 

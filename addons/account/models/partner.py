@@ -473,8 +473,9 @@ class ResPartner(models.Model):
         action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
-    @api.onchange('company_id')
+    @api.onchange('company_id', 'parent_id')
     def _onchange_company_id(self):
+        super(ResPartner, self)._onchange_company_id()
         if self.company_id:
             company = self.company_id
         else:
