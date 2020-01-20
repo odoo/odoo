@@ -505,7 +505,8 @@
             <div t-attf-class="d-flex mb-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">
                 <img class="mr-2"
                     style="max-height: 36px;"
-                    t-att-src="website.image_url(challenge.reward_id, 'image_128')"
+                    t-att-src="website.image_url(challenge.reward_id, 'image_128') if challenge.reward_id.image_1920 else
+                               '/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)"
                     t-att-alt="challenge.reward_id.name"/>
                 <div class="flex-grow-1">
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
