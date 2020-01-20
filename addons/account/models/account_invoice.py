@@ -134,6 +134,7 @@ class AccountInvoice(models.Model):
             domain = [('account_id', '=', self.account_id.id),
                       ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id),
                       ('reconciled', '=', False),
+                      ('move_id.state', '=', 'posted'),
                       '|',
                         '&', ('amount_residual_currency', '!=', 0.0), ('currency_id','!=', None),
                         '&', ('amount_residual_currency', '=', 0.0), '&', ('currency_id','=', None), ('amount_residual', '!=', 0.0)]
