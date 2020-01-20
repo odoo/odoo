@@ -2295,27 +2295,30 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for params
      */
-    editImage: function (previewMode, widgetValue, params) {
+    editImage: async function (previewMode, widgetValue, params) {
         const {originalSrc} = this.settings;
-        return new Promise(resolve => {
-            // Need a dummy element for the media dialog to modify.
-            const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
-            dummyEl.src = originalSrc;
-            if (this.isVideo) {
-                // Used by mediaDialog to select the video tab immediately.
-                dummyEl.classList.add('media_iframe_video');
-            }
-            const $editable = this.$target.closest('.o_editable');
-            const mediaDialog = new weWidgets.MediaDialog(this, {
-                noIcons: true,
-                noDocuments: true,
-                noVideos: !params.allowVideos,
-                isForBgVideo: true,
-                res_model: $editable.data('oe-model'),
-                res_id: $editable.data('oe-id'),
-                firstFilters: this.firstFilters,
-            }, dummyEl).open();
-            mediaDialog.on('save', this, this._onMediaDialogSave.bind(this, resolve));
+        // Need a dummy element for the media dialog to modify.
+        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
+        dummyEl.src = originalSrc;
+        if (this.isVideo) {
+            // Used by mediaDialog to select the video tab immediately.
+            dummyEl.classList.add('media_iframe_video');
+        }
+        const $editable = this.$target.closest('.o_editable');
+        const mediaDialog = new weWidgets.MediaDialog(this, {
+            noIcons: true,
+            noDocuments: true,
+            noVideos: !params.allowVideos,
+            isForBgVideo: true,
+            res_model: $editable.data('oe-model'),
+            res_id: $editable.data('oe-id'),
+            firstFilters: this.firstFilters,
+        }, dummyEl).open();
+        await new Promise(resolve => {
+            mediaDialog.on('save', this, async (...args) => {
+                await this._onMediaDialogSave(...args);
+                resolve();
+            });
             mediaDialog.on('cancel', this, resolve);
         });
     },
@@ -2576,7 +2579,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      *
      * @private
      */
-    _onMediaDialogSave: async function (callback, data) {
+    _onMediaDialogSave: async function (data) {
         const originalSrc = data.getAttribute('src');
         await this._changeSrc(originalSrc);
         const width = await this._computeOptimizedWidth(originalSrc);
@@ -2584,7 +2587,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._rerenderXML();
         this.$el.find('input.custom-range').val(this.settings.quality);
         await this._changeSrc(await this._applyOptions());
-        callback();
     },
 });
 /**

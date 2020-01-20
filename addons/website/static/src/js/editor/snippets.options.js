@@ -71,7 +71,7 @@ options.registry.background.include({
      *
      * @override
      */
-    _onMediaDialogSave: async function (callback, data) {
+    _onMediaDialogSave: async function (data) {
         const target = this.$target[0];
         const {bgVideoSrc} = data;
         target.classList.toggle('o_background_video', !!bgVideoSrc);
@@ -84,7 +84,6 @@ options.registry.background.include({
         await this._changeSrc('');
         this.settings.originalSrc = bgVideoSrc;
         target.dataset.bgVideoSrc = bgVideoSrc;
-        callback();
     },
 });
 
