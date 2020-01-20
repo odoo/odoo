@@ -18,6 +18,15 @@ QUnit.module('fields', {
                     message: "",
                 }]
             },
+            visitor: {
+                fields: {
+                    mobile: {string: "mobile", type: "text"},
+                },
+                records: [{
+                    id: 1,
+                    mobile: "+32494444444",
+                }]
+            },
         };
     }
 }, function () {
@@ -32,6 +41,7 @@ QUnit.module('fields', {
             data: this.data,
             arch: '<form><sheet><field name="message" widget="sms_widget"/></sheet></form>',
         });
+
         assert.containsOnce(form, '.o_sms_count', "Should have a sms counter");
         assert.strictEqual(form.$('.o_sms_count').text(), '0 characters, fits in 0 SMS (GSM7) ',
             'Should be "0 characters, fits in 0 SMS (GSM7) " by default');
@@ -67,6 +77,40 @@ QUnit.module('fields', {
         await testUtils.fields.editAndTrigger(form.$('.o_input'), text, 'input');
         assert.strictEqual(form.$('.o_sms_count').text(), '71 characters, fits in 2 SMS (UNICODE) ',
             'Should be "71 characters, fits in 2 SMS (UNICODE) " for 71 x "ê"');
+
+        form.destroy();
+    });
+
+    QUnit.test('Sms widgets with non-empty initial value', async function (assert) {
+        assert.expect(1);
+        var form = await createView({
+            View: FormView,
+            model: 'visitor',
+            data: this.data,
+            arch: `<form><sheet><field name="mobile" widget="sms_widget"/></sheet></form>`,
+            res_id: 1,
+            res_ids: [1],
+        });
+
+        assert.strictEqual(form.$('.o_field_text').text(), '+32494444444',
+            'Should have the initial value');
+
+        form.destroy();
+    });
+
+    QUnit.test('Sms widgets with empty initial value', async function (assert) {
+        assert.expect(1);
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form><sheet><field name="message" widget="sms_widget"/></sheet></form>`,
+            res_id: 1,
+            res_ids: [1],
+        });
+
+        assert.strictEqual(form.$('.o_field_text').text(), '',
+            'Should have the empty initial value');
 
         form.destroy();
     });
