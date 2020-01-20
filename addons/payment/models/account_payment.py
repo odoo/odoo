@@ -114,4 +114,6 @@ class AccountPayment(models.Model):
         for trans in transactions:
             trans.s2s_do_transaction()
 
+        payments_need_trans.filtered(lambda payment: payment.payment_transaction_id.state == 'done').write({'state': 'posted'})
+
         return res
