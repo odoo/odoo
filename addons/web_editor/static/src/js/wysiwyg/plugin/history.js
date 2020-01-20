@@ -11,8 +11,22 @@ var HistoryPlugin = Plugins.history.extend({
      *
      * @override
      */
-    applySnapshot: function () {
+    applySnapshot: function (snapshot) {
         this.context.invoke('MediaPlugin.hidePopovers');
+
+        if (snapshot && snapshot.contents) {
+            var $tempDiv = $('<div/>', {html: snapshot.contents});
+            _.each($tempDiv.find('.o_temp_auto_element'), function (el) {
+                var $el = $(el);
+                var originalContent = $el.attr('data-temp-auto-element-original-content');
+                if (originalContent) {
+                    $el.after(originalContent);
+                }
+                $el.remove();
+            });
+            snapshot.contents = $tempDiv.html();
+        }
+
         try {
             this._super.apply(this, arguments);
         } catch (e) {
