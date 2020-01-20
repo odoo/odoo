@@ -230,6 +230,26 @@ var ControlPanelView = Factory.extend({
             const addParam = _.extend({}, y.addParam, o ? o.addParam : {});
             const setParam = _.extend({}, y.setParam, o ? o.setParam : {});
             const granularity = o ? o.granularity : y.granularity;
+
+            /*
+                BugFix OPW-2169528 - part 1
+                If month - 1 or month - 2 are in the previous year, the filter is incorrect.
+                ex: Date = Jan. 2020, Filter = Dec. 2019 => last_year__last_month = 2018-12 instead 2019-12
+
+                This fix increase the year by 1 when actualMonth < selectedMonth:
+                    2020: no records
+                    2019: 2019 records instead of 2018 ones
+                    ...
+            */
+            if (addParam.months) {
+                const actualYear = Math.trunc(this.referenceMoment.clone().format('Y')),
+                      selectedYear = Math.trunc(this.referenceMoment.clone().subtract(-addParam.months, 'months').format('Y'));
+
+                if (actualYear > selectedYear) {
+                    addParam.years = addParam.years ? ++addParam.years : 1;
+                }
+            }
+
             const date = this.referenceMoment.clone().set(setParam).add(addParam);
             let leftBound = date.clone().startOf(granularity).locale('en');
             let rightBound = date.clone().endOf(granularity).locale('en');
