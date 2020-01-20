@@ -136,7 +136,7 @@ class ProductProduct(models.Model):
                     product.virtual_available = min(ratios_virtual_available) // 1
                     product.qty_available = min(ratios_qty_available) // 1
                     product.incoming_qty = min(ratios_incoming_qty) // 1
-                    product.outgoing_qty = min(ratios_incoming_qty) // 1
+                    product.outgoing_qty = min(ratios_outgoing_qty) // 1
                     product.free_qty = min(ratios_free_qty) // 1
         super(ProductProduct, self - kits)._compute_quantities()
 
