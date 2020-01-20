@@ -908,8 +908,8 @@ class AccountJournal(models.Model):
         for journal in self:
             company = journal.company_id
             if ('company_id' in vals and journal.company_id.id != vals['company_id']):
-                if self.env['account.move'].search([('journal_id', '=', journal.id)], limit=1):
-                    raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
+                if self.env['account.move'].search([('journal_id', '=', journal.id), ('state', '=', 'posted')], limit=1):
+                    raise UserError(_('This journal already contains posted items, therefore you cannot modify its company.'))
                 company = self.env['res.company'].browse(vals['company_id'])
                 if journal.bank_account_id.company_id and journal.bank_account_id.company_id != company:
                     journal.bank_account_id.write({
@@ -917,8 +917,8 @@ class AccountJournal(models.Model):
                         'partner_id': company.partner_id.id,
                     })
             if ('code' in vals and journal.code != vals['code']):
-                if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
-                    raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
+                if self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'posted')], limit=1):
+                    raise UserError(_('This journal already contains posted items, therefore you cannot modify its short name.'))
                 new_prefix = self._get_sequence_prefix(vals['code'], refund=False)
                 journal.sequence_id.write({'prefix': new_prefix})
                 if journal.refund_sequence_id:
