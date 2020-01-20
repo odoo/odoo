@@ -528,117 +528,196 @@ var MockServer = Class.extend({
         return modelFields;
     },
     /**
-     * Simulate a call to the 'search_panel_select_range' method.
+     * Simulate a call to the search_panel_local_counters method.
+     * A model is added to the params to perform the adequate read_group.
      *
-     * Note that the implementation assumes that 'parent_id' is the field that
-     * encodes the parent relationship.
+     * @param {string} model
+     * @param {string} fieldName
+     * @param {Object} kwargs
+     * @returns {Object}
+     */
+    _mockSearchPanelLocalCounters: function (model, fieldName, kwargs) {
+        const countDomain = [
+            ...(kwargs.search_domain || []),
+            ...(kwargs.category_domain || []),
+            ...(kwargs.filter_domain || []),
+            ...(kwargs.group_domain  || []),
+            [fieldName, '!=', false],
+        ];
+        const field = this.data[model].fields[fieldName];
+        let getGroupId;
+        if (field.type === 'many2one') {
+            getGroupId = group => group[fieldName][0];
+        } else {
+            getGroupId = group => group[fieldName];
+        }
+        const groups = this._mockReadGroup(model, {
+            domain: countDomain,
+            fields: [fieldName],
+            groupby: [fieldName],
+        });
+        const localCounters = {};
+        for (const group of groups) {
+            const groupId = getGroupId(group);
+            localCounters[groupId] = group[fieldName + '_count'];
+        }
+        return localCounters;
+    },
+    /**
+     * Simulate a call to the search_panel_global_counters method.
+     *
+     * @param {Map} valuesRange
+     * @param {string} parentName
+     */
+    _mockSearchPanelGlobalCounters: function (valuesRange, parentName) {
+        const localCounters = [...valuesRange.keys()].map(id => valuesRange.get(id).count);
+        for (let [id, values] of valuesRange.entries()) {
+            const count = localCounters[id];
+            if (count) {
+                let parent_id = values[parentName];
+                while (parent_id) {
+                    values = valuesRange.get(parent_id);
+                    values.count += count;
+                    parent_id = values[parentName];
+                }
+            }
+        }
+    },
+    /**
+     * Simulate a call to the `search_panel_range` method.
+     * The `values_range` object being an OrderedDict in python, we use a map to
+     * have a close behaviour.
      *
      * @private
      * @param {string} model
-     * @param {Array} args
+     * @param {string} fieldName
+     * @param {Object} [kwargs={}]
+     * @returns {(Map|undefined)}
+     */
+    _mockSearchPanelRange: function (model, fieldName, kwargs = {}) {
+        const field = this.data[model].fields[fieldName];
+        let localCounters = {};
+        if (field.type !== 'many2many' && !kwargs.disable_counters) {
+            localCounters = this._mockSearchPanelLocalCounters(model, fieldName, kwargs);
+        }
+        if (['many2one', 'many2many'].includes(field.type)) {
+            const comodelDomain = kwargs.comodel_domain || [];
+            const fieldNames = kwargs.comodelFieldNames || {};
+            fieldNames.display_name = () => null;
+            const records = this._mockSearchRead(field.relation, [comodelDomain, Object.keys(fieldNames)], {});
+            const valuesRange = new Map();
+            for (const record of records) {
+                record.count = localCounters[record.id] || 0;
+                Object.values(fieldNames).forEach(fn => fn(record));
+                valuesRange.set(record.id, record);
+            }
+            return valuesRange;
+        }
+        if (field.type === 'selection') {
+            const valuesRange = new Map();
+            const selection = this.data[model].fields[fieldName].selection;
+            for (const [id, display_name] of selection) {
+                valuesRange.set(id, { id, display_name, count: localCounters[id] || 0 });
+            }
+            return valuesRange;
+        }
+    },
+    /**
+     * Simulate a call to the 'search_panel_select_range' method.
+     * Note that the implementation assumes that 'parent_id' is the field that encodes
+     * the parent relationship.
+     *
+     * @private
+     * @param {string} model
+     * @param {string[]} args
+     * @param {Object} [kwargs={}]
      * @returns {Object}
      */
-    _mockSearchPanelSelectRange: function (model, args) {
-        var fieldName = args[0];
-        var field = this.data[model].fields[fieldName];
-
-        if (field.type !== 'many2one') {
-            throw new Error('Only fields of type many2one are handled');
+    _mockSearchPanelSelectRange: function (model, [fieldName], kwargs = {}) {
+        const field = this.data[model].fields[fieldName];
+        const supportedTypes = ['many2one', 'selection'];
+        if (!supportedTypes.includes(field.type)) {
+            throw new Error(`Only types ${supportedTypes} are supported for category (found type ${field.type})`);
         }
-
-        var fields = ['display_name'];
-        var parentField = this.data[field.relation].fields.parent_id;
-        if (parentField) {
-            fields.push('parent_id');
+        const comodelFieldNames = {};
+        let parentName = false;
+        if (field.type === 'many2one') {
+            if (this.data[field.relation].fields.parent_id) {
+                parentName = 'parent_id';
+                comodelFieldNames.parent_id = record => {
+                    if (record.parent_id) {
+                        record.parent_id = record.parent_id[0];
+                    }
+                };
+            }
+        }
+        const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
+        const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
+        if (parentName && !kwargs.disable_counters) {
+            this._mockSearchPanelGlobalCounters(valuesRange, parentName);
         }
         return {
-            parent_field: parentField ? 'parent_id' : false,
-            values: this._mockSearchRead(field.relation, [[], fields], {}),
+            parent_field: parentName,
+            values: [...valuesRange.values()],
         };
     },
     /**
      * Simulate a call to the 'search_panel_select_multi_range' method.
-     *
-     * Note that only the many2one and selection cases are handled by this
-     * function.
+     * Note that only the many2one and selection cases are handled by this function.
      *
      * @param {string} model
-     * @param {Array} args
-     * @param {Object} kwargs
-     * @returns {Object}
+     * @param {string[]} args
+     * @param {Object} [kwargs={}]
+     * @returns {Object[]}
      */
-    _mockSearchPanelSelectMultiRange: function (model, args, kwargs) {
-        var fieldName = args[0];
-        var field = this.data[model].fields[fieldName];
-        var comodelDomain = kwargs.comodel_domain || [];
-
-        if (!_.contains(['many2one', 'selection'], field.type)) {
-            throw new Error('Only fields of type many2one and selection are handled');
+    _mockSearchPanelSelectMultiRange: function (model, [fieldName], kwargs = {}) {
+        const field = this.data[model].fields[fieldName];
+        const supportedTypes = ['many2one', 'many2many', 'selection'];
+        if (!supportedTypes.includes(field.type)) {
+            throw new Error(`Only types ${supportedTypes} are supported for filter (found type ${field.type})`);
         }
-
-        var modelDomain;
-        var disableCounters = kwargs.disable_counters || false;
-        modelDomain = [[fieldName, '!=', false]]
-                            .concat(kwargs.category_domain)
-                            .concat(kwargs.filter_domain)
-                            .concat(kwargs.search_domain);
-        var groupBy = kwargs.group_by || false;
-        var comodel = field.relation || false;
-        var groupByField = groupBy && this.data[comodel].fields[groupBy];
-
-        // get counters
-        var groups;
-        var counters = {};
-        if (!disableCounters) {
-            groups = this._mockReadGroup(model, {
-                domain: modelDomain,
-                fields: [fieldName],
-                groupby: [fieldName],
-            });
-            groups.forEach(function (group) {
-                var groupId = field.type === 'many2one' ? group[fieldName][0] : group[fieldName];
-                counters[groupId] = group[fieldName + '_count'];
-            });
+        const comodelFieldNames = {};
+        const groupBy = kwargs.group_by || false;
+        if (groupBy && field.type !== 'selection') {
+            const groupByField = this.data[field.relation].fields[groupBy];
+            let groupIdName;
+            if (groupByField.type === 'many2one') {
+                groupIdName = value => value || [false, "Not Set"];
+            } else if (groupByField.type === 'selection') {
+                const desc = this.data[field.relation].fields[groupBy];
+                const groupBySelection = Object.assign({}, desc.selection);
+                groupBySelection[false] = "Not Set";
+                groupIdName = value => [value, groupBySelection[value]];
+            } else {
+                groupIdName = value => value ? [value, value] : [false, "Not Set"];
+            }
+            comodelFieldNames[groupBy] = record => {
+                const value = record[groupBy];
+                const [group_id, group_name] = groupIdName(value);
+                Object.assign(record, { group_id, group_name });
+                delete record[groupBy];
+            };
         }
-
-        // get filter values
-        var filterValues = [];
-        if (field.type === 'many2one') {
-            var fields = groupBy ? ['display_name', groupBy] : ['display_name'];
-            var records = this._mockSearchRead(comodel, [comodelDomain, fields], {});
-            records.forEach(function (record) {
-                var filterValue = {
-                    count: counters[record.id] || 0,
-                    id: record.id,
-                    name: record.display_name,
-                };
-                if (groupBy) {
-                    var id = record[groupBy];
-                    var name = record[groupBy];
-                    if (groupByField.type === 'many2one') {
-                        name = id[1];
-                        id = id[0];
-                    } else if (groupByField.type === 'selection') {
-                        name = _.find(field.selection, function (option) {
-                            return option[0] === id;
-                        })[1];
-                    }
-                    filterValue.group_id = id;
-                    filterValue.group_name = name;
+        const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
+        const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
+        if (field.type === 'many2many' && !kwargs.disable_counters) {
+            const modelDomain = [
+                ...(kwargs.search_domain || []),
+                ...(kwargs.category_domain || []),
+                ...(kwargs.filter_domain || []),
+                [fieldName, '!=', false],
+            ];
+            const groupDomains = kwargs.group_domain || [];
+            for (const [id, values] of valuesRange.entries()) {
+                const countDomain = [...modelDomain, [fieldName, 'in', id]];
+                if (groupBy && groupDomains && 'group_id' in values) {
+                    const extraDomain = groupDomains[values.group_id] || [];
+                    countDomain.push(...extraDomain);
                 }
-                filterValues.push(filterValue);
-            });
-        } else if (field.type === 'selection') {
-            field.selection.forEach(function (option) {
-                filterValues.push({
-                    count: counters[option[0]] || 0,
-                    id: option[0],
-                    name: option[1],
-                });
-            });
+                values.count = this._mockSearchCount(model, countDomain);
+            }
         }
-
-        return filterValues;
+        return [...valuesRange.values()];
     },
     /**
      * Simulate a call to the '/web/action/load' route

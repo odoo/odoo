@@ -56,25 +56,31 @@ var Domain = collections.Tree.extend({
             // get the value from the parent record.
             var isParentField = false;
             var fieldName = this._data[0];
-            // We split the domain first part and check if it's a match
-            // for the syntax 'parent.field'.
-            var parentField = this._data[0].split('.');
-            if ('parent' in values && parentField.length === 2) {
-                fieldName = parentField[1];
-                isParentField = parentField[0] === 'parent' &&
-                    fieldName in values.parent;
-            }
-            if (!(this._data[0] in values) && !(isParentField)) {
-                throw new Error(_.str.sprintf(
-                    "Unknown field %s in domain",
-                    this._data[0]
-                ));
-            }
-            var fieldValue;
-            if (!isParentField) {
-                fieldValue = values[fieldName];
+            let fieldValue;
+            if (typeof fieldName === 'string') {
+                // We split the domain first part and check if it's a match
+                // for the syntax 'parent.field'.
+                var parentField = this._data[0].split('.');
+                if ('parent' in values && parentField.length === 2) {
+                    fieldName = parentField[1];
+                    isParentField = parentField[0] === 'parent' &&
+                        fieldName in values.parent;
+                }
+                if (!(this._data[0] in values) && !(isParentField)) {
+                    throw new Error(_.str.sprintf(
+                        "Unknown field %s in domain",
+                        this._data[0]
+                    ));
+                }
+                if (!isParentField) {
+                    fieldValue = values[fieldName];
+                } else {
+                    fieldValue = values.parent[fieldName];
+                }
             } else {
-                fieldValue = values.parent[fieldName];
+                // First domain argument is not a field name => we directly take
+                // it for the evaluation.
+                fieldValue = fieldName;
             }
 
             switch (this._data[1]) {
