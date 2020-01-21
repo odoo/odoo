@@ -3,6 +3,7 @@ odoo.define('sale_product_configurator.OptionalProductsModal', function (require
 
 var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
+const OwlDialog = require('web.OwlDialog');
 var ServicesMixin = require('web.ServicesMixin');
 var VariantMixin = require('sale.VariantMixin');
 
@@ -118,6 +119,9 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
                 self.$modal.modal().appendTo(self.container);
                 self.$modal.focus();
                 self._openedResolver();
+
+                // Notifies OwlDialog to adjust focus/active properties on owl dialogs
+                OwlDialog.display(self);
             }
         });
         if (options && options.shouldFocusButtons) {
