@@ -13,6 +13,7 @@ from . import test_purchase_order
 from . import test_purchase_order_process
 from . import test_stockvaluation
 from . import test_replenish_wizard
+from . import test_propagate_quantity
 from . import test_reordering_rule
 from . import test_move_cancel_propagation
 from . import test_product_template

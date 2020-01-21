@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_is_zero
 from dateutil import relativedelta
 from odoo.exceptions import UserError
 
@@ -60,25 +60,6 @@ class PurchaseOrder(models.Model):
         p_type = self.picking_type_id
         if not(p_type and p_type.code == 'incoming' and (p_type.warehouse_id.company_id == self.company_id or not p_type.warehouse_id)):
             self.picking_type_id = self._get_picking_type(self.company_id.id)
-
-    # --------------------------------------------------
-    # CRUD
-    # --------------------------------------------------
-
-    def write(self, vals):
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
-        res = super(PurchaseOrder, self).write(vals)
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                to_log = {}
-                for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
-                        to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
-                if to_log:
-                    order._log_decrease_ordered_quantity(to_log)
-        return res
 
     # --------------------------------------------------
     # Actions
@@ -139,7 +120,7 @@ class PurchaseOrder(models.Model):
     # Business methods
     # --------------------------------------------------
 
-    def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities):
+    def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities, whitelist):
 
         def _keys_in_sorted(move):
             """ sort by picking and the responsible for the product the
@@ -165,7 +146,7 @@ class PurchaseOrder(models.Model):
             }
             return self.env.ref('purchase_stock.exception_on_po').render(values=values)
 
-        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby, whitelist=whitelist)
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
             if parent._name == 'stock.picking':
@@ -277,10 +258,11 @@ class PurchaseOrderLine(models.Model):
     def create(self, values):
         line = super(PurchaseOrderLine, self).create(values)
         if line.order_id.state == 'purchase':
-            line._create_or_update_picking()
+            line._create_or_update_picking({line: 0})
         return line
 
     def write(self, values):
+        previous_product_qty = {}
         for line in self.filtered(lambda l: not l.display_type):
             if values.get('date_planned') and line.propagate_date:
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
@@ -292,16 +274,19 @@ class PurchaseOrderLine(models.Model):
                     moves_to_update = line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
                 for move in moves_to_update:
                     move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
-        result = super(PurchaseOrderLine, self).write(values)
-        if 'product_qty' in values:
-            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
-        return result
+            if values.get('product_qty'):
+                previous_product_qty[line] = line.product_qty
+        res = super(PurchaseOrderLine, self).write(values)
+        if values.get('product_qty'):
+            self.filtered(lambda line: line.state == 'purchase')._create_or_update_picking(previous_product_qty)
+        return res
 
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
 
-    def _create_or_update_picking(self):
+    def _create_or_update_picking(self, previous_product_qty):
+        new_moves = self.env['stock.move']
         for line in self:
             if line.product_id and line.product_id.type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
@@ -315,16 +300,41 @@ class PurchaseOrderLine(models.Model):
                     line.invoice_lines[0].move_id.activity_schedule(
                         'mail.mail_activity_data_warning',
                         note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'))
-
-                # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
-                picking = pickings and pickings[0] or False
-                if not picking:
-                    res = line.order_id._prepare_picking()
-                    picking = self.env['stock.picking'].create(res)
-
-                moves = line._create_stock_moves(picking)
-                moves._action_confirm()._action_assign()
+                if float_compare(previous_product_qty[line], line.product_qty, line.product_uom.rounding) >= 0:
+                    if not float_is_zero(line.qty_received, line.product_uom.rounding)\
+                            and float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) > 0:
+                        # is there any quantity to decrease (in a backorder)
+                        open_moves = line.move_ids.filtered(lambda move: move.state not in ('done', 'cancel') and move.location_dest_id.usage != "supplier")
+                        if open_moves and sum(open_moves.mapped('product_uom_qty')) > (line.product_qty - line.qty_received):
+                            line.move_ids._decrease_initial_demand(previous_product_qty[line] - line.product_qty, 'DOWN')
+                        else:
+                            picking = line.order_id.picking_ids.filtered(
+                                lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit')
+                            )
+                            if not picking:
+                                picking = self.env['stock.picking'].create(
+                                    line.order_id._prepare_picking()
+                                )
+                            price_unit = self._get_stock_move_price_unit()
+                            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(
+                                line.product_qty - line.qty_received, self.product_id.uom_id
+                            )
+                            new_moves |= self.env['stock.move'].create(
+                                self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
+                            )
+                    else:
+                        line.move_ids._decrease_initial_demand(previous_product_qty[line] - line.product_qty, 'DOWN')
+                else:
+                    # If the user increased quantity of existing line or created a new line
+                    pickings = line.order_id.picking_ids.filtered(
+                        lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit')
+                    )
+                    if not pickings:
+                        res = line.order_id._prepare_picking()
+                        pickings = self.env['stock.picking'].create(res)
+                    new_moves |= line._create_stock_moves(pickings[0])
+        if new_moves:
+            new_moves._action_confirm()._action_assign()
 
     def _get_stock_move_price_unit(self):
         self.ensure_one()
