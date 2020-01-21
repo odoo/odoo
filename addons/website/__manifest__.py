@@ -41,7 +41,6 @@
         'views/snippets/s_card.xml',
         'views/snippets/s_share.xml',
         'views/snippets/s_rating.xml',
-        'views/snippets/s_btn.xml',
         'views/snippets/s_hr.xml',
         'views/snippets/s_facebook_page.xml',
         'views/snippets/s_image_gallery.xml',
@@ -69,6 +68,9 @@
         'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
+
+        # Old snippets
+        'views/snippets/s_btn.xml',
     ],
     'demo': [
         'data/website_demo.xml',
