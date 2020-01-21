@@ -209,7 +209,7 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="delay_alert_date" invisible="1"/>
-                    <field name="json_popover" string=" " widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
+                    <field name="json_popover" string=" " widget="stock_rescheduling_popover" attrs="{'invisible': ['|',('delay_alert_date', '=', False), ('state', 'in', ['cancel', 'done'])]}"/>
                 </tree>
             </field>
         </record>
@@ -302,7 +302,7 @@
                             <div class="o_row">
                             <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}"/>
                                 <field name="delay_alert_date" invisible="1"/>
-                                <field name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
+                                <field name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': ['|',('delay_alert_date', '=', False), ('state', 'in', ['cancel', 'done'])]}"/>
                             </div>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
