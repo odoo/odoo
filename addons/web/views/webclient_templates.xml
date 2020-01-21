@@ -517,7 +517,7 @@
         <div class="o_brand_promotion">
             <t t-call="web.brand_promotion_message">
                 <t t-set="_message"></t>
-                <t t-set="_utm_medium">portal</t>
+                <t t-set="_utm_medium" t-valuef="portal"/>
             </t>
         </div>
     </template>

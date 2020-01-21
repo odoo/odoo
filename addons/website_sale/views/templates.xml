@@ -205,13 +205,13 @@
                 <div class="container oe_website_sale">
                     <div class="products_pager form-inline flex-md-nowrap justify-content-between justify-content-md-center">
                         <t t-call="website_sale.search">
-                            <t t-set="_classes">w-100 w-md-auto mt-2</t>
+                            <t t-set="_classes" t-valuef="w-100 w-md-auto mt-2"/>
                         </t>
                         <t t-call="website_sale.pricelist_list">
-                            <t t-set="_classes">mt-2 ml-md-2</t>
+                            <t t-set="_classes" t-valuef="mt-2 ml-md-2"/>
                         </t>
                         <t t-call="website.pager">
-                            <t t-set="_classes">mt-2 ml-md-2</t>
+                            <t t-set="_classes" t-valuef="mt-2 ml-md-2"/>
                         </t>
                     </div>
                     <div class="row o_wsale_products_main_row">
@@ -481,7 +481,7 @@
                                     <t t-set="search" t-value="False"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list">
-                                    <t t-set="_classes">ml-2</t>
+                                    <t t-set="_classes" t-valuef="ml-2"/>
                                 </t>
                             </div>
                         </div>
@@ -733,7 +733,7 @@
 
     <template id="extra_info" name="Checkout Extra Info">
         <t t-call="website.layout">
-            <t t-set="no_footer">1</t>
+            <t t-set="no_footer" t-value="1"/>
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
                     <div class="row">
@@ -981,7 +981,7 @@
             <div class="text-center">
                 <span class="h6">
                     <t t-call="website_sale.total">
-                        <t t-set='hide_coupon'>True</t>
+                        <t t-set="hide_coupon" t-value="True"/>
                     </t>
                 </span>
                 <a role="button" class="btn btn-primary" href="/shop/cart">
@@ -1046,7 +1046,7 @@
     <template id="checkout">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Checkout</t>
-            <t t-set="no_footer">1</t>
+            <t t-set="no_footer" t-value="1"/>
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
@@ -1152,7 +1152,7 @@
     </template>
 
     <template id="address" name="Address Management">
-        <t t-set="no_footer">1</t>
+        <t t-set="no_footer" t-value="1"/>
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
@@ -1166,7 +1166,7 @@
                     <div class="row">
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
-                                <t t-set="redirect">/shop/address</t>
+                                <t t-set="redirect" t-valuef="/shop/address"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
@@ -1320,7 +1320,7 @@
     <template id="payment" name="Payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Acquirer</t>
-            <t t-set="no_footer">1</t>
+            <t t-set="no_footer" t-value="1"/>
 
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
@@ -1407,7 +1407,7 @@
                 <hr class="d-none d-xl-block"/>
                 <div>
                     <t t-call="website_sale.total">
-                        <t t-set='no_rowspan'>1</t>
+                        <t t-set="no_rowspan" t-value="1"/>
                     </t>
                     <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
@@ -1538,7 +1538,7 @@
                         <div class="col-12 col-xl-auto">
                             <t t-set="website_sale_order" t-value="order"/>
                             <t t-call="website_sale.cart_summary">
-                                <t t-set="hide_coupon">1</t>
+                                <t t-set="hide_coupon" t-value="1"/>
                             </t>
                         </div>
                     </div>
@@ -1645,7 +1645,7 @@
                 <t t-set="_message">
                     The #1 <a target="_blank" href="http://www.odoo.com/page/e-commerce?utm_source=db&amp;utm_medium=website">Open Source eCommerce</a>
                 </t>
-                <t t-set="_utm_medium">website</t>
+                <t t-set="_utm_medium" t-valuef="website"/>
             </t>
         </xpath>
     </template>
