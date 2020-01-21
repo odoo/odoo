@@ -863,11 +863,6 @@ class Home(http.Controller):
         ])
         return response
 
-    @http.route('/web/dbredirect', type='http', auth="none")
-    def web_db_redirect(self, redirect='/', **kw):
-        ensure_db()
-        return werkzeug.utils.redirect(redirect, 303)
-
     def _login_redirect(self, uid, redirect=None):
         return redirect if redirect else '/web'
 
