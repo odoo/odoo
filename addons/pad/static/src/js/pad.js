@@ -97,7 +97,7 @@ var FieldPad = AbstractField.extend({
         if (this.url) {
             // here, we have a valid url, so we can simply display an iframe
             // with the correct src attribute
-            var userName = encodeURIComponent(this.getSession().userName);
+            var userName = encodeURIComponent(this.getSession().name);
             var url = this.url + '?showChat=false&userName=' + userName;
             var content = '<iframe width="100%" height="100%" frameborder="0" src="' + url + '"></iframe>';
             this.$('.oe_pad_content').html(content);
