@@ -541,7 +541,7 @@ class StockMove(models.Model):
         self.ensure_one()
 
         picking_type_id = self.picking_type_id or self.picking_id.picking_type_id
-        
+
         # If "show suggestions" is not checked on the picking type, we have to filter out the
         # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
         # different views to display one field or another so that the webclient doesn't have to
@@ -1602,3 +1602,41 @@ class StockMove(models.Model):
                 mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
                 move.procure_method = 'make_to_order'
+
+    def _decrease_initial_demand(self, qty, stream='UP'):
+        """Decrease the initial demand and propagate this change on the following moves.
+
+        The propagation is stopped by the end of the chain or either by a done
+        or cancelled move. In case the one of the current move in `self` is linked
+        to a business document that cannot be updated. This method return the moves
+        that cannot be updated.
+
+        :param qty: quantity to decrease.
+        :type qty: float, required
+        :param stream: direction of the propagation. 'UP' means from stock to reception. 'DOWN'
+            means from stock to delivery.
+        :type stream: string, optional.
+        :return: list of non updatable moves: move and corresponding business that haven't be updated
+        :rtype: list of tuples
+        """
+        assert stream in ('UP', 'DOWN'), 'Unknown stream'
+        non_updatable_moves = []
+        for move in self:
+            if move.state in ('done', 'cancel'):
+                if not move.origin_returned_move_id:
+                    non_updatable_moves.append((move, move.picking_id))
+                continue
+            computed_qty = move.product_id.uom_id._compute_quantity(qty, move.product_uom, rounding_method='HALF-UP')
+            move.product_uom_qty -= computed_qty
+            if stream == 'UP':
+                non_updatable_moves += move.move_orig_ids._decrease_initial_demand(qty, stream=stream)
+            else:
+                non_updatable_moves += move.move_dest_ids.filtered(
+                    lambda m: m.group_id == move.group_id
+                )._decrease_initial_demand(qty, stream=stream)
+            # In case a move has more than 1 not-done move_orig, we don't want to
+            # propagate several times the quantity so we stop it
+            break
+        # Not used for now but could be useful later to have all done move in the
+        # chain
+        return non_updatable_moves
