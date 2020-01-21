@@ -67,7 +67,6 @@
                     <i class="fa fa-indent"/> Inner content
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_btn" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.png"/>
                     <t t-snippet="website.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png"/>
                     <t t-snippet="website.s_alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.png"/>
                     <t t-snippet="website.s_card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
@@ -138,8 +137,8 @@
             data-color-prefix="bg-"/>
     </div>
 
-    <!-- H-ALIGN | .s_btn -->
-    <div id="so_text_align" data-selector=".s_btn, .s_share">
+    <!-- H-ALIGN -->
+    <div id="so_text_align" data-selector=".s_share">
         <we-select string="Alignment">
             <we-button data-select-class="text-left">Left</we-button>
             <we-button data-select-class="text-center">Center</we-button>
@@ -293,7 +292,7 @@
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > div, .parallax, .s_hr, .s_btn, .carousel-item, .s_rating"
+        data-selector="section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating"
         data-exclude="section:has(> .carousel), .o_gallery .carousel-item, .s_col_no_resize.row > div"/>
 
     <div data-js="sizing_x"
@@ -306,7 +305,7 @@
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart</t>
+    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, .row > div > img, #{so_content_addition_selector}"
