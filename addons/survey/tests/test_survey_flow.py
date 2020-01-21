@@ -85,6 +85,9 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         self.assertAnswer(answers, 'new', self.env['survey.question'])
         csrf_token = self._find_csrf_token(r.text)
 
+        r = self._access_begin(survey, answer_token)
+        self.assertResponse(r, 200)
+
         # Customer submit first page answers
         answer_data = {
             page0_q0.id: {'value': ['Alfred Poilvache']},

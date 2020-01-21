@@ -33,8 +33,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         this.fadeInOutDelay = 400;
         return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
+            self.readonly = self.options.readonly;
             // Init fields
-            if (!self.options.isStartScreen) {
+            if (!self.options.isStartScreen && !self.readonly) {
                 self._initTimer();
                 self._initBreadcrumb();
             }
@@ -45,9 +46,14 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self._initTextArea();
             self._focusOnFirstInput();
             // Init event listener
-            if (!self.options.readonly) {
+            if (!self.readonly) {
                 $(document).on('keypress', self._onKeyPress.bind(self));
             }
+            if (self.options.sessionInProgress &&
+                (self.options.isStartScreen || self.options.hasAnswered)) {
+                self.preventEnterSubmit = true;
+            }
+            self._initSessionManagement();
         });
     },
 
@@ -71,7 +77,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         // Handle Start / Next / Submit
         if (keyCode === 13) {  // Enter : go Next
             event.preventDefault();
-            this._submitForm({});
+            if (!this.preventEnterSubmit) {
+                var isFinish = this.$('button[value="finish"]').length !== 0;
+                this._submitForm({isFinish: isFinish});
+            }
         } else if (self.options.questionsLayout === 'page_per_question'
                    && letter.match(/[a-z]/i)) {
             var $choiceInput = this.$(`input[data-selection-key=${letter}]`);
@@ -131,14 +140,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     },
 
     _onMatrixBtnClick: function (event) {
-        if (!this.options.readonly) {
-            var $target = $(event.currentTarget);
-            var $input = $target.find('input');
-            if ($input.attr('type') === 'radio') {
-                $input.prop("checked", true).trigger('change');
-            } else {
-                $input.prop("checked", !$input.prop("checked")).trigger('change');
-            }
+        if (this.readonly) {
+            return;
+        }
+
+        var $target = $(event.currentTarget);
+        var $input = $target.find('input');
+        if ($input.attr('type') === 'radio') {
+            $input.prop("checked", true).trigger('change');
+        } else {
+            $input.prop("checked", !$input.prop("checked")).trigger('change');
         }
     },
 
@@ -161,6 +172,75 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         this._submitForm({'previousPageId': event.data.previousPageId});
     },
 
+    /**
+     * We listen to 'next_question' and 'end_session' events to load the next
+     * page of the survey automatically, based on the host pacing.
+     *
+     * If the trigger is 'next_question', we handle some extra computation to find
+     * a suitable "fadeInOutDelay" based on the delay between the time of the question
+     * change by the host and the time of reception of the event.
+     * This will allow us to account for a little bit of server lag (up to 2 seconds)
+     * while giving everyone a fair experience on the quiz.
+     *
+     * e.g 1:
+     * - The host switches the question
+     * - We receive the event 500 ms later due to server lag
+     * - -> The fadeInOutDelay will be 750 ms (500ms delay + 750ms * 2 fade in fade out)
+     *
+     * e.g 2:
+     * - The host switches the question
+     * - We receive the event 1500 ms later due to bigger server lag
+     * - -> The fadeInOutDelay will be 250ms (1500ms delay + 250ms * 2 fade in fade out)
+     *
+     * @private
+     * @param {Array[]} notifications structured as specified by the bus feature
+     */
+    _onNotification: function (notifications) {
+        var nextPageEvent = false;
+        if (notifications && notifications.length !== 0) {
+            notifications.forEach(function (notification) {
+                if (notification.length >= 2) {
+                    var event = notification[1];
+                    if (event.type === 'next_question' ||
+                        event.type === 'end_session') {
+                        nextPageEvent = event;
+                    }
+                }
+            });
+        }
+
+        if (this.options.isStartScreen && nextPageEvent.type === 'end_session') {
+            // can happen when triggering the same survey session multiple times
+            // we received an "old" end_session event that needs to be ignored
+            return;
+        }
+
+        if (nextPageEvent) {
+            if (nextPageEvent.type === 'next_question') {
+                var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.question_start).utc().valueOf();
+                if (serverDelayMS < 0) {
+                    serverDelayMS = 0;
+                } else if (serverDelayMS > 2000) {
+                    serverDelayMS = 2000;
+                }
+                this.fadeInOutDelay = (2000 - serverDelayMS) / 2;
+            } else {
+                this.fadeInOutDelay = 400;
+            }
+
+            this.preventEnterSubmit = false;
+            this.readonly = false;
+            this._nextScreen(
+                this._rpc({
+                    route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
+                }), {
+                    initTimer: true,
+                    isFinish: nextPageEvent.type === 'end_session'
+                }
+            );
+        }
+    },
+
     // SUBMIT
     // -------------------------------------------------------------------------
 
@@ -174,6 +254,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * @param {Array} [options]
     * @param {Integer} [options.previousPageId] navigates to page id
     * @param {Boolean} [options.skipValidation] skips JS validation
+    * @param {Boolean} [options.initTime] will force the re-init of the timer after next
+    *   screen transition
     * @param {Boolean} [options.isFinish] fades out breadcrumb and timer
     * @private
     */
@@ -201,6 +283,32 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             this._prepareSubmitValues(formData, params);
         }
 
+        // prevent user from submitting more times using enter key
+        this.preventEnterSubmit = true;
+
+        if (this.options.sessionInProgress) {
+            // reset the fadeInOutDelay when attendee is submitting form
+            this.fadeInOutDelay = 400;
+            // prevent user from clicking on matrix options when form is submitted
+            this.readonly = true;
+        }
+
+        var submitPromise = self._rpc({
+            route: _.str.sprintf('%s/%s/%s', route, self.options.surveyToken, self.options.answerToken),
+            params: params,
+        });
+        this._nextScreen(submitPromise, options);
+    },
+
+    /**
+     * Will fade out / fade in the next screen based on passed promise and options.
+     *
+     * @param {Promise} nextScreenPromise
+     * @param {Object} options see '_submitForm' for details
+     */
+    _nextScreen: function (nextScreenPromise, options) {
+        var self = this;
+
         var resolveFadeOut;
         var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
 
@@ -211,21 +319,25 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
         });
-        var submitPromise = self._rpc({
-            route: _.str.sprintf('%s/%s/%s', route, self.options.surveyToken, self.options.answerToken),
-            params: params,
-        });
-        Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
-            return self._onSubmitDone(results[1], options.isFinish);
+
+        Promise.all([fadeOutPromise, nextScreenPromise]).then(function (results) {
+            return self._onNextScreenDone(results[1], options);
         });
     },
 
     /**
-    * Follow the submit and handle the transition from one screen to another
-    * Also handle server side validation and displays eventual error messages.
-    */
-    _onSubmitDone: function (result, isFinish) {
+     * Handle server side validation and display eventual error messages.
+     *
+     * @param {string} result the HTML result of the screen to display
+     * @param {Object} options see '_submitForm' for details
+     */
+   _onNextScreenDone: function (result, options) {
         var self = this;
+
+        if (!(options && options.isFinish)
+            && !this.options.sessionInProgress) {
+            this.preventEnterSubmit = false;
+        }
 
         if (result && !result.error) {
             this.$(".o_survey_form_content").empty();
@@ -233,11 +345,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             this.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
-            if (this.options.isStartScreen) {
+            if (this.options.isStartScreen || (options && options.initTimer)) {
                 this._initTimer();
                 this.options.isStartScreen = false;
+            } else {
+                if (this.options.sessionInProgress && this.surveyTimerWidget) {
+                    this.surveyTimerWidget.destroy();
+                }
             }
-            if (isFinish) {
+            if (options && options.isFinish) {
                 this._initResultWidget();
                 if (this.surveyBreadcrumbWidget) {
                     this.$('.o_survey_breadcrumb_container').addClass('d-none');
@@ -588,12 +704,37 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
+    /**
+     * Will handle bus specific behavior for survey 'sessions'
+     *
+     * @private
+     */
+    _initSessionManagement: function () {
+        if (this.options.surveyToken && this.options.sessionInProgress) {
+            this.call('bus_service', 'addChannel', this.options.surveyToken);
+            this.call('bus_service', 'startPolling');
+
+            this.call('bus_service', 'onNotification', this, this._onNotification);
+        }
+    },
+
     _initTimer: function () {
+        if (this.surveyTimerWidget) {
+            this.surveyTimerWidget.destroy();
+        }
+
         var self = this;
-        var $timer = this.$('.o_survey_timer');
-        if ($timer.length) {
-            var timeLimitMinutes = this.options.timeLimitMinutes;
-            var timer = this.options.timer;
+        var $timerData = this.$('.o_survey_form_content_data');
+        var questionTimeLimitReached = $timerData.data('questionTimeLimitReached');
+        var timeLimitMinutes = $timerData.data('timeLimitMinutes');
+        var hasAnswered = $timerData.data('hasAnswered');
+
+        if (!questionTimeLimitReached && !hasAnswered && timeLimitMinutes) {
+            var timer = $timerData.data('timer');
+            var $timer = $('<span>', {
+                class: 'o_survey_timer'
+            });
+            this.$('.o_survey_timer_container').append($timer);
             this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
                 'timer': timer,
                 'timeLimitMinutes': timeLimitMinutes
@@ -602,10 +743,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             this.surveyTimerWidget.on('time_up', this, function (ev) {
                 self._submitForm({
                     'skipValidation': true,
-                    'isFinish': true
+                    'isFinish': !this.options.sessionInProgress
                 });
             });
-            $timer.removeClass('d-none');
         }
     },
 

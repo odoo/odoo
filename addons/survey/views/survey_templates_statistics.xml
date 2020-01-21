@@ -27,6 +27,10 @@
     </template>
 
     <template id="survey_page_statistics_inner" name="Survey: result statistics content">
+        <div t-if="survey.session_show_ranking" class="o_survey_session_ranking mb-5 mt-1">
+            <h2 class="mt16 text-uppercase text-muted">Ranking</h2>
+            <t t-call="survey.user_input_session_ranking" />
+        </div>
         <div t-if="question_and_page_data" class="card d-print-none">
             <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="search_filters" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
             <div class="card-body">
@@ -38,7 +42,7 @@
             </div>
         </div>
         <div t-if="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']">
-            <h1 class="mt16">Results Overview</h1>
+            <h2 class="mt16 text-uppercase text-muted">Results Overview</h2>
             <div>Success rate: <mark class="font-weight-bold"><t t-esc="survey_data['global_success_rate']"></t>%</mark></div>
             <div class="survey_graph" data-graph-type="pie" t-att-data-graph-data="survey_data['global_success_graph']">
                 <!-- canvas element for drawing pie chart -->
@@ -81,7 +85,6 @@
                         </strong>
                     </t>
                 </div>
-                <div class="ml-3 text-muted" t-field="question.description"/>
             </div>
             <!-- Question info -->
             <span class="badge badge-info" t-field='question.question_type'/>
@@ -99,6 +102,10 @@
             <span class="badge badge-info ml-3"><span t-esc="len(question_data['answer_input_done_ids'])"></span> Answered</span>
             <span class="badge badge-info ml-1"><span t-esc="len(question_data['answer_input_skipped_ids'])"></span> Skipped</span>
         </div>
+
+        <!-- Question Description -->
+        <div class="ml-3 text-muted" t-field="question.description"/>
+
         <t t-if="question.question_type in ['text_box', 'char_box', 'date', 'datetime']">
             <t t-call="survey.question_result_text"/>
         </t>
@@ -126,20 +133,29 @@
                 <t t-foreach="table_data" t-as="input_line">
                     <tr t-if="not input_line.skipped" t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
                         <td>
-                            <a t-att-href="input_line.user_input_id.get_print_url()"><t t-esc="input_line_index + 1"></t></a>
+                            <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                            <t t-else="">
+                                <a t-att-href="input_line.user_input_id.get_print_url()">
+                                    <t t-esc="input_line_index + 1"></t>
+                                </a>
+                            </t>
                         </td>
                         <td>
                             <t t-if="question.question_type == 'text_box'">
-                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_text_box"></a>
+                                <span t-if="no_print_url" t-field="input_line.value_text_box" />
+                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_text_box"></a>
                             </t>
                             <t t-if="question.question_type == 'char_box'">
-                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_char_box"></a>
+                                <span t-if="no_print_url" t-field="input_line.value_char_box" />
+                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_char_box"></a>
                             </t>
                             <t t-if="question.question_type == 'date'">
-                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"></a>
+                                <span t-if="no_print_url" t-field="input_line.value_date" />
+                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"></a>
                             </t>
                             <t t-if="question.question_type == 'datetime'">
-                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_datetime"></a>
+                                <span t-if="no_print_url" t-field="input_line.value_datetime" />
+                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_datetime"></a>
                             </t>
                         </td>
                     </tr>
@@ -201,7 +217,12 @@
                         <t t-foreach="table_data" t-as="input_line">
                             <tr t-if="not input_line.skipped" t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
                                 <td>
-                                    <a t-att-href="input_line.user_input_id.get_print_url()"><t t-esc="input_line_index + 1"></t></a>
+                                    <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                                    <t t-else="">
+                                        <a t-att-href="input_line.user_input_id.get_print_url()">
+                                            <t t-esc="input_line_index + 1"></t>
+                                        </a>
+                                    </t>
                                 </td>
                                 <td><span t-field="input_line.value_numerical_box"></span><br/></td>
                             </tr>
@@ -342,7 +363,14 @@
             </thead>
             <tbody>
                 <tr t-foreach="comment_lines" t-as="input_line">
-                    <td><a t-att-href="input_line.user_input_id.get_print_url()"><t t-esc="input_line_index + 1"></t></a></td>
+                    <td>
+                        <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                        <t t-else="">
+                            <a t-att-href="input_line.user_input_id.get_print_url()">
+                                <t t-esc="input_line_index + 1"></t>
+                            </a>
+                        </t>
+                    </td>
                     <td>
                         <span t-field="input_line.value_char_box"></span><br/>
                     </td>

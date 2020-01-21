@@ -6,13 +6,22 @@
                         Common Style
  **********************************************************/
 
-.o_survey_form, .o_survey_print {
+.o_survey_form, .o_survey_print, .o_survey_session_manage, .o_survey_quick_access {
     .o_survey_question_error {
         height: 0px;
         transition: height .5s ease;
         line-height: 4rem;
         &.slide_in {
             height: 4rem;
+        }
+    }
+
+    fieldset[disabled] {
+        .o_survey_question_text_box,
+        .o_survey_question_date,
+        .o_survey_question_datetime,
+        .o_survey_question_numerical_box {
+            padding-left: 0px;
         }
     }
 
@@ -88,16 +97,47 @@
     }
 }
 
-/**********************************************************
-                    Form Specific Style
- **********************************************************/
-
-.o_survey_form {
+.o_survey_form, .o_survey_session_manage {
     min-height: 100%;
 
     .o_survey_choice_btn {
         background-color: rgba($primary, 0.5);
         border: 2px solid $primary;
+    }
+
+    .o_survey_choice_key {
+        width: 25px;
+        height: 25px;
+        border: 2px solid $primary;
+        span {
+            font-size: smaller;
+            top: -2px;
+            &.o_survey_key {
+                opacity: 0;
+            }
+        }
+    }
+
+    .o_survey_question_matrix {
+        th {
+            background-color: $primary;
+        }
+        td {
+            background-color: rgba($primary, 0.2);
+        }
+    }
+
+    .o_survey_progress {
+        height:0.5em;
+    }
+}
+
+/**********************************************************
+                    Form Specific Style
+ **********************************************************/
+
+.o_survey_form {
+    .o_survey_choice_btn {
         cursor: pointer;
 
         &.o_survey_selected {
@@ -112,45 +152,132 @@
         }
     }
 
-    .o_survey_choice_key {
-        width: 25px;
-        height: 25px;
+    .o_survey_choice_key span.o_survey_key {
+        width: inherit;
+        right: 10px;
         border: 2px solid $primary;
-        span {
-            font-size: smaller;
-            top: -2px;
-            &.o_survey_key {
-                width: inherit;
-                right: 10px;
-                border: 2px solid $primary;
-                border-right: 0px;
-                height: 25px;
-                opacity: 0;
-                transition: opacity 0.4s ease;
-                white-space: nowrap;
-            }
+        border-right: 0px;
+        height: 25px;
+        transition: opacity 0.4s ease;
+        white-space: nowrap;
+    }
+
+    .o_survey_question_matrix td:hover {
+        background-color: rgba($primary, 0.5);
+        cursor: pointer;
+        .o_survey_choice_key span.o_survey_key {
+            opacity: 1;
+        }
+    }
+}
+
+/**********************************************************
+                Survey Session Specific Style
+ **********************************************************/
+
+.o_survey_session_manage {
+    .o_survey_manage_fontsize_14 {
+        font-size: 1.4rem;
+    }
+
+    .o_survey_session_manage_container {
+        border: solid 1px #999999;
+        box-shadow: 0px 1px 1px 0px #999999;
+        min-height: 75vh;
+
+        .js_question-wrapper {
+            padding-bottom: 0px;
         }
     }
 
-    .o_survey_question_matrix {
-        th {
-            background-color: $primary;
-        }
-        td {
-            background-color: rgba($primary, 0.2);
+    .tab-content > .o_survey_session_manage_question.tab-pane {
+        display: none;
+    }
 
+    .tab-content > .o_survey_session_manage_question.active {
+        display: flex;
+    }
+
+    .o_survey_session_copy {
+        cursor: pointer;
+        opacity: .75;
+        transition: opacity .3s ease;
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .btn {
+        font-variant: small-caps;
+        &.o_survey_session_end {
+            right: 0px;
+        }
+    }
+
+    .o_survey_session_results, .o_survey_session_ranking {
+        .fa {
+            font-size: .9rem;
+            opacity: .75;
             &:hover {
-                background-color: rgba($primary, 0.5);
+                transition: opacity .4s ease;
+                opacity: 1;
                 cursor: pointer;
-                .o_survey_choice_key span.o_survey_key {
-                    opacity: 1;
-                }
             }
+        }
+
+        .o_survey_result, .o_survey_session_ranking_container {
+            overflow: hidden;
+        }
+
+        .survey_filter {
+            display: none;
         }
     }
 
-    .o_survey_progress {
-        height:0.5em;
+    .o_survey_result {
+        .nav-tabs .nav-link.active {
+            background-color: transparent;
+            border-color: #dee2e6 #dee2e6 transparent;
+        }
+    }
+
+    .nav-tabs {
+        border-bottom: 0px;
+        .nav-item .nav-link {
+            border-radius: 0px;
+            background-color: transparent;
+            border: solid 1px transparent;
+
+            &.active {
+                border: solid 1px #999999;
+                border-bottom: 0px;
+            }
+        }
+    }
+}
+
+.o_survey_session_ranking {
+    .o_survey_session_ranking_item {
+        line-height: 1.4rem;
+
+        .o_survey_session_ranking_index {
+            width: 1.5rem;
+        }
+
+        .o_survey_session_ranking_bar {
+            min-width: 90px;
+            height: 1.4rem;
+            color: white;
+            background-color: #007A77;
+            transition: width ease 1.5s;
+        }
+
+        .o_survey_session_ranking_name {
+            width: 7.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 }
 
