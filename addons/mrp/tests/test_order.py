@@ -1180,3 +1180,58 @@ class TestMrpOrder(TestMrpCommon):
 
         # Check Mo is created or not
         self.assertTrue(mo, "Mo is created")
+
+    def test_mo_with_zero_qty(self):
+        product_product = self.env['product.product']
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+
+        finish_product = product_product.create({'name': 'Finished', 'route_ids': [(6, 0, [route_manufacture])]})
+        comp_choice_1_product = product_product.create({'name': 'Compo Choice 1', 'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        comp_choice_2_product = product_product.create({'name': 'Compo Choice 2', 'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        compo_1 = product_product.create({'name': 'Compo 1'})
+        compo_2 = product_product.create({'name': 'Compo 2'})
+
+        # create sub bill of material
+        self.env['mrp.bom'].create({
+            'product_id': comp_choice_1_product.id,
+            'product_tmpl_id': comp_choice_1_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': compo_1.id, 'product_qty': 1})]
+        })
+        self.env['mrp.bom'].create({
+            'product_id': comp_choice_2_product.id,
+            'product_tmpl_id': comp_choice_2_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': compo_2.id, 'product_qty': 1})]
+        })
+        self.env['mrp.bom'].create({
+            'product_id': finish_product.id,
+            'product_tmpl_id': finish_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                    'product_id': comp_choice_1_product.id,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'product_qty': 0.0}),
+                (0, 0, {
+                    'product_id': comp_choice_2_product.id,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'product_qty': 0.0,
+                })
+            ],
+            'consumption': 'flexible',
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finish_product
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.move_raw_ids[0].product_uom_qty = 1
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed', 'MO should be confirmed.')
