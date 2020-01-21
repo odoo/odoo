@@ -662,6 +662,7 @@ const SelectUserValueWidget = UserValueWidget.extend({
      */
     _updateUI: async function () {
         await this._super(...arguments);
+
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         this.menuTogglerEl.textContent = activeWidget ? activeWidget.el.textContent : "/";
     },
@@ -2296,24 +2297,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @see this.selectClass for params
      */
     editImage: async function (previewMode, widgetValue, params) {
-        const {originalSrc} = this.settings;
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
-        dummyEl.src = originalSrc;
-        if (this.isVideo) {
-            // Used by mediaDialog to select the video tab immediately.
-            dummyEl.classList.add('media_iframe_video');
-        }
-        const $editable = this.$target.closest('.o_editable');
-        const mediaDialog = new weWidgets.MediaDialog(this, {
-            noIcons: true,
-            noDocuments: true,
-            noVideos: !params.allowVideos,
-            isForBgVideo: true,
-            res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),
-            firstFilters: this.firstFilters,
-        }, dummyEl).open();
+        const {parent, options, targetEl} = this._getMediaDialogArgs(params);
+        const mediaDialog = new weWidgets.MediaDialog(parent, options, targetEl).open();
         await new Promise(resolve => {
             mediaDialog.on('save', this, async (...args) => {
                 await this._onMediaDialogSave(...args);
@@ -2519,6 +2504,30 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.$el.find('.o_we_image_file_size')
             .text(`${(this.weight / 1024).toFixed(0)} kb`);
     },
+    /**
+     * Returns an object containing the required arguments for creating the
+     * MediaDialog, this is done here to allow overriding.
+     *
+     * @see this.selectClass for params
+     */
+    _getMediaDialogArgs: function (params) {
+        const {originalSrc} = this.settings;
+        const dummyEl = document.createElement('img');
+        const $editable = this.$target.closest('.o_editable');
+        dummyEl.src = originalSrc;
+        return {
+            parent: this,
+            options: {
+                noIcons: true,
+                noDocuments: true,
+                noVideos: true,
+                res_model: $editable.data('oe-model'),
+                res_id: $editable.data('oe-id'),
+                firstFilters: this.firstFilters,
+            },
+            targetEl: dummyEl
+        };
+    },
 
     //--------------------------------------------------------------------------
     // Utils
@@ -2670,7 +2679,7 @@ registry.background = ImageHandlerOption.extend({
     /**
      * @override
      */
-    _changeSrc: async function (src, previewMode = false, noUpdate = false) {
+    _changeSrc: async function (src, previewMode = false) {
         await this._super(...arguments);
         switch (previewMode) {
             case false:
@@ -2691,8 +2700,8 @@ registry.background = ImageHandlerOption.extend({
     },
     /**
      * For backgrounds, the display width is usually smaller than the maximum
-     * display width, so we override this to return the original image's width
-     * capped at 1920.
+     * display width because of the left panel, so we override this to return
+     * the original image's width capped at 1920.
      *
      * @override
      */
@@ -2741,17 +2750,15 @@ registry.background = ImageHandlerOption.extend({
      * @private
      * @param {Event} ev
      * @param {boolean|string} previewMode
-     * @returns {boolean} true if the color has been applied (removing the
-     *                    background)
      */
     _onBackgroundColorUpdate: async function (ev, data) {
         const {previewMode, callback} = data;
         ev.stopPropagation();
         if (ev.currentTarget !== ev.target) {
-            return callback(false);
+            return callback();
         }
         await this._changeSrc('', previewMode);
-        return callback(true);
+        return callback();
     },
 });
 

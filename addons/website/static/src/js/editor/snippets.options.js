@@ -45,8 +45,47 @@ options.Class.include({
         }
     },
 });
-
+// Allow the use of background videos.
 options.registry.background.include({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getMediaDialogArgs: function (params) {
+        const {parent, options, targetEl} = this._super(...arguments);
+        let targetOverrideEl = targetEl;
+        if (this.$target.is('.o_background_video')) {
+            targetOverrideEl = document.createElement('iframe');
+            targetOverrideEl.src = targetEl.src;
+            targetOverrideEl.classList.add('media_iframe_video');
+        }
+        options.noVideos = !params.allowVideos;
+        options.isForBgVideo = true;
+        return {parent, options, targetEl: targetOverrideEl};
+    },
+    /**
+     * @override
+     */
+    _changeSrc: async function (value, previewMode) {
+        const target = this.$target[0];
+        switch (previewMode) {
+            case true:
+                this.isVideo = target.classList.contains('o_background_video');
+                target.classList.remove('o_background_video');
+                break;
+            case 'reset':
+                target.classList.toggle('o_background_video', this.isVideo);
+                break;
+        }
+        if (previewMode === false) {
+            delete target.dataset.bgVideoSrc;
+        }
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -54,36 +93,16 @@ options.registry.background.include({
     /**
      * @override
      */
-    _onBackgroundColorUpdate: async function (ev, data) {
-        const {previewMode, callback} = data;
-        const ret = await new Promise(resolve => this._super(ev, _.extend(data, {callback: resolve})));
-        if (ret) {
-            const target = this.$target[0];
-            target.classList.toggle('o_background_video', previewMode === 'reset');
-            if (previewMode === false) {
-                delete target.dataset.bgVideoSrc;
-            }
-        }
-        return callback(ret);
-    },
-    /**
-     * Allows the use of background videos.
-     *
-     * @override
-     */
     _onMediaDialogSave: async function (data) {
-        const target = this.$target[0];
         const {bgVideoSrc} = data;
-        target.classList.toggle('o_background_video', !!bgVideoSrc);
+        const target = this.$target[0];
         if (!bgVideoSrc) {
-            delete target.dataset.bgVideoSrc;
             return this._super(...arguments);
         }
-        this.canModifyImage = false;
-        this.isVideo = true;
-        await this._changeSrc('');
-        this.settings.originalSrc = bgVideoSrc;
+        await this._changeSrc('', false);
+        target.classList.add('o_background_video');
         target.dataset.bgVideoSrc = bgVideoSrc;
+        this.settings.originalSrc = bgVideoSrc;
     },
 });
 

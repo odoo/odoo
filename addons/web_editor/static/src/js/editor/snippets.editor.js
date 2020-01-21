@@ -1292,6 +1292,9 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _destroyEditors: async function () {
+        // Need to clean all editors before destroying any, because otherwise an editor's parent
+        // can be destroyed before the child is cleaned, removing access to trigger_up methods
+        // like _rpc()
         await Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.cleanForSave()));
         await Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.destroy()));
         this.snippetEditors.splice(0);
