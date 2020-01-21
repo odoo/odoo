@@ -549,6 +549,7 @@
 
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
+            <div class="oe_structure"/>
             <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = this.action + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
@@ -589,6 +590,7 @@
 
                 <input type="hidden" name="redirect" t-att-value="redirect"/>
             </form>
+            <div class="oe_structure"/>
         </t>
     </template>
 
