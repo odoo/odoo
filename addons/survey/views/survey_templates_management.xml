@@ -84,7 +84,7 @@
 
     <template id="survey_button_retake" name="Survey: retake button">
         <div>
-            <t t-if="not answer.scoring_success">
+            <t t-if="not answer.scoring_success and not answer.is_session_answer">
                 <t t-if="survey.is_attempts_limited">
                     <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
                     <t t-if="attempts_left > 0">
@@ -99,6 +99,41 @@
                 </t>
             </t>
         </div>
+    </template>
+
+    <!-- Survey Home page - Access Code
+    Mainly used in 'session mode' to give an easy access to the survey through the '/s' route. -->
+    <template id="survey_access_code" name="Survey: Access Code page">
+        <t t-call="survey.layout">
+            <t t-set="no_header" t-value="True" />
+            <t t-set="no_footer" t-value="True" />
+            <div class="wrap o_survey_wrap pb16 d-flex">
+                <div class="container o_survey_quick_access d-flex flex-column">
+                    <div class="d-flex flex-grow-1 align-items-center">
+                        <div class="col-lg-12">
+                            <div class="text-center mb32">
+                                <h3>Please enter the code</h3>
+                            </div>
+                            <div class="row">
+                            <div class="offset-md-4 col-md-4 text-center">
+                                <input id="access_code" type="text" placeholder="ABC123"
+                                       class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
+                            </div>
+                            <div class="col-3 text-center o_survey_error text-danger d-none pt-2" role="alert">
+                                <span>Code is incorrect. Please try again.</span>
+                            </div>
+                            </div>
+                            <div class="text-center mt32 p-2">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                            <div class="text-center p-2">
+                                <span class="text-muted">The code is found on the screen in front of you</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
     </template>
 
 </data>

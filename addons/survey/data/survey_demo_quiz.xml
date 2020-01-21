@@ -121,6 +121,8 @@
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
         <field name="constr_mandatory" eval="True"/>
+        <field name="is_time_limited" eval="True"/>
+        <field name="time_limit">15</field>
     </record>
         <record id="survey_demo_quiz_p3_q2_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
@@ -148,6 +150,8 @@
         <field name="constr_mandatory" eval="False"/>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="True"/>
+        <field name="is_time_limited" eval="True"/>
+        <field name="time_limit">20</field>
     </record>
         <record id="survey_demo_quiz_p3_q3_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
@@ -181,6 +185,8 @@
         <field name="constr_mandatory" eval="True"/>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
+        <field name="is_time_limited" eval="True"/>
+        <field name="time_limit">20</field>
     </record>
         <record id="survey_demo_quiz_p3_q4_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q4"/>

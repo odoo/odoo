@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import json
 import random
 import uuid
 import werkzeug
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, exceptions, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.osv import expression
 
 
@@ -105,6 +109,21 @@ class Survey(models.Model):
     certification_give_badge = fields.Boolean('Give Badge')
     certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
+    # live sessions
+    session_state = fields.Selection([
+        ('ready', 'Ready'),
+        ('in_progress', 'In Progress'),
+        ], string="Session State", copy=False)
+    # live sessions - current question fields
+    session_question_id = fields.Many2one('survey.question', string="Current Question", copy=False,
+        help="The current question of the survey session.")
+    session_question_start_time = fields.Datetime("Current Question Start Time", copy=False,
+        help="The time at which the current question has started, used to handle the timer for attendees.")
+    session_question_answer_count = fields.Integer("Answers Count", compute='_compute_session_question_answer_count')
+    # live sessions - settings
+    session_show_ranking = fields.Boolean("Show Session Ranking", compute='_compute_session_show_ranking',
+        help="This mode will display a ranking chart of all attendees.")
+    session_speed_rating = fields.Boolean("Reward quick answers", help="Attendees get more points if they answer quickly")
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
@@ -156,6 +175,28 @@ class Survey(models.Model):
         for survey in self:
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
+
+    @api.depends('session_question_id', 'user_input_ids.user_input_line_ids')
+    def _compute_session_question_answer_count(self):
+        """ We have to loop since our result is dependent of the survey.session_question_id.
+        This field is currently used to display the count about a single survey, in the
+        context of sessions, so it should not matter too much. """
+        for survey in self:
+            answer_count = 0
+            input_line_count = self.env['survey.user_input.line'].read_group(
+                [('question_id', '=', survey.session_question_id.id), ('survey_id', '=', survey.id)],
+                ['user_input_id:count_distinct'],
+                ['question_id'],
+            )
+            if input_line_count:
+                answer_count = input_line_count[0].get('user_input_id')
+
+            survey.session_question_answer_count = answer_count
+
+    @api.depends('scoring_type')
+    def _compute_session_show_ranking(self):
+        for survey in self:
+            survey.session_show_ranking = survey.scoring_type != 'no_scoring'
 
     @api.onchange('scoring_success_min')
     def _onchange_scoring_success_min(self):
@@ -240,15 +281,25 @@ class Survey(models.Model):
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
+                'is_session_answer': survey.session_state in ['ready', 'in_progress']
             }
+            if survey.session_state == 'in_progress':
+                # if the session is already in progress, the answer skips the 'new' state
+                answer_vals.update({
+                    'state': 'in_progress',
+                    'start_datetime': fields.Datetime.now(),
+                })
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
                 answer_vals['email'] = user.email
+                answer_vals['nickname'] = user.name
             elif partner:
                 answer_vals['partner_id'] = partner.id
                 answer_vals['email'] = partner.email
+                answer_vals['nickname'] = partner.name
             else:
                 answer_vals['email'] = email
+                answer_vals['nickname'] = email
 
             if invite_token:
                 answer_vals['invite_token'] = invite_token
@@ -261,10 +312,13 @@ class Survey(models.Model):
             answer_vals.update(additional_vals)
             user_inputs += user_inputs.create(answer_vals)
 
-        for question in self.mapped('question_ids').filtered(lambda q: q.question_type == 'char_box' and q.save_as_email):
+        for question in self.mapped('question_ids').filtered(
+                lambda q: q.question_type == 'char_box' and (q.save_as_email or q.save_as_nickname)):
             for user_input in user_inputs:
-                if user_input.email:
+                if question.save_as_email and user_input.email:
                     user_input.save_lines(question, user_input.email)
+                if question.save_as_nickname and user_input.nickname:
+                    user_input.save_lines(question, user_input.nickname)
 
         return user_inputs
 
@@ -391,6 +445,7 @@ class Survey(models.Model):
                 to True if she knows that the page to display is the first one!
                 (doing this will probably cause a giant worm to eat her house)
         """
+
         survey = user_input.survey_id
 
         pages_or_questions = survey._get_pages_or_questions(user_input)
@@ -411,8 +466,26 @@ class Survey(models.Model):
             return (pages_or_questions[current_page_index + 1][1], show_last)
 
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
+        """ Returns a tuple containing: the survey question and the passed question_id / page_id
+        based on the question_layout and the fact that it's a session or not.
+
+        Breakdown of use cases:
+        - We are currently running a session
+          We return the current session question and it's id
+        - The layout is page_per_section
+          We return the questions for that page and the passed page_id
+        - The layout is page_per_question
+          We return the question for the passed question_id and the question_id
+        - The layout is one_page
+          We return all the questions of the survey and None
+
+        In addition, we cross the returned questions with the answer.predefined_question_ids,
+        that allows to handle the randomization of questions. """
+
         questions, page_or_question_id = None, None
 
+        if answer and answer.is_session_answer:
+            return self.session_question_id, self.session_question_id.id
         if self.questions_layout == 'page_per_section':
             if not page_id:
                 raise ValueError("Page id is needed for question layout 'page_per_section'")
@@ -433,6 +506,68 @@ class Survey(models.Model):
         if answer:
             questions = questions & answer.predefined_question_ids
         return questions, page_or_question_id
+
+    # ------------------------------------------------------------
+    # SESSIONS MANAGEMENT
+    # ------------------------------------------------------------
+
+    def _session_open(self):
+        """ The session start is sudo'ed to allow survey user to manage sessions of surveys
+        they do not own.
+
+        We flush after writing to make sure it's updated before bus takes over. """
+
+        if self.env.user.has_group('survey.group_survey_user'):
+            self.sudo().write({'session_state': 'in_progress'})
+            self.sudo().flush(['session_state'])
+
+    def _session_trigger_next_question(self):
+        """ Triggers the next question of the session.
+
+        We artificially add 2 seconds to the 'current_question_start_time' to account for server delay.
+        As the timing can influence the attendees score, we try to be fair with everyone by giving them
+        an extra few seconds before we start counting down.
+
+        Frontend should take the delay into account by displaying the appropriate animations.
+
+        Writing the next question on the survey is sudo'ed to avoid potential access right issues.
+        e.g: a survey user can create a live session from any survey but he can only write
+        on its own survey. """
+
+        self.ensure_one()
+
+        if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
+            return
+
+        if not self.session_question_id:
+            question = self.question_ids[0]
+        else:
+            questions = list(enumerate(self.question_ids))
+            current_question_index = questions.index(
+                next(question for question in questions if question[1] == self.session_question_id)
+            )
+            if current_question_index < len(self.question_ids) - 1:
+                question = self.question_ids[current_question_index + 1]
+            else:
+                question = self.session_question_id
+
+        # using datetime.datetime because we want the millis portion
+        now = datetime.datetime.now()
+        self.sudo().write({
+            'session_question_id': question.id,
+            'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=2)
+        })
+        self.env['bus.bus'].sendone(self.access_token, {
+            'question_start': now.timestamp(),
+            'type': 'next_question'
+        })
+
+    def _prepare_ranking_values(self):
+        """" The ranking is descending and takes the total of the attendee points up to the current question. """
+        self.ensure_one()
+
+        return self.env['survey.user_input'].search([('survey_id', '=', self.id)],
+            limit=25, order="scoring_total desc")
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -552,8 +687,49 @@ class Survey(models.Model):
             'url': '/survey/%s/get_certification_preview' % (self.id)
         }
 
+    def action_start_session(self):
+        """ Sets the necessary fields for the session to take place and starts it.
+        The write is sudo'ed because a survey user can start a session even if it's
+        not his own survey. """
+
+        if not self.env.user.has_group('survey.group_survey_user'):
+            raise AccessError(_('Only survey users can manage sessions.'))
+
+        self.ensure_one()
+        self.sudo().write({
+            'questions_layout': 'page_per_question',
+            'session_question_id': None,
+            'session_state': 'ready'
+        })
+        return self.action_open_session_manager()
+
+    def action_open_session_manager(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Open Session Manager",
+            'target': 'self',
+            'url': '/survey/session/manage/%s' % self.access_token
+        }
+
+    def action_end_session(self):
+        """ The write is sudo'ed because a survey user can end a session even if it's
+        not his own survey. """
+
+        if not self.env.user.has_group('survey.group_survey_user'):
+            raise AccessError(_('Only survey users can manage sessions.'))
+
+        self.sudo().write({'session_state': False})
+        self.user_input_ids.sudo().write({'state': 'done'})
+        self.env['bus.bus'].sendone(self.access_token, {'type': 'end_session'})
+
     def get_start_url(self):
         return 'survey/start/%s' % self.access_token
+
+    def get_start_short_url(self):
+        """ See controller method docstring for more details. """
+        return '/s/%s' % self.access_token[:6]
 
     def get_print_url(self):
         return 'survey/print/%s' % self.access_token
