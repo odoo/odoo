@@ -419,6 +419,18 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
+        # check modules states
+        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade', 'to remove')")
+        module_list = [name for (name,) in cr.fetchall()]
+        if module_list:
+            _logger.error("Some module have inconsistent state, some dependency may be missing: %s", module_list)
+
+        cr.execute("SELECT name from ir_module_module WHERE state = 'installed'")
+        module_list = [name for (name,) in cr.fetchall() if name not in graph]
+        if module_list:
+            _logger.error("Some module are not loaded, some dependency may be missing: %s", module_list)
+
+
         registry.loaded = True
         registry.setup_models(cr)
 
@@ -448,7 +460,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 if model in registry:
                     env[model]._check_removed_columns(log=True)
                 elif _logger.isEnabledFor(logging.INFO):    # more an info that a warning...
-                    _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
+                    _logger.log(25, "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
