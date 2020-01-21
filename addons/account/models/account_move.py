@@ -2753,32 +2753,34 @@ class AccountMoveLine(models.Model):
                 'credit': price_subtotal < 0.0 and -price_subtotal or 0.0,
             }
 
-    def _get_fields_onchange_balance(self, quantity=None, discount=None, balance=None, move_type=None, currency=None, taxes=None):
+    def _get_fields_onchange_balance(self, quantity=None, discount=None, balance=None, move_type=None, currency=None, taxes=None, price_subtotal=None):
         self.ensure_one()
         return self._get_fields_onchange_balance_model(
             quantity=quantity or self.quantity,
             discount=discount or self.discount,
             balance=balance or self.balance,
             move_type=move_type or self.move_id.type,
-            currency=currency or self.currency_id,
+            currency=currency or self.currency_id or self.move_id.currency_id,
             taxes=taxes or self.tax_ids,
+            price_subtotal=price_subtotal or self.price_subtotal,
         )
 
     @api.model
-    def _get_fields_onchange_balance_model(self, quantity, discount, balance, move_type, currency, taxes):
+    def _get_fields_onchange_balance_model(self, quantity, discount, balance, move_type, currency, taxes, price_subtotal):
         ''' This method is used to recompute the values of 'quantity', 'discount', 'price_unit' due to a change made
         in some accounting fields such as 'balance'.
 
         This method is a bit complex as we need to handle some special cases.
         For example, setting a positive balance with a 100% discount.
 
-        :param quantity:    The current quantity.
-        :param discount:    The current discount.
-        :param balance:     The new balance.
-        :param move_type:   The type of the move.
-        :param currency:    The currency.
-        :param taxes:       The applied taxes.
-        :return:            A dictionary containing 'quantity', 'discount', 'price_unit'.
+        :param quantity:        The current quantity.
+        :param discount:        The current discount.
+        :param balance:         The new balance.
+        :param move_type:       The type of the move.
+        :param currency:        The currency.
+        :param taxes:           The applied taxes.
+        :param price_subtotal:  The price_subtotal.
+        :return:                A dictionary containing 'quantity', 'discount', 'price_unit'.
         '''
         if move_type in self.move_id.get_outbound_types():
             sign = 1
@@ -2787,6 +2789,14 @@ class AccountMoveLine(models.Model):
         else:
             sign = 1
         balance *= sign
+
+        # Avoid rounding issue when dealing with price included taxes. For example, when the price_unit is 2300.0 and
+        # a 5.5% price included tax is applied on it, a balance of 2300.0 / 1.055 = 2180.094 ~ 2180.09 is computed.
+        # However, when triggering the inverse, 2180.09 + (2180.09 * 0.055) = 2180.09 + 119.90 = 2299.99 is computed.
+        # To avoid that, set the price_subtotal at the balance if the difference between them looks like a rounding
+        # issue.
+        if currency.is_zero(balance - price_subtotal):
+            return {}
 
         taxes = taxes.flatten_taxes_hierarchy()
         if taxes and any(tax.price_include for tax in taxes):
@@ -3155,7 +3165,7 @@ class AccountMoveLine(models.Model):
             vals.setdefault('company_currency_id', move.company_id.currency_id.id) # important to bypass the ORM limitation where monetary fields are not rounded; more info in the commit message
 
             if move.is_invoice(include_receipts=True):
-                currency = self.env['res.currency'].browse(vals.get('currency_id'))
+                currency = move.currency_id
                 partner = self.env['res.partner'].browse(vals.get('partner_id'))
                 taxes = self.resolve_2many_commands('tax_ids', vals.get('tax_ids', []), fields=['id'])
                 tax_ids = set(tax['id'] for tax in taxes)
@@ -3170,13 +3180,24 @@ class AccountMoveLine(models.Model):
                         balance = vals.get('amount_currency', 0.0)
                     else:
                         balance = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+                    price_subtotal = self._get_price_total_and_subtotal_model(
+                        vals.get('price_unit', 0.0),
+                        vals.get('quantity', 0.0),
+                        vals.get('discount', 0.0),
+                        currency,
+                        self.env['product.product'].browse(vals.get('product_id')),
+                        partner,
+                        taxes,
+                        move.type,
+                    ).get('price_subtotal', 0.0)
                     vals.update(self._get_fields_onchange_balance_model(
                         vals.get('quantity', 0.0),
                         vals.get('discount', 0.0),
                         balance,
                         move.type,
                         currency,
-                        taxes
+                        taxes,
+                        price_subtotal
                     ))
                     vals.update(self._get_price_total_and_subtotal_model(
                         vals.get('price_unit', 0.0),
@@ -3356,9 +3377,11 @@ class AccountMoveLine(models.Model):
             # in onchange and in create/write. So, if something changed in accounting [resp. business] fields,
             # business [resp. accounting] fields are recomputed.
             if any(field in vals for field in ACCOUNTING_FIELDS):
-                price_subtotal = line.currency_id and line.amount_currency or line.debit - line.credit
+                balance = line.currency_id and line.amount_currency or line.debit - line.credit
+                price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
                 to_write = line._get_fields_onchange_balance(
-                    balance=price_subtotal,
+                    balance=balance,
+                    price_subtotal=price_subtotal,
                 )
                 to_write.update(line._get_price_total_and_subtotal(
                     price_unit=to_write.get('price_unit', line.price_unit),
