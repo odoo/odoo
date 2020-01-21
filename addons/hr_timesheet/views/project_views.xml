@@ -261,16 +261,21 @@
                     <field name="company_id" invisible="1"/>
                     <field name="display_timesheet_timer" invisible="1"/>
                     <field name="timer_pause" invisible="1" />
+                    <field name="display_timer_start_primary" invisible="1"/>
+                    <field name="display_timer_start_secondary" invisible="1"/>
+                    <field name="display_timer_stop" invisible="1"/>
+                    <field name="display_timer_pause" invisible="1"/>
+                    <field name="display_timer_resume" invisible="1"/>
                     <button class="btn-primary" name="action_timer_start" type="object" string="Start"
-                        attrs="{'invisible': ['|', '|', ('total_hours_spent', '!=', 0), ('timer_start', '!=', False), ('display_timesheet_timer', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                        attrs="{'invisible': [('display_timer_start_primary', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <button class="btn-secondary" name="action_timer_start" type="object" string="Start"
-                        attrs="{'invisible': ['|', '|', ('total_hours_spent', '=', 0), ('timer_start', '!=', False), ('display_timesheet_timer', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                        attrs="{'invisible': [('display_timer_start_secondary', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <button class="btn-primary btn-danger o_fsm_stop" name="action_timer_stop" type="object" string="Stop"
-                        attrs="{'invisible': ['|', ('timer_start', '=', False), ('display_timesheet_timer', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                        attrs="{'invisible': [('display_timer_stop', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <button class="btn-primary" name="action_timer_pause" type="object" string="Pause"
-                        attrs="{'invisible': ['|', '|', ('timer_pause', '!=', False), ('timer_start', '=', False), ('display_timesheet_timer', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                        attrs="{'invisible': [('display_timer_pause', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <button class="btn-primary btn-info" name="action_timer_resume" type="object" string="Resume"
-                        attrs="{'invisible': ['|', '|', ('timer_pause', '=', False), ('timer_start', '=', False), ('display_timesheet_timer', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                        attrs="{'invisible': [('display_timer_resume', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position="attributes">
                     <attribute name="class">ml-2</attribute>
