@@ -104,7 +104,7 @@
 
 <template id="option_imagepicker">
     <we-row t-att-string="title" class="o_we_inline">
-        <we-button class="o_we_crop_image fa fa-fw fa-crop" data-crop-image="" data-no-preview="true"/>
+        <!-- TODO: crop here? <we-button class="o_we_crop_image fa fa-fw fa-crop" data-crop-image="" data-no-preview="true"/> -->
         <we-button class="o_we_edit_image fa fa-fw fa-edit" data-edit-image="true" t-att-data-allow-videos="allow_videos" data-no-preview="true"/>
         <we-button class="o_we_remove_image fa fa-fw fa-times" data-remove-image="" data-no-preview="true" data-name="remove"/>
     </we-row>
@@ -251,7 +251,10 @@
         </t>
     </div>
     <div data-js="background" string="Background" data-selector=".parallax" data-target=".s_parallax_bg">
-        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-first-filters="background"/>
+        <t t-call="website.option_imagepicker">
+            <t t-set="title" t-value="'Background'"/>
+            <t t-set="first_filters" t-value="'background'"/>
+        </t>
     </div>
 
     <!-- Background Image Size/Position -->
@@ -402,7 +405,10 @@
          data-drop-near=".o_mega_menu .nav-link"/>
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <we-imagepicker class="o_we_inline" string="Cover" data-background="" data-first-filters="cover"/>
+        <t t-call="website.option_imagepicker">
+            <t t-set="title" t-value="'Cover'"/>
+            <t t-set="first_filters" t-value="'cover'"/>
+        </t>
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_record_has_cover cover_full">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">Half Screen</we-button>

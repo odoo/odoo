@@ -662,7 +662,6 @@ const SelectUserValueWidget = UserValueWidget.extend({
      */
     _updateUI: async function () {
         await this._super(...arguments);
-
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         this.menuTogglerEl.textContent = activeWidget ? activeWidget.el.textContent : "/";
     },
@@ -1009,6 +1008,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _updateUI: async function (color) {
         await this._super(...arguments);
+
         this.colorPreviewEl.classList.remove(...this.colorPalette.getColorNames().map(c => 'bg-' + c));
         this.colorPreviewEl.style.removeProperty('background-color');
 
@@ -2282,8 +2282,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     updateUI: async function () {
         await this._super(...arguments);
         this._updateWeight();
+        // Quality option is not a UserValueWidget so value and visibility are manual.
         this.$el.find('input.custom-range').val(this.settings.quality);
-        // Quality option is not a UserValueWidget so visibility is manual.
         this.$el.find('.o_we_quality_option').toggleClass('d-none', !this.canModifyImage);
     },
 
@@ -2309,12 +2309,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     },
     /**
      * Removes the currently set image.
+     *
+     * @see this.selectClass for params
      */
-    removeImage: async function (ev) {
-        await this._changeSrc('');
+    removeImage: async function (previewMode, widgetValue, params) {
+        await this._changeSrc('', previewMode);
     },
     /**
      * Puts a color filter on the image.
+     *
+     * @see this.selectClass for params
      */
     filter: async function (previewMode, widgetValue, params) {
         switch (previewMode) {
@@ -2329,7 +2333,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._changeSrc(await this._applyOptions(), previewMode);
     },
     /**
-     * Puts a color filter on the image.
+     * Sets the image width.
+     *
+     * @see this.selectClass for params
      */
     width: async function (previewMode, widgetValue, params) {
         this.settings.width = parseInt(widgetValue);
@@ -2367,8 +2373,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return this._super(...arguments);
     },
     /**
-     * Called by the option when the image src needs to be updated,
-     * if you extend this option you HAVE to override this method.
+     * Called in other methods when the image src needs to be updated.
+     *
+     * @override
      */
     _changeSrc: async function (value, previewMode) {
         if (!value && !previewMode) {
@@ -2377,11 +2384,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
     },
     /**
-     * Applies all selected options on the original image and call _changeSrc
-     * with a dataURL containing the result.
+     * Applies all selected options on the original image.
      *
      * @private
-     * @returns {string} URL to the new image (or original URL if incompatible)
+     * @returns {string} URL to the new image (or original URL if the image
+     *     cannot be modified)
      */
     _applyOptions: async function () {
         const {quality, originalSrc, width, filter} = this.settings;
@@ -2408,8 +2415,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return dataURL;
         } catch (error) {
             // Can't load image for whatever reason (usually an invalid src) OR
-            // SecurityError, canvas is tainted with cross-origin data,
-            // so we cannot read the dataURL. Need to disable options.
+            // SecurityError when attempting to convert canvas to dataURL,
+            // because is tainted with cross-origin data. Need to disable options.
             console.warn(error);
             this.canModifyImage = false;
             return originalSrc;
@@ -2454,12 +2461,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _computeOptimizedWidth: function () {
+        // TODO: read widths from computed style in case container widths are not default
         const displayWidth = this.$target[0].clientWidth;
         // If the image is in a column, it might get bigger on smaller screens.
         // We use col-lg for this in most (all?) snippets.
         if (this.$target.closest('[class*="col-lg"]').length) {
             // A container's maximum inner width is 690px on the md breakpoint
-            // Might want to extract those values from the css somehow?
             if (this.$target.closest('.container').length) {
                 return Math.min(1920, Math.max(displayWidth, 690));
             }
@@ -2501,14 +2508,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _updateWeight: async function () {
-        this.$el.find('.o_we_image_file_size')
-            .text(`${(this.weight / 1024).toFixed(0)} kb`);
+        this.$el.find('.o_we_image_file_size').text(`${(this.weight / 1024).toFixed(0)} kb`);
     },
     /**
      * Returns an object containing the required arguments for creating the
      * MediaDialog, this is done here to allow overriding.
      *
-     * @see this.selectClass for params
+     * @param {Object} params @see this.selectClass third argument.
      */
     _getMediaDialogArgs: function (params) {
         const {originalSrc} = this.settings;
@@ -2538,6 +2544,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * image is loaded.
      *
      * @private
+     * @param {String} src the URL of the image to load
+     * @param {Image} img optional img element in which to load the image
+     * @returns {Image} the loaded image
      */
     _loadImage: async function (src, img = document.createElement('img')) {
         try {
@@ -2567,16 +2576,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return style.getPropertyValue('--' + color).trim();
     },
 
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
      * Handles changes to the quality range input. Since this doesn't use a
-     * UserValueWidget it needs to update the UI manually.
+     * UserValueWidget it needs to update its UI manually.
      *
      * @private
+     * @param {Event|OdooEvent} ev
      */
     _onQualityChange: async function (ev) {
         this.settings.quality = parseInt(ev.target.value);
@@ -2587,6 +2596,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * Handles saving in the MediaDialog.
      *
      * @private
+     * @param {Object} data data returned by the MediaDialog.
      */
     _onMediaDialogSave: async function (data) {
         const originalSrc = data.getAttribute('src');
@@ -2609,7 +2619,7 @@ registry.Image = ImageHandlerOption.extend({
     /**
      * @override
      */
-    _changeSrc: async function (src) {
+    _changeSrc: async function (src, previewMode) {
         await this._super(...arguments);
         await this._loadImage(src, this.$target[0]);
     },
@@ -2668,6 +2678,7 @@ registry.background = ImageHandlerOption.extend({
         if (this.$target.is('.parallax, .s_parallax_bg')) {
             return;
         }
+        // This event is not unbound on destroy, oversight?
         this.$target.off('.background-option')
             .on('background-color-event.background-option', this._onBackgroundColorUpdate.bind(this));
     },
@@ -2734,7 +2745,11 @@ registry.background = ImageHandlerOption.extend({
      * @param {string} value
      * @returns {string}
      */
-    _getSrcFromCssValue: function (value = this.$target[0].style.backgroundImage) {
+    _getSrcFromCssValue: function (value) {
+        // FIXME: reading from style.backgroundImage won't get non inline URLs,
+        // but using jQuery's css will yield absolute paths which can't be used for
+        // searching the original in DB.
+        value = value || this.$target[0].style.backgroundImage || this.$target.css('background-image');
         var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
         return value && value.replace(srcValueWrapper, '') || '';
     },
