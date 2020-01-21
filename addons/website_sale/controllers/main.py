@@ -174,15 +174,19 @@ class WebsiteSale(http.Controller):
         return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
 
     def _get_search_domain(self, search, category, attrib_values):
-        domain = request.website.sale_product_domain()
+        domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
-                domain += [
-                    '|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
-                    ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
+                subdomains = [
+                    [('name', 'ilike', srch)],
+                    [('product_variant_ids.default_code', 'ilike', srch)],
+                    [('description', 'ilike', srch)],
+                    [('description_sale', 'ilike', srch)]
+                ]
+                domains.append(expression.OR(subdomains))
 
         if category:
-            domain += [('public_categ_ids', 'child_of', int(category))]
+            domains.append([('public_categ_ids', 'child_of', int(category))])
 
         if attrib_values:
             attrib = None
@@ -194,13 +198,13 @@ class WebsiteSale(http.Controller):
                 elif value[0] == attrib:
                     ids.append(value[1])
                 else:
-                    domain += [('attribute_line_ids.value_ids', 'in', ids)]
+                    domains.append([('attribute_line_ids.value_ids', 'in', ids)])
                     attrib = value[0]
                     ids = [value[1]]
             if attrib:
-                domain += [('attribute_line_ids.value_ids', 'in', ids)]
+                domains.append([('attribute_line_ids.value_ids', 'in', ids)])
 
-        return domain
+        return expression.AND(domains)
 
     @http.route([
         '/shop',
