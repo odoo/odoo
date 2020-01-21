@@ -579,6 +579,9 @@ class SaleOrder(models.Model):
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return []
+
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         # 1) Create invoices.
@@ -636,12 +639,14 @@ class SaleOrder(models.Model):
             invoice_vals_list = new_invoice_vals_list
 
         # 3) Create invoices.
-        moves = self.env['account.move'].with_context(default_type='out_invoice').create(invoice_vals_list)
+        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
+        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
+        moves = self.env['account.move'].sudo().with_context(default_type='out_invoice').create(invoice_vals_list)
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
+            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
         for move in moves:
             move.message_post_with_view('mail.message_origin_link',
                 values={'self': move, 'origin': move.line_ids.mapped('sale_line_ids.order_id')},
