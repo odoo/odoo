@@ -1000,7 +1000,7 @@ class StockMove(models.Model):
             if move.move_orig_ids:
                 move_waiting |= move
             else:
-                if move.procure_method == 'make_to_order':
+                if move.procure_method == 'make_to_order' and move.product_uom_qty > 0:
                     move_create_proc |= move
                 else:
                     move_to_confirm |= move
