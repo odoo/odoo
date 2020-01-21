@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="user_input_session" name="Survey User Input Session" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-att-style" add="('height: 100%; overflow: auto; background: url(' + '/web/image/survey.survey/%s/background_image' % survey.id + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image else 'height: 100%; overflow: auto;'"/>
+        </xpath>
+        <xpath expr="//head/t[@t-call-assets][last()]" position="after">
+            <t t-call-assets="survey.survey_user_input_session_assets" lazy_load="True"/>
+            <t t-call-assets="survey.survey_assets" lazy_load="True"/>
+        </xpath>
+        <xpath expr="//header" position="before">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+        </xpath>
+        <xpath expr="//header" position="after">
+            <div id="wrap" class="oe_structure oe_empty"/>
+        </xpath>
+    </template>
+
+    <template id="user_input_session_open" name="Survey: Open Session">
+        <t t-call="survey.user_input_session">
+            <div t-att-data-survey-access-token="survey.access_token"
+                t-att-data-survey-id="survey.id"
+                t-att-data-is-start-screen="True"
+                class="wrap py-3 min-vh-100 align-items-center justify-content-center d-flex o_survey_session_open o_survey_session_manage">
+                <div class="w-75 p-4 o_survey_session_manage_container">
+                    <div class="mb-5 text-center">
+                        <h1 t-field="survey.title" />
+                        <div t-field="survey.description" />
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-center mb-2" t-if="survey.access_mode == 'public'">
+                            <h1>
+                                <a t-att-href="survey_url" t-esc="survey_url" target="_blank" />
+                                <i class="fa fa-copy font-weight-normal ml-3 o_survey_session_copy" />
+                            </h1>
+                            <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey_url" />
+                        </div>
+                        <div class="col-lg-12 text-center ml-3 font-weight-light o_survey_manage_fontsize_14">
+                            Participants <span class="ml-1 font-weight-bold o_survey_session_attendees_count" t-esc="survey.answer_count" />
+                        </div>
+                    </div>
+                    <div class="text-center mt-5">
+                        <a role="button" class="btn btn-primary font-weight-bold o_survey_session_start" href="#">
+                            Start Session
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="user_input_session_manage" name="Survey: Manage Session">
+        <t t-call="survey.user_input_session">
+            <t t-call="survey.user_input_session_manage_content" />
+        </t>
+    </template>
+
+    <template id="user_input_session_manage_content" name="Survey User Input Session Manage">
+        <div class="wrap py-3 pt-4 min-vh-100 align-items-center d-flex flex-column o_survey_session_manage"
+            t-att-style="'display: none;' if is_rpc_call else ''"
+            t-att-data-is-rpc-call="is_rpc_call"
+            t-att-data-survey-id="survey.id"
+            t-att-data-survey-access-token="survey.access_token"
+            t-att-data-timer="survey.session_question_start_time.isoformat()"
+            t-att-data-time-limit-minutes="survey.session_question_id.time_limit / 60">
+            <nav class="w-75 navbar navbar-expand-lg text-left font-weight-bold pl-0 pb-0">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav nav-tabs mr-auto" role="tablist">
+                        <li class="nav-item">
+                            <a data-toggle="tab" role="tab" class="nav-link active py-2 px-3"
+                                aria-controls="#o_survey_session_manage_question" href="#o_survey_session_manage_question">
+                                Question
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a data-toggle="tab" role="tab" class="nav-link py-2 px-3 o_survey_session_results_href"
+                                aria-controls="#o_survey_session_results" href="#o_survey_session_results">
+                                Results
+                            </a>
+                        </li>
+                        <li t-if="survey.session_show_ranking" class="nav-item">
+                            <a data-toggle="tab" role="tab" class="nav-link py-2 px-3 o_survey_session_ranking_href"
+                                aria-controls="#o_survey_session_ranking" href="#o_survey_session_ranking">
+                                Ranking
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="tab-content w-75">
+            <div role="tabpanel" id="o_survey_session_manage_question"
+                class="p-4 px-5 flex-column tab-pane fade show active o_survey_session_manage_question o_survey_session_manage_container">
+                <t t-if="survey.access_mode == 'public'">
+                    <h4 class="text-right">
+                        <a t-att-href="survey_url" t-esc="survey_url" target="_blank" />
+                        <i class="fa fa-copy font-weight-normal ml-3 mr-1 o_survey_session_copy" />
+                    </h4>
+                    <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey_url" />
+                </t>
+                <div class="d-flex flex-column justify-content-center flex-grow-1">
+                    <div>
+                        <fieldset disabled="disabled">
+                            <div class="row mb-4">
+                                <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
+                                <h1 t-if="survey.session_question_id.is_time_limited" class="o_survey_timer_container col-lg-4 text-right">
+                                    <span class="o_survey_timer"/>
+                                </h1>
+                            </div>
+                            <t t-set="question" t-value="survey.session_question_id" />
+                            <t t-set="answer" t-value="env['survey.user_input']" />
+                            <t t-set="answer_lines" t-value="env['survey.user_input.line']" />
+                            <t t-set="survey_form_readonly" t-value="True"/>
+                            <t t-call="survey.question_container" />
+                        </fieldset>
+                        <div class="mb-5">
+                            <div class="d-inline-block font-weight-bold">
+                                <t t-call="survey.survey_progression">
+                                    <t t-set="page_ids" t-value="survey.question_ids.ids"/>
+                                    <t t-set="page_number" t-value="page_ids.index(survey.session_question_id.id)"/>
+                                </t>
+                            </div>
+                            <div class="float-right d-inline-block font-weight-bold my-2">
+                                Received answers:
+                                <span class="o_survey_session_answer_count" t-esc="survey.session_question_answer_count" />
+                                    /
+                                    <t t-esc="survey.answer_count" />
+                            </div>
+                        </div>
+                        <div class="text-center position-relative">
+                            <a t-if="not is_last_question" role="button" class="btn btn-primary font-weight-bold o_survey_session_next" href="#">
+                                Next Question
+                            </a>
+                            <a role="button" href="#"
+                                t-attf-class="btn font-weight-bold o_survey_session_end #{'position-absolute btn-secondary' if not is_last_question else 'btn-primary'}">
+                                End Session
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" id="o_survey_session_results"
+                    class="p-4 px-5 tab-pane fade o_survey_session_manage_container o_survey_session_results">
+                <div class="row m-0 pt-2 d-flex align-items-center">
+                    <div class="col-lg-10 m-0 p-0">
+                        <h3 class="m-0">Results</h3>
+                    </div>
+                    <div class="col-lg-2 m-0 p-0 text-right">
+                        <h5 class="m-0">
+                            <i class="fa fa-refresh o_survey_session_refresh_results mr-2" />
+                        </h5>
+                    </div>
+                </div>
+                <div class="o_survey_result">
+                </div>
+            </div>
+            <div role="tabpanel" id="o_survey_session_ranking"
+                t-if="survey.session_show_ranking"
+                class="p-4 px-5 tab-pane fade o_survey_session_manage_container o_survey_session_ranking">
+                <div class="row m-0 pt-2 d-flex align-items-center">
+                    <div class="col-lg-10 m-0 p-0">
+                        <h3 class="m-0">Ranking</h3>
+                    </div>
+                    <div class="col-lg-2 m-0 p-0 text-right">
+                        <h5 class="m-0">
+                            <i class="fa fa-refresh o_survey_session_refresh_ranking mr-2" />
+                        </h5>
+                    </div>
+                </div>
+                <div class="o_survey_session_ranking_container">
+                </div>
+            </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="user_input_session_ranking" name="Survey User Input Ranking">
+        <div t-if="ranking">
+            <t t-set="max_score" t-value="ranking[0].scoring_total or 1" />
+            <t t-foreach="ranking" t-as="ranking_item">
+                <div class="o_survey_session_ranking_item mb-1">
+                    <div t-esc="'%d.' % (ranking_item_index + 1)" class="o_survey_session_ranking_index d-inline-block font-weight-bold"></div>
+                    <!-- We keep "10rem" of space to display the points.
+                    Then, the length of the bar is a percentage of the attendee's score compared to the max_score. -->
+                    <t t-set="width_ratio" t-value="round(ranking_item.scoring_total / max_score, 3)"/>
+                    <div class="o_survey_session_ranking_bar mr-1 pr-2 align-top d-inline-block text-right font-weight-bold mb-1"
+                        t-esc="ranking_item.nickname"
+                        t-att-style="'width: %s' % ('0%' if animate_width else ('calc(calc(%s - 10rem) * %s' % ('100%', width_ratio)))"
+                        t-att-data-width-ratio="width_ratio">
+                        <span t-if="ranking_item.nickname" t-esc="ranking_item.nickname" />
+                        <span t-else="">Anonymous</span>
+                    </div>
+                    <div class="o_survey_session_ranking_name font-weight-bold align-top d-inline-block">
+                        <span t-esc="'%.0f ' % ranking_item.scoring_total" />
+                        <span>points</span>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+</data>
+</odoo>

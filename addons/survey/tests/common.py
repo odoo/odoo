@@ -216,6 +216,11 @@ class TestSurveyCommon(common.SavepointCase):
     def _access_page(self, survey, token):
         return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
+    def _access_begin(self, survey, token):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = base_url + '/survey/begin/%s/%s' % (survey.access_token, token)
+        return self.opener.post(url=url, json={})
+
     def _access_submit(self, survey, token, post_data):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)

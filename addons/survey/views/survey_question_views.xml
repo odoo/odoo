@@ -100,6 +100,10 @@
                             <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/><br/>
                             <field name="save_as_email" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_email', '=', False)]}"/>
                             <label for="save_as_email" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_email', '=', False)]}"/>
+                            <div attrs="{'invisible': [('question_type', '!=', 'char_box')]}">
+                                <field name="save_as_nickname"/>
+                                <label for="save_as_nickname"/>
+                            </div>
                             <field name="page_id" invisible="1" required="0"/>
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
@@ -161,6 +165,15 @@
                                 <field name='comments_allowed' />
                                 <field name='comments_message' attrs="{'invisible': [('comments_allowed', '=', False)]}"/>
                                 <field name='comment_count_as_answer' attrs="{'invisible': ['|', ('comments_allowed', '=', False), ('question_type', 'in', ['matrix'])]}" />
+                            </group>
+                            <group string="Live Sessions">
+                                <label for="is_time_limited" string="Question Time Limit"/>
+                                <div>
+                                    <field name="is_time_limited" nolabel="1"/>
+                                    <field name="time_limit" nolabel="1" class="oe_inline"
+                                        attrs="{'invisible': [('is_time_limited', '=', False)]}" />
+                                    <span attrs="{'invisible': [('is_time_limited', '=', False)]}"> seconds</span>
+                                </div>
                             </group>
                         </page>
                     </notebook>
