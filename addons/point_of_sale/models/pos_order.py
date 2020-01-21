@@ -628,22 +628,9 @@ class PosOrderLine(models.Model):
     def create(self, values):
         if values.get('order_id') and not values.get('name'):
             # set name based on the sequence specified on the config
-            config_id = self.order_id.browse(values['order_id']).session_id.config_id.id
-            # HACK: sequence created in the same transaction as the config
-            # cf TODO master is pos.config create
-            # remove me saas-15
-            self.env.cr.execute("""
-                SELECT s.id
-                FROM ir_sequence s
-                JOIN pos_config c
-                  ON s.create_date=c.create_date
-                WHERE c.id = %s
-                  AND s.code = 'pos.order.line'
-                LIMIT 1
-                """, (config_id,))
-            sequence = self.env.cr.fetchone()
-            if sequence:
-                values['name'] = self.env['ir.sequence'].browse(sequence[0])._next()
+            config = self.env['pos.order'].browse(values['order_id']).session_id.config_id
+            if config.sequence_line_id:
+                values['name'] = config.sequence_line_id._next()
         if not values.get('name'):
             # fallback on any pos.order sequence
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
