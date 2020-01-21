@@ -1802,7 +1802,7 @@ class AccountMove(models.Model):
                 draft_name += ' (* %s)' % str(self.id)
             else:
                 draft_name += ' ' + self.name
-        return (draft_name or self.name) + (show_ref and self.ref and ' (%s)' % self.ref or '')
+        return (draft_name or self.name) + (show_ref and self.ref and ' (%s%s)' % (self.ref[:50], '...' if len(self.ref) > 50 else '') or '')
 
     def _get_invoice_delivery_partner_id(self):
         ''' Hook allowing to retrieve the right delivery address depending of installed modules.
