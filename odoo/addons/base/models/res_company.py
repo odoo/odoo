@@ -28,14 +28,8 @@ class Company(models.Model):
     def _get_logo(self):
         return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'static', 'img', 'res_company_logo.png'), 'rb') .read())
 
-    @api.model
-    def _get_euro(self):
-        return self.env['res.currency.rate'].search([('rate', '=', 1)], limit=1).currency_id
-
-    @api.model
-    def _get_user_currency(self):
-        currency_id = self.env['res.users'].browse(self._uid).company_id.currency_id
-        return currency_id or self._get_euro()
+    def _default_currency_id(self):
+        return self.env.user.company_id.currency_id
 
     def _get_default_favicon(self, original=False):
         img_path = get_resource_path('web', 'static/src/img/favicon.ico')
@@ -74,7 +68,7 @@ class Company(models.Model):
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._get_user_currency())
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._default_currency_id())
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
     street = fields.Char(compute='_compute_address', inverse='_inverse_street')
     street2 = fields.Char(compute='_compute_address', inverse='_inverse_street2')
@@ -164,19 +158,10 @@ class Company(models.Model):
         if self.state_id.country_id:
             self.country_id = self.state_id.country_id
 
-    def on_change_country(self, country_id):
-        # This function is called from account/models/chart_template.py, hence decorated with `multi`.
-        self.ensure_one()
-        currency_id = self._get_user_currency()
-        if country_id:
-            currency_id = self.env['res.country'].browse(country_id).currency_id
-        return {'value': {'currency_id': currency_id.id}}
-
     @api.onchange('country_id')
-    def _onchange_country_id_wrapper(self):
-        values = self.on_change_country(self.country_id.id)['value']
-        for fname, value in values.items():
-            setattr(self, fname, value)
+    def _onchange_country_id(self):
+        if self.country_id:
+            self.currency_id = self.country_id.currency_id
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
