@@ -551,7 +551,13 @@ class GoogleCalendar(models.AbstractModel):
     @api.model
     def synchronize_events_cron(self):
         """ Call by the cron. """
-        users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False)])
+        if self._context.get('delta'):
+            delta = self._context.get('delta')
+            last_cron_time = datetime.now() - timedelta(hours=delta)
+            users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False),
+                                                  ('google_calendar_last_sync_date', '<=', last_cron_time)])
+        else:
+            users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False)])
         _logger.info("Calendar Synchro - Started by cron")
 
         for user_to_sync in users.ids:
