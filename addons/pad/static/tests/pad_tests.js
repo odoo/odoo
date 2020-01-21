@@ -92,7 +92,7 @@ QUnit.module('pad widget', {
                 return this._super.apply(this, arguments);
             },
             session: {
-                userName: "batman",
+                username: "batman",
             },
         });
         assert.notOk(form.$('p.oe_unconfigured').is(':visible'),
@@ -143,7 +143,7 @@ QUnit.module('pad widget', {
                 return result;
             },
             session: {
-                userName: "batman",
+                username: "batman",
             },
         });
         assert.strictEqual(form.$('.oe_pad_content').text(), "Loading",
@@ -179,7 +179,7 @@ QUnit.module('pad widget', {
                 return this._super.apply(this, arguments);
             },
             session: {
-                userName: "batman",
+                username: "batman",
             },
         });
         var def = form.canBeDiscarded();
@@ -215,7 +215,7 @@ QUnit.module('pad widget', {
                 return this._super.apply(this, arguments);
             },
             session: {
-                userName: "batman",
+                username: "batman",
             },
         });
         form.$buttons.find('.o_form_button_edit').click();
@@ -252,7 +252,7 @@ QUnit.module('pad widget', {
                 return this._super.apply(this, arguments);
             },
             session: {
-                userName: "batman",
+                username: "batman",
             },
         });
         form.$buttons.find('.o_form_button_edit').click();
