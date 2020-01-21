@@ -24,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
     module_auth_ldap = fields.Boolean("LDAP Authentication")
     module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
-    module_inter_company_rules = fields.Boolean("Manage Inter Company")
+    module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_pad = fields.Boolean("Collaborative Pads")
     module_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
