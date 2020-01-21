@@ -1824,6 +1824,22 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).all_children_ids, all_children)
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
 
+    def test_12_active_test_one2many_search(self):
+        Model = self.env['test_new_api.model_active_field']
+        parent = Model.create({})
+        all_children = Model.create([
+            {'name': 'A', 'parent_id': parent.id, 'active': True},
+            {'name': 'B', 'parent_id': parent.id, 'active': False},
+        ])
+
+        # a one2many field without context does not match its inactive children
+        self.assertIn(parent, Model.search([('children_ids.name', '=', 'A')]))
+        self.assertNotIn(parent, Model.search([('children_ids.name', '=', 'B')]))
+
+        # a one2many field with active_test=False matches its inactive children
+        self.assertIn(parent, Model.search([('all_children_ids.name', '=', 'A')]))
+        self.assertIn(parent, Model.search([('all_children_ids.name', '=', 'B')]))
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
