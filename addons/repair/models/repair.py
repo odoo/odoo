@@ -493,19 +493,30 @@ class Repair(models.Model):
                     'partner_id': repair.address_id.id,
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
-                    'move_line_ids': [(0, 0, {'product_id': operation.product_id.id,
-                                           'lot_id': operation.lot_id.id, 
-                                           'product_uom_qty': 0,  # bypass reservation here
-                                           'product_uom_id': operation.product_uom.id,
-                                           'qty_done': operation.product_uom_qty,
-                                           'package_id': False,
-                                           'result_package_id': False,
-                                           'owner_id': owner_id,
-                                           'location_id': operation.location_id.id, #TODO: owner stuff
-                                           'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
                     'origin': repair.name,
                 })
+
+                # Best effort to reserve the product in a (sub)-location where it is available
+                product_qty = move.product_uom._compute_quantity(
+                    operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+                available_quantity = self.env['stock.quant']._get_available_quantity(
+                    move.product_id,
+                    move.location_id,
+                    lot_id=operation.lot_id.id,
+                    strict=False,
+                )
+                move._update_reserved_quantity(
+                    product_qty,
+                    available_quantity,
+                    move.location_id,
+                    lot_id=operation.lot_id.id,
+                    strict=False,
+                )
+                # Then, set the quantity done. If the required quantity was not reserved, negative
+                # quant is created in operation.location_id.
+                move._set_quantity_done(operation.product_uom_qty)
+
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
             move = Move.create({
