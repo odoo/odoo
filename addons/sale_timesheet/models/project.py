@@ -21,6 +21,15 @@ class Project(models.Model):
         help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
         "By extension, it defines the rate at which an employee's time on the project is billed.")
     allow_billable = fields.Boolean("Bill from Tasks")
+    display_create_order = fields.Boolean(compute='_compute_display_create_order')
+
+    @api.depends('billable_type', 'allow_billable', 'sale_order_id', 'partner_id')
+    def _compute_display_create_order(self):
+        for project in self:
+            show = True
+            if not project.partner_id or project.billable_type != 'no' or project.allow_billable or project.sale_order_id:
+                show = False
+            project.display_create_order = show
 
     @api.depends('sale_order_id', 'sale_line_id', 'sale_line_employee_ids')
     def _compute_billable_type(self):
@@ -125,6 +134,19 @@ class ProjectTask(models.Model):
     ], string="Billable Type", compute='_compute_billable_type', compute_sudo=True, store=True)
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     allow_billable = fields.Boolean(related="project_id.allow_billable")
+    display_create_order = fields.Boolean(compute='_compute_display_create_order')
+
+    @api.depends(
+        'allow_billable', 'allow_timesheets', 'sale_order_id', 'display_timesheet_timer',
+        'timer_start')
+    def _compute_display_create_order(self):
+        for task in self:
+            show = True
+            if not task.allow_billable or not task.allow_timesheets or \
+                task.billable_type == 'employee_rate' or not task.partner_id or \
+                task.sale_order_id or (task.display_timesheet_timer and task.timer_start):
+                show = False
+            task.display_create_order = show
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
