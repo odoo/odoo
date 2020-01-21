@@ -3,9 +3,9 @@
 
     <div t-name="web.PivotRenderer" class="o_pivot" owl="1">
         <t t-if="!props.hasData || !props.measures.length" t-call="web.NoContentHelper">
-            <t t-set="description" t-value="'Try to add some records, or make sure
-                                            that there is at least one measure and
-                                            no active filter in the search bar'"/>
+            <t t-set="description">
+                Try to add some records, or make sure that there is at least one measure and no active filter in the search bar
+            </t>
         </t>
         <table t-else="1" class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !props.disableLinking }">
             <thead>

@@ -308,12 +308,12 @@
         data-drop-near=".row > div"
         data-exclude=".s_col_no_resize.row > div"/>
 
-    <t t-set="so_snippet_addition_selector">section, .parallax, .s_popup</t>
+    <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax, .s_popup</t>
     <div id="so_snippet_addition"
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector">blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart</t>
+    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, #{so_content_addition_selector}"
