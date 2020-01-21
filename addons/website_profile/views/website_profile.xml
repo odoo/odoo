@@ -258,7 +258,7 @@
                             <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
                             <small t-if="next_rank_id" class="font-weight-bold mt-1">Next rank:</small>
                             <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
-                                <t t-set="img_max_width">40%</t>
+                                <t t-set="img_max_width" t-valuef="40%"/>
                             </t>
 
                             <table class="table table-sm w-100" id="o_wprofile_sidebar_table">
@@ -290,7 +290,7 @@
                             <div class="o_wprofile_email_validation_container mb16 mt16">
                                 <t t-call="website_profile.email_validation_banner">
                                     <t t-set="redirect_url" t-value="'/profile/user/%s' % user.id"/>
-                                    <t t-set="send_validation_email_message" t-value="'Click here to send a verification email.'"/>
+                                    <t t-set="send_validation_email_message">Click here to send a verification email.</t>
                                 </t>
                             </div>
                             <div id="profile_about_badge" class="mb32">

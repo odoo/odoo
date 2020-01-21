@@ -494,8 +494,8 @@
                             <p t-if="event.twitter_hashtag" class="font-weight-bold">Hashtag: <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank">#<span t-field="event.twitter_hashtag"/></a></p>
                             <t t-call="website.s_share">
                                 <t t-set="_no_title" t-value="True"/>
-                                <t t-set="_classes">o_wevent_sidebar_social mx-n1</t>
-                                <t t-set="_link_classes">o_wevent_social_link</t>
+                                <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
+                                <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
                             </t>
                         </div>
                     </div>

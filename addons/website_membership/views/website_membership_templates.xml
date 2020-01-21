@@ -35,7 +35,7 @@
             <div class="col-lg-8" id="ref_content">
                 <div class='d-flex m-2'>
                     <t t-call="website.pager">
-                       <t t-set="classname">float-left</t>
+                       <t t-set="classname" t-valuef="float-left"/>
                     </t>
                     <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
                         <t t-call="website.website_search_box">
