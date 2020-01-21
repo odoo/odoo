@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Hr Recruitment Assets Frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_hr_recruitment/static/src/scss/website_hr_recruitment.scss"/>
+    </xpath>
+</template>
+
 <template id="index" name="Jobs">
     <t t-call="website.layout">
-        <div id="wrap">
+        <div id="wrap" class="o_website_hr_recruitment_jobs_list bg-100">
             <div class="oe_structure">
-                <section class="mb16">
+                <section class="pt48 pb32 bg-200">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-12 text-center mb16">
-                                <h2>Our Job Offers</h2>
-                                <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
-                            </div>
                             <div class="col-lg-12 text-center">
+                                <h2 class="h1 text-secondary">Our Job Offers</h2>
+                                <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
                                 <p>
                                     Join us, we offer you an extraordinary chance to learn, to
                                     develop and to be part of an exciting experience and
@@ -25,11 +29,11 @@
             </div>
 
             <div class="container oe_website_jobs">
-                <div class="row">
+                <div class="row pt48 pb48">
                     <div class="d-none" id="jobs_grid_left">
 
                     </div>
-                    <div class="col-lg-12" id="jobs_grid">
+                    <div class="col-lg" id="jobs_grid">
                         <div t-if="not jobs">
                             <div class="text-center text-muted">
                                 <h3 class="css_editable_hidden"><a t-attf-href="/contactus">Contact us</a> for job opportunities.</h3>
@@ -38,30 +42,35 @@
                                 </h4>
                             </div>
                         </div>
-                        <ul class="list-unstyled" t-if="jobs">
-                            <li t-foreach="jobs" t-as="job" t-attf-class="media#{' mt-3' if job_index else ''}">
-                                <div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
-                                    <h3>
-                                        <a t-attf-href="/jobs/detail/#{ slug(job) }">
-                                            <span t-field="job.name"/>
-                                        </a>
-                                        <small t-if="job.no_of_recruitment &gt; 1">
-                                            <t t-esc="job.no_of_recruitment"/> open positions
-                                        </small>
+                        <a t-foreach="jobs" t-as="job" t-attf-href="/jobs/detail/#{ slug(job) }" t-attf-class="text-decoration-none#{' mt-3' if job_index else ''}">
+                            <div class="card card-default mb32">
+                                <div class="card-body" t-att-data-publish="job.website_published and 'on' or 'off'">
+                                    <span t-if="not job.website_published" class="badge badge-danger mb8 p-2">unpublished</span>
+                                    <h3 class="text-secondary mt0 mb4">
+                                        <span t-field="job.name"/>
                                     </h3>
-
-                                    <span t-field="job.address_id" t-options='{
-                                        "widget": "contact",
-                                        "fields": ["address"],
-                                        "no_tag_br": True
-                                        }'/>
-                                    <span t-if="not job.website_published" class="badge badge-danger">unpublished</span>
-                                    <div class="text-muted">
-                                        <i class="fa fa-clock-o" title="Publication date" role="img" aria-label="Publication date"/> <span t-field="job.write_date"/>
+                                    <h5 t-if="job.no_of_recruitment &gt; 1">
+                                        <t t-esc="job.no_of_recruitment"/> open positions
+                                    </h5>
+                                    <p t-if="editable"
+                                       t-field="job.description"
+                                       class="mt16 mb0 css_non_editable_mode_hidden"/>
+                                    <p t-esc="len((job.description or '').split(' ')) > 35 and '%s ...' % ' '.join(job.description.split(' ')[:35]) or job.description"
+                                        class="mt16 mb0 css_editable_mode_hidden"
+                                    />
+                                    <div class="o_job_infos mt16">
+                                        <span t-field="job.address_id" t-options='{
+                                            "widget": "contact",
+                                            "fields": ["address"],
+                                            "no_tag_br": True
+                                            }'/>
+                                        <div>
+                                            <i class="fa fa-fw fa-clock-o" title="Publication date" role="img" aria-label="Publication date"/><span t-field="job.write_date"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -73,21 +82,31 @@
     <t t-call="website.layout">
         <t t-set="additional_title">Job Detail</t>
         <div id="wrap" class="js_hr_recruitment">
-            <div class="oe_structure" id="oe_structure_website_hr_recruitment_detail_1"/>
-
             <!-- Breadcrumb -->
-            <section class="mb16 bg-white">
+            <section class="bg-200">
                 <div class="container">
-                    <div class="float-right">
-                        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-right mt32 mb4">Apply Now!</a>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb pl-0">
+                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary font-weight-bold">Jobs</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
+                        </ol>
+                    </nav>
+                </div>
+            </section>
+            <!-- Job name -->
+            <section class="pb32">
+                <div class="container">
+                    <div class="mt32">
+                        <div class="float-right">
+                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-right">Apply Now!</a>
+                        </div>
+                        <h1 t-field="job.name"/>
+                        <h5 class="font-weight-light" t-field="job.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["city"],
+                            "no_tag_br": True
+                        }'/>
                     </div>
-                    <label class="mb0 mt16"><a href="/jobs">Jobs</a></label> /
-                    <h1 class="mb0 mt0" t-field="job.name"/>
-                    <h4 class="mt0" t-field="job.address_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["city"],
-                        "no_tag_br": True
-                    }'/>
                 </div>
             </section>
 
@@ -190,185 +209,214 @@
 </template>
 
 <template id="default_website_description">
-    <!-- Description -->
-    <section class="mb32">
-        <div class="container">
-            <p class="mt0 lead">
-                Short summary of the job: A sales job for smart people and can
-                learn quickly new industries management practices. You will be
-                in charge of the full sales cycle from the opportunity
-                qualification to the negotiation, going through astonishing
-                product demos.
-            </p>
-        </div>
-    </section>
-
-    <!-- Responsibilities -->
-    <section class="o_tasks">
+    <!-- Description text and ratings -->
+    <section class="pt32">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-lg-4">
-                    <h4><strong>Responsibilities</strong></h4>
-                    <p>Full sales cycle</p>
-                    <p>Achieve monthly targets</p>
-                    <p>US + Canada Territory</p>
+                <div class="col-lg-8 pb32">
+                    <p class="lead">
+                        As an employee of our company, you will <b>collaborate with each department
+                        to create and deploy disruptive products.</b> Come work at a growing company
+                        that offers great benefits with opportunities to moving forward and learn
+                        alongside accomplished leaders. We're seeking an experienced and outstanding
+                        member of staff.
+                        <br/><br/>
+                        This position is both <b>creative and rigorous</b> by nature you need to think
+                        outside the box. We expect the candidate to be proactive and have a "get it done"
+                        spirit. To be successful, you will have solid solving problem skills.
+                    </p>
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <h4><strong>Challenges</strong></h4>
-                    <p>Full sales cycle</p>
-                    <p>Achieve monthly targets</p>
-                    <p>US + Canada Territory</p>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <h4><strong>Must Have</strong></h4>
-                    <p>Full sales cycle</p>
-                    <p>Achieve monthly targets</p>
-                    <p>US + Canada Territory</p>
+                <div class="col-lg-3 offset-lg-1 pb32">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                        <h6 class="s_rating_title">Customer Relationship</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                        <h6 class="s_rating_title">Personal Evolution</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                        <h6 class="s_rating_title">Autonomy</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                                <i class="fa fa-fw fa-star-o"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                        <h6 class="s_rating_title">Administrative Work</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                                <i class="fa fa-fw fa-star-o"/>
+                                <i class="fa fa-fw fa-star-o"/>
+                                <i class="fa fa-fw fa-star-o"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                        <h6 class="s_rating_title">Technical Expertise</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-fw fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- What's great -->
-    <section class="mb32 mt16">
-        <div class="container">
-            <h4><strong>What's great in the job?</strong></h4>
-            <ul>
-                <li>No outbound calls, you get leads and focus on providing value to them</li>
-                <li>You sell management software to directors of SMEs: interesting projects and people</li>
-                <li>Large apps scope: CRM, MRP, Accounting, Inventory, HR, Project Mgt, etc.</li>
-                <li>Direct coordination with functional consultants for qualification and follow ups</li>
-                <li>High commissions for good performers</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Datas -->
-    <section style="border: 0 solid #e3e3e3; border-width: 2px 0;">
+    <!-- Responsabilities, Must Have and Nice to have -->
+    <section class="s_comparisons pt24 pb24 bg-200">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-lg-4 mt16 mb16">
-                    <div class="s_rating s_rating_stars s_rating_3">
-                        <h6 class="mb0">Job Complexity:</h6>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <div class="s_rating_bar"/>
-                    </div>
-                    <div class="s_rating s_rating_stars s_rating_1">
-                        <h6 class="mb0">Personal Evolution:</h6>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <div class="s_rating_bar"/>
-                    </div>
-                    <div class="s_rating s_rating_stars s_rating_4">
-                        <h6 class="mb0">Variability of the Job:</h6>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <div class="s_rating_bar"/>
-                    </div>
-                    <div class="s_rating s_rating_stars s_rating_5">
-                        <h6 class="mb0">Job Security:</h6>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <div class="s_rating_bar"/>
-                    </div>
-                    <div class="s_rating s_rating_stars s_rating_2">
-                        <h6 class="mb0">Overachieving Possibilities:</h6>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <i class="fa"/>
-                        <div class="s_rating_bar"/>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                    <div class="card bg-primary">
+                        <h4 class="card-header">Responsibilities</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Lead the entire sales cycle</li>
+                            <li class="list-group-item">Achieve monthly sales objectives</li>
+                            <li class="list-group-item">Qualify the customer needs</li>
+                            <li class="list-group-item">Negotiate and contract</li>
+                            <li class="list-group-item">Master demos of our software</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mt16 mb16">
-                    <h6 class="mb0">Team / Company Size:</h6>
-                    <p class="text-uppercase ">10  / 40 people</p>
-                    <h6 class="mb0">Avg Deal Size:</h6>
-                    <p class="text-uppercase ">$15k</p>
-                    <h6 class="mb0">Sales Cycle:</h6>
-                    <p class="text-uppercase ">3 months</p>
-                    <h6 class="mb0">Company Growth:</h6>
-                    <p class="text-uppercase ">50% YoY</p>
-                    <h6 class="mb0">Company Maturity:</h6>
-                    <p class="text-uppercase ">Profitable</p>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                    <div class="card bg-primary">
+                        <h4 class="card-header">Must Have</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Bachelor Degree or Higher</li>
+                            <li class="list-group-item">Passion for software products</li>
+                            <li class="list-group-item">Perfect written English</li>
+                            <li class="list-group-item">Highly creative and autonomous</li>
+                            <li class="list-group-item">Valid work permit for Belgium</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mt16 mb16">
-                    <h3 class="mt0">Need More Info?</h3>
-                    <ul>
-                        <li><a href="#">The founder’s story</a></li>
-                        <li><a href="#">The culture</a></li>
-                        <li><a href="https://twitter.com/odoo/likes">What people say about us?</a></li>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                    <div class="card bg-primary">
+                        <h4 class="card-header">Nice to have</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Experience in writing online content</li>
+                            <li class="list-group-item">Additional languages</li>
+                            <li class="list-group-item">Google Adwords experience</li>
+                            <li class="list-group-item">Strong analytical skills</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- What's great -->
+    <section class="pt40">
+        <div class="container">
+            <h2>What's great in the job?</h2>
+            <br/>
+            <div class="row">
+                <div class="col-lg-8 pb40">
+                    <ul class="lead">
+                        <li>Great team of smart people, in a friendly and open culture</li>
+                        <li>No dumb managers, no stupid tools to use, no rigid working hours</li>
+                        <li>No waste of time in enterprise processes, real responsibilities and autonomy</li>
+                        <li>Expand your knowledge of various business industries</li>
+                        <li>Create content that will help our users on a daily basis</li>
+                        <li>Real responsibilities and challenges in a fast evolving company</li>
                     </ul>
                 </div>
+                <div class="col-lg-3 offset-lg-1 pb40">
+                    <div>
+                        <h5>About us</h5>
+                        <p>Learn more about our company.</p>
+                        <div class="s_btn text-left" data-name="Button">
+                            <a href="/aboutus" class="btn btn-outline-alpha" target="_blank"><small><b>READ</b></small></a>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <h5>Our Product</h5>
+                        <p>Discover our products.</p>
+                        <div class="s_btn text-left" data-name="Button">
+                            <a href="/" class="btn btn-outline-alpha" target="_blank"><small><b>READ</b></small></a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Perks -->
-    <section class="o_perk mt16 mb16">
+    <!-- What we offer -->
+    <section class="s_features pt40 pb40 bg-200" data-name="Features">
         <div class="container">
-            <div class="row">
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-heart"/>
-                    Benefits</h4>
-                    <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
+            <h2>What We Offer</h2>
+            <br/>
+            <p class="lead">
+                Each employee has a chance to see the impact of his work.
+                You can make a real contribution to the success of the company.
+                <br/>
+                Several activities are often organized all over the year, such as weekly
+                sports sessions, team building events, monthly drink, and much more
+            </p>
+            <div class="row pt16">
+                <div class="col-lg-3 text-center bg-white border pt16 pb32 rounded" style="border-left-color: var(--200) !important; border-bottom-color: var(--200) !important; border-right-color: var(--200) !important; border-top-color: var(--200) !important; border-width: 5px !important; border-radius: 8px !important;">
+                    <i class="fa fa-2x fa-gift rounded-circle bg-primary m-3"></i>
+                    <h3>Perks</h3>
+                    <p>A full-time position <br/>Attractive salary package.</p>
                 </div>
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-sun-o"/>
-                    PTOs</h4>
-                    <p>Vacation, Sick, and paid leaves</p>
+                <div class="col-lg-3 text-center bg-white border pt16 pb32 rounded" style="border-left-color: var(--200) !important; border-bottom-color: var(--200) !important; border-right-color: var(--200) !important; border-top-color: var(--200) !important; border-width: 5px !important; border-radius: 8px !important;">
+                    <i class="fa fa-2x fa-bar-chart rounded-circle bg-primary m-3"></i>
+                    <h3>Trainings</h3>
+                    <p>12 days / year, including <br/>6 of your choice.</p>
                 </div>
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-car"/>
-                    Save on commute</h4>
-                    <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
-                    </div>
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-check-circle"/>
-                    Discount Programs</h4>
-                    <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
+                <div class="col-lg-3 text-center bg-white border pt16 pb32 rounded" style="border-left-color: var(--200) !important; border-bottom-color: var(--200) !important; border-right-color: var(--200) !important; border-top-color: var(--200) !important; border-width: 5px !important; border-radius: 8px !important;">
+                    <i class="fa fa-2x fa-futbol-o rounded-circle bg-primary m-3"></i>
+                    <h3>Sport Activity</h3>
+                    <p>Play any sport with colleagues, <br/>the bill is covered.</p>
                 </div>
-            </div><div class="row">
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-map-marker"/>
-                    Prime location</h4>
-                    <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
-                </div>
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-calendar"/>
-                    Sponsored Events</h4>
-                    <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
-                </div>
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-futbol-o"/>
-                    Sport Activity</h4>
-                    <p>Play any sport with colleagues and the bill is covered</p>
-                    </div>
-                <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-coffee"/>
-                    Eat &amp; Drink</h4>
-                    <p>Peet's and Philz coffee provided all day to order and pantry snacks</p>
+                <div class="col-lg-3 text-center bg-white border pt16 pb32 rounded" style="border-left-color: var(--200) !important; border-bottom-color: var(--200) !important; border-right-color: var(--200) !important; border-top-color: var(--200) !important; border-width: 5px !important; border-radius: 8px !important;">
+                    <i class="fa fa-2x fa-coffee rounded-circle bg-primary m-3"></i>
+                    <h3>Eat &amp; Drink</h3>
+                    <p>Fruit, coffee and <br/>snacks provided.</p>
                 </div>
             </div>
         </div>
     </section>
-
     <!-- Photos -->
-    <section class="mt16 mb16">
+    <section class="pt24 pb16">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-lg-6 mt16 mb16">
@@ -460,7 +508,7 @@
     </field>
 </record>
 
-<template id="job_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
+<template id="job_filter_by_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
             <li class="nav-item"><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_countries=1" t-attf-class="nav-link#{'' if country_id else ' active'}">All Countries</a></li>
@@ -475,12 +523,9 @@
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
         <attribute name="class">col-lg-3</attribute>
     </xpath>
-    <xpath expr="//div[@id='jobs_grid']" position="attributes">
-        <attribute name="class">col-lg-9</attribute>
-    </xpath>
 </template>
 
-<template id="job_departments" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Departments">
+<template id="job_filter_by_departments" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
             <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else ''}" t-attf-class="nav-link#{'' if department_id else ' active'}">All Departments</a></li>
@@ -494,12 +539,9 @@
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
         <attribute name="class">col-lg-3</attribute>
     </xpath>
-    <xpath expr="//div[@id='jobs_grid']" position="attributes">
-        <attribute name="class">col-lg-9</attribute>
-    </xpath>
 </template>
 
-<template id="job_offices" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Offices">
+<template id="job_filter_by_offices" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
             <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }" t-attf-class="nav-link#{'' if office_id else ' active'}">All Offices</a></li>
@@ -518,8 +560,29 @@
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
         <attribute name="class">col-lg-3</attribute>
     </xpath>
-    <xpath expr="//div[@id='jobs_grid']" position="attributes">
-        <attribute name="class">col-lg-9</attribute>
+</template>
+
+<template id="job_right_side_bar" inherit_id="website_hr_recruitment.index" active="True" customize_show="True" name="Right Side Bar">
+    <xpath expr="//div[@id='jobs_grid']" position="after">
+        <div class="col-lg-3 oe_structure oe_empty" id="jobs_grid_left">
+            <section class="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <img src="/website_hr_recruitment/static/src/img/job_image_1.jpg" class="img-fluid" alt="About us"/>
+                            <h4 class="mt24 mb8">About us</h4>
+                            <p>
+                                We are a team of passionate people whose goal is to improve everyone's life through disruptive products.
+                                We build great products to solve your business problems.
+                            </p>
+                            <div class="s_btn pt18" data-name="Button">
+                                <a href="/aboutus" class="btn btn-primary">About us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </xpath>
 </template>
 
