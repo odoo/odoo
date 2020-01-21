@@ -705,27 +705,14 @@ class MrpProduction(models.Model):
             factor = ongoing_qty_bom_uom / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
 
-            documents = defaultdict(list)
             for line, line_values in lines:
                 if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
                         line.product_id.type not in ['product', 'consu']:
                     continue
-                move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
-                if move:
-                    move = move[0]
-                    old_qty = move.product_uom_qty
-                    iterate_key = move._get_document_iterate_key()
-                    if iterate_key:
-                        document = self.env['stock.picking']._log_activity_get_documents({move: (line_values['qty'], old_qty)}, iterate_key, 'UP')
-                        for key, value in document.items():
-                            documents[key] += [value]
                 production._update_raw_move(line, line_values)
-            if documents:
-                production._log_manufacture_exception(documents)
             ongoing_move_raw_ids = production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
 
-            finished_moves_modification = production._update_finished_moves(ongoing_qty, previous_qty)
-            production._log_downside_manufactured_quantity(finished_moves_modification)
+            production._update_finished_moves(ongoing_qty, previous_qty)
             ongoing_move_raw_ids._action_assign()
 
             qty_per_operation = {}

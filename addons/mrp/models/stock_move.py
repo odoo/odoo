@@ -160,6 +160,21 @@ class StockMove(models.Model):
                 defaults['additional'] = True
         return defaults
 
+    def write(self, values):
+        if 'product_uom_qty' in values:
+            old_quantities = {move: move.product_uom_qty for move in self}
+        res = super().write(values)
+        if 'product_uom_qty' in values:
+            procurement_requests = []
+            for move in self:
+                mo = move.raw_material_production_id
+                if mo and mo.state == 'confirmed':
+                    qty_diff = float_compare(move.product_uom_qty, old_quantities[move], precision_rounding=move.product_uom.rounding)
+                    if qty_diff < 0:
+                        move.move_orig_ids._decrease_initial_demand(old_quantities[move] - move.product_uom_qty)
+            self.env['procurement.group'].run(procurement_requests)
+        return res
+
     def _action_assign(self):
         res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
@@ -309,3 +324,17 @@ class StockMove(models.Model):
             return min(qty_ratios) // 1
         else:
             return 0.0
+
+    def _decrease_initial_demand(self, qty, stream='UP'):
+        done_move_to_return = []
+        finished_moves = self.env['stock.move']
+        for move in self:
+            if move.production_id and move.product_id == move.production_id.product_id and move.state not in ('done, cancel'):
+                try:
+                    if move.production_id.state == 'confirmed':
+                        converted_qty = move.product_id.uom_id._compute_quantity(qty, move.production_id.product_uom_id)
+                        move.production_id._update_quantity(move.production_id.product_qty - converted_qty)
+                        finished_moves |= move
+                except UserError:
+                    done_move_to_return.append((move, move.production_id))
+        return done_move_to_return + super(StockMove, self - finished_moves)._decrease_initial_demand(qty, stream=stream)
