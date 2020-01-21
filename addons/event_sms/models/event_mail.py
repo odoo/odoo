@@ -27,6 +27,13 @@ class EventMailScheduler(models.Model):
         domain=[('model', '=', 'event.registration')], ondelete='restrict',
         help='This field contains the template of the SMS that will be automatically sent')
 
+    @api.onchange('notification_type')
+    def _onchange_notification_type(self):
+        if self.notification_type == "mail":
+            self.sms_template_id = False
+        elif self.notification_type == "sms":
+            self.template_id = False
+
     def execute(self):
         for mail in self:
             now = fields.Datetime.now()
