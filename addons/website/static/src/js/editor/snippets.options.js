@@ -1006,7 +1006,6 @@ options.registry.CoverProperties = options.Class.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        this.$image = this.$target.find('.o_record_cover_image');
         this.$filter = this.$target.find('.o_record_cover_filter');
     },
     /**
@@ -1027,7 +1026,8 @@ options.registry.CoverProperties = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Handles a background change.
+     * FIXME: Remove and restore functionality in a separate option inheriting from background.
+     * (classes and clicking default cover size in select.)
      *
      * @see this.selectClass for parameters
      */
@@ -1099,13 +1099,6 @@ options.registry.CoverProperties = options.Class.extend({
                     if (this.$filter.hasClass(className)) {
                         return className;
                     }
-                }
-                return '';
-            }
-            case 'background': {
-                const background = this.$image.css('background-image');
-                if (background && background !== 'none') {
-                    return background.match(/^url\(["']?(.+?)["']?\)$/)[1];
                 }
                 return '';
             }

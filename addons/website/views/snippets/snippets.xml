@@ -242,7 +242,7 @@
 
     <!-- Background Image -->
     <div data-js="background" string="Background"
-        data-selector="section, .carousel-item"
+        data-selector="section, .carousel-item, .o_record_cover_image"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item, .parallax">
         <t t-call="website.option_imagepicker">
             <t t-set="title" t-value="'Background'"/>
@@ -404,11 +404,17 @@
          data-drop-in=".o_mega_menu nav"
          data-drop-near=".o_mega_menu .nav-link"/>
 
-    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
+    <!-- Cover image -->
+    <!-- FIXME: Unfortunately, since this doesn't save the DOM we can't really save the image settings (quality, width, filter) -->
+    <div data-js="background" string="Cover"
+        data-selector=".o_record_cover_container"
+        data-target=".o_record_cover_image">
         <t t-call="website.option_imagepicker">
             <t t-set="title" t-value="'Cover'"/>
             <t t-set="first_filters" t-value="'cover'"/>
         </t>
+    </div>
+    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_record_has_cover cover_full">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">Half Screen</we-button>

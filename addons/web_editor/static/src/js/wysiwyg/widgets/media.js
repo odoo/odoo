@@ -275,33 +275,6 @@ var FileWidget = SearchableMediaWidget.extend({
             .replace(allImgClassModifiers, ' ');
     },
     /**
-     * Computes and returns the width that a new attachment should have to
-     * ideally occupy the space where it will be inserted.
-     * Only relevant for images.
-     *
-     * @see options.mediaWidth
-     *
-     * @private
-     * @returns {integer}
-     */
-    _computeOptimizedWidth: function () {
-        if (this.options.mediaWidth) {
-            return this.options.mediaWidth;
-        }
-        // If the media is in a column, it might get bigger on smaller screens.
-        // We use col-lg for this in most (all?) snippets.
-        if (this.$media.closest('[class*="col-lg"]').length) {
-            // A container's maximum inner width is 690px on the md breakpoint
-            if (this.$media.closest('.container').length) {
-                return Math.min(1920, Math.max(this.$media.width(), 690));
-            }
-            // A container-fluid's max inner width is 962px on the md breakpoint
-            return Math.min(1920, Math.max(this.$media.width(), 962));
-        }
-        // If it's not in a col-lg, it's probably not going to change size depending on breakpoints
-        return this.$media.width();
-    },
-    /**
      * Returns the domain for attachments used in media dialog.
      * We look for attachments related to the current document. If there is a value for the model
      * field, it is used to search attachments, and the attachments from the current document are
@@ -677,6 +650,7 @@ var FileWidget = SearchableMediaWidget.extend({
         var isURL = /^.+\..+$/.test(inputValue); // TODO improve
 
         // Would be nice to be able to only get headers to determine content-type but we hit CORS (img src doesn't)
+        // Do we really need mimetype for url type attachments?
         const img = document.createElement('img');
         img.src = inputValue;
         img.addEventListener('load', () => {

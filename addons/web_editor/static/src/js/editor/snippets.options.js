@@ -2461,7 +2461,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     _computeOptimizedWidth: function () {
-        // TODO: read widths from computed style in case container widths are not default
+        // FIXME: read widths from computed style in case container widths are not default
         const displayWidth = this.$target[0].clientWidth;
         // If the image is in a column, it might get bigger on smaller screens.
         // We use col-lg for this in most (all?) snippets.
