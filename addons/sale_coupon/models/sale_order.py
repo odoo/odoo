@@ -264,10 +264,6 @@ class SaleOrder(models.Model):
         ])._filter_programs_from_common_rules(self)
         return programs
 
-    def _get_applied_coupon_program_coming_from_another_so(self):
-        # TODO: Remove me in master as no more used
-        pass
-
     def _get_valid_applied_coupon_program(self):
         self.ensure_one()
         # applied_coupon_ids's coupons might be coming from:
