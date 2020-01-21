@@ -243,8 +243,3 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order_bis.order_line), 2, "You should get 1 regular product_B and 1 free product_B")
         order_bis.recompute_coupon_lines()
         self.assertEqual(len(order_bis.order_line), 2, "Free product from a coupon generated from a promotion program on next order should not dissapear")
-
-def test_on_next_order_reward_promo_program(self):
-    # TODO: remove me in master, this was never executed due to bad indentation (the method is not indented under the class)
-    #       note that this flow did not worked and was not implemented.. now tested with `test_on_next_order_reward_promotion_program()`
-    pass
