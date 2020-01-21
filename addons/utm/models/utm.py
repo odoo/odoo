@@ -26,7 +26,7 @@ class UtmCampaign(models.Model):
         required=True, default=lambda self: self.env.uid)
     stage_id = fields.Many2one('utm.stage', string='Stage', ondelete='restrict', required=True,
         default=lambda self: self.env['utm.stage'].search([], limit=1),
-        group_expand='_group_expand_stage_ids'
+        group_expand='_group_expand_stage_ids',
         copy=False)
     tag_ids = fields.Many2many(
         'utm.tag', 'utm_tag_rel',
