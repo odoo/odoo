@@ -289,10 +289,16 @@ class StockMove(models.Model):
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        result = {data['move_id'][0]: data['product_qty'] for data in 
-            self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
+        # This compute depends of move lines' `product_qty` who is a stored computed field.
+        # As the write of the computed field updated value is delayed, the `read_group` can't
+        # get the updated value at the time. Get the value directly from the records is less
+        # performing, but as it looks also into the cache, it can get the right value.
         for rec in self:
-            rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
+            rec.reserved_availability = rec.product_id.uom_id._compute_quantity(
+                sum(rec.mapped('move_line_ids').mapped('product_qty')),
+                rec.product_uom,
+                rounding_method='HALF-UP'
+            )
 
     @api.one
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
