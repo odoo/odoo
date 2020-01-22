@@ -1325,8 +1325,41 @@ var FieldFloatToggle = AbstractField.extend({
 });
 
 var FieldPercentage = FieldFloat.extend({
+    className: 'o_field_float_percentage o_field_number',
     description: _lt("Percentage"),
-    formatType:'percentage',
+    formatType: 'percentage',
+
+    init() {
+        this._super.apply(this, arguments);
+
+        if (this.mode === 'edit') {
+            this.tagName = 'div';
+            this.className += ' o_input';
+
+            // do not display percentage symbol in edit as it is explicitly added after input
+            this.formatOptions.noSymbol = true;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * For percentage widget, the input is inside a div, alongside a span
+     * containing the percentage(%) symbol.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit() {
+        this.$el.empty();
+        // Prepare and add the input
+        const def = this._prepareInput(this.$input).appendTo(this.$el);
+        const $percentageSymbol = $('<span>', { text: '%' });
+        this.$el.append($percentageSymbol);
+        return def;
+    },
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
