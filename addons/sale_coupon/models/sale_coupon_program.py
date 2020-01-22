@@ -3,7 +3,8 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval
+
+import ast
 
 
 class SaleCouponProgram(models.Model):
@@ -285,7 +286,7 @@ class SaleCouponProgram(models.Model):
 
     def _is_valid_partner(self, partner):
         if self.rule_partners_domain:
-            domain = safe_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
+            domain = ast.literal_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
             return bool(self.env['res.partner'].search_count(domain))
         else:
             return True
@@ -293,13 +294,13 @@ class SaleCouponProgram(models.Model):
     def _is_valid_product(self, product):
         # NOTE: if you override this method, think of also overriding _get_valid_products
         if self.rule_products_domain:
-            domain = safe_eval(self.rule_products_domain) + [('id', '=', product.id)]
+            domain = ast.literal_eval(self.rule_products_domain) + [('id', '=', product.id)]
             return bool(self.env['product.product'].search_count(domain))
         else:
             return True
 
     def _get_valid_products(self, products):
         if self.rule_products_domain:
-            domain = safe_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
+            domain = ast.literal_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
             return self.env['product.product'].search(domain)
         return products

@@ -15,7 +15,6 @@ from datetime import datetime
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 

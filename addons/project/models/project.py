@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from datetime import timedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
-from odoo.tools.safe_eval import safe_eval
 from odoo.tools.misc import format_date
 
 
@@ -406,7 +406,7 @@ class Project(models.Model):
             }
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
         action['name'] = _('Ratings of %s') % (self.name,)
-        action_context = safe_eval(action['context']) if action['context'] else {}
+        action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['search_default_parent_res_name'] = self.name
         action_context.pop('group_by', None)
