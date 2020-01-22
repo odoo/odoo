@@ -2430,7 +2430,6 @@ var BooleanToggle = FieldBoolean.extend({
     _onClick: function (event) {
         event.stopPropagation();
         this._setValue(!this.value);
-        this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
     },
 });
 
