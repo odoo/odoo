@@ -939,7 +939,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         if not column or (self.required and not has_notnull):
             # the column is new or it becomes required; initialize its values
-            if model._table_has_rows():
+            if model._table_has_null_rows(self.name):
                 model._init_column(self.name)
 
         if self.required and not has_notnull:
