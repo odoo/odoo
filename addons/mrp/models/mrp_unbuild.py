@@ -272,11 +272,12 @@ class MrpUnbuild(models.Model):
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
-        if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
+        unbuild_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
+        if float_compare(available_qty, unbuild_qty, precision_digits=precision) >= 0:
             return self.action_unbuild()
         else:
             return {
-                'name': _('Insufficient Quantity'),
+                'name': self.product_id.display_name + _(': Insufficient Quantity To Unbuild'),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.unbuild',
                 'view_id': self.env.ref('mrp.stock_warn_insufficient_qty_unbuild_form_view').id,
@@ -284,7 +285,9 @@ class MrpUnbuild(models.Model):
                 'context': {
                     'default_product_id': self.product_id.id,
                     'default_location_id': self.location_id.id,
-                    'default_unbuild_id': self.id
+                    'default_unbuild_id': self.id,
+                    'default_quantity': unbuild_qty,
+                    'default_product_uom_name': self.product_id.uom_name
                 },
                 'target': 'new'
             }
