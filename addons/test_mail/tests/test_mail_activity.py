@@ -24,7 +24,7 @@ class TestActivityCommon(TestMailCommon):
         cls._reset_mail_context(cls.test_record)
 
 
-@tests.tagged('mail_activity')
+@tests.tagged('mail_activity', 'post_install', '-at_install')
 class TestActivityRights(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -85,7 +85,7 @@ class TestActivityRights(TestActivityCommon):
                     user_id=self.user_admin.id)
 
 
-@tests.tagged('mail_activity')
+@tests.tagged('mail_activity', 'post_install', '-at_install')
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
@@ -149,7 +149,7 @@ class TestActivityFlow(TestActivityCommon):
         self.assertEqual(activity.user_id, self.user_employee)
 
 
-@tests.tagged('mail_activity')
+@tests.tagged('mail_activity', 'post_install', '-at_install')
 class TestActivityMixin(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

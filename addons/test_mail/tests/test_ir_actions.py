@@ -3,8 +3,10 @@
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
 
     def test_action_email(self):

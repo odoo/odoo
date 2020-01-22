@@ -9,9 +9,11 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 
 
+@tagged('post_install', '-at_install')
 class TestMessagePost(TestMailCommon, TestRecipients):
 
     @classmethod

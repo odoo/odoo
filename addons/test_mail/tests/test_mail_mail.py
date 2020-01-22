@@ -6,10 +6,11 @@ import psycopg2
 from odoo import api
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
 
+@tagged('post_install', '-at_install')
 class TestMailMail(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -36,6 +37,7 @@ class TestMailMail(TestMailCommon):
         self.assertRaises(MailDeliveryException, lambda: mail.send(raise_exception=True))
 
 
+@tagged('post_install', '-at_install')
 class TestMailMailRace(common.TransactionCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

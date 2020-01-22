@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('mail_wizards')
+@tagged('mail_wizards', 'post_install', '-at_install')
 class TestMailResend(TestMailCommon):
 
     @classmethod

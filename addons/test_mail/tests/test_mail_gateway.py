@@ -16,7 +16,7 @@ from odoo.tests import tagged
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
 
-@tagged('mail_gateway')
+@tagged('mail_gateway', 'post_install', '-at_install')
 class TestEmailParsing(TestMailCommon):
 
     def test_message_parse_body(self):
@@ -70,7 +70,7 @@ class TestEmailParsing(TestMailCommon):
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))
 
 
-@tagged('mail_gateway')
+@tagged('mail_gateway', 'post_install', '-at_install')
 class TestMailAlias(TestMailCommon):
 
     def test_alias_setup(self):
@@ -78,7 +78,7 @@ class TestMailAlias(TestMailCommon):
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
 
-@tagged('mail_gateway')
+@tagged('mail_gateway', 'post_install', '-at_install')
 class TestMailgateway(TestMailCommon):
 
     @classmethod
@@ -737,6 +737,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(record._name, 'mail.test.gateway')
 
 
+@tagged('post_install', '-at_install')
 class TestMailThreadCC(TestMailCommon):
 
     @classmethod
