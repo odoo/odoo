@@ -252,9 +252,7 @@ QUnit.module('Search View', {
 
         this.basicDomains = [
             ["&",["date_field",">=","2017-03-01"],["date_field","<=","2017-03-31"]],
-            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
             ["&",["date_field",">=","2017-02-01"],["date_field","<=","2017-02-28"]],
-            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
             ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-01-31"]],
             ["|",
                 "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-01-31"],
@@ -267,19 +265,19 @@ QUnit.module('Search View', {
             ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
             ["|",
                 "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"],
-                "&",["date_field",">=","2016-01-01"],["date_field","<=","2016-12-31"]
+                "&",["date_field",">=","2015-01-01"],["date_field","<=","2015-12-31"]
             ],
             ["|",
                 "|",
+                    "&",["date_field",">=","2017-03-01"],["date_field","<=","2017-03-31"],
                     "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"],
-                    "&",["date_field",">=","2016-01-01"],["date_field","<=","2016-12-31"],
                 "&",["date_field",">=","2015-01-01"],["date_field","<=","2015-12-31"]
             ],
             ["|",
                 "|",
                     "&", ["date_field",">=","2017-03-01"],["date_field","<=","2017-03-31"],
-                    "&",["date_field",">=","2016-03-01"],["date_field","<=","2016-03-31"],
-                "&",["date_field",">=","2015-03-01"],["date_field","<=","2015-03-31"]
+                    "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-03-31"],
+                "&",["date_field",">=","2015-01-01"],["date_field","<=","2015-03-31"]
             ]
         ];
 
@@ -748,7 +746,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('filter by a date field using period works', async function (assert) {
-        assert.expect(15);
+        assert.expect(13);
 
         var self = this;
 
@@ -796,9 +794,9 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="first_quarter"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_year"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="antepenultimate_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="first_quarter"]'));
         actionManager.destroy();
         unpatchDate();
     });

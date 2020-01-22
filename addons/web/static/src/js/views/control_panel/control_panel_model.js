@@ -15,7 +15,7 @@ const DEFAULT_TIMERANGE = controlPanelViewParameters.DEFAULT_TIMERANGE;
 let TIME_RANGE_OPTIONS = controlPanelViewParameters.TIME_RANGE_OPTIONS;
 let COMPARISON_TIME_RANGE_OPTIONS = controlPanelViewParameters.COMPARISON_TIME_RANGE_OPTIONS;
 const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
-const YEAR_OPTIONS = controlPanelViewParameters.YEAR_OPTIONS;
+const { MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS } = controlPanelViewParameters;
 
 // Returns a predicate used to test if two arrays (of maximal length 2) have the same basic content.
 function isEqualTo (array1) {
@@ -420,7 +420,7 @@ var ControlPanelModel = mvc.Model.extend({
                         }
                         if (filter.currentOptionIds) {
                             filter.currentOptionIds.clear();
-                        }   
+                        }
                     })
                     group.activeFilterIds = [];
                 });
@@ -453,26 +453,19 @@ var ControlPanelModel = mvc.Model.extend({
         optionId = optionId || filter.defaultOptionId;
         const group = this.groups[filter.groupId];
 
-        const selectedYears = () => YEAR_OPTIONS.reduce(
-            (acc, y) => {
-                if (filter.currentOptionIds.has(y.optionId)) {
-                    acc.push(y.optionId);
-                }
-                return acc;
-            }, 
-            []
-        );
+        const noYearSelected = () => !YEAR_OPTIONS.some(o => filter.currentOptionIds.has(o.optionId));
+        const quarterSelected = () => QUARTER_OPTIONS.some(o => filter.currentOptionIds.has(o.optionId));
 
         if (filter.type === 'filter') {
             const alreadyActive = group.activeFilterIds.some(isEqualTo([filterId]));
             if (alreadyActive) {
                 if (filter.currentOptionIds.has(optionId)) {
                     filter.currentOptionIds.delete(optionId);
-                    if (!selectedYears().length) {
+                    if (noYearSelected()) {
                         // This is the case where optionId was the last option of type 'year' to be there before being removed above.
-                        // Since other options of type 'month' or 'quarter' do not make sense without a year
-                        // we deactivate all options.
-                        filter.currentOptionIds.clear();
+                        // Since the options of type 'quarter' do not make sense without a year
+                        // we deactivate those options.
+                        QUARTER_OPTIONS.forEach(o => { filter.currentOptionIds.delete(o.optionId); });
                     }
                     if (!filter.currentOptionIds.size) {
                         // Here no option is selected so that the filter becomes inactive.
@@ -480,12 +473,14 @@ var ControlPanelModel = mvc.Model.extend({
                     }
                 } else {
                     filter.currentOptionIds.add(optionId);
+                    if (noYearSelected() && quarterSelected()) {
+                        filter.currentOptionIds.add('this_year');
+                    }
                 }
             } else {
                 this.toggleFilter(filterId);
                 filter.currentOptionIds.add(optionId);
-                if (!selectedYears().length) {
-                    // Here we add 'this_year' as options if no option of type year is already selected.
+                if (noYearSelected() && quarterSelected()) {
                     filter.currentOptionIds.add('this_year');
                 }
             }
@@ -580,18 +575,25 @@ var ControlPanelModel = mvc.Model.extend({
      */
     _computeDateFilterDomain: function (filter) {
         const domains = [];
-        const p = _.partition([...filter.currentOptionIds], optionId =>
-            OPTION_GENERATORS.find(o => o.optionId === optionId).groupId === 1);
-        const yearIds = p[1];
-        const otherOptionIds = p[0];
-        // the following case corresponds to years selected only
-        if (otherOptionIds.length === 0) {
+
+        const [monthIds, quarterIds, yearIds]  = [...filter.currentOptionIds].reduce((acc, optionId) => {
+            const index = OPTION_GENERATORS.find(o => o.optionId === optionId).groupId - 1;
+            acc[index].push(optionId);
+            return acc;
+        }, [[], [], []]);
+
+        monthIds.forEach(monthId => {
+            const d = filter.basicDomains[monthId];
+            domains.push(d.domain);
+        });
+
+        if (quarterIds.length === 0) {
             yearIds.forEach(yearId => {
                 const d = filter.basicDomains[yearId];
                 domains.push(d.domain);
             });
         } else {
-            otherOptionIds.forEach(optionId => {
+            quarterIds.forEach(optionId => {
                 yearIds.forEach(yearId => {
                     const d = filter.basicDomains[yearId + '__' + optionId];
                     domains.push(d.domain);
@@ -726,8 +728,8 @@ var ControlPanelModel = mvc.Model.extend({
         return pyUtils.assembleDomains(domains, 'AND');
     },
     /**
-     * Return an array containing 'facets' used to create the content of the search bar. 
-     * 
+     * Return an array containing 'facets' used to create the content of the search bar.
+     *
      * @returns {Object}
      */
     _getFacets: function () {

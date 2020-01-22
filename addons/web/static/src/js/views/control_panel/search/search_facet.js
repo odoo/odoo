@@ -52,24 +52,35 @@ var SearchFacet = Widget.extend({
                 const optionDescriptions = [];
                 const sortFunction = (o1, o2) =>
                     filter.options.findIndex(o => o.optionId === o1) - filter.options.findIndex(o => o.optionId === o2);
-                const p = _.partition([...filter.currentOptionIds], optionId =>
-                    filter.options.find(o => o.optionId === optionId).groupId === 1);
-                const yearIds = p[1].sort(sortFunction);
-                const otherOptionIds = p[0].sort(sortFunction);
-                // the following case corresponds to years selected only
-                if (otherOptionIds.length === 0) {
+
+                const [monthIds, quarterIds, yearIds]  = [...filter.currentOptionIds].reduce((acc, optionId) => {
+                    const index = filter.options.find(o => o.optionId === optionId).groupId - 1;
+                    acc[index].push(optionId);
+                    return acc;
+                }, [[], [], []]);
+
+                monthIds.sort(sortFunction);
+                quarterIds.sort(sortFunction);
+                yearIds.sort(sortFunction);
+
+                monthIds.forEach(monthId => {
+                    const d = filter.basicDomains[monthId];
+                    optionDescriptions.push(d.description);
+                });
+                if (quarterIds.length === 0) {
                     yearIds.forEach(yearId => {
                         const d = filter.basicDomains[yearId];
                         optionDescriptions.push(d.description);
                     });
                 } else {
-                    otherOptionIds.forEach(optionId => {
+                    quarterIds.forEach(optionId => {
                         yearIds.forEach(yearId => {
                             const d = filter.basicDomains[yearId + '__' + optionId];
                             optionDescriptions.push(d.description);
                         });
                     });
                 }
+
                 description += ': ' + optionDescriptions.join('/');
             } else {
                 description = description += ': ' +
