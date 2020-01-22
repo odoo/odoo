@@ -57,6 +57,7 @@
         'views/snippets/s_chart.xml',
         'views/snippets/s_parallax.xml',
         'views/snippets/s_quotes_carousel.xml',
+        'views/snippets/s_numbers.xml',
         'views/snippets/s_mega_menu_multi_menus.xml',
         'views/snippets/s_mega_menu_menu_image_menu.xml',
         'views/website_views.xml',
