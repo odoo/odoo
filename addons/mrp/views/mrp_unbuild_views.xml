@@ -114,8 +114,8 @@
                                 <field name="bom_id" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty"/>
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                    <field name="product_qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
+                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
                                 </div>
                             </group>
                             <group>

@@ -66,6 +66,7 @@
                     <button name="action_cancel" type="object" string="Cancel"
                             attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', False)]}"
                             confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
+                    <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>

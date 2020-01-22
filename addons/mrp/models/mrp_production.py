@@ -1143,3 +1143,15 @@ class MrpProduction(models.Model):
             return self.env.ref('mrp.exception_on_mo').render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
+
+    def button_unbuild(self):
+        self.ensure_one()
+        return {
+            'name': _('Unbuild'),
+            'view_mode': 'form',
+            'res_model': 'mrp.unbuild',
+            'view_id': self.env.ref('mrp.mrp_unbuild_form_view').id,
+            'type': 'ir.actions.act_window',
+            'context': {'default_mo_id': self.id, 'create': False, 'edit': False},
+            'target': 'new',
+        }
