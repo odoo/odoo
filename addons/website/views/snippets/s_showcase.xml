@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Template -->
+<template name="Showcase" id="s_showcase">
+    <section class="s_showcase" data-vcss="001">
+        <div class="container">
+            <div class="row text-center col-md-6 col-lg-12 mx-auto mt-3">
+                <div class="col-lg-3 offset-lg-2 my-2" data-name="Feature block">
+                    <h3 class="mb16"><span class="fa fa-fw fa-desktop s_showcase_icon"/>First feature</h3>
+                    <p>Focus on what the customer would like to know, not what you want to show. Write a small explanation of this great feature</p>
+                </div>
+                <div class="col-lg-3 offset-lg-2 my-2" data-name="Feature block">
+                    <h3 class="mb16"><span class="fa fa-paint-brush s_showcase_icon"/>Second feature</h3>
+                    <p>Focus on what the customer would like to know, not what you want to show. Write a small explanation of this great feature</p>
+                </div>
+                <div class="col-lg-3 offset-lg-2 my-2" data-name="Feature block">
+                    <h3 class="mb16"><span class="fa fa-heart s_showcase_icon"/>Another feature</h3>
+                    <p>Focus on what the customer would like to know, not what you want to show. Write a small explanation of this great feature</p>
+                </div>
+                <div class="col-lg-3 offset-lg-2 my-2" data-name="Feature block">
+                    <h3 class="mb16"><span class="fa fa-sliders s_showcase_icon"/>Last Feature</h3>
+                    <p>Focus on what the customer would like to know, not what you want to show. Write a small explanation of this great feature</p>
+                </div>
+            </div>
+        </div>
+        <div class="mt16 mb16 text-center">
+            <a class="btn btn-secondary" href="">Discover all the features</a>
+        </div>
+    </section>
+</template>
+
+<!-- Options -->
+<template id="s_showcase_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='background']" position="before">
+        <div data-js='s_showcase' data-selector=".s_showcase .feature"/>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<template id="assets_snippet_s_showcase_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_showcase/000.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_showcase_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_showcase/001.scss"/>
+    </xpath>
+</template>
+
+</odoo>
