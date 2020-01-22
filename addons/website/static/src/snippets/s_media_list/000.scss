@@ -1,0 +1,27 @@
+
+.s_media_list {
+    .row {
+        margin: $grid-gutter-width 0;
+    }
+    [class*="col-"] {
+        padding: 0;
+    }
+    .s_media_list_body {
+        background-color: #fff;
+        padding: $grid-gutter-width;
+    }
+    .s_media_list_options {
+        @include o-position-absolute(auto,0,0,0);
+        display: flex;
+        border-top: 1px solid gray('400');
+        .s_media_list_option {
+            flex: 1 1 auto;
+            padding: $grid-gutter-width/3 0;
+            border-right: 1px solid gray('400');
+            text-align: center;
+            &:last-child {
+                border-right: 0;
+            }
+        }
+    }
+}
