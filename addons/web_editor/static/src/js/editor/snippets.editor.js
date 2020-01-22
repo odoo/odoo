@@ -93,7 +93,7 @@ var SnippetEditor = Widget.extend({
                 },
             });
         } else {
-            this.$('.o_move_handle').addClass('d-none');
+            this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
