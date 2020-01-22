@@ -2,6 +2,7 @@ odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
 var AbstractStorageService = require('web.AbstractStorageService');
+const concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
@@ -1244,6 +1245,85 @@ QUnit.module('Search View', {
 
         assert.isNotVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
         assert.verifySteps(['getItem ', 'getItem ', 'setItem false', 'getItem ']);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('update suggested filters in autocomplete menu with Japanese IME', async function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 11,
+            name: 'Partners Action 11',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+            search_view_id: [11, 'search'],
+        });
+        this.archs['partner,11,search'] = `
+            <search>
+                <field name="foo"/>
+                <field name="bar"/>
+            </search>`;
+
+        const actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(11);
+
+        // Simulate typing "Test" on search view.
+        const TEST = "TEST";
+        $('.o_searchview_input').val(TEST);
+        for (const char of TEST) {
+            $('.o_searchview_input').trigger($.Event('keypress', {
+                which: char.charCodeAt(0),
+                keyCode: char.charCodeAt(0),
+            }));
+        }
+        $('.o_searchview_input').trigger($.Event('keyup'));
+        await concurrency.delay(0);
+        assert.containsOnce(
+            $,
+            '.o_searchview_autocomplete',
+            "should display autocomplete dropdown menu on typing something in search view"
+        );
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: TEST",
+            `1st filter suggestion should be based on typed word "TEST"`
+        );
+
+        // Simulate soft-selection of another suggestion from IME.
+        const テスト = "テスト";
+        $('.o_searchview_input').val(テスト);
+        for (const char of テスト) {
+            $('.o_searchview_input').trigger($.Event('keypress', {
+                which: char.charCodeAt(0),
+                keyCode: char.charCodeAt(0),
+            }));
+        }
+        $('.o_searchview_input').trigger($.Event('keyup'));
+        await concurrency.delay(0);
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: テスト",
+            `1st filter suggestion should be updated with soft-selection typed word "テスト"`
+        );
+
+        // Simulate selection on suggestion item "Test" from IME.
+        $('.o_searchview_input').val("TEST");
+        const nativeInputEvent = new window.InputEvent('input', { inputType: 'insertCompositionText' });
+        const jqueryInputEvent = $.Event('input', { bubbles: true });
+        jqueryInputEvent.originalEvent = nativeInputEvent;
+        $('.o_searchview_input').trigger(jqueryInputEvent);
+        await concurrency.delay(0);
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: TEST",
+            `1st filter suggestion should finally be updated with click selection on word "TEST" from IME`
+        );
 
         actionManager.destroy();
     });
