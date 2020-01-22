@@ -1181,6 +1181,8 @@ class StockMove(models.Model):
             else:
                 if not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
+                        if move.product_uom_qty == 0:
+                            assigned_moves |= move
                         continue
                     # If we don't need any quantity, consider the move assigned.
                     need = missing_reserved_quantity
