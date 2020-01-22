@@ -3858,7 +3858,9 @@ class StockMove(SavepointCase):
         insufficient_qty_wizard = self.env['stock.warn.insufficient.qty.scrap'].create({
             'product_id': self.product.id,
             'location_id': self.stock_location.id,
-            'scrap_id': scrap.id
+            'scrap_id': scrap.id,
+            'quantity': 1,
+            'product_uom_name': self.product.uom_id.name
         })
         insufficient_qty_wizard.action_done()
         self.assertEqual(self.env['stock.quant']._gather(self.product, self.stock_location).quantity, -11)

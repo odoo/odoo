@@ -209,12 +209,13 @@ class Repair(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
         available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        repair_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_id)
         for available_qty in [available_qty_owner, available_qty_noown]:
-            if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
+            if float_compare(available_qty, repair_qty, precision_digits=precision) >= 0:
                 return self.action_repair_confirm()
         else:
             return {
-                'name': _('Insufficient Quantity'),
+                'name': self.product_id.display_name + _(': Insufficient Quantity To Repair'),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.repair',
                 'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,
@@ -222,8 +223,10 @@ class Repair(models.Model):
                 'context': {
                     'default_product_id': self.product_id.id,
                     'default_location_id': self.location_id.id,
-                    'default_repair_id': self.id
-                    },
+                    'default_repair_id': self.id,
+                    'default_quantity': repair_qty,
+                    'default_product_uom_name': self.product_id.uom_name
+                },
                 'target': 'new'
             }
 
