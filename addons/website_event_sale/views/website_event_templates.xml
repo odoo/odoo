@@ -1,129 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="index" inherit_id="website_event.events_list" name="Event's Ticket">
-    <xpath expr="//div[@t-foreach='event_ids']//footer" position="inside">
-        <t t-if="event.event_registrations_open and event.event_ticket_ids">
-            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="text-danger">Sold Out</span>
-            <span t-if="event.seats_availability == 'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="text-muted">
-                <em>Only <t t-esc="event.seats_available"/> Remaining</em>
-            </span>
-        </t>
-    </xpath>
-</template>
-
 <template id="registration_template" inherit_id="website_event.registration_template">
-    <xpath expr="//t[@t-id='tickets']" position="replace">
-        <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
-        <t t-if="len(event.event_ticket_ids) &gt; 1"> <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
-                <span t-if="not event.event_registrations_open" class="text-danger">
-                    <i class="fa fa-ban mr-2"/>Sold Out
-                </span>
-                <div class="ml-auto pr-3">
-                    <span t-if="event.is_participating" class="text-success ml-3">
-                        <i class="fa fa-check mr-2"/>Registered
-                    </span>
-                </div>
-                <a href="#" role="button" class="btn btn-primary o_wevent_registration_btn collapsed" data-toggle="collapse" data-target="#o_wevent_tickets_collapse">
-                    Tickets
-                    <span class="close">×</span>
-                </a>
-            </div>
-            <div id="o_wevent_tickets_collapse" class="collapse">
-                <div t-foreach="tickets" t-as="ticket" class="row mx-0 bg-light border-bottom">
-                    <div class="col-md-8 py-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                        <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
-                        <small t-if="ticket.end_sale_date and ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="ticket.end_sale_date"/></small>
-                        <small t-if="ticket.start_sale_date and not ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales start on <span itemprop="priceValidUntil" t-field="ticket.start_sale_date"/></small>
-                    </div>
-                    <div class="col-md-4 py-3 pl-md-0">
-                        <div class="d-flex align-items-center">
-                            <t t-if="ticket.price or editable">
-                                <t t-if="(ticket.price-website.get_current_pricelist().currency_id._convert(ticket.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
-                                    <del class="text-danger mr-1" t-field="ticket.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
-                                </t>
-                                <span t-field="ticket.price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                <span t-field="ticket.price_reduce_taxinc" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>
-                                <span itemprop="price" class="d-none" t-esc="ticket.price"/>
-                                <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
-                            </t>
-                            <span t-if="not ticket.price and not editable" class="font-weight-bold text-uppercase">Free</span>
-                            <t t-if="not ticket.is_expired and ticket.sale_available">
-                                <select t-attf-name="nb_register-#{ticket.id}" class="w-auto ml-auto custom-select">
-                                    <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
-                                    <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
-                                    <t t-foreach="range(0, seats_max)" t-as="nb">
-                                        <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
-                                    </t>
-                                </select>
-                            </t>
-                        </div>
-                    </div>
-                    <div t-if="ticket.product_id.description_sale" class="col-12">
-                        <p itemprop="description" t-field="ticket.product_id.description_sale" class="small py-2 border-top"/>
-                    </div>
-                </div>
-                <div class="row no-gutters">
-                    <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not event.event_registrations_open or None" t-attf-id="#{event.id}">Register</button>
-                    </div>
-                </div>
-            </div>
-        </t>
-        <t t-else="">
-            <t t-call="website_event.ticket">
-                <t t-set="name"><span t-field="tickets.name"/></t>
-                <t t-set="price">
-                    <t t-if="tickets.price or editable">
-                        <t t-if="(tickets.price-website.get_current_pricelist().currency_id._convert(tickets.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
-                            <del class="text-danger mr-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
-                        </t>
-                        <span t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
-                        <span t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>
-                        <span itemprop="price" class="d-none" t-esc="tickets.price"/>
-                        <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
-                    </t>
-                    <span t-if="not tickets.price and not editable" class="font-weight-bold text-uppercase">Free</span>
-                </t>
-                <t t-if="tickets.product_id.description_sale" t-set="description">
-                    <span t-field="tickets.product_id.description_sale"/>
-                </t>
-                <t t-set="registration_end">
-                    <t t-if="tickets.start_sale_date">Sales end on <span itemprop="priceValidUntil" t-field="tickets.end_sale_date"/></t>
-                </t>
-                <t t-if="not tickets.is_expired and tickets.sale_available" t-set="quantity">
-                    <select t-attf-name="nb_register-#{tickets.id}" class="w-auto custom-select">
-                        <t t-set="seats_max_ticket" t-value="(tickets.seats_availability == 'unlimited' or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
-                        <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
-                        <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
-                        <t t-foreach="range(0, seats_max)" t-as="nb">
-                            <option t-esc="nb" t-att-selected="len(tickets) == 1 and nb == 1 and 'selected'"/>
-                        </t>
-                    </select>
-                </t>
+    <!-- Add price information on tickets (multi tickets, aka in collapse) -->
+    <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
+        <t t-if="ticket.price">
+            <t t-if="(ticket.price-website.get_current_pricelist().currency_id._convert(ticket.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                <del class="text-danger mr-1" t-field="ticket.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
             </t>
+            <span t-field="ticket.price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
+            <span t-field="ticket.price_reduce_taxinc" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>
+            <span itemprop="price" class="d-none" t-esc="ticket.price"/>
+            <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
         </t>
+        <span t-else="" class="font-weight-bold text-uppercase">Free</span>
     </xpath>
-    <xpath expr="//form[@id='registration_form']" position="attributes">
-        <attribute name="t-if">event.event_registrations_open and not all([ticket.is_expired for ticket in event.event_ticket_ids])</attribute>
-    </xpath>
-    <xpath expr="//form[@id='registration_form']" position="before">
-        <div t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today() and not event.event_registrations_open" class="alert alert-info mb-5" role="status">
-            <em >Ticket  Sales starting on <t t-esc="event.start_sale_date"/></em>
+    <!-- Add price information on tickets (mono ticket, aka not in collapse) -->
+    <xpath expr="//div[hasclass('o_wevent_registration_single')]//h6" position="after">
+        <div class="border-right px-3">
+            <t t-if="tickets.price">
+                <t t-if="(tickets.price-website.get_current_pricelist().currency_id._convert(tickets.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                    <del class="text-danger mr-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
+                </t>
+                <span t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
+                <span t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>
+                <span itemprop="price" class="d-none" t-esc="tickets.price"/>
+                <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
+            </t>
+            <span t-else="" class="font-weight-bold text-uppercase">Free</span>
         </div>
-    </xpath>
-</template>
-
-
-<!-- Add the ticket name on the registration complete page. -->
-<template id="registration_complete_inherit_website_event_sale" inherit_id="website_event.registration_complete" name="Sale Registration Completed">
-    <xpath expr="//thead/tr/th[1]" position="after">
-        <th>Ticket</th>
-    </xpath>
-    <xpath expr="//tbody/t/tr/td[1]" position="after">
-        <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
     </xpath>
 </template>
 
