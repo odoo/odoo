@@ -1,11 +1,9 @@
-odoo.define('web.OwlDialog', function (require) {
+odoo.define('web.OwlDialog', function () {
     "use strict";
-
-    const { useExternalListener } = require('web.custom_hooks');
 
     const { Component, hooks, misc } = owl;
     const { Portal } = misc;
-    const { useRef } = hooks;
+    const { useExternalListener, useRef } = hooks;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',
         'large': 'modal-lg',
