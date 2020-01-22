@@ -837,7 +837,7 @@
     };
     // note that the space after typeof is relevant. It makes sure that the formatted
     // expression has a space after typeof
-    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;".split(",");
+    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
     let tokenizeString = function (expr) {
         let s = expr[0];
         let start = s;
@@ -981,7 +981,7 @@
      * the arrow operator, then we add the current (or some previous tokens) token to
      * the list of variables so it does not get replaced by a lookup in the context
      */
-    function compileExpr(expr, scope) {
+    function compileExprToArray(expr, scope) {
         scope = Object.create(scope);
         const tokens = tokenize(expr);
         for (let i = 0; i < tokens.length; i++) {
@@ -1017,6 +1017,7 @@
                 }
             }
             if (isVar) {
+                token.varName = token.value;
                 if (token.value in scope && "id" in scope[token.value]) {
                     token.value = scope[token.value].expr;
                 }
@@ -1026,7 +1027,12 @@
                 }
             }
         }
-        return tokens.map(t => t.value).join("");
+        return tokens;
+    }
+    function compileExpr(expr, scope) {
+        return compileExprToArray(expr, scope)
+            .map(t => t.value)
+            .join("");
     }
 
     const INTERP_REGEXP = /\{\{.*?\}\}/g;
@@ -1044,6 +1050,7 @@
             this.indentLevel = 0;
             this.shouldDefineParent = false;
             this.shouldDefineScope = false;
+            this.protectedScopeNumber = 0;
             this.shouldDefineQWeb = false;
             this.shouldDefineUtils = false;
             this.shouldDefineRefs = false;
@@ -1164,6 +1171,24 @@
             this.rootContext.shouldDefineScope = true;
             return compileExpr(expr, this.variables);
         }
+        captureExpression(expr) {
+            this.rootContext.shouldDefineScope = true;
+            const argId = this.generateID();
+            const tokens = compileExprToArray(expr, this.variables);
+            const done = new Set();
+            return tokens
+                .map(tok => {
+                if (tok.varName) {
+                    if (!done.has(tok.varName)) {
+                        done.add(tok.varName);
+                        this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
+                    }
+                    tok.value = `${tok.varName}_${argId}`;
+                }
+                return tok.value;
+            })
+                .join("");
+        }
         /**
          * Perform string interpolation on the given string. Note that if the whole
          * string is an expression, it simply returns it (formatted and enclosed in
@@ -1180,14 +1205,19 @@
             let r = s.replace(/\{\{.*?\}\}/g, s => "${" + this.formatExpression(s.slice(2, -2)) + "}");
             return "`" + r + "`";
         }
-        startProtectScope() {
+        startProtectScope(codeBlock) {
             const protectID = this.generateID();
+            this.rootContext.protectedScopeNumber++;
             this.rootContext.shouldDefineScope = true;
+            const scopeExpr = codeBlock
+                ? `Object.create(scope);`
+                : `Object.assign(Object.create(context), scope);`;
             this.addLine(`let _origScope${protectID} = scope;`);
-            this.addLine(`scope = Object.assign(Object.create(context), scope);`);
+            this.addLine(`scope = ${scopeExpr}`);
             return protectID;
         }
         stopProtectScope(protectID) {
+            this.rootContext.protectedScopeNumber--;
             this.addLine(`scope = _origScope${protectID};`);
         }
     }
@@ -1312,6 +1342,9 @@
         remove: "(vn, rm)",
         destroy: "()"
     };
+    function isComponent(obj) {
+        return obj && obj.hasOwnProperty("__owl__");
+    }
     const UTILS = {
         zero: Symbol("zero"),
         toObj(expr) {
@@ -1350,8 +1383,19 @@
                 .join("");
         },
         getComponent(obj) {
-            while (obj && !obj.hasOwnProperty("__owl__")) {
+            while (obj && !isComponent(obj)) {
                 obj = obj.__proto__;
+            }
+            return obj;
+        },
+        getScope(obj, property) {
+            const obj0 = obj;
+            while (obj && !obj.hasOwnProperty(property)) {
+                const newObj = obj.__proto__;
+                if (!newObj || isComponent(newObj)) {
+                    return obj0;
+                }
+                obj = newObj;
             }
             return obj;
         }
@@ -2107,7 +2151,12 @@
             qwebvar.expr = `scope.${variable}`;
             if (value) {
                 const formattedValue = ctx.formatExpression(value);
-                ctx.addLine(`${qwebvar.expr} = ${formattedValue};`);
+                let scopeExpr = `scope`;
+                if (ctx.protectedScopeNumber) {
+                    ctx.rootContext.shouldDefineUtils = true;
+                    scopeExpr = `utils.getScope(scope, '${variable}')`;
+                }
+                ctx.addLine(`${scopeExpr}.${variable} = ${formattedValue};`);
                 qwebvar.value = formattedValue;
             }
             if (hasBody) {
@@ -2231,9 +2280,9 @@
             // ------------------------------------------------
             const callingScope = hasBody ? "scope" : "Object.assign(Object.create(context), scope)";
             const parentComponent = `utils.getComponent(context)`;
-            const keyCode = ctx.loopNumber || ctx.hasKey0 ? `, key: ${ctx.generateTemplateKey()}` : "";
+            const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
-            const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}${keyCode}})`;
+            const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
             if (ctx.parentNode) {
                 ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, ${extra});`);
             }
@@ -2277,7 +2326,7 @@
             ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
             ctx.closeIf();
             ctx.addLine(`let _length${keysID} = _${keysID}.length;`);
-            let varsID = ctx.startProtectScope();
+            let varsID = ctx.startProtectScope(true);
             const loopVar = `i${ctx.loopNumber}`;
             ctx.addLine(`for (let ${loopVar} = 0; ${loopVar} < _length${keysID}; ${loopVar}++) {`);
             ctx.indent();
@@ -2374,7 +2423,7 @@
             ctx.rootContext.shouldDefineUtils = true;
             const comp = `utils.getComponent(context)`;
             if (args) {
-                let argId = ctx.generateID();
+                const argId = ctx.generateID();
                 ctx.addLine(`let args${argId} = [${ctx.formatExpression(args)}];`);
                 code = `${comp}['${name}'](...args${argId}, e);`;
                 putInCache = false;
@@ -2385,8 +2434,9 @@
         }
         else {
             // if we get here, then it is an expression
+            // we need to capture every variable in it
             putInCache = false;
-            code = ctx.formatExpression(value);
+            code = ctx.captureExpression(value);
         }
         const modCode = mods.map(mod => modcodes[mod]).join("");
         let handler = `function (e) {if (!context.__owl__.isMounted){return}${modCode}${code}}`;
@@ -3484,9 +3534,23 @@
         const selectorStack = [];
         const parts = [];
         let rules = [];
+        function generateSelector(stackIndex, parentSelector) {
+            const parts = [];
+            for (const selector of selectorStack[stackIndex]) {
+                let part = (parentSelector && parentSelector + " " + selector) || selector;
+                if (part.includes("&")) {
+                    part = selector.replace(/&/g, parentSelector || "");
+                }
+                if (stackIndex < selectorStack.length - 1) {
+                    part = generateSelector(stackIndex + 1, part);
+                }
+                parts.push(part);
+            }
+            return parts.join(", ");
+        }
         function generateRules() {
             if (rules.length) {
-                parts.push(selectorStack.join(" ") + " {");
+                parts.push(generateSelector(0) + " {");
                 parts.push(...rules);
                 parts.push("}");
                 rules = [];
@@ -3501,7 +3565,7 @@
             else {
                 if (tokens[0] === "{") {
                     generateRules();
-                    selectorStack.push(token);
+                    selectorStack.push(token.split(/\s*,\s*/));
                     tokens.shift();
                 }
                 if (tokens[0] === ";") {
@@ -3701,7 +3765,15 @@
             const position = options.position || "last-child";
             const __owl__ = this.__owl__;
             if (__owl__.isMounted) {
-                return Promise.resolve();
+                if (position !== "self" && this.el.parentNode !== target) {
+                    // in this situation, we are trying to mount a component on a different
+                    // target. In this case, we need to unmount first, otherwise it will
+                    // not work.
+                    this.unmount();
+                }
+                else {
+                    return Promise.resolve();
+                }
             }
             if (!(target instanceof HTMLElement || target instanceof DocumentFragment)) {
                 let message = `Component '${this.constructor.name}' cannot be mounted: the target is not a valid DOM node.`;
@@ -4344,6 +4416,27 @@
         const component = Component.current;
         component.env = Object.assign(Object.create(component.env), nextEnv);
     }
+    // -----------------------------------------------------------------------------
+    // useExternalListener
+    // -----------------------------------------------------------------------------
+    /**
+     * When a component needs to listen to DOM Events on element(s) that are not
+     * part of his hierarchy, we can use the `useExternalListener` hook.
+     * It will correctly add and remove the event listener, whenever the
+     * component is mounted and unmounted.
+     *
+     * Example:
+     *  a menu needs to listen to the click on window to be closed automatically
+     *
+     * Usage:
+     *  in the constructor of the OWL component that needs to be notified,
+     *  `useExternalListener(window, 'click', this._doSomething);`
+     * */
+    function useExternalListener(target, eventName, handler, eventParams) {
+        const boundHandler = handler.bind(Component.current);
+        onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
+        onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));
+    }
 
     var _hooks = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -4355,7 +4448,8 @@
         onWillStart: onWillStart,
         onWillUpdateProps: onWillUpdateProps,
         useRef: useRef,
-        useSubEnv: useSubEnv
+        useSubEnv: useSubEnv,
+        useExternalListener: useExternalListener
     });
 
     class Store extends Context {
@@ -4972,9 +5066,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.0-beta5';
-    exports.__info__.date = '2019-12-20T10:27:22.467Z';
-    exports.__info__.hash = 'b63cd4c';
+    exports.__info__.version = '1.0.4';
+    exports.__info__.date = '2020-01-21T09:28:57.200Z';
+    exports.__info__.hash = 'e402ee6';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
