@@ -106,8 +106,12 @@ class MrpUnbuild(models.Model):
     def _onchange_mo_id(self):
         if self.mo_id:
             self.product_id = self.mo_id.product_id.id
-            self.product_qty = self.mo_id.product_qty
+            self.bom_id = self.mo_id.bom_id
             self.product_uom_id = self.mo_id.product_uom_id
+            if self.has_tracking == 'serial':
+                self.product_qty = 1
+            else:
+                self.product_qty = self.mo_id.product_qty
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -50,7 +50,6 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.product_qty = 3
-        x.product_uom_id = self.uom_unit
         x.save().action_unbuild()
 
 
@@ -62,7 +61,6 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.product_qty = 2
-        x.product_uom_id = self.uom_unit
         x.save().action_unbuild()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 0, 'You should have 0 finalproduct in stock')
@@ -73,7 +71,6 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.product_qty = 5
-        x.product_uom_id = self.uom_unit
         x.save().action_unbuild()
 
         # Check quantity in stock after last unbuild.
@@ -128,14 +125,12 @@ class TestUnbuild(TestMrpCommon):
             x.product_id = p_final
             x.bom_id = bom
             x.product_qty = 3
-            x.product_uom_id = self.uom_unit
             unbuild_order = x.save()
 
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
         x.product_qty = 3
-        x.product_uom_id = self.uom_unit
         x.lot_id = lot
         x.save().action_unbuild()
 
@@ -148,7 +143,6 @@ class TestUnbuild(TestMrpCommon):
         x.bom_id = bom
         x.product_qty = 2
         x.lot_id = lot
-        x.product_uom_id = self.uom_unit
         x.save().action_unbuild()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot), 0, 'You should have 0 finalproduct in stock')
@@ -160,7 +154,6 @@ class TestUnbuild(TestMrpCommon):
         x.bom_id = bom
         x.product_qty = 5
         x.lot_id = lot
-        x.product_uom_id = self.uom_unit
         x.save().action_unbuild()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
@@ -213,7 +206,6 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.product_qty = 3
-        x.product_uom_id = self.uom_unit
         unbuild_order = x.save()
 
         # This should fail since we do not provide the MO that we wanted to unbuild. (without MO we do not know which consumed lot we have to restore)
@@ -232,7 +224,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 2
         x.save().action_unbuild()
@@ -244,7 +235,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 5
         x.save().action_unbuild()
@@ -307,14 +297,12 @@ class TestUnbuild(TestMrpCommon):
         with self.assertRaises(AssertionError):
             x.product_id = p_final
             x.bom_id = bom
-            x.product_uom_id = self.uom_unit
             x.product_qty = 3
             x.save()
 
         with self.assertRaises(AssertionError):
             x.product_id = p_final
             x.bom_id = bom
-            x.product_uom_id = self.uom_unit
             x.product_qty = 3
             x.save()
 
@@ -323,7 +311,6 @@ class TestUnbuild(TestMrpCommon):
         with self.assertRaises(AssertionError):
             x.product_id = p_final
             x.bom_id = bom
-            x.product_uom_id = self.uom_unit
             x.mo_id = mo
             x.product_qty = 3
             x.save()
@@ -333,7 +320,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 3
         x.lot_id = lot_final
@@ -346,7 +332,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 2
         x.lot_id = lot_final
@@ -359,7 +344,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 5
         x.lot_id = lot_final
@@ -417,7 +401,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 5
         x.save().action_unbuild()
@@ -580,7 +563,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = finshed_product
         x.bom_id = bom
-        x.product_uom_id = self.uom_unit
         x.mo_id = mo
         x.product_qty = 1
         x.location_id = self.stock_location
