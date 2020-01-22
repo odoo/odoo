@@ -68,6 +68,7 @@
                 <field name="name" string="Stock Locations"/>
                 <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                 <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
+                <filter name="prod_inv_location" string="Production" domain="[('usage', 'in', ['inventory', 'production'])]" help="Production Locations"/>
                 <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
                 <field name="location_id" string="Parent Location"/>
                 <separator/>
@@ -129,6 +130,16 @@
           </p>
         </field>
     </record>
+    <record id="action_prod_inv_location_form" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">stock.location</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_location_tree2"/>
+        <field name="search_view_id" ref="view_location_search"/>
+        <field name="context">{'search_default_prod_inv_location': 1}</field>
+    </record>
+
     <menuitem action="action_location_form" id="menu_action_location_form"
         parent="menu_warehouse_config" sequence="2" groups="stock.group_stock_multi_locations"/>
 
