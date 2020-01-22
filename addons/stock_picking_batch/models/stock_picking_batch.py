@@ -102,7 +102,6 @@ class StockPickingBatch(models.Model):
         if picking_to_backorder:
             return picking_to_backorder.action_generate_backorder_wizard()
         # Change the state only if there is no other action (= wizard) waiting.
-        self.write({'state': 'done'})
         return True
 
     def _track_subtype(self, init_values):
@@ -118,3 +117,13 @@ class StockPicking(models.Model):
         'stock.picking.batch', string='Batch Picking', oldname="wave_id",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Batch associated to this picking', copy=False)
+
+    def action_done(self):
+        res = super(StockPicking, self).action_done()
+        batch_to_mark_done = self.env['stock.picking.batch']
+        for batch in self.mapped('batch_id'):
+            if all(p.state in ['cancel', 'done'] for p in batch.picking_ids):
+                batch_to_mark_done |= batch
+        if batch_to_mark_done:
+            batch_to_mark_done.write({'state': 'done'})
+        return res
