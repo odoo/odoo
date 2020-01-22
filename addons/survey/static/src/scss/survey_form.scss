@@ -21,14 +21,14 @@
     .o_survey_question_datetime,
     .o_survey_question_numerical_box {
         border: 0px;
-        border-bottom: 2px solid $o-brand-primary;
+        border-bottom: 2px solid $primary;
         &:disabled {
             color: black !important;
             border-color: $gray-600;
             border-bottom: 2px solid $gray-600;
         }
         &:focus {
-            border-color: $o-brand-primary;
+            border-color: $primary;
         }
     }
 
@@ -96,16 +96,16 @@
     min-height: 100%;
 
     .o_survey_choice_btn {
-        background-color: rgba($o-brand-primary, 0.5);
-        border: 2px solid $o-brand-primary;
+        background-color: rgba($primary, 0.5);
+        border: 2px solid $primary;
         cursor: pointer;
 
         &.o_survey_selected {
-            background-color: $o-brand-primary;
+            background-color: $primary;
         }
 
         &:hover {
-            background-color: rgba($o-brand-primary, 0.8);
+            background-color: rgba($primary, 0.8);
             .o_survey_choice_key span.o_survey_key {
                 opacity: 1;
             }
@@ -115,14 +115,14 @@
     .o_survey_choice_key {
         width: 25px;
         height: 25px;
-        border: 2px solid $o-brand-primary;
+        border: 2px solid $primary;
         span {
             font-size: smaller;
             top: -2px;
             &.o_survey_key {
                 width: inherit;
                 right: 10px;
-                border: 2px solid $o-brand-primary;
+                border: 2px solid $primary;
                 border-right: 0px;
                 height: 25px;
                 opacity: 0;
@@ -134,13 +134,13 @@
 
     .o_survey_question_matrix {
         th {
-            background-color: $o-brand-primary;
+            background-color: $primary;
         }
         td {
-            background-color: rgba($o-brand-primary, 0.2);
+            background-color: rgba($primary, 0.2);
 
             &:hover {
-                background-color: rgba($o-brand-primary, 0.5);
+                background-color: rgba($primary, 0.5);
                 cursor: pointer;
                 .o_survey_choice_key span.o_survey_key {
                     opacity: 1;
