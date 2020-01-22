@@ -51,14 +51,12 @@ return Widget.extend({
                 }
                 return;
             }
-            var search_string = self.get_search_string();
-            if (self.search_string !== search_string) {
-                if (search_string.length) {
-                    self.search_string = search_string;
-                    self.initiate_search(search_string);
-                } else {
-                    self.close();
-                }
+            self._updateSearch();
+        });
+        this.$input.on('input', function (ev) {
+            if (ev.originalEvent.inputType === 'insertCompositionText') {
+                // click inside keyboard IME suggestions menu
+                self._updateSearch();
             }
         });
         this.$input.on('keypress', function (ev) {
@@ -249,6 +247,22 @@ return Widget.extend({
     },
     is_expanded: function() {
         return this.$el[0].style.display === "block";
-    }
+    },
+    /**
+     * Update search dropdown menu based on new input content.
+     *
+     * @private
+     */
+    _updateSearch: function () {
+        var search_string = this.get_search_string();
+        if (this.search_string !== search_string) {
+            if (search_string.length) {
+                this.search_string = search_string;
+                this.initiate_search(search_string);
+            } else {
+                this.close();
+            }
+        }
+    },
 });
 });

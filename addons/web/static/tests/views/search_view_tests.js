@@ -1538,6 +1538,86 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('update suggested filters in autocomplete menu with Japanese IME', async function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 13,
+            name: 'Partners Action 11',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+            search_view_id: [13, 'search'],
+        });
+        this.archs['partner,13,search'] = `
+            <search>
+                <field name="foo"/>
+                <field name="bar"/>
+            </search>`;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(13);
+        await testUtils.nextTick();
+
+        // Simulate typing "Test" on search view.
+        const TEST = "TEST";
+        $('.o_searchview_input').val(TEST);
+        for (const char of TEST) {
+            $('.o_searchview_input').trigger($.Event('keypress', {
+                which: char.charCodeAt(0),
+                keyCode: char.charCodeAt(0),
+            }));
+        }
+        $('.o_searchview_input').trigger($.Event('keyup'));
+        await testUtils.nextTick();
+        assert.containsOnce(
+            $,
+            '.o_searchview_autocomplete',
+            "should display autocomplete dropdown menu on typing something in search view"
+        );
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: TEST",
+            `1st filter suggestion should be based on typed word "TEST"`
+        );
+
+        // Simulate soft-selection of another suggestion from IME.
+        const テスト = "テスト";
+        $('.o_searchview_input').val(テスト);
+        for (const char of テスト) {
+            $('.o_searchview_input').trigger($.Event('keypress', {
+                which: char.charCodeAt(0),
+                keyCode: char.charCodeAt(0),
+            }));
+        }
+        $('.o_searchview_input').trigger($.Event('keyup'));
+        await testUtils.nextTick();
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: テスト",
+            `1st filter suggestion should be updated with soft-selection typed word "テスト"`
+        );
+
+        // Simulate selection on suggestion item "Test" from IME.
+        $('.o_searchview_input').val("TEST");
+        const nativeInputEvent = new window.InputEvent('input', { inputType: 'insertCompositionText' });
+        const jqueryInputEvent = $.Event('input', { bubbles: true });
+        jqueryInputEvent.originalEvent = nativeInputEvent;
+        $('.o_searchview_input').trigger(jqueryInputEvent);
+        await testUtils.nextTick();
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: TEST",
+            `1st filter suggestion should finally be updated with click selection on word "TEST" from IME`
+        );
+
+        actionManager.destroy();
+    });
+
     QUnit.module('TimeRangeMenu');
 
     QUnit.test('time range menu stays hidden', async function (assert) {
