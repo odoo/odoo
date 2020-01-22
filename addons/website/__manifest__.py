@@ -65,6 +65,7 @@
         'views/snippets/s_process_steps.xml',
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_progress_bar.xml',
+        'views/snippets/s_blockquote.xml',
         'views/snippets/s_mega_menu_multi_menus.xml',
         'views/snippets/s_mega_menu_menu_image_menu.xml',
         'views/website_views.xml',
