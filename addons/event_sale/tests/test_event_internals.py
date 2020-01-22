@@ -39,10 +39,14 @@ class TestEventData(TestEventSaleCommon):
             })]
         })
         event_type.event_type_ticket_ids._onchange_product_id()
+        self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
+
+        # synchronize event
         event._onchange_type()
         self.assertEqual(event.event_ticket_ids.name, 'Registration for %s' % event.name)
         self.assertEqual(event.event_ticket_ids.product_id, self.event_product)
         self.assertEqual(event.event_ticket_ids.price, self.event_product.list_price)
+        self.assertEqual(event.event_ticket_ids.description, self.event_product.description_sale)
 
     def test_event_registrable(self):
         """Test if `_compute_event_registrations_open` works properly with additional

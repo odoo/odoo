@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <tree string="Event Template Tickets" editable="bottom">
                 <field name="name"/>
+                <field name="description"/>
                 <field name="seats_max"/>
                 <field name="seats_availability"/>
             </tree>
@@ -24,6 +25,7 @@
             <sheet>
                 <group>
                     <field name="name"/>
+                    <field name="description"/>
                     <field name="seats_availability"/>
                     <field name="seats_max"/>
                 </group>
@@ -69,6 +71,7 @@
         <field name="arch" type="xml">
             <tree string="Tickets" editable="bottom">
                 <field name="name"/>
+                <field name="description"/>
                 <field name="start_sale_date"/>
                 <field name="end_sale_date"/>
                 <field name="seats_max"/>
@@ -88,6 +91,7 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="description"/>
                             <field name="start_sale_date"/>
                             <field name="end_sale_date"/>
                         </group><group>
