@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
 
     @classmethod

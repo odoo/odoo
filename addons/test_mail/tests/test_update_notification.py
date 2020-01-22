@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
+@tagged('post_install', '-at_install')
 class TestUpdateNotification(TransactionCase):
     def test_user_count(self):
         ping_msg = self.env['publisher_warranty.contract'].with_context(active_test=False)._get_message()

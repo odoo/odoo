@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
     """ TODO LIST
 
@@ -132,6 +134,7 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
         self.assertSMSSent(self.random_numbers_san, self._test_body)
 
 
+@tagged('post_install', '-at_install')
 class TestSMSComposerBatch(test_mail_full_common.TestSMSCommon):
     @classmethod
     def setUpClass(cls):
@@ -208,6 +211,7 @@ class TestSMSComposerBatch(test_mail_full_common.TestSMSCommon):
             self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
 
 
+@tagged('post_install', '-at_install')
 class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
 
     @classmethod
