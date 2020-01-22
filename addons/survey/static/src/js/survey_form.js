@@ -5,6 +5,10 @@ var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
+var core = require('web.core');
+var Dialog = require('web.Dialog');
+
+var _t = core._t;
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
@@ -314,11 +318,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     _initDateTimePicker: function ($dateGroup) {
         var disabledDates = []
-
         var minDateData = $dateGroup.data('mindate')
-        var minDate = minDateData ? this._formatDateTime(minDateData) : moment({ y: 1900 });
         var maxDateData = $dateGroup.data('maxdate')
-        var maxDate = maxDateData ? this._formatDateTime(maxDateData) : moment().add(200, "y");
 
         var datetimepickerFormat = time.getLangDateFormat()
         if ($dateGroup.find('input').data('questionType') === 'datetime') {
@@ -330,13 +331,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             disabledDates = [minDate, maxDate]
         }
 
+        var minDate = minDateData
+                        ? this._formatDateTime(minDateData, datetimepickerFormat)
+                        : moment({ y: 1900 });
+        var maxDate = maxDateData
+                        ? this._formatDateTime(maxDateData, datetimepickerFormat)
+                        : moment().add(200, "y");
+
         $dateGroup.datetimepicker({
             format : datetimepickerFormat,
             minDate: minDate,
             maxDate: maxDate,
             disabledDates: disabledDates,
             useCurrent: false,
-            viewDate: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
+            viewDate: moment(new Date()).hours(minDate.hours()).minutes(minDate.minutes()).seconds(minDate.seconds()).milliseconds(minDate.milliseconds()),
             calendarWeeks: true,
             icons: {
                 time: 'fa fa-clock-o',
@@ -349,13 +357,22 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             locale : moment.locale(),
             allowInputToggle: true,
         });
-        $dateGroup.on('error.datetimepicker', function () {
+        $dateGroup.on('error.datetimepicker', function (err) {
+            if (err.date) {
+                if (err.date < minDate) {
+                    Dialog.alert(this, _t('The date you selected is lower than the minimum date: ') + minDate.format(datetimepickerFormat));
+                }
+
+                if (err.date > maxDate) {
+                    Dialog.alert(this, _t('The date you selected is greater than the maximum date: ') + maxDate.format(datetimepickerFormat));
+                }
+            }
             return false;
         });
     },
 
-    _formatDateTime: function (datetimeValue){
-        return field_utils.format.datetime(moment(datetimeValue), null, {timezone: true});
+    _formatDateTime: function (datetimeValue, format){
+        return moment(field_utils.format.datetime(moment(datetimeValue), null, {timezone: true}), format);
     },
 
     // ERRORS TOOLS
