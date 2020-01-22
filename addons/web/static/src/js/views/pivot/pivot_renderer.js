@@ -1,10 +1,10 @@
 odoo.define('web.PivotRenderer', function (require) {
     "use strict";
 
-    const { useState, onMounted, onPatched } = owl.hooks;
-    const { useExternalListener } = require('web.custom_hooks');
     const OwlAbstractRenderer = require('web.AbstractRendererOwl');
     const field_utils = require('web.field_utils');
+
+    const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
     /**
      * Here is a basic example of the structure of the Pivot Table:
