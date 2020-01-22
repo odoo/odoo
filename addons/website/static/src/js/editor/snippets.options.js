@@ -1165,7 +1165,7 @@ options.registry.SnippetMove = options.Class.extend({
      */
     start: function () {
         var $buttons = this.$el.find('we-button');
-        var $overlayArea = this.$overlay.find('.o_overlay_options');
+        var $overlayArea = this.$overlay.find('.o_overlay_move_options');
         $overlayArea.prepend($buttons[0]);
         $overlayArea.append($buttons[1]);
 
