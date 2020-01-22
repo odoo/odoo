@@ -61,6 +61,7 @@
         'views/snippets/s_masonry_block.xml',
         'views/snippets/s_media_list.xml',
         'views/snippets/s_showcase.xml',
+        'views/snippets/s_timeline.xml',
         'views/snippets/s_mega_menu_multi_menus.xml',
         'views/snippets/s_mega_menu_menu_image_menu.xml',
         'views/website_views.xml',
