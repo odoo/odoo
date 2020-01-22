@@ -138,7 +138,7 @@ screens.PaymentScreenWidget.include({
             return get_hash_prom;
         }
         else {
-            return this._super(arguments);
+            return this._super(order, server_ids);
         }
     },
 });

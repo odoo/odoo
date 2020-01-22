@@ -61,6 +61,12 @@ class SaleOrder(models.Model):
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
+    @api.model
+    def create(self, vals):
+        if 'warehouse_id' not in vals and 'company_id' in vals and vals.get('company_id') != self.env.company.id:
+            vals['warehouse_id'] = self.env['stock.warehouse'].search([('company_id', '=', vals.get('company_id'))], limit=1).id
+        return super(SaleOrder, self).create(vals)
+
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
             for order in self:

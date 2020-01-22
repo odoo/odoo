@@ -9,7 +9,7 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr "<br/><br/> Компоненты будут взяты <b>из% s.</b>"
+msgstr "<br/><br/> Компоненты будут взяты <b>из %s.</b>"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -3897,8 +3897,7 @@ msgstr ""
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
-msgstr ""
-"Заказ на производство для &quot;% s&quot; не имеет указанного количества."
+msgstr "Заказ на производство для ` %s ` не имеет указанного количества."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4512,11 +4511,11 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"Когда в закупке является маршрут &quot;производить&quot; с набором типов "
-"операций, он будет пытаться создать заказ на производство для этого товара, "
-"используя спецификацию того же типа операции. Это позволяет определить "
-"складские правила, которые запускают различные производственные заказы с "
-"различными спецификациями."
+"Когда в закупке является маршрут `производить` с набором типов операций, он "
+"будет пытаться создать заказ на производство для этого товара, используя "
+"спецификацию того же типа операции. Это позволяет определить складские "
+"правила, которые запускают различные производственные заказы с различными "
+"спецификациями."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -4536,7 +4535,7 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
-"Когда товары необходимые <b>в% s,</b> <br/> заказ на производство создано "
+"Когда товары необходимые <b>в %s,</b> <br/> заказ на производство создано "
 "для удовлетворения потребности."
 
 #. module: mrp
@@ -4828,7 +4827,7 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
-"Вы можете обработать только 1.0% s товаров с уникальным серийным номером."
+"Вы можете обработать только 1.0 %s товаров с уникальным серийным номером."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4856,9 +4855,7 @@ msgstr "Вы не можете создать новую спецификаци�
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
-"Вы не можете удалить заказ на разборку, если состояние - "
-"&quot;Выполнено&quot;."
+msgstr "Вы не можете удалить заказ на разборку, если состояние - `Выполнено`."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4910,7 +4907,7 @@ msgstr "Вы не можете разобрать еще не законченн
 #, python-format
 msgid "You have already processed %s. Please input a quantity higher than %s "
 msgstr ""
-"Вы уже полностью обработали% s. Пожалуйста, введите количество выше, чем% s"
+"Вы уже полностью обработали %s. Пожалуйста, введите количество выше, чем %s "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

@@ -291,7 +291,7 @@ class HrEmployeePrivate(models.Model):
 
     def generate_random_barcode(self):
         for employee in self:
-            employee.barcode = "".join(choice(digits) for i in range(8))
+            employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):

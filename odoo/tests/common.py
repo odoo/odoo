@@ -718,6 +718,81 @@ class ChromeBrowser():
         self.request_id += 1
         return sent_id
 
+    def _get_message(self, raise_log_error=True):
+        """
+        :param bool raise_log_error:
+
+            by default, error logging messages reported by the browser are
+            converted to exception in order to fail the current test.
+
+            This is undersirable for *some* message loops, mostly when waiting
+            for a response to a command we've sent (wait_id): we do want to
+            properly handle exceptions and to forward the browser logs in order
+            to avoid losing information, but e.g. if the client generates two
+            console.error() we don't want the first call to take_screenshot to
+            trip up on the second console.error message and throw a second
+            exception. At the same time we don't want to *lose* the second
+            console.error as it might provide useful information.
+        """
+        try:
+            res = json.loads(self.ws.recv())
+        except websocket.WebSocketTimeoutException:
+            res = {}
+
+        if res.get('method') == 'Runtime.consoleAPICalled':
+            params = res['params']
+
+            # console formatting differs somewhat from Python's, if args[0] has
+            # format modifiers that many of args[1:] get formatted in, missing
+            # args are replaced by empty strings and extra args are concatenated
+            # (space-separated)
+            #
+            # current version modifies the args in place which could and should
+            # probably be improved
+            arg0, args = '', []
+            if params.get('args'):
+                arg0 = str(self._from_remoteobject(params['args'][0]))
+                args = params['args'][1:]
+            formatted = [re.sub(r'%[%sdfoOc]', self.console_formatter(args), arg0)]
+            # formatter consumes args it uses, leaves unformatted args untouched
+            formatted.extend(str(self._from_remoteobject(arg)) for arg in args)
+            message = ' '.join(formatted)
+            stack = ''.join(self._format_stack(params))
+            if stack:
+                message += '\n' + stack
+
+            log_type = params['type']
+            if raise_log_error and log_type == 'error':
+                self.take_screenshot()
+                self._save_screencast()
+                raise ChromeBrowserException(message)
+
+            self._logger.getChild('browser').log(
+                self._TO_LEVEL.get(log_type, logging.INFO),
+                "%s", message # might still have %<x> characters
+            )
+            res['success'] = 'test successful' in message
+
+        if res.get('method') == 'Runtime.exceptionThrown':
+            exception_details = res['params']['exceptionDetails']
+            descr = exception_details.get('exception', {}).get('description')
+            self.take_screenshot()
+            self._save_screencast()
+            raise ChromeBrowserException(descr or pprint.pformat(exception_details))
+
+        return res
+
+    _TO_LEVEL = {
+        'debug': logging.DEBUG,
+        'log': logging.INFO,
+        'info': logging.INFO,
+        'warning': logging.INFO, # logging.WARNING,
+        'error': logging.ERROR,
+        # TODO: what do with
+        # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
+        # endGroup, assert, profile, profileEnd, count, timeEnd
+    }
+
     def _websocket_wait_id(self, awaited_id, timeout=10):
         """
         blocking wait for a certain id in a response
@@ -725,11 +800,8 @@ class ChromeBrowser():
         """
         start_time = time.time()
         while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id') == awaited_id:
+            res = self._get_message(raise_log_error=False)
+            if res.get('id') == awaited_id:
                 return res
         self._logger.info('timeout exceeded while waiting for id : %d', awaited_id)
         return {}
@@ -740,11 +812,8 @@ class ChromeBrowser():
         """
         start_time = time.time()
         while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('method', '') == method:
+            res = self._get_message()
+            if res.get('method', '') == method:
                 if params:
                     if set(params).issubset(set(res.get('params', {}))):
                         return res
@@ -761,9 +830,12 @@ class ChromeBrowser():
         self._logger.info('Asked for screenshot (id: %s)', ss_id)
         res = self._websocket_wait_id(ss_id)
         base_png = res.get('result', {}).get('data')
-        decoded = base64.decodebytes(bytes(base_png.encode('utf-8')))
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-        fname = '%s%s%s.png' % (prefix, timestamp,suffix)
+        if not base_png:
+            self._logger.warning("Couldn't capture screenshot: expected image data, got %s", res)
+            return
+
+        decoded = base64.b64decode(base_png, validate=True)
+        fname = '{}{:%Y%m%d_%H%M%S_%f}{}.png'.format(prefix, datetime.now(), suffix)
         full_path = os.path.join(self.screenshots_dir, fname)
         with open(full_path, 'wb') as f:
             f.write(decoded)
@@ -829,11 +901,9 @@ class ChromeBrowser():
         tdiff = time.time() - start_time
         has_exceeded = False
         while tdiff < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id') == ready_id:
+            res = self._get_message()
+
+            if res.get('id') == ready_id:
                 if res.get('result') == awaited_result:
                     if has_exceeded:
                         self._logger.info('The ready code tooks too much time : %s', tdiff)
@@ -856,32 +926,15 @@ class ChromeBrowser():
         logged_error = False
         nb_frame = 0
         while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id', -1) == code_id:
+            res = self._get_message()
+
+            if res.get('id', -1) == code_id:
                 self._logger.info('Code start result: %s', res)
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
                     raise ChromeBrowserException("Running code returned an error: %s" % res)
-            elif res and res.get('method') == 'Runtime.exceptionThrown':
-                exception_details = res.get('params', {}).get('exceptionDetails', {})
-                self.take_screenshot()
-                self._save_screencast()
-                raise ChromeBrowserException(exception_details)
-            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
-                logs = res.get('params', {}).get('args')
-                log_type = res.get('params', {}).get('type')
-                content = " ".join([str(log.get('value', '')) for log in logs])
-                if log_type == 'error':
-                    self.take_screenshot()
-                    self._save_screencast()
-                    raise ChromeBrowserException(content)
-                else:
-                    self._logger.info('console log: %s', content)
-                    if 'test successful' in content:
-                        return True
-            elif res and res.get('method') == 'Page.screencastFrame':
+            elif res.get('success'):
+                return True
+            elif res.get('method') == 'Page.screencastFrame':
                 session_id = res.get('params').get('sessionId')
                 self._websocket_send('Page.screencastFrameAck', params={'sessionId': int(session_id)})
                 outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % nb_frame)
@@ -925,6 +978,71 @@ class ChromeBrowser():
         self._websocket_wait_id(cl_id)
         self.navigate_to('about:blank', wait_stop=True)
 
+    def _from_remoteobject(self, arg):
+        """ attempts to make a CDT RemoteObject comprehensible
+        """
+        objtype = arg['type']
+        klass = arg.get('className', '')
+        subtype = arg.get('subtype')
+        if objtype == 'undefined':
+            # the undefined remoteobject is literally just {type: undefined}...
+            return 'undefined'
+        elif objtype != 'object' or subtype:
+            # value is the json representation for json object
+            # otherwise fallback on the description which is "a string
+            # representation of the object" e.g. the traceback for errors, the
+            # source for functions, ... finally fallback on the entire arg mess
+            return arg.get('value', arg.get('description', arg))
+
+        # all that's left is type=object, subtype=None aka custom or
+        # non-standard objects, print as TypeName(param=val, ...), sadly because
+        # of the way Odoo widgets are created they all appear as Class(...)
+        return '%s(%s)' % (
+            klass or objtype,
+            ', '.join(
+                '%s=%s' % (p['name'], repr(p['value']) if p['type'] == 'string' else p['value'])
+                for p in arg.get('preview', {}).get('properties', [])
+                if p.get('value') is not None
+            )
+        )
+
+    LINE_PATTERN = '\tat %(functionName)s (%(url)s:%(lineNumber)d:%(columnNumber)d)\n'
+    def _format_stack(self, logrecord):
+        if logrecord['type'] not in ('error', 'trace', 'warning'):
+            return
+
+        trace = logrecord.get('stackTrace')
+        while trace:
+            for f in trace['callFrames']:
+                yield self.LINE_PATTERN % f
+            trace = trace.get('parent')
+
+    def console_formatter(self, args):
+        """ Formats similarly to the console API:
+
+        * if there are no args, don't format (return string as-is)
+        * %% -> %
+        * %c -> replace by styling directives (ignore for us)
+        * other known formatters -> replace by corresponding argument
+        * leftover known formatters (args exhausted) -> replace by empty string
+        * unknown formatters -> return as-is
+        """
+        if not args:
+            return lambda m: m[0]
+
+        def replacer(m):
+            fmt = m[0][1]
+            if fmt == '%':
+                return '%'
+            if fmt in 'sdfoOc':
+                if not args:
+                    return ''
+                repl = args.pop(0)
+                if fmt == 'c':
+                    return ''
+                return str(self._from_remoteobject(repl))
+            return m[0]
+        return replacer
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
@@ -1379,8 +1497,12 @@ class Form(object):
         fields = self._view['fields']
         def cleanup(k, v):
             if fields[k]['type'] == 'one2many':
-                # o2m default gets a (6) at the start, makes no sense
-                return [c for c in v if c[0] != 6]
+                return [
+                    # use None as "empty" value for UPDATE instead of {}
+                    (1, c[1], None) if c[0] == 1 and not c[2] else c
+                    for c in v
+                    if c[0] != 6 # o2m default gets a (6) at the start, nonsensical
+                ]
             elif fields[k]['type'] == 'datetime' and isinstance(v, datetime):
                 return odoo.fields.Datetime.to_string(v)
             elif fields[k]['type'] == 'date' and isinstance(v, date):
@@ -1504,7 +1626,8 @@ class Form(object):
         # * the environment's context (?)
         # * a few magic values
         record_id = self._values.get('id') or False
-        ctx = dict(self._values)
+
+        ctx = dict(self._values_to_save(all_fields=True))
         ctx.update(self._env.context)
         ctx.update(
             id=record_id,
@@ -1560,36 +1683,37 @@ class Form(object):
                 r.write(values)
         else:
             r = self._model.create(values)
+            self._values.update(
+                record_to_values(self._view['fields'], r)
+            )
+        self._changed.clear()
         self._model.flush()
         self._model.invalidate_cache()
-        [data] = r.read(list(self._view['fields']))
-        # FIXME: process relational fields
-        # alternative: iterate on record & read from it directly? pb: would
-        # provide recordsets for relational fields which may or may not be
-        # what we ultimately want, but we've got to re-process them anyway so...?
-        self._values.update(data)
-        self._changed.clear()
         return r
 
-    def _values_to_save(self):
+    def _values_to_save(self, all_fields=False):
         """ Validates values and returns only fields modified since
         load/save
+
+        :param bool all_fields: if False (the default), checks for required
+                                fields and only save fields which are changed
+                                and not readonly
         """
         values = {}
         fields = self._view['fields']
         for f in fields:
             descr = fields[f]
             v = self._values[f]
-            if self._get_modifier(f, 'required') and not (descr['type'] == 'boolean' or self._get_modifier(f, 'invisible')):
+            # note: maybe `invisible` should not skip `required` if model attribute
+            if not all_fields and self._get_modifier(f, 'required') and not (descr['type'] == 'boolean' or self._get_modifier(f, 'invisible')):
                 assert v is not False, "{} is a required field".format(f)
-
-            # skip unmodified fields
-            if f not in self._changed:
+            # skip unmodified fields unless all_fields (also always ignore id)
+            if f == 'id' or not (all_fields or f in self._changed):
                 continue
 
             if self._get_modifier(f, 'readonly'):
                 node = _get_node(self._view, f)
-                if not node.get('force_save'):
+                if not (all_fields or node.get('force_save')):
                     continue
 
             if descr['type'] == 'one2many':
@@ -1606,10 +1730,14 @@ class Form(object):
 
                 for (c, rid, vs) in oldvals:
                     if c in (0, 1):
-                        items = list(getattr(vs, 'changed_items', vs.items)())
+                        vs = vs or {}
+                        if all_fields:
+                            items = list(vs.items())
+                        else:
+                            items = list(getattr(vs, 'changed_items', vs.items)())
                         fields_ = view['fields']
                         missing = fields_.keys() - vs.keys()
-                        if missing:
+                        if missing: # FIXME: maaaybe this should be done at the start?
                             Model = self._env[descr['relation']]
                             if c == 0:
                                 vs.update(dict.fromkeys(missing, False))
@@ -1622,11 +1750,12 @@ class Form(object):
                                     {k: v for k, v in fields_.items() if k not in vs},
                                     Model.browse(rid)
                                 ))
-                        vs.setdefault('id', False)
-                        vs['•parent•'] = self._values
+                        context = dict(vs)
+                        context.setdefault('id', False)
+                        context['•parent•'] = self._values
                         vs = {
                             k: v for k, v in items
-                            if nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=vs)
+                            if all_fields or nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=context)
                         }
                     v.append((c, rid, vs))
 
@@ -1649,7 +1778,7 @@ class Form(object):
         self._model.flush()
         self._model.invalidate_cache()
         if result.get('warning'):
-            _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
+            _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
         # mark onchange output as changed
         self._changed.update(values.keys())
@@ -1691,27 +1820,48 @@ class Form(object):
             if not descr['views']:
                 return []
 
+            if current is None:
+                current = []
             v = []
-            c = {t[1] for t in current if t[0] in (1, 2)} if current else set()
+            c = {t[1] for t in current if t[0] in (1, 2)}
+            current_values = {c[1]: c[2] for c in current if c[0] == 1}
             # which view should this be???
             subfields = descr['views']['edition']['fields']
             # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
-                if command[0] in (0, 1):
-                    c.discard(command[1])
-                    v.append((command[0], command[1], {
-                        k: self._cleanup_onchange(
-                            subfields[k], v, None
-                        )
+                if command[0] == 0:
+                    v.append((0, 0, {
+                        k: self._cleanup_onchange(subfields[k], v, None)
                         for k, v in command[2].items()
                         if k in subfields
                     }))
+                elif command[0] == 1:
+                    record_id = command[1]
+                    c.discard(record_id)
+                    stored = current_values.get(record_id)
+                    if stored is None:
+                        record = self._env[descr['relation']].browse(record_id)
+                        stored = UpdateDict(record_to_values(subfields, record))
+
+                    updates = (
+                        (k, self._cleanup_onchange(subfields[k], v, None))
+                        for k, v in command[2].items()
+                        if k in subfields
+                    )
+                    for field, value in updates:
+                        # if there are values from the onchange which differ
+                        # from current values, update & mark field as changed
+                        if stored.get(field, value) != value:
+                            stored._changed.add(field)
+                            stored[field] = value
+
+                    v.append((1, record_id, stored))
                 elif command[0] == 2:
                     c.discard(command[1])
                     v.append((2, command[1], False))
                 elif command[0] == 4:
                     c.discard(command[1])
-                    v.append((1, command[1], {}))
+                    v.append((1, command[1], None))
                 elif command[0] == 5:
                     v = []
             # explicitly mark all non-relinked (or modified) records as deleted
@@ -1760,7 +1910,10 @@ class O2MForm(Form):
         if index is None:
             self._init_from_defaults(m)
         else:
-            self._values.update(proxy._records[index])
+            vals = proxy._records[index]
+            self._values.update(vals)
+            if hasattr(vals, '_changed'):
+                self._changed.update(vals._changed)
 
     def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
         if vals is None:
@@ -1772,8 +1925,8 @@ class O2MForm(Form):
         values = super(O2MForm, self)._onchange_values()
         # computed o2m may not have a relation_field(?)
         descr = self._proxy._descr
-        if 'relation_field' in descr:
-            values[descr['relation_field']] = self._proxy._parent._values
+        if 'relation_field' in descr: # note: should be fine because not recursive
+            values[descr['relation_field']] = self._proxy._parent._onchange_values()
         return values
 
     def save(self):
@@ -1788,7 +1941,9 @@ class O2MForm(Form):
             if c == 0:
                 vs.update(values)
             elif c == 1:
-                vs = UpdateDict(vs)
+                if vs is None:
+                    vs = UpdateDict()
+                assert isinstance(vs, UpdateDict), type(vs)
                 vs.update(values)
                 commands[index] = (1, id_, vs)
             else:
@@ -1797,12 +1952,14 @@ class O2MForm(Form):
         # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
         proxy._parent._perform_onchange([proxy._field])
 
-    def _values_to_save(self):
+    def _values_to_save(self, all_fields=False):
         """ Validates values and returns only fields modified since
         load/save
         """
         values = UpdateDict(self._values)
         values._changed.update(self._changed)
+        if all_fields:
+            return values
 
         for f in self._view['fields']:
             if self._get_modifier(f, 'required') and not (self._get_modifier(f, 'column_invisible') or self._get_modifier(f, 'invisible')):
@@ -1814,6 +1971,8 @@ class UpdateDict(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._changed = set()
+        if args and isinstance(args[0], UpdateDict):
+            self._changed.update(args[0]._changed)
 
     def changed_items(self):
         return (
@@ -1847,11 +2006,11 @@ class O2MProxy(X2MProxy):
             if command == 0:
                 self._records.append(values)
             elif command == 1:
-                # read based on view info
-                r = model.browse(rid)
-                record = record_to_values(fields, r)
-                record.update(values)
-                self._records.append(record)
+                if values is None:
+                    # read based on view info
+                    r = model.browse(rid)
+                    values = UpdateDict(record_to_values(fields, r))
+                self._records.append(values)
             elif command == 2:
                 pass
             else:
@@ -2019,7 +2178,7 @@ def record_to_values(fields, record):
             assert v._name == descr['relation']
             v = [(6, 0, v.ids)]
         elif descr['type'] == 'one2many':
-            v = [(1, r.id, {}) for r in v]
+            v = [(1, r.id, None) for r in v]
         elif descr['type'] == 'datetime' and isinstance(v, datetime):
             v = odoo.fields.Datetime.to_string(v)
         elif descr['type'] == 'date' and isinstance(v, date):

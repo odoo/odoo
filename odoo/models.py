@@ -40,7 +40,7 @@ from operator import attrgetter, itemgetter
 
 import babel.dates
 import dateutil.relativedelta
-import psycopg2
+import psycopg2, psycopg2.extensions
 from lxml import etree
 from lxml.builder import E
 from psycopg2.extensions import AsIs
@@ -53,7 +53,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby
+                   groupby, unique
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -756,19 +756,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for r in missing
         )
         fields = ['module', 'model', 'name', 'res_id']
-        cr.copy_from(io.StringIO(
-            u'\n'.join(
-                u"%s\t%s\t%s\t%d" % (
-                    modname,
-                    record._name,
-                    xids[record.id][1],
-                    record.id,
-                )
-                for record in missing
-            )),
-            table='ir_model_data',
-            columns=fields,
-        )
+
+        # disable eventual async callback / support for the extent of
+        # the COPY FROM, as these are apparently incompatible
+        callback = psycopg2.extensions.get_wait_callback()
+        psycopg2.extensions.set_wait_callback(None)
+        try:
+            cr.copy_from(io.StringIO(
+                u'\n'.join(
+                    u"%s\t%s\t%s\t%d" % (
+                        modname,
+                        record._name,
+                        xids[record.id][1],
+                        record.id,
+                    )
+                    for record in missing
+                )),
+                table='ir_model_data',
+                columns=fields,
+            )
+        finally:
+            psycopg2.extensions.set_wait_callback(callback)
         self.env['ir.model.data'].invalidate_cache(fnames=fields)
 
         return (
@@ -3146,12 +3154,13 @@ Fields:
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
             for name in regular_fields:
+                corecord = record.sudo()[name]
                 # Special case with `res.users` since an user can belong to multiple companies.
-                if record[name]._name == 'res.users' and record[name].company_ids:
-                    if not (company <= record[name].company_ids):
+                if corecord._name == 'res.users' and corecord.company_ids:
+                    if not (company <= corecord.company_ids):
                         inconsistent_fields.add(name)
                         inconsistent_recs |= record
-                elif not (record[name].company_id <= company):
+                elif not (corecord.company_id <= company):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
             # The second part of the check (for property / company-dependent fields) verifies that the records
@@ -3164,11 +3173,12 @@ Fields:
                 company = self.env.company
             for name in property_fields:
                 # Special case with `res.users` since an user can belong to multiple companies.
-                if record[name]._name == 'res.users' and record[name].company_ids:
-                    if not (company <= record[name].company_ids):
+                corecord = record.sudo()[name]
+                if corecord._name == 'res.users' and corecord.company_ids:
+                    if not (company <= corecord.company_ids):
                         inconsistent_fields.add(name)
                         inconsistent_recs |= record
-                elif not (record[name].company_id <= company):
+                elif not (corecord.company_id <= company):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
 
@@ -5602,7 +5612,7 @@ Record ids: %(records)s
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        recs = self.browse(self._prefetch_ids)
+        recs = self.browse(unique(self._prefetch_ids))
         ids = [self.id]
         for record_id in self.env.cache.get_missing_ids(recs - self, field):
             if not record_id:

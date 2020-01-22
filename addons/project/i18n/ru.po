@@ -11,7 +11,7 @@
 # Martin Trigaux, 2019
 # Collex100, 2019
 # Viktor Pogrebniak <vp@aifil.ru>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr "Кол-во задач"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr "$ {Object.project_id.company_id.name}: Оценка удовлетворенности"
+msgstr "${Object.project_id.company_id.name}: Оценка удовлетворенности"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -68,7 +68,7 @@ msgstr "% В"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (копия)"
+msgstr " %s (копия)"
 
 #. module: project
 #. openerp-web
@@ -156,41 +156,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div> % Set access_token = object.rating_get_access_token ()% set partner = "
-"object.rating_get_partner_id () <table border=\"0\" cellpadding=\"0\" "
-"cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px "
-"auto;\"><tbody><tr><td valign=\"top\" style=\"font-size: 13px;\"> "
-"Поздравляем $ {partner.name} <br/> Пожалуйста, найдите время, чтобы оценить "
-"наши услуги, связанные с этой задачей <strong>&quot;$ "
-"{object.name}&quot;%</strong> if object.rating_get_rated_partner_id (). "
-"Name: предназначено <strong>$ {object.rating_get_rated_partner_id (). "
-"Name}.</strong> <br/> % Else:. <br/> % endif </td></tr><tr><td style=\"text-"
-"align: center;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: "
-"32px 0px 32px 0px;\"><tr><td style=\"font-size: 13px;\"> <strong>Расскажите "
-"нам, что вы думаете о наших услугах</strong> <br/> <span style=\"text-color:"
-" #888888\">(нажмите на один из смайлов)</span> </td></tr><tr><td style"
-"=\"font-size: 13px;\"><table style=\"width:100%;text-"
-"align:center;\"><tr><td> <a href=\"/rating/${access_token}/10\"><img "
-"alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" "
-"title=\"Satisfied\"/></a> </td><td> <a "
-"href=\"/rating/${access_token}/5\"><img alt=\"Not satisfied\" "
-"src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/></a> "
-"</td><td> <a href=\"/rating/${access_token}/1\"><img alt=\"Highly "
-"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly "
-"Dissatisfied\"/></a> </td></tr></table></td></tr></table></td></tr><tr><td "
-"valign=\"top\" style=\"font-size: 13px;\"> Мы ценим ваши отзывы. Это "
-"помогает нам постоянно совершенствоваться. % If "
-"object.project_id.rating_status == &#39;stage&#39;: <br/> <span "
-"style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: "
-"#454748;\">Этот опрос клиента было отправлено, поскольку ваше задание было "
-"перемещено на этап <b>$ {object.stage_id.name}%</b></span> endif% if "
-"object.project_id.rating_status == &#39;periodic&#39;: <br/> <span "
-"style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: "
-"#454748;\">Этот опрос клиента направляется <b>$ "
-"{object.project_id.rating_status_period}</b> до тех пор, пока задача "
-"находится на <b>$ {object.stage_id.name}</b> этапе.</span> % endif "
-"</td></tr></tbody></table></div>"
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Hello ${partner.name},<br/>\n"
+"            Please take a moment to rate our services related to the task \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Tell us how you feel about our service</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(click on one of these smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            We appreciate your feedback. It helps us to improve continuously.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -205,9 +226,9 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-"<div> Уважаемый (ая) $ {object.partner_id.name or &#39;customer&#39;}, <br/>"
-" Спасибо за запрос. <br/> Если у вас возникли вопросы, сообщите нам об этом."
-" <br/><br/> Спасибо, <br/></div>"
+"<div> Уважаемый (ая) ${object.partner_id.name or 'customer'}, <br/> Спасибо "
+"за запрос. <br/> Если у вас возникли вопросы, сообщите нам об этом. "
+"<br/><br/> Спасибо, <br/></div>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -591,10 +612,9 @@ msgid ""
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 "Автоматически изменяйте состояние канбан, когда клиент отвечает на отзывы на"
-" этом этапе. * Хороший отзыв от клиента обновит состояние канбан к "
-"&quot;готов к новому этапу&quot; (зеленая отметка). * Средний или плохой "
-"обратная связь установит состояние канбан на &quot;заблокирован&quot; "
-"(красная отметка)."
+" этом этапе. * Хороший отзыв от клиента обновит состояние канбан к `готов к "
+"новому этапу` (зеленая отметка). * Средний или плохой обратная связь "
+"установит состояние канбан на `заблокирован` (красная отметка)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -746,10 +766,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
-"Общайтесь с клиентами по задачи с помощью шлюза электронной почты. "
-"Прикрепите логотип дизайнов с заданием, чтобы информация переходила от "
-"дизайнеров к рабочим, которые печатают футболки. Организуйте приоритеты "
-"среди заказов% s, используя иконку."
+"Общайтесь с клиентами по задачам с помощью шлюза электронной почты. "
+"Прикрепите дизайн логотипа к задаче, чтобы информация переходила от "
+"дизайнеров к работникам, которые печатают футболки. Организуйте приоритеты "
+"среди заказов %s, используя иконку."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -951,9 +971,9 @@ msgid ""
 "column."
 msgstr ""
 "Клиенты предлагают отзывы по электронной почте; Odoo создает задачи "
-"автоматически, и вы можете общаться с этой задачей напрямую. Ваши менеджеры "
-"решают, какие отзывы принято% s а какие отзывы перемещены в колонки "
-"&quot;Отклонено&quot;."
+"автоматически, и вы можете общаться непосредственно в этой задаче. Ваши "
+"менеджеры решают, какие отзывы принять %s а какие отзывы переместить в "
+"колонку `Отклонено`."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1176,8 +1196,8 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
-"Каждый может предложить идеи, а редактор - лучшие% s. Присоедините все "
-"документы или ссылки непосредственно к заданию, чтобы упорядочить всю "
+"Каждый может предложить идеи, а Редактор - отметить лучшие как %s Прикрепите"
+" все документы или ссылки непосредственно к задаче, чтобы упорядочить всю "
 "информацию об исследовании."
 
 #. module: project
@@ -1205,11 +1225,11 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
-"Легко заполните папку &quot;Входящие&quot; шлюзом электронной почты. "
-"Периодически просматривайте папку &quot;Входящие&quot; и раскладывайте "
-"задачи, перемещая их в другие столбцов. Ежедневно вы просматриваете колонку "
-"&quot;Эта неделя&quot;, чтобы переместить важные задачи &quot;Сегодня&quot;."
-" Каждый понедельник вы просматриваете столбец &quot;Этот месяц&quot;."
+"Легко заполните папку \"Входящие\" шлюзом электронной почты. Периодически "
+"просматривайте папку \"Входящие\" и раскладывайте задачи, перемещая их в "
+"другие столбцов. Ежедневно вы просматриваете колонку \"Эта неделя\", чтобы "
+"переместить важные задачи \"Сегодня\". Каждый понедельник вы просматриваете "
+"столбец \"Этот месяц\"."
 
 #. module: project
 #. openerp-web
@@ -2360,7 +2380,7 @@ msgstr "Рейтинги"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Ratings of %s"
-msgstr "Рейтинги% s"
+msgstr "Рейтинги %s "
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2413,7 +2433,7 @@ msgstr "Причина оценки"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr "Прием ${object.name}"
+msgstr "Получение ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
@@ -2724,7 +2744,7 @@ msgstr "Задача"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr "Задача% s не может иметь несколько уровней подзадачи."
+msgstr "Задача %s не может иметь несколько уровней подзадач."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2906,14 +2926,26 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
+msgid "The parent task belongs to a company you do not have access to."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
-"Проект не может быть общим с получателем (ами), поскольку конфиденциальность"
-" проекта слишком ограничено. Установите конфиденциальности на &quot;Видимый "
-"добавленным клиентами&quot;, чтобы сделать его доступным для получателей."
+"Проект не может быть общим с получателем(ями), поскольку конфиденциальность "
+"проекта слишком ограничена. Установите конфиденциальность на 'Видимый "
+"подписанным клиентами', чтобы сделать его доступным для получателя(ей)."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The subtasks belong to a company you do not have access to."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2923,10 +2955,10 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
-"Задача нельзя совместно использовать с получателем (ами), поскольку "
-"конфиденциальность проекта слишком ограничено. Установите конфиденциальность"
-" проекта на &quot;Видимый добавленным клиентами&quot;, чтобы сделать его "
-"доступным для получателей."
+"Задача не может быть использована совместно с получателем(ями), поскольку "
+"конфиденциальность проекта слишком ограничена. Установите конфиденциальность"
+" на 'Видимый подписанным клиентами', чтобы сделать его доступным для "
+"получателя(ей). "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -3146,7 +3178,7 @@ msgstr "Видимость"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr "Ожидает следующий этап: используйте% s и% s отметки"
+msgstr "Ожидает следующего этапа: используйте отметки %s и %s "
 
 #. module: project
 #. openerp-web

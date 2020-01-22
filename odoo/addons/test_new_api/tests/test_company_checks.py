@@ -144,3 +144,22 @@ class TestCompanyCheck(common.TransactionCase):
         # 'allowed_company_ids' is sticky
         User = User.with_context(context)
         self.assertEqual(User.env.context, dict(context, **companies_1))
+
+    def test_company_check_no_access(self):
+        """ Test that company_check validates correctly the companies on
+        the different records, even if the use has no access to one of the
+        records, example, a private address set by an onchange
+        """
+
+        user = self.env['res.users'].create({
+            'name': 'My Classic User',
+            'login': 'My Classic User',
+            'groups_id': [(6, 0, self.env.ref('base.group_user').ids)],
+        })
+
+        with common.Form(self.env['test_new_api.model_private_address_onchange'].with_user(user)) as form:
+            form.name = 'My Classic Name'
+            form.company_id = self.env.user.company_id
+            with self.assertRaises(AccessError):
+                form.address_id.name
+            form.save()

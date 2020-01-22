@@ -158,6 +158,10 @@ class HrExpense(models.Model):
             if account:
                 self.account_id = account
 
+    @api.onchange('company_id')
+    def _onchange_expense_company_id(self):
+        self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid), ('company_id', '=', self.company_id.id)])
+
     @api.onchange('product_uom_id')
     def _onchange_product_uom_id(self):
         if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:

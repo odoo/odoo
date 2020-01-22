@@ -299,7 +299,7 @@ class AccountMove(models.Model):
         try:
             tree = etree.fromstring(content)
         except Exception:
-            raise UserError(_('The xml file is badly formatted : {}').format(attachment.name))
+            _logger.exception('The xml file is badly formatted : {}'.format(attachment.name))
 
         for xml_type, check_func, decode_func in decoders:
             check_res = check_func(tree, attachment.name)
@@ -313,7 +313,7 @@ class AccountMove(models.Model):
         try:
             return invoice_ids
         except UnboundLocalError:
-            raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))
+            _logger.exception('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed'.format(attachment.name))
 
     def _remove_ocr_option(self):
         if 'extract_state' in self:
