@@ -97,7 +97,7 @@
                     <t t-snippet="website.s_text_highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_color_block.png"/>
                     <t t-snippet="website.s_chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.png"/>
                     <t t-snippet="website.s_progress_bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.png"/>
-                    <!-- Tags -->
+                    <t t-snippet="website.s_badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_badge.png"/>
                     <t t-snippet="website.s_blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.png"/>
                     <t id="event_speaker_bio_hook"/>
                 </div>
@@ -326,7 +326,7 @@
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar</t>
+    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, .row > div > img, #{so_content_addition_selector}"
