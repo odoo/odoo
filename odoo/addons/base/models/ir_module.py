@@ -315,7 +315,7 @@ class Module(models.Model):
         except pkg_resources.DistributionNotFound as e:
             try:
                 importlib.import_module(pydep)
-                _logger.warning("python external dependency %s should be replaced by it's PyPI package name", pydep)
+                _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
             except ImportError:
                 # backward compatibility attempt failed
                 _logger.warning("DistributionNotFound: %s", e)
