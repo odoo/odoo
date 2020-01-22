@@ -304,7 +304,7 @@
                             </t>
                         </div>
                         <div class="col-7 o_kanban_primary_right">
-                            <div class="row">
+                            <div class="row" t-if="dashboard.number_draft">
                                 <div class="col-7 text-left">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
@@ -315,7 +315,7 @@
                                     <span><t t-esc="dashboard.sum_draft"/></span>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" t-if="dashboard.number_waiting">
                                 <div class="col-7 text-left">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">

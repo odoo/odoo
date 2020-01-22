@@ -757,6 +757,26 @@
             </field>
         </record>
 
+        <record id="action_hr_expense_account" model="ir.actions.act_window">
+            <field name="name">Employee Expenses</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{
+                'search_default_approved': 1,
+                'search_default_to_post': 1,
+            }
+            </field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new expense report
+              </p><p>
+                Once you have created your expense, submit it to your manager who will validate it.
+              </p>
+            </field>
+        </record>
+
         <record id="action_hr_expense_sheet_all_all" model="ir.actions.act_window">
             <field name="name">All Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
@@ -878,4 +898,6 @@ if records:
             sequence="100"/>
         <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration"
             action="hr_expense_product" groups="hr_expense.group_hr_expense_manager" sequence="10"/>
+
+        <menuitem id="menu_hr_expense_account_employee_expenses" name="Employee Expenses" sequence="22" parent="account.menu_finance_payables" groups="hr_expense.group_hr_expense_user" action="action_hr_expense_account"/>
 </odoo>
