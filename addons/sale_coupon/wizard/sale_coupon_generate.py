@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
-from odoo.tools.safe_eval import safe_eval
+
+import ast
 
 
 class SaleCouponGenerate(models.TransientModel):
@@ -27,7 +28,7 @@ class SaleCouponGenerate(models.TransientModel):
                 self.env['sale.coupon'].create(vals)
 
         if self.generation_type == 'nbr_customer' and self.partners_domain:
-            for partner in self.env['res.partner'].search(safe_eval(self.partners_domain)):
+            for partner in self.env['res.partner'].search(ast.literal_eval(self.partners_domain)):
                 vals.update({'partner_id': partner.id})
                 coupon = self.env['sale.coupon'].create(vals)
                 subject = '%s, a coupon has been generated for you' % (partner.name)

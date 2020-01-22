@@ -5,7 +5,7 @@ from babel.dates import format_datetime, format_date
 from odoo import models, api, _, fields
 from odoo.osv import expression
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
 import random
 
@@ -491,7 +491,7 @@ class account_journal(models.Model):
         else:
             action_ref = 'account.action_account_payments'
         [action] = self.env.ref(action_ref).read()
-        action['context'] = dict(safe_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
+        action['context'] = dict(ast.literal_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
         if mode == 'form':
             action['views'] = [[False, 'form']]
         return action

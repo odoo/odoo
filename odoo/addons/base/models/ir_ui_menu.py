@@ -9,7 +9,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules import get_module_resource
-from odoo.tools.safe_eval import safe_eval
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")

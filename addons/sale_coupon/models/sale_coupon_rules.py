@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.safe_eval import safe_eval
 
 
 class SaleCouponRule(models.Model):

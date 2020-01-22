@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import logging
 import re
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import remove_accents
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class Alias(models.Model):
     def _check_alias_defaults(self):
         for alias in self:
             try:
-                dict(safe_eval(alias.alias_defaults))
+                dict(ast.literal_eval(alias.alias_defaults))
             except Exception:
                 raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 

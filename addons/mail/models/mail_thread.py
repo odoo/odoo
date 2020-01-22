@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import base64
 import datetime
 import dateutil
@@ -31,7 +32,6 @@ from odoo.osv import expression
 
 from odoo.tools import pycompat, ustr
 from odoo.tools.misc import clean_context, split_every
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -416,7 +416,7 @@ class MailThread(models.AbstractModel):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 # the 'Log a note' button is employee only
-                options = safe_eval(node.get('options', '{}'))
+                options = ast.literal_eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
                 # save options on the node
@@ -1001,7 +1001,7 @@ class MailThread(models.AbstractModel):
                 routes = []
                 for alias in dest_aliases:
                     user_id = self._mail_find_user_for_gateway(email_from, alias=alias).id or self._uid
-                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, safe_eval(alias.alias_defaults), user_id, alias)
+                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, ast.literal_eval(alias.alias_defaults), user_id, alias)
                     route = self._routing_check_route(message, message_dict, route, raise_exception=True)
                     if route:
                         _logger.info(

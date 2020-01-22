@@ -63,7 +63,8 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
     # Need the context to evaluate the invisible attribute on tree views.
     # For non-tree views, the context shouldn't be given.
     if node.get('attrs'):
-        modifiers.update(safe_eval(node.get('attrs')))
+        attrs = node.get('attrs').strip()
+        modifiers.update(ast.literal_eval(attrs))
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):

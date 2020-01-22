@@ -10,7 +10,7 @@ import babel.dates
 from lxml import etree
 import math
 
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, format_duration, pycompat
+from odoo.tools import html_escape as escape, posix_to_ldml, float_utils, format_date, format_duration, pycompat
 from odoo.tools.misc import get_lang
 
 import logging
