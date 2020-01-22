@@ -38,6 +38,8 @@ class EventTemplateTicket(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         self.price = self.product_id.list_price or 0
+        if not self.description and self.product_id.description_sale:
+            self.description = self.product_id.description_sale
 
     def _init_column(self, column_name):
         if column_name != "product_id":
@@ -93,3 +95,11 @@ class EventTicket(models.Model):
             tax_ids = record.sudo().product_id.taxes_id.filtered(lambda r: r.company_id == record.event_id.company_id)
             taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
             record.price_reduce_taxinc = taxes['total_included']
+
+    def _get_ticket_multiline_description(self):
+        """ If people set a description on their product it has more priority
+        than the ticket name itself for the SO description. """
+        self.ensure_one()
+        if self.product_id.description_sale:
+            return '%s\n%s' % (self.product_id.description_sale, self.event_id.display_name)
+        return super(EventTicket, self)._get_ticket_multiline_description()

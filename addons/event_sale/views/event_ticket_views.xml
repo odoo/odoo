@@ -9,6 +9,8 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="product_id"/>
+            </field>
+            <field name="description" position="after">
                 <field name="price"/>
             </field>
         </field>
@@ -21,6 +23,8 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="product_id"/>
+            </field>
+            <field name="description" position="after">
                 <field name="price"/>
             </field>
         </field>
@@ -35,7 +39,7 @@
             <field name="name" position="after">
                 <field name="product_id" context="{'default_event_ok': 1}"/>
             </field>
-            <field name="end_sale_date" position="after">
+            <field name="description" position="after">
                 <field name="price"/>
             </field>
         </field>
@@ -49,7 +53,7 @@
             <field name="name" position="after">
                 <field name="product_id" context="{'default_event_ok':1}"/>
             </field>
-            <field name="end_sale_date" position="after">
+            <field name="description" position="after">
                 <field name="price"/>
             </field>
         </field>
