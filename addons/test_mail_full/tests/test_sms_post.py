@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSMSPost(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
     """ TODO
 
@@ -219,6 +221,7 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, test_mail_full_common.Tes
         self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
 
+@tagged('post_install', '-at_install')
 class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
 
     @classmethod
@@ -339,6 +342,7 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
         ], self._test_body, messages)
 
 
+@tagged('post_install', '-at_install')
 class TestSMSApi(test_mail_full_common.TestSMSCommon):
 
     @classmethod

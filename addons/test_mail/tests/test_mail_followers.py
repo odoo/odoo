@@ -4,9 +4,11 @@
 from psycopg2 import IntegrityError
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.tests import tagged
 from odoo.tools.misc import mute_logger
 
 
+@tagged('post_install', '-at_install')
 class BaseFollowersTest(TestMailCommon):
 
     @classmethod
@@ -117,6 +119,7 @@ class BaseFollowersTest(TestMailCommon):
             })
 
 
+@tagged('post_install', '-at_install')
 class AdvancedFollowersTest(TestMailCommon):
     @classmethod
     def setUpClass(cls):

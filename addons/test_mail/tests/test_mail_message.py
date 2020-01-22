@@ -6,10 +6,11 @@ import base64
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError, except_orm
-from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
+from odoo.tools import mute_logger, formataddr
 
 
+@tagged('post_install', '-at_install')
 class TestMessageValues(TestMailCommon):
 
     @classmethod

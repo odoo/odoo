@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, except_orm, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
 
 
+@tagged('post_install', '-at_install')
 class TestChannelAccessRights(TestMailCommon):
 
     @classmethod
@@ -111,6 +112,7 @@ class TestChannelAccessRights(TestMailCommon):
                 trigger_read = partner.with_user(self.user_portal).name
 
 
+@tagged('post_install', '-at_install')
 class TestChannelFeatures(TestMailCommon):
 
     @classmethod
@@ -208,7 +210,7 @@ class TestChannelFeatures(TestMailCommon):
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'Out')
 
 
-@tagged('moderation')
+@tagged('moderation', 'post_install', '-at_install')
 class TestChannelModeration(TestMailCommon):
 
     @classmethod
