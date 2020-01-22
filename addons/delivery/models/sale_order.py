@@ -20,11 +20,48 @@ class SaleOrder(models.Model):
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
         return self.amount_total - delivery_cost
 
+<<<<<<< HEAD
     @api.depends('order_line')
     def _compute_delivery_state(self):
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.delivery_set = True
+=======
+    @api.depends('partner_shipping_id')
+    def _compute_available_carrier(self):
+        carriers = self.env['delivery.carrier'].search([])
+        for rec in self:
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_shipping_id else carriers
+
+    def get_delivery_price(self):
+        for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
+            # We do not want to recompute the shipping price of an already validated/done SO
+            # or on an SO that has no lines yet
+            order.delivery_rating_success = False
+            res = order.carrier_id.rate_shipment(order)
+            if res['success']:
+                order.delivery_rating_success = True
+                order.delivery_price = res['price']
+                order.delivery_message = res['warning_message']
+            else:
+                order.delivery_rating_success = False
+                order.delivery_price = 0.0
+                order.delivery_message = res['error_message']
+
+    @api.onchange('carrier_id')
+    def onchange_carrier_id(self):
+        if self.state in ('draft', 'sent'):
+            self.delivery_price = 0.0
+            self.delivery_rating_success = False
+            self.delivery_message = False
+
+    @api.onchange('partner_id')
+    def onchange_partner_id_carrier_id(self):
+        if self.partner_id:
+            self.carrier_id = self.partner_id.property_delivery_carrier_id.filtered('active')
+
+    # TODO onchange sol, clean delivery price
+>>>>>>> 1cee114f7e1... temp
 
     @api.onchange('order_line', 'partner_id')
     def onchange_order_line(self):
