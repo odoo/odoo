@@ -1092,7 +1092,7 @@ var SnippetsMenu = Widget.extend({
                     style['display'] = 'inline-block';
                 } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     style['float'] = float;
-                    if (!isFullWidth($zone)) {
+                    if (!isFullWidth($zone) && !$zone.hasClass('oe_structure')) {
                         vertical = true;
                         style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                     }
@@ -1110,7 +1110,7 @@ var SnippetsMenu = Widget.extend({
                     style['display'] = 'inline-block';
                 } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     style['float'] = float;
-                    if (!isFullWidth($zone)) {
+                    if (!isFullWidth($zone) && !$zone.hasClass('oe_structure')) {
                         vertical = true;
                         style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                     }
