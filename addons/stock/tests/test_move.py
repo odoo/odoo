@@ -3443,7 +3443,7 @@ class StockMove(SavepointCase):
         })
         picking.action_confirm()
         picking.action_assign()
-        # No quantites filled, immediate transfer wizard should pop up.
+        # No quantities filled, immediate transfer wizard should pop up.
         immediate_trans_wiz_dict = picking.button_validate()
         self.assertEqual(immediate_trans_wiz_dict.get('res_model'), 'stock.immediate.transfer')
         immediate_trans_wiz = Form(self.env[immediate_trans_wiz_dict['res_model']].with_context(immediate_trans_wiz_dict['context'])).save()
