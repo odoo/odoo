@@ -1909,6 +1909,14 @@ class TestX2many(common.TransactionCase):
         result = recs.search([('id', 'in', recs.ids), ('lines', '!=', False)])
         self.assertEqual(result, recs - recZ)
 
+    def test_create_batch_m2m(self):
+        lines = self.env['test_new_api.multi.line'].create([{
+            'tags': [(0, 0, {'name': str(j)}) for j in range(3)],
+        } for i in range(3)])
+        self.assertEqual(len(lines), 3)
+        for line in lines:
+            self.assertEqual(len(line.tags), 3)
+
 
 class TestHtmlField(common.TransactionCase):
 
