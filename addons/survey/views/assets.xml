@@ -13,7 +13,9 @@
         <script type="text/javascript" src="/survey/static/src/js/survey_print.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
 
-        <t t-call="web._assets_helpers"/>
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_frontend_helpers"/>
+        </t>
         <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
         <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
         <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_form.scss"/>
