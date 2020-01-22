@@ -165,14 +165,14 @@
                             </div>
                         </div>
                     </div>
-                    <p t-if="o.type in ('out_invoice', 'in_refund')">
+                    <p t-if="o.type in ('out_invoice', 'in_refund') and o.invoice_payment_ref">
                         Please use the following communication for your payment : <b><span t-field="o.invoice_payment_ref"/></b>
-                    </p>
-                    <p t-if="o.narration" name="comment">
-                        <span t-field="o.narration"/>
                     </p>
                     <p t-if="o.invoice_payment_term_id" name="payment_term">
                         <span t-field="o.invoice_payment_term_id.note"/>
+                    </p>
+                    <p t-if="o.narration" name="comment">
+                        <span t-field="o.narration"/>
                     </p>
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
