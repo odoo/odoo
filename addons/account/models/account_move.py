@@ -1153,7 +1153,7 @@ class AccountMoveLine(models.Model):
         writeoff_move.post()
 
         # Return the writeoff move.line which is to be reconciled
-        return writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
+        return writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id).sorted(key='id')[:1]
 
     @api.multi
     def _prepare_writeoff_first_line_values(self, values):
