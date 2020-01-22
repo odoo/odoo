@@ -13,6 +13,9 @@ class EventTemplateTicket(models.Model):
     name = fields.Char(
         string='Name', default=lambda self: _('Registration'),
         required=True, translate=True)
+    description = fields.Text(
+        'Description', translate=True,
+        help="A description of the ticket that you want to communicate to your customers.")
     event_type_id = fields.Many2one(
         'event.type', string='Event Category', ondelete='cascade', required=True)
     # sale
@@ -66,7 +69,7 @@ class EventTemplateTicket(models.Model):
     def _get_event_ticket_fields_whitelist(self):
         """ Whitelist of fields that are copied from event_type_ticket_ids to event_ticket_ids when
         changing the event_type_id field of event.event """
-        return ['name']
+        return ['name', 'description']
 
 
 class EventTicket(models.Model):
@@ -129,11 +132,7 @@ class EventTicket(models.Model):
         """ Compute a multiline description of this ticket. It is used when ticket
         description are necessary without having to encode it manually, like sales
         information. """
-        self.ensure_one()
-        lines = [self.display_name]
-        if self.event_id:
-            lines.append(self.event_id.display_name)
-        return '\n'.join(lines)
+        return '%s\n%s' % (self.display_name, self.event_id.display_name)
 
     def _get_ticket_tz(self):
         return self.event_id.date_tz or self.env.user.tz
