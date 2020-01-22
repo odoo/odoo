@@ -6,7 +6,6 @@ from ast import literal_eval
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
 
 
 class SendSMS(models.TransientModel):
@@ -87,7 +86,7 @@ class SendSMS(models.TransientModel):
     def _compute_recipients_count(self):
         self.res_ids_count = len(literal_eval(self.res_ids)) if self.res_ids else 0
         if self.res_model:
-            self.active_domain_count = self.env[self.res_model].search_count(safe_eval(self.active_domain or '[]'))
+            self.active_domain_count = self.env[self.res_model].search_count(literal_eval(self.active_domain or '[]'))
         else:
             self.active_domain_count = 0
 
@@ -308,7 +307,7 @@ class SendSMS(models.TransientModel):
         if not self.res_model:
             return None
         if self.use_active_domain:
-            active_domain = safe_eval(self.active_domain or '[]')
+            active_domain = literal_eval(self.active_domain or '[]')
             records = self.env[self.res_model].search(active_domain)
         elif self.res_id:
             records = self.env[self.res_model].browse(self.res_id)

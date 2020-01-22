@@ -57,7 +57,6 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
-from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
 

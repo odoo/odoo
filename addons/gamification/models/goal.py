@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import logging
 import time
 from datetime import date, datetime, timedelta
@@ -292,7 +293,7 @@ class Goal(models.Model):
                 field_date_name = definition.field_date_id.name
                 if definition.computation_mode == 'count' and definition.batch_mode:
                     # batch mode, trying to do as much as possible in one request
-                    general_domain = safe_eval(definition.domain)
+                    general_domain = ast.literal_eval(definition.domain)
                     field_name = definition.batch_distinctive_field.name
                     subqueries = {}
                     for goal in goals:
