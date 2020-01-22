@@ -593,7 +593,7 @@ class AccountAccount(models.Model):
         if default.get('code', False):
             return super(AccountAccount, self).copy(default)
         try:
-            default['code'] = (str(int(self.code) + 10) or '')
+            default['code'] = (str(int(self.code) + 10) or '').zfill(len(self.code))
             default.setdefault('name', _("%s (copy)") % (self.name or ''))
             while self.env['account.account'].search([('code', '=', default['code']),
                                                       ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):
