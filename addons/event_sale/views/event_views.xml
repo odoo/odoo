@@ -88,6 +88,21 @@
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <field name="currency_id" invisible="1"/>
+                    <button name="action_view_linked_orders"
+                            type="object" class="oe_stat_button" icon="fa-dollar"
+                            help="Total sales for this event"
+                            attrs="{'invisible': ['|', ('sale_price_subtotal', '=', 0), ('sale_price_subtotal', '=', False)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field string="Sales" name="sale_price_subtotal"
+                                    widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </span>
+                            <span class="o_stat_text">Sales</span>
+                        </div>
+                    </button>
+                </xpath>
                 <page name="event_communication" position="before">
                     <page string="Tickets" name="tickets">
                         <field name="event_ticket_ids" context="{'default_name': name}" mode="tree,kanban">
@@ -142,18 +157,6 @@
                         </field>
                     </page>
                 </page>
-            </field>
-        </record>
-
-        <record id="event_view_kanban" model="ir.ui.view">
-            <field name="name">event.kanban.inherit</field>
-            <field name="model">event.event</field>
-            <field name="inherit_id" ref="event.view_event_kanban"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('o_event_duration_str')]" position="after">
-                    <field name="currency_id" invisible="1"/>
-                    <div attrs="{'invisible': [('sale_price_subtotal', '&lt;=', 0)]}">Sales <field name="sale_price_subtotal" widget="monetary"/></div>
-                </xpath>
             </field>
         </record>
 
