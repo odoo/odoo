@@ -1819,14 +1819,6 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
 });
 
 QUnit.test('all messages in "Inbox" in "History" after marked all as read', async function (assert) {
-    /**
-     * FIXME: for some reasons, this test may crash non-deterministically on
-     * runbot around once every hundreds of builds. As of the writing of this
-     * comment, no explanation has been found, so extra `nextTick()` have been
-     * added in the meantime. This work-around sucks, but this is better than
-     * skipping this test, until we find the issue and fix it properly in the
-     * future.
-     */
     assert.expect(10);
 
     const messagesData = [];
@@ -1846,8 +1838,10 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     };
 
     let messageFetchCount = 0;
-    const loadMoreDef = testUtils.makeTestPromise();
+    const initDef = testUtils.makeTestPromise();
     const markAllReadDef = testUtils.makeTestPromise();
+    const clickHistoryDef = testUtils.makeTestPromise();
+    const loadMoreDef = testUtils.makeTestPromise();
     let objectDiscuss;
 
     const discuss = await createDiscuss({
@@ -1882,6 +1876,12 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                 assert.step(args.method);
 
                 messageFetchCount++;
+                if (messageFetchCount === 1) {
+                    initDef.resolve();
+                }
+                if (messageFetchCount === 2) {
+                    clickHistoryDef.resolve();
+                }
                 if (messageFetchCount === 3) {
                     loadMoreDef.resolve();
                 }
@@ -1891,6 +1891,8 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     });
     objectDiscuss = discuss;
 
+    await initDef;
+    await testUtils.nextTick();
     assert.verifySteps(['message_fetch'],
         "should fetch messages once for needaction messages (Inbox)");
     assert.containsN(discuss, '.o_thread_message', 30,
@@ -1899,6 +1901,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     const $markAllReadButton = $('.o_mail_discuss_button_mark_all_read');
     await testUtils.dom.click($markAllReadButton);
     await markAllReadDef;
+    await testUtils.nextTick();
     // immediately jump to end of the fadeout animation on messages
     discuss.$('.o_thread_message').stop(false, true);
     assert.containsNone(discuss, '.o_thread_message',
@@ -1906,16 +1909,8 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
 
     const $history = discuss.$('.o_mail_discuss_item[data-thread-id="mailbox_history"]');
     await testUtils.dom.click($history);
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
+    await clickHistoryDef;
+    await testUtils.nextTick();
     assert.verifySteps(['message_fetch'],
         "should fetch messages once for history");
     assert.containsN(discuss, '.o_thread_message', 30,
@@ -1925,16 +1920,6 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     discuss.$('.o_mail_thread').scrollTop(0);
     await loadMoreDef;
     await testUtils.nextTick();
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
-    await testUtils.nextTick(); // extra (non-deterministic)
     assert.verifySteps(['message_fetch'],
         "should fetch more messages in history for loadMore");
     assert.containsN(discuss, '.o_thread_message', 40,
