@@ -107,37 +107,40 @@ class Followers(models.Model):
         self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
             query = """
-WITH sub_followers AS (
-    SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
-    FROM mail_followers fol
-        RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
-        ON subrel.mail_followers_id = fol.id
-        RIGHT JOIN mail_message_subtype subtype
-        ON subtype.id = subrel.mail_message_subtype_id
-    WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
-)
-SELECT partner.id as pid, NULL AS cid,
-        partner.active as active, partner.partner_share as pshare, NULL as ctype,
-        users.notification_type AS notif, array_agg(groups.id) AS groups
-    FROM res_partner partner
-    LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-    LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-    LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
-    WHERE EXISTS (
-        SELECT partner_id FROM sub_followers
-        WHERE sub_followers.channel_id IS NULL
-            AND sub_followers.partner_id = partner.id
-            AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-    ) %s
-    GROUP BY partner.id, users.notification_type
-UNION
-SELECT NULL AS pid, channel.id AS cid,
-        TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-        CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
-    FROM mail_channel channel
-    WHERE EXISTS (
-        SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-    ) %s
+SELECT DISTINCT ON(pid, cid) * FROM (
+    WITH sub_followers AS (
+        SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
+        FROM mail_followers fol
+            RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
+            ON subrel.mail_followers_id = fol.id
+            RIGHT JOIN mail_message_subtype subtype
+            ON subtype.id = subrel.mail_message_subtype_id
+        WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
+    )
+    SELECT partner.id as pid, NULL AS cid,
+            partner.active as active, partner.partner_share as pshare, NULL as ctype,
+            users.notification_type AS notif, array_agg(groups.id) AS groups
+        FROM res_partner partner
+        LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+        LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+        LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
+        WHERE EXISTS (
+            SELECT partner_id FROM sub_followers
+            WHERE sub_followers.channel_id IS NULL
+                AND sub_followers.partner_id = partner.id
+                AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
+        ) %s
+        GROUP BY partner.id, users.notification_type
+    UNION
+    SELECT NULL AS pid, channel.id AS cid,
+            TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
+            CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+        FROM mail_channel channel
+        WHERE EXISTS (
+            SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
+        ) %s
+) AS x
+ORDER BY pid, cid, notif
 """ % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
             params = [subtype_id, records._name, tuple(records.ids)]
             if pids:
@@ -150,12 +153,13 @@ SELECT NULL AS pid, channel.id AS cid,
             params, query_pid, query_cid = [], '', ''
             if pids:
                 query_pid = """
-SELECT partner.id as pid, NULL AS cid,
+SELECT DISTINCT ON (partner.id) partner.id as pid, NULL AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
     users.notification_type AS notif, NULL AS groups
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-WHERE partner.id IN %s"""
+WHERE partner.id IN %s
+ORDER BY partner.id, users.notification_type"""
                 params.append(tuple(pids))
             if cids:
                 query_cid = """
