@@ -534,11 +534,6 @@ class Lead(models.Model):
     # ------------------------------------------------------------
 
     def toggle_active(self):
-        super(Lead, self).toggle_active()
-        self.filtered(lambda lead: lead.active)._compute_probabilities()
-        return True
-
-    def toggle_active(self):
         res = super(Lead, self).toggle_active()
         self.filtered(lambda lead: lead.active)._update_probability()
         return res
