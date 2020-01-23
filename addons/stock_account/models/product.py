@@ -97,6 +97,7 @@ class ProductProduct(models.Model):
     quantity_svl = fields.Float(compute='_compute_value_svl')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
@@ -125,6 +126,22 @@ class ProductProduct(models.Model):
         remaining = (self - products)
         remaining.value_svl = 0
         remaining.quantity_svl = 0
+
+    # -------------------------------------------------------------------------
+    # Actions
+    # -------------------------------------------------------------------------
+    def action_revaluation(self):
+        self.ensure_one()
+        ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
+        return {
+            'name': _("Product Revaluation"),
+            'view_mode': 'form',
+            'res_model': 'stock.valuation.layer.revaluation',
+            'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
+            'type': 'ir.actions.act_window',
+            'context': ctx,
+            'target': 'new'
+        }
 
     # -------------------------------------------------------------------------
     # SVL creation helpers
