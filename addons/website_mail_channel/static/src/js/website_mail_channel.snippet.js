@@ -117,6 +117,8 @@ publicWidget.registry.follow_alias = publicWidget.Widget.extend({
             else {
                 self.$target.find('.js_mg_email').addClass('d-none');
             }
+        }).guardedCatch(function (res) { // case you don't have read access on record (modelConverter crash)
+            res.event.preventDefault();
         });
     }
 });
