@@ -3072,14 +3072,13 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             },
                         });
                         this.trigger_up('reload_snippet_template');
-                        resolve();
                     },
                 }, {
                     text: _t("Discard"),
                     close: true,
-                    click: () => resolve(),
                 }],
             }).open();
+            dialog.on('closed', this, () => resolve());
         });
     },
 });
