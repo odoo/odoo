@@ -171,6 +171,28 @@
                     </div>
                     <h2>Quotations &amp; Orders</h2>
                     <div class="row mt16 o_settings_container" name="quotation_order_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="default_setting_options">
+                            <div class="o_setting_right_pane">
+                                        <span class="o_form_label">Default Sending Options</span>
+                                        <div class="text-muted">
+                                            Those options will be selected by default when clicking "Send &amp; Print" on invoices
+                                        </div>
+                                        <div class="mt16">
+                                            <div class="content-group" id="send_default_order">
+                                                <div class="row">
+                                                    <field name="order_is_print" class="col-lg-1 ml16"/>
+                                                    <label for="order_is_print"/>
+                                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                                </div>
+                                                <div class="row">
+                                                    <field name="order_is_email" class="col-lg-1 ml16"/>
+                                                    <label for="order_is_email"/>
+                                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                                </div>
+                                            </div>
+                                        </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="sale_config_online_confirmation_sign">
                             <div class="o_setting_left_pane">
                                 <field name="portal_confirmation_sign"/>

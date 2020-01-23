@@ -11,6 +11,9 @@ class ResCompany(models.Model):
     portal_confirmation_pay = fields.Boolean(string='Online Payment')
     quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
 
+    order_is_email = fields.Boolean('Send Email', default=True)
+    order_is_print = fields.Boolean('Print Order', default=False)
+
     # sale quotation onboarding
     sale_quotation_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the sale onboarding panel", default='not_done')
     sale_onboarding_order_confirmation_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding confirmation order step", default='not_done')

@@ -63,6 +63,9 @@ class ResConfigSettings(models.TransientModel):
                                                config_parameter='sale.default_confirmation_template',
                                                help="Email sent to the customer once the order is paid.")
 
+    order_is_print = fields.Boolean(string='Print Order', related='company_id.order_is_print', readonly=False)
+    order_is_email = fields.Boolean(string='Send an Email', related='company_id.order_is_email', readonly=False)
+
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if self.default_invoice_policy != 'order':

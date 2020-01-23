@@ -329,6 +329,11 @@ class SaleOrder(models.Model):
         self.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         return {}
 
+    def action_sale_print(self):
+        self.filtered(lambda inv: inv.state == 'draft').write({'state': 'sent'})
+        self.message_subscribe(partner_ids=self.partner_id.ids)
+        return self.env.ref('sale.action_report_saleorder').report_action(self)
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         """
@@ -713,18 +718,21 @@ class SaleOrder(models.Model):
         return template_id
 
     def action_quotation_send(self):
-        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
+        ''' Opens a wizard to compose an email and print, with relevant mail template loaded by default '''
         self.ensure_one()
         template_id = self._find_mail_template()
         lang = self.env.context.get('lang')
         template = self.env['mail.template'].browse(template_id)
         if template.lang:
             lang = template._render_template(template.lang, 'sale.order', self.ids[0])
+        send_by_email_and_print = self._context.get('send_by_email_and_print')
+        compose_form = self.env.ref('sale.sale_order_send_wizard_form', raise_if_not_found=False).id
+
         ctx = {
             'default_model': 'sale.order',
             'default_res_id': self.ids[0],
             'default_use_template': bool(template_id),
-            'default_template_id': template_id,
+            'default_template_id':template and template.id or False,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
             'custom_layout': "mail.mail_notification_paynow",
@@ -733,11 +741,13 @@ class SaleOrder(models.Model):
             'model_description': self.with_context(lang=lang).type_name,
         }
         return {
+            'name': _('Send Mail'),
             'type': 'ir.actions.act_window',
+            'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(False, 'form')],
-            'view_id': False,
+            'res_model': 'sale.order.send' if send_by_email_and_print else 'mail.compose.message',
+            'views': [(compose_form if send_by_email_and_print else False, 'form')],
+            'view_id': compose_form if send_by_email_and_print else False,
             'target': 'new',
             'context': ctx,
         }
