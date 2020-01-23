@@ -234,10 +234,26 @@ class WebsiteSale(ProductConfiguratorController):
 
         Category = request.env['product.public.category']
         search_categories = False
-        search_product = Product.search(domain)
         if search:
-            categories = search_product.mapped('public_categ_ids')
-            search_categories = Category.search([('id', 'parent_of', categories.ids)] + request.website.website_domain())
+            # search_product = Product.search(domain)
+            # categories = search_product.mapped('public_categ_ids')
+            query = Product._where_calc(domain)
+            Product._apply_ir_rules(query, 'read')
+            product_from, product_where, product_params = query.get_sql()
+            product_query = 'SELECT "{}".id FROM {} WHERE {}'.format(Product._table, product_from, product_where)
+            field = type(Product).public_categ_ids
+
+            query = """
+                SELECT rel.{id2} FROM {rel} rel
+                WHERE rel.{id1} IN ({prod_query})
+            """.format(
+                rel=field.relation, id1=field.column1, id2=field.column2,
+                prod_query=product_query,
+            )
+            request.cr.execute(query, product_params)
+            categ_ids = [row[0] for row in request.cr.fetchall()]
+
+            search_categories = Category.search([('id', 'parent_of', categ_ids)] + request.website.website_domain())
             categs = search_categories.filtered(lambda c: not c.parent_id)
         else:
             categs = Category.search([('parent_id', '=', False)] + request.website.website_domain())
@@ -251,7 +267,7 @@ class WebsiteSale(ProductConfiguratorController):
                 parent_category_ids.append(current_category.parent_id.id)
                 current_category = current_category.parent_id
 
-        product_count = len(search_product)
+        product_count = Product.search_count(domain)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
