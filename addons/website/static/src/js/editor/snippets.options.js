@@ -498,16 +498,18 @@ options.registry.layout_column = options.Class.extend({
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
             for (var i = 0; i < count; i++) {
+                // TODO: consider the implications of this being async in master
                 this.trigger_up('clone_snippet', {$snippet: $lastColumn});
             }
         } else {
             var self = this;
             _.each(this.$target.children().slice(count), function (el) {
+                // TODO: consider the implications of this being async in master
                 self.trigger_up('remove_snippet', {$snippet: $(el)});
             });
         }
 
-        this._resizeColumns();
+        this._resizeColumns(count);
         this.trigger_up('cover_update');
     },
     /**
@@ -515,9 +517,9 @@ options.registry.layout_column = options.Class.extend({
      *
      * @private
      */
-    _resizeColumns: function () {
+    _resizeColumns: function (count = 0) {
         var $columns = this.$target.children();
-        var colsLength = $columns.length;
+        var colsLength = $columns.length - count;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
