@@ -37,16 +37,13 @@ class Event(models.Model):
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket',
         copy=True)
-
     sale_order_lines_ids = fields.One2many(
         'sale.order.line', 'event_id',
         string='All sale order lines pointing to this event')
-
-    sale_total_price = fields.Monetary(compute='_compute_sale_total_price')
+    sale_price_subtotal = fields.Monetary(string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal')
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
-        default=lambda self: self.env.company.currency_id.id, readonly=True)
-
+        related='company_id.currency_id', readonly=True)
     start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
 
     @api.onchange('event_type_id')
@@ -67,12 +64,14 @@ class Event(models.Model):
             start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
             event.start_sale_date = min(start_dates) if start_dates else False
 
-    @api.depends('sale_order_lines_ids')
-    def _compute_sale_total_price(self):
+    @api.depends('company_id.currency_id',
+                 'sale_order_lines_ids.price_subtotal', 'sale_order_lines_ids.currency_id',
+                 'sale_order_lines_ids.company_id', 'sale_order_lines_ids.order_id.date_order')
+    def _compute_sale_price_subtotal(self):
         for event in self:
-            event.sale_total_price = sum([
+            event.sale_price_subtotal = sum([
                 event.currency_id._convert(
-                    sale_order_line_id.price_reduce_taxexcl,
+                    sale_order_line_id.price_subtotal,
                     sale_order_line_id.currency_id,
                     sale_order_line_id.company_id,
                     sale_order_line_id.order_id.date_order)
