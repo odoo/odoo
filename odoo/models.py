@@ -2487,7 +2487,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         _logger.info("Storing computed values of %s", field)
                         self.env.add_to_compute(recs._fields[field], recs)
 
-        if self._auto:
             foreign, other = self._get_constraints()
             for (key, definition) in foreign:
                 # FKs must be handled in post-init as it is very possible that the comodel has not
@@ -2512,14 +2511,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ This method is called right after :meth:`~.init`, it's main purpose is to perform
             schema changes to the database after it has been completely initialised.
         """
-        foreign, other = self._get_constraints()
-        for (key, definition) in foreign:
-            # FKs must be handled in post-init as it is very possible that the comodel has not
-            # yet been initialized
-            self.pool.post_init(self._add_constraint, key, definition)
+        if self._auto:
+            foreign, other = self._get_constraints()
+            for (key, definition) in foreign:
+                # FKs must be handled in post-init as it is very possible that the comodel has not
+                # yet been initialized
+                self.pool.post_init(self._add_constraint, key, definition)
 
-        for (key, definition) in other:
-            self._add_constraint(key, definition)
+            for (key, definition) in other:
+                self._add_constraint(key, definition)
 
     def _get_constraints(self):
         fk = []
