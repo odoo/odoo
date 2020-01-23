@@ -18,11 +18,6 @@ class EventTemplateTicket(models.Model):
         help="A description of the ticket that you want to communicate to your customers.")
     event_type_id = fields.Many2one(
         'event.type', string='Event Category', ondelete='cascade', required=True)
-    # sale
-    start_sale_date = fields.Date(string="Registration Start")
-    end_sale_date = fields.Date(string="Registration End")
-    is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
-    sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available')
     # seats
     seats_availability = fields.Selection([
         ('limited', 'Limited'), ('unlimited', 'Unlimited')], string='Seats Limit',
@@ -32,44 +27,16 @@ class EventTemplateTicket(models.Model):
         help="Define the number of available tickets. If you have too many registrations you will "
              "not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
 
-    @api.depends('end_sale_date', 'event_type_id')
-    def _compute_is_expired(self):
-        for ticket in self:
-            if ticket.end_sale_date:
-                current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
-                ticket.is_expired = ticket.end_sale_date < current_date
-            else:
-                ticket.is_expired = False
-
-    @api.depends('start_sale_date', 'end_sale_date', 'event_type_id')
-    def _compute_sale_available(self):
-        for ticket in self:
-            current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
-            if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
-                    ticket.end_sale_date and ticket.end_sale_date < current_date:
-                ticket.sale_available = False
-            else:
-                ticket.sale_available = True
-
     @api.depends('seats_max')
     def _compute_seats_availability(self):
         for ticket in self:
             ticket.seats_availability = 'limited' if ticket.seats_max else 'unlimited'
 
-    @api.constrains('start_sale_date', 'end_sale_date')
-    def _constrains_dates_coherency(self):
-        for ticket in self:
-            if ticket.start_sale_date and ticket.end_sale_date and ticket.start_sale_date > ticket.end_sale_date:
-                raise UserError(_('The stop date cannot be earlier than the start date.'))
-
-    def _get_ticket_tz(self):
-        return self.event_type_id.use_timezone and self.event_type_id.default_timezone or self.env.user.tz
-
     @api.model
     def _get_event_ticket_fields_whitelist(self):
         """ Whitelist of fields that are copied from event_type_ticket_ids to event_ticket_ids when
         changing the event_type_id field of event.event """
-        return ['name', 'description']
+        return ['name', 'description', 'seats_max']
 
 
 class EventTicket(models.Model):
@@ -81,6 +48,13 @@ class EventTicket(models.Model):
     _inherit = 'event.type.ticket'
     _description = 'Event Ticket'
 
+    @api.model
+    def default_get(self, fields):
+        res = super(EventTicket, self).default_get(fields)
+        if 'name' in fields and (not res.get('name') or res['name'] == _('Registration')) and self.env.context.get('default_event_name'):
+            res['name'] = _('Registration for %s') % self.env.context['default_event_name']
+        return res
+
     # description
     event_type_id = fields.Many2one(ondelete='set null', required=False)
     event_id = fields.Many2one(
@@ -88,12 +62,35 @@ class EventTicket(models.Model):
         ondelete='cascade', required=True)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     # sale
+    start_sale_date = fields.Date(string="Registration Start")
+    end_sale_date = fields.Date(string="Registration End")
+    is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
+    sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available')
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     # seats
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seats', compute='_compute_seats', store=True)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=True)
+
+    @api.depends('end_sale_date', 'event_id.date_tz')
+    def _compute_is_expired(self):
+        for ticket in self:
+            if ticket.end_sale_date:
+                current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
+                ticket.is_expired = ticket.end_sale_date < current_date
+            else:
+                ticket.is_expired = False
+
+    @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz')
+    def _compute_sale_available(self):
+        for ticket in self:
+            current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
+            if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
+                    ticket.end_sale_date and ticket.end_sale_date < current_date:
+                ticket.sale_available = False
+            else:
+                ticket.sale_available = True
 
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
@@ -122,6 +119,12 @@ class EventTicket(models.Model):
         for ticket in self:
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
+
+    @api.constrains('start_sale_date', 'end_sale_date')
+    def _constrains_dates_coherency(self):
+        for ticket in self:
+            if ticket.start_sale_date and ticket.end_sale_date and ticket.start_sale_date > ticket.end_sale_date:
+                raise UserError(_('The stop date cannot be earlier than the start date.'))
 
     @api.constrains('seats_available', 'seats_max')
     def _constrains_seats_available(self):
