@@ -234,10 +234,36 @@ class WebsiteSale(ProductConfiguratorController):
 
         Category = request.env['product.public.category']
         search_categories = False
-        search_product = Product.search(domain)
         if search:
-            categories = search_product.mapped('public_categ_ids')
-            search_categories = Category.search([('id', 'parent_of', categories.ids)] + request.website.website_domain())
+            # subquery for search_product = Product.search(domain)
+            query = Product._where_calc(domain)
+            Product._apply_ir_rules(query, 'read')
+            prod_from, prod_where, prod_params = query.get_sql()
+            prod_query = 'SELECT "{}".id FROM {} WHERE {}'.format(Product._table, prod_from, prod_where or "true")
+
+            # categories = search_product.mapped('public_categ_ids')
+            Category.check_access_rights('read')
+            query = Category._where_calc([])
+            Category._apply_ir_rules(query, 'read')
+            cat_from, cat_where, cat_params = query.get_sql()
+
+            field = type(Product).public_categ_ids
+
+            query = """
+                SELECT "{cat_table}".id FROM {cat_from}
+                WHERE {cat_where} AND "{cat_table}".id IN (
+                    SELECT rel.{rel_cat} FROM {rel_table} rel
+                    WHERE rel.{rel_prod} IN ({prod_query})
+                )
+            """.format(
+                cat_table=Category._table, cat_from=cat_from, cat_where=cat_where or "true",
+                rel_table=field.relation, rel_prod=field.column1, rel_cat=field.column2,
+                prod_query=prod_query,
+            )
+            request.cr.execute(query, cat_params + prod_params)
+            categ_ids = [row[0] for row in request.cr.fetchall()]
+
+            search_categories = Category.search([('id', 'parent_of', categ_ids)] + request.website.website_domain())
             categs = search_categories.filtered(lambda c: not c.parent_id)
         else:
             categs = Category.search([('parent_id', '=', False)] + request.website.website_domain())
@@ -251,14 +277,66 @@ class WebsiteSale(ProductConfiguratorController):
                 parent_category_ids.append(current_category.parent_id.id)
                 current_category = current_category.parent_id
 
-        product_count = len(search_product)
+        product_count = Product.search_count(domain)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
         ProductAttribute = request.env['product.attribute']
         if products:
-            # get all products without limit
-            attributes = ProductAttribute.search([('attribute_line_ids.value_ids', '!=', False), ('attribute_line_ids.product_tmpl_id', 'in', search_product.ids)])        
+            # subquery for search_product = Product.search(domain)
+            query = Product._where_calc(domain)
+            Product._apply_ir_rules(query, 'read')
+            prod_from, prod_where, prod_params = query.get_sql()
+            prod_query = 'SELECT "{}".id FROM {} WHERE {}'.format(Product._table, prod_from, prod_where or "true")
+
+            # subquery for condition on 'attribute_line_ids'
+            ProductAttribute.check_access_rights('read')
+            query = ProductAttribute._where_calc([])
+            ProductAttribute._apply_ir_rules(query, 'read')
+            att_order = ProductAttribute._generate_order_by(ProductAttribute._order, query)
+            att_from, att_where, att_params = query.get_sql()
+
+            # attributes = ProductAttribute.search([
+            #     ('attribute_line_ids.value_ids', '!=', False),
+            #     ('attribute_line_ids.product_tmpl_id', 'in', search_product.ids),
+            # ])
+            ProductAttributeLine = ProductAttribute.attribute_line_ids
+            ProductAttributeLine.check_access_rights('read')
+            query = ProductAttributeLine._where_calc([])
+            ProductAttributeLine._apply_ir_rules(query, 'read')
+            attline_from, attline_where, attline_params = query.get_sql()
+
+            field = type(ProductAttributeLine).value_ids
+
+            query = """
+                SELECT "{att_table}".id FROM {att_from}
+                WHERE {att_where}
+                    AND "{att_table}".id IN (
+                        SELECT "{attline_table}".attribute_id FROM {attline_from}
+                        WHERE {attline_where} AND "{attline_table}".id IN (
+                            SELECT "{rel_attline}" FROM "{rel_table}"
+                        )
+                    )
+                    AND "{att_table}".id IN (
+                        SELECT "{attline_table}".attribute_id FROM {attline_from}
+                        WHERE {attline_where}
+                            AND "{attline_table}".product_tmpl_id IN ({prod_query})
+                    )
+                {att_order}
+            """.format(
+                att_table=ProductAttribute._table,
+                att_from=att_from,
+                att_where=att_where or "true",
+                attline_table=ProductAttributeLine._table,
+                attline_from=attline_from,
+                attline_where=attline_where or "true",
+                rel_table=field.relation,
+                rel_attline=field.column1,
+                prod_query=prod_query,
+                att_order=att_order,
+            )
+            request.cr.execute(query, att_params + attline_params + attline_params + prod_params)
+            attributes = ProductAttribute.browse(row[0] for row in request.cr.fetchall())
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
