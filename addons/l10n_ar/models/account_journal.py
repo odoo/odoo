@@ -185,5 +185,4 @@ class AccountJournal(models.Model):
         we add or not a prefix to identify sales journal.
         """
         if self.type == 'sale' and self.l10n_ar_afip_pos_number:
-            pos_num = str(self.l10n_ar_afip_pos_number)
-            self.code = pos_num if len(pos_num) > 4 else _('S') + "%04d" % self.l10n_ar_afip_pos_number
+            self.code = "%05i" % self.l10n_ar_afip_pos_number
