@@ -307,7 +307,6 @@ class EventEvent(models.Model):
                         (attribute_name, ticket[attribute_name] if not isinstance(ticket[attribute_name], models.BaseModel) else ticket[attribute_name].id)
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                     )
-                    ticket_vals['name'] = self.name and _('Registration for %s') % self.name or ticket.name
                     all_ticket_values.append(ticket_vals)
 
                 self.event_ticket_ids = [(5, 0, 0)] + [(0, 0, item) for item in all_ticket_values]

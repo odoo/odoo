@@ -28,13 +28,6 @@ class EventTemplateTicket(models.Model):
             discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
             record.price_reduce = (1.0 - discount) * record.price
 
-    @api.depends('product_id.active')
-    def _compute_sale_available(self):
-        inactive_product_tickets = self.filtered(lambda ticket: not ticket.product_id.active)
-        for ticket in inactive_product_tickets:
-            ticket.sale_available = False
-        super(EventTemplateTicket, self - inactive_product_tickets)._compute_sale_available()
-
     @api.onchange('product_id')
     def _onchange_product_id(self):
         self.price = self.product_id.list_price or 0
@@ -95,6 +88,13 @@ class EventTicket(models.Model):
             tax_ids = record.sudo().product_id.taxes_id.filtered(lambda r: r.company_id == record.event_id.company_id)
             taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
             record.price_reduce_taxinc = taxes['total_included']
+
+    @api.depends('product_id.active')
+    def _compute_sale_available(self):
+        inactive_product_tickets = self.filtered(lambda ticket: not ticket.product_id.active)
+        for ticket in inactive_product_tickets:
+            ticket.sale_available = False
+        super(EventTicket, self - inactive_product_tickets)._compute_sale_available()
 
     def _get_ticket_multiline_description(self):
         """ If people set a description on their product it has more priority
