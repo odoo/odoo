@@ -257,8 +257,49 @@ class WebsiteSale(ProductConfiguratorController):
 
         ProductAttribute = request.env['product.attribute']
         if products:
-            # get all products without limit
-            attributes = ProductAttribute.search([('attribute_line_ids.value_ids', '!=', False), ('attribute_line_ids.product_tmpl_id', 'in', search_product.ids)])        
+            # implement the following searches with subqueries for performance reasons:
+            # search_product = Product.search(domain)
+            # attributes = ProductAttribute.search([
+            #     ('attribute_line_ids.value_ids', '!=', False),
+            #     ('attribute_line_ids.product_tmpl_id', 'in', search_product.ids),
+            # ])
+            query = ProductAttribute._where_calc([])
+            ProductAttribute._apply_ir_rules(query, 'read')
+            attrib_order = ProductAttribute._generate_order_by(ProductAttribute._order, query)
+            attrib_from, attrib_where, attrib_params = query.get_sql()
+
+            ProductAttributeLine = ProductAttribute.attribute_line_ids
+            alv_field = type(ProductAttributeLine).value_ids
+
+            query = Product._where_calc(domain)
+            Product._apply_ir_rules(query, 'read')
+            product_from, product_where, product_params = query.get_sql()
+            product_query = 'SELECT "{}".id FROM {} WHERE {}'.format(Product._table, product_from, product_where)
+
+            query = """
+                SELECT "{att}".id FROM {att_from}
+                WHERE {att_where}
+                    AND "{att}".id IN (
+                        SELECT al.attribute_id FROM {al} al, {alv} alv
+                        WHERE al.id = alv.{alv1}
+                    )
+                    AND "{att}".id IN (
+                        SELECT al.attribute_id FROM {al} al
+                        WHERE al.product_tmpl_id IN ({prod_query})
+                    )
+                {order_by}
+            """.format(
+                att=ProductAttribute._table,
+                att_from=attrib_from,
+                att_where=attrib_where or "1=1",
+                al=ProductAttributeLine._table,
+                alv=alv_field.relation,
+                alv1=alv_field.column1,
+                prod_query=product_query,
+                order_by=attrib_order,
+            )
+            request.cr.execute(query, attrib_params + product_params)
+            attributes = ProductAttribute.browse(row[0] for row in request.cr.fetchall())
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
