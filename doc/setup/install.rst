@@ -363,7 +363,8 @@ on the requirements file in a terminal **with Administrator privileges**:
 .. code-block:: doscon
 
     C:\> cd \CommunityPath
-    C:\> pip install wheel -r requirements.txt
+    C:\> pip install setuptools wheel
+    C:\> pip install -r requirements.txt
 
 .. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
              version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
@@ -530,7 +531,8 @@ on the requirements file:
 .. code-block:: console
 
     $ cd /CommunityPath
-    $ pip3 install wheel -r requirements.txt
+    $ pip3 install setuptools wheel
+    $ pip3 install -r requirements.txt
 
 .. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
              version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
@@ -679,7 +681,8 @@ on the requirements file:
 .. code-block:: console
 
    $ cd /CommunityPath
-   /CommunityPath$ pip3 install -r requirements.txt
+   $ pip3 install setuptools wheel
+   $ pip3 install -r requirements.txt
 
 .. warning:: Non-Python dependencies need to be installed with a package manager:
 
