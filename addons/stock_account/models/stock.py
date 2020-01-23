@@ -759,3 +759,5 @@ class ProcurementGroup(models.Model):
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         self.env['stock.move']._run_fifo_vacuum()
+        if use_new_cursor:
+            self._cr.commit()
