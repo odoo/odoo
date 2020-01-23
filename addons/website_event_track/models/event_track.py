@@ -43,9 +43,9 @@ class Track(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char('Name')
-    partner_email = fields.Char('Email')
-    partner_phone = fields.Char('Phone')
+    partner_name = fields.Char('Name', tracking=10)
+    partner_email = fields.Char('Email', tracking=20)
+    partner_phone = fields.Char('Phone', tracking=30)
     partner_biography = fields.Html('Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
