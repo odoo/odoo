@@ -605,6 +605,9 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
 
+        if not qty_to_invoice:
+            return 0
+
         candidates = stock_moves\
             .sudo()\
             .mapped('stock_valuation_layer_ids')\
