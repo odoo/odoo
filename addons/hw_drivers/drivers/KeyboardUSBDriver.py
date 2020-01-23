@@ -125,7 +125,7 @@ class KeyboardUSBDriver(Driver):
             return ("%s - %s") % (manufacturer, product)
         except ValueError as e:
             _logger.warning(e)
-            return _('Unknow keyboard or scanner')
+            return _('Unknown input device')
 
     def action(self, data):
         if data.get('action', False) == 'update_layout':
