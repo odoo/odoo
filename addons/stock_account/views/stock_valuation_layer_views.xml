@@ -50,6 +50,11 @@
                 <field name="currency_id" invisible="1" />
                 <field name="value" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <groupby name="product_id">
+                    <field name="cost_method" invisible="1"/>
+                    <field name="quantity_svl" invisible="1"/>
+                    <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object" attrs="{'invisible':['|', ('cost_method', '=', 'standard'), ('quantity_svl', '&lt;=', 0)]}" />
+                </groupby>
             </tree>
         </field>
     </record>
