@@ -152,7 +152,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('o_event_duration_str')]" position="after">
                     <field name="currency_id" invisible="1"/>
-                    <div attrs="{'invisible': [('sale_total_price', '&lt;=', 0)]}">Sales <field name="sale_total_price" widget="monetary"/></div>
+                    <div attrs="{'invisible': [('sale_price_subtotal', '&lt;=', 0)]}">Sales <field name="sale_price_subtotal" widget="monetary"/></div>
                 </xpath>
             </field>
         </record>
