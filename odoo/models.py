@@ -2512,14 +2512,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             schema changes to the database after it has been completely initialised.
         """
         if self._auto:
-            foreign, other = self._get_constraints()
-            for (key, definition) in foreign:
-                # FKs must be handled in post-init as it is very possible that the comodel has not
-                # yet been initialized
-                self.pool.post_init(self._add_constraint, key, definition)
+            try:
+                foreign, other = self._get_constraints()
+                for (key, definition) in foreign:
+                    # FKs must be handled in post-init as it is very possible that the comodel has
+                    # not yet been initialized
+                    self.pool.post_init(self._add_constraint, key, definition)
 
-            for (key, definition) in other:
-                self._add_constraint(key, definition)
+                for (key, definition) in other:
+                    self._add_constraint(key, definition)
+            except Exception:
+                if will_raise:
+                    raise Exception from None
 
     def _get_constraints(self):
         fk = []
