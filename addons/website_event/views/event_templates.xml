@@ -422,7 +422,7 @@
                         <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
                     </div>
                 </div>
-                <div class="container mb-5">
+                <div class="container">
                     <t t-call="website_event.registration_template"/>
                 </div>
             </t>
@@ -434,19 +434,21 @@
 <!-- Event - Description -->
 <template id="event_description_full" name="Event Description">
     <t t-call="website_event.event_details">
-        <section class="bg-200">
-            <div class="container">
-                <div class="row no-gutters mt-n5 pb-5">
+        <section class="bg-200 mt-n5">
+            <div class="container rounded overflow-hidden">
+                <div class="row no-gutters mt-n4">
                     <!-- Description -->
-                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white rounded-left p-5 shadow-sm">
+                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white p-5 shadow-sm">
                         <span t-field="event.description" itemprop="description"/>
                     </div>
-                    <div class="col-lg-4 bg-light rounded-right shadow-sm d-print-none">
+                    <div class="col-lg-4 bg-light shadow-sm d-print-none">
                         <!-- Date & Time -->
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
-                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
-                            <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                            <div class="d-flex align-items-center">
+                                <h5 t-field="event.with_context(tz=event.date_tz).date_begin" class="my-1 mr-1" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                                <h5 class="my-1" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                            </div>
                             <t t-if="not event.is_one_day">Start -</t>
                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             <t t-if="event.is_one_day">
@@ -455,8 +457,10 @@
                             </t>
                             <t t-else="">
                                 <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
-                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
-                                <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
+                                <div class="d-flex">
+                                    <h5 t-field="event.with_context(tz=event.date_tz).date_end" class="my-1 mr-1" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                                    <h5 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
+                                </div>
                                 <t t-if="not event.is_one_day">End -</t>
                                 <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </t>
