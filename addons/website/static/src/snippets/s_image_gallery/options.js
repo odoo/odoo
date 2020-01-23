@@ -94,8 +94,8 @@ options.registry.gallery = options.Class.extend({
                 }
                 this.mode('reset', this.getMode());
                 this.trigger_up('cover_update');
-                resolve();
             });
+            dialog.on('closed', this, () => resolve());
             dialog.open();
         });
     },
