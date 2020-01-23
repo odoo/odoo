@@ -36,6 +36,7 @@ class TestEventData(TestEventSaleCommon):
             'event_type_ticket_ids': [(5, 0), (0, 0, {
                 'name': 'First Ticket',
                 'product_id': self.event_product.id,
+                'seats_max': 5,
             })]
         })
         event_type.event_type_ticket_ids._onchange_product_id()
@@ -43,7 +44,9 @@ class TestEventData(TestEventSaleCommon):
 
         # synchronize event
         event._onchange_type()
-        self.assertEqual(event.event_ticket_ids.name, 'Registration for %s' % event.name)
+        self.assertEqual(event.event_ticket_ids.name, event.event_type_id.event_type_ticket_ids.name)
+        self.assertEqual(event.event_ticket_ids.seats_availability, 'limited')
+        self.assertEqual(event.event_ticket_ids.seats_max, 5)
         self.assertEqual(event.event_ticket_ids.product_id, self.event_product)
         self.assertEqual(event.event_ticket_ids.price, self.event_product.list_price)
         self.assertEqual(event.event_ticket_ids.description, self.event_product.description_sale)
@@ -93,9 +96,9 @@ class TestEventTicketData(TestEventSaleCommon):
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """
-        self.event_type_complex.write({
-            'use_ticket': True,
-            'event_type_ticket_ids': [
+        event = self.event_0.with_user(self.env.user)
+        event.write({
+            'event_ticket_ids': [
                 (5, 0),
                 (0, 0, {
                     'name': 'First Ticket',
@@ -109,9 +112,9 @@ class TestEventTicketData(TestEventSaleCommon):
                 })
             ],
         })
-        first_ticket = self.event_type_complex.event_type_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
+        first_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
         first_ticket._onchange_product_id()
-        second_ticket = self.event_type_complex.event_type_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
+        second_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
         second_ticket._onchange_product_id()
         # force second ticket price, after calling the onchange
         second_ticket.write({'price': 8.0})

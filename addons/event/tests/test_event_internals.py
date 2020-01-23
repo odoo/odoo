@@ -210,9 +210,9 @@ class TestEventTicketData(TestEventCommon):
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """
-        self.event_type_complex.write({
-            'use_ticket': True,
-            'event_type_ticket_ids': [
+        event = self.event_0.with_user(self.env.user)
+        event.write({
+            'event_ticket_ids': [
                 (5, 0),
                 (0, 0, {
                     'name': 'First Ticket',
@@ -224,8 +224,8 @@ class TestEventTicketData(TestEventCommon):
                 })
             ],
         })
-        first_ticket = self.event_type_complex.event_type_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
-        second_ticket = self.event_type_complex.event_type_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
+        first_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
+        second_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
 
         self.assertEqual(first_ticket.seats_availability, 'limited')
         self.assertTrue(first_ticket.sale_available)
