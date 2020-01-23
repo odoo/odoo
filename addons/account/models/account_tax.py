@@ -67,7 +67,7 @@ class AccountTax(models.Model):
         string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 4))
+    amount = fields.Float(required=True, digits=(16, 4), default=0.0)
     description = fields.Char(string='Label on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
