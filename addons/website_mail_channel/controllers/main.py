@@ -205,8 +205,12 @@ class MailGroup(http.Controller):
         }
         return request.env.ref('website_mail_channel.messages_short').render(values, engine='ir.qweb')
 
-    @http.route("/groups/<model('mail.channel'):group>/get_alias_info", type='json', auth='public', website=True)
-    def get_alias_info(self, group, **post):
+    @http.route("/groups/<int:group_id>/get_alias_info", type='json', auth='public', website=True)
+    def get_alias_info(self, group_id, **post):
+        group = request.env['mail.channel'].search([('id', '=', group_id)])
+        if not group:  # doesn't exist or doesn't have the right to access it
+            return {}
+
         return {
             'alias_name': group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain and '%s@%s' % (group.alias_id.alias_name, group.alias_id.alias_domain) or False
         }
