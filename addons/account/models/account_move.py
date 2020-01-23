@@ -1093,7 +1093,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id', 'invoice_source_email')
     def _compute_invoice_partner_display_info(self):
         for move in self:
-            vendor_display_name = move.partner_id.name
+            vendor_display_name = move.partner_id.display_name
             if not vendor_display_name:
                 if move.invoice_source_email:
                     vendor_display_name = _('From: ') + move.invoice_source_email
@@ -4137,7 +4137,7 @@ class AccountPartialReconcile(models.Model):
                             'tax_base_amount': line.tax_base_amount,
                             'tag_ids': [(6, 0, line.tag_ids.ids)],
                         })
-                        if line.account_id.reconcile:
+                        if line.account_id.reconcile and not line.reconciled:
                             #setting the account to allow reconciliation will help to fix rounding errors
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
