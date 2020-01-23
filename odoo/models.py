@@ -68,6 +68,7 @@ regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
+regex_foreign_key = re.compile(r'\s*foreign\s+key\b.*', re.I)
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -2487,7 +2488,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         self.env.add_to_compute(recs._fields[field], recs)
 
         if self._auto:
-            self._add_sql_constraints()
+            foreign, other = self._get_constraints()
+            for (key, definition) in foreign:
+                # FKs must be handled in post-init as it is very possible that the comodel has not
+                # yet been initialized
+                self.pool.post_init(self._drop_constraint_if_obsolete, key, definition)
+            for (key, definition) in other:
+                self._drop_constraint_if_obsolete(key, definition)
 
         if must_create_table:
             self._execute_sql()
@@ -2500,6 +2507,44 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             overridden to create or modify a model's database schema.
         """
         pass
+
+    def _auto_end(self, *, will_raise=True):
+        """ This method is called right after :meth:`~.init`, it's main purpose is to perform
+            schema changes to the database after it has been completely initialised.
+        """
+        foreign, other = self._get_constraints()
+        for (key, definition) in foreign:
+            # FKs must be handled in post-init as it is very possible that the comodel has not
+            # yet been initialized
+            self.pool.post_init(self._add_constraint, key, definition)
+
+        for (key, definition) in other:
+            self._add_constraint(key, definition)
+
+    def _get_constraints(self):
+        fk = []
+        other = []
+
+        for (key, definition, _) in self._sql_constraints:
+            if regex_foreign_key.match(definition):
+                fk.append((key, definition))
+            else:
+                other.append((key, definition))
+        return fk, other
+
+    def _drop_constraint_if_obsolete(self, key, definition):
+        cr = self._cr
+        conname = f"{self._table}_{key}"
+        current_definition = tools.constraint_definition(cr, self._table, conname)
+        if current_definition and current_definition != definition:
+            tools.drop_constraint(cr, self._table, conname)
+
+    def _add_constraint(self, key, definition):
+        cr = self._cr
+        conname = f"{self._table}_{key}"
+        current_definition = tools.constraint_definition(cr, self._table, conname)
+        if not current_definition:
+            tools.add_constraint(cr, self._table, conname, definition)
 
     def _create_parent_columns(self):
         tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')

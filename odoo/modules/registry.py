@@ -326,6 +326,7 @@ class Registry(Mapping):
         for model in models:
             model._auto_init()
             model.init()
+            model._auto_end()
 
         self._ordinary_tables = None
 
