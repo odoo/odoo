@@ -9,7 +9,7 @@ from unittest.mock import DEFAULT
 from odoo import exceptions
 from odoo.addons.sms.models.sms_sms import SmsSms as SmsSms
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 
 class LinkTrackerMock(common.BaseCase):
@@ -47,7 +47,6 @@ class LinkTrackerMock(common.BaseCase):
         self.assertEqual(redirect_params, url_params)
 
 
-@tagged('post_install', '-at_install')
 class TestSMSPost(test_mail_full_common.TestSMSCommon, LinkTrackerMock):
 
     @classmethod

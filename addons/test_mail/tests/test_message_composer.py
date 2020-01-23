@@ -7,11 +7,9 @@ from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('post_install', '-at_install')
 class TestComposer(TestMailCommon, TestRecipients):
 
     @classmethod
@@ -155,7 +153,6 @@ class TestComposer(TestMailCommon, TestRecipients):
             self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
 
 
-@tagged('post_install', '-at_install')
 class TestComposerWTpl(TestMailCommon, TestRecipients):
 
     @classmethod

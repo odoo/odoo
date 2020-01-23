@@ -7,7 +7,7 @@ from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 from odoo.tests import tagged
 
 
-@tagged('mass_mailing', 'post_install', '-at_install')
+@tagged('mass_mailing')
 class TestMassSMS(test_mail_full_common.TestSMSCommon):
 
     @classmethod

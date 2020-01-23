@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged("odoobot", 'post_install', '-at_install')
+@tagged("odoobot")
 class TestOdoobot(TestMailCommon, TestRecipients):
 
     @classmethod
