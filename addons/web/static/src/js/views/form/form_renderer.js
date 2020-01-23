@@ -249,7 +249,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             if (name in state) {
-                var $page = $notebook.find('> ul > li').eq(state[name]);
+                var $page = $notebook.find('> .o_notebook_headers > .nav-tabs > .nav-item').eq(state[name]);
                 if (!$page.hasClass('o_invisible_modifier')) {
                     $page.find('a[data-toggle="tab"]').click();
                 }
@@ -338,7 +338,6 @@ var FormRenderer = BasicRenderer.extend({
         }
     },
     /**
-            excludedElements: ".o_notebook .nav.nav-tabs",
      * @private
      * @param {string} name
      * @returns {string}
@@ -901,9 +900,10 @@ var FormRenderer = BasicRenderer.extend({
                 },
             });
         });
+        var $notebookHeaders = $('<div class="o_notebook_headers">').append($headers);
         var $notebook = $('<div class="o_notebook">')
                 .data('name', node.attrs.name || '_default_')
-                .append($headers, $pages);
+                .append($notebookHeaders, $pages);
         this._registerModifiers(node, this.state, $notebook);
         this._handleAttributes($notebook, node);
         return $notebook;
