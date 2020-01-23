@@ -83,3 +83,12 @@ class Event(models.Model):
         non_open_events = self.filtered(lambda event: not any(event.event_ticket_ids.mapped('sale_available')))
         non_open_events.event_registrations_open = False
         super(Event, self - non_open_events)._compute_event_registrations_open()
+
+    def action_view_linked_orders(self):
+        """ Redirects to the orders linked to the current events """
+        sale_order_action = self.env.ref('sale.action_orders').read()[0]
+        sale_order_action.update({
+            'domain': [('state', '!=', 'cancel'), ('order_line.event_id', 'in', self.ids)],
+            'context': {'create': 0},
+        })
+        return sale_order_action
