@@ -5,6 +5,7 @@ import itertools
 import json
 
 from odoo import fields, _, models
+from odoo.osv import expression
 from odoo.tools import float_round
 from odoo.tools.misc import get_lang
 
@@ -76,6 +77,11 @@ class Project(models.Model):
         # rates from non-invoiced timesheets that are linked to canceled so
         dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
 
+        other_revenues = self.env['account.analytic.line'].read_group([
+            ('account_id', 'in', self.analytic_account_id.ids),
+            ('amount', '>=', 0),
+            ('project_id', '=', False)], ['amount'], [])[0].get('amount', 0)
+
         # profitability, using profitability SQL report
         profit = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'expense_cost', 'expense_amount_untaxed_invoiced', 'total'], 0.0)
         profitability_raw_data = self.env['project.profitability.report'].read_group([('project_id', 'in', self.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_invoiced'], ['project_id'])
@@ -85,6 +91,7 @@ class Project(models.Model):
             profit['cost'] += data.get('timesheet_cost', 0.0)
             profit['expense_cost'] += data.get('expense_cost', 0.0)
             profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
+        profit['other_revenues'] = other_revenues or 0
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
@@ -103,7 +110,8 @@ class Project(models.Model):
         employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
 
         # Retrieve the employees for which the current user can see theirs timesheets
-        employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(self.env['account.analytic.line']._domain_employee_id())
+        employee_domain = expression.AND([[('company_id', 'in', self.env.companies.ids)], self.env['account.analytic.line']._domain_employee_id()])
+        employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(employee_domain)
         repartition_domain = [('project_id', 'in', self.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         # repartition data, without timesheet on cancelled so
         repartition_data = self.env['account.analytic.line'].read_group(repartition_domain + ['|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')], ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
@@ -253,7 +261,7 @@ class Project(models.Model):
             month_index = fields.Date.from_string(date).month
             return babel.dates.get_month_names('abbreviated', locale=get_lang(self.env).code)[month_index]
 
-        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Total'), _('Sold'), _('Remaining')]
+        header_names = [_('Sales Order'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Total'), _('Sold'), _('Remaining')]
 
         result = []
         for name in header_names:
@@ -411,6 +419,8 @@ class Project(models.Model):
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
         tasks_context = self.env.context
+        late_tasks_domain = [('project_id', 'in', self.ids), ('date_deadline', '<', fields.Date.to_string(fields.Date.today())), ('date_end', '=', False)]
+        overtime_tasks_domain = [('project_id', 'in', self.ids), ('overtime', '>', 0), ('planned_hours', '>', 0)]
 
         # filter out all the projects that have no tasks
         task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
@@ -427,6 +437,26 @@ class Project(models.Model):
                 domain=tasks_domain,
                 context=tasks_context
             )
+        })
+        stat_buttons.append({
+            'name': _("Late Tasks"),
+            'count': self.env['project.task'].search_count(late_tasks_domain),
+            'icon': 'fa fa-tasks',
+            'action': _to_action_data(
+                action=self.env.ref('project.action_view_task'),
+                domain=late_tasks_domain,
+                context=tasks_context,
+            ),
+        })
+        stat_buttons.append({
+            'name': _("Tasks in Overtime"),
+            'count': self.env['project.task'].search_count(overtime_tasks_domain),
+            'icon': 'fa fa-tasks',
+            'action': _to_action_data(
+                action=self.env.ref('project.action_view_task'),
+                domain=overtime_tasks_domain,
+                context=tasks_context,
+            ),
         })
 
         if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):

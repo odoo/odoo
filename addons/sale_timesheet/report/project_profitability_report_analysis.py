@@ -31,6 +31,8 @@ class ProfitabilityAnalysis(models.Model):
     amount_untaxed_invoiced = fields.Float("Untaxed Amount Invoiced", digits=(16, 2), readonly=True, group_operator="sum")
     expense_amount_untaxed_to_invoice = fields.Float("Untaxed Amount to Re-invoice", digits=(16, 2), readonly=True, group_operator="sum")
     expense_amount_untaxed_invoiced = fields.Float("Untaxed Re-invoiced Amount", digits=(16, 2), readonly=True, group_operator="sum")
+    other_revenues = fields.Float("Other Revenues", digits=(16, 2), readonly=True, group_operator="sum",
+                                  help="All revenues that are not from timesheets and that are linked to the analytic account of the project.")
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
@@ -73,7 +75,8 @@ class ProfitabilityAnalysis(models.Model):
                     END AS amount_untaxed_invoiced,
                     COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
                     COST_SUMMARY.timesheet_cost AS timesheet_cost,
-                    COST_SUMMARY.expense_cost AS expense_cost
+                    COST_SUMMARY.expense_cost AS expense_cost,
+                    COST_SUMMARY.other_revenues AS other_revenues
                 FROM project_project P
                     JOIN res_company C ON C.id = P.company_id
                     LEFT JOIN (
@@ -84,6 +87,7 @@ class ProfitabilityAnalysis(models.Model):
                             SUM(timesheet_unit_amount) AS timesheet_unit_amount,
                             SUM(timesheet_cost) AS timesheet_cost,
                             SUM(expense_cost) AS expense_cost,
+                            SUM(other_revenues) AS other_revenues,
                             SUM(downpayment_invoiced) AS downpayment_invoiced
                         FROM (
                             SELECT
@@ -92,6 +96,7 @@ class ProfitabilityAnalysis(models.Model):
                                 TS.so_line AS sale_line_id,
                                 SUM(TS.unit_amount) AS timesheet_unit_amount,
                                 SUM(TS.amount) AS timesheet_cost,
+                                0.0 AS other_revenues,
                                 0.0 AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM account_analytic_line TS, project_project P
@@ -106,6 +111,24 @@ class ProfitabilityAnalysis(models.Model):
                                 AAL.so_line AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
+                                SUM(AAL.amount) AS other_revenues,
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
+                                LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
+                            WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                            GROUP BY P.id, AA.id, AAL.so_line
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                AAL.so_line AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
                                 SUM(AAL.amount) AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM project_project P
@@ -122,6 +145,7 @@ class ProfitabilityAnalysis(models.Model):
                                 MY_SOLS.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
                                 0.0 AS expense_cost,
                                 CASE WHEN MY_SOLS.invoice_status = 'invoiced' THEN MY_SOLS.price_reduce ELSE 0.0 END AS downpayment_invoiced
                             FROM project_project P
@@ -139,6 +163,7 @@ class ProfitabilityAnalysis(models.Model):
                                 OLIS.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
                                 OLIS.price_reduce AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM project_project P
@@ -158,6 +183,7 @@ class ProfitabilityAnalysis(models.Model):
                                 SOL.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
                                 0.0 AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM sale_order_line SOL
@@ -172,6 +198,7 @@ class ProfitabilityAnalysis(models.Model):
                                 SOL.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
                                 0.0 AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM sale_order_line SOL
