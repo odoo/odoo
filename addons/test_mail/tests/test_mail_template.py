@@ -4,11 +4,9 @@
 import base64
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('post_install', '-at_install')
 class TestMailTemplate(TestMailCommon, TestRecipients):
 
     @classmethod

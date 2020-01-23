@@ -4,10 +4,8 @@
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestTracking(TestMailCommon):
 
     def setUp(self):
