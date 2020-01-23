@@ -1675,10 +1675,10 @@ class SaleOrderLine(models.Model):
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - custom_ptavs):
-            name += "\n" + ptav.display_name
+            name += "\n" + ptav.with_context(lang=self.order_id.partner_id.lang).display_name
 
         # display the is_custom values
         for pacv in self.product_custom_attribute_value_ids:
-            name += "\n" + pacv.display_name
+            name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
 
         return name
