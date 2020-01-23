@@ -637,6 +637,12 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.cr = cls.env.cr
 
         cls.company_data = cls.setup_company_data('company_1_data')
+
+        user.write({
+            'company_ids': [(6, 0, cls.company_data['company'].ids)],
+            'company_id': cls.company_data['company'].id,
+        })
+
         cls.currency_data = cls.setup_multi_currency_data()
 
         # ==== Taxes ====
@@ -760,20 +766,31 @@ class AccountTestInvoicingCommon(SavepointCase):
         :param company_name: The name of the company.
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
+        def search_account(company, chart_template, field_name, domain):
+            template_code = chart_template[field_name].code
+            domain = [('company_id', '=', company.id)] + domain
+
+            account = None
+            if template_code:
+                account = cls.env['account.account'].search(domain + [('code', '=like', template_code + '%')], limit=1)
+
+            if not account:
+                account = cls.env['account.account'].search(domain, limit=1)
+            return account
+
         chart_template = cls.env.user.company_id.chart_template_id
+        currency = cls.env.user.company_id.currency_id
         company = cls.env['res.company'].create({
             'name': company_name,
-            'currency_id': cls.env.user.company_id.currency_id.id,
+            'currency_id': currency.id,
             **kwargs,
         })
         cls.env.user.company_ids |= company
-        cls.env.user.company_id = company
 
-        chart_template = cls.env['account.chart.template'].browse(chart_template.id)
-        chart_template.try_loading()
+        chart_template.with_company(company).try_loading()
 
         # The currency could be different after the installation of the chart template.
-        company.write({'currency_id': kwargs.get('currency_id', cls.env.user.company_id.currency_id.id)})
+        company.write({'currency_id': kwargs.get('currency_id', currency.id)})
 
         return {
             'company': company,
@@ -786,13 +803,16 @@ class AccountTestInvoicingCommon(SavepointCase):
                     ('company_id', '=', company.id),
                     ('user_type_id', '=', cls.env.ref('account.data_account_type_expenses').id)
                 ], limit=1),
-            'default_account_receivable': cls.env['account.account'].search([
-                    ('company_id', '=', company.id),
-                    ('user_type_id.type', '=', 'receivable')
-                ], limit=1),
+            'default_account_receivable': search_account(company, chart_template, 'property_account_receivable_id', [
+                ('user_type_id.type', '=', 'receivable')
+            ]),
             'default_account_payable': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('user_type_id.type', '=', 'payable')
+                ], limit=1),
+            'default_account_assets': cls.env['account.account'].search([
+                    ('company_id', '=', company.id),
+                    ('user_type_id', '=', cls.env.ref('account.data_account_type_current_assets').id)
                 ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_account_tax_purchase': company.account_purchase_tax_id.mapped('invoice_repartition_line_ids.account_id'),
