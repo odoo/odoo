@@ -56,23 +56,6 @@ class AccountInvoiceReport(models.Model):
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
 
-    _depends = {
-        'account.move': [
-            'name', 'state', 'move_type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
-            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'invoice_partner_bank_id',
-        ],
-        'account.move.line': [
-            'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',
-            'move_id', 'product_id', 'product_uom_id', 'account_id', 'analytic_account_id',
-            'journal_id', 'company_id', 'currency_id', 'partner_id',
-        ],
-        'product.product': ['product_tmpl_id'],
-        'product.template': ['categ_id'],
-        'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
-        'res.currency.rate': ['currency_id', 'name'],
-        'res.partner': ['country_id'],
-    }
-
     @api.model
     def _select(self):
         return '''

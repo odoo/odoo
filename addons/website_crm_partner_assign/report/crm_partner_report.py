@@ -23,17 +23,9 @@ class CrmPartnerReportAssign(models.Model):
     turnover = fields.Float('Turnover', readonly=True)
     date = fields.Date('Invoice Account Date', readonly=True)
 
-    _depends = {
-        'account.invoice.report': ['invoice_date', 'partner_id', 'price_subtotal', 'state', 'move_type'],
-        'crm.lead': ['partner_assigned_id'],
-        'res.partner': ['activation', 'country_id', 'date_partnership', 'date_review',
-                        'grade_id', 'parent_id', 'team_id', 'user_id'],
-    }
-
     def init(self):
         """
             CRM Lead Report
-            @param cr: the current row, from the database cursor
         """
         tools.drop_view_if_exists(self._cr, 'crm_partner_report_assign')
         self._cr.execute("""
