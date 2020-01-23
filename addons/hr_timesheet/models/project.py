@@ -88,6 +88,7 @@ class Task(models.Model):
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
+    overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
@@ -108,12 +109,14 @@ class Task(models.Model):
         for task in self:
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
+                task.overtime = max(task_total_hours - task.planned_hours, 0)
                 if task_total_hours > task.planned_hours:
                     task.progress = 100
                 else:
                     task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
             else:
                 task.progress = 0.0
+                task.overtime = 0
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_remaining_hours(self):
