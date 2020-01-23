@@ -1811,3 +1811,12 @@ class NameManager:
             model_field_infos = self.fields_get.get(field_name)
             if model_field_infos:
                 field_infos.update(model_field_infos)
+
+    def get_field(self, view, fname):
+        if fname:
+            field = self.Model._fields.get(fname)
+            if not field:
+                msg = _('Field "%s" does not exist in model "%s"')
+                view.handle_view_error(msg % (fname, self.Model._name))
+            return field
+        return False

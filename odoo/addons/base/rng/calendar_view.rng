@@ -14,15 +14,35 @@
             <rng:optional><rng:attribute name="date_delay" /></rng:optional>
             <rng:optional><rng:attribute name="all_day" /></rng:optional>
             <rng:optional><rng:attribute name="form_view_id" /></rng:optional>
-            <rng:optional><rng:attribute name="event_limit" /></rng:optional>
-            <rng:optional><rng:attribute name="quick_add" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="event_limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="quick_add">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:optional><rng:attribute name="event_open_popup" /></rng:optional>
             <rng:optional><rng:attribute name="show_unusual_days" /></rng:optional>
             <rng:optional><rng:attribute name="js_class"/></rng:optional>
-            <rng:optional><rng:attribute name="hide_time"/></rng:optional>
-            <rng:optional><rng:attribute name="hide_date"/></rng:optional>
-            <rng:optional><rng:attribute name="create"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="hide_time">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="hide_date">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="create">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional>
                 <rng:attribute name="mode">
                     <rng:choice>

@@ -5,6 +5,16 @@
     <!-- Handling of element overloading when inheriting from a base
          template
     -->
+    <rng:define name="booleanchoice">
+        <rng:choice>
+            <rng:value>true</rng:value>
+            <rng:value>false</rng:value>
+            <rng:value>True</rng:value>
+            <rng:value>False</rng:value>
+            <rng:value>0</rng:value>
+            <rng:value>1</rng:value>
+        </rng:choice>
+    </rng:define>
 
     <rng:define name="overload">
         <rng:optional>
@@ -99,7 +109,11 @@
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="align"/></rng:optional>
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
-            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="colspan">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="angle"/></rng:optional>
             <rng:optional><rng:attribute name="fill"/></rng:optional>
@@ -150,7 +164,11 @@
             <rng:ref name="modifiable"/>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
-            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="colspan">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="col"/></rng:optional>
@@ -214,14 +232,22 @@
             <rng:optional><rng:attribute name="class"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="completion"/></rng:optional>
-            <rng:optional><rng:attribute name="width"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="width">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional><rng:attribute name="ref"/></rng:optional>
             <rng:optional><rng:attribute name="eval"/></rng:optional>
             <rng:optional><rng:attribute name="search"/></rng:optional>
             <rng:optional><rng:attribute name="model"/></rng:optional>
             <rng:optional><rng:attribute name="use"/></rng:optional>
-            <rng:optional><rng:attribute name="on_change"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="on_change">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
             <rng:optional><rng:attribute name="filter_domain"/></rng:optional>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
@@ -235,8 +261,16 @@
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:optional><rng:attribute name="groupby"/></rng:optional>
             <rng:optional><rng:attribute name="operator"/></rng:optional>
-            <rng:optional><rng:attribute name="colspan"/></rng:optional>
-            <rng:optional><rng:attribute name="nolabel"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="colspan">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="nolabel">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="required"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="view_mode"/></rng:optional>
@@ -255,7 +289,11 @@
             <rng:optional><rng:attribute name="default_focus"/></rng:optional>
             <rng:optional><rng:attribute name="filters"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
-            <rng:optional><rng:attribute name="can_create" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="can_create">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="can_write" /></rng:optional>
             <rng:optional><rng:attribute name="interval" /></rng:optional>
             <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
@@ -266,10 +304,7 @@
             <rng:optional><rng:attribute name="kanban_view_ref" /></rng:optional>
             <rng:optional>
                 <rng:attribute name="force_save">
-                    <rng:choice>
-                      <rng:value>1</rng:value>
-                      <rng:value>0</rng:value>
-                    </rng:choice>
+                    <rng:ref name="booleanchoice"/>
                 </rng:attribute>
             </rng:optional>
             <!-- Widget *static* options defined as an arbitrary JSON dict, with
@@ -300,9 +335,21 @@
             <rng:ref name="access_rights"/>
             <rng:ref name="modifiable"/>
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
-            <rng:optional><rng:attribute name="colspan"/></rng:optional>
-            <rng:optional><rng:attribute name="rowspan"/></rng:optional>
-            <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="colspan">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="rowspan">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="expand">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="states"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="fill"/></rng:optional>
@@ -329,14 +376,36 @@
             <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="states" /></rng:optional>
-            <rng:optional><rng:attribute name="type" /></rng:optional>
-            <rng:optional><rng:attribute name="special" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="type">
+                    <rng:choice>
+                        <rng:value>action</rng:value>
+                        <rng:value>object</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="special">
+                    <rng:choice>
+                        <rng:value>cancel</rng:value>
+                        <rng:value>save</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="align" /></rng:optional>
-            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="colspan">
+                    <rng:data type="float"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="target"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
-            <rng:optional><rng:attribute name="confirm"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="confirm">
+                    <rng:data type="string"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="class"/></rng:optional>
             <rng:optional><rng:attribute name="default_focus"/></rng:optional>
@@ -379,7 +448,28 @@
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
             <rng:optional><rng:attribute name="date"/></rng:optional>
-            <rng:optional><rng:attribute name="default_period"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="default_period">
+                    <rng:choice>
+                        <rng:value>last_7_days</rng:value>
+                        <rng:value>last_30_days</rng:value>
+                        <rng:value>last_365_days</rng:value>
+                        <rng:value>last_5_years</rng:value>
+                        <rng:value>today</rng:value>
+                        <rng:value>this_week</rng:value>
+                        <rng:value>this_month</rng:value>
+                        <rng:value>last_month</rng:value>
+                        <rng:value>antepenultimate_month</rng:value>
+                        <rng:value>fourth_quarter</rng:value>
+                        <rng:value>third_quarter</rng:value>
+                        <rng:value>second_quarter</rng:value>
+                        <rng:value>first_quarter</rng:value>
+                        <rng:value>this_year</rng:value>
+                        <rng:value>last_year</rng:value>
+                        <rng:value>antepenultimate_year</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field" />

@@ -10,7 +10,11 @@
     <rng:define name="groupby">
         <rng:element name="groupby">
             <rng:attribute name="name"/>
-            <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="expand">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
@@ -24,13 +28,41 @@
         <rng:element name="tree">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="name"/></rng:optional>
-            <rng:optional><rng:attribute name="create"/></rng:optional>
-            <rng:optional><rng:attribute name="delete"/></rng:optional>
-            <rng:optional><rng:attribute name="edit"/></rng:optional>
-            <rng:optional><rng:attribute name="multi_edit"/></rng:optional>
-            <rng:optional><rng:attribute name="export_xlsx"/></rng:optional>
-            <rng:optional><rng:attribute name="duplicate"/></rng:optional>
-            <rng:optional><rng:attribute name="import"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="create">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="delete">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="edit">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="duplicate">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="multi_edit">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="export_xlsx">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="import">
+                    <rng:ref name="booleanchoice"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional> <!-- deprecated, has no effect anymore -->
             <rng:optional><rng:attribute name="class"/></rng:optional>
             <!-- Allows to take a custom View widget for handling -->
@@ -69,6 +101,7 @@
                     <rng:ref name="control"/>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>
+                    <!-- VFE TODO is this really intended? A tree in a tree ??? -->
                     <rng:ref name="tree"/>
                     <rng:ref name="groupby"/>
                     <rng:ref name="button"/>
