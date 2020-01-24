@@ -388,6 +388,9 @@ var MailManager =  AbstractService.extend({
             var thread = self.getThread(threadID);
             if (thread) {
                 thread.removeMessage(message.getID());
+                self._messages = _.reject(self._messages, function (msg) {
+                    return msg.getID() === message.getID();
+                })
             }
         });
     },

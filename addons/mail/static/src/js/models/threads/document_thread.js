@@ -177,6 +177,16 @@ var DocumentThread = Thread.extend({
         return true;
     },
     /**
+     * Remove message with ID `messageID` from this thread
+     *
+     * @param {integer} messageID
+     */
+    removeMessage: function (messageID) {
+        this._messages = _.reject(this._messages, function (message) {
+            return message.getID() === messageID;
+        });
+    },
+    /**
      * @param {integer[]} attachmentIDs
      */
     removeAttachmentsFromMessages: function (attachmentIDs) {
