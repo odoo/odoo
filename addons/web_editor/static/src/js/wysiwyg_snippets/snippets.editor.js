@@ -178,53 +178,59 @@ var SnippetEditor = Widget.extend({
     /**
      * Removes the associated snippet from the DOM and destroys the associated
      * editor (itself).
+     *
+     * @returns {Promise}
      */
     removeSnippet: function () {
         this.toggleFocus(false);
+        var self = this;
+        // Wait for the onRemove to be triggered before actually removing
+        return new Promise(function (resolve) {
+            self.trigger_up('call_for_each_child_snippet', {
+                $snippet: self.$target,
+                callback: function (editor, $snippet) {
+                    for (var i in editor.styles) {
+                        editor.styles[i].onRemove();
+                    }
+                    resolve();
+                },
+            });
+        }).then(function () {
+            var $parent = self.$target.parent();
+            self.$target.find('*').addBack().tooltip('dispose');
+            self.$target.remove();
+            self.$el.remove();
 
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: this.$target,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onRemove();
+            var node = $parent[0];
+            if (node && node.firstChild) {
+                if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
+                    node.removeChild(node.firstChild);
                 }
-            },
-        });
-
-        var $parent = this.$target.parent();
-        this.$target.find('*').addBack().tooltip('dispose');
-        this.$target.remove();
-        this.$el.remove();
-
-        var node = $parent[0];
-        if (node && node.firstChild) {
-            if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
-                node.removeChild(node.firstChild);
             }
-        }
 
-        if ($parent.closest(':data("snippet-editor")').length) {
-            while (!$parent.data('snippet-editor')) {
-                var $nextParent = $parent.parent();
+            if ($parent.closest(':data("snippet-editor")').length) {
+                while (!$parent.data('snippet-editor')) {
+                    var $nextParent = $parent.parent();
+                    if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
+                        $parent.remove();
+                    }
+                    $parent = $nextParent;
+                }
                 if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                    $parent.remove();
+                    _.defer(function () {
+                        $parent.data('snippet-editor').removeSnippet();
+                    });
                 }
-                $parent = $nextParent;
             }
-            if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                _.defer(function () {
-                    $parent.data('snippet-editor').removeSnippet();
-                });
-            }
-        }
 
-        // clean editor if they are image or table in deleted content
-        this.$body.find('.note-control-selection').hide();
-        this.$body.find('.o_table_handler').remove();
+            // clean editor if they are image or table in deleted content
+            self.$body.find('.note-control-selection').hide();
+            self.$body.find('.o_table_handler').remove();
 
-        this.trigger_up('snippet_removed');
-        this.destroy();
-        $parent.trigger('content_changed');
+            self.trigger_up('snippet_removed');
+            self.destroy();
+            $parent.trigger('content_changed');
+        });
     },
     /**
      * Displays/Hides the editor overlay and notifies the associated snippet
