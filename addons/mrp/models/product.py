@@ -110,6 +110,7 @@ class ProductProduct(models.Model):
 
     def _is_phantom_bom(self):
         self.ensure_one()
-        if self.bom_ids and self.bom_ids[0].type == 'phantom':
+        boms = self.sudo().bom_ids
+        if boms and boms[0].type == 'phantom':
             return True
         return super(ProductProduct, self)._is_phantom_bom()
