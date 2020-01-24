@@ -138,7 +138,7 @@
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
-                        <group>
+                        <group name="phone_numbers">
                             <label for="groups_id" string="Access Rights"
                                     attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
                             <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
