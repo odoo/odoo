@@ -337,6 +337,10 @@ class IrModel(models.Model):
         # clean up registry first
         custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
         for name in custom_models:
+            # remove the custom model from its parents' inheritance list (normally `base`)
+            # otherwise registry might crash on next reload
+            parent_name = self.pool.models[name]._inherit
+            self.pool.models[parent_name]._inherit_children.discard(name)
             del self.pool.models[name]
         # add manual models
         cr = self.env.cr
