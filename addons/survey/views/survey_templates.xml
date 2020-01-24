@@ -300,6 +300,13 @@
         </div>
     </template>
 
+    <template id="question_suggested_value_image" name="Image from the question suggested answer">
+        <div t-if="question.allow_value_image and label.value_image"
+            t-field="label.value_image"
+            class="d-flex my-3 justify-content-center"
+            t-options='{"widget": "image", "alt-field": "name", "itemprop": "image"}'/>
+    </template>
+
     <template id="question_simple_choice" name="Question: simple choice">
         <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id)"/>
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
@@ -331,6 +338,7 @@
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
                         <i class="fa fa-circle float-right mt-1 position-relative"></i>
+                        <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </t>
             </div>
@@ -392,6 +400,7 @@
                         <span class="ml-2" t-field='label.value'/>
                         <i class="fa fa-check-square float-right mt-1 position-relative"></i>
                         <i class="fa fa-square float-right mt-1 position-relative"></i>
+                        <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </t>
             </div>
