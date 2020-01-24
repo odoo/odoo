@@ -22,14 +22,14 @@ var PrinterMixin = {
         function process_next_job() {
             if (self.receipt_queue.length > 0) {
                 var r = self.receipt_queue.shift();
-                self.htmlToImg(r)
+                return self.htmlToImg(r)
                     .then(self.send_printing_job.bind(self))
                     .then(self._onIoTActionResult.bind(self))
                     .then(process_next_job)
                     .guardedCatch(self._onIoTActionFail.bind(self));
             }
         }
-        process_next_job();
+        return process_next_job();
     },
 
     /**
