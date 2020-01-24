@@ -685,9 +685,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * without having to manually get the focus (only if the input has the right type - can write something inside -)
     */
     _focusOnFirstInput: function () {
-        var $inputs = this.$("input[type='text'],input[type='number'],textarea").not('.o_survey_comment');
-        if ($inputs.length > 0) {
-            $inputs.first().focus();
+        var $firstTextInput = this.$('.js_question-wrapper').first()  // Take first question
+                              .find("input[type='text'],input[type='number'],textarea")  // get 'text' inputs
+                              .filter('.form-control')  // needed for the auto-resize
+                              .not('.o_survey_comment');  // remove inputs for comments that does not count as answers
+        if ($firstTextInput.length > 0) {
+            $firstTextInput.focus();
         }
     },
 
