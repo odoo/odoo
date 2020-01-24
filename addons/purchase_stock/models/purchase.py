@@ -135,6 +135,11 @@ class PurchaseOrder(models.Model):
             result['res_id'] = pick_ids.id
         return result
 
+    def action_view_invoice(self):
+        result = super().action_view_invoice()
+        result['context']['default_invoice_incoterm_id'] = self.incoterm_id.id
+        return result
+
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
