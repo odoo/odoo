@@ -906,6 +906,7 @@ class AccountMove(models.Model):
         'line_ids.payment_id.state')
     def _compute_amount(self):
         invoice_ids = [move.id for move in self if move.id and move.is_invoice(include_receipts=True)]
+        paid_invoices = self.env['account.move']
         if invoice_ids:
             self._cr.execute(
                 '''
@@ -987,12 +988,17 @@ class AccountMove(models.Model):
 
             # Compute 'invoice_payment_state'.
             if move.state == 'posted' and is_paid:
+                if move.invoice_payment_state not in ('paid', 'in_payment'):
+                    paid_invoices |= move
                 if move.id in in_payment_set:
                     move.invoice_payment_state = 'in_payment'
                 else:
                     move.invoice_payment_state = 'paid'
             else:
                 move.invoice_payment_state = 'not_paid'
+
+        # Trigger 'action_invoice_paid' on invoices changing their state to paid/in_payment.
+        paid_invoices.action_invoice_paid()
 
     @api.multi
     def _inverse_amount_total(self):
@@ -1481,18 +1487,10 @@ class AccountMove(models.Model):
     def create(self, vals_list):
         # OVERRIDE
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
-
-        moves = super(AccountMove, self).create(vals_list)
-
-        # Trigger 'action_invoice_paid' when the invoice is directly paid at its creation.
-        moves.filtered(lambda move: move.is_invoice(include_receipts=True) and move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
-
-        return moves
+        return super(AccountMove, self).create(vals_list)
 
     @api.multi
     def write(self, vals):
-        not_paid_invoices = self.filtered(lambda move: move.is_invoice(include_receipts=True) and move.invoice_payment_state not in ('paid', 'in_payment'))
-
         if self._move_autocomplete_invoice_lines_write(vals):
             res = True
         else:
@@ -1503,10 +1501,6 @@ class AccountMove(models.Model):
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
             # 'check_move_validity' is needed as the write will be done line per line.
             self._check_move_consistency()
-
-        # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
-        not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
-
         return res
 
     @api.multi
