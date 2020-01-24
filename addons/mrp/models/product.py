@@ -155,3 +155,13 @@ class ProductProduct(models.Model):
         action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
         return action
+<<<<<<< HEAD
+=======
+
+    def _is_phantom_bom(self):
+        self.ensure_one()
+        boms = self.sudo().bom_ids
+        if boms and boms[0].type == 'phantom':
+            return True
+        return super(ProductProduct, self)._is_phantom_bom()
+>>>>>>> a0ade99f20d... temp
