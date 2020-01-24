@@ -24,6 +24,12 @@ $o-portal-bg-color: desaturate($gray-200, 100%);
 $o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
 
 // Frontend general
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
+}
+
 #wrapwrap {
     position: relative;
     display: flex;
