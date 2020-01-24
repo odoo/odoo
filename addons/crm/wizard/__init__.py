@@ -6,3 +6,4 @@ from . import crm_partner_binding
 from . import crm_lead_to_opportunity
 from . import crm_lead_to_opportunity_mass
 from . import crm_merge_opportunities
+from . import crm_merge_lost_reasons

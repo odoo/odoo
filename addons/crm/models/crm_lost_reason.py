@@ -10,3 +10,9 @@ class LostReason(models.Model):
 
     name = fields.Char('Description', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
+
+    def name_get(self):
+        if self.env.context.get('append_id_to_name', False):
+            return [(lost_reason.id, "[{}] {}".format(lost_reason.id, lost_reason.name)) for lost_reason in self]
+        else:
+            return super(LostReason, self).name_get()

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="crm_merge_lost_reasons_view_form" model="ir.ui.view">
+        <field name="name">crm.merge.lost.reasons.form</field>
+        <field name="model">crm.merge.lost.reasons</field>
+        <field name="arch" type="xml">
+            <form string="Merge Lost Reason" create="false">
+                <sheet>
+                    <p class="oe_grey">
+                        Selected Lost reasons will be merged together. All documents and statistics linked to one of these Lost reasons will be redirected to the destination Lost reasons. You can remove Lost reasons from this list to avoid merging them.
+                    </p>
+                    <group>
+                        <field name="lost_reason_id" string="Destination Lost reasons" domain="[('id', 'in', context.get('active_ids'))]" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Merged Lost Reasons">
+                        <field name="lost_reasons_ids" nolabel="1">
+                            <tree>
+                                <field name="id" />
+                                <field name="name" string="Lost Reasons Name" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_merge_lost_reason" string="Merge" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window
+        id="crm_merge_lost_reasons_action"
+        name="Merge Lost Reason"
+        res_model="crm.merge.lost.reasons"
+        binding_model="crm.lost.reason"
+        binding_views="list"
+        view_mode="form"
+        target="new"
+        />
+</odoo>
