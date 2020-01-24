@@ -39,7 +39,7 @@ class TestORM(TransactionCase):
         with self.assertRaises(MissingError):
             p1.write({'name': 'foo'})
 
-    @mute_logger('odoo.models')
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_filtered_records(self):
         """ Verify that accessing filtered records works as expected for non-admin user """
         p1 = self.env['res.partner'].create({'name': 'W'})
