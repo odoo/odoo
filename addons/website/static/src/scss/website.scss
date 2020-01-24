@@ -199,6 +199,12 @@ font[class*='bg-'] {
         border-top-left-radius: $size;
         border-bottom-right-radius: $size;
     }
+    &.rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * $border-width);
+        border-style: solid;
+        background: transparent;
+    }
 }
 // Smaller container
 .o_container_small {
@@ -378,6 +384,11 @@ table.table_desc tr td {
 }
 .cover_mid {
     @extend .o_half_screen_height;
+}
+
+// Allows custom border radius without contents overflowing.
+.card {
+    overflow: hidden;
 }
 
 //
@@ -625,7 +636,6 @@ table.table_desc tr td {
         }
     }
 }
-
 
 //
 // Layout

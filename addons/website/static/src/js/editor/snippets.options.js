@@ -393,119 +393,6 @@ options.registry.CarouselItem = options.Class.extend({
     },
 });
 
-options.registry.navTabs = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        this._findLinksAndPanes();
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    onBuilt: function () {
-        this._generateUniqueIDs();
-    },
-    /**
-     * @override
-     */
-    onClone: function () {
-        this._generateUniqueIDs();
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Creates a new tab and tab-pane.
-     *
-     * @see this.selectClass for parameters
-     */
-    addTab: function (previewMode, widgetValue, params) {
-        var $activeItem = this.$navLinks.filter('.active').parent();
-        var $activePane = this.$tabPanes.filter('.active');
-
-        var $navItem = $activeItem.clone();
-        var $navLink = $navItem.find('.nav-link').removeClass('active show');
-        var $tabPane = $activePane.clone().removeClass('active show');
-        $navItem.insertAfter($activeItem);
-        $tabPane.insertAfter($activePane);
-        this._findLinksAndPanes();
-        this._generateUniqueIDs();
-
-        $navLink.tab('show');
-    },
-    /**
-     * Removes the current active tab and its content.
-     *
-     * @see this.selectClass for parameters
-     */
-    removeTab: function (previewMode, widgetValue, params) {
-        var self = this;
-
-        var $activeLink = this.$navLinks.filter('.active');
-        var $activePane = this.$tabPanes.filter('.active');
-
-        var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
-
-        return new Promise(resolve => {
-            $next.one('shown.bs.tab', function () {
-                $activeLink.parent().remove();
-                $activePane.remove();
-                self._findLinksAndPanes();
-                resolve();
-            });
-            $next.tab('show');
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetVisibility: async function (widgetName, params) {
-        if (widgetName === 'remove_tab_opt') {
-            return (this.$tabPanes.length > 2);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @private
-     */
-    _findLinksAndPanes: function () {
-        this.$navLinks = this.$target.find('.nav-link');
-        var $el = this.$target;
-        do {
-            $el = $el.parent();
-            this.$tabPanes = $el.find('.tab-pane');
-        } while (this.$tabPanes.length === 0 && !$el.is('body'));
-    },
-    /**
-     * @private
-     */
-    _generateUniqueIDs: function () {
-        for (var i = 0; i < this.$navLinks.length; i++) {
-            var id = _.now() + '_' + _.uniqueId();
-            var idLink = 'nav_tabs_link_' + id;
-            var idContent = 'nav_tabs_content_' + id;
-            this.$navLinks.eq(i).attr({
-                'id': idLink,
-                'href': '#' + idContent,
-                'aria-controls': idContent,
-            });
-            this.$tabPanes.eq(i).attr({
-                'id': idContent,
-                'aria-labelledby': idLink,
-            });
-        }
-    },
-});
-
 options.registry.sizing_x = options.registry.sizing.extend({
     /**
      * @override
@@ -1171,6 +1058,17 @@ options.registry.SnippetMove = options.Class.extend({
 
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        // TODO improve this: hack to hide options section if snippet move is
+        // the only one.
+        const $allOptions = this.$el.parent();
+        if ($allOptions.find('we-customizeblock-option').length <= 1) {
+            $allOptions.addClass('d-none');
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -1182,12 +1080,20 @@ options.registry.SnippetMove = options.Class.extend({
      * @see this.selectClass for parameters
      */
     moveSnippet: function (previewMode, widgetValue, params) {
+        const isNavItem = this.$target[0].classList.contains('nav-item');
+        const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         switch (widgetValue) {
             case 'prev':
                 this.$target.prev().before(this.$target);
+                if (isNavItem) {
+                    $tabPane.prev().before($tabPane);
+                }
                 break;
             case 'next':
                 this.$target.next().after(this.$target);
+                if (isNavItem) {
+                    $tabPane.next().after($tabPane);
+                }
                 break;
         }
     },
