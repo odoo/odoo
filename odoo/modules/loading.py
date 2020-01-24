@@ -423,13 +423,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade', 'to remove')")
         module_list = [name for (name,) in cr.fetchall()]
         if module_list:
-            _logger.error("Some module have inconsistent state, some dependency may be missing: %s", module_list)
+            _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
-        cr.execute("SELECT name from ir_module_module WHERE state = 'installed'")
+        cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
         if module_list:
-            _logger.error("Some module are not loaded, some dependency may be missing: %s", module_list)
-
+            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", sorted(module_list))
 
         registry.loaded = True
         registry.setup_models(cr)
