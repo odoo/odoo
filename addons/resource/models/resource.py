@@ -316,9 +316,9 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
-    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the attendance intervals in the given datetime range.
-            The returned intervals are expressed in the resource's timezone.
+            The returned intervals are expressed in specified tz or in the resource's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
@@ -331,8 +331,8 @@ class ResourceCalendar(models.Model):
             ('display_type', '=', False),
         ]])
 
-        # express all dates and times in the resource's timezone
-        tz = timezone((resource or self).tz)
+        # express all dates and times in specified tz or in the resource's timezone
+        tz = tz if tz else timezone((resource or self).tz)
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
 
@@ -366,9 +366,9 @@ class ResourceCalendar(models.Model):
 
         return Intervals(result)
 
-    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the leave intervals in the given datetime range.
-            The returned intervals are expressed in the calendar's timezone.
+            The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
@@ -385,7 +385,7 @@ class ResourceCalendar(models.Model):
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
-        tz = timezone((resource or self).tz)
+        tz = tz if tz else timezone((resource or self).tz)
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
         result = []
@@ -396,10 +396,10 @@ class ResourceCalendar(models.Model):
 
         return Intervals(result)
 
-    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the effective work intervals between the given datetimes. """
-        return (self._attendance_intervals(start_dt, end_dt, resource) -
-                self._leave_intervals(start_dt, end_dt, resource, domain))
+        return (self._attendance_intervals(start_dt, end_dt, resource, tz=tz) -
+                self._leave_intervals(start_dt, end_dt, resource, domain, tz=tz))
 
     # --------------------------------------------------
     # Private Methods / Helpers
