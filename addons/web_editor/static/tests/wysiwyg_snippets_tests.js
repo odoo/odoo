@@ -187,9 +187,9 @@ QUnit.test('remove snippet', function (assert) {
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.getEditable();
 
-        testUtils.mock.intercept(wysiwyg, "snippet_focused", function () {
+        testUtils.mock.intercept(wysiwyg, "snippet_focused", async function () {
             $('.note-btn-bold').removeClass('o_disabled');
-            $('#oe_manipulators .oe_overlay_options .oe_snippet_remove').click();
+            await testUtils.dom.click($('#oe_manipulators .oe_overlay_options .oe_snippet_remove'));
             assert.ok($('.note-btn-bold').hasClass('o_disabled'));
 
             wysiwyg.save().then(function (result) {
