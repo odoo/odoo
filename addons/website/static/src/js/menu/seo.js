@@ -538,7 +538,7 @@ var MetaImageSelector = Widget.extend({
         this.metaTitle = data.title || '';
         this.activeMetaImg = data.metaImg;
         this.serverUrl = data.htmlpage.url();
-        data.pageImages.unshift(_.str.sprintf('/web/image/res.company/%s/logo', odoo.session_info.website_company_id));
+        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/logo', odoo.session_info.website_id));
         data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/social_default_image', odoo.session_info.website_id));
         this.images = _.uniq(data.pageImages);
         this.customImgUrl = _.contains(data.pageImages, data.metaImg) ? false : data.metaImg;

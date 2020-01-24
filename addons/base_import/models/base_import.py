@@ -719,6 +719,16 @@ class Import(models.TransientModel):
             if not line[index]:
                 continue
             thousand_separator, decimal_separator = self._infer_separators(line[index], options)
+
+            if 'E' in line[index] or 'e' in line[index]:
+                tmp_value = line[index].replace(thousand_separator, '.')
+                try:
+                    tmp_value = '{:f}'.format(float(tmp_value))
+                    line[index] = tmp_value
+                    thousand_separator = ' '
+                except Exception:
+                    pass
+
             line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
@@ -836,6 +846,7 @@ class Import(models.TransientModel):
         :rtype: bytes
         """
         maxsize = int(config.get("import_image_maxbytes", DEFAULT_IMAGE_MAXBYTES))
+        _logger.debug("Trying to import image from URL: %s into field %s, at line %s" % (url, field, line_number))
         try:
             response = session.get(url, timeout=int(config.get("import_image_timeout", DEFAULT_IMAGE_TIMEOUT)))
             response.raise_for_status()
@@ -858,6 +869,7 @@ class Import(models.TransientModel):
 
             return base64.b64encode(content)
         except Exception as e:
+            _logger.exception(e)
             raise ValueError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
                 'url': url,
                 'field_name': field,

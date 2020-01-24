@@ -41,6 +41,17 @@ class KeyboardUSBDriver(Driver):
         self._device_type = 'keyboard'
         self._device_connection = 'direct'
         self._device_name = self._set_name()
+
+        # from https://github.com/xkbcommon/libxkbcommon/blob/master/test/evdev-scancodes.h
+        self._scancode_to_modifier = {
+            42: 'left_shift',
+            54: 'right_shift',
+            58: 'caps_lock',
+            69: 'num_lock',
+            100: 'alt_gr', # right alt
+        }
+        self._tracked_modifiers = {modifier: False for modifier in self._scancode_to_modifier.values()}
+
         self.load_layout()
 
         if not KeyboardUSBDriver.available_layouts:
@@ -51,7 +62,8 @@ class KeyboardUSBDriver(Driver):
             if (self.dev.idVendor == device.info.vendor) and (self.dev.idProduct == device.info.product):
                 self.input_device = device
 
-        if 'barcode' in self._device_name.lower() or 'scanner' in self._device_name.lower() or self.dev.interface_protocol == '0':
+        device_name = self._device_name.lower()
+        if 'barcode' in device_name or 'scanner' in device_name or 'reader' in device_name or self.dev.interface_protocol == '0':
             self._device_type = 'scanner'
             self._barcodes = Queue()
             self._current_barcode = ''
@@ -129,12 +141,22 @@ class KeyboardUSBDriver(Driver):
 
     def run(self):
         key_input = self._barcode_scanner_input if self._device_type == "scanner" else self._keyboard_input
+
         try:
             for event in self.input_device.read_loop():
                 if event.type == evdev.ecodes.EV_KEY:
                     data = evdev.categorize(event)
-                    if data.keystate == 1:
+
+                    modifier_name = self._scancode_to_modifier.get(data.scancode)
+                    if modifier_name:
+                        if modifier_name in ('caps_lock', 'num_lock'):
+                            if data.keystate == 1:
+                                self._tracked_modifiers[modifier_name] = not self._tracked_modifiers[modifier_name]
+                        else:
+                            self._tracked_modifiers[modifier_name] = bool(data.keystate)  # 1 for keydown, 0 for keyup
+                    elif data.keystate == 1:
                         key_input(data.scancode)
+
         except Exception as err:
             _logger.warning(err)
 
@@ -263,19 +285,14 @@ class KeyboardUSBDriver(Driver):
                 2 -- AltGr
                 3 -- Highercase + AltGr
         """
-        keyboard_leds = self.input_device.leds()
-        num_lock = 0 in keyboard_leds  # Led Num 0
-        caps_lock = 1 in keyboard_leds  # Led Num 1
-
-        keyboard_pressed = self.input_device.active_keys()
-        shift = bool([x for x in [42, 54] if x in keyboard_pressed])  # 42 = Left Shift, 54 = Right Shift
-        alt_gr = 100 in keyboard_pressed
-
         modifiers = 0
-        if (scancode in [71, 72, 73, 75, 76, 77, 79, 80, 81, 82, 83] and num_lock) or (shift ^ caps_lock):
+        uppercase = (self._tracked_modifiers['right_shift'] or self._tracked_modifiers['left_shift']) ^ self._tracked_modifiers['caps_lock']
+        if uppercase or (scancode in [71, 72, 73, 75, 76, 77, 79, 80, 81, 82, 83] and self._tracked_modifiers['num_lock']):
             modifiers += 1
-        if alt_gr:
+
+        if self._tracked_modifiers['alt_gr']:
             modifiers += 2
+
         return modifiers
 
     def read_next_barcode(self):

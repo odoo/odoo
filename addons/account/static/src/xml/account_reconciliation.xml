@@ -223,11 +223,11 @@
                     <td class="o_td_label"><label class="o_form_label">Taxes</label></td>
                     <td class="o_td_field"></td>
                 </tr>
-                <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
+                <tr class="create_analytic_account_id" t-if="group_acc">
                     <td class="o_td_label"><label class="o_form_label">Analytic Acc.</label></td>
                     <td class="o_td_field"></td>
                 </tr>
-                <tr class="create_analytic_tag_ids" groups="analytic.group_analytic_tags">
+                <tr class="create_analytic_tag_ids" t-if="group_tags">
                     <td class="o_td_label"><label class="o_form_label">Analytic Tags.</label></td>
                     <td class="o_td_field"></td>
                 </tr>

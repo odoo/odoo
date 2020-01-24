@@ -412,8 +412,9 @@ class Registry(Mapping):
             # Check if the model caches must be invalidated.
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
-                self.clear_caches()
-                self.cache_invalidated = False
+                # Bypass self.clear_caches() to avoid invalidation loops in multi-threaded
+                # configs due to the `cache_invalidated` flag being set, causing more signaling.
+                self.cache.clear()
             self.registry_sequence = r
             self.cache_sequence = c
 

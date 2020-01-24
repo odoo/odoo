@@ -19,6 +19,7 @@
 # Martin Trigaux, 2019
 # Frédéric LIETART <stuff@tifred.fr>, 2019
 # Clo <clo@odoo.com>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Clo <clo@odoo.com>, 2019\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -523,7 +524,7 @@ msgstr "Toutes les tâches"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Tous les employés"
 
 #. module: project
 #. openerp-web
@@ -1007,7 +1008,7 @@ msgstr "Quotidien"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
 msgid "Date Deadline Formatted"
-msgstr ""
+msgstr "Date d'échéance formatée"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1047,6 +1048,10 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Définie la visibilité des tâches du projet:\n"
+"- Employés invités: les employés peuvent seulement voir les projets et tâches auxquels ils sont abonnés.\n"
+"- Tous les employés: les employés peuvent voir tous les projets et tâches.\n"
+"- Utilisateurs portail et tous les employés: les employés peuvent tout voir. Les utilisateurs portail peuvent voir les projets et tâches auxquels ils (ou quelqu'un de leur société) sont abonnés.  "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1328,7 +1333,7 @@ msgstr "GTD"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Obtenir des retours client"
 
 #. module: project
 #. openerp-web
@@ -1384,6 +1389,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Gérez vos idées au sein des Tâches de votre nouveau Projet et discutez-en "
+"dans le chatter de vos tâches. Utilisez les %s et %s pour signaler quel est "
+"le statut actuel de vos idées."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1589,7 +1597,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Employés invités"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1641,7 +1649,7 @@ msgstr "Explication de kanban valide"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "KPI Valeur d'Ouverture d'une Tâche de Projet"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -2207,7 +2215,7 @@ msgstr "URL d'accès au portail"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "Utilisateurs portail et tous les employés"
 
 #. module: project
 #. openerp-web
@@ -2977,6 +2985,12 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
+msgid "The parent task belongs to a company you do not have access to."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
@@ -2986,6 +3000,12 @@ msgstr ""
 "confidentialité du projet est trop restreinte. Définissez la confidentialité"
 " sur \"Visible par les clients suiveurs\" afin de le rendre accessible au(x)"
 " destinataire(s)."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The subtasks belong to a company you do not have access to."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3008,7 +3028,7 @@ msgstr "Il n'y a pas de projets."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this object at the moment"
-msgstr ""
+msgstr "Il n'y a aucunes évaluations de cet objet pour le moment."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks

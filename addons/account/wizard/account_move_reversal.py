@@ -71,7 +71,6 @@ class AccountMoveReversal(models.TransientModel):
             moves_vals_list = []
             for move in moves.with_context(include_business_fields=True):
                 moves_vals_list.append(move.copy_data({
-                    'invoice_payment_ref': move.name,
                     'date': self.date or move.date,
                 })[0])
             new_moves = self.env['account.move'].create(moves_vals_list)

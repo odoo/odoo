@@ -82,6 +82,17 @@ tour.register('main_flow_tour', {
     content: _t('Save this product and the modifications you\'ve made to it.'),
     position: 'bottom',
 }, {
+    trigger: ".oe_button_box",
+    extra_trigger: '.o_form_readonly',
+    auto: true,
+    run: function (actions) {
+        // auto expand "More" buttons
+        var $more = $(".oe_button_box .o_button_more");
+        if ($more.length) {
+            actions.click($more);
+        }
+    },
+},{
     trigger: ".oe_button_box .oe_stat_button:has(div[name=bom_count])",
     extra_trigger: '.o_form_readonly',
     content: _t('See Bill of material'),

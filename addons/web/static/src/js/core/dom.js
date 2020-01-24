@@ -108,14 +108,17 @@ var dom = {
             class: $textarea[0].className,
         });
 
+        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
         $fixedTextarea.css({
+            position: 'absolute',
             opacity: 0,
-            height: 0,
+            height: 10,
             borderTopWidth: 0,
             borderBottomWidth: 0,
             padding: 0,
             overflow: 'hidden',
-        });
+            top: -10000,
+        }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
 
         // The following line is necessary to prevent the scrollbar to appear

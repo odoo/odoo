@@ -186,6 +186,7 @@
                                     <field name="state" invisible="1"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="invoice_lines" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field
                                         name="product_id"
@@ -210,7 +211,7 @@
                                             'required': [('display_type', '=', False)]
                                         }"
                                         force_save="1" optional="show"/>
-                                    <field name="price_unit"/>
+                                    <field name="price_unit" attrs="{'readonly': [('invoice_lines', '!=', [])]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
@@ -548,6 +549,7 @@
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="view_id" ref="purchase_order_tree"/>
             <field name="domain">[]</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="context">{'quotation_only': True}</field>
             <field name="help" type="html">
@@ -571,6 +573,7 @@
             <field name="view_id" ref="purchase_order_view_tree"/>
             <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="purchase_order_view_search"/>
+            <field name="context">{}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a quotation

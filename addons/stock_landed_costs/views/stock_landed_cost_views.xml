@@ -7,6 +7,7 @@
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
                 <form string="Landed Costs">
+                    <field name="stock_valuation_layer_ids" invisible="1"/>
                     <header>
                         <button name="button_validate" string="Validate" states="draft" class="oe_highlight" type="object"/>
                         <button name="button_cancel" string="Cancel" states="draft" type="object"/>
@@ -17,7 +18,7 @@
                             <button string="Valuation" type="object"
                                 name="action_view_stock_valuation_layers"
                                 class="oe_stat_button" icon="fa-dollar" groups="stock.group_stock_manager"
-                                attrs="{'invisible': [('state', 'not in', ['done'])]}" />
+                                attrs="{'invisible': ['|' , ('state', 'not in', ['done']), ('stock_valuation_layer_ids', '=', [])]}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Landed Cost"/>
@@ -28,7 +29,8 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('state', '=', 'done'), ('picking_type_code', '!=', 'internal')]"/>
+                                <field name="allowed_picking_ids" invisible="1"/>
+                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('id', 'in', allowed_picking_ids)]"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>

@@ -13,6 +13,10 @@ class AccountMove(models.Model):
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
 
+    def _get_lines_onchange_currency(self):
+        # OVERRIDE
+        return self.line_ids.filtered(lambda l: not l.is_anglo_saxon_line)
+
     def _reverse_move_vals(self, default_values, cancel=True):
         # OVERRIDE
         # Don't keep anglo-saxon lines if not cancelling an existing invoice.
@@ -38,11 +42,20 @@ class AccountMove(models.Model):
         self._stock_account_anglo_saxon_reconcile_valuation()
         return res
 
+    def button_draft(self):
+        res = super(AccountMove, self).button_draft()
+
+        # Unlink the COGS lines generated during the 'post' method.
+        self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
+        return res
+
     def button_cancel(self):
         # OVERRIDE
         res = super(AccountMove, self).button_cancel()
 
         # Unlink the COGS lines generated during the 'post' method.
+        # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
+        # However, since it can be called in RPC, better be safe.
         self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
         return res
 
@@ -100,14 +113,6 @@ class AccountMove(models.Model):
                 sign = -1 if move.type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
-                if move.currency_id == move.company_id.currency_id:
-                    currency = False
-                    amount_currency = 0.0
-                else:
-                    currency = move.currency_id
-                    price_unit = currency._convert(
-                        price_unit, move.company_id.currency_id, move.company_id, move.invoice_date or move.date)
-                    amount_currency = sign * line.quantity * price_unit
 
                 # Add interim account line.
                 lines_vals_list.append({
@@ -117,11 +122,8 @@ class AccountMove(models.Model):
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': price_unit,
-                    'price_subtotal': amount_currency if currency else balance,
                     'debit': balance < 0.0 and -balance or 0.0,
                     'credit': balance > 0.0 and balance or 0.0,
-                    'currency_id': currency and currency.id,
-                    'amount_currency': -amount_currency,
                     'account_id': debit_interim_account.id,
                     'analytic_account_id': line.analytic_account_id.id,
                     'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
@@ -137,11 +139,8 @@ class AccountMove(models.Model):
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': -price_unit,
-                    'price_subtotal': -amount_currency if currency else -balance,
                     'debit': balance > 0.0 and balance or 0.0,
                     'credit': balance < 0.0 and -balance or 0.0,
-                    'currency_id': currency and currency.id,
-                    'amount_currency': amount_currency,
                     'account_id': credit_expense_account.id,
                     'analytic_account_id': line.analytic_account_id.id,
                     'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],

@@ -86,6 +86,7 @@ class MrpUnbuild(models.Model):
         if self.mo_id:
             self.product_id = self.mo_id.product_id.id
             self.product_qty = self.mo_id.product_qty
+            self.product_uom_id = self.mo_id.product_uom_id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -124,6 +125,7 @@ class MrpUnbuild(models.Model):
         consume_moves = self._generate_consume_moves()
         consume_moves._action_confirm()
         produce_moves = self._generate_produce_moves()
+        produce_moves._action_confirm()
 
         finished_move = consume_moves.filtered(lambda m: m.product_id == self.product_id)
         consume_moves -= finished_move

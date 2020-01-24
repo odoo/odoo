@@ -540,6 +540,41 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         backorder.action_done()
         self.assertTrue(picking_receipt.move_lines.move_orig_ids.production_id.state == 'done')
 
+    def test_flow_9(self):
+        """Ensure that cancel the subcontract moves will also delete the
+        components need for the subcontractor.
+        """
+        resupply_sub_on_order_route = self.env['stock.location.route'].search([
+            ('name', '=', 'Resupply Subcontractor on Order')
+        ])
+        (self.comp1 + self.comp2).write({
+            'route_ids': [(4, resupply_sub_on_order_route.id)]
+        })
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 5
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        picking_delivery = self.env['stock.move'].search([
+            ('product_id', 'in', (self.comp1 | self.comp2).ids)
+        ]).picking_id
+        self.assertTrue(picking_delivery)
+        self.assertEqual(picking_delivery.state, 'confirmed')
+        self.assertEqual(self.comp1.virtual_available, -5)
+        self.assertEqual(self.comp2.virtual_available, -5)
+        # action_cancel is not call on the picking in order
+        # to test behavior from other source than picking (e.g. puchase).
+        picking_receipt.move_lines._action_cancel()
+        self.assertEqual(picking_delivery.state, 'cancel')
+        self.assertEqual(self.comp1.virtual_available, 0.0)
+        self.assertEqual(self.comp1.virtual_available, 0.0)
+
+
 class TestSubcontractingTracking(TransactionCase):
     def setUp(self):
         super(TestSubcontractingTracking, self).setUp()

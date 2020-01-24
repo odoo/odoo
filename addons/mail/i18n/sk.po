@@ -11,7 +11,7 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
-# Jan Prokop, 2019
+# Jan Prokop, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Jan Prokop, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5789,7 +5789,7 @@ msgstr "Nemožno sa pripojiť na SMTP server"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
-msgstr ""
+msgstr "Nemožno logovať email, prosím nastavte emailovú adresu odosielateľa."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -6226,6 +6226,13 @@ msgstr "Ste v súkromnom rozhovore s<b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Ste v kanáli <b>#%s</b>."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6683,7 +6690,7 @@ msgstr "neznámy cieľový model %s"
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
 #, python-format
 msgid "unnamed"
-msgstr ""
+msgstr "nepomenovaný"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

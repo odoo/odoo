@@ -37,6 +37,7 @@
                         <field name="lines" colspan="4" nolabel="1">
                             <tree string="Order lines" editable="bottom">
                                 <field name="product_id"/>
+                                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
                                 <field name="price_unit" widget="monetary"/>

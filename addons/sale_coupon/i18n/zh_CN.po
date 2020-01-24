@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Jeanphy <hzh0292@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # Martin Trigaux, 2019
@@ -16,6 +15,7 @@
 # snow wang <147156565@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:02+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +94,7 @@ msgid ""
 "                        <b>Apply on Next Order -</b> Generate a coupon for a next order.\n"
 "                    </span>"
 msgstr ""
-"<span class=\"oe_grey\"><b>在目前的订单</b>申请奖励将被应用在目前的订单。<br/>\n"
+"<span class=\"oe_grey\"><b>在目前的订单</b>申请的优惠将被应用在目前的订单。<br/>\n"
 "\n"
 "<b>适用于下一个订单</b>生成下一级的优惠券</span>"
 
@@ -109,8 +109,8 @@ msgid ""
 "<span> Orders</span>\n"
 "                    <span class=\"oe_grey\"> if 0, infinite use</span>"
 msgstr ""
-"<span>预定</span>\n"
-"<span class=\"oe_grey\">如果０，无限使用</span>"
+"<span> 订单</span>\n"
+"<span class=\"oe_grey\"> 如果设置０，则不限使用</span>"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.view_sale_coupon_program_kanban
@@ -224,7 +224,7 @@ msgstr ""
 "        恭喜 ${object.partner_id.name},<br/>\n"
 "        % endif\n"
 "\n"
-"        这是由${object.program_id.company_id.name}送給你的奖励。<br/>\n"
+"        这是由${object.program_id.company_id.name}送给你的专属优惠。<br/>\n"
 "\n"
 "        % if object.program_id.reward_type == 'discount':\n"
 "            % if object.program_id.discount_type == 'fixed_amount':\n"
@@ -319,7 +319,7 @@ msgstr "促销政策已经应用在这个订单上"
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "A minimum of %s %s should be purchased to get the reward"
-msgstr "至少%s%s应该购买得到的奖励"
+msgstr "至少购买%s%s才可得到的奖励"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__active
@@ -419,7 +419,7 @@ msgstr "使用优惠券"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
 msgid "Apply on First"
-msgstr "适用于第一"
+msgstr "用于生效后的头 "
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -431,7 +431,7 @@ msgstr "已归档"
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
-msgstr "在规定的条件下至少有一个是不符合获得奖励！"
+msgstr "在规定的条件下至少有一个是不符合获得优惠！"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__promo_code_usage__no_code_needed
@@ -444,7 +444,7 @@ msgid ""
 "Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
-"自动应用-不需要代码，如果满足方案规则，则应用奖励（除非全球折扣或免费送货奖励不累计）。\n"
+"自动应用-满足优惠条件时不需要输入优惠券代码，即可享受优惠。（注意：全局折扣和免费送货类型的优惠不叠加，只适用第一个）。\n"
 "\n"
 "使用代码-如果满足了程序规则，则必须为应用程序提供有效的代码。\n"
 
@@ -570,7 +570,7 @@ msgstr "优惠券方案名称…"
 #: model:ir.ui.menu,name:sale_coupon.menu_coupon_type_config
 #: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
 msgid "Coupon Programs"
-msgstr "优惠券方案"
+msgstr "优惠券促销"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_id
@@ -911,7 +911,7 @@ msgstr "对于提供最大的销售订单号可以奖励的"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Minimum Purchase Of"
-msgstr "最低购买"
+msgstr "最低购买金额"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_min_quantity
@@ -1136,7 +1136,7 @@ msgstr "促销方案名称。。。"
 #: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
 msgid "Promotion Programs"
-msgstr "促销方案"
+msgstr "直接促销"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__program_type__promotion_program
@@ -1159,7 +1159,7 @@ msgstr "促销"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__reward_product_quantity
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Quantity"
-msgstr "数量"
+msgstr "最少购买量"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon__state__reserved
@@ -1170,12 +1170,12 @@ msgstr "已保留"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__reward_id
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Reward"
-msgstr "奖励"
+msgstr "优惠类型"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr "奖励金额"
+msgstr "优惠金额"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__reward_description
@@ -1188,7 +1188,7 @@ msgstr "奖励说明"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr "奖励线产品"
+msgstr "奖励产品"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__reward_product_id
@@ -1211,7 +1211,7 @@ msgstr "奖励产品数量"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Rewards"
-msgstr "奖励"
+msgstr "优惠及返利"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_minimum_amount
@@ -1253,7 +1253,7 @@ msgstr "销售优惠券报告"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_reward
 msgid "Sales Coupon Reward"
-msgstr "销售券奖励"
+msgstr "销售券优惠"
 
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_rule
@@ -1300,7 +1300,7 @@ msgstr "选择产品"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Select reward product"
-msgstr "选择奖励产品"
+msgstr "选择优惠产品"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_form
@@ -1443,7 +1443,7 @@ msgstr "单位"
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
-msgstr "使用代码"
+msgstr "使用促销代码"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon

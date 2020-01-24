@@ -45,6 +45,7 @@ class LandedCost(models.Model):
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
         copy=False, states={'done': [('readonly', True)]})
+    allowed_picking_ids = fields.Many2many('stock.picking', compute='_compute_allowed_picking_ids')
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
         copy=True, states={'done': [('readonly', True)]})
@@ -78,6 +79,18 @@ class LandedCost(models.Model):
     def _compute_total_amount(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
+
+    @api.depends('company_id')
+    def _compute_allowed_picking_ids(self):
+        self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                 FROM stock_move AS sm
+                           INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                WHERE sm.picking_id IS NOT NULL""")
+        valued_picking_ids_per_company = defaultdict(list)
+        for res in self.env.cr.fetchall():
+            valued_picking_ids_per_company[res[1]].append(res[0])
+        for cost in self:
+            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
 
     @api.model
     def create(self, vals):
@@ -122,7 +135,7 @@ class LandedCost(models.Model):
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
-                linked_layer = line.move_id.stock_valuation_layer_ids[-1]  # Maybe the LC layer should be linked to multiple IN layer?
+                linked_layer = line.move_id.stock_valuation_layer_ids[:1]
 
                 # Prorate the value at what's still in stock
                 cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
@@ -292,7 +305,7 @@ class LandedCostLine(models.Model):
         if not self.product_id:
             self.quantity = 0.0
         self.name = self.product_id.name or ''
-        self.split_method = 'equal'
+        self.split_method = self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
         self.account_id = accounts_data['stock_input']

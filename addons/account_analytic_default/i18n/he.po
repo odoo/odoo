@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Moshe Flam <pashute@gmail.com>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:07+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr "<i class=\"fa fa-calendar\"/> מ"
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
-msgstr "<strong>צרכן</strong>"
+msgstr "<strong>לקוח</strong>"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
@@ -56,7 +56,7 @@ msgstr "חשבונות"
 msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
-msgstr "ברירת מחדל אנליטית דורשת לפחות חשבון אנליטי או תג אנליטי."
+msgstr "חשבונאות אנליטית ברירת מחדל דורשת לפחות חשבון אנליטי או תגית אנליטית."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
@@ -68,7 +68,7 @@ msgstr "חשבון אנליטי"
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Analytic Default Rule"
-msgstr ""
+msgstr "כלל אנליטי ברירת מחדל"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -76,24 +76,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "ברירות המחדל לצורכי ניתוח"
+msgstr "חשבונאות אנליטית ברירות מחדל"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "חישובי פיזור"
+msgstr "חלוקה לחשבונות אנליטיים"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr "כללי חישוב הניתוח"
+msgstr "כללים לחשבונות אנליטיים"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "תגיות אנילטיות"
+msgstr "תגיות אנליטיות"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
@@ -119,12 +119,12 @@ msgstr "נוצר ב-"
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "תאריך סיום ברירת מחדל עבור חשבון ניתוח זה"
+msgstr "תאריך סיום ברירת מחדל עבור חשבון אנליטי זה"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
-msgstr "תאריך התחלה כברירת מחדל עבור חשבון ניתוח זה"
+msgstr "תאריך תחילה ברירת מחדל עבור חשבון אנליטי זה"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
@@ -140,7 +140,7 @@ msgstr "תאריך סיום"
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "מציג את סדר ההופעה בעת הצגת רשימת פיזור מחושב"
+msgstr "מציג את סדר החלוקה לחשבונות אנליטיים"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -150,12 +150,12 @@ msgstr "קבץ לפי"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "פקודת יומן"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
@@ -176,7 +176,7 @@ msgstr "עדכון אחרון ב"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
-msgstr "שותף"
+msgstr "לקוח/ספק"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
@@ -191,9 +191,8 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
 msgstr ""
-"בחר חברה שתשמש בחשבון הניתוח שהוגדר בניתוח הראשוני (כלומר בעת יצירת חשבונית "
-"חדשה או הזמנה חדשה אם נבחר חברה זו, חשבון זה ישמש לו כחשבון לניתוח באופן "
-"אוטומטי)"
+"הגדר חברה שתקושר לחשבון אנליטי מסוים כברירת מחדל (לדוגמא: חשבונית חדשה תשויך"
+" אוטומטית לחשבון אנליטי מסוים)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
@@ -202,8 +201,8 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"בחר שותף שישתמש בחשבון הניתוח שנקבע בניתוח הראשוני (כלומר בעת יצירת חשבונית "
-"חדשה או הזמנה חדשה, כאשר נבחר שותף זה, חשבון זה יבחר אוטומטית כחשבון לניתוח)"
+"הגדר לקוח/ספק שיקושר לחשבון אנליטי מסוים כברירת מחדל (לדוגמא: חשבונית חדשה "
+"תשויך אוטומטית לחשבון אנליטי מסוים)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
@@ -212,14 +211,14 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
-"בחר מוצר שישתמש בחשבון הניתוח שנקבע בניתוח הראשוני (כלומר בעת יצירת חשבונית "
-"חדשה או הזמנה חדשה, כאשר נבחר מוצר זה, חשבון זה יבחר אוטומטית כחשבון לניתוח)"
+"הגדר מוצר שיקושר לחשבון אנליטי מסוים כברירת מחדל (לדוגמא: חשבונית חדשה "
+"המכילה מוצר זה תשויך אוטומטית לחשבון אנליטי מסוים)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr "בחר משתמש שישתמש בחשבון הניתוח שנקבע בניתוח הראשוני"
+msgstr "הגדר משתמש שיקושר לחשבון אנליטי מסוים כברירת מחדל."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__account_id
@@ -228,6 +227,8 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
 msgstr ""
+"הגדר חשבון שיקושר לחשבון אנליטי מסוים כברירת מחדל (לדוגמא: חשבונית חדשה "
+"תשויך אוטומטית לחשבון אנליטי מסוים)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
@@ -237,7 +238,7 @@ msgstr "רצף"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
-msgstr "תאריך התחלה"
+msgstr "תאריך תחילה"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form

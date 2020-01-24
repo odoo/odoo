@@ -6,13 +6,13 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -504,6 +504,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender "
+"weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -5819,6 +5821,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maken': maak een nieuw record met nieuwe waarden\n"
+"- 'Update een record': update de waarden van een record\n"
+"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail verzenden': automatisch een e-mail verzenden (Discuss)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Discuss)\n"
+"- 'Maak volgende activiteit': maak een activiteit aan (Discuss)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6126,8 +6136,8 @@ msgid ""
 "sent. Please contact an administrator to fix this issue."
 msgstr ""
 "Weergave \"mail.mail_channel_send_guidelines\" is niet gevonden. Er is geen "
-"e-mail verzonden. Gelieve een administrator te contacteren om dit probleem "
-"op te lossen."
+"e-mail verzonden. Neem contact op met een beheerder om dit probleem op te "
+"lossen."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6291,6 +6301,13 @@ msgstr "U bent in kanaal <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid ""
@@ -6446,8 +6463,8 @@ msgid ""
 msgstr ""
 "Uw wachtwoord is het standaard (admin)! Als dit systeem wordt blootgesteld "
 "aan niet-vertrouwde gebruikers, is het belangrijk om het om "
-"veiligheidsredenen onmiddellijk te wijzigen. Ik zal je er blijven over "
-"zeuren ;-) !"
+"veiligheidsredenen onmiddellijk te wijzigen. Ik zal je er over blijven "
+"zeuren!"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0

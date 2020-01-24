@@ -225,6 +225,8 @@ class Company(models.Model):
             'website': vals.get('website'),
             'vat': vals.get('vat'),
         })
+        # compute stored fields, for example address dependent fields
+        partner.flush()
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)

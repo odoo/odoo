@@ -286,7 +286,7 @@ class ResCompany(models.Model):
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
         company = self.env.company
-        company.set_onboarding_step_done('account_setup_coa_state')
+        company.sudo().set_onboarding_step_done('account_setup_coa_state')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
@@ -390,7 +390,7 @@ class ResCompany(models.Model):
             if float_is_zero(debit_diff + credit_diff, precision_rounding=currency.rounding):
                 if balancing_move_line:
                     # zero difference and existing line : delete the line
-                    balancing_move_line.unlink()
+                    self.account_opening_move_id.line_ids -= balancing_move_line
             else:
                 if balancing_move_line:
                     # Non-zero difference and existing line : edit the line

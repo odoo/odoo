@@ -35,6 +35,9 @@
 # Martin Trigaux, 2019
 # Julien Martin <204336@supinfo.com>, 2019
 # Oriane Malburny <oma@odoo.com>, 2019
+# lcaodoo <lca@odoo.com>, 2019
+# Jonathan <jcs@odoo.com>, 2020
+# Alexandra Jubert <aju@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -42,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +70,7 @@ msgstr ""
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s vous a invité à suivre un nouveau document."
 
 #. module: mail
 #. openerp-web
@@ -91,6 +94,8 @@ msgid ""
 "%s \n"
 "(inactive)"
 msgstr ""
+"%s \n"
+"(inactif)"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -261,7 +266,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p> Create a private channel.</p>"
-msgstr ""
+msgstr "<p> Créez un canal privé.</p>"
 
 #. module: mail
 #. openerp-web
@@ -308,7 +313,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr ""
+msgstr "<p>Créez un canal ici.</p>"
 
 #. module: mail
 #. openerp-web
@@ -421,7 +426,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
-msgstr ""
+msgstr "<strong>Note originale:</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -829,7 +834,7 @@ msgstr "Toujours autoriser |"
 #: code:addons/mail/static/src/js/models/mail_failure.js:0
 #, python-format
 msgid "An error occurred when sending an email"
-msgstr ""
+msgstr "Une erreur est survenue lors de l'envoi d'un courriel"
 
 #. module: mail
 #. openerp-web
@@ -1038,19 +1043,19 @@ msgstr "Bannir"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Ban List"
-msgstr "Liste des bannis"
+msgstr "Liste des Bannis"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Ban this email address"
-msgstr "Bannir cette adresse email"
+msgstr "Bannir cette adresse électronique"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Banned Emails"
-msgstr "Emails bannis"
+msgstr "Courriels Bannis"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -1075,12 +1080,12 @@ msgstr "Bien à vous,"
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
-msgstr "Blacklist"
+msgstr "Liste Noire"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr "Date de la liste noire"
+msgstr "Date de la Liste Noire"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__body_html
@@ -1809,7 +1814,7 @@ msgstr "Discussions"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_cancel
 msgid "Dismiss notification for resend by model"
-msgstr ""
+msgstr "Rejeter la notification de renvoi par modèle"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__display_name
@@ -1871,7 +1876,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chatter.js:0
 #, python-format
 msgid "Do you really want to delete %s?"
-msgstr ""
+msgstr "Voulez-vous réellement supprimer %s ?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2049,7 +2054,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr "Configuration de courriels"
+msgstr "Configuration de Courriels"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -2545,7 +2550,7 @@ msgstr "Gérer dans Odoo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
 msgid "Has Cancel"
-msgstr ""
+msgstr "A Annulé"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -2558,7 +2563,7 @@ msgstr "Comporte des mentions"
 #: model:ir.model.fields,help:mail.field_mail_mail__has_error
 #: model:ir.model.fields,help:mail.field_mail_message__has_error
 msgid "Has error"
-msgstr ""
+msgstr "A une erreur"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -3441,7 +3446,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Merge Partner Wizard"
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge.py:0
@@ -4072,7 +4077,7 @@ msgstr "Notification"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Type de Notification"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify_msg
@@ -5536,7 +5541,7 @@ msgstr "Aperçu du modèle"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__preview_lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Langue de l'aperçu du modèle"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -5832,6 +5837,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Type d'action serveur. Les valeurs suivantes sont disponibles:\n"
+"- 'Executer du code Python': un bloc de code python qui sera exécuté\n"
+"- 'Créer': créer un nouvel enregistrement avec de nouvelles valeurs\n"
+"- 'Mettre à jour un enregistrement': mettre à jour les valeurs d'un enregistrement\n"
+"- 'Executer plusieurs actions': définir une action qui déclenche plusieurs autres actions serveur\n"
+"- 'Envoyer E-Mail': envoyer un e-mail automatiquement (Discutez)\n"
+"- 'Ajouter Abonnés': ajouter des abonnés à un enregistrement (Discutez)\n"
+"- 'Créer une Nouvelle Activité': créer une activité (Discutez)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6301,6 +6314,13 @@ msgstr "Vous êtes en discussion privée avec <b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Vous êtes dans le salon <b>#%s</b>."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: mail
 #. openerp-web

@@ -320,7 +320,7 @@ class ProductTemplate(models.Model):
         for template in unique_variants:
             template.default_code = template.product_variant_ids.default_code
         for template in (self - unique_variants):
-            template.default_code = ''
+            template.default_code = False
 
     def _set_default_code(self):
         for template in self:
@@ -598,6 +598,7 @@ class ProductTemplate(models.Model):
         # (eg. product.template: product_variant_ids)
         # We can't rely on existing invalidate_cache because of the savepoint
         # in _unlink_or_archive.
+        self.flush()
         self.invalidate_cache()
         return True
 

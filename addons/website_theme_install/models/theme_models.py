@@ -113,10 +113,10 @@ class ThemeMenu(models.Model):
         new_menu = {
             'name': self.name,
             'url': self.url,
-            'page_id': page_id,
+            'page_id': page_id and page_id.id or False,
             'new_window': self.new_window,
             'sequence': self.sequence,
-            'parent_id': parent_id,
+            'parent_id': parent_id and parent_id.id or False,
             'theme_template_id': self.id,
         }
         return new_menu

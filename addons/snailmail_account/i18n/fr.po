@@ -8,6 +8,7 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgstr ""
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
 msgstr ""
+"%s des factures sélectionnées ont une adresse invalide et n'ont pas été "
+"envoyées"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -54,6 +57,9 @@ msgid ""
 "                                            The customer address is not complete.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                            L'adresse du client n'est pas complète.\n"
+"                                        </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -62,6 +68,9 @@ msgid ""
 "                                        Some customer addresses are not complete.\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                        Certaines adresses clients ne sont pas complètes.\n"
+"                                    </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -79,6 +88,8 @@ msgid ""
 "Allows to send the document by Snailmail (coventional posting delivery "
 "service)"
 msgstr ""
+"Autorise l'envoi de documents via Snailmail (service conventionnel de "
+"livraison par la poste)"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
@@ -101,7 +112,7 @@ msgstr "Adresses invalides"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
 msgid "Invalid Addresses Count"
-msgstr ""
+msgstr "Nombre d'Adresses Invalides"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
@@ -118,7 +129,7 @@ msgstr "Envoyé par la poste"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
 msgid "Stamp(s)"
-msgstr ""
+msgstr "Timbre(s)"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form

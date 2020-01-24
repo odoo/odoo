@@ -51,6 +51,9 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"A helymeghatározáshoz (Google Helyek) API kulcs szükséges. További "
+"információ: https://developers.google.com/maps/documentation/geocoding/get-"
+"api-key"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -92,12 +95,12 @@ msgstr "Probléma a geolocation szerverrel:"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Helymeghatározó"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "Földrajzi szolgáltató"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -161,7 +164,7 @@ msgstr "Partner hozzárendelés"
 #: code:addons/base_geolocalize/models/base_geocoder.py:69
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "%s szolgáltató földrajzi szolgáltatása nincs támogatva."
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
@@ -181,6 +184,13 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"Földrajzi helymeghatározási hiba, a kapott üzenet:\n"
+"%s\n"
+"\n"
+"Ez egy fizetős Google szolgáltatás lett.\n"
+"Először engedélyezze a fizetést a Google-fiókjában.\n"
+"Ezután menjen a fejlesztői konzolra, és kapcsolja be ezeket az API-kat:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key

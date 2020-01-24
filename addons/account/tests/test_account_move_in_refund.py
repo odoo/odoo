@@ -838,7 +838,10 @@ class TestAccountMoveInRefundOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(self.invoice, [{'name': 'RBILL/2019/0042'}])
 
-        invoice_copy = self.invoice.copy()
+        values = {
+            'invoice_date': self.invoice.invoice_date,
+        }
+        invoice_copy = self.invoice.copy(default=values)
         invoice_copy.post()
 
         self.assertRecordValues(invoice_copy, [{'name': 'RBILL/2019/0043'}])

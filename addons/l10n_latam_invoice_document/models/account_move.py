@@ -80,7 +80,7 @@ class AccountMove(models.Model):
             invoice.l10n_latam_tax_ids = not_included_invoice_taxes
         remaining = self - recs_invoice
         remaining.l10n_latam_amount_untaxed = False
-        remaining.l10n_latam_tax_ids = []
+        remaining.l10n_latam_tax_ids = [(5, 0)]
 
     def _compute_invoice_sequence_number_next(self):
         """ If journal use documents disable the next number header"""
@@ -111,7 +111,12 @@ class AccountMove(models.Model):
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
-        validated_invoices = self.filtered(lambda x: x.l10n_latam_use_documents and x.state in ['open', 'done'])
+        """ This constraint checks that if a invoice is posted and does not have a document type configured will raise
+        an error. This only applies to invoices related to journals that has the "Use Documents" set as True.
+
+        And if the document type is set then check if the invoice number has been set, because a posted invoice
+        without a document number is not valid in the case that the related journals has "Use Docuemnts" set as True """
+        validated_invoices = self.filtered(lambda x: x.l10n_latam_use_documents and x.state == 'posted')
         without_doc_type = validated_invoices.filtered(lambda x: not x.l10n_latam_document_type_id)
         if without_doc_type:
             raise ValidationError(_(

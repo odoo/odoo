@@ -329,7 +329,8 @@ class Website(models.Model):
 
             # check if the fiscal position has changed with the partner_id update
             recent_fiscal_position = sale_order.fiscal_position_id.id
-            if flag_pricelist or recent_fiscal_position != fiscal_position:
+            # when buying a free product with public user and trying to log in, SO state is not draft
+            if (flag_pricelist or recent_fiscal_position != fiscal_position) and sale_order.state == 'draft':
                 update_pricelist = True
 
         if code and code != sale_order.pricelist_id.code:

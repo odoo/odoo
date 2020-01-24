@@ -69,6 +69,7 @@ const ListConfirmDialog = Dialog.extend({
      */
     start: function () {
         this.$content.find('.o_changes_widget').replaceWith(this.fieldWidget.$el);
+        this.fieldWidget.el.style.pointerEvents = 'none';
         return this._super.apply(this, arguments);
     },
 });

@@ -139,7 +139,6 @@ class PosOrder(models.Model):
 
         if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
-            pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
 
         return pos_order.id
 
@@ -188,7 +187,7 @@ class PosOrder(models.Model):
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
-            'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
 
@@ -345,11 +344,37 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
+    def _is_pos_order_paid(self):
+        return float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
     def action_pos_order_paid(self):
-        if not float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding):
+        if not self._is_pos_order_paid():
             raise UserError(_("Order %s is not fully paid.") % self.name)
         self.write({'state': 'paid'})
         return self.create_picking()
+
+    def _get_amount_receivable(self):
+        return self.amount_total
+
+
+    def _prepare_invoice_vals(self):
+        self.ensure_one()
+        vals = {
+            'invoice_payment_ref': self.name,
+            'invoice_origin': self.name,
+            'journal_id': self.session_id.config_id.invoice_journal_id.id,
+            'type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
+            'ref': self.name,
+            'partner_id': self.partner_id.id,
+            'narration': self.note or '',
+            # considering partner's sale pricelist's currency
+            'currency_id': self.pricelist_id.currency_id.id,
+            'invoice_user_id': self.user_id.id,
+            'invoice_date': self.date_order.date(),
+            'fiscal_position_id': self.fiscal_position_id.id,
+            'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
+        }
+        return vals
 
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
@@ -363,27 +388,14 @@ class PosOrder(models.Model):
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
-            move_vals = {
-                'invoice_payment_ref': order.name,
-                'invoice_origin': order.name,
-                'journal_id': order.session_id.config_id.invoice_journal_id.id,
-                'type': 'out_invoice' if order.amount_total >= 0 else 'out_refund',
-                'ref': order.name,
-                'partner_id': order.partner_id.id,
-                'narration': order.note or '',
-                # considering partner's sale pricelist's currency
-                'currency_id': order.pricelist_id.currency_id.id,
-                'invoice_user_id': order.user_id.id,
-                'invoice_date': order.date_order.date(),
-                'fiscal_position_id': order.fiscal_position_id.id,
-                'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
-            }
+            move_vals = order._prepare_invoice_vals()
             new_move = moves.sudo()\
                             .with_context(default_type=move_vals['type'], force_company=order.company_id.id)\
                             .create(move_vals)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
+            new_move.sudo().with_context(force_company=order.company_id.id).post()
             moves += new_move
 
         if not moves:
@@ -606,12 +618,16 @@ class PosOrder(models.Model):
                 'amount_paid': 0,
             })
             for line in order.lines:
+                PosOrderLineLot = self.env['pos.pack.operation.lot']
+                for pack_lot in line.pack_lot_ids:
+                    PosOrderLineLot += pack_lot.copy()
                 line.copy({
                     'name': line.name + _(' REFUND'),
                     'qty': -line.qty,
                     'order_id': refund_order.id,
                     'price_subtotal': -line.price_subtotal,
                     'price_subtotal_incl': -line.price_subtotal_incl,
+                    'pack_lot_ids': PosOrderLineLot,
                     })
             refund_orders |= refund_order
 
@@ -856,7 +872,7 @@ class ReportSaleDetails(models.AbstractModel):
         domain = [('state', 'in', ['paid','invoiced','done'])]
 
         if (session_ids):
-            AND([domain, [('session_id', 'in', session_ids)]])
+            domain = AND([domain, [('session_id', 'in', session_ids.ids)]])
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
@@ -875,13 +891,13 @@ class ReportSaleDetails(models.AbstractModel):
                 # stop by default today 23:59:59
                 date_stop = date_start + timedelta(days=1, seconds=-1)
 
-            AND([domain,
+            domain = AND([domain,
                 [('date_order', '>=', fields.Datetime.to_string(date_start)),
                 ('date_order', '<=', fields.Datetime.to_string(date_stop))]
             ])
 
             if config_ids:
-                AND([domain, [('config_id', 'in', config_ids)]])
+                domain = AND([domain, [('config_id', 'in', config_ids.ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
@@ -913,18 +929,16 @@ class ReportSaleDetails(models.AbstractModel):
                     taxes.setdefault(0, {'name': _('No Taxes'), 'tax_amount':0.0, 'base_amount':0.0})
                     taxes[0]['base_amount'] += line.price_subtotal_incl
 
-        st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
-        if st_line_ids:
+        payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
+        if payment_ids:
             self.env.cr.execute("""
-                SELECT aj.name, sum(amount) total
-                FROM account_bank_statement_line AS absl,
-                     account_bank_statement AS abs,
-                     account_journal AS aj
-                WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id
-                    AND absl.id IN %s
-                GROUP BY aj.name
-            """, (tuple(st_line_ids),))
+                SELECT method.name, sum(amount) total
+                FROM pos_payment AS payment,
+                     pos_payment_method AS method
+                WHERE payment.payment_method_id = method.id
+                    AND payment.id IN %s
+                GROUP BY method.name
+            """, (tuple(payment_ids),))
             payments = self.env.cr.dictfetchall()
         else:
             payments = []

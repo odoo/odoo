@@ -1484,11 +1484,8 @@
             </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
-            <t t-if="widget.isMobile">
-                <li class="bg-info">Tap on the list to change company</li>
-            </t>
             <t t-foreach="widget.user_companies" t-as="company">
-                <div role="menuitem" href="#" class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
+                <div role="menuitem" class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
                     <div class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
                         <span style="height: 2rem;">
                             <t t-if="widget.allowed_company_ids.includes(company[0])">

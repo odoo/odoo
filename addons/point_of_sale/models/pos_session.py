@@ -361,7 +361,7 @@ class PosSession(models.Model):
             if order.is_invoiced:
                 # Combine invoice receivable lines
                 key = order.partner_id.property_account_receivable_id.id
-                invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
+                invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order._get_amount_receivable()}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
                 for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable'):
                     order_account_move_receivable_lines[move_line.account_id.id] |= move_line
@@ -408,6 +408,9 @@ class PosSession(models.Model):
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
 
+                # Increasing current partner's customer_rank
+                order.partner_id._increase_rank('customer_rank')
+
         ## SECTION: Create non-reconcilable move lines
         # Create account.move.line records for
         #   - sales
@@ -417,7 +420,7 @@ class PosSession(models.Model):
         #   - non-cash combine receivables (not for automatic reconciliation)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
-        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items()]
+        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items() if amounts['amount']]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
         tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
         if len(tax_names_no_account) > 0:
@@ -490,6 +493,11 @@ class PosSession(models.Model):
         for output_account, vals in stock_output_vals.items():
             stock_output_lines[output_account] = MoveLine.create(vals)
 
+        ## SECTION: Create extra move lines
+        # Keep reference to the stock output lines because
+        # they are reconciled with output lines in the stock.move's account.move.line
+        MoveLine.create(self._get_extra_move_lines_vals())
+
         ## SECTION: Reconcile account move lines
         # reconcile cash receivable lines
         for statement in self.statement_ids:
@@ -520,6 +528,9 @@ class PosSession(models.Model):
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).reconcile()
+
+    def _get_extra_move_lines_vals(self):
+        return []
 
     def _prepare_line(self, order_line):
         """ Derive from order_line the order date, income account, amount and taxes information.

@@ -18,11 +18,12 @@
 # Sebastian <shu@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Anja Funk <anja.funk@afimage.de>, 2019
 # Oliver Roch <oliver.roch@d9t.de>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2020
+# Thomas Neumann <j.v@posteo.de>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019\n"
+"Last-Translator: Thomas Neumann <j.v@posteo.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1099,7 +1100,7 @@ msgstr "Anrufen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 msgid "Can Write"
-msgstr ""
+msgstr "Kann schreiben"
 
 #. module: mail
 #. openerp-web
@@ -1162,7 +1163,7 @@ msgstr "CC-Empfänger  (Platzhalter können verwendet werden)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall
 msgid "Catchall Email"
-msgstr ""
+msgstr "E-Mail Auffangbehälter"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__email_cc
@@ -1274,7 +1275,7 @@ msgstr "Chat Kurzbefehl"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Chat Status"
-msgstr ""
+msgstr "Chat Status"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -1456,24 +1457,24 @@ msgstr "Anlegen"
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid "Create %s (Private)"
-msgstr ""
+msgstr "erstellen %s (privat)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid "Create %s (Public)"
-msgstr ""
+msgstr "erstellen%s (öffentlich) "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Next Activity"
-msgstr ""
+msgstr "erstellen nächste Aktivität"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "erstellen UId"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -1677,7 +1678,7 @@ msgstr "Verzögerungstyp"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
-msgstr ""
+msgstr "Verzögerungseinheiten"
 
 #. module: mail
 #. openerp-web
@@ -4785,7 +4786,7 @@ msgstr "Aufzeichnung Diskussion ID"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Records:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -5788,6 +5789,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6262,6 +6271,13 @@ msgstr "Sie befinden sich im Kanal <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid ""
@@ -6560,7 +6576,7 @@ msgstr "Nicht richtig konfigurierter Alias (unbekannter Referenzdatensatz)"
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "less"
-msgstr ""
+msgstr "weniger "
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6716,7 +6732,7 @@ msgstr "unbekanntes Zielmodel %s"
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
 #, python-format
 msgid "unnamed"
-msgstr ""
+msgstr "unbenannt "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

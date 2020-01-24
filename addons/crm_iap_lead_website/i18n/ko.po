@@ -8,7 +8,7 @@
 # Linkup <link-up@naver.com>, 2019
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Mark Lee <odoos@soti.33mail.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid ""
 "1 credit is consumed per visitor matching the website traffic conditions and"
 " whose company can be identified.<br/>"
-msgstr ""
+msgstr "웹 사이트 트래픽 조건과 일치하고 회사를 식별할 수 있도록 방문자 당 1 크레딧이 소비됩니다.<br/>"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -39,7 +39,7 @@ msgstr "<span class=\"o_stat_text\"> 영업제안 </span>"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Opportunities </span>"
-msgstr "<span class=\"o_stat_text\"> 기회 </span>"
+msgstr "<span class=\"o_stat_text\"> 영업기회 </span>"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__active
@@ -64,7 +64,7 @@ msgstr "CRM 공개 화면"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
-msgstr ""
+msgstr "회사만 추적할지, 회사 및 연락처를 추적할지 선택"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__companies
@@ -138,7 +138,7 @@ msgstr "표시 이름"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "유효한 정규식을 입력하십시오."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__contact_filter_type
@@ -158,7 +158,7 @@ msgstr "크기로 필터링"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "From"
-msgstr "출고 창고"
+msgstr "보낸 사람"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_ids
@@ -218,7 +218,7 @@ msgstr "최근 갱신일"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__lead
 msgid "Lead"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -267,7 +267,7 @@ msgstr "영업제안/영업기회"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
-msgstr ""
+msgstr "항상 일치 시키려면 비워 두십시오. 일치하지 않으면 Odoo는 영업제안을 생성하지 않습니다"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__0
@@ -322,7 +322,7 @@ msgstr "생성된 기회의 수"
 msgid ""
 "Only visitors of following countries will be converted into "
 "leads/opportunities (using GeoIP)."
-msgstr ""
+msgstr "다음 국가의 방문자만 GeoIP를 사용하여 영업제안/기회로 전환됩니다."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__state_ids
@@ -368,6 +368,8 @@ msgid ""
 "to target the homepage. Example: /page* to track all the pages which begin "
 "with /page"
 msgstr ""
+"웹 사이트 페이지를 추적하기 위한 참조. 전체 웹 사이트를 추적하려면 비워 두거나 /를 눌러 홈페이지를 공략하십시오. 예제 : "
+"/page*는 /page로 시작하는 모든 페이지를 추적"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__website_id
@@ -402,13 +404,13 @@ msgstr "영업사원"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr ""
+msgstr "CRM 공개 규칙 검색"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
-msgstr "연공서열"
+msgstr "상급자"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
@@ -442,13 +444,15 @@ msgid ""
 "criteria. Their details will show up in the history thread of generated "
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
+"이 항목은 해당 역할/서열이 기준과 일치하는지 추적할 연락처 수입니다. 그들의 세부 사항은 생성된 영업제안/기회의 이력에 나타날 것이다."
+" 추적된 연락처 한 번에 1 크레딧을 소비합니다."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
 msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
-msgstr ""
+msgstr "이 규칙은 생성된 영업제안의 이름으로 추가되므로 이 규칙으로 생성된 영업제안/기회를 식별할 수 있습니다"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
@@ -468,14 +472,14 @@ msgstr "URL 표현식"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Up to"
-msgstr ""
+msgstr "까지"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__sequence
 msgid ""
 "Used to order the rules with same URL and countries. Rules with a lower "
 "sequence number will be processed first."
-msgstr ""
+msgstr "같은 URL과 국가로 규칙을 주문하는 데 사용됩니다. 순서 번호가 낮은 규칙이 먼저 처리됩니다."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__3
@@ -501,7 +505,7 @@ msgstr "웹사이트 트래픽 상태"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
-msgstr ""
+msgstr "회사가 이 규칙과 일치하면 추가 크레딧이 사용됩니다."
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form

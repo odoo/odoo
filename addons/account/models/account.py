@@ -264,13 +264,49 @@ class AccountAccount(models.Model):
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
 
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        if not self:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_move_line line
+            JOIN account_account account ON account.id = line.account_id
+            WHERE line.account_id IN %s
+            AND line.company_id != account.company_id
+        ''', [tuple(self.ids)])
+        if self._cr.fetchone():
+            raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
+
+    @api.constrains('user_type_id')
+    def _check_user_type_id(self):
+        if not self:
+            return
+
+        self.flush(['user_type_id'])
+        self._cr.execute('''
+            SELECT account.id
+            FROM account_account account
+            JOIN account_account_type acc_type ON account.user_type_id = acc_type.id
+            JOIN account_journal journal ON journal.default_credit_account_id = account.id OR journal.default_debit_account_id = account.id
+            WHERE account.id IN %s
+            AND acc_type.type IN ('receivable', 'payable')
+            AND journal.type IN ('sale', 'purchase')
+            LIMIT 1;
+        ''', [tuple(self.ids)])
+
+        if self._cr.fetchone():
+            raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
         # This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
-            record.root_id = record.code and (ord(record.code[0]) * 1000 + ord(record.code[1])) or False
+            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or ' ')) if record.code else False
 
     def _search_used(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
@@ -424,7 +460,7 @@ class AccountAccount(models.Model):
         if default.get('code', False):
             return super(AccountAccount, self).copy(default)
         try:
-            default['code'] = (str(int(self.code) + 10) or '')
+            default['code'] = (str(int(self.code) + 10) or '').zfill(len(self.code))
             default.setdefault('name', _("%s (copy)") % (self.name or ''))
             while self.env['account.account'].search([('code', '=', default['code']),
                                                       ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):
@@ -787,6 +823,29 @@ class AccountJournal(models.Model):
                 # Or they are part of a bank journal and their partner_id must be the company's partner_id.
                 if journal.bank_account_id.partner_id != journal.company_id.partner_id:
                     raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % journal.company_id.name)
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        if not self:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT move.id
+            FROM account_move move
+            JOIN account_journal journal ON journal.id = move.journal_id
+            WHERE move.journal_id IN %s
+            AND move.company_id != journal.company_id
+        ''', [tuple(self.ids)])
+        if self._cr.fetchone():
+            raise UserError(_("You can't change the company of your journal since there are some journal entries linked to it."))
+
+    @api.constrains('type', 'default_credit_account_id', 'default_debit_account_id')
+    def _check_type_default_credit_account_id_type(self):
+        journals_to_check = self.filtered(lambda journal: journal.type in ('sale', 'purchase'))
+        accounts_to_check = journals_to_check.mapped('default_debit_account_id') + journals_to_check.mapped('default_credit_account_id')
+        if any(account.user_type_id.type in ('receivable', 'payable') for account in accounts_to_check):
+            raise ValidationError(_("The type of the journal's default credit/debit account shouldn't be 'receivable' or 'payable'."))
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
@@ -1270,7 +1329,32 @@ class AccountTax(models.Model):
             if not tax._check_m2m_recursion('children_tax_ids'):
                 raise ValidationError(_("Recursion found for tax '%s'.") % (tax.name,))
             if not all(child.type_tax_use in ('none', tax.type_tax_use) for child in tax.children_tax_ids):
-                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
+                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))\
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        if not self:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_move_line line
+            JOIN account_tax tax ON tax.id = line.tax_line_id
+            WHERE line.tax_line_id IN %s
+            AND line.company_id != tax.company_id
+            
+            UNION ALL
+            
+            SELECT line.id
+            FROM account_move_line_account_tax_rel tax_rel
+            JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
+            JOIN account_move_line line ON line.id = tax_rel.account_move_line_id
+            WHERE tax_rel.account_tax_id IN %s
+            AND line.company_id != tax.company_id
+        ''', [tuple(self.ids)] * 2)
+        if self._cr.fetchone():
+            raise UserError(_("You can't change the company of your tax since there are some journal items linked to it."))
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

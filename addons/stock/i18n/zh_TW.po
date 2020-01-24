@@ -2817,7 +2817,7 @@ msgstr "盤點明細"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "庫存位置"
+msgstr "庫存調整位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -7365,3 +7365,9 @@ msgstr "已做替代處理"
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""

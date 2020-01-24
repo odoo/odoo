@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,9 +22,9 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Купить кард-ридер</i>"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -52,7 +53,7 @@ msgstr "КОД ПОДТВЕРЖДЕНИЯ:"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "автоматический вакуум"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -60,9 +61,9 @@ msgid "Barcode Rule"
 msgstr "Правило штрихкода"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury_2
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Barcode Scanner/Card Reader"
-msgstr ""
+msgstr "Сканер штрих-кода / Кард-ридер"
 
 #. module: pos_mercury
 #. openerp-web
@@ -85,7 +86,7 @@ msgstr "Номер карты"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr ""
+msgstr "Префикс номера карты"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_owner_name
@@ -101,7 +102,7 @@ msgstr "Card Reader"
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
-msgstr ""
+msgstr "Настройте ваш кард-ридер"
 
 #. module: pos_mercury
 #. openerp-web
@@ -136,6 +137,9 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+"Возмещение кредитной карты не поддерживается. Вместо этого выберите способ "
+"оплаты кредитной карты, нажмите `Подтвердить` и верните оригинальную оплату "
+"вручную с помощью бэкенд Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -246,7 +250,7 @@ msgstr ""
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
-msgstr ""
+msgstr "Не найдено открытой сессии точки продаж %s для пользователя."
 
 #. module: pos_mercury
 #. openerp-web
@@ -282,7 +286,7 @@ msgstr "Прокрутка одной кредитной карты уже от�
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "Online Payment"
-msgstr ""
+msgstr "платеж онлайн"
 
 #. module: pos_mercury
 #. openerp-web
@@ -303,7 +307,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Pay with: "
-msgstr ""
+msgstr "Оплачивайте с:"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
@@ -352,7 +356,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Refunds not supported"
-msgstr ""
+msgstr "Возмещения не поддерживается"
 
 #. module: pos_mercury
 #. openerp-web
@@ -440,9 +444,9 @@ msgid ""
 msgstr ""
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
-msgstr ""
+msgstr "счета Vantiv"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
@@ -490,6 +494,9 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
+"Сейчас мы поддерживаем устройство для чтения карт MagTek Dynamag. Это может "
+"быть связано непосредственно к устройству точки продажи или его можно "
+"подключить к IoTBox."
 
 #. module: pos_mercury
 #. openerp-web

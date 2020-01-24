@@ -14,7 +14,7 @@ from functools import partial
 
 import odoo
 from odoo import api, models
-from odoo import SUPERUSER_ID
+from odoo import registry, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
@@ -163,7 +163,11 @@ class Http(models.AbstractModel):
         """
         is_rerouting = hasattr(request, 'routing_iteration')
 
-        request.website_routing = request.env['website'].get_current_website().id
+        if request.session.db:
+            reg = registry(request.session.db)
+            with reg.cursor() as cr:
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                request.website_routing = env['website'].get_current_website().id
 
         response = super(Http, cls)._dispatch()
 
@@ -281,8 +285,8 @@ class Http(models.AbstractModel):
     def _get_exception_code_values(cls, exception):
         code, values = super(Http, cls)._get_exception_code_values(exception)
         if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
-            code = 'page_404'
             values['path'] = request.httprequest.path[1:]
+            values['force_template'] = 'website.page_404'
         return (code, values)
 
     @classmethod
@@ -316,8 +320,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_error_html(cls, env, code, values):
-        if code == 'page_404':
-            return env['ir.ui.view'].render_template('website.%s' % code, values)
+        if values.get('force_template'):
+            return env['ir.ui.view'].render_template(values['force_template'], values)
         return super(Http, cls)._get_error_html(env, code, values)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',

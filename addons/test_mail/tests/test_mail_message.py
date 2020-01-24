@@ -357,17 +357,19 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         ).with_context({'mail_create_nosubscribe': False})
 
         # mark all as read clear needactions
-        group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        msg1 = group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        self._clear_bus()
         emp_partner.env['mail.message'].mark_all_as_read(domain=[])
+        self.assertBusNotification([(self.cr.dbname, 'res.partner', emp_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg1.id] }])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
         # mark all as read also clear inaccessible needactions
-        new_msg = group_private.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        msg2 = group_private.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
         needaction_accessible = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
         self.assertEqual(needaction_accessible, 1, "a new message to a partner is readable to that partner")
 
-        new_msg.sudo().partner_ids = self.env['res.partner']
+        msg2.sudo().partner_ids = self.env['res.partner']
         emp_partner.env['mail.message'].search([['needaction', '=', True]])
         needaction_length = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
         self.assertEqual(needaction_length, 1, "message should still be readable when notified")
@@ -375,7 +377,9 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
+        self._clear_bus()
         emp_partner.env['mail.message'].mark_all_as_read(domain=[])
+        self.assertBusNotification([(self.cr.dbname, 'res.partner', emp_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg2.id] }])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 

@@ -31,7 +31,9 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
             this._addConfigurationEditButton();
         } else if (this.mode === 'edit' && this.value) {
             this._addProductLinkButton();
+            this.$('.o_edit_product_configuration').hide();
         } else {
+            this.$('.o_external_button').hide();
             this.$('.o_edit_product_configuration').hide();
         }
     },

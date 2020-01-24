@@ -5,10 +5,9 @@
 # Translators:
 # ExcaliberX <excaliberx@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
-# שהאב חוסיין <shhab89@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +37,11 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>תצורות Vantiv  </i> הגדר איזה חשבון Vantiv יהיה בשימוש בעת \n"
+"                                עיבוד עסקאות כרטיסי אשראי בקופה. הגדרת תצורת Vantiv\n"
+"                                תאפשר לך לאפשר תשלומים עם כרטיסי אשראי שונים\n"
+"                                (למשל:. ויזה, מאסטרקארד, דיסקברי, אמריקן אקספרס, ...). לאחר הגדרת\n"
+"                                תצורה זו עליך לשייך אותו לאמצעי תשלום של הקופה."
 
 #. module: pos_mercury
 #. openerp-web
@@ -163,7 +167,7 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"לטיפול מהיר בהזמנות: פשוט החלק כרטיס אשראי כשמסך התשלום\n"
+"לטיפול מהיר בהזמנות: העבר כרטיס אשראי במסך התשלום\n"
 "                                 (מבלי שתלחץ על שום דבר אחר) יגבה את מלוא סכום ההזמנה מהכרטיס\n"
 "         "
 
@@ -179,13 +183,13 @@ msgstr "עבור למסך התשלום כדי להשתמש בכרטיסים"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Handling transaction..."
-msgstr "מטפל בטרנזקציה..."
+msgstr "מטפל בעסקה..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__id
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
@@ -198,11 +202,14 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"אם אין לך כבר חשבון Vantiv, צור קשר עם Vantiv בטלפון +1 (800) 846-4472\n"
+"                               כדי ליצור אחד.\n"
+"                "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
-msgstr ""
+msgstr "מספר חשבונית מתשלום Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -225,7 +232,7 @@ msgstr "עדכון אחרון ב"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "Merchant ID"
-msgstr "זיהוי סוחר"
+msgstr "מזהה סוחר"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
@@ -240,26 +247,26 @@ msgstr "שם"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Vantiv configuration"
-msgstr ""
+msgstr "שם תצורת Vantiv"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No Vantiv configuration associated with the payment method."
-msgstr ""
+msgstr "אין תצורת Vantiv המשויכת לאמצעי התשלום."
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
-msgstr "לא נמצא סשן פתוח של נקודת מכירה עבור המשתמש%s."
+msgstr "לא נמצאה משמרת קופה פתוחה עבור המשתמש%s."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
-msgstr ""
+msgstr "אין תגובה מ Vantiv) Vantiv למטה?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -288,7 +295,7 @@ msgstr "העברת כרטיס אשראי אחד כבר ממתינה."
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "Online Payment"
-msgstr "תשלום אלקטרוני"
+msgstr "תשלום מקוון"
 
 #. module: pos_mercury
 #. openerp-web
@@ -313,44 +320,44 @@ msgstr "שלם עם:"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Vantiv Pay"
-msgstr ""
+msgstr "מספר רשומת תשלום מ- Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Vantiv Pay"
-msgstr ""
+msgstr "מספר מזהה תשלום מ- Vantiv Pay"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "אנא הגדר את חשבון הסוחר Vantiv שלך."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "הזמנות נקודת מכירה"
+msgstr "הזמנות קופה"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "אמצעי תשלום קופה"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "תשלומי קופה"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "קופה תצורת Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "קופה עסקת Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
@@ -364,21 +371,21 @@ msgstr "החזרים אינם נתמכים"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr "ההיפוך נכשל, שלח עסקה מבוטלת ..."
+msgstr "הביטול נכשל, שלח עסקה מבוטלת ..."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Reversal succeeded"
-msgstr "היפוך הצליח"
+msgstr "ביטול הצליח"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Sending reversal..."
-msgstr "שולח היפוך..."
+msgstr "שולח ביטול..."
 
 #. module: pos_mercury
 #. openerp-web
@@ -390,17 +397,17 @@ msgstr "להסכם מחזיק הכרטיס"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr "המותג של כרטיס התשלום (למשל ויזה, AMEX, ...)"
+msgstr "מותג כרטיס האשראי (למשל ויזה,אמריקן אקספרס, ...)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr "מס' הכרטיס המשמש לתשלום "
+msgstr "מספר הכרטיס המשמש לתשלום "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Vantiv used for this journal"
-msgstr ""
+msgstr "תצורת Vantiv המשמשת ליומן זה"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -428,7 +435,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Transaction approved"
-msgstr "העסקה אושרה"
+msgstr "עסקה אושרה"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
@@ -443,6 +450,10 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"קל להשתמש באינטגרצית Vantiv בקופה: : פשוט לחץ\n"
+"                                על אמצעי התשלום המשויך. לאחר מכן ניתן להתאים את הסכום(למשל עבור קופה)\n"
+"                                בדיוק כמו בכל שורת תשלום אחרת. בכל פעם ששורת התשלום מוגדרת, ניתן\n"
+"                                להעביר כרטיס במכשיר קורא הכרטיסים."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
@@ -453,27 +464,27 @@ msgstr "חשבונות Vantiv "
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr ""
+msgstr "תצורות Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "אישורי Vantiv "
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Vantiv invoice number"
-msgstr ""
+msgstr "מספר חשבונית Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr ""
+msgstr "מספר רשומת Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr ""
+msgstr "מספר מזהה Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
@@ -487,7 +498,7 @@ msgstr "עסקה מבוטלת הצליחה"
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr "ממתין ל Swipe"
+msgstr "ממתין להעברת כרטיס"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -495,8 +506,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
-"אנו תומכים כרגע במכשיר קורא כרטיסים MagTek Dynamag. הוא יכול להיות מחובר "
-"ישירות למכשיר נקודת המכירה או לקופסת IoT."
+"אנו תומכים כרגע במכשיר קורא כרטיסים MagTek Dynamag. הוא יכול להיות מחובר\n"
+" ישירות לקופה או לקופסת IoT."
 
 #. module: pos_mercury
 #. openerp-web

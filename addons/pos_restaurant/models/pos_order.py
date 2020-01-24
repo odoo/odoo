@@ -44,6 +44,18 @@ class PosOrder(models.Model):
         for order_line_id, pack_lot_ids in groupby(pack_lots, key=lambda x:x['order_line']):
             next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lots)
 
+    def _get_fields_for_order_line(self):
+        return [
+            'id',
+            'discount',
+            'product_id',
+            'price_unit',
+            'order_id',
+            'qty',
+            'note',
+            'mp_skip',
+        ]
+
     def _get_order_lines(self, orders):
         """Add pos_order_lines to the orders.
 
@@ -54,16 +66,7 @@ class PosOrder(models.Model):
         """
         order_lines = self.env['pos.order.line'].search_read(
                 domain = [('order_id', 'in', [to['id'] for to in orders])],
-                fields = [
-                    'id',
-                    'discount',
-                    'product_id',
-                    'price_unit',
-                    'order_id',
-                    'qty',
-                    'note',
-                    'mp_skip',
-                    ])
+                fields = self._get_fields_for_order_line())
 
         if order_lines != []:
             self._get_pack_lot_lines(order_lines)
@@ -108,6 +111,22 @@ class PosOrder(models.Model):
         for order_id, payment_lines in groupby(extended_payment_lines, key=lambda x:x[2]['pos_order_id']):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
+    def _get_fields_for_draft_order(self):
+        return [
+                    'id',
+                    'pricelist_id',
+                    'partner_id',
+                    'sequence_number',
+                    'session_id',
+                    'pos_reference',
+                    'create_uid',
+                    'create_date',
+                    'customer_count',
+                    'fiscal_position_id',
+                    'table_id',
+                    'to_invoice',
+                    ]
+
     @api.model
     def get_table_draft_orders(self, table_id):
         """Generate an object of all draft orders for the given table.
@@ -121,20 +140,7 @@ class PosOrder(models.Model):
         """
         table_orders = self.search_read(
                 domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
-                fields = [
-                    'id',
-                    'pricelist_id',
-                    'partner_id',
-                    'sequence_number',
-                    'session_id',
-                    'pos_reference',
-                    'create_uid',
-                    'create_date',
-                    'customer_count',
-                    'fiscal_position_id',
-                    'table_id',
-                    'to_invoice',
-                    ])
+                fields = self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)
         self._get_payment_lines(table_orders)

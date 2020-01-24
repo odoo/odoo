@@ -249,7 +249,7 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].search([
+        candidates = self.env['stock.valuation.layer'].sudo().search([
             ('product_id', '=', self.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', company.id),
@@ -381,6 +381,11 @@ class ProductProduct(models.Model):
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
 
+            # If some negative stock were fixed, we need to recompute the standard price.
+            product = self.with_context(force_company=company.id)
+            if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+                product.sudo().write({'standard_price': product.value_svl / product.quantity_svl})
+
             # Create the account move.
             if self.valuation != 'real_time':
                 continue
@@ -465,6 +470,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -500,6 +506,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -543,8 +550,6 @@ class ProductProduct(models.Model):
                         'account_id': dacc,
                         'product_id': product.id,
                         'uom_id': uom.id,
-                        'account_analytic_id': account_analytic and account_analytic.id,
-                        'analytic_tag_ids': analytic_tags and analytic_tags.ids and [(6, 0, analytic_tags.ids)] or False,
                     },
 
                     {
