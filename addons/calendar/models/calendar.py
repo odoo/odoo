@@ -1256,7 +1256,8 @@ class Meeting(models.Model):
         """
         if self.interval and self.interval < 0:
             raise UserError(_('interval cannot be negative.'))
-        if self.count and self.count <= 0:
+        # self.count is always an int
+        if self.count <= 0:
             raise UserError(_('Event recurrence interval cannot be negative.'))
 
         def get_week_string(freq):
