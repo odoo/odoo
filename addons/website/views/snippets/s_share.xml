@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="s_share" name="Share">
-    <div t-attf-class="s_share #{_classes}">
+    <div t-attf-class="s_share text-left #{_classes}">
         <h4 t-if="not _no_title" class="s_share_title">Share</h4>
         <a href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-1x fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
@@ -13,10 +13,36 @@
         <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-1x fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
+        <a href="whatsapp://send?text={title}&amp;url={url}" t-attf-class="s_share_whatsapp #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-whatsapp #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a href="http://pinterest.com/pin/create/button/?url={url}&amp;description={title}" t-attf-class="s_share_pinterest #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-pinterest #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
         <a href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
             <i t-attf-class="fa fa-1x fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
     </div>
+</template>
+
+<template id="s_share_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_share">
+            <we-select string="Title Position" data-apply-to=".s_share_title">
+                <we-button data-select-class="d-block">Top</we-button>
+                <we-button data-select-class="">Left</we-button>
+                <we-button data-select-class="d-none">None</we-button>
+            </we-select>
+            <we-select string="Icon Layout" data-apply-to=".fa">
+                <we-button data-select-class="rounded shadow-sm">Square</we-button>
+                <we-button data-select-class="rounded-empty-circle shadow-sm">Circle</we-button>
+                <we-button data-select-class="rounded-circle shadow-sm">Disk</we-button>
+                <we-button data-select-class="m-3">None</we-button>
+            </we-select>
+            <!-- Compatibility, keep reverse logical, don't use `icon_color` -->
+            <we-checkbox string="Icon Layout Color" data-select-class="no_icon_color|"/>
+        </div>
+    </xpath>
 </template>
 
 <template id="assets_snippet_s_share_css_000" inherit_id="website.assets_frontend">

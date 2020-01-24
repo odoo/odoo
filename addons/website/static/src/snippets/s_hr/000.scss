@@ -4,21 +4,7 @@
     hr {
         padding: 0;
         border: 0;
-        border-top-color: inherit;
+        border-top: 1px solid inherit;
         margin: 0;
-    }
-    // Style
-    .s_hr_dashed { border-top-style: dashed; }
-    .s_hr_double { border-top-style: double; }
-    .s_hr_dotted { border-top-style: dotted; }
-    .s_hr_solid  { border-top-style: solid;  }
-    // Thickness
-    $count: 5;
-    $base-width: 1px;
-    @while $count > 0 {
-        .s_hr_#{$base-width * $count} {
-            border-top-width: $base-width * $count;
-        }
-        $count: $count - 1;
     }
 }
