@@ -2172,9 +2172,8 @@ class TestViews(ViewCase):
 
     def test_graph_fields(self):
         self.assertValid('<graph string="Graph"><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>')
-        self.assertInvalid(
+        self.assertInvalidViewDefinition(
             '<graph string="Graph"><label for="model"/><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>',
-            'A <graph> can only contains <field> nodes, found a <label>'
         )
 
     def test_default_group_by(self):
@@ -2217,6 +2216,16 @@ class TestViews(ViewCase):
             'model': 'ir.ui.view',
             'arch': arch,
         })
+
+    def assertInvalidViewDefinition(self, arch, view_name="Wrong Specs"):
+        with self.assertRaises(ValidationError) as catcher, mute_logger('odoo.tools.view_validation'):
+            self.View.create({
+                'name': view_name,
+                'model': 'ir.ui.view',
+                'arch': arch,
+            })
+        message = str(catcher.exception.args[0])
+        self.assertIn('Invalid view %s definition' % view_name, message)
 
     def assertInvalid(self, arch, expected_message=None, name='invalid view'):
         with self.assertRaises(ValidationError) as catcher, mute_logger('odoo.addons.base.models.ir_ui_view'):

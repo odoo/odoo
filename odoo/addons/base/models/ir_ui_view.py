@@ -1090,12 +1090,6 @@ actual arch.
             description = 'A button with icon attribute (%s)' % node.get('icon')
             self._validate_fa_class_accessibility(node, description)
 
-    def _validate_tag_graph(self, node, name_manager, node_info):
-        for child in node.iterchildren(tag=etree.Element):
-            if child.tag != 'field' and not isinstance(child, etree._Comment):
-                msg = _('A <graph> can only contains <field> nodes, found a <%s>')
-                self.handle_view_error(msg % child.tag)
-
     def _validate_tag_groupby(self, node, name_manager, node_info):
         # groupby nodes should be considered as nested view because they may
         # contain fields on the comodel
