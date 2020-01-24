@@ -1233,18 +1233,10 @@ class Meeting(models.Model):
         """ Compute rule string according to value type RECUR of iCalendar
             :return: string containing recurring rule (empty if no rule)
         """
-<<<<<<< HEAD
         if self.interval <= 0:
             raise UserError(_('The interval cannot be negative.'))
         if self.end_type == 'count' and self.count <= 0:
             raise UserError(_('The number of repetitions  cannot be negative.'))
-=======
-        if self.interval and self.interval < 0:
-            raise UserError(_('interval cannot be negative.'))
-        # self.count is always an int
-        if self.count <= 0:
-            raise UserError(_('Event recurrence interval cannot be negative.'))
->>>>>>> 4c6bf19a497... temp
 
         def get_week_string(freq):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
