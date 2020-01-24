@@ -628,7 +628,7 @@ class SaleOrder(models.Model):
                     payment_refs.add(invoice_vals['invoice_payment_ref'])
                     refs.add(invoice_vals['ref'])
                 ref_invoice_vals.update({
-                    'ref': ', '.join(refs),
+                    'ref': ', '.join(refs)[:2000],
                     'invoice_origin': ', '.join(origins),
                     'invoice_payment_ref': len(payment_refs) == 1 and payment_refs.pop() or False,
                 })
