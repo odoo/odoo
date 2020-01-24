@@ -205,7 +205,7 @@ function fontToImg($editable) {
         if (content) {
             var color = $font.css('color').replace(/\s/g, '');
             $font.replaceWith($('<img/>', {
-                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, $font.height())),
+                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, Math.round($font.height()))),
                 'data-class': $font.attr('class'),
                 'data-style': $font.attr('style'),
                 class: $font.attr('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), ''), // remove inline font-awsome style
