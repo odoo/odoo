@@ -15,9 +15,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_warehouse_id(self):
-        company = self.env.company.id
-        warehouse_ids = self.env['stock.warehouse'].search([('company_id', '=', company)], limit=1)
-        return warehouse_ids
+        return self.user_id._get_default_warehouse_id()
 
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
@@ -66,9 +64,10 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'warehouse_id' not in vals and 'company_id' in vals and vals.get('company_id') != self.env.company.id:
-            vals['warehouse_id'] = self.env['stock.warehouse'].search([('company_id', '=', vals.get('company_id'))], limit=1).id
-        return super(SaleOrder, self).create(vals)
+        if 'warehouse_id' not in vals and 'company_id' in vals:
+            user = self.env['res.users'].browse(vals.get('user_id', False))
+            vals['warehouse_id'] = user.with_company(vals.get('company_id'))._get_default_warehouse_id().id
+        return super().create(vals)
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
@@ -123,7 +122,12 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self.company_id:
-            self.warehouse_id = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
+            self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
+
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        super().onchange_user_id()
+        self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
