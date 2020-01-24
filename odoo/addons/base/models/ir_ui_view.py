@@ -22,7 +22,7 @@ from lxml.etree import LxmlError
 from lxml.builder import E
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError, AccessError
+from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools import config, ConstantMapping, pycompat, apply_inheritance_specs, locate_node
@@ -34,6 +34,7 @@ from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.image import image_data_uri
 from odoo.models import check_method_name
 from odoo.osv.expression import expression
+from odoo.models import regex_order
 
 _logger = logging.getLogger(__name__)
 
@@ -1222,7 +1223,7 @@ actual arch.
                             self.handle_view_error(msg % (attr, expr))
                         group_by = val_ast.s
                         if not group_by.split(':')[0] in Model._fields:
-                            msg = _('Unknow field "%s" in "group_by" value in %s=%r')
+                            msg = _('Unknown field "%s" in "group_by" value in %s=%r')
                             self.handle_view_error(msg % (group_by, attr, expr))
 
                     else:
@@ -1240,7 +1241,6 @@ actual arch.
                 self._validate_classes(node, expr)
 
             elif attr == 'groups':
-                key_description = '%s=%r' % (attr, expr)
                 for group in expr.replace('!', '').split(','):
                     # further improvement: add all groups to name_manager in
                     # order to batch check them at the end
@@ -1268,6 +1268,26 @@ actual arch.
                 msg = _("A role cannot be `none` or `presentation`. "
                         "All your elements must be accessible with screen readers, describe it.")
                 self.handle_view_error(msg, raise_exception=False)
+
+            elif attr == "default_order":
+                try:
+                    Model._check_qorder(expr)
+                except UserError:
+                    msg = _('Invalid "default_order" specified. '
+                        'A valid "order" specification is a comma-separated list of valid field names '
+                        '(optionally followed by asc/desc for the direction)')
+                    self.handle_view_error(msg)
+                order_fields = re.findall(r'"?(\w+)"?\s*(?:asc|desc)?', expr, flags=re.I)
+                for fname in order_fields:
+                    if fname not in Model._fields:
+                        msg = _('Unknown field "%s" in "default_order" value of %s')
+                        self.handle_view_error(msg % (fname, node.tag))
+
+            elif attr == "default_group_by":
+                fname = expr.split(":")[0]  # date:day, date:month support
+                if not fname in Model._fields:
+                    msg = _('Unknown field "%s" in "default_group_by" value in %s')
+                    self.handle_view_error(msg % (fname, node.tag))
 
     def _validate_classes(self, node, expr):
         """ Validate the classes present on node. """

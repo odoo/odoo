@@ -564,12 +564,6 @@ class TestApplyInheritanceMoveSpecs(ViewCase):
             )
         )
 
-
-class TestApplyInheritedArchs(ViewCase):
-    """ Applies a sequence of modificator archs to a base view
-    """
-
-
 class TestNoModel(ViewCase):
     def test_create_view_nomodel(self):
         view = self.View.create({
@@ -1785,7 +1779,7 @@ class TestViews(ViewCase):
         self.assertValid(arch % 'name')
         self.assertInvalid(
             arch % 'invalid_field',
-            """Unknow field "invalid_field" in "group_by" value in context="{'group_by':'invalid_field'}""",
+            """Unknown field "invalid_field" in "group_by" value in context="{'group_by':'invalid_field'}""",
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -2182,6 +2176,40 @@ class TestViews(ViewCase):
             '<graph string="Graph"><label for="model"/><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>',
             'A <graph> can only contains <field> nodes, found a <label>'
         )
+
+    def test_default_group_by(self):
+        invalid_view = """
+        <tree string="Broll" default_group_by="wrong_field">
+            <field name="name"/>
+        </tree>
+        """
+        self.assertInvalid(invalid_view, 'Unknown field "wrong_field"')
+
+    def test_default_order(self):
+        valid = """
+        <tree string="Views" default_order="inherit_id asc, xml_id desc">
+            <field name="name"/>
+        </tree>
+        """
+        self.assertValid(valid)
+        valid2 = """
+        <tree string="Views" default_order="inherit_id">
+            <field name="name"/>
+        </tree>
+        """
+        self.assertValid(valid2)
+        invalid = """
+        <tree string="Views" default_order="broll_id asc, truc_id desc">
+            <field name="name"/>
+        </tree>
+        """
+        self.assertInvalid(invalid, 'Unknown field "broll_id"')
+        invalid2 = """
+        <tree string="Views" default_order="unknown_field">
+            <field name="name"/>
+        </tree>
+        """
+        self.assertInvalid(invalid2, 'Unknown field "unknown_field"')
 
     def assertValid(self, arch, name='valid view'):
         self.View.create({
