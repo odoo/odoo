@@ -109,6 +109,8 @@
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
+                                    <field name="value_image" options="{'accepted_file_extensions': 'image/*'}"
+                                        attrs="{'column_invisible': ['|', ('parent.allow_value_image', '=', False), ('parent.question_type', '=', 'matrix')]}"/>
                                     <field name="is_correct" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
                                     <field name="answer_score" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
                                 </tree>
@@ -121,6 +123,9 @@
                                     <field name="value" string="Rows"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Description" name="survey_description">
+                            <field name="description" widget="html"/>
                         </page>
                         <page string="Options" name="options">
                             <group string="Constraints">
@@ -150,6 +155,7 @@
                             </group>
                             <group string="Display" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
                                 <field name="column_nb" string="Number of columns"/>
+                                <field name="allow_value_image"/>
                             </group>
                             <group string="Allow Comments" attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
                                 <field name='comments_allowed' />

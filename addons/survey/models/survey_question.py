@@ -54,7 +54,9 @@ class SurveyQuestion(models.Model):
 
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
-    description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
+    description = fields.Html(
+        'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
+        help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -86,6 +88,7 @@ class SurveyQuestion(models.Model):
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
+    allow_value_image = fields.Boolean('Images on answers', help='Display images in addition to answer label. Valid only for simple / multiple choice questions.')
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
@@ -447,6 +450,7 @@ class SurveyQuestionAnswer(models.Model):
     matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
+    value_image = fields.Image('Image', max_width=256, max_height=256)
     is_correct = fields.Boolean('Is a correct answer')
     answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
