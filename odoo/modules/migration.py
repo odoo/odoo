@@ -12,7 +12,7 @@ from os.path import join as opj
 
 from odoo.modules.module import get_resource_path
 import odoo.release as release
-import odoo.tools as tools
+import odoo.upgrades
 from odoo.tools.parse_version import parse_version
 
 _logger = logging.getLogger(__name__)
@@ -63,7 +63,7 @@ class MigrationManager(object):
 
     def _get_files(self):
         def _get_upgrades_paths(pkg):
-            for path in tools.config['upgrades_paths'].split(','):
+            for path in odoo.upgrades.__path__:
                 upgrade_path = opj(path, pkg)
                 if os.path.exists(upgrade_path):
                     return upgrade_path
@@ -86,8 +86,6 @@ class MigrationManager(object):
             self.migrations[pkg.name] = {
                 'module': get_scripts(get_resource_path(pkg.name, 'migrations')),
                 'module_upgrades': get_scripts(get_resource_path(pkg.name, 'upgrades')),
-                'maintenance': get_scripts(get_resource_path('base', 'maintenance', 'migrations', pkg.name)),
-                'maintenance_upgrades': get_scripts(get_resource_path('base', 'maintenance', 'upgrades', pkg.name)),
                 'upgrades': get_scripts(_get_upgrades_paths(pkg.name)),
             }
 
@@ -133,11 +131,9 @@ class MigrationManager(object):
             mapping = {
                 'module': opj(pkg.name, 'migrations'),
                 'module_upgrades': opj(pkg.name, 'upgrades'),
-                'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
-                'maintenance_upgrades': opj('base', 'maintenance', 'upgrades', pkg.name),
             }
 
-            for path in tools.config['upgrades_paths'].split(','):
+            for path in odoo.upgrades.__path__:
                 if os.path.exists(opj(path, pkg.name)):
                     mapping['upgrades'] = opj(path, pkg.name)
                     break

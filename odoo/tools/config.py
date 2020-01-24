@@ -9,10 +9,12 @@ except ImportError:
 import errno
 import logging
 import optparse
+import glob
 import os
 import sys
 import tempfile
 import odoo
+from os.path import expandvars, expanduser, abspath, realpath
 from .. import release, conf, loglevels
 from . import appdirs
 
@@ -488,7 +490,7 @@ class configmanager(object):
                 self._normalize(x)
                 for x in self.options['addons_path'].split(','))
 
-        self.options['upgrades_paths'] = (
+        self.options["upgrades_paths"] = (
             ",".join(self._normalize(x)
                 for x in self.options['upgrades_paths'].split(','))
             if self.options['upgrades_paths']
@@ -546,7 +548,7 @@ class configmanager(object):
             if not os.path.isdir(res):
                 raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
             if not self._is_addons_path(res):
-                raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, path))
+                raise optparse.OptionValueError("option %s: the path %r is not a valid addons directory" % (opt, path))
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
@@ -558,8 +560,17 @@ class configmanager(object):
             res = self._normalize(path)
             if not os.path.isdir(res):
                 raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
-            upgrades_paths.append(res)
+            if not self._is_upgrades_path(res):
+                raise optparse.OptionValueError("option %s: the path %r is not a valid upgrade directory" % (opt, path))
+            if res not in upgrades_paths:
+                upgrades_paths.append(res)
         setattr(parser.values, option.dest, ",".join(upgrades_paths))
+
+    def _is_upgrades_path(self, res):
+        return any(
+            glob.glob(os.path.join(res, f"*/*/{prefix}-*.py"))
+            for prefix in ["pre", "post", "end"]
+        )
 
     def _test_enable_callback(self, option, opt, value, parser):
         if not parser.values.test_tags:
@@ -700,9 +711,7 @@ class configmanager(object):
     def _normalize(self, path):
         if not path:
             return path
-        return os.path.abspath(
-            os.path.expanduser(
-                os.path.expandvars(
-                    path.strip())))
+        return realpath(abspath(expanduser(expandvars(path.strip()))))
+
 
 config = configmanager()
