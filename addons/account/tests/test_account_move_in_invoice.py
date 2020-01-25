@@ -186,6 +186,294 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 416.0,
         })
 
+    def test_in_invoice_line_onchange_product_2_with_fiscal_pos(self):
+        ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
+        The price_unit should be 100.0 after applying the fiscal position.
+        '''
+        tax_price_include = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        tax_price_exclude = self.env['account.tax'].create({
+            'name': '15% excl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+            'tax_ids': [
+                (0, None, {
+                    'tax_src_id': tax_price_include.id,
+                    'tax_dest_id': tax_price_exclude.id,
+                }),
+            ],
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 110.0,
+            'supplier_taxes_id': [(6, 0, tax_price_include.ids)],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.currency_id = self.currency_data['currency']
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice = move_form.save()
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'price_unit': 200.0,
+                'price_subtotal': 200.0,
+                'price_total': 230.0,
+                'tax_ids': tax_price_exclude.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 200.0,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': 30.0,
+                'price_subtotal': 30.0,
+                'price_total': 30.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_exclude.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 30.0,
+                'debit': 15.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': -230.0,
+                'price_subtotal': -230.0,
+                'price_total': -230.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -230.0,
+                'debit': 0.0,
+                'credit': 115.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 200.0,
+            'amount_tax': 30.0,
+            'amount_total': 230.0,
+        })
+
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.product_uom_id = uom_dozen
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'product_uom_id': uom_dozen.id,
+                'price_unit': 2400.0,
+                'price_subtotal': 2400.0,
+                'price_total': 2760.0,
+                'tax_ids': tax_price_exclude.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 2400.0,
+                'debit': 1200.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': 360.0,
+                'price_subtotal': 360.0,
+                'price_total': 360.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_exclude.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 360.0,
+                'debit': 180.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': -2760.0,
+                'price_subtotal': -2760.0,
+                'price_total': -2760.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -2760.0,
+                'debit': 0.0,
+                'credit': 1380.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 2400.0,
+            'amount_tax': 360.0,
+            'amount_total': 2760.0,
+        })
+
+    def test_in_invoice_line_onchange_product_2_with_fiscal_pos_2(self):
+        ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
+        The price_unit should be 120.0 after applying the fiscal position.
+        '''
+        tax_price_include_1 = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        tax_price_include_2 = self.env['account.tax'].create({
+            'name': '20% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 20,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+            'tax_ids': [
+                (0, None, {
+                    'tax_src_id': tax_price_include_1.id,
+                    'tax_dest_id': tax_price_include_2.id,
+                }),
+            ],
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 110.0,
+            'supplier_taxes_id': [(6, 0, tax_price_include_1.ids)],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.currency_id = self.currency_data['currency']
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice = move_form.save()
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'price_unit': 240.0,
+                'price_subtotal': 200.0,
+                'price_total': 240.0,
+                'tax_ids': tax_price_include_2.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 200.0,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': 40.0,
+                'price_subtotal': 40.0,
+                'price_total': 40.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include_2.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 40.0,
+                'debit': 20.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': -240.0,
+                'price_subtotal': -240.0,
+                'price_total': -240.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -240.0,
+                'debit': 0.0,
+                'credit': 120.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 200.0,
+            'amount_tax': 40.0,
+            'amount_total': 240.0,
+        })
+
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.product_uom_id = uom_dozen
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'product_uom_id': uom_dozen.id,
+                'price_unit': 2880.0,
+                'price_subtotal': 2400.0,
+                'price_total': 2880.0,
+                'tax_ids': tax_price_include_2.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 2400.0,
+                'debit': 1200.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': 480.0,
+                'price_subtotal': 480.0,
+                'price_total': 480.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include_2.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 480.0,
+                'debit': 240.0,
+                'credit': 0.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': -2880.0,
+                'price_subtotal': -2880.0,
+                'price_total': -2880.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -2880.0,
+                'debit': 0.0,
+                'credit': 1440.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 2400.0,
+            'amount_tax': 480.0,
+            'amount_total': 2880.0,
+        })
+
     def test_in_invoice_line_onchange_business_fields_1(self):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
@@ -859,6 +1147,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
+        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
         self.assertInvoiceValues(reverse_move, [
             {
                 **self.product_line_vals_1,
@@ -893,7 +1182,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': move_reversal.date,
             'state': 'draft',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
-            'invoice_payment_state': 'not_paid',
+            'payment_state': 'not_paid',
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -904,6 +1193,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
+        self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
         self.assertInvoiceValues(reverse_move, [
             {
                 **self.product_line_vals_1,
@@ -938,7 +1228,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': move_reversal.date,
             'state': 'posted',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
-            'invoice_payment_state': 'paid',
+            'payment_state': 'paid',
         })
 
     def test_in_invoice_create_refund_multi_currency(self):
@@ -961,6 +1251,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
+        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
         self.assertInvoiceValues(reverse_move, [
             {
                 **self.product_line_vals_1,
@@ -1006,7 +1297,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': move_reversal.date,
             'state': 'draft',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
-            'invoice_payment_state': 'not_paid',
+            'payment_state': 'not_paid',
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -1017,6 +1308,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
+        self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
         self.assertInvoiceValues(reverse_move, [
             {
                 **self.product_line_vals_1,
@@ -1062,7 +1354,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': move_reversal.date,
             'state': 'posted',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
-            'invoice_payment_state': 'paid',
+            'payment_state': 'paid',
         })
 
     def test_in_invoice_create_1(self):

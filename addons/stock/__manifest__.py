@@ -80,6 +80,7 @@
         'static/src/xml/inventory_report.xml',
         'static/src/xml/inventory_lines.xml',
         'static/src/xml/popover_widget.xml',
+        'static/src/xml/stock_orderpoint_lead_days_widget.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
     ],
     'installable': True,

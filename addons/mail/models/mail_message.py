@@ -712,7 +712,7 @@ class Message(models.Model):
 
         ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
 
-        notification = {'type': 'mark_as_read', 'message_ids': notifications}
+        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids]}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids
@@ -852,7 +852,7 @@ class Message(models.Model):
                 'subject': subject,
                 'body_html': body_html,
                 'author_id': self.env.user.partner_id.id,
-                'email_from': self.env.user.email_formatted or self.env.company_id.catchall_formatted,
+                'email_from': self.env.user.email_formatted or self.env.company.catchall_formatted,
                 'email_to': msg.email_from,
                 'auto_delete': True,
                 'state': 'outgoing'

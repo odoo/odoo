@@ -3,7 +3,6 @@ odoo.define('website.editor.snippets.options', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var weWidgets = require('wysiwyg.widgets');
 const wUtils = require('website.utils');
 var options = require('web_editor.snippets.options');
 
@@ -390,119 +389,6 @@ options.registry.CarouselItem = options.Class.extend({
             case 'right':
                 this.$controls.filter('.carousel-control-next')[0].click();
                 break;
-        }
-    },
-});
-
-options.registry.navTabs = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        this._findLinksAndPanes();
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    onBuilt: function () {
-        this._generateUniqueIDs();
-    },
-    /**
-     * @override
-     */
-    onClone: function () {
-        this._generateUniqueIDs();
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Creates a new tab and tab-pane.
-     *
-     * @see this.selectClass for parameters
-     */
-    addTab: function (previewMode, widgetValue, params) {
-        var $activeItem = this.$navLinks.filter('.active').parent();
-        var $activePane = this.$tabPanes.filter('.active');
-
-        var $navItem = $activeItem.clone();
-        var $navLink = $navItem.find('.nav-link').removeClass('active show');
-        var $tabPane = $activePane.clone().removeClass('active show');
-        $navItem.insertAfter($activeItem);
-        $tabPane.insertAfter($activePane);
-        this._findLinksAndPanes();
-        this._generateUniqueIDs();
-
-        $navLink.tab('show');
-    },
-    /**
-     * Removes the current active tab and its content.
-     *
-     * @see this.selectClass for parameters
-     */
-    removeTab: function (previewMode, widgetValue, params) {
-        var self = this;
-
-        var $activeLink = this.$navLinks.filter('.active');
-        var $activePane = this.$tabPanes.filter('.active');
-
-        var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
-
-        return new Promise(resolve => {
-            $next.one('shown.bs.tab', function () {
-                $activeLink.parent().remove();
-                $activePane.remove();
-                self._findLinksAndPanes();
-                resolve();
-            });
-            $next.tab('show');
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetVisibility: async function (widgetName, params) {
-        if (widgetName === 'remove_tab_opt') {
-            return (this.$tabPanes.length > 2);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @private
-     */
-    _findLinksAndPanes: function () {
-        this.$navLinks = this.$target.find('.nav-link');
-        var $el = this.$target;
-        do {
-            $el = $el.parent();
-            this.$tabPanes = $el.find('.tab-pane');
-        } while (this.$tabPanes.length === 0 && !$el.is('body'));
-    },
-    /**
-     * @private
-     */
-    _generateUniqueIDs: function () {
-        for (var i = 0; i < this.$navLinks.length; i++) {
-            var id = _.now() + '_' + _.uniqueId();
-            var idLink = 'nav_tabs_link_' + id;
-            var idContent = 'nav_tabs_content_' + id;
-            this.$navLinks.eq(i).attr({
-                'id': idLink,
-                'href': '#' + idContent,
-                'aria-controls': idContent,
-            });
-            this.$tabPanes.eq(i).attr({
-                'id': idContent,
-                'aria-labelledby': idLink,
-            });
         }
     },
 });
@@ -1166,11 +1052,22 @@ options.registry.SnippetMove = options.Class.extend({
      */
     start: function () {
         var $buttons = this.$el.find('we-button');
-        var $overlayArea = this.$overlay.find('.o_overlay_options');
+        var $overlayArea = this.$overlay.find('.o_overlay_move_options');
         $overlayArea.prepend($buttons[0]);
         $overlayArea.append($buttons[1]);
 
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        // TODO improve this: hack to hide options section if snippet move is
+        // the only one.
+        const $allOptions = this.$el.parent();
+        if ($allOptions.find('we-customizeblock-option').length <= 1) {
+            $allOptions.addClass('d-none');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1183,12 +1080,20 @@ options.registry.SnippetMove = options.Class.extend({
      * @see this.selectClass for parameters
      */
     moveSnippet: function (previewMode, widgetValue, params) {
+        const isNavItem = this.$target[0].classList.contains('nav-item');
+        const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         switch (widgetValue) {
             case 'prev':
                 this.$target.prev().before(this.$target);
+                if (isNavItem) {
+                    $tabPane.prev().before($tabPane);
+                }
                 break;
             case 'next':
                 this.$target.next().after(this.$target);
+                if (isNavItem) {
+                    $tabPane.next().after($tabPane);
+                }
                 break;
         }
     },
@@ -1217,10 +1122,87 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
      * Called when the autocomplete change the input value.
      *
      * @private
+     * @param {OdooEvent} ev
      */
-    _onWebsiteURLChosen: function () {
+    _onWebsiteURLChosen: function (ev) {
         $(this.inputEl).trigger('input');
-        this._notifyValueChange(false);
+        this._onUserValueChange(ev);
+    },
+});
+
+options.registry.ScrollButton = options.Class.extend({
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        this.$button = this.$('.o_scroll_button');
+    },
+    /**
+     * Removes button if the option is not displayed (for example in "fit
+     * content" height).
+     *
+     * @override
+     */
+    updateUIVisibility: async function () {
+        await this._super(...arguments);
+        if (this.$button.length && this.el.offsetParent === null) {
+            this.$button.detach();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggles the scroll down button.
+     */
+    toggleButton: function (previewMode, widgetValue, params) {
+        if (widgetValue) {
+            if (!this.$button.length) {
+                const anchor = document.createElement('a');
+                anchor.classList.add(
+                    'o_scroll_button',
+                    'rounded-circle',
+                    'align-items-center',
+                    'justify-content-center',
+                    'mx-auto',
+                    'bg-primary',
+                );
+                anchor.href = '#';
+                anchor.contentEditable = "false";
+                anchor.title = _t("Scroll down to next section");
+                const arrow = document.createElement('i');
+                arrow.classList.add('fa', 'fa-angle-down', 'fa-3x');
+                anchor.appendChild(arrow);
+                this.$button = $(anchor);
+            }
+            this.$target.append(this.$button);
+        } else {
+            this.$button.detach();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'toggleButton':
+                return !!this.$button.parent().length;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeVisibility: function () {
+        return this.$target.is('.o_full_screen_height, .o_half_screen_height');
     },
 });
 

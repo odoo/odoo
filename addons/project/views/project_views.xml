@@ -28,6 +28,7 @@
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
+                    <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
@@ -132,6 +133,8 @@
                                 <group>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
+                                    <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
+                                    <field name="allowed_portal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
 
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
@@ -254,7 +257,8 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="oe_kanban_bottom_right">
-                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
+                                            <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
+                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -506,6 +510,9 @@
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
+                                    <field name="project_privacy_visibility" groups="base.group_no_one"/>
+                                    <field name="allowed_user_ids" widget="many2many_tags"
+                                           groups="base.group_no_one" attrs="{'invisible': [('project_privacy_visibility', 'not in', ('followers', 'portal'))]}"/>
                                     <field name="child_ids" invisible="1" />
                                     <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -655,7 +662,8 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar"/>
+                                        <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
+                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>

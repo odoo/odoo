@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil import relativedelta
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-
-from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class Location(models.Model):
@@ -212,21 +208,3 @@ class Route(models.Model):
         for route in self:
             route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
         super(Route, self).toggle_active()
-
-    def view_product_ids(self):
-        return {
-            'name': _('Products'),
-            'view_mode': 'tree,form',
-            'res_model': 'product.template',
-            'type': 'ir.actions.act_window',
-            'domain': [('route_ids', 'in', self.ids)],
-        }
-
-    def view_categ_ids(self):
-        return {
-            'name': _('Product Categories'),
-            'view_mode': 'tree,form',
-            'res_model': 'product.category',
-            'type': 'ir.actions.act_window',
-            'domain': [('route_ids', 'in', self.ids)],
-        }

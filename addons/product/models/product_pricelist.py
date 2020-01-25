@@ -592,5 +592,6 @@ class PricelistItem(models.Model):
         res = super(PricelistItem, self).write(values)
         # When the pricelist changes we need the product.template price
         # to be invalided and recomputed.
+        self.flush()
         self.invalidate_cache()
         return res

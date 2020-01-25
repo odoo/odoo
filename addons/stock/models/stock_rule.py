@@ -1,19 +1,32 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple, OrderedDict, defaultdict
+import logging
+from collections import defaultdict, namedtuple
+from datetime import datetime, time
+
 from dateutil.relativedelta import relativedelta
-from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
-from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
-
+from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError
+from odoo.osv import expression
+from odoo.tools import float_compare, float_round, frozendict, html_escape
+from odoo.tools.misc import split_every
 
-import logging
 _logger = logging.getLogger(__name__)
+
+
+class ProcurementException(Exception):
+    """An exception raised by ProcurementGroup `run` containing all the faulty
+    procurements.
+    """
+    def __init__(self, procurement_exceptions):
+        """:param procurement_exceptions: a list of tuples containing the faulty
+        procurement and their error messages
+        :type procurement_exceptions: list
+        """
+        self.procurement_exceptions = procurement_exceptions
 
 
 class StockRule(models.Model):
@@ -57,7 +70,7 @@ class StockRule(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, check_company=True,
-        domain=[('code', '?=', 'picking_type_code_domain')])
+        domain="[('code', '=?', picking_type_code_domain)]")
     picking_type_code_domain = fields.Char(compute='_compute_picking_type_code_domain')
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one(
@@ -210,7 +223,7 @@ class StockRule(models.Model):
         for procurement, rule in procurements:
             if not rule.location_src_id:
                 msg = _('No source location defined on stock rule: %s!') % (rule.name, )
-                raise UserError(msg)
+                raise ProcurementException([(procurement, msg)])
 
             if rule.procure_method == 'mts_else_mto':
                 mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
@@ -294,21 +307,25 @@ class StockRule(models.Model):
             'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
             'delay_alert': self.delay_alert,
+            'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
         for field in self._get_custom_move_fields():
             if field in values:
                 move_values[field] = values.get(field)
         return move_values
 
-    def _log_next_activity(self, product_id, note):
-        existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),
-                                                              ('note', '=', note)])
-        if not existing_activity:
-            product_id.product_tmpl_id.activity_schedule(
-                'mail.mail_activity_data_warning',
-                note=note,
-                user_id=product_id.responsible_id.id or SUPERUSER_ID,
-            )
+    def _get_lead_days(self, product):
+        """Returns the cumulative delay and its description encountered by a
+        procurement going through the rules in `self`.
+
+        :param product: the product of the procurement
+        :type product: :class:`~odoo.addons.product.models.product.ProductProduct`
+        :return: the cumulative delay and cumulative delay's description
+        :rtype: tuple
+        """
+        delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        delay_description = ''.join(['<tr><td>%s %s</td><td>+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
+        return delay, delay_description
 
 
 class ProcurementGroup(models.Model):
@@ -349,42 +366,61 @@ class ProcurementGroup(models.Model):
         ('direct', 'Partial'),
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
+    stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
 
     @api.model
-    def run(self, procurements):
-        """ Method used in a procurement case. The purpose is to supply the
-        product passed as argument in the location also given as an argument.
-        In order to be able to find a suitable location that provide the product
-        it will search among stock.rule.
+    def run(self, procurements, raise_user_error=True):
+        """Fulfil `procurements` with the help of stock rules.
+
+        Procurements are needs of products at a certain location. To fulfil
+        these needs, we need to create some sort of documents (`stock.move`
+        by default, but extensions of `_run_` methods allow to create every
+        type of documents).
+
+        :param procurements: the description of the procurement
+        :type list: list of `~odoo.addons.stock.models.stock_rule.ProcurementGroup.Procurement`
+        :param raise_user_error: will raise either an UserError or a ProcurementException
+        :type raise_user_error: boolan, optional
+        :raises UserError: if `raise_user_error` is True and a procurement isn't fulfillable
+        :raises ProcurementException: if `raise_user_error` is False and a procurement isn't fulfillable
         """
+
+        def raise_exception(procurement_errors):
+            if raise_user_error:
+                dummy, errors = zip(*procurement_errors)
+                raise UserError('\n'.join(errors))
+            else:
+                raise ProcurementException(procurement_errors)
+
         actions_to_run = defaultdict(list)
-        errors = []
+        procurement_errors = []
         for procurement in procurements:
             procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                errors.append(_('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %
-                    (procurement.product_id.display_name, procurement.location_id.display_name))
+                error = _('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %\
+                    (procurement.product_id.display_name, procurement.location_id.display_name)
+                procurement_errors.append((procurement, error))
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))
 
-        if errors:
-            raise UserError('\n'.join(errors))
+        if procurement_errors:
+            raise_exception(procurement_errors)
 
         for action, procurements in actions_to_run.items():
             if hasattr(self.env['stock.rule'], '_run_%s' % action):
                 try:
                     getattr(self.env['stock.rule'], '_run_%s' % action)(procurements)
-                except UserError as e:
-                    errors.append(e.name)
+                except ProcurementException as e:
+                    procurement_errors += e.procurement_exceptions
             else:
                 _logger.error("The method _run_%s doesn't exist on the procurement rules" % action)
 
-        if errors:
-            raise UserError('\n'.join(errors))
+        if procurement_errors:
+            raise_exception(procurement_errors)
         return True
 
     @api.model
@@ -485,21 +521,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _procurement_from_orderpoint_get_order(self):
-        return 'location_id'
-
-    @api.model
-    def _procurement_from_orderpoint_get_grouping_key(self, orderpoint_ids):
-        orderpoints = self.env['stock.warehouse.orderpoint'].browse(orderpoint_ids)
-        return orderpoints.location_id.id
-
-    @api.model
-    def _procurement_from_orderpoint_get_groups(self, orderpoint_ids):
-        """ Make groups for a given orderpoint; by default schedule all operations in one without date """
-        return [{'to_date': False, 'procurement_values': dict()}]
-
-    @api.model
-    def _procurement_from_orderpoint_post_process(self, orderpoint_ids):
-        return True
+        return 'location_id,company_id'
 
     def _get_orderpoint_domain(self, company_id=False):
         domain = [('company_id', '=', company_id)] if company_id else []
@@ -514,97 +536,90 @@ class ProcurementGroup(models.Model):
             This is appropriate for batch jobs only.
         """
         self = self.with_company(company_id)
-        OrderPoint = self.env['stock.warehouse.orderpoint']
         domain = self._get_orderpoint_domain(company_id=company_id)
-        orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(domain,
-            order=self._procurement_from_orderpoint_get_order()).ids
-        while orderpoints_noprefetch:
+        orderpoints_noprefetch = self.env['stock.warehouse.orderpoint'].search_read(
+            domain, fields=['id'], order=self._procurement_from_orderpoint_get_order())
+        orderpoints_noprefetch = [orderpoint['id'] for orderpoint in orderpoints_noprefetch]
+
+        for orderpoints_batch in split_every(1000, orderpoints_noprefetch):
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
-            OrderPoint = self.env['stock.warehouse.orderpoint']
+            orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
+            orderpoints_exceptions = []
+            while orderpoints_batch:
 
-            orderpoints = OrderPoint.browse(orderpoints_noprefetch[:1000])
-            orderpoints_noprefetch = orderpoints_noprefetch[1000:]
+                # Calculate groups that can be executed together
+                orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
 
-            # Calculate groups that can be executed together
-            location_data = OrderedDict()
+                procurements = []
+                for orderpoint in orderpoints_batch:
+                    orderpoint_context = orderpoint._get_product_context()
+                    product_context = frozendict({**self.env.context, **orderpoint_context})
+                    orderpoints_contexts[product_context] |= orderpoint
 
-            def makedefault():
-                return {
-                    'products': self.env['product.product'],
-                    'orderpoints': self.env['stock.warehouse.orderpoint'],
-                    'groups': []
-                }
+                for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
+                    substract_quantity = orderpoints_by_context._quantity_in_progress()
+                    product_quantity = orderpoints_by_context.product_id.with_context(orderpoint_context)._product_available()
 
-            for orderpoint in orderpoints:
-                key = self._procurement_from_orderpoint_get_grouping_key([orderpoint.id])
-                if not location_data.get(key):
-                    location_data[key] = makedefault()
-                location_data[key]['products'] += orderpoint.product_id
-                location_data[key]['orderpoints'] += orderpoint
-                location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
+                    for orderpoint in orderpoints_by_context:
+                        op_product_virtual = product_quantity[orderpoint.product_id.id]['virtual_available']
+                        if op_product_virtual is None:
+                            continue
+                        if float_compare(op_product_virtual, orderpoint.product_min_qty, precision_rounding=orderpoint.product_uom.rounding) <= 0:
+                            qty = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - op_product_virtual
+                            remainder = orderpoint.qty_multiple > 0 and qty % orderpoint.qty_multiple or 0.0
 
-            for location_id, location_data in location_data.items():
-                location_orderpoints = location_data['orderpoints']
-                product_context = dict(self._context, location=location_orderpoints[0].location_id.id)
-                substract_quantity = location_orderpoints._quantity_in_progress()
+                            if float_compare(remainder, 0.0, precision_rounding=orderpoint.product_uom.rounding) > 0:
+                                qty += orderpoint.qty_multiple - remainder
 
-                for group in location_data['groups']:
-                    if group.get('from_date'):
-                        product_context['from_date'] = group['from_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                    if group['to_date']:
-                        product_context['to_date'] = group['to_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                    product_quantity = location_data['products'].with_context(product_context)._product_available()
-                    for orderpoint in location_orderpoints:
-                        try:
-                            op_product_virtual = product_quantity[orderpoint.product_id.id]['virtual_available']
-                            if op_product_virtual is None:
+                            if float_compare(qty, 0.0, precision_rounding=orderpoint.product_uom.rounding) < 0:
                                 continue
-                            if float_compare(op_product_virtual, orderpoint.product_min_qty, precision_rounding=orderpoint.product_uom.rounding) <= 0:
-                                qty = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - op_product_virtual
-                                remainder = orderpoint.qty_multiple > 0 and qty % orderpoint.qty_multiple or 0.0
 
-                                if float_compare(remainder, 0.0, precision_rounding=orderpoint.product_uom.rounding) > 0:
-                                    qty += orderpoint.qty_multiple - remainder
+                            qty -= substract_quantity[orderpoint.id]
+                            qty_rounded = float_round(qty, precision_rounding=orderpoint.product_uom.rounding)
+                            if qty_rounded > 0:
+                                date = datetime.combine(orderpoint_context.get('to_date'), time.min)
+                                values = orderpoint._prepare_procurement_values(qty_rounded, date=date)
+                                procurements.append(self.env['procurement.group'].Procurement(
+                                    orderpoint.product_id, qty_rounded, orderpoint.product_uom,
+                                    orderpoint.location_id, orderpoint.name, orderpoint.name,
+                                    orderpoint.company_id, values))
 
-                                if float_compare(qty, 0.0, precision_rounding=orderpoint.product_uom.rounding) < 0:
-                                    continue
+                try:
+                    with self.env.cr.savepoint():
+                        self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=False)
+                except ProcurementException as errors:
+                    for procurement, error_msg in errors.procurement_exceptions:
+                        orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
+                    failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
+                    if not failed_orderpoints:
+                        _logger.error('Unable to process orderpoints')
+                        break
+                    orderpoints_batch -= failed_orderpoints
 
-                                qty -= substract_quantity[orderpoint.id]
-                                qty_rounded = float_round(qty, precision_rounding=orderpoint.product_uom.rounding)
-                                if qty_rounded > 0:
-                                    values = orderpoint._prepare_procurement_values(qty_rounded, **group['procurement_values'])
-                                    try:
-                                        with self._cr.savepoint():
-                                            #TODO: make it batch
-                                            self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
-                                                orderpoint.product_id, qty_rounded, orderpoint.product_uom,
-                                                orderpoint.location_id, orderpoint.name, orderpoint.name,
-                                                orderpoint.company_id, values)])
-                                    except UserError as error:
-                                        self.env['stock.rule']._log_next_activity(orderpoint.product_id, error.name)
-                                    self._procurement_from_orderpoint_post_process([orderpoint.id])
-                                if use_new_cursor:
-                                    cr.commit()
-
-                        except OperationalError:
-                            if use_new_cursor:
-                                orderpoints_noprefetch += [orderpoint.id]
-                                cr.rollback()
-                                continue
-                            else:
-                                raise
-
-            try:
-                if use_new_cursor:
-                    cr.commit()
-            except OperationalError:
-                if use_new_cursor:
-                    cr.rollback()
-                    continue
+                except OperationalError:
+                    if use_new_cursor:
+                        cr.rollback()
+                        continue
+                    else:
+                        raise
                 else:
-                    raise
+                    orderpoints_batch._post_process_scheduler()
+                    break
+
+            # Log an activity on product template for failed orderpoints.
+            for orderpoint, error_msg in orderpoints_exceptions:
+                existing_activity = self.env['mail.activity'].search([
+                    ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
+                    ('res_model_id', '=', self.env.ref('product.model_product_template').id),
+                    ('note', '=', error_msg)])
+                if not existing_activity:
+                    orderpoint.product_id.product_tmpl_id.activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        note=error_msg,
+                        user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
+                    )
 
             if use_new_cursor:
                 cr.commit()

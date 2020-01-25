@@ -96,26 +96,19 @@ class Project(models.Model):
             project.task_count = result.get(project.id, 0)
 
     def attachment_tree_view(self):
-        self.ensure_one()
-        domain = [
+        attachment_action = self.env.ref('base.action_attachment')
+        action = attachment_action.read()[0]
+        action['domain'] = str([
             '|',
-            '&', ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids),
-            '&', ('res_model', '=', 'project.task'), ('res_id', 'in', self.task_ids.ids)]
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'ir.attachment',
-            'type': 'ir.actions.act_window',
-            'view_id': False,
-            'view_mode': 'kanban,tree,form',
-            'help': _('''<p class="o_view_nocontent_smiling_face">
-                        Documents are attached to the tasks of your project.</p><p>
-                        Send messages or log internal notes with attachments to link
-                        documents to your project.
-                    </p>'''),
-            'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
-        }
+            '&',
+            ('res_model', '=', 'project.project'),
+            ('res_id', 'in', self.ids),
+            '&',
+            ('res_model', '=', 'project.task'),
+            ('res_id', 'in', self.task_ids.ids)
+        ])
+        action['context'] = "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
+        return action
 
     @api.model
     def activate_sample_project(self):
@@ -197,9 +190,9 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited employees'),
-            ('employees', 'All employees'),
-            ('portal', 'Portal users and all employees'),
+            ('followers', 'Invited internal users'),
+            ('employees', 'All internal users'),
+            ('portal', 'Invited portal users and all internal users'),
         ],
         string='Visibility', required=True,
         default='portal',
@@ -209,6 +202,11 @@ class Project(models.Model):
                 "- Portal users and all employees: employees may see everything."
                 "   Portal users may see project and tasks followed by.\n"
                 "   them or by someone of their company.")
+
+    allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_users', inverse='_inverse_allowed_user')
+    allowed_internal_user_ids = fields.Many2many('res.users', 'project_allowed_internal_users_rel',
+                                                 string="Allowed Internal Users", default=lambda self: self.env.user, domain=[('share', '=', False)])
+    allowed_portal_user_ids = fields.Many2many('res.users', 'project_allowed_portal_users_rel', string="Allowed Portal Users", domain=[('share', '=', True)])
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
@@ -231,6 +229,18 @@ class Project(models.Model):
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
+
+    @api.depends('allowed_internal_user_ids', 'allowed_portal_user_ids')
+    def _compute_allowed_users(self):
+        for project in self:
+            users = project.allowed_internal_user_ids | project.allowed_portal_user_ids
+            project.allowed_user_ids = users
+
+    def _inverse_allowed_user(self):
+        for project in self:
+            allowed_users = project.allowed_user_ids
+            project.allowed_portal_user_ids = allowed_users.filtered('share')
+            project.allowed_internal_user_ids = allowed_users - project.allowed_portal_user_ids
 
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
@@ -299,22 +309,33 @@ class Project(models.Model):
         project = super(Project, self).create(vals)
         if not vals.get('subtask_project_id'):
             project.subtask_project_id = project.id
-        if project.privacy_visibility == 'portal' and project.partner_id:
-            project.message_subscribe(project.partner_id.ids)
+        if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
+            project.allowed_user_ids |= project.partner_id.user_ids
         return project
 
     def write(self, vals):
+        allowed_users_changed = 'allowed_portal_user_ids' in vals or 'allowed_internal_user_ids' in vals
+        if allowed_users_changed:
+            allowed_users = {project: project.allowed_user_ids for project in self}
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
             vals.pop('is_favorite')
             self._fields['is_favorite'].determine_inverse(self)
         res = super(Project, self).write(vals) if vals else True
+
+        if allowed_users_changed:
+            for project in self:
+                permission_removed = allowed_users.get(project) - project.allowed_user_ids
+                for task in project.task_ids:
+                    task.allowed_user_ids -= permission_removed
+
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
         if vals.get('partner_id') or vals.get('privacy_visibility'):
             for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
-                project.message_subscribe(project.partner_id.ids)
+                project.allowed_user_ids |= project.partner_id.user_ids
+
         return res
 
     def unlink(self):
@@ -505,7 +526,7 @@ class Task(models.Model):
     partner_email = fields.Char(related='partner_id.email', string='Customer Email')
     partner_phone = fields.Char(related='partner_id.phone')
     partner_city = fields.Char(related='partner_id.city', readonly=False)
-    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
+    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
@@ -522,6 +543,8 @@ class Task(models.Model):
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True,
         compute='_compute_email_from', store="True", readonly=False)
+    allowed_user_ids = fields.Many2many('res.users', string="Visible to", groups='project.group_project_manager', compute='_compute_allowed_user_ids', store=True, readonly=False)
+    project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
@@ -535,6 +558,14 @@ class Task(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive hierarchy of tasks.'))
 
+    @api.constrains('allowed_user_ids')
+    def _check_no_portal_allowed(self):
+        for task in self.filtered(lambda t: t.project_id.privacy_visibility != 'portal'):
+            portal_users = task.allowed_user_ids.filtered('share')
+            if portal_users:
+                user_names = ', '.join(portal_users[:10].mapped('name'))
+                raise ValidationError(_("The project visibility setting doesn't allow portal users to see the project's tasks. (%s)") % user_names)
+
     @api.depends('date_deadline')
     def _compute_date_deadline_formatted(self):
         for task in self:
@@ -545,6 +576,21 @@ class Task(models.Model):
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = [(6, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
+
+    @api.depends('project_id.allowed_user_ids', 'project_id.privacy_visibility')
+    def _compute_allowed_user_ids(self):
+        for task in self:
+            portal_users = task.allowed_user_ids.filtered('share')
+            internal_users = task.allowed_user_ids - portal_users
+            if task.project_id.privacy_visibility == 'followers':
+                task.allowed_user_ids |= task.project_id.allowed_internal_user_ids
+                task.allowed_user_ids -= portal_users
+            elif task.project_id.privacy_visibility == 'portal':
+                task.allowed_user_ids |= task.project_id.allowed_portal_user_ids
+            if task.project_id.privacy_visibility != 'portal':
+                task.allowed_user_ids -= portal_users
+            elif task.project_id.privacy_visibility != 'followers':
+                task.allowed_user_ids -= internal_users
 
     @api.depends('create_date', 'date_end', 'date_assign')
     def _compute_elapsed(self):
@@ -619,6 +665,11 @@ class Task(models.Model):
             self.company_id = self.project_id.company_id
         else:
             self.stage_id = False
+    
+    @api.onchange('company_id')
+    def _onchange_task_company(self):
+        if self.project_id.company_id != self.company_id:
+            self.project_id = False
 
     @api.constrains('parent_id', 'child_ids')
     def _check_subtask_level(self):
@@ -897,12 +948,25 @@ class Task(models.Model):
         if not children:
             return self.env['project.task']
         return children + children._get_all_subtasks()
+    def action_open_parent_task(self):
+        if self.sudo().parent_id and self.sudo().parent_id.company_id.id not in self.env.companies.ids:
+            raise UserError(_('The parent task belongs to a company you do not have access to.'))
+        return {
+            'name': _('Parent Task'),
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.parent_id.id,
+            'type': 'ir.actions.act_window',
+            'context': dict(self._context, create=False)
+        }
 
     def action_subtask(self):
+        if self.sudo().subtask_project_id and self.sudo().subtask_project_id.company_id.id not in self.env.companies.ids:
+            raise UserError(_('The subtasks belong to a company you do not have access to.'))
         action = self.env.ref('project.project_task_action_sub_task').read()[0]
 
         # display all subtasks of current task
-        action['domain'] = [('id', 'in', self._get_all_subtasks().ids)]
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
 
         # update context, with all default values as 'quick_create' does not contains all field in its view
         if self._context.get('default_project_id'):

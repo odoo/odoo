@@ -96,7 +96,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
 
         # -> this should have generated answer lines
-        self.assertAnswer(answers, 'skip', page_0)
+        self.assertAnswer(answers, 'in_progress', page_0)
         self.assertAnswerLines(page_0, answers, answer_data)
 
         # Customer is redirected on second page and begins filling it

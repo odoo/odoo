@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import OperationalError, Error
+import logging
 
-from odoo import api, fields, models, _
+from psycopg2 import Error, OperationalError
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-
-import logging
 
 _logger = logging.getLogger(__name__)
 
@@ -256,10 +256,6 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.location_id.usage == 'view':
                 raise ValidationError(_('You cannot take products from or deliver products to a location of type "view".'))
-
-    def _compute_name(self):
-        for quant in self:
-            quant.name = '%s: %s%s' % (quant.lot_id.name or quant.product_id.code or '', quant.quantity, quant.product_id.uom_id.name)
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -617,13 +613,15 @@ class StockQuant(models.Model):
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
         self._quant_tasks()
+        ctx = dict(self.env.context or {})
+        ctx.pop('group_by', None)
         action = {
             'name': _('Update Quantity'),
             'view_type': 'tree',
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
-            'context': self.env.context,
+            'context': ctx,
             'domain': domain or [],
             'help': """
                 <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>
@@ -739,21 +737,5 @@ class QuantPackage(models.Model):
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 
-    def view_content_package(self):
-        action = self.env['ir.actions.act_window'].for_xml_id('stock', 'quantsact')
-        action['domain'] = [('id', 'in', self._get_contained_quants().ids)]
-        return action
-
     def _get_contained_quants(self):
         return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
-
-    def _get_all_products_quantities(self):
-        '''This function computes the different product quantities for the given package
-        '''
-        # TDE CLEANME: probably to move somewhere else, like in pack op
-        res = {}
-        for quant in self._get_contained_quants():
-            if quant.product_id not in res:
-                res[quant.product_id] = 0
-            res[quant.product_id] += quant.quantity
-        return res

@@ -735,7 +735,7 @@ class payment_register(models.TransientModel):
         invoices = self.env['account.move'].browse(active_ids)
 
         # Check all invoices are open
-        if any(invoice.state != 'posted' or invoice.invoice_payment_state != 'not_paid' or not invoice.is_invoice() for invoice in invoices):
+        if any(invoice.state != 'posted' or invoice.payment_state not in ('not_paid', 'partial') or not invoice.is_invoice() for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
         # Check all invoices are inbound or all invoices are outbound
         outbound_list = [invoice.is_outbound() for invoice in invoices]

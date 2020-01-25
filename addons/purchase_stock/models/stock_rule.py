@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.addons.stock.models.stock_rule import ProcurementException
 
 
 class StockRule(models.Model):
@@ -40,6 +41,7 @@ class StockRule(models.Model):
     @api.model
     def _run_buy(self, procurements):
         procurements_by_po_domain = defaultdict(list)
+        errors = []
         for procurement, rule in procurements:
 
             # Get the schedule date in order to find a valid seller
@@ -53,7 +55,7 @@ class StockRule(models.Model):
 
             if not supplier:
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
-                raise UserError(msg)
+                errors.append((procurement, msg))
 
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
@@ -65,6 +67,9 @@ class StockRule(models.Model):
 
             domain = rule._make_po_get_domain(procurement.company_id, procurement.values, partner)
             procurements_by_po_domain[domain].append((procurement, rule))
+
+        if errors:
+            raise ProcurementException(errors)
 
         for domain, procurements_rules in procurements_by_po_domain.items():
             # Get the procurements for the current domain.
@@ -124,13 +129,42 @@ class StockRule(models.Model):
                         procurement.values, po))
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
+    def _get_lead_days(self, product):
+        """Add the company security lead time, days to purchase and the supplier
+        delay to the cumulative delay and cumulative description. The days to
+        purchase and company lead time are always displayed for onboarding
+        purpose in order to indicate that those options are available.
+        """
+        delay, delay_description = super()._get_lead_days(product)
+        buy_rule = self.filtered(lambda r: r.action == 'buy')
+        if not buy_rule or not product._prepare_sellers():
+            return delay, delay_description
+        buy_rule.ensure_one()
+        supplier_delay = product._prepare_sellers()[0].delay
+        if supplier_delay:
+            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
+        security_delay = buy_rule.picking_type_id.company_id.po_lead
+        delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
+        days_to_purchase = buy_rule.company_id.days_to_purchase
+        delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
+        return delay + supplier_delay + security_delay + days_to_purchase, delay_description
+
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
-        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel']
+        # Do not group procument from different orderpoint. 1. _quantity_in_progress
+        # directly depends from the orderpoint_id on the line. 2. The stock move
+        # generated from the order line has the orderpoint's location as
+        # destination location. In case of move_dest_ids those two points are not
+        # necessary anymore since those values are taken from destination moves.
+        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'],\
+            procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel'],\
+            (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
     def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel']
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'],\
+            procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel'],\
+            (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
     def _get_procurements_to_merge(self, procurements):
@@ -256,6 +290,12 @@ class StockRule(models.Model):
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
         )
+        if values.get('orderpoint_id'):
+            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay) + company_id.po_lead)
+            domain += (
+                ('date_order', '<=', datetime.combine(procurement_date, datetime.max.time())),
+                ('date_order', '>=', datetime.combine(procurement_date, datetime.min.time()))
+            )
         if group:
             domain += (('group_id', '=', group.id),)
         return domain

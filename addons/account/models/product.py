@@ -52,3 +52,10 @@ class ProductTemplate(models.Model):
         if not fiscal_pos:
             fiscal_pos = self.env['account.fiscal.position']
         return fiscal_pos.map_accounts(accounts)
+
+
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    def _get_product_accounts(self):
+        return self.product_tmpl_id._get_product_accounts()

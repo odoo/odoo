@@ -3,10 +3,11 @@
 
 import copy
 import logging
+import uuid
 from lxml import etree, html
 
 from odoo.exceptions import AccessError
-from odoo import api, fields, models
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
@@ -67,6 +68,7 @@ class IrUiView(models.Model):
         xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
         arch.append(xpath)
         structure = etree.Element(el.tag, attrib=el.attrib)
+        structure.text = el.text
         xpath.append(structure)
         for child in el.iterchildren(tag=etree.Element):
             structure.append(copy.deepcopy(child))
@@ -270,3 +272,81 @@ class IrUiView(models.Model):
         View = self.with_context(active_test=False, lang=None)
         views = View._views_get(key, bundles=bundles)
         return views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))
+
+    # --------------------------------------------------------------------------
+    # Snippet saving
+    # --------------------------------------------------------------------------
+
+    @api.model
+    def _get_default_snippet_thumbnail(self, snippet_class=None):
+        return '/web_editor/static/src/img/snippets_thumbs/s_custom_snippet.png'
+
+    @api.model
+    def _get_snippet_addition_view_key(self, template_key, key):
+        return '%s.%s' % (template_key, key)
+
+    @api.model
+    def _snippet_save_view_values_hook(self):
+        return {}
+
+    @api.model
+    def save_snippet(self, name, arch, template_key, snippet_class=None, thumbnail_url=None):
+        """
+        Saves a new snippet arch so that it appears with the given name when
+        using the given snippets template.
+
+        :param name: the name of the snippet to save
+        :param arch: the html structure of the snippet to save
+        :param template_key: the key of the view regrouping all snippets in
+            which the snippet to save is meant to appear
+        :param snippet_class: a className which is supposed to uniquely-identify
+            the snippet from which the snippet to save originates
+        :param thumbnail_url: the url of the thumbnail to use when displaying
+            the snippet to save (default: see '_get_default_snippet_thumbnail')
+        """
+        if not thumbnail_url:
+            thumbnail_url = self._get_default_snippet_thumbnail(snippet_class)
+
+        app_name = template_key.split('.')[0]
+        snippet_class = snippet_class or 's_custom_snippet'
+        key = '%s_%s' % (snippet_class, uuid.uuid4().hex)
+        snippet_key = '%s.%s' % (app_name, key)
+
+        # html to xml to add '/' at the end of self closing tags like br, ...
+        xml_arch = etree.tostring(html.fromstring(arch))
+        new_snippet_view_values = {
+            'name': name,
+            'key': snippet_key,
+            'type': 'qweb',
+            'arch': xml_arch,
+        }
+        new_snippet_view_values.update(self._snippet_save_view_values_hook())
+        self.create(new_snippet_view_values)
+
+        custom_section = self.search([('key', '=', template_key)])
+        snippet_addition_view_values = {
+            'name': name + ' Block',
+            'key': self._get_snippet_addition_view_key(template_key, key),
+            'inherit_id': custom_section.id,
+            'type': 'qweb',
+            'arch': """
+                <data inherit_id="%s">
+                    <xpath expr="//div[@id='snippet_custom']" position="attributes">
+                        <attribute name="class" remove="d-none" separator=" "/>
+                    </xpath>
+                    <xpath expr="//div[@id='snippet_custom_body']" position="inside">
+                        <t t-snippet="%s" t-thumbnail="%s"/>
+                    </xpath>
+                </data>
+            """ % (template_key, snippet_key, thumbnail_url),
+        }
+        snippet_addition_view_values.update(self._snippet_save_view_values_hook())
+        self.create(snippet_addition_view_values)
+
+    @api.model
+    def delete_snippet(self, view_id, template_key):
+        snippet_view = self.browse(view_id)
+        key = snippet_view.key.split('.')[1]
+        custom_key = self._get_snippet_addition_view_key(template_key, key)
+        snippet_addition_view = self.search([('key', '=', custom_key)])
+        (snippet_addition_view | snippet_view).unlink()

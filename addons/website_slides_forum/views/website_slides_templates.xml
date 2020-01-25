@@ -2,14 +2,14 @@
 <odoo><data>
     <template id='course_main' inherit_id="website_slides.course_main">
     <!-- Channel (training) main template: add link to forum -->
-    <xpath expr="//li[hasclass('o_wslides_course_header_nav_home_training')]" position="after">
+    <xpath expr="//li[hasclass('o_wslides_course_header_nav_review_training')]" position="after">
         <li class="nav-item" t-if="channel.forum_id">
             <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
                 t-att-class="'nav-link'" target="new">Forum</a>
         </li>
     </xpath>
     <!-- Channel (documentation) main template: add link to forum -->
-    <xpath expr="//li[hasclass('o_wslides_course_header_nav_home_documentation')]" position="after">
+    <xpath expr="//li[hasclass('o_wslides_course_header_nav_review_documentation')]" position="after">
             <li class="nav-item" t-if="channel.forum_id">
                 <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
                     t-att-class="'nav-link'" target="new">Forum</a>

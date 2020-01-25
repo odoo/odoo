@@ -18,12 +18,13 @@ var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var mvc = require('web.mvc');
+var { WidgetAdapterMixin } = require('web.OwlCompatibility');
 
 var session = require('web.session');
 
 var QWeb = core.qweb;
 
-var AbstractController = mvc.Controller.extend(ActionMixin, {
+var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, {
     custom_events: _.extend({}, ActionMixin.custom_events, {
         navigation_move: '_onNavigationMove',
         open_record: '_onOpenRecord',
@@ -106,6 +107,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this.controlPanelElements.$switch_buttons.off();
         }
         this._super.apply(this, arguments);
+        WidgetAdapterMixin.destroy.call(this, ...arguments);
     },
     /**
      * Called each time the controller is attached into the DOM.
@@ -118,6 +120,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this._searchPanel.on_attach_callback();
         }
         this.renderer.on_attach_callback();
+        WidgetAdapterMixin.on_attach_callback.call(this, ...arguments);
     },
     /**
      * Called each time the controller is detached from the DOM.
@@ -127,6 +130,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this._controlPanel.on_detach_callback();
         }
         this.renderer.on_detach_callback();
+        WidgetAdapterMixin.on_detach_callback.call(this, ...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -296,16 +300,17 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             });
         });
     },
-
     /**
-     * Update the state of the renderer.
-     * This method is required to be overridden in OWL components through the controller
-     * adapter
+     * Update the state of the renderer (handle both Widget and Component
+     * renderers).
      *
      * @param {Object} state the model state
      * @param {Object} params will be given to the model and to the renderer
      */
-    updateRendererState: function(state, params) {
+    updateRendererState: function (state, params) {
+        if (this.renderer instanceof owl.Component) {
+            return this.renderer.update(state);
+        }
         return this.renderer.updateState(state, params);
     },
 
@@ -462,6 +467,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @private
      */
     _startRenderer: function () {
+        if (this.renderer instanceof owl.Component) {
+            return this.renderer.mount(this.$('.o_content')[0]);
+        }
         return this.renderer.appendTo(this.$('.o_content'));
     },
     /**

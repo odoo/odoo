@@ -712,7 +712,7 @@
                                         <t t-esc='widget.inputbuffer' />
                                     </div>
                                 </t>
-                                <div class='col-name' > <t t-esc='line.name' /> </div>
+                                <div class='col-name' > <t t-esc='line.payment_method.name' /> </div>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'reversed', 'reversing'].includes(line.payment_status)">
                                     <div/>
                                 </t>
@@ -729,7 +729,7 @@
                         <t t-if='!line.selected'>
                             <div class='paymentline' t-att-data-cid='line.cid'>
                                 <div class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </div>
-                                <div class='col-name'> <t t-esc='line.name' /> </div>
+                                <div class='col-name'> <t t-esc='line.payment_method.name' /> </div>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'reversed', 'reversing'].includes(line.payment_status)">
                                     <div/>
                                 </t>
@@ -1473,7 +1473,7 @@
                         <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp;
                             line.get_unit_display_price() != line.get_lst_price()">
                             <s>
-                                <t t-esc="widget.format_currency(line.get_lst_price(),'Product Price')" />
+                                <t t-esc="widget.format_currency(line.get_fixed_lst_price(),'Product Price')" />
                             </s>
                             <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
                         </t>
@@ -1578,7 +1578,7 @@
     <t t-name="Paymentline">
         <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
             <div class='paymentline-name'>
-                <t t-esc="line.name"/>
+                <t t-esc="line.payment_method.name"/>
             </div>
             <input class='paymentline-input'
                 t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
@@ -1593,7 +1593,7 @@
     <t t-name="PaymentlineOld">
         <tr t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
             <td class="paymentline-type">
-                <t t-esc="line.name"/>
+                <t t-esc="line.payment_method.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
                 <input type="number" step="0.01" t-att-value="line.get_amount_str()" />

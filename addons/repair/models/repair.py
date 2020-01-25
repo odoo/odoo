@@ -209,12 +209,13 @@ class Repair(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
         available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        repair_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_id)
         for available_qty in [available_qty_owner, available_qty_noown]:
-            if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
+            if float_compare(available_qty, repair_qty, precision_digits=precision) >= 0:
                 return self.action_repair_confirm()
         else:
             return {
-                'name': _('Insufficient Quantity'),
+                'name': self.product_id.display_name + _(': Insufficient Quantity To Repair'),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.repair',
                 'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,
@@ -222,8 +223,10 @@ class Repair(models.Model):
                 'context': {
                     'default_product_id': self.product_id.id,
                     'default_location_id': self.location_id.id,
-                    'default_repair_id': self.id
-                    },
+                    'default_repair_id': self.id,
+                    'default_quantity': repair_qty,
+                    'default_product_uom_name': self.product_id.uom_name
+                },
                 'target': 'new'
             }
 
@@ -506,21 +509,31 @@ class Repair(models.Model):
                     'partner_id': repair.address_id.id,
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
-                    'move_line_ids': [(0, 0, {'product_id': operation.product_id.id,
-                                           'lot_id': operation.lot_id.id,
-                                           'product_uom_qty': 0,  # bypass reservation here
-                                           'product_uom_id': operation.product_uom.id,
-                                           'qty_done': operation.product_uom_qty,
-                                           'package_id': False,
-                                           'result_package_id': False,
-                                           'owner_id': owner_id,
-                                           'location_id': operation.location_id.id, #TODO: owner stuff
-                                           'company_id': repair.company_id.id,
-                                           'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
                     'origin': repair.name,
                     'company_id': repair.company_id.id,
                 })
+
+                # Best effort to reserve the product in a (sub)-location where it is available
+                product_qty = move.product_uom._compute_quantity(
+                    operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+                available_quantity = self.env['stock.quant']._get_available_quantity(
+                    move.product_id,
+                    move.location_id,
+                    lot_id=operation.lot_id.id,
+                    strict=False,
+                )
+                move._update_reserved_quantity(
+                    product_qty,
+                    available_quantity,
+                    move.location_id,
+                    lot_id=operation.lot_id.id,
+                    strict=False,
+                )
+                # Then, set the quantity done. If the required quantity was not reserved, negative
+                # quant is created in operation.location_id.
+                move._set_quantity_done(operation.product_uom_qty)
+
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
             move = Move.create({

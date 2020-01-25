@@ -13,6 +13,10 @@ This module provides facility to the user to install mrp and purchase modules at
 It is basically used when we want to keep track of production orders generated
 from purchase order.
     """,
+    'data': [
+        'views/purchase_order_views.xml',
+        'views/mrp_production_views.xml'
+    ],
     'depends': ['mrp', 'purchase_stock'],
     'installable': True,
     'auto_install': True,

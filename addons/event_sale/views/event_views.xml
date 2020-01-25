@@ -94,7 +94,8 @@
                             <tree string="Tickets" editable="bottom">
                                 <field name="name"/>
                                 <field name="product_id" context="{'default_event_ok':1}"/>
-                                <field name="deadline"/>
+                                <field name="start_sale_date"/>
+                                <field name="end_sale_date"/>
                                 <field name="price"/>
                                 <field name="seats_max"/>
                                 <field name="seats_reserved" readonly="1"/>
@@ -129,7 +130,7 @@
                                     <group>
                                         <field name="name"/>
                                         <field name="product_id" context="{'default_event_ok':1}"/>
-                                        <field name="deadline"/>
+                                        <field name="end_sale_date"/>
                                         <field name="price"/>
                                     </group><group>
                                         <field name="seats_max"/>
@@ -141,6 +142,18 @@
                         </field>
                     </page>
                 </page>
+            </field>
+        </record>
+
+        <record id="event_view_kanban" model="ir.ui.view">
+            <field name="name">event.kanban.inherit</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_event_duration_str')]" position="after">
+                    <field name="currency_id" invisible="1"/>
+                    <div attrs="{'invisible': [('sale_total_price', '&lt;=', 0)]}">Sales <field name="sale_total_price" widget="monetary"/></div>
+                </xpath>
             </field>
         </record>
 
@@ -158,7 +171,7 @@
                             <field name="event_id"/>
                             <field name="seats_availability"/>
                             <field name="seats_available"/>
-                            <field name="deadline"/>
+                            <field name="end_sale_date"/>
                             <field name="price"/>
                             <field name="price_reduce" groups="base.group_no_one"/>
                         </group>

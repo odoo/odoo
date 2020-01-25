@@ -12,6 +12,7 @@
         <field name="questions_layout">page_per_section</field>
         <field name="description" type="html">
 <p>This small quiz will test your knowledge about our Company. Be prepared !</p></field>
+        <field name="background_image" type="base64" file="survey/static/src/img/survey_background.jpg"/>
     </record>
 
     <!-- Page 1: general informations -->
@@ -89,7 +90,6 @@
         <field name="title">Which category does a tomato belong to</field>
         <field name="description" type="html"><span>"Red" is not a category, I know what you are trying to do ;)</span></field>
         <field name="question_type">simple_choice</field>
-        <field name="display_mode">dropdown</field>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="True"/>
         <field name="constr_mandatory" eval="True"/>
@@ -118,7 +118,6 @@
         <field name="sequence">22</field>
         <field name="title">Which of the following would you use to pollinate</field>
         <field name="question_type">simple_choice</field>
-        <field name="display_mode">columns</field>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
         <field name="constr_mandatory" eval="True"/>
@@ -280,5 +279,46 @@
             <field name="question_id" ref="survey_demo_quiz_p3_q6"/>
             <field name="sequence">4</field>
             <field name="value">Winter</field>
+        </record>
+
+    <!-- Page 4: Feedback - non scored question -->
+    <record id="survey_demo_quiz_p4" model="survey.question">
+        <field name="title">Your feeling</field>
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">26</field>
+        <field name="question_type" eval="False"/>
+        <field name="is_page" eval="True"/>
+        <field name="description" type="html">
+            <p>We may be interested by your input.</p></field>
+    </record>
+    <record id="survey_demo_quiz_p4_q1" model="survey.question">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">27</field>
+        <field name="title">What do you think about this survey ?</field>
+        <field name="description" type="html"><span>If you don't like us, please try to be as objective as possible.</span></field>
+        <field name="question_type">simple_choice</field>
+        <field name="comments_allowed" eval="True"/>
+        <field name="comment_count_as_answer" eval="True"/>
+        <field name="constr_mandatory" eval="False"/>
+    </record>
+        <record id="survey_demo_quiz_p4_q1_sug1" model="survey.question.answer">
+            <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
+            <field name="sequence">1</field>
+            <field name="value">Good</field>
+        </record>
+        <record id="survey_demo_quiz_p4_q1_sug2" model="survey.question.answer">
+            <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
+            <field name="sequence">2</field>
+            <field name="value">Not Good, Not Bad</field>
+        </record>
+        <record id="survey_demo_quiz_p4_q1_sug3" model="survey.question.answer">
+            <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
+            <field name="sequence">3</field>
+            <field name="value">Iznogoud</field>
+        </record>
+        <record id="survey_demo_quiz_p4_q1_sug4" model="survey.question.answer">
+            <field name="question_id" ref="survey_demo_quiz_p4_q1"/>
+            <field name="sequence">4</field>
+            <field name="value">I have no idea, I'm a dog!</field>
         </record>
 </data></odoo>

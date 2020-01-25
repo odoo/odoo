@@ -3,9 +3,9 @@
 
 from collections import Counter
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_round, float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 
 class StockMoveLine(models.Model):
@@ -81,12 +81,6 @@ class StockMoveLine(models.Model):
         for line in self:
             line.product_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
 
-    @api.constrains('lot_id', 'product_id')
-    def _check_lot_product(self):
-        for line in self:
-            if line.lot_id and line.product_id != line.lot_id.sudo().product_id:
-                raise ValidationError(_('This lot %s is incompatible with this product %s' % (line.lot_id.name, line.product_id.display_name)))
-
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
         in the default product UoM. This code has been added to raise an error if a write is made given a value
@@ -94,14 +88,25 @@ class StockMoveLine(models.Model):
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
+    @api.constrains('lot_id', 'product_id')
+    def _check_lot_product(self):
+        for line in self:
+            if line.lot_id and line.product_id != line.lot_id.sudo().product_id:
+                raise ValidationError(_('This lot %s is incompatible with this product %s' % (line.lot_id.name, line.product_id.display_name)))
+
     @api.constrains('product_uom_qty')
-    def check_reserved_done_quantity(self):
+    def _check_reserved_done_quantity(self):
         for move_line in self:
             if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
+    @api.constrains('qty_done')
+    def _check_positive_qty_done(self):
+        if any([ml.qty_done < 0 for ml in self]):
+            raise ValidationError(_('You can not enter negative quantities.'))
+
     @api.onchange('product_id', 'product_uom_id')
-    def onchange_product_id(self):
+    def _onchange_product_id(self):
         if self.product_id:
             if not self.id and self.user_has_groups('stock.group_stock_multi_locations'):
                 self.location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id) or self.location_dest_id
@@ -115,7 +120,7 @@ class StockMoveLine(models.Model):
                     self.product_uom_id = self.product_id.uom_id.id
 
     @api.onchange('lot_name', 'lot_id')
-    def onchange_serial_number(self):
+    def _onchange_serial_number(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
         help him. This includes:
             - automatically switch `qty_done` to 1.0
@@ -153,19 +158,6 @@ class StockMoveLine(models.Model):
                 message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
-
-    @api.constrains('qty_done')
-    def _check_positive_qty_done(self):
-        if any([ml.qty_done < 0 for ml in self]):
-            raise ValidationError(_('You can not enter negative quantities.'))
-
-    def _get_similar_move_lines(self):
-        self.ensure_one()
-        lines = self.env['stock.move.line']
-        picking_id = self.move_id.picking_id if self.move_id else self.picking_id
-        if picking_id:
-            lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
-        return lines
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -231,6 +223,9 @@ class StockMoveLine(models.Model):
         """
         if self.env.context.get('bypass_reservation_update'):
             return super(StockMoveLine, self).write(vals)
+
+        if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
+            raise UserError(_("Changing the product is only allowed in 'Draft' state."))
 
         Quant = self.env['stock.quant']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -468,6 +463,14 @@ class StockMoveLine(models.Model):
             'product_uom_qty': 0.00,
             'date': fields.Datetime.now(),
         })
+
+    def _get_similar_move_lines(self):
+        self.ensure_one()
+        lines = self.env['stock.move.line']
+        picking_id = self.move_id.picking_id if self.move_id else self.picking_id
+        if picking_id:
+            lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
+        return lines
 
     def _create_and_assign_production_lot(self):
         """ Creates and assign a new production lot of the move line."""

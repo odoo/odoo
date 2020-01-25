@@ -71,15 +71,25 @@ class ProjectTask(models.Model):
     # Actions
     # ---------------------------------------------------
 
+    def _get_action_view_so_ids(self):
+        return self.sale_order_id.ids
+
     def action_view_so(self):
         self.ensure_one()
-        return {
+        so_ids = self._get_action_view_so_ids()
+        action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "views": [[False, "form"]],
-            "res_id": self.sale_order_id.id,
+            "name": "Sales Order",
+            "views": [[False, "tree"], [False, "form"]],
             "context": {"create": False, "show_sale": True},
+            "domain": [["id", "in", so_ids]],
         }
+        if len(so_ids) == 1:
+            action_window["views"] = [[False, "form"]]
+            action_window["res_id"] = so_ids[0]
+
+        return action_window
 
     def rating_get_partner_id(self):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id

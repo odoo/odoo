@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo import fields
 from .common import PurchaseTestCommon
+from odoo.tests.common import Form
 
 
 class TestPurchaseLeadTime(PurchaseTestCommon):
@@ -236,6 +238,59 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         po_line = self.env['purchase.order.line'].search([
             ('product_id', '=', product_1.id),
         ])
-        self.assertEqual(len(po_line), 2, 'the purchase order lines are not merged')
+        self.assertEqual(len(po_line), 2, 'the purchase order lines are merged')
         self.assertEqual(po_line[0].product_qty, 10, 'the purchase order line has a wrong quantity')
         self.assertEqual(po_line[1].product_qty, 5, 'the purchase order line has a wrong quantity')
+
+    def test_reordering_days_to_purchase(self):
+        self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
+        self.mock_date = self.patcher.start()
+
+        vendor = self.env['res.partner'].create({
+            'name': 'Colruyt'
+        })
+
+        self.env.company.days_to_purchase = 2.0
+
+        product = self.env['product.product'].create({
+            'name': 'Chicory',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': vendor.id, 'delay': 1.0})]
+        })
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint = orderpoint_form.save()
+
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        delivery_moves = self.env['stock.move']
+        for i in range(0, 6):
+            delivery_moves |= self.env['stock.move'].create({
+                'name': 'Delivery',
+                'date_expected': datetime.today() + timedelta(days=i),
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 5.0,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })
+        delivery_moves._action_confirm()
+        self.env['procurement.group'].run_scheduler()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), fields.Date.today() + timedelta(days=2))
+        self.assertEqual(len(po_line), 1)
+        self.assertEqual(po_line.product_uom_qty, 20.0)
+        self.assertEqual(len(po_line.order_id), 1)
+        orderpoint_form = Form(orderpoint)
+        orderpoint_form.save()
+
+        self.mock_date.today.return_value = fields.Date.today() + timedelta(days=1)
+        self.env.cache.invalidate()
+        self.env['procurement.group'].run_scheduler()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 2)
+        self.assertEqual(len(po_line.order_id), 2)
+        new_order = po_line.order_id.sorted('date_order')[-1]
+        self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
+        self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
+        self.patcher.stop()

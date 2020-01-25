@@ -151,9 +151,8 @@ class ResPartnerBank(models.Model):
         qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 256, 256)
         return qr_code_url
 
-    @api.model
     def validate_swiss_code_arguments(self, currency, debitor):
-
+        currency = currency or self.company_id.currency_id
         t_street_comp = '%s %s' % (self.company_id.street if (self.company_id.street != False) else '', self.company_id.street2 if (self.company_id.street2 != False) else '')
         t_street_deb = '%s %s' % (debitor.street if (debitor.street != False) else '', debitor.street2 if (debitor.street2 != False) else '')
         number = self.find_number(t_street_comp)
@@ -164,7 +163,7 @@ class ResPartnerBank(models.Model):
             t_street_deb = False
 
         if(currency.name == 'EUR'):
-            return (self.l10n_ch_postal_subscription_eur and
+            return (self.l10n_ch_isr_subscription_eur and
                     self.company_id.zip and
                     self.company_id.city and
                     self.company_id.country_id.code and
@@ -175,7 +174,7 @@ class ResPartnerBank(models.Model):
                     debitor.country_id.code and
                     (number != False) and (number_deb != False))
         elif(currency.name == 'CHF'):
-            return (self.l10n_ch_postal_subscription_chf and
+            return (self.l10n_ch_isr_subscription_chf and
                     self.company_id.zip and
                     self.company_id.city and
                     self.company_id.country_id.code and

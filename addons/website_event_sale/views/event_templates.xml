@@ -9,7 +9,7 @@
 
 <template id="index" inherit_id="website_event.events_list" name="Event's Ticket">
     <xpath expr="//div[@t-foreach='event_ids']//footer" position="inside">
-        <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
+        <t t-if="event.event_registrations_open and event.event_ticket_ids">
             <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="text-danger">Sold Out</span>
             <span t-if="event.seats_availability == 'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="text-muted">
                 <em>Only <t t-esc="event.seats_available"/> Remaining</em>
@@ -20,10 +20,10 @@
 
 <template id="registration_template" inherit_id="website_event.registration_template">
     <xpath expr="//t[@t-id='tickets']" position="replace">
-        <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda t: not t.is_expired)"/>
+        <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
         <t t-if="len(event.event_ticket_ids) &gt; 1"> <!-- If some tickets expired and there is only one type left, we keep the same layout -->
             <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
-                <span t-if="not tickets_available" class="text-danger">
+                <span t-if="not event.event_registrations_open" class="text-danger">
                     <i class="fa fa-ban mr-2"/>Sold Out
                 </span>
                 <div class="ml-auto pr-3">
@@ -40,7 +40,8 @@
                 <div t-foreach="tickets" t-as="ticket" class="row mx-0 bg-light border-bottom">
                     <div class="col-md-8 py-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
-                        <small t-if="ticket.deadline" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="ticket.deadline"/></small>
+                        <small t-if="ticket.end_sale_date and ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="ticket.end_sale_date"/></small>
+                        <small t-if="ticket.start_sale_date and not ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales start on <span itemprop="priceValidUntil" t-field="ticket.start_sale_date"/></small>
                     </div>
                     <div class="col-md-4 py-3 pl-md-0">
                         <div class="d-flex align-items-center">
@@ -54,14 +55,16 @@
                                 <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
                             </t>
                             <span t-if="not ticket.price and not editable" class="font-weight-bold text-uppercase">Free</span>
-                            <select t-attf-name="nb_register-#{ticket.id}" class="w-auto ml-auto custom-select">
-                                <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
-                                <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
-                                <t t-foreach="range(0, seats_max)" t-as="nb">
-                                    <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
-                                </t>
-                            </select>
+                            <t t-if="not ticket.is_expired and ticket.sale_available">
+                                <select t-attf-name="nb_register-#{ticket.id}" class="w-auto ml-auto custom-select">
+                                    <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
+                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                    <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
+                                    <t t-foreach="range(0, seats_max)" t-as="nb">
+                                        <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
+                                    </t>
+                                </select>
+                            </t>
                         </div>
                     </div>
                     <div t-if="ticket.product_id.description_sale" class="col-12">
@@ -70,7 +73,7 @@
                 </div>
                 <div class="row no-gutters">
                     <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not tickets_available or None" t-attf-id="#{event.id}">Register</button>
+                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not event.event_registrations_open or None" t-attf-id="#{event.id}">Register</button>
                     </div>
                 </div>
             </div>
@@ -94,9 +97,9 @@
                     <span t-field="tickets.product_id.description_sale"/>
                 </t>
                 <t t-set="registration_end">
-                    <t t-if="tickets.deadline">Sales end on <span itemprop="priceValidUntil" t-field="tickets.deadline"/></t>
+                    <t t-if="tickets.start_sale_date">Sales end on <span itemprop="priceValidUntil" t-field="tickets.end_sale_date"/></t>
                 </t>
-                <t t-set="quantity">
+                <t t-if="not tickets.is_expired and tickets.sale_available" t-set="quantity">
                     <select t-attf-name="nb_register-#{tickets.id}" class="w-auto custom-select">
                         <t t-set="seats_max_ticket" t-value="(tickets.seats_availability == 'unlimited' or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
                         <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
@@ -110,7 +113,12 @@
         </t>
     </xpath>
     <xpath expr="//form[@id='registration_form']" position="attributes">
-        <attribute name="t-if">event.event_ticket_ids and not all([ticket.is_expired for ticket in event.event_ticket_ids])</attribute>
+        <attribute name="t-if">event.event_registrations_open and not all([ticket.is_expired for ticket in event.event_ticket_ids])</attribute>
+    </xpath>
+    <xpath expr="//form[@id='registration_form']" position="before">
+        <div t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today() and not event.event_registrations_open" class="alert alert-info mb-5" role="status">
+            <em >Ticket  Sales starting on <t t-esc="event.start_sale_date"/></em>
+        </div>
     </xpath>
 </template>
 

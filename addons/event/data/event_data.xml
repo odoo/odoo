@@ -27,5 +27,36 @@
             <field name="auto_confirm" eval="True"/>
             <field name="use_mail_schedule" eval="False"/>
         </record>
+
+        <!-- Event stages -->
+        <record id="event_stage_new" model="event.stage">
+            <field name="name">New</field>
+            <field name="description">Freshly created</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="event_stage_booked" model="event.stage">
+            <field name="name">Booked</field>
+            <field name="description">The place has been reserved</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="event_stage_announced" model="event.stage">
+            <field name="name">Announced</field>
+            <field name="description">The event has been publicly announced</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="event_stage_done" model="event.stage">
+            <field name="name">Ended</field>
+            <field name="description">Fully ended</field>
+            <field name="sequence">5</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="event_stage_cancelled" model="event.stage">
+            <field name="name">Cancelled</field>
+            <field name="description">The event has been cancelled</field>
+            <field name="sequence">6</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
     </data>
 </odoo>

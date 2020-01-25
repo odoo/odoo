@@ -26,6 +26,22 @@
             </field>
         </record>
 
+        <record id="res_partner_view_kanban_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.kanban.inherit.mail</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="activity_state"/>
+                </field>
+                <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
+                    <div class="mt-auto">
+                        <field name="activity_ids" widget="kanban_activity"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
        <record id="res_partner_view_search_inherit_mail" model="ir.ui.view">
             <field name="name">res.partner.view.search.inherit.mail</field>
             <field name="model">res.partner</field>

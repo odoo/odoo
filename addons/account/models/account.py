@@ -448,7 +448,7 @@ class AccountAccount(models.Model):
         # This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
-            record.root_id = record.code and (ord(record.code[0]) * 1000 + ord(record.code[1])) or False
+            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or ' ')) if record.code else False
 
     @api.depends('code')
     def _compute_account_group(self):
@@ -593,7 +593,7 @@ class AccountAccount(models.Model):
         if default.get('code', False):
             return super(AccountAccount, self).copy(default)
         try:
-            default['code'] = (str(int(self.code) + 10) or '')
+            default['code'] = (str(int(self.code) + 10) or '').zfill(len(self.code))
             default.setdefault('name', _("%s (copy)") % (self.name or ''))
             while self.env['account.account'].search([('code', '=', default['code']),
                                                       ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):

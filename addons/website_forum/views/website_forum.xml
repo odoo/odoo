@@ -54,8 +54,8 @@
             <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
             <div class="container">
                 <div class="row s_nb_column_fixed">
-                    <div class="col-lg-12 s_title" data-name="Title">
-                        <h1 class="s_title_thin o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
+                    <div class="col-lg-12">
+                        <h1 class="o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
                     </div>
                 </div>
                 <div t-if="editable or (is_public_user and not forum_welcome_message)" t-att-class="'css_non_editable_mode_hidden' if editable else 'forum_intro'">
@@ -73,8 +73,8 @@
                 <div class="col o_wprofile_email_validation_container mb16">
                     <t t-call="website_profile.email_validation_banner">
                         <t t-set="redirect_url" t-value="'/forum/%s' % forum.id"/>
-                        <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the forum.'"/>
-                        <t t-set="additional_validated_email_message" t-value="' You may now participate to our forums.'"/>
+                        <t t-set="send_validation_email_message">Click here to send a verification email allowing you to participate to the forum.</t>
+                        <t t-set="additional_validated_email_message"> You may now participate to our forums.</t>
                     </t>
                     <div class="row">
                         <div class="col">
@@ -210,7 +210,7 @@
             <form id="o_wforum_search" class="form-inline collapse w-100 w-md-auto pt-2 pt-md-0 d-md-flex"
                   role="search" t-attf-action="#{url_for('/forum/')}#{slug(forum)}#{tag and ('/tag/%s/questions' % slug(tag))}" method="get">
                 <t t-call="website.website_search_box">
-                    <t t-set="_classes">w-100</t>
+                    <t t-set="_classes" t-valuef="w-100"/>
                 </t>
 
                 <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
@@ -470,10 +470,8 @@
                 <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
                 <div class="container">
                     <div class="row s_nb_column_fixed">
-                        <div class="col-lg-12 s_title" data-name="Title">
-                            <h1 class="s_title_thin o_default_snippet_text text-center">Our forums</h1>
-                        </div>
-                        <div class="col-lg-12 s_text" data-name="Text">
+                        <div class="col-lg-12">
+                            <h1 class="o_default_snippet_text text-center">Our forums</h1>
                             <p class="lead o_default_snippet_text mb-0" style="text-align: center;">
                                 This community is for professional and enthusiast users, partners and programmers.
                             </p>

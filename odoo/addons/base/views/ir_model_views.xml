@@ -543,10 +543,28 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_model_constraint_search" model="ir.ui.view">
+            <field name="model">ir.model.constraint</field>
+            <field name="arch" type="xml">
+                <search string="Constraints">
+                    <field name="model"/>
+                    <field name="name"/>
+                    <field name="message"/>
+                    <group expand="1" string="Group By">
+                        <filter name="module" string="Module" context="{'group_by' : 'module'}"/>
+                        <filter name="model" string="Model" context="{'group_by': 'model'}"/>
+                        <filter name="type" string="Constraint type" context="{'group_by' : 'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_model_constraint" model="ir.actions.act_window">
             <field name="name">Model Constraints</field>
             <field name="res_model">ir.model.constraint</field>
             <field name="view_id" ref="view_model_constraint_list"/>
+            <field name="search_view_id" ref="view_model_constraint_search"/>
         </record>
         <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
                   groups="base.group_no_one"/>

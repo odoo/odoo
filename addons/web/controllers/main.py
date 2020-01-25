@@ -863,11 +863,6 @@ class Home(http.Controller):
         ])
         return response
 
-    @http.route('/web/dbredirect', type='http', auth="none")
-    def web_db_redirect(self, redirect='/', **kw):
-        ensure_db()
-        return werkzeug.utils.redirect(redirect, 303)
-
     def _login_redirect(self, uid, redirect=None):
         return redirect if redirect else '/web'
 
@@ -1365,8 +1360,10 @@ class View(http.Controller):
 
 class Binary(http.Controller):
 
-    def placeholder(self, image='placeholder.png'):
-        with tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb') as fd:
+    @staticmethod
+    def placeholder(image='placeholder.png'):
+        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'src', 'img', image]
+        with tools.file_open(get_resource_path(*image_path), 'rb') as fd:
             return fd.read()
 
     @http.route(['/web/content',
@@ -1436,16 +1433,35 @@ class Binary(http.Controller):
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename_field='name', unique=None, filename=None, mimetype=None,
                        download=None, width=0, height=0, crop=False, quality=0, access_token=None,
-                       placeholder='placeholder.png', **kwargs):
+                       placeholder=None, **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
+        return Binary._content_image_get_response(
+            status, headers, image_base64, model=model, id=id, field=field, download=download,
+            width=width, height=height, crop=crop, quality=quality,
+            placeholder=placeholder)
+
+    @staticmethod
+    def _content_image_get_response(
+            status, headers, image_base64, model='ir.attachment', id=None,
+            field='datas', download=None, width=0, height=0, crop=False,
+            quality=0, placeholder='placeholder.png'):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
-            image_base64 = base64.b64encode(self.placeholder(image=placeholder))
+            if placeholder is None and model in request.env:
+                # Try to browse the record in case a specific placeholder
+                # is supposed to be used. (eg: Unassigned users on a task)
+                record = request.env[model].browse(int(id)) if id else request.env[model]
+                placeholder_filename = record._get_placeholder_filename(field=field)
+                placeholder_content = Binary.placeholder(image=placeholder_filename)
+            else:
+                placeholder_content = Binary.placeholder()
+            image_base64 = base64.b64encode(placeholder_content)
+
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
@@ -1469,7 +1485,7 @@ class Binary(http.Controller):
 
     @http.route('/web/binary/upload', type='http', auth="user")
     @serialize_exception
-    def upload(self, callback, ufile):
+    def upload(self, ufile, callback=None):
         # TODO: might be useful to have a configuration flag for max-length file uploads
         out = """<script language="javascript" type="text/javascript">
                     var win = window.top.window;
@@ -1481,11 +1497,11 @@ class Binary(http.Controller):
                     ufile.content_type, base64.b64encode(data)]
         except Exception as e:
             args = [False, str(e)]
-        return out % (json.dumps(callback), json.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
-    def upload_attachment(self, callback, model, id, ufile):
+    def upload_attachment(self, model, id, ufile, callback=None):
         files = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
         out = """<script language="javascript" type="text/javascript">
@@ -1519,7 +1535,7 @@ class Binary(http.Controller):
                     'id': attachment.id,
                     'size': attachment.file_size
                 })
-        return out % (json.dumps(callback), json.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route([
         '/web/binary/company_logo',

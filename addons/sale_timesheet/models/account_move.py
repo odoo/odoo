@@ -74,6 +74,6 @@ class AccountMoveLine(models.Model):
         """
         return [
             ('so_line', 'in', sale_line_delivery.ids),
-            ('timesheet_invoice_id', '=', False),
-            ('project_id', '!=', False)
+            ('project_id', '!=', False),
+            '|', ('timesheet_invoice_id', '=', False), ('timesheet_invoice_id.state', '=', 'cancel')
         ]

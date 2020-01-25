@@ -5,9 +5,9 @@
     <xpath expr="//div[@id='snippets_menu']" position="inside">
         <button type="button" disabled="disabled">Select a template</button>
     </xpath>
-    <xpath expr="//div[@id='o_scroll']" position="replace">
-        <t t-set="company_id" t-value="res_company"/>
-        <div id="o_scroll">
+    <xpath expr="//t[@id='default_snippets']" position="replace">
+        <t id="default_snippets">
+            <t t-set="company_id" t-value="res_company"/>
             <div id="email_designer_themes">
                 <div data-name="basic"
                      data-nowrap="1"
@@ -70,7 +70,7 @@
                     <t t-snippet="mass_mailing.s_mail_block_footer_social_left" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social_left.png"/>
                 </div>
             </div>
-        </div>
+        </t>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <t t-call="mass_mailing.snippet_options"/>
@@ -797,11 +797,20 @@
         data-exclude=".o_mail_no_options"
         data-drop-near=".col_mv, td, th"/>
 
+    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
     <div data-js="content"
-        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body"
+        t-att-data-selector="mailing_content_selector"
         data-exclude=".o_mail_no_options"
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
         data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+
+    <div data-js="SnippetSave"
+        t-att-data-selector="mailing_content_selector">
+        <we-button class="fa fa-fw fa-save"
+                   title="Save the block to use it elsewhere"
+                   data-save-snippet=""
+                   data-no-preview="true"/>
+    </div>
 
     <div data-js="sizing_y"
         data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"

@@ -61,6 +61,7 @@ class PosOrder(models.Model):
             'payment_method_id': ui_paymentline['payment_method_id'],
             'card_type': ui_paymentline.get('card_type'),
             'transaction_id': ui_paymentline.get('transaction_id'),
+            'payment_status': ui_paymentline.get('payment_status'),
             'pos_order_id': order.id,
         }
 
@@ -188,7 +189,7 @@ class PosOrder(models.Model):
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
-            'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
 
@@ -226,7 +227,8 @@ class PosOrder(models.Model):
         readonly=True)
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True,
+        help='The rate of the currency to the currency of rate applicable at the date of the order')
 
     invoice_group = fields.Boolean(related="config_id.module_account", readonly=False)
     state = fields.Selection(
@@ -626,22 +628,9 @@ class PosOrderLine(models.Model):
     def create(self, values):
         if values.get('order_id') and not values.get('name'):
             # set name based on the sequence specified on the config
-            config_id = self.order_id.browse(values['order_id']).session_id.config_id.id
-            # HACK: sequence created in the same transaction as the config
-            # cf TODO master is pos.config create
-            # remove me saas-15
-            self.env.cr.execute("""
-                SELECT s.id
-                FROM ir_sequence s
-                JOIN pos_config c
-                  ON s.create_date=c.create_date
-                WHERE c.id = %s
-                  AND s.code = 'pos.order.line'
-                LIMIT 1
-                """, (config_id,))
-            sequence = self.env.cr.fetchone()
-            if sequence:
-                values['name'] = self.env['ir.sequence'].browse(sequence[0])._next()
+            config = self.env['pos.order'].browse(values['order_id']).session_id.config_id
+            if config.sequence_line_id:
+                values['name'] = config.sequence_line_id._next()
         if not values.get('name'):
             # fallback on any pos.order sequence
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')

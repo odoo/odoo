@@ -837,7 +837,7 @@
     };
     // note that the space after typeof is relevant. It makes sure that the formatted
     // expression has a space after typeof
-    const OPERATORS = ".,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;".split(",");
+    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;".split(",");
     let tokenizeString = function (expr) {
         let s = expr[0];
         let start = s;
@@ -1052,10 +1052,11 @@
             this.inPreTag = false;
             this.allowMultipleRoots = false;
             this.hasParentWidget = false;
-            this.currentKey = "";
+            this.hasKey0 = false;
+            this.keyStack = [];
             this.rootContext = this;
             this.templateName = name || "noname";
-            this.addLine("var h = this.h;");
+            this.addLine("let h = this.h;");
         }
         generateID() {
             return CompilationContext.nextID++;
@@ -1070,21 +1071,15 @@
          */
         generateTemplateKey(prefix = "") {
             const id = this.generateID();
-            if (this.loopNumber === 0 && !this.currentKey) {
+            if (this.loopNumber === 0 && !this.hasKey0) {
                 return `'${prefix}__${id}__'`;
             }
-            let locationExpr = `\`${prefix}__${id}__`;
-            for (let i = 0; i < this.loopNumber - 1; i++) {
-                locationExpr += `\${i${i + 1}}__`;
+            let key = `\`${prefix}__${id}__`;
+            let start = this.hasKey0 ? 0 : 1;
+            for (let i = start; i < this.loopNumber + 1; i++) {
+                key += `\${key${i}}__`;
             }
-            if (this.currentKey) {
-                const k = this.currentKey;
-                this.addLine(`let k${id} = ${locationExpr}\` + ${k};`);
-            }
-            else {
-                locationExpr += this.loopNumber ? `\${i${this.loopNumber}}__\`` : "`";
-                this.addLine(`let k${id} = ${locationExpr};`);
-            }
+            this.addLine(`let k${id} = ${key}\`;`);
             return `k${id}`;
         }
         generateCode() {
@@ -1133,10 +1128,10 @@
             return newContext;
         }
         indent() {
-            this.indentLevel++;
+            this.rootContext.indentLevel++;
         }
         dedent() {
-            this.indentLevel--;
+            this.rootContext.indentLevel--;
         }
         addLine(line) {
             const prefix = new Array(this.indentLevel + 2).join("    ");
@@ -1188,7 +1183,7 @@
         startProtectScope() {
             const protectID = this.generateID();
             this.rootContext.shouldDefineScope = true;
-            this.addLine(`const _origScope${protectID} = scope;`);
+            this.addLine(`let _origScope${protectID} = scope;`);
             this.addLine(`scope = Object.assign(Object.create(context), scope);`);
             return protectID;
         }
@@ -1352,7 +1347,7 @@
                     return vnode.text;
                 }
             })
-                .join();
+                .join("");
         },
         getComponent(obj) {
             while (obj && !obj.hasOwnProperty("__owl__")) {
@@ -1570,7 +1565,7 @@
                 }
             });
         }
-        _compile(name, elem, parentContext) {
+        _compile(name, elem, parentContext, defineKey) {
             const isDebug = elem.attributes.hasOwnProperty("t-debug");
             const ctx = new CompilationContext(name);
             if (elem.tagName !== "t") {
@@ -1583,6 +1578,10 @@
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
+                if (defineKey) {
+                    ctx.addLine(`let key0 = extra.key || "";`);
+                    ctx.hasKey0 = true;
+                }
             }
             this._compileNode(elem, ctx);
             if (!parentContext) {
@@ -1652,15 +1651,12 @@
                     // this is an unusual situation: this text node is the result of the
                     // template rendering.
                     let nodeID = ctx.generateID();
-                    ctx.addLine(`var vn${nodeID} = {text: \`${text}\`};`);
+                    ctx.addLine(`let vn${nodeID} = {text: \`${text}\`};`);
                     ctx.addLine(`result = vn${nodeID};`);
                     ctx.rootContext.rootNode = nodeID;
                     ctx.rootContext.parentTextNode = nodeID;
                 }
                 return;
-            }
-            if (ctx !== ctx.rootContext) {
-                ctx = ctx.subContext("currentKey", ctx.currentKey);
             }
             const firstLetter = node.tagName[0];
             if (firstLetter === firstLetter.toUpperCase()) {
@@ -1837,7 +1833,7 @@
                         }
                     }
                     else {
-                        ctx.addLine(`var _${attID} = '${value}';`);
+                        ctx.addLine(`let _${attID} = '${value}';`);
                         if (!name.match(/^[a-zA-Z]+$/)) {
                             // attribute contains 'non letters' => we want to quote it
                             name = '"' + name + '"';
@@ -1873,12 +1869,12 @@
                         const attValue = node.getAttribute(attName);
                         if (attValue) {
                             const attValueID = ctx.generateID();
-                            ctx.addLine(`var _${attValueID} = ${formattedValue};`);
+                            ctx.addLine(`let _${attValueID} = ${formattedValue};`);
                             formattedValue = `'${attValue}' + (_${attValueID} ? ' ' + _${attValueID} : '')`;
                             const attrIndex = attrs.findIndex(att => att.startsWith(attName + ":"));
                             attrs.splice(attrIndex, 1);
                         }
-                        ctx.addLine(`var _${attID} = ${formattedValue};`);
+                        ctx.addLine(`let _${attID} = ${formattedValue};`);
                         attrs.push(`${attName}: _${attID}`);
                         handleBooleanProps(attName, attID);
                     }
@@ -1893,23 +1889,23 @@
                     const attID = ctx.generateID();
                     let staticVal = node.getAttribute(attName);
                     if (staticVal) {
-                        ctx.addLine(`var _${attID} = '${staticVal} ' + ${formattedExpr};`);
+                        ctx.addLine(`let _${attID} = '${staticVal} ' + ${formattedExpr};`);
                     }
                     else {
-                        ctx.addLine(`var _${attID} = ${formattedExpr};`);
+                        ctx.addLine(`let _${attID} = ${formattedExpr};`);
                     }
                     attrs.push(`${attName}: _${attID}`);
                 }
                 // t-att= attributes
                 if (name === "t-att") {
                     let id = ctx.generateID();
-                    ctx.addLine(`var _${id} = ${ctx.formatExpression(value)};`);
+                    ctx.addLine(`let _${id} = ${ctx.formatExpression(value)};`);
                     tattrs.push(id);
                 }
             }
             let nodeID = ctx.generateID();
-            let nodeKey = ctx.currentKey || nodeID;
-            const parts = [`key:${nodeKey}`];
+            let key = ctx.loopNumber || ctx.hasKey0 ? `\`\${key${ctx.loopNumber}}_${nodeID}\`` : nodeID;
+            const parts = [`key:${key}`];
             if (attrs.length + tattrs.length > 0) {
                 parts.push(`attrs:{${attrs.join(",")}}`);
             }
@@ -1934,9 +1930,13 @@
                 ctx.addLine(`}`);
                 ctx.closeIf();
             }
-            ctx.addLine(`var vn${nodeID} = h('${node.nodeName}', p${nodeID}, c${nodeID});`);
+            ctx.addLine(`let vn${nodeID} = h('${node.nodeName}', p${nodeID}, c${nodeID});`);
             if (ctx.parentNode) {
                 ctx.addLine(`c${ctx.parentNode}.push(vn${nodeID});`);
+            }
+            else if (ctx.loopNumber || ctx.hasKey0) {
+                ctx.rootContext.shouldDefineResult = true;
+                ctx.addLine(`result = vn${nodeID};`);
             }
             return nodeID;
         }
@@ -2024,12 +2024,12 @@
         let exprID;
         if (typeof value === "string") {
             exprID = `_${ctx.generateID()}`;
-            ctx.addLine(`var ${exprID} = ${ctx.formatExpression(value)};`);
+            ctx.addLine(`let ${exprID} = ${ctx.formatExpression(value)};`);
         }
         else {
             exprID = `scope.${value.id}`;
         }
-        ctx.addIf(`${exprID} || ${exprID} === 0`);
+        ctx.addIf(`${exprID} != null`);
         if (ctx.escaping) {
             let protectID;
             if (value.hasBody) {
@@ -2046,7 +2046,7 @@
                 let nodeID = ctx.generateID();
                 ctx.rootContext.rootNode = nodeID;
                 ctx.rootContext.parentTextNode = nodeID;
-                ctx.addLine(`var vn${nodeID} = {text: ${exprID}};`);
+                ctx.addLine(`let vn${nodeID} = {text: ${exprID}};`);
                 if (ctx.rootContext.shouldDefineResult) {
                     ctx.addLine(`result = vn${nodeID}`);
                 }
@@ -2118,7 +2118,7 @@
                 const tempParentNodeID = ctx.generateID();
                 const _parentNode = ctx.parentNode;
                 ctx.parentNode = tempParentNodeID;
-                ctx.addLine(`const c${tempParentNodeID} = new utils.VDomArray();`);
+                ctx.addLine(`let c${tempParentNodeID} = new utils.VDomArray();`);
                 const nodeCopy = node.cloneNode(true);
                 for (let attr of ["t-set", "t-value", "t-if", "t-else", "t-elif"]) {
                     nodeCopy.removeAttribute(attr);
@@ -2185,6 +2185,7 @@
             // Step 1: sanity checks
             // ------------------------------------------------
             ctx.rootContext.shouldDefineScope = true;
+            ctx.rootContext.shouldDefineUtils = true;
             if (node.nodeName !== "t") {
                 throw new Error("Invalid tag for t-call directive (should be 't')");
             }
@@ -2197,7 +2198,7 @@
             // ------------------------------------------------
             if (!qweb.subTemplates[subTemplate]) {
                 qweb.subTemplates[subTemplate] = true;
-                const subTemplateFn = qweb._compile(subTemplate, nodeTemplate.elem, ctx);
+                const subTemplateFn = qweb._compile(subTemplate, nodeTemplate.elem, ctx, true);
                 qweb.subTemplates[subTemplate] = subTemplateFn;
             }
             // Step 3: compile t-call body if necessary
@@ -2229,14 +2230,18 @@
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
             const callingScope = hasBody ? "scope" : "Object.assign(Object.create(context), scope)";
+            const parentComponent = `utils.getComponent(context)`;
+            const keyCode = ctx.loopNumber || ctx.hasKey0 ? `, key: ${ctx.generateTemplateKey()}` : "";
+            const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
+            const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}${keyCode}})`;
             if (ctx.parentNode) {
-                ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, Object.assign({}, extra, {parentNode: c${ctx.parentNode}}));`);
+                ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, ${extra});`);
             }
             else {
                 // this is a t-call with no parentnode, we need to extract the result
                 ctx.rootContext.shouldDefineResult = true;
                 ctx.addLine(`result = []`);
-                ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, Object.assign({}, extra, {parentNode: result}));`);
+                ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, ${extra});`);
                 ctx.addLine(`result = result[0]`);
             }
             // Step 5: restore previous scope
@@ -2262,16 +2267,16 @@
             const elems = node.getAttribute("t-foreach");
             const name = node.getAttribute("t-as");
             let arrayID = ctx.generateID();
-            ctx.addLine(`var _${arrayID} = ${ctx.formatExpression(elems)};`);
+            ctx.addLine(`let _${arrayID} = ${ctx.formatExpression(elems)};`);
             ctx.addLine(`if (!_${arrayID}) { throw new Error('QWeb error: Invalid loop expression')}`);
             let keysID = ctx.generateID();
             let valuesID = ctx.generateID();
-            ctx.addLine(`var _${keysID} = _${valuesID} = _${arrayID};`);
+            ctx.addLine(`let _${keysID} = _${valuesID} = _${arrayID};`);
             ctx.addIf(`!(_${arrayID} instanceof Array)`);
             ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
             ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
             ctx.closeIf();
-            ctx.addLine(`var _length${keysID} = _${keysID}.length;`);
+            ctx.addLine(`let _length${keysID} = _${keysID}.length;`);
             let varsID = ctx.startProtectScope();
             const loopVar = `i${ctx.loopNumber}`;
             ctx.addLine(`for (let ${loopVar} = 0; ${loopVar} < _length${keysID}; ${loopVar}++) {`);
@@ -2288,6 +2293,14 @@
                 !node.children[0].hasAttribute("t-key");
             if (shouldWarn) {
                 console.warn(`Directive t-foreach should always be used with a t-key! (in template: '${ctx.templateName}')`);
+            }
+            if (nodeCopy.hasAttribute("t-key")) {
+                const expr = ctx.formatExpression(nodeCopy.getAttribute("t-key"));
+                ctx.addLine(`let key${ctx.loopNumber} = ${expr};`);
+                nodeCopy.removeAttribute("t-key");
+            }
+            else {
+                ctx.addLine(`let key${ctx.loopNumber} = i${ctx.loopNumber};`);
             }
             nodeCopy.removeAttribute("t-foreach");
             qweb._compileNode(nodeCopy, ctx);
@@ -2587,10 +2600,21 @@
     QWeb.addDirective({
         name: "key",
         priority: 45,
-        atNodeEncounter({ ctx, value }) {
-            let id = ctx.generateID();
-            ctx.addLine(`const nodeKey${id} = ${ctx.formatExpression(value)};`);
-            ctx.currentKey = `nodeKey${id}`;
+        atNodeEncounter({ ctx, value, node }) {
+            if (ctx.loopNumber === 0) {
+                ctx.keyStack.push(ctx.rootContext.hasKey0);
+                ctx.rootContext.hasKey0 = true;
+            }
+            ctx.addLine("{");
+            ctx.indent();
+            ctx.addLine(`let key${ctx.loopNumber} = ${ctx.formatExpression(value)};`);
+        },
+        finalize({ ctx }) {
+            ctx.dedent();
+            ctx.addLine("}");
+            if (ctx.loopNumber === 0) {
+                ctx.rootContext.hasKey0 = ctx.keyStack.pop();
+            }
         }
     });
 
@@ -2829,7 +2853,7 @@
                 else if (!name.startsWith("t-")) {
                     if (name !== "class" && name !== "style") {
                         // this is a prop!
-                        props[name] = ctx.formatExpression(value);
+                        props[name] = ctx.formatExpression(value) || "undefined";
                     }
                 }
             }
@@ -3448,6 +3472,59 @@
         return result;
     }
 
+    /**
+     * Owl Style System
+     *
+     * This files contains the Owl code related to processing (extended) css strings
+     * and creating/adding <style> tags to the document head.
+     */
+    const STYLESHEETS = {};
+    function processSheet(str) {
+        const tokens = str.split(/(\{|\}|;)/).map(s => s.trim());
+        const selectorStack = [];
+        const parts = [];
+        let rules = [];
+        function generateRules() {
+            if (rules.length) {
+                parts.push(selectorStack.join(" ") + " {");
+                parts.push(...rules);
+                parts.push("}");
+                rules = [];
+            }
+        }
+        while (tokens.length) {
+            let token = tokens.shift();
+            if (token === "}") {
+                generateRules();
+                selectorStack.pop();
+            }
+            else {
+                if (tokens[0] === "{") {
+                    generateRules();
+                    selectorStack.push(token);
+                    tokens.shift();
+                }
+                if (tokens[0] === ";") {
+                    rules.push("  " + token + ";");
+                }
+            }
+        }
+        return parts.join("\n");
+    }
+    function registerSheet(id, css) {
+        const sheet = document.createElement("style");
+        sheet.innerHTML = processSheet(css);
+        STYLESHEETS[id] = sheet;
+    }
+    function activateSheet(id, name) {
+        const sheet = STYLESHEETS[id];
+        if (!sheet) {
+            throw new Error(`Invalid css stylesheet for component '${name}'. Did you forget to use the 'css' tag helper?`);
+        }
+        sheet.setAttribute("component", name);
+        document.head.appendChild(sheet);
+    }
+
     const portalSymbol = Symbol("portal"); // FIXME
     //------------------------------------------------------------------------------
     // Component
@@ -3532,6 +3609,9 @@
                 refs: null,
                 scope: null
             };
+            if (constr.style) {
+                this.__applyStyles(constr);
+            }
         }
         /**
          * The `el` is the root element of the component.  Note that it could be null:
@@ -3889,6 +3969,20 @@
             parentFiber.lastChild = fiber;
             this.__prepareAndRender(fiber, cb);
             return fiber;
+        }
+        /**
+         * Apply the stylesheets defined by the component. Note that we need to make
+         * sure all inherited stylesheets are applied as well.  We then delete the
+         * `style` key from the constructor to make sure we do not apply it again.
+         */
+        __applyStyles(constr) {
+            while (constr && constr.style) {
+                if (constr.hasOwnProperty("style")) {
+                    activateSheet(constr.style, constr.name);
+                    delete constr.style;
+                }
+                constr = constr.__proto__;
+            }
         }
         __getTemplate(qweb) {
             let p = this.constructor;
@@ -4342,7 +4436,7 @@
             delete store.updateFunctions[componentId];
             __destroy.call(component, parent);
         };
-        if (typeof result !== "object") {
+        if (typeof result !== "object" || result === null) {
             return result;
         }
         return new Proxy(result, {
@@ -4351,6 +4445,9 @@
             },
             set(target, k, v) {
                 throw new Error("Store state should only be modified through actions");
+            },
+            has(target, k) {
+                return k in result;
             }
         });
     }
@@ -4387,10 +4484,26 @@
         QWeb.registerTemplate(name, value);
         return name;
     }
+    /**
+     * CSS tag helper for defining inline stylesheets.  With this, one can simply define
+     * an inline stylesheet with just the following code:
+     * ```js
+     *   class A extends Component {
+     *     static style = css`.component-a { color: red; }`;
+     *   }
+     * ```
+     */
+    function css(strings, ...args) {
+        const name = `__sheet__${QWeb.nextId++}`;
+        const value = String.raw(strings, ...args);
+        registerSheet(name, value);
+        return name;
+    }
 
     var _tags = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        xml: xml
+        xml: xml,
+        css: css
     });
 
     /**
@@ -4859,9 +4972,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.0-beta2';
-    exports.__info__.date = '2019-12-12T13:33:31.203Z';
-    exports.__info__.hash = '0931a4d';
+    exports.__info__.version = '1.0.0-beta5';
+    exports.__info__.date = '2019-12-20T10:27:22.467Z';
+    exports.__info__.hash = 'b63cd4c';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));

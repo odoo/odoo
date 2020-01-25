@@ -26,6 +26,7 @@
             <field name="description" type="html"><p>Test your vendor skills!</p></field>
             <field name="certification_give_badge">True</field>
             <field name="certification_badge_id" ref="vendor_certification_badge"/>
+            <field name="background_image" type="base64" file="survey/static/src/img/survey_background_2.jpg"/>
         </record>
         <!-- Page 1 -->
         <record model="survey.question" id="vendor_certification_page_1">
@@ -42,7 +43,6 @@
             <field name="sequence">2</field>
             <field name="title">Do we sell Acoustic Bloc Screens?</field>
             <field name="question_type">simple_choice</field>
-            <field name="display_mode">dropdown</field>
             <field name="constr_mandatory" eval="True" />
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_1_question_1_choice_1">
@@ -145,7 +145,6 @@
             <field name="sequence">5</field>
             <field name="title">How many versions of the Corner Desk do we have?</field>
             <field name="question_type">simple_choice</field>
-            <field name="display_mode">dropdown</field>
             <field name="constr_mandatory" eval="True" />
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_1_question_4_choice_1">
@@ -192,7 +191,6 @@
             <field name="sequence">8</field>
             <field name="title">How much do we sell our Cable Management Box?</field>
             <field name="question_type">simple_choice</field>
-            <field name="display_mode">dropdown</field>
             <field name="constr_mandatory" eval="True" />
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_1_choice_1">
@@ -280,7 +278,6 @@
             <field name="sequence">10</field>
             <field name="title">What do you think about our prices (not rated)?</field>
             <field name="question_type">simple_choice</field>
-            <field name="display_mode">dropdown</field>
             <field name="constr_mandatory" eval="True" />
         </record>
         <record model="survey.question.answer" id="vendor_certification_page_2_question_3_choice_1">

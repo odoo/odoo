@@ -1818,8 +1818,8 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     discuss.destroy();
 });
 
- QUnit.test('all messages in "Inbox" in "History" after marked all as read', async function (assert) {
-    assert.expect(10)
+QUnit.test('all messages in "Inbox" in "History" after marked all as read', async function (assert) {
+    assert.expect(10);
 
     const messagesData = [];
     for (let i = 0; i < 40; i++) {
@@ -1838,8 +1838,10 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     };
 
     let messageFetchCount = 0;
-    const loadMoreDef = testUtils.makeTestPromise();
+    const initDef = testUtils.makeTestPromise();
     const markAllReadDef = testUtils.makeTestPromise();
+    const clickHistoryDef = testUtils.makeTestPromise();
+    const loadMoreDef = testUtils.makeTestPromise();
     let objectDiscuss;
 
     const discuss = await createDiscuss({
@@ -1874,6 +1876,12 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                 assert.step(args.method);
 
                 messageFetchCount++;
+                if (messageFetchCount === 1) {
+                    initDef.resolve();
+                }
+                if (messageFetchCount === 2) {
+                    clickHistoryDef.resolve();
+                }
                 if (messageFetchCount === 3) {
                     loadMoreDef.resolve();
                 }
@@ -1883,6 +1891,8 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     });
     objectDiscuss = discuss;
 
+    await initDef;
+    await testUtils.nextTick();
     assert.verifySteps(['message_fetch'],
         "should fetch messages once for needaction messages (Inbox)");
     assert.containsN(discuss, '.o_thread_message', 30,
@@ -1891,6 +1901,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     const $markAllReadButton = $('.o_mail_discuss_button_mark_all_read');
     await testUtils.dom.click($markAllReadButton);
     await markAllReadDef;
+    await testUtils.nextTick();
     // immediately jump to end of the fadeout animation on messages
     discuss.$('.o_thread_message').stop(false, true);
     assert.containsNone(discuss, '.o_thread_message',
@@ -1898,6 +1909,8 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
 
     const $history = discuss.$('.o_mail_discuss_item[data-thread-id="mailbox_history"]');
     await testUtils.dom.click($history);
+    await clickHistoryDef;
+    await testUtils.nextTick();
     assert.verifySteps(['message_fetch'],
         "should fetch messages once for history");
     assert.containsN(discuss, '.o_thread_message', 30,

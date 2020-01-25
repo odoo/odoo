@@ -524,7 +524,7 @@ class MailActivity(models.Model):
         activity_data = defaultdict(dict)
         for group in grouped_activities:
             res_id = group['res_id']
-            activity_type_id = group['activity_type_id'][0]
+            activity_type_id = (group.get('activity_type_id') or (False, False))[0]
             res_id_to_deadline[res_id] = group['date_deadline'] if (res_id not in res_id_to_deadline or group['date_deadline'] < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
             state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
             activity_data[res_id][activity_type_id] = {

@@ -98,7 +98,7 @@ list of filtered posts (by date or tag).
                         </t>
 
                         <t t-call="website.pager" >
-                            <t t-set="classname">justify-content-center</t>
+                            <t t-set="classname" t-valuef="justify-content-center"/>
                         </t>
                     </div>
                 </div>
@@ -242,7 +242,10 @@ list of filtered posts (by date or tag).
                             <div t-field="blog_post.name" id="o_wblog_post_name" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                             <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                         </div>
-                        <a id="o_wblog_post_content_jump" href="#o_wblog_post_main" class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto text-decoration-none">
+                        <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class').split(' '))"/>
+                        <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
+                            id="o_wblog_post_content_jump" href="#o_wblog_post_main"
+                            class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto text-decoration-none">
                             <i class="fa fa-angle-down fa-3x text-white" aria-label="To blog content" title="To blog content"/>
                         </a>
                     </div>
@@ -437,7 +440,7 @@ list of filtered posts (by date or tag).
                            t-att-data-text="_cp.get('text_size_class')"
                            t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
 
-                        <t t-set="next_cover_is_full" t-value="'cover_full' in _cp.get('resize_class', '')"/>
+                        <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
                         <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
 
                         <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">

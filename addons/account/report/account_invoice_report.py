@@ -32,7 +32,7 @@ class AccountInvoiceReport(models.Model):
         ('posted', 'Open'),
         ('cancel', 'Cancelled')
         ], string='Invoice Status', readonly=True)
-    invoice_payment_state = fields.Selection(selection=[
+    payment_state = fields.Selection(selection=[
         ('not_paid', 'Not Paid'),
         ('in_payment', 'In Payment'),
         ('paid', 'paid')
@@ -92,7 +92,7 @@ class AccountInvoiceReport(models.Model):
                 move.partner_id,
                 move.invoice_user_id,
                 move.fiscal_position_id,
-                move.invoice_payment_state,
+                move.payment_state,
                 move.invoice_date,
                 move.invoice_date_due,
                 move.invoice_payment_term_id,
@@ -154,7 +154,7 @@ class AccountInvoiceReport(models.Model):
                 move.partner_id,
                 move.invoice_user_id,
                 move.fiscal_position_id,
-                move.invoice_payment_state,
+                move.payment_state,
                 move.invoice_date,
                 move.invoice_date_due,
                 move.invoice_payment_term_id,

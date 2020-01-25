@@ -179,7 +179,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         ])
 
         # The invoice should be paid, as the payments totally cover its total
-        self.assertEqual(move.invoice_payment_state, 'paid', 'The invoice should be paid by now')
+        self.assertEqual(move.payment_state, 'paid', 'The invoice should be paid by now')
         self.assertTrue(receivable_line.reconciled, 'The invoice should be totally reconciled')
         self.assertTrue(receivable_line.full_reconcile_id, 'The invoice should have a full reconcile number')
         self.assertEqual(receivable_line.amount_residual, 0, 'The invoice should be totally reconciled')
@@ -772,7 +772,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         credit_aml = payment.move_line_ids.filtered('credit')
         inv.js_assign_outstanding_line(credit_aml.id)
-        self.assertTrue(inv.invoice_payment_state == 'paid', 'The invoice should be paid')
+        self.assertTrue(inv.payment_state == 'paid', 'The invoice should be paid')
 
         exchange_reconcile = payment.move_line_ids.mapped('full_reconcile_id')
         exchange_move = exchange_reconcile.exchange_move_id
@@ -853,9 +853,9 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
              'invoice_ids': [(6, 0, invoice_cust_1.ids)],
              })
         payment.post()
-        # We expect at this point that the invoice should still be open,
+        # We expect at this point that the invoice should still be open, in 'partial' state,
         # because they owe us still 50 CC.
-        self.assertEqual(invoice_cust_1.invoice_payment_state, 'not_paid', 'Invoice is in status %s' % invoice_cust_1.state)
+        self.assertEqual(invoice_cust_1.payment_state, 'partial', 'Invoice is in status %s' % invoice_cust_1.state)
 
     def test_multiple_term_reconciliation_opw_1906665(self):
         '''Test that when registering a payment to an invoice with multiple
@@ -1686,7 +1686,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         # Second Payment
         payment1 = self.make_payment(invoice, journal, 0.01)
         self.assertEqual(invoice.amount_residual, 0)
-        self.assertEqual(invoice.invoice_payment_state, 'paid')
+        self.assertEqual(invoice.payment_state, 'paid')
 
         self.assertTrue(tax_waiting_line.reconciled)
         move_caba1 = tax_waiting_line.matched_debit_ids.mapped('debit_move_id').mapped('move_id').filtered(lambda m: m != move_caba0)
@@ -1816,8 +1816,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(inv1_receivable.full_reconcile_id, pay_receivable.full_reconcile_id)
         self.assertEqual(inv1_receivable.full_reconcile_id, move_balance_receiv.full_reconcile_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
-        self.assertEqual(inv2.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
+        self.assertEqual(inv2.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic3(self):
         """
@@ -1888,8 +1888,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
-        self.assertEqual(inv2.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
+        self.assertEqual(inv2.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic4(self):
         """
@@ -1969,8 +1969,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
-        self.assertEqual(inv2.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
+        self.assertEqual(inv2.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic5(self):
         """
@@ -2037,8 +2037,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
-        self.assertEqual(inv2.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
+        self.assertEqual(inv2.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic6(self):
         """
@@ -2101,8 +2101,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
-        self.assertEqual(inv2.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
+        self.assertEqual(inv2.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic6bis(self):
         """
@@ -2176,8 +2176,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
-        self.assertEqual(inv2.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
+        self.assertEqual(inv2.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic7(self):
         """
@@ -2235,7 +2235,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')
 
     def test_inv_refund_foreign_payment_writeoff_domestic8(self):
         """
@@ -2298,4 +2298,4 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertFalse(inv1_receivable.full_reconcile_id.exchange_move_id)
 
-        self.assertEqual(inv1.invoice_payment_state, 'paid')
+        self.assertEqual(inv1.payment_state, 'paid')

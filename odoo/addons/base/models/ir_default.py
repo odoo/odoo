@@ -135,7 +135,8 @@ class IrDefault(models.Model):
                         AND {}
                     ORDER BY d.user_id, d.company_id, d.id
                 """
-        params = [model_name, self.env.uid, self.env.company.id]
+        # self.env.company is empty when there is no user (controllers with auth=None)
+        params = [model_name, self.env.uid, self.env.company.id or None]
         if condition:
             query = query.format("d.condition=%s")
             params.append(condition)

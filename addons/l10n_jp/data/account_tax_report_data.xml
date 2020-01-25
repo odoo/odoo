@@ -27,6 +27,14 @@
         <field name="sequence">1</field>
     </record>
 
+    <record id="tax_report_to_pay_temp_tx_output_10" model="account.tax.report.line">
+        <field name="name">仮受消費税(10%)</field>
+        <field name="tag_name">仮受消費税(10%)</field>
+        <field name="parent_id" ref="tax_report_to_pay_temp_tx"/>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.jp"/>
+    </record>
+
     <record id="tax_report_to_pay_temp_tx_duty_free" model="account.tax.report.line">
         <field name="name">免税</field>
         <field name="tag_name">免税</field>
@@ -56,6 +64,14 @@
         <field name="parent_id" ref="tax_report_to_pay_temp_pmt"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">1</field>
+    </record>
+
+    <record id="tax_report_to_pay_temp_pmt_susp_cons_10" model="account.tax.report.line">
+        <field name="name">仮払消費税(10%)</field>
+        <field name="tag_name">仮払消費税(10%)</field>
+        <field name="parent_id" ref="tax_report_to_pay_temp_pmt"/>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.jp"/>
     </record>
 
     <record id="tax_report_to_pay_temp_pmt_import_8" model="account.tax.report.line">
@@ -95,6 +111,14 @@
         <field name="sequence">1</field>
     </record>
 
+    <record id="tax_report_comp_basis_sales_taxable_10" model="account.tax.report.line">
+        <field name="name">課税対象売上(10%)</field>
+        <field name="tag_name">課税対象売上(10%)</field>
+        <field name="parent_id" ref="tax_report_comp_basis_sales"/>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.jp"/>
+    </record>
+
     <record id="tax_report_comp_basis_sales_duty_free" model="account.tax.report.line">
         <field name="name">免税売上</field>
         <field name="tag_name">免税売上</field>
@@ -124,6 +148,14 @@
         <field name="parent_id" ref="tax_report_comp_basis_purchases"/>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">1</field>
+    </record>
+
+    <record id="tax_report_comp_basis_purchases_taxable_10" model="account.tax.report.line">
+        <field name="name">課税対象仕入(10%)</field>
+        <field name="tag_name">課税対象仕入(10%)</field>
+        <field name="parent_id" ref="tax_report_comp_basis_purchases"/>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.jp"/>
     </record>
 
     <record id="tax_report_comp_basis_purchases_import" model="account.tax.report.line">

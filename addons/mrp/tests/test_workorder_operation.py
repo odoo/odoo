@@ -1023,6 +1023,52 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertAlmostEqual(workorder.date_planned_start, date_start, delta=timedelta(seconds=1), msg="Workorder should be planned tomorrow.")
         self.assertAlmostEqual(workorder.date_planned_finished, date_start + timedelta(hours=1), delta=timedelta(seconds=1), msg="Workorder should be done one hour later.")
 
+    def test_planning_overlaps_wo(self):
+        """ Test that workorder doesn't overlaps between then when plan the MO """
+        self.full_availability()
+
+        dining_table = self.dining_table
+
+        # Take between +30min -> +90min
+        date_start = datetime.now() + timedelta(minutes=30)
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = self.mrp_bom_desk
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table_form.date_planned_start = date_start
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        # Create work order
+        production_table.button_plan()
+        workorder_prev = production_table.workorder_ids[0]
+
+        # Check that the workorder is planned now and that it lasts one hour
+        self.assertAlmostEqual(workorder_prev.date_planned_start, date_start, delta=timedelta(seconds=10), msg="Workorder should be planned in +30min")
+        self.assertAlmostEqual(workorder_prev.date_planned_finished, date_start + timedelta(hours=1), delta=timedelta(seconds=10), msg="Workorder should be done in +90min")
+
+        # As soon as possible, but because of the first one, it will planned only after +90 min
+        date_start = datetime.now()
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = self.mrp_bom_desk
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table_form.date_planned_start = date_start
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        # Create work order
+        production_table.button_plan()
+        workorder = production_table.workorder_ids[0]
+
+        # Check that the workorder is planned now and that it lasts one hour
+        self.assertAlmostEqual(workorder.date_planned_start, workorder_prev.date_planned_finished, delta=timedelta(seconds=10), msg="Workorder should be planned after the first one")
+        self.assertAlmostEqual(workorder.date_planned_finished, workorder_prev.date_planned_finished + timedelta(hours=1), delta=timedelta(seconds=10), msg="Workorder should be done one hour later.")
+
     def test_change_production_1(self):
         """Change the quantity to produce on the MO while workorders are already planned."""
         dining_table = self.dining_table
@@ -1369,7 +1415,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertEqual(line3.product_id, self.product_1)
         self.assertEqual(line3.qty_done, 4)
 
-    def test_replan(self):
+    def test_conflict_and_replan(self):
         """ TEST Json data conflicted and the replan button of a workorder """
         self.routing_1.operation_ids[0].write({'workcenter_id': self.mrp_workcenter_3.id})
         dining_table = self.dining_table
@@ -1401,13 +1447,17 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertEqual(wo2.state, 'pending')
         self.assertEqual(wo3.state, 'pending')
 
+        self.assertFalse(wo1.id in wo1._get_conflicted_workorder_ids(), "Shouldn't conflict")
+        self.assertFalse(wo2.id in wo2._get_conflicted_workorder_ids(), "Shouldn't conflict")
+        self.assertFalse(wo3.id in wo3._get_conflicted_workorder_ids(), "Shouldn't conflict")
+
         # Conflicted with wo1
         wo2.write({'date_planned_start': wo1.date_planned_start, 'date_planned_finished': wo1.date_planned_finished})
         # Bad order of workorders (wo3-wo1-wo2) + Late
         wo3.write({'date_planned_start': wo1.date_planned_start - timedelta(weeks=1), 'date_planned_finished': wo1.date_planned_finished - timedelta(weeks=1)})
 
-        self.assertEqual(wo2.id in wo2._get_conflicted_workorder_ids(), True, "Should conflict with wo1")
-        self.assertEqual(wo1.id in wo1._get_conflicted_workorder_ids(), True, "Should conflict with wo2")
+        self.assertTrue(wo2.id in wo2._get_conflicted_workorder_ids(), "Should conflict with wo1")
+        self.assertTrue(wo1.id in wo1._get_conflicted_workorder_ids(), "Should conflict with wo2")
 
         self.assertTrue('text-danger' in wo2.json_popover, "Popover should in be in red (due to conflict)")
         self.assertTrue('text-danger' in wo3.json_popover, "Popover should in be in red (due to bad order of wo)")

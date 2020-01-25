@@ -55,9 +55,12 @@ class ProductTemplate(models.Model):
             if product_template.valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
+        # Check access right
+        if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+            raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
-            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves.post()
         return res
 
@@ -98,7 +101,7 @@ class ProductProduct(models.Model):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
             for product_product in self:
                 if product_product.cost_method != 'fifo':
-                    counterpart_account_id = product_product.property_account_expense_id.id or product_product.categ_id.property_account_expense_categ_id.id
+                    counterpart_account_id = product_product._get_product_accounts()['expense'].id
                     product_product._change_standard_price(vals['standard_price'], counterpart_account_id)
 
         return super(ProductProduct, self).write(vals)
@@ -180,7 +183,7 @@ class ProductProduct(models.Model):
         """
         # Handle stock valuation layers.
 
-        if self.valuation == 'real_time' and not self.env['account.move'].check_access_rights('create', raise_exception=False):
+        if self.valuation == 'real_time' and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
             raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
 
         svl_vals_list = []
@@ -331,7 +334,7 @@ class ProductProduct(models.Model):
             ('remaining_qty', '<', 0),
             ('stock_move_id', '!=', False),
             ('company_id', '=', company.id),
-        ])
+        ], order='create_date, id')
         for svl_to_vacuum in svls_to_vacuum:
             domain = [
                 ('company_id', '=', svl_to_vacuum.company_id.id),
@@ -345,7 +348,7 @@ class ProductProduct(models.Model):
             ]
             candidates = self.env['stock.valuation.layer'].sudo().search(domain)
             if not candidates:
-                continue
+                break
             qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
             qty_taken_on_candidates = 0
             tmp_value = 0
@@ -457,7 +460,7 @@ class ProductProduct(models.Model):
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
         for out_stock_valuation_layer in stock_valuation_layers:
             product = out_stock_valuation_layer.product_id
-            expense_account = product.property_account_expense_id or product.categ_id.property_account_expense_categ_id
+            expense_account = product._get_product_accounts()['expense']
             if not expense_account:
                 raise UserError(_('Please define an expense account for this product: "%s" (id:%d) - or for its category: "%s".') % (product.name, product.id, self.name))
             if not product_accounts[product.id].get('stock_valuation'):
@@ -484,6 +487,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -519,6 +523,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
+                'type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -562,8 +567,6 @@ class ProductProduct(models.Model):
                         'account_id': dacc,
                         'product_id': product.id,
                         'uom_id': uom.id,
-                        'account_analytic_id': account_analytic and account_analytic.id,
-                        'analytic_tag_ids': analytic_tags and analytic_tags.ids and [(6, 0, analytic_tags.ids)] or False,
                     },
 
                     {
@@ -738,8 +741,11 @@ class ProductCategory(models.Model):
             if product_category.property_valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
+        # Check access right
+        if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+            raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
-            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves.post()
         return res

@@ -159,7 +159,7 @@ class MrpWorkorder(models.Model):
                 previous_wo = previous_wo_dict.get(wo.id)
                 prev_start = previous_wo and previous_wo['date_planned_start'] or False
                 prev_finished = previous_wo and previous_wo['date_planned_finished'] or False
-                if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_finished):
+                if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_start):
                     infos.append({
                         'color': 'text-primary',
                         'msg': _("Waiting the previous work order, planned from %s to %s") % (
@@ -171,7 +171,7 @@ class MrpWorkorder(models.Model):
                         'color': 'text-warning',
                         'msg': _("The work order should have already been processed.")
                     })
-                if prev_start and prev_start > wo.date_planned_finished:
+                if prev_start and prev_start > wo.date_planned_start:
                     infos.append({
                         'color': 'text-danger',
                         'msg': _("Scheduled before the previous work order, planned from %s to %s") % (
@@ -281,7 +281,13 @@ class MrpWorkorder(models.Model):
         (self - treated).allowed_lots_domain = False
 
     def name_get(self):
-        return [(wo.id, "%s. %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
+        res = []
+        for wo in self:
+            if len(wo.production_id.workorder_ids) == 1:
+                res.append((wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)))
+            else:
+                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
+        return res
 
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
@@ -761,7 +767,8 @@ class MrpWorkorder(models.Model):
                 AND wo2.state IN ('pending','ready')
                 AND wo1.id != wo2.id
                 AND wo1.workcenter_id = wo2.workcenter_id
-                AND (wo2.date_planned_start, wo2.date_planned_finished) OVERLAPS (wo1.date_planned_start, wo1.date_planned_finished)
+                AND (DATE_TRUNC('second', wo2.date_planned_start), DATE_TRUNC('second', wo2.date_planned_finished))
+                    OVERLAPS (DATE_TRUNC('second', wo1.date_planned_start), DATE_TRUNC('second', wo1.date_planned_finished))
         """
         self.env.cr.execute(sql, [tuple(self.ids)])
         res = defaultdict(list)

@@ -50,7 +50,7 @@ class WebsiteVisitor(models.Model):
             lead = self.lead_ids._sort_by_confidence_level(reverse=True)[0]
             partner_id = self.partner_id.id
             if not self.partner_id:
-                partner_id = lead.handle_partner_assignation()[lead.id]
+                partner_id = lead.handle_partner_assignation(action='create')[lead.id]
                 if not lead.partner_id:
                     lead.partner_id = partner_id
                 self.partner_id = partner_id

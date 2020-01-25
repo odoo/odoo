@@ -22,7 +22,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_deposit_account_id(self):
-        return self._default_product_id().property_account_income_id
+        return self._default_product_id()._get_product_accounts()['income']
 
     @api.model
     def _default_deposit_taxes_id(self):
@@ -109,7 +109,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         }
         if order.fiscal_position_id:
             invoice_vals['fiscal_position_id'] = order.fiscal_position_id.id
-        invoice = self.env['account.move'].create(invoice_vals)
+        invoice = self.env['account.move'].sudo().create(invoice_vals).with_user(self.env.uid)
         invoice.message_post_with_view('mail.message_origin_link',
                     values={'self': invoice, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)

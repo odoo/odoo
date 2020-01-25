@@ -68,6 +68,8 @@
                                         <field name="slide_type" attrs="{'invisible': [('slide_type', '=', 'category')]}"/>
                                         <field name="completion_time" attrs="{'invisible': [('slide_type', '=', 'category')]}" string="Duration" widget="float_time"/>
                                         <field name="total_views" attrs="{'invisible': [('slide_type', '=', 'category')]}"/>
+                                        <field name="is_preview" string="Preview"/>
+                                        <field name="is_published" string="Published"/>
                                         <field name="is_category" invisible="1"/>
                                         <control>
                                             <create name="add_slide_section" string="Add Section" context="{'default_is_category': True}"/>

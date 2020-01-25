@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<!-- Owl Templates -->
+
+<t t-name="CustomFileInput" owl="1">
+    <span class="o_file_input" aria-atomic="true">
+        <span class="o_file_input_trigger" t-on-click.prevent="_onTriggerClicked">
+            <t t-slot="default">
+                <button class="btn btn-primary">Choose File</button>
+            </t>
+        </span>
+        <input type="file" name="ufile" class="o_input_file d-none"
+            t-att="{multiple: props.multi_upload, accept: props.accepted_file_extensions}"
+            t-ref="file-input"
+            t-on-change="_onFileInputChange"
+        />
+    </span>
+</t>
+
+<t t-name="DialogButton.tooltip" owl="1">
+    <div class="oe_tooltip_string" role="tooltip">
+        <div class="tooltip-inner">
+            Hit ENTER to <t t-esc="title"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="OwlDialog" owl="1">
+    <Portal target="'body'">
+        <div class="o_dialog" t-on-focus="_onFocus">
+            <div t-if="props.backdrop" class="modal-backdrop show" t-on-click="_onBackdropClick"/>
+            <div role="dialog" class="modal"
+                tabindex="-1"
+                t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                t-ref="modal"
+                t-on-close_dialog.stop="_close"
+                >
+                <div class="modal-dialog" t-att-class="size">
+                    <div class="modal-content" t-att-class="props.contentClass">
+                        <header t-if="props.renderHeader" class="modal-header">
+                            <h4 class="modal-title">
+                                <t t-esc="props.title"/>
+                                <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
+                            </h4>
+                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="_close">×</button>
+                        </header>
+                        <main class="modal-body">
+                            <t t-slot="default"/>
+                        </main>
+                        <footer t-if="props.renderFooter" class="modal-footer" t-ref="modal-footer">
+                            <t t-slot="buttons">
+                                <button class="btn btn-primary" t-on-click.prevent="_close">
+                                    Ok
+                                </button>
+                            </t>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Portal>
+</t>
+
+<!-- Legacy Templates -->
+
 <div t-name="EmptyComponent"/>
 
 <div t-name="Loading" class="o_loading"/>
@@ -1450,7 +1513,7 @@
     <a role="menuitem" href="#" data-menu="documentation" class="dropdown-item">Documentation</a>
     <a role="menuitem" href="#" data-menu="support" class="dropdown-item">Support</a>
     <div role="separator" class="dropdown-divider"/>
-    <a role="menuitem" href="#" data-menu="settings" class="dropdown-item o_burger_menu_profile">Preferences</a>
+    <a role="menuitem" href="#" data-menu="settings" class="dropdown-item">Preferences</a>
     <a role="menuitem" href="#" data-menu="account" class="dropdown-item">My Odoo.com account</a>
     <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
 </t>
@@ -1545,6 +1608,19 @@
 <t t-name="FieldColor">
     <div>
         <button class="o_field_color" t-attf-tabindex="#{widget.mode === 'edit' ? 0 : -1}"></button>
+    </div>
+</t>
+
+<t t-name="ColorPicker">
+    <div class="o_field_color_picker">
+        <ul/>
+    </div>
+</t>
+<t t-name="ColorPickerReadonly">
+    <div class="o_field_color_picker_preview">
+        <li>
+            <a aria-label="No color" href="#" role="menuitem" t-att-class="'oe_kanban_color_'+active_color" t-att-data-color="active_color" title="No color"/>
+        </li>
     </div>
 </t>
 

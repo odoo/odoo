@@ -26,15 +26,6 @@ $o-wblog-title-sizes-variants: (
 ) !default;
 
 // ======= ANIMATIONS =======
-// Attention keeper for the "scroll down" top-banner button
-@keyframes o-wblog-anim-heart {
-    0%, 14%, 35% { transform: scale(1); }
-    7%, 21% {
-        transform: scale(1.3);
-        background-color: rgba(theme-color('primary'), 0.8);
-    }
-}
-
 // Generic fade-in
 @keyframes o-wblog-fade-In {
     0%   { opacity: 0; }
@@ -191,39 +182,8 @@ $o-wblog-title-sizes-variants: (
                 color: white;
             }
 
-            #o_wblog_post_content_jump {
-                @include size($o-wblog-loader-size);
-                display: none;
-                background-color: rgba(black, 0.5);
-
-                &:hover {
-                    background-color: rgba(black, 0.7);
-                }
-            }
-
             // Cover sizes
             // ==============================================
-            &.cover_full {
-                min-height: 600px;
-                min-height: 100vh;
-            }
-
-            &.cover_mid {
-                min-height: 400px;
-                min-height: 55vh;
-            }
-
-            &.cover_full, &.cover_mid {
-                #o_wblog_post_content_jump {
-                    display: flex;
-                    animation: o-wblog-anim-heart 2.6s ease-in-out 1s infinite;
-
-                    &:hover {
-                        animation-iteration-count: 1;
-                    }
-                }
-            }
-
             &.cover_auto {
                 padding: 3rem 0;
                 // The actual height will always be 'auto'. The following
@@ -238,11 +198,11 @@ $o-wblog-title-sizes-variants: (
                     visibility: hidden;
                 }
 
-                &.cover_full {
+                &.o_full_screen_height {
                     min-height: 350px;
                 }
 
-                &.cover_mid {
+                &.o_half_screen_height {
                     min-height: 250px;
                 }
 
@@ -374,6 +334,15 @@ $o-wblog-title-sizes-variants: (
     }
 }
 
+#o_wblog_post_content_jump {
+    @extend .o_scroll_button;
+    @include size($o-wblog-loader-size);
+    background-color: rgba(black, 0.5);
+
+    &:hover {
+        background-color: rgba(black, 0.7);
+    }
+}
 
 //------------------------------------------------------------------------------
 // Latest posts snippets

@@ -82,13 +82,15 @@ class MailThread(models.AbstractModel):
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
     message_follower_ids = fields.One2many(
-        'mail.followers', 'res_id', string='Followers')
+        'mail.followers', 'res_id', string='Followers', groups='base.group_user')
     message_partner_ids = fields.Many2many(
         comodel_name='res.partner', string='Followers (Partners)',
-        compute='_get_followers', search='_search_follower_partners')
+        compute='_get_followers', search='_search_follower_partners',
+        groups='base.group_user')
     message_channel_ids = fields.Many2many(
         comodel_name='mail.channel', string='Followers (Channels)',
-        compute='_get_followers', search='_search_follower_channels')
+        compute='_get_followers', search='_search_follower_channels',
+        groups='base.group_user')
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
@@ -258,15 +260,16 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).create(vals_list)
 
+        threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe'):
-            default_followers = self.env['mail.followers']._add_default_followers(self._name, [], self.env.user.partner_id.ids, customer_ids=[])[0][0]
-            for values in vals_list:
-                message_follower_ids = values.get('message_follower_ids') or []
-                message_follower_ids += [(0, 0, fol_vals) for fol_vals in default_followers]
-                values['message_follower_ids'] = message_follower_ids
-
-        threads = super(MailThread, self).create(vals_list)
+            for thread in threads:
+                self.env['mail.followers']._insert_followers(
+                    thread._name, thread.ids, self.env.user.partner_id.ids,
+                    None, None, None,
+                    customer_ids=[],
+                    check_existing=False
+                )
 
         # auto_subscribe: take values and defaults into account
         create_values_list = {}
@@ -275,7 +278,7 @@ class MailThread(models.AbstractModel):
             for key, val in self._context.items():
                 if key.startswith('default_') and key[8:] not in create_values:
                     create_values[key[8:]] = val
-            thread._message_auto_subscribe(create_values)
+            thread._message_auto_subscribe(create_values, followers_existing_policy='update')
             create_values_list[thread.id] = create_values
 
         # automatic logging unless asked not to (mainly for various testing purpose)
@@ -586,6 +589,14 @@ class MailThread(models.AbstractModel):
     def _message_track_post_template(self, changes):
         if not changes:
             return True
+        # Clean the context to get rid of residual default_* keys
+        # that could cause issues afterward during the mail.message
+        # generation. Example: 'default_parent_id' would refer to
+        # the parent_id of the current record that was used during
+        # its creation, but could refer to wrong parent message id,
+        # leading to a traceback in case the related message_id
+        # doesn't exist
+        self = self.with_context(clean_context(self._context))
         templates = self._track_template(changes)
         for field_name, (template, post_kwargs) in templates.items():
             if not template:
@@ -2100,7 +2111,7 @@ class MailThread(models.AbstractModel):
     # Notification API
     # ------------------------------------------------------
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
+    def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
         """ Main notification method. This method basically does two things
 
          * call ``_notify_compute_recipients`` that computes recipients to
@@ -2131,7 +2142,8 @@ class MailThread(models.AbstractModel):
             message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
-        self._notify_record_by_email(message, rdata, msg_vals=msg_vals, **kwargs)
+        if notify_by_email:
+            self._notify_record_by_email(message, rdata, msg_vals=msg_vals, **kwargs)
 
         return rdata
 
@@ -2725,7 +2737,7 @@ class MailThread(models.AbstractModel):
         if not subtype_ids:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids, partner_ids, None, channel_ids, None,
-                customer_ids=customer_ids)
+                customer_ids=customer_ids, check_existing=True, existing_policy='skip')
         else:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
@@ -2824,7 +2836,7 @@ class MailThread(models.AbstractModel):
                 model_description=model_description,
             )
 
-    def _message_auto_subscribe(self, updated_values):
+    def _message_auto_subscribe(self, updated_values, followers_existing_policy='skip'):
         """ Handle auto subscription. Auto subscription is done based on two
         main mechanisms
 
@@ -2862,7 +2874,7 @@ class MailThread(models.AbstractModel):
             res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True)
             for fid, rid, pid, cid, subtype_ids, pshare in res:
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
-                sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids]
+                sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids or sid in int_ids]
                 if pid:
                     new_partners[pid] = (set(sids) & set(all_ids)) - set(int_ids) if pshare else set(sids) & set(all_ids)
                 if cid:
@@ -2881,7 +2893,7 @@ class MailThread(models.AbstractModel):
             self._name, self.ids,
             list(new_partners), new_partners,
             list(new_channels), new_channels,
-            check_existing=True, existing_policy='skip')
+            check_existing=True, existing_policy=followers_existing_policy)
 
         # notify people from auto subscription, for example like assignation
         for (template, lang), pids in notify_data.items():

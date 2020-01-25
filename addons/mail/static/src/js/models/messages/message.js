@@ -252,7 +252,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         }
         return {
             author: this.getDisplayedAuthor(),
-            body: mailUtils.parseAndTransform(this.getBody(), mailUtils.inline),
+            body: mailUtils.htmlToTextContentInline(this.getBody()),
             date: this.getDate(),
             documentModel: this.getDocumentModel(),
             documentID: this.getDocumentID(),

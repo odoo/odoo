@@ -148,9 +148,8 @@
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                 </group>
                             </group>
-                            <group string="Display mode" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
-                                <field name="display_mode" string="Format" attrs="{'invisible':[('question_type','not in',['simple_choice'])],'required':[('question_type','=','simple_choice')]}"/>
-                                <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('question_type','=','simple_choice')]}"/>
+                            <group string="Display" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
+                                <field name="column_nb" string="Number of columns"/>
                             </group>
                             <group string="Allow Comments" attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
                                 <field name='comments_allowed' />

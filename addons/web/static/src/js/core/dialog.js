@@ -4,6 +4,7 @@ odoo.define('web.Dialog', function (require) {
 var core = require('web.core');
 var dom = require('web.dom');
 var Widget = require('web.Widget');
+const OwlDialog = require('web.OwlDialog');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -205,6 +206,9 @@ var Dialog = Widget.extend({
             if (options && options.shouldFocusButtons) {
                 self._onFocusControlButton();
             }
+
+            // Notifies OwlDialog to adjust focus/active properties on owl dialogs
+            OwlDialog.display(self);
         });
 
         return self;
@@ -234,6 +238,12 @@ var Dialog = Widget.extend({
 
         if (this.isDestroyed()) {
             return;
+        }
+
+        // Notifies OwlDialog to adjust focus/active properties on owl dialogs.
+        // Only has to be done if the dialog has been opened (has an el).
+        if (this.el) {
+            OwlDialog.hide(this);
         }
 
         // Triggers the onForceClose event if the callback is defined

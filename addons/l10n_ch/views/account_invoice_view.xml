@@ -20,7 +20,7 @@
                             ('type', 'not in', ('out_invoice', 'out_refund')),
                             ('l10n_ch_isr_sent', '=', True),
                             ('state', '!=', 'posted'),
-                            ('invoice_payment_state', '!=', 'not_paid'),
+                            ('payment_state', 'not in', ('not_paid', 'partial')),
                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         class="oe_highlight"
                         groups="base.group_user"
@@ -36,7 +36,7 @@
                             ('type', 'not in', ('out_invoice', 'out_refund')),
                             ('l10n_ch_isr_sent', '=', False),
                             ('state', '!=', 'posted'),
-                            ('invoice_payment_state', '!=', 'not_paid'),
+                            ('payment_state', 'not in', ('not_paid', 'partial')),
                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         />

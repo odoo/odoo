@@ -1472,7 +1472,7 @@ var BasicModel = AbstractModel.extend({
             if (field && (field.type === 'one2many' || field.type === 'many2many')) {
                 defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options));
             } else if (field && (field.type === 'many2one' || field.type === 'reference')) {
-                defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
+                defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName], options));
             } else {
                 record._changes[fieldName] = changes[fieldName];
             }
@@ -1523,16 +1523,37 @@ var BasicModel = AbstractModel.extend({
      * onchange modifies a many2one field. For this reason, we need (sometimes)
      * to do a /name_get to fetch a display_name.
      *
+     * Moreover, for the many2one case, a new value can sometimes be set (i.e.
+     * a display_name is given, but no id). When this happens, we first do a
+     * name_create.
+     *
      * @param {Object} record
      * @param {string} fieldName
      * @param {Object} [data]
+     * @param {Object} [options]
+     * @param {string} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {Promise}
      */
-    _applyX2OneChange: function (record, fieldName, data) {
+    _applyX2OneChange: async function (record, fieldName, data, options) {
+        options = options || {};
         var self = this;
-        if (!data || !data.id) {
+        if (!data || (!data.id && !data.display_name)) {
             record._changes[fieldName] = false;
             return Promise.resolve();
+        }
+
+        const field = record.fields[fieldName];
+        const coModel = field.type === 'reference' ? data.model : field.relation;
+        if (field.type === 'many2one' && !data.id && data.display_name) {
+            // only display_name given -> do a name_create
+            const result = await this._rpc({
+                model: coModel,
+                method: 'name_create',
+                args: [data.display_name],
+                context: this._getContext(record, {fieldName: fieldName, viewType: options.viewType}),
+            });
+            data = {id: result[0], display_name: result[1]};
         }
 
         // here, we check that the many2one really changed. If the res_id is the
@@ -1551,11 +1572,9 @@ var BasicModel = AbstractModel.extend({
             return Promise.resolve();
         }
         var rel_data = _.pick(data, 'id', 'display_name');
-        var field = record.fields[fieldName];
 
         // the reference field doesn't store its co-model in its field metadata
         // but directly in the data (as the co-model isn't fixed)
-        var coModel = field.type === 'reference' ? data.model : field.relation;
         var def;
         if (rel_data.display_name === undefined) {
             // TODO: refactor this to use _fetchNameGet
@@ -1802,7 +1821,7 @@ var BasicModel = AbstractModel.extend({
      *   (only supported by the 'CREATE' command.operation)
      * @returns {Promise}
      */
-    _applyX2ManyChange: function (record, fieldName, command, options) {
+    _applyX2ManyChange: async function (record, fieldName, command, options) {
         if (command.operation === 'TRIGGER_ONCHANGE') {
             // the purpose of this operation is to trigger an onchange RPC, so
             // there is no need to apply any change on the record (the changes
@@ -1847,6 +1866,25 @@ var BasicModel = AbstractModel.extend({
                 // handle multiple add: command[2] may be a dict of values (1
                 // record added) or an array of dict of values
                 var data = _.isArray(command.ids) ? command.ids : [command.ids];
+
+                // name_create records for which there is no id (typically, could
+                // be the case of a quick_create in a many2many_tags, so data.length
+                // is 1)
+                for (const r of data) {
+                    if (!r.id && r.display_name) {
+                        const prom = this._rpc({
+                            model: field.relation,
+                            method: 'name_create',
+                            args: [r.display_name],
+                            context: this._getContext(record, {fieldName: fieldName, viewType: options.viewType}),
+                        }).then(result => {
+                            r.id = result[0];
+                            r.display_name = result[1];
+                        });
+                        defs.push(prom);
+                    }
+                }
+                await Promise.all(defs);
 
                 // Ensure the local data repository (list) boundaries can handle incoming records (data)
                 if (data.length + list.res_ids.length > list.limit) {
@@ -3942,7 +3980,8 @@ var BasicModel = AbstractModel.extend({
 
         // Fields that are present in the originating view, that need to be initialized
         // Hence preventing their value to crash when getting back to the originating view
-        var parentRecord = self.localData[params.parentID];
+        var parentRecord = params.parentID && this.localData[params.parentID].type === 'list' ? this.localData[params.parentID] : null;
+
         if (parentRecord) {
             var originView = parentRecord.viewType;
             fieldNames = _.union(fieldNames, Object.keys(parentRecord.fieldsInfo[originView]));

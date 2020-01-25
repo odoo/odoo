@@ -998,6 +998,12 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.with_user(user1).tag_id, tag2)
         self.assertEqual(record.with_user(user2).tag_id, tag0)
 
+        # regression: duplicated records caused values to be browse(browse(id))
+        recs = record.create({}) + record + record
+        recs.invalidate_cache()
+        for rec in recs.with_user(user0):
+            self.assertIsInstance(rec.tag_id.id, int)
+
         # unlink value of a many2one (tag2), and check again
         tag2.unlink()
         self.assertEqual(record.with_user(user0).tag_id, tag1)
@@ -1929,6 +1935,14 @@ class TestX2many(common.TransactionCase):
 
         result = recs.search([('id', 'in', recs.ids), ('lines', '!=', False)])
         self.assertEqual(result, recs - recZ)
+
+    def test_create_batch_m2m(self):
+        lines = self.env['test_new_api.multi.line'].create([{
+            'tags': [(0, 0, {'name': str(j)}) for j in range(3)],
+        } for i in range(3)])
+        self.assertEqual(len(lines), 3)
+        for line in lines:
+            self.assertEqual(len(line.tags), 3)
 
 
 class TestHtmlField(common.TransactionCase):

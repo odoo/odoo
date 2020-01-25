@@ -74,7 +74,6 @@ class TestUi(TestUICommon):
                     'title': 'What type of wood is the best for furniture?',
                     'sequence': 2,
                     'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {

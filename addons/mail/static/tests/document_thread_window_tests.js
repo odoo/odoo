@@ -227,7 +227,7 @@ QUnit.test('post messages in a document thread window', async function (assert) 
 });
 
 QUnit.test('open, fold, unfold and close a document thread window', async function (assert) {
-    assert.expect(24);
+    assert.expect(20);
     var messagingMenu = new MessagingMenu();
     testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
@@ -238,12 +238,13 @@ QUnit.test('open, fold, unfold and close a document thread window', async functi
     testUtils.mock.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage' && ev.data.method === 'setItem') {
             const key = ev.data.args[0];
-            const state = ev.data.args[1].state;
-            assert.strictEqual(key, 'mail.document_threads_state/some.res.model_1');
-            assert.ok(state);
-            assert.ok(state.name);
-            assert.ok(state.windowState);
-            assert.step(`${key}: { name: "${state.name}", windowState: '${state.windowState}' }`);
+            if (key === 'mail.document_threads_state/some.res.model_1') {
+                const state = ev.data.args[1].state;
+                assert.ok(state);
+                assert.ok(state.name);
+                assert.ok(state.windowState);
+                assert.step(`${key}: { name: "${state.name}", windowState: '${state.windowState}' }`);
+            }
         }
     }, true);
     await messagingMenu.appendTo($('#qunit-fixture'));

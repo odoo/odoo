@@ -78,6 +78,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/name_and_signature.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web.zoomodoo.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/color_picker.scss"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overridden.scss"/>
 
@@ -137,6 +138,7 @@
         <script type="text/javascript" src="/web/static/src/js/core/collections.js"/>
         <script type="text/javascript" src="/web/static/src/js/core/concurrency.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/owl_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/dom.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
@@ -210,7 +212,6 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_examples_dialog.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_column_progressbar.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_view.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_view_mobile.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web_calendar.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web_calendar_mobile.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view.scss"/>
@@ -286,6 +287,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/pie_chart.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/ribbon.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/signature.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/custom_file_input.js"></script>
         <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/fields/abstract_field.js"></script>
@@ -302,7 +304,6 @@
         <script type="text/javascript" src="/web/static/src/js/views/abstract_renderer_owl.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/abstract_model.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/abstract_controller.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/controller_adapter.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/renderer_wrapper.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/basic/basic_model.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/basic/basic_view.js"></script>
@@ -355,7 +356,6 @@
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer_mobile.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/quick_create_form_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list/list_editable_renderer.js"></script>
@@ -379,6 +379,8 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/attach_document.js"></script>
         <script type="text/javascript" src="/web/static/src/js/fields/signature.js"></script>
 
+        <script type="text/javascript" src="/web/static/src/js/owl_compatibility.js"></script>
+
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report_backend.scss"/>
@@ -398,6 +400,7 @@
         </t>
 
         <t t-call="web._assets_bootstrap"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_frontend.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/lazyloader.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
@@ -514,7 +517,7 @@
         <div class="o_brand_promotion">
             <t t-call="web.brand_promotion_message">
                 <t t-set="_message"></t>
-                <t t-set="_utm_medium">portal</t>
+                <t t-set="_utm_medium" t-valuef="portal"/>
             </t>
         </div>
     </template>
@@ -704,6 +707,7 @@
                 <script type="text/javascript" src="/web/static/tests/core/util_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/widget_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/dialog_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/owl_dialog_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/dom_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/chrome/action_manager_tests.js"></script>
@@ -711,6 +715,8 @@
                 <script type="text/javascript" src="/web/static/tests/chrome/keyboard_navigation_mixin_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/user_menu_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/systray_tests.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/components/custom_file_input_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/widgets/company_switcher_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/data_export_tests.js"/>
@@ -721,6 +727,8 @@
                 <script type="text/javascript" src="/web/static/tests/tools/debug_manager_tests.js"/>
 
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils_tests.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/owl_compatibility_tests.js"></script>
             </t>
 
             <div id="qunit"/>
@@ -741,7 +749,6 @@
 
                 <script type="text/javascript" src="/web/static/tests/chrome/action_manager_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/calendar_mobile_tests.js"></script>
-                <script type="text/javascript" src="/web/static/tests/views/kanban_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/mobile_control_panel_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/basic_fields_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/relational_fields_mobile_tests.js"></script>
@@ -884,73 +891,12 @@
 
     <!--
         Optional Bundle for PDFJS lib
-        Since PDFJS is quite huge (40000 lines), please only load it when it is necessary.
+        Since PDFJS is quite huge (80000≈ lines), please only load it when it is necessary.
         For now, it is only use to display the PDF slide Viewer during an embed.
-        Bundlized, the size is reduced to 3000 lines.
+        Bundlized, the size is reduced to 5300≈ lines.
     -->
     <template id="pdf_js_lib" name="PDF JS Library">
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/shared/util.js"></script>
-
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/api.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/metadata.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/canvas.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/webgl.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/pattern_helper.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/font_loader.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/display/annotation_helper.js"></script>
-        <!-- files normally dynamically loaded in worker_loader.js -->
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/network.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/chunked_stream.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/pdf_manager.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/core.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/obj.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/charsets.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/annotation.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/function.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/colorspace.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/crypto.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/pattern.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/evaluator.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/cmap.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/fonts.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/font_renderer.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/glyphlist.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/image.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/metrics.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/parser.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/ps_parser.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/stream.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/worker.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/arithmetic_decoder.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/jpg.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/jpx.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/jbig2.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/bidi.js"></script>
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/core/murmurhash3.js"></script>
-        <!--
-            NOTE JEM : PDFJS not-minified load its assets dynamically. Not minify, this lib is huge (4000 lines).
-            To load PDFJS using odoo bundle, we create a custom worker_loader, to avoid reloading all the assets (core/*.js) dynamically.
-            Loading all this assets in a bundle can be problematic in debug mode, since we don't wait all assets to be loaded to start using PDFJS. That's why, in debug mode, we use the native loader, otherwise our custom loader is used.
-        -->
-        <t t-if="not debug">
-            <script>
-                // Use Odoo PDFJS Loader, to avoid dynamic assets loading
-                PDFJS.workerSrc = '/web/static/lib/pdfjs/worker_loader_by_odoo.js';
-                PDFJS.disableWorker = true;
-            </script>
-        </t>
-        <t t-if="debug">
-            <script>
-                // Specify the main script used to create a new PDF.JS web worker.
-                // In production, leave this undefined or change it to point to the
-                // combined `pdf.worker.js` file.
-                PDFJS.workerSrc = '/web/static/lib/pdfjs/src/worker_loader.js';
-            </script>
-        </t>
-        <!--
-            If no loader defined, this file will try to load pdf.worker.js (in build/).
-            It will crash since we don't use the minified version of PDFJS
-        -->
-        <script type="text/javascript" src="/web/static/lib/pdfjs/src/pdf.js"></script>
+        <script type="text/javascript" src="/web/static/lib/pdfjs/build/pdf.js"></script>
+        <script type="text/javascript" src="/web/static/lib/pdfjs/build/pdf.worker.js"></script>
     </template>
 </odoo>

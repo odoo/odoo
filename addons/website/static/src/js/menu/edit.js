@@ -101,11 +101,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
         this.editModeEnable = true;
         await new EditorMenu(this).prependTo(document.body);
-        var $target = this._targetForEdition();
-        this.$editorMessageElements = $target
-            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
-            .not('[data-editor-message]')
-            .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+        this._addEditorMessages();
         var res = await new Promise(function (resolve, reject) {
             self.trigger_up('widgets_start_request', {
                 editableMode: true,
@@ -136,6 +132,18 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Adds automatic editor messages on drag&drop zone elements.
+     *
+     * @private
+     */
+    _addEditorMessages: function () {
+        var $target = this._targetForEdition();
+        this.$editorMessageElements = $target
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .not('[data-editor-message]')
+            .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+    },
     /**
      * Returns the target for edition.
      *
@@ -236,7 +244,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
-     * that is should start the public widgets for this snippet.
+     * that is should start the public widgets for this snippet. Also add the
+     * editor messages.
      *
      * @private
      * @param {OdooEvent} ev
@@ -246,6 +255,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             editableMode: true,
             $target: ev.data.$target,
         });
+        this._addEditorMessages();
     },
 });
 

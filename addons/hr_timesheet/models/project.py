@@ -88,6 +88,7 @@ class Task(models.Model):
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
+    overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
@@ -97,6 +98,38 @@ class Task(models.Model):
     timesheet_timer_first_start = fields.Datetime("Timesheet Timer First Use", readonly=True)
     timesheet_timer_last_stop = fields.Datetime("Timesheet Timer Last Use", readonly=True)
     display_timesheet_timer = fields.Boolean("Display Timesheet Time", compute='_compute_display_timesheet_timer')
+    display_timer_start_primary = fields.Boolean(compute='_compute_display_timer_buttons')
+    display_timer_start_secondary = fields.Boolean(compute='_compute_display_timer_buttons')
+    display_timer_stop = fields.Boolean(compute='_compute_display_timer_buttons')
+    display_timer_pause = fields.Boolean(compute='_compute_display_timer_buttons')
+    display_timer_resume = fields.Boolean(compute='_compute_display_timer_buttons')
+
+    @api.depends('display_timesheet_timer', 'timer_start', 'timer_pause', 'total_hours_spent')
+    def _compute_display_timer_buttons(self):
+        for task in self:
+            start_p, start_s, stop, pause, resume = True, True, True, True, True
+            if not task.display_timesheet_timer:
+                start_p, start_s, stop, pause, resume = False, False, False, False, False
+            else:
+                if task.timer_start:
+                    start_p, start_s = False, False
+                    if task.timer_pause:
+                        pause = False
+                    else:
+                        resume = False
+                else:
+                    stop, pause, resume = False, False, False
+                    if not task.total_hours_spent:
+                        start_s = False
+                    else:
+                        start_p = False
+            task.write({
+                'display_timer_start_primary': start_p,
+                'display_timer_start_secondary': start_s,
+                'display_timer_stop': stop,
+                'display_timer_pause': pause,
+                'display_timer_resume': resume,
+            })
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
@@ -108,12 +141,14 @@ class Task(models.Model):
         for task in self:
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
+                task.overtime = max(task_total_hours - task.planned_hours, 0)
                 if task_total_hours > task.planned_hours:
                     task.progress = 100
                 else:
                     task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
             else:
                 task.progress = 0.0
+                task.overtime = 0
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_remaining_hours(self):
@@ -134,6 +169,16 @@ class Task(models.Model):
     def _compute_display_timesheet_timer(self):
         for task in self:
             task.display_timesheet_timer = task.allow_timesheets and task.project_id.allow_timesheet_timer and task.analytic_account_active
+
+    def action_view_subtask_timesheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Timesheets'),
+            'res_model': 'account.analytic.line',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '!=', False), ('task_id', 'in', self.child_ids.ids)],
+        }
 
     def write(self, values):
         # a timesheet must have an analytic account (and a project)

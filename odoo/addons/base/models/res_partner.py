@@ -135,6 +135,14 @@ class Partner(models.Model):
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
+    @api.model
+    def default_get(self, default_fields):
+        """Add the company of the parent as default if we are creating a child partner."""
+        values = super().default_get(default_fields)
+        if 'parent_id' in default_fields and values.get('parent_id'):
+            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+        return values
+
     name = fields.Char(index=True)
     display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)

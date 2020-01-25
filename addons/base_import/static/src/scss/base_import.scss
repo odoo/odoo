@@ -115,15 +115,25 @@
     }
 
     /* ------------- THE CSV TABLE ------------ */
+
+    $cell-max-width: 350px;
+    $cell-padding: 4px;
     .oe_import_grid {
         tr {
             &.oe_import_grid-header:first-child {
                 line-height: 24px;
                 font-weight: normal;
             }
-            td {
-                padding: 4px;
+            .oe_import_grid-cell {
+                max-width: $cell-max-width;
+                padding: $cell-padding;
                 vertical-align: top;
+                .o_multi_line_text {
+                    word-break: break-word;
+                }
+                .o_single_line_text {
+                    @include o-text-overflow($display: table-cell, $max-width: $cell-max-width - $cell-padding);
+                }
             }
         }
     }

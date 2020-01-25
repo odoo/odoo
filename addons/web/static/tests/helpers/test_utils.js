@@ -121,6 +121,7 @@ return Promise.all([
     return {
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,
+            getMockedOwlEnv: testUtilsMock.getMockedOwlEnv,
             intercept: testUtilsMock.intercept,
             patch: testUtilsMock.patch,
             patchDate: testUtilsMock.patchDate,

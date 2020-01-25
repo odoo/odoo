@@ -48,7 +48,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o"
-                            attrs="{'invisible': ['|',('invoice_method','=','none'), ('state','in',('confirmed','2binvoiced','draft'))]}"
+                            attrs="{'invisible': ['|', '|', '&amp;',('invoice_method','=','after_repair'), ('state', '!=', 'done'), ('invoice_method', '=', 'none'), ('state','in',('confirmed','2binvoiced','draft'))]}"
                             groups="account.group_account_invoice">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">1</span>

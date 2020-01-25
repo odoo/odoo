@@ -473,8 +473,24 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             calendar = holiday._get_calendar()
             if holiday.date_from and holiday.date_to:
-                number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
-                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
+                # Take attendances into account, in case the leave validated
+                # Otherwise, this will result into number_of_hours = 0
+                # and number_of_hours_display = 0 or (#day * calendar.hours_per_day),
+                # which could be wrong if the employee doesn't work the same number
+                # hours each day
+                if holiday.state == 'validate':
+                    start_dt = holiday.date_from
+                    end_dt = holiday.date_to
+                    if not start_dt.tzinfo:
+                        start_dt = start_dt.replace(tzinfo=UTC)
+                    if not end_dt.tzinfo:
+                        end_dt = end_dt.replace(tzinfo=UTC)
+                    intervals = calendar._attendance_intervals(start_dt, end_dt, holiday.employee_id.resource_id) \
+                                - calendar._leave_intervals(start_dt, end_dt, None)  # Substract Global Leaves
+                    number_of_hours = sum((stop - start).total_seconds() / 3600 for start, stop, dummy in intervals)
+                else:
+                    number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
+                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY))
             else:
                 holiday.number_of_hours_display = 0
 

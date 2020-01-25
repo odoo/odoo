@@ -89,7 +89,7 @@ odoo.define('web.PivotView', function (require) {
                 if (field.attrs.type === 'measure' && !(name in measures)) {
                     measures[name] = this.fields[name];
                 }
-                if (field.attrs.string) {
+                if (field.attrs.string && name in measures) {
                     measures[name].string = field.attrs.string;
                 }
                 if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
@@ -141,7 +141,7 @@ odoo.define('web.PivotView', function (require) {
          */
         getRenderer(parent, state) {
             state = Object.assign(state || {}, this.rendererParams);
-            return new RendererWrapper(null, state, this.config.Renderer);
+            return new RendererWrapper(null, this.config.Renderer, state);
         },
     });
 

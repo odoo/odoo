@@ -96,7 +96,7 @@ var SnippetEditor = Widget.extend({
                 },
             });
         } else {
-            this.$('.o_move_handle').addClass('d-none');
+            this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
@@ -344,8 +344,8 @@ var SnippetEditor = Widget.extend({
             var styles = _.values(editor.styles);
             _.sortBy(styles, '__order').forEach(style => {
                 if (show) {
-                    style.updateUI();
                     style.onFocus();
+                    style.updateUI();
                 } else {
                     style.onBlur();
                 }
@@ -780,6 +780,7 @@ var SnippetsMenu = Widget.extend({
     events: {
         'click .o_install_btn': '_onInstallBtnClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
+        'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -801,6 +802,7 @@ var SnippetsMenu = Widget.extend({
         'block_preview_overlays': '_onBlockPreviewOverlays',
         'unblock_preview_overlays': '_onUnblockPreviewOverlays',
         'user_value_widget_opening': '_onUserValueWidgetOpening',
+        'reload_snippet_template': '_onReloadSnippetTemplate',
     },
 
     /**
@@ -857,26 +859,22 @@ var SnippetsMenu = Widget.extend({
         this.window = this.ownerDocument.defaultView;
         this.$window = $(this.window);
 
+        this.customizePanel = document.createElement('div');
+        this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
+
+        this.invisibleDOMPanelEl = document.createElement('div');
+        this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
+        this.invisibleDOMPanelEl.appendChild(
+            $('<div/>', {
+                text: _t('Invisible Elements'),
+                class: 'o_panel_header',
+            }).prepend(
+                $('<i/>', {class: 'fa fa-eye-slash'})
+            )[0]
+        );
+
         // Fetch snippet templates and compute it
-
-        defs.push(this.loadSnippets().then(html => {
-            return this._computeSnippetTemplates(html);
-        }).then(() => {
-            this.customizePanel = document.createElement('div');
-            this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
-            this.$el.append(this.customizePanel);
-
-            this.invisibleDOMPanelEl = document.createElement('div');
-            this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
-            this.invisibleDOMPanelEl.appendChild(
-                $('<div/>', {
-                    text: _t('Invisible Elements'),
-                    class: 'o_panel_header',
-                }).prepend(
-                    $('<i/>', {class: 'fa fa-eye-slash'})
-                )[0]
-            );
-            this.$el.append(this.invisibleDOMPanelEl);
+        defs.push(this._loadSnippetsTemplates().then(() => {
             return this._updateInvisibleDOM();
         }));
 
@@ -998,9 +996,10 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * Load snippets.
+     * @param {boolean} invalidateCache
      */
-    loadSnippets: function () {
-        if (this.cacheSnippetTemplate[this.options.snippets]) {
+    loadSnippets: function (invalidateCache) {
+        if (!invalidateCache && this.cacheSnippetTemplate[this.options.snippets]) {
             this._defLoadSnippets = this.cacheSnippetTemplate[this.options.snippets];
             return this._defLoadSnippets;
         }
@@ -1287,6 +1286,17 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * @private
+     * @param {boolean} invalidateCache
+     */
+    _loadSnippetsTemplates: async function (invalidateCache) {
+        return this._mutex.exec(async () => {
+            await this._destroyEditors();
+            const html = await this.loadSnippets(invalidateCache);
+            await this._computeSnippetTemplates(html);
+        });
+    },
+    /**
+     * @private
      */
     _destroyEditors: async function () {
         const proms = _.map(this.snippetEditors, async function (snippetEditor) {
@@ -1502,6 +1512,7 @@ var SnippetsMenu = Widget.extend({
                 var $snippet = $(this);
                 var name = $snippet.attr('name');
                 var $sbody = $snippet.children(':not(.oe_snippet_thumbnail)').addClass('oe_snippet_body');
+                const isCustomSnippet = !!$snippet.parents('#snippet_custom').length;
 
                 // Associate in-page snippets to their name
                 if ($sbody.length) {
@@ -1525,6 +1536,13 @@ var SnippetsMenu = Widget.extend({
                     $snippet.find('[data-oe-thumbnail]').data('oeThumbnail'),
                     name
                 ));
+                if (isCustomSnippet) {
+                    const btn = document.createElement('we-button');
+                    btn.dataset.snippetId = $snippet.data('oeSnippetId');
+                    btn.classList.add('o_delete_btn', 'fa', 'fa-trash');
+                    $thumbnail.prepend(btn);
+                    $thumbnail.prepend($('<div class="o_image_ribbon"/>'));
+                }
                 $snippet.prepend($thumbnail);
 
                 // Create the install button (t-install feature) if necessary
@@ -1563,6 +1581,8 @@ var SnippetsMenu = Widget.extend({
 
         // Add the computed template and make elements draggable
         this.$el.html($html);
+        this.$el.append(this.customizePanel);
+        this.$el.append(this.invisibleDOMPanelEl);
         this._makeSnippetDraggable(this.$snippets);
         this._disableUndroppableSnippets();
 
@@ -1677,7 +1697,11 @@ var SnippetsMenu = Widget.extend({
 
         $snippets.draggable({
             greedy: true,
-            helper: 'clone',
+            helper: function () {
+                const dragSnip = this.cloneNode(true);
+                dragSnip.querySelectorAll('.o_delete_btn, .o_image_ribbon').forEach(el => el.remove());
+                return dragSnip;
+            },
             appendTo: this.$body,
             cursor: 'move',
             handle: '.oe_snippet_thumbnail',
@@ -1970,6 +1994,43 @@ var SnippetsMenu = Widget.extend({
             .toggleClass('fa-eye', isVisible)
             .toggleClass('fa-eye-slash', !isVisible);
         return this._activateSnippet(isVisible ? $snippet : false);
+    },
+    /**
+     * @private
+     */
+    _onDeleteBtnClick: function (ev) {
+        const $snippet = $(ev.target).closest('.oe_snippet');
+        new Dialog(this, {
+            size: 'medium',
+            title: _t('Confirmation'),
+            $content: $('<div><p>' + _t(`Are you sure you want to delete the snippet: ${$snippet.attr('name')} ?`) + '</p></div>'),
+            buttons: [{
+                text: _t("Yes"),
+                close: true,
+                classes: 'btn-primary',
+                click: async () => {
+                    await this._rpc({
+                        model: 'ir.ui.view',
+                        method: 'delete_snippet',
+                        kwargs: {
+                            'view_id': parseInt(ev.currentTarget.dataset.snippetId),
+                            'template_key': this.options.snippets,
+                        },
+                    });
+                    await this._loadSnippetsTemplates(true);
+                },
+            }, {
+                text: _t("No"),
+                close: true,
+            }],
+        }).open();
+    },
+    /**
+     * @private
+     */
+    _onReloadSnippetTemplate: async function (ev) {
+        await this._activateSnippet(false);
+        await this._loadSnippetsTemplates(true);
     },
     /**
      * @private

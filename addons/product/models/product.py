@@ -327,6 +327,7 @@ class ProductProduct(models.Model):
         if 'active' in values:
             # prefetched o2m have to be reloaded (because of active_test)
             # (eg. product.template: product_variant_ids)
+            self.flush()
             self.invalidate_cache()
             # `_get_first_possible_variant_id` depends on variants active state
             self.clear_caches()
@@ -568,7 +569,7 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
-    def _prepare_sellers(self, params):
+    def _prepare_sellers(self, params=False):
         return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
@@ -739,7 +740,7 @@ class SupplierInfo(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', check_company=True,
         index=True, ondelete='cascade')
-    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")

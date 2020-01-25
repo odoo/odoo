@@ -534,11 +534,6 @@ class Lead(models.Model):
     # ------------------------------------------------------------
 
     def toggle_active(self):
-        super(Lead, self).toggle_active()
-        self.filtered(lambda lead: lead.active)._compute_probabilities()
-        return True
-
-    def toggle_active(self):
         res = super(Lead, self).toggle_active()
         self.filtered(lambda lead: lead.active)._update_probability()
         return res
@@ -664,15 +659,8 @@ class Lead(models.Model):
 
     def _merge_get_result_type(self):
         """ Define the type of the result of the merge.  If at least one of the
-            element to merge is an opp, the resulting new element will be an opp.
-            Otherwise it will be a lead.
-            We'll directly use a list of browse records instead of a list of ids
-            for performances' sake: it will spare a second browse of the
-            leads/opps.
-
-            :param list opps: list of browse records containing the leads/opps to process
-            :return string type: the type of the final element
-        """
+        element to merge is an opp, the resulting new element will be an opp.
+        Otherwise it will be a lead. """
         if any(record.type == 'opportunity' for record in self):
             return 'opportunity'
         return 'lead'
@@ -719,19 +707,20 @@ class Lead(models.Model):
         data['type'] = self._merge_get_result_type()
         return data
 
-    def _mail_body(self, fields):
-        """ generate the message body with the changed values
-            :param fields : list of fields to track
-            :returns a list of message bodies for the corresponding leads
+    def _merge_notify_get_merged_fields_message(self, fields):
+        """ Generate the message body with the changed values
+
+        :param fields : list of fields to track
+        :returns a list of message bodies for the corresponding leads
         """
         bodies = []
         for lead in self:
             title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
             body = [title]
             _fields = self.env['ir.model.fields'].search([
-                    ('name', 'in', fields or []),
-                    ('model_id.model', '=', lead._name),
-                ])
+                ('name', 'in', fields or []),
+                ('model_id.model', '=', lead._name),
+            ])
             for field in _fields:
                 value = getattr(lead, field.name, False)
                 if field.ttype == 'selection':
@@ -751,11 +740,11 @@ class Lead(models.Model):
         return bodies
 
     def _merge_notify(self, opportunities):
-        """ Create a message gathering merged leads/opps informations. Using message_post, send a
-            message explaining which fields has been merged and their new value. `self` is the
-            resulting merge crm.lead record.
-            :param opportunities : recordset of merged crm.lead
-            :returns mail.message posted on resulting crm.lead
+        """ Post a message gathering merged leads/opps informations. It explains
+        which fields has been merged and their new value. `self` is the resulting
+        merge crm.lead record.
+
+        :param opportunities: see ``merge_dependences``
         """
         # TODO JEM: mail template should be used instead of fix body, subject text
         self.ensure_one()
@@ -764,14 +753,15 @@ class Lead(models.Model):
         merge_message = _('Merged leads') if result_type == 'lead' else _('Merged opportunities')
         subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
         # message bodies
-        message_bodies = opportunities._mail_body(list(CRM_LEAD_FIELDS_TO_MERGE))
+        message_bodies = opportunities._merge_notify_get_merged_fields_message(list(CRM_LEAD_FIELDS_TO_MERGE))
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
     def _merge_opportunity_history(self, opportunities):
         """ Move mail.message from the given opportunities to the current one. `self` is the
             crm.lead record destination for message of `opportunities`.
-            :param opportunities : recordset of crm.lead to move the messages
+
+        :param opportunities: see ``merge_dependences``
         """
         self.ensure_one()
         for opportunity in opportunities:
@@ -785,7 +775,8 @@ class Lead(models.Model):
     def _merge_opportunity_attachments(self, opportunities):
         """ Move attachments of given opportunities to the current one `self`, and rename
             the attachments having same name than native ones.
-            :param opportunities : recordset of merged crm.lead
+
+        :param opportunities: see ``merge_dependences``
         """
         self.ensure_one()
 
@@ -810,8 +801,9 @@ class Lead(models.Model):
     def merge_dependences(self, opportunities):
         """ Merge dependences (messages, attachments, ...). These dependences will be
             transfered to `self`, the most important lead.
-            :param opportunities : recordset of opportunities to transfert. Does
-                not include `self`.
+
+        :param opportunities : recordset of opportunities to transfer. Does not
+          include `self` which is the target crm.lead being the result of the merge.
         """
         self.ensure_one()
         self._merge_notify(opportunities)
@@ -940,16 +932,18 @@ class Lead(models.Model):
 
         return True
 
-    def _create_lead_partner_data(self, name, is_company, parent_id=False):
-        """ extract data from lead to create a partner
-            :param name : furtur name of the partner
-            :param is_company : True if the partner is a company
-            :param parent_id : id of the parent partner (False if no parent)
-            :returns res.partner record
+    def _create_lead_partner_data(self, partner_name, is_company=False, parent_id=False):
+        """ Extract data from lead to create a partner.
+
+        :param name : furtur name of the partner
+        :param is_company : True if the partner is a company
+        :param parent_id : id of the parent partner (False if no parent)
+
+        :return: dictionary of values to give at res_partner.create()
         """
         email_split = tools.email_split(self.email_from)
         return {
-            'name': name,
+            'name': partner_name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
             'team_id': self.team_id.id,
@@ -980,28 +974,30 @@ class Lead(models.Model):
             contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
 
         if self.partner_name:
-            partner_company = Partner.create(self._create_lead_partner_data(self.partner_name, True))
+            partner_company = Partner.create(self._create_lead_partner_data(self.partner_name, is_company=True))
         elif self.partner_id:
             partner_company = self.partner_id
         else:
             partner_company = None
 
         if contact_name:
-            return Partner.create(self._create_lead_partner_data(contact_name, False, partner_company.id if partner_company else False))
+            return Partner.create(self._create_lead_partner_data(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
 
         if partner_company:
             return partner_company
-        return Partner.create(self._create_lead_partner_data(self.name, False))
+        return Partner.create(self._create_lead_partner_data(self.name, is_company=False))
 
-    def handle_partner_assignation(self,  action='create', partner_id=False):
+    def handle_partner_assignation(self, action='create', partner_id=False):
         """ Handle partner assignation during a lead conversion.
-            if action is 'create', create new partner with contact and assign lead to new partner_id.
-            otherwise assign lead to the specified partner_id
 
-            :param list ids: leads/opportunities ids to process
-            :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
-            :param int partner_id: partner to assign if any
-            :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
+        If action is 'create', create new partner with contact and assign lead to
+        new partner_id. Otherwise assign lead to the specified partner_id
+
+        TDE FIXME: docstring does not match code... code seems a bit random.
+
+        :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
+        :param int partner_id: partner to assign if any
+        :return: dict(lead_id: partner_id)
         """
         partner_ids = {}
         for lead in self:
@@ -1041,6 +1037,10 @@ class Lead(models.Model):
             if value:
                 lead.write(value)
         return True
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
 
     def redirect_lead_opportunity_view(self):
         self.ensure_one()

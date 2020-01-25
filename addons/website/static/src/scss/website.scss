@@ -199,6 +199,12 @@ font[class*='bg-'] {
         border-top-left-radius: $size;
         border-bottom-right-radius: $size;
     }
+    &.rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * $border-width);
+        border-style: solid;
+        background: transparent;
+    }
 }
 // Smaller container
 .o_container_small {
@@ -359,6 +365,30 @@ table.table_desc tr td {
 // Jumbotron
 .jumbotron {
     border-radius: 0;
+}
+
+.o_full_screen_height {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 100vh;
+}
+.o_half_screen_height {
+    @extend .o_full_screen_height;
+    min-height: 55vh;
+}
+
+// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
+.cover_full {
+    @extend .o_full_screen_height;
+}
+.cover_mid {
+    @extend .o_half_screen_height;
+}
+
+// Allows custom border radius without contents overflowing.
+.card {
+    overflow: hidden;
 }
 
 //
@@ -607,7 +637,6 @@ table.table_desc tr td {
     }
 }
 
-
 //
 // Layout
 //
@@ -772,5 +801,32 @@ table.table_desc tr td {
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+    }
+}
+
+// Scroll down button
+.o_scroll_button {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    animation: o-anim-heartbeat 2.6s ease-in-out 1s infinite;
+
+    &:focus {
+        outline: none;
+    }
+    &:hover {
+        text-decoration: none;
+        animation-iteration-count: 1;
+    }
+}
+
+// Attention keeper for the "scroll down" top-banner button
+@keyframes o-anim-heartbeat {
+    0%, 14%, 35% {
+        transform: scale(1);
+    }
+    7%, 21% {
+        transform: scale(1.3);
+        background-color: rgba(theme-color('primary'), 0.8);
     }
 }

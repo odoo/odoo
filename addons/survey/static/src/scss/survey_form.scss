@@ -1,0 +1,193 @@
+.o_survey_wrap {
+    min-height: 100%;
+}
+
+/**********************************************************
+                        Common Style
+ **********************************************************/
+
+.o_survey_form, .o_survey_print {
+    .o_survey_question_error {
+        height: 0px;
+        transition: height .5s ease;
+        line-height: 4rem;
+        &.slide_in {
+            height: 4rem;
+        }
+    }
+
+    .o_survey_question_text_box,
+    .o_survey_question_date,
+    .o_survey_question_datetime,
+    .o_survey_question_numerical_box {
+        border: 0px;
+        border-bottom: 2px solid $o-brand-primary;
+        &:disabled {
+            color: black !important;
+            border-color: $gray-600;
+            border-bottom: 2px solid $gray-600;
+        }
+        &:focus {
+            border-color: $o-brand-primary;
+        }
+    }
+
+    .o_survey_form_date .input-group-append {
+        right: 0;
+        .input-group-text i {
+            font-size: large;
+        }
+    }
+
+    .o_survey_choice_btn {
+        transition: background-color 0.3s ease;
+        flex: 1 0 300px;
+
+        span {
+            line-height: 25px;
+        }
+        i {
+            top: 0px;
+            font-size: large;
+            &.fa-check-circle,&.fa-check-square {
+                display: none;
+            }
+        }
+
+        &.o_survey_selected i {
+            display: none;
+            &.fa-check-circle,&.fa-check-square {
+                display: inline;
+            }
+        }
+    }
+
+    .o_survey_question_matrix {
+        td {
+            min-width: 100px;
+            i {
+                font-size: 22px;
+                display: none;
+                &.o_survey_matrix_empty_checkbox {
+                    display: inline;
+                }
+            }
+            .o_survey_choice_key > span > span {
+                top: 0px;
+            }
+
+            &.o_survey_selected {
+                i {
+                    display: inline;
+                    &.o_survey_matrix_empty_checkbox {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**********************************************************
+                    Form Specific Style
+ **********************************************************/
+
+.o_survey_form {
+    min-height: 100%;
+
+    .o_survey_choice_btn {
+        background-color: rgba($o-brand-primary, 0.5);
+        border: 2px solid $o-brand-primary;
+        cursor: pointer;
+
+        &.o_survey_selected {
+            background-color: $o-brand-primary;
+        }
+
+        &:hover {
+            background-color: rgba($o-brand-primary, 0.8);
+            .o_survey_choice_key span.o_survey_key {
+                opacity: 1;
+            }
+        }
+    }
+
+    .o_survey_choice_key {
+        width: 25px;
+        height: 25px;
+        border: 2px solid $o-brand-primary;
+        span {
+            font-size: smaller;
+            top: -2px;
+            &.o_survey_key {
+                width: inherit;
+                right: 10px;
+                border: 2px solid $o-brand-primary;
+                border-right: 0px;
+                height: 25px;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .o_survey_question_matrix {
+        th {
+            background-color: $o-brand-primary;
+        }
+        td {
+            background-color: rgba($o-brand-primary, 0.2);
+
+            &:hover {
+                background-color: rgba($o-brand-primary, 0.5);
+                cursor: pointer;
+                .o_survey_choice_key span.o_survey_key {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .o_survey_progress {
+        height:0.5em;
+    }
+}
+
+/**********************************************************
+                   Print Specific Style
+ **********************************************************/
+
+.o_survey_print {
+    .o_survey_choice_btn {
+        background-color: $gray-500;
+        border-color: transparent;
+        cursor: default;
+
+        &.bg-success, &.bg-danger {
+            opacity: 0.6;
+        }
+        &.o_survey_selected {
+            background-color: $gray-600;
+            opacity: 1;
+        }
+        i.fa-square, i.fa-circle {
+            display: none;
+        }
+    }
+    .o_survey_question_matrix {
+        th {
+            /* important needed to force override bg-primary set on th in the template */
+            background-color: $gray-600 !important;
+        }
+        td {
+            background-color: $gray-200;
+            &:hover {
+                cursor: default;
+            }
+        }
+        i.fa-check-square, i.fa-check-circle, i.o_survey_matrix_empty_checkbox {
+            color: $gray-600;
+        }
+    }
+}

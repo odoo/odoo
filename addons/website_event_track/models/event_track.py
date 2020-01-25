@@ -28,24 +28,6 @@ class TrackLocation(models.Model):
     name = fields.Char('Location', required=True)
 
 
-class TrackStage(models.Model):
-    _name = 'event.track.stage'
-    _description = 'Event Track Stage'
-    _order = 'sequence, id'
-
-    name = fields.Char(string='Stage Name', required=True, translate=True)
-    sequence = fields.Integer(string='Sequence', default=1)
-    mail_template_id = fields.Many2one(
-        'mail.template', string='Email Template',
-        domain=[('model', '=', 'event.track')],
-        help="If set an email will be sent to the customer when the track reaches this step.")
-    fold = fields.Boolean(
-        string='Folded in Kanban',
-        help='This stage is folded in the kanban view when there are no records in that stage to display.')
-    is_done = fields.Boolean(string='Accepted Stage')
-    is_cancel = fields.Boolean(string='Canceled Stage')
-
-
 class Track(models.Model):
     _name = "event.track"
     _description = 'Event Track'
@@ -86,7 +68,7 @@ class Track(models.Model):
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color', related="stage_id.color")
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
@@ -193,25 +175,3 @@ class Track(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-
-
-class SponsorType(models.Model):
-    _name = "event.sponsor.type"
-    _description = 'Event Sponsor Type'
-    _order = "sequence"
-
-    name = fields.Char('Sponsor Type', required=True, translate=True)
-    sequence = fields.Integer('Sequence')
-
-
-class Sponsor(models.Model):
-    _name = "event.sponsor"
-    _description = 'Event Sponsor'
-    _order = "sequence"
-
-    event_id = fields.Many2one('event.event', 'Event', required=True)
-    sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
-    partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
-    url = fields.Char('Sponsor Website')
-    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
-    image_128 = fields.Image(string="Logo", related='partner_id.image_128', store=True, readonly=False)

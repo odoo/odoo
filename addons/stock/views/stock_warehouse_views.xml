@@ -225,6 +225,7 @@
                                 <div class="o_row">
                                     <field name="product_min_qty"/>
                                     <field name="product_uom_name"/>
+                                    <field name="json_lead_days_popover" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
                                 </div>
                                 <label for="product_max_qty"/>
                                 <div class="o_row">
@@ -242,11 +243,6 @@
                                     <field name="group_id" groups="stock.group_adv_location"/>
                                 </div>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <label for="lead_days"/>
-                                <div class="o_row">
-                                    <field name="lead_days"/>
-                                    <field name="lead_type"/>
-                                </div>
                             </group>
                         </group>
                     </sheet>

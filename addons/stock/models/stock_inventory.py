@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class Inventory(models.Model):
@@ -526,9 +526,6 @@ class InventoryLine(models.Model):
                 vals = line._get_move_values(abs(line.difference_qty), line.location_id.id, virtual_location.id, True)
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
-
-    def _refresh_inventory(self):
-        return self[0].inventory_id.action_open_inventory_lines()
 
     def action_refresh_quantity(self):
         filtered_lines = self.filtered(lambda l: l.state != 'done')

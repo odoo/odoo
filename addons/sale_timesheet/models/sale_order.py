@@ -31,15 +31,8 @@ class SaleOrder(models.Model):
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
         for sale_order in self:
-            duration_list = []
             timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
-            for timesheet in timesheets:
-                timesheet_uom = timesheet.product_uom_id or timesheet.company_id.project_time_mode_id
-                if timesheet_uom != sale_order.timesheet_encode_uom_id and timesheet_uom.category_id == sale_order.timesheet_encode_uom_id.category_id:
-                    duration_list.append(timesheet_uom._compute_quantity(timesheet.unit_amount, sale_order.timesheet_encode_uom_id))
-                else:
-                    duration_list.append(timesheet.unit_amount)
-            sale_order.timesheet_total_duration = sum(duration_list)
+            sale_order.timesheet_total_duration = sum([timesheet.unit_amount for timesheet in timesheets])
 
     def action_view_project_ids(self):
         self.ensure_one()
@@ -131,7 +124,9 @@ class SaleOrderLine(models.Model):
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         domain = expression.AND([domain, [
             ('date', '<=', date),
-            ('timesheet_invoice_id', '=', False)]])
+            '|',
+            ('timesheet_invoice_id', '=', False),
+            ('timesheet_invoice_id.state', '=', 'cancel')]])
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:

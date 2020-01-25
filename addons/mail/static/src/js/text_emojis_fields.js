@@ -19,7 +19,7 @@ var FieldEmojiCommon = {
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._triggerOnchange =_.throttle(this._triggerOnchange, 1000, {leading: false});
+        this._triggerOnchange = _.throttle(this._triggerOnchange, 1000, {leading: false});
         this.emojis = emojis;
     },
 
@@ -33,11 +33,18 @@ var FieldEmojiCommon = {
      * @override
      */
     on_attach_callback: function () {
-        var self = this;
         if (!this.$emojisIcon) {
             this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
             this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
-            this.$el.after(this.$emojisIcon);
+
+            if (this.$el.filter('span.o_field_translate').length) {
+                // multi-languages activated, place the button on the left of the translation button
+                this.$emojisIcon.addClass('o_mail_emojis_dropdown_translation');
+            }
+            if (this.$el.filter('textarea').length) {
+                this.$emojisIcon.addClass('o_mail_emojis_dropdown_textarea');
+            }
+            this.$el.last().after(this.$emojisIcon);
         }
 
         if (this.mode === 'edit') {
@@ -72,7 +79,7 @@ var FieldEmojiCommon = {
      */
     _onEmojiClick: function () {
         _onEmojiClickMixin.apply(this, arguments);
-        self._isDirty = true;
+        this._isDirty = true;
         this.$input.trigger('change');
     },
 

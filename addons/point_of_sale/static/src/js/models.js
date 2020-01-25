@@ -1036,7 +1036,7 @@ exports.PosModel = Backbone.Model.extend({
                     }
                     self.set('failed',error);
                 }
-                console.error('Failed to send orders:', orders);
+                console.warn('Failed to send orders:', orders);
                 self.gui.show_sync_error_popup();
                 throw reason;
             });
@@ -1948,7 +1948,7 @@ exports.Orderline = Backbone.Model.extend({
                 else if(tax.amount_type === 'fixed')
                     incl_fixed_amount += quantity * tax.amount
                 else{
-                    tax_amount = self._compute_all(tax, base, quantity);
+                    var tax_amount = self._compute_all(tax, base, quantity);
                     incl_fixed_amount += tax_amount;
                     cached_tax_amounts[i] = tax_amount;
                 }
@@ -2039,6 +2039,28 @@ exports.Orderline = Backbone.Model.extend({
     },
     display_discount_policy: function(){
         return this.order.pricelist.discount_policy;
+    },
+    compute_fixed_price: function (price) {
+        var order = this.order;
+        if(order.fiscal_position) {
+            var taxes = this.get_taxes();
+            var mapped_included_taxes = [];
+            var self = this;
+            _(taxes).each(function(tax) {
+                var line_taxes = self._map_tax_fiscal_position(tax);
+                if(tax.price_include && !_.contains(line_taxes, tax)){
+                    mapped_included_taxes.push(tax);
+                }
+            });
+
+            if (mapped_included_taxes.length > 0) {
+                return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
+            }
+        }
+        return price;
+    },
+    get_fixed_lst_price: function(){
+        return this.compute_fixed_price(this.get_lst_price());
     },
     get_lst_price: function(){
         return this.product.lst_price;
@@ -2623,25 +2645,7 @@ exports.Order = Backbone.Model.extend({
     },
 
     fix_tax_included_price: function(line){
-        if(this.fiscal_position){
-            var unit_price = line.price;
-            var taxes = line.get_taxes();
-            var mapped_included_taxes = [];
-            _(taxes).each(function(tax) {
-                var line_taxes = line._map_tax_fiscal_position(tax);
-                if(tax.price_include && !_.contains(line_taxes, tax)){
-
-                    mapped_included_taxes.push(tax);
-                }
-            });
-
-            if (mapped_included_taxes.length > 0) {
-                unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
-            }
-
-            line.set_unit_price(unit_price);
-        }
-
+        line.set_unit_price(line.compute_fixed_price(line.price));
     },
 
     add_product: function(product, options){
@@ -3111,6 +3115,9 @@ exports.NumpadState = Backbone.Model.extend({
             }else{
                 this.trigger('set_value',this.get('buffer'));
             }
+        } else if (this.get('buffer') === "-0") {
+            this.set({ buffer: "0" });
+            this.trigger('set_value',this.get('buffer'));
         }else{
             var newBuffer = this.get('buffer').slice(0,-1) || "";
             this.set({ buffer: newBuffer });

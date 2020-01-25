@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
 
 
@@ -166,3 +166,131 @@ class TestProcRule(TransactionCase):
         self.assertAlmostEqual(move_orig.date_expected, move_orig_initial_date, delta=timedelta(seconds=10), msg='schedule date should not be impacted by action_done')
         self.assertAlmostEqual(move_orig.date, datetime.now(), delta=timedelta(seconds=10), msg='date should be now')
         self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
+
+    def test_reordering_rule_1(self):
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product
+        orderpoint_form.location_id = warehouse.lot_stock_id
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint_form.product_max_qty = 5.0
+        orderpoint_form.save()
+
+        self.env['stock.rule'].create({
+            'name': 'Rule Supplier',
+            'route_id': warehouse.reception_route_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'action': 'pull',
+            'delay': 9.0,
+            'procure_method': 'make_to_stock',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+
+        delivery_move = self.env['stock.move'].create({
+            'name': 'Delivery',
+            'date_expected': datetime.today() + timedelta(days=5),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        delivery_move._action_confirm()
+        self.env['procurement.group'].run_scheduler()
+
+        receipt_move = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
+        ])
+        self.assertTrue(receipt_move)
+        self.assertEqual(receipt_move.date_expected.date(), date.today())
+        self.assertEqual(receipt_move.product_uom_qty, 17.0)
+
+
+class TestProcRuleLoad(TransactionCase):
+    def setUp(cls):
+        super(TestProcRuleLoad, cls).setUp()
+        cls.skipTest("Performance test, too heavy to run.")
+
+    def test_orderpoint_1(self):
+        """ Try 500 products with a 1000 RR(stock -> shelf1 and stock -> shelf2)
+        Also randomly include 4 miss configuration.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH'
+        })
+        warehouse.reception_steps = 'three_steps'
+        supplier_loc = self.env.ref('stock.stock_location_suppliers')
+        stock_loc = warehouse.lot_stock_id
+        shelf1 = self.env['stock.location'].create({
+            'location_id': stock_loc.id,
+            'usage': 'internal',
+            'name': 'shelf1'
+        })
+        shelf2 = self.env['stock.location'].create({
+            'location_id': stock_loc.id,
+            'usage': 'internal',
+            'name': 'shelf2'
+        })
+
+        products = self.env['product.product'].create([{'name': i, 'type': 'product'} for i in range(500)])
+        self.env['stock.warehouse.orderpoint'].create([{
+            'product_id': products[i // 2].id,
+            'location_id': (i % 2 == 0) and shelf1.id or shelf2.id,
+            'warehouse_id': warehouse.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        } for i in range(1000)])
+
+        self.env['stock.rule'].create({
+            'name': 'Rule Shelf1',
+            'route_id': warehouse.reception_route_id.id,
+            'location_id': shelf1.id,
+            'location_src_id': stock_loc.id,
+            'action': 'pull',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+        self.env['stock.rule'].create({
+            'name': 'Rule Shelf2',
+            'route_id': warehouse.reception_route_id.id,
+            'location_id': shelf2.id,
+            'location_src_id': stock_loc.id,
+            'action': 'pull',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+        self.env['stock.rule'].create({
+            'name': 'Rule Supplier',
+            'route_id': warehouse.reception_route_id.id,
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_src_id': supplier_loc.id,
+            'action': 'pull',
+            'procure_method': 'make_to_stock',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+
+        wrong_route = self.env['stock.location.route'].create({
+            'name': 'Wrong Route',
+        })
+        self.env['stock.rule'].create({
+            'name': 'Trap Rule',
+            'route_id': wrong_route.id,
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_src_id': supplier_loc.id,
+            'action': 'pull',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        (products[50] | products[99] | products[150] | products[199]).write({
+            'route_ids': [(4, wrong_route.id)]
+        })
+        self.env['procurement.group'].run_scheduler()
+        self.assertTrue(self.env['stock.move'].search([('product_id', 'in', products.ids)]))
+        for index in [50, 99, 150, 199]:
+            self.assertTrue(self.env['mail.activity'].search([
+                ('res_id', '=', products[index].product_tmpl_id.id),
+                ('res_model_id', '=', self.env.ref('product.model_product_template').id)
+            ]))

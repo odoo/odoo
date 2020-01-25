@@ -104,6 +104,8 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
     def expense_post_payment(self):
         self.ensure_one()
+        company = self.company_id
+        self = self.with_company(company.id)
         context = dict(self._context or {})
         active_ids = context.get('active_ids', [])
         expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)

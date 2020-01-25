@@ -18,10 +18,6 @@
 .o_base_settings {
     height: 100%;
 
-    @include media-breakpoint-down(sm) {
-        flex-flow: column nowrap;
-    }
-
     .o_control_panel {
         flex: 0 0 auto;
 
@@ -77,10 +73,6 @@
 
         overflow: auto;
 
-        @include media-breakpoint-down(sm) {
-            flex-flow: column nowrap;
-        }
-
         .settings_tab {
             display: flex;
             flex: 0 0 auto;
@@ -88,14 +80,6 @@
             background: gray('900');
             overflow: auto;
             padding-top: $o-horizontal-padding*0.5;
-
-            @include media-breakpoint-down(sm) {
-                flex: 0 0 $o-base-settings-mobile-tabs-height;
-                display: inline-flex;
-                position: relative;
-                overflow: hidden;
-                padding: 0;
-            }
 
             .selected {
                 background-color: gray('900');
@@ -120,55 +104,6 @@
                     width: 23px;
                     min-width: 23px;
                     margin-right: 10px;
-                }
-
-                // Mobile Tabs
-                @include media-breakpoint-down(sm) {
-                    display: block;
-                    @include o-position-absolute($left:100%);
-                    @include size(auto, $o-base-settings-mobile-tabs-height);
-                    padding: $o-base-settings-mobile-tabs-height*0.25 $o-base-settings-mobile-tabs-height*0.4;
-                    text-align: center;
-                    font-size: 14px;
-                    font-weight: 500;
-                    line-height: inherit;
-                    transition: 0.2s all ease 0s;
-                    transform: translate3d(0,0,0);
-
-                    .app_name {
-                        display: block;
-                        white-space: nowrap;
-                    }
-
-                    &:after {
-                        content: '';
-                        background: $o-brand-primary;
-                        opacity: 0;
-                        @include o-position-absolute(auto, 0, 0, 0);
-                        @include size(100%, 3px);
-                        transition: 0.2s all ease 0s;
-                    }
-
-                    &.previous, &.before {
-                        left: 0% - $o-base-settings-mobile-tabs-overflow-gap;
-                    }
-
-                    &.current {
-                        left: 50%;
-                        color: white;
-
-                        // Reset default style for 'selected' tabs
-                        box-shadow: none;
-                        background: none;
-
-                        &:after {
-                            opacity: 1;
-                        }
-                    }
-
-                    &.next, &.after {
-                        left: 100% + $o-base-settings-mobile-tabs-overflow-gap;
-                    }
                 }
             }
         }

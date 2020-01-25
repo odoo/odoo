@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+import operator as py_operator
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
-from datetime import datetime
-import operator as py_operator
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -523,6 +523,18 @@ class Product(models.Model):
                 raise UserError(msg)
         return res
 
+    def _get_rules_from_location(self, location, seen_rules=False):
+        if not seen_rules:
+            seen_rules = self.env['stock.rule']
+        rule = self.env['procurement.group']._get_rule(self, location, {'warehouse_id': location.get_warehouse()})
+        if not rule:
+            return seen_rules
+        if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
+            return seen_rules | rule
+        else:
+            return self._get_rules_from_location(rule.location_src_id, seen_rules | rule)
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     _check_company_auto = True
@@ -809,7 +821,7 @@ class UoM(models.Model):
 
                 if stock_move_lines:
                     raise UserError(_(
-                        "You cannot change the ratio of this unit of mesure as some"
+                        "You cannot change the ratio of this unit of measure as some"
                         " products with this UoM have already been moved or are "
                         "currently reserved."
                     ))

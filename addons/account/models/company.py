@@ -395,7 +395,7 @@ class ResCompany(models.Model):
             if float_is_zero(debit_diff + credit_diff, precision_rounding=currency.rounding):
                 if balancing_move_line:
                     # zero difference and existing line : delete the line
-                    balancing_move_line.unlink()
+                    self.account_opening_move_id.line_ids -= balancing_move_line
             else:
                 if balancing_move_line:
                     # Non-zero difference and existing line : edit the line

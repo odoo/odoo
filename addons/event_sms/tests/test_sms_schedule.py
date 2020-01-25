@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests.common import MockSMS
-from odoo.tools import mute_logger
 
 
 class TestSMSSchedule(TestEventCommon, MockSMS):

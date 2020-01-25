@@ -3,6 +3,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
 var core = require('web.core');
 const ColorpickerDialog = require('web.ColorpickerDialog');
+const Dialog = require('web.Dialog');
 const time = require('web.time');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
@@ -21,13 +22,18 @@ var _t = core._t;
  * @returns {HTMLElement} - the original 'el' argument
  */
 function _addTitleAndAllowedAttributes(el, title, options) {
+    let tooltipEl = el;
     if (title) {
         const titleEl = _buildTitleElement(title);
+        tooltipEl = titleEl;
         el.appendChild(titleEl);
     }
 
     if (options && options.classes) {
         el.classList.add(...options.classes);
+    }
+    if (options && options.tooltip) {
+        tooltipEl.title = options.tooltip;
     }
     if (options && options.dataAttributes) {
         for (const key in options.dataAttributes) {
@@ -111,9 +117,7 @@ function createPropertyProxy(obj, propertyName, value) {
 const UserValueWidget = Widget.extend({
     className: 'o_we_user_value_widget',
     custom_events: {
-        'user_value_change': '_onUserValueNotification',
-        'user_value_preview': '_onUserValueNotification',
-        'user_value_reset': '_onUserValueNotification',
+        'user_value_update': '_onUserValueNotification',
     },
 
     /**
@@ -282,12 +286,18 @@ const UserValueWidget = Widget.extend({
         this._methodsParams = _.extend({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
         this._dependencies = [];
+        this._triggerWidgetsNames = [];
+        this._triggerWidgetsValues = [];
 
         for (const key in this.el.dataset) {
             const dataValue = this.el.dataset[key].trim();
 
             if (key === 'dependencies') {
                 this._dependencies.push(...dataValue.split(/\s*,\s*/g));
+            } else if (key === 'trigger') {
+                this._triggerWidgetsNames.push(...dataValue.split(/\s*,\s*/g));
+            } else if (key === 'triggerValue') {
+                this._triggerWidgetsValues.push(...dataValue.split(/\s*,\s*/g));
             } else if (validMethodNames.includes(key)) {
                 this._methodsNames.push(key);
                 this._methodsParams.optionsPossibleValues[key] = dataValue.split(/\s*\|\s*/g);
@@ -317,6 +327,45 @@ const UserValueWidget = Widget.extend({
             const uniqArr = arr.filter((v, i, arr) => i === arr.indexOf(v));
             this._methodsParams.optionsPossibleValues[methodName] = uniqArr;
         }
+    },
+    /**
+     * @param {boolean} [previewMode=false]
+     * @param {boolean} [isSimulatedEvent=false]
+     */
+    notifyValueChange: function (previewMode, isSimulatedEvent) {
+        // If the widget has no associated method, it should not notify user
+        // value changes
+        if (!this._methodsNames.length) {
+            return;
+        }
+
+        // Don't notify a reset update if the widget was not previewed before.
+        const isPreviewed = this.isPreviewed();
+        if (previewMode === 'reset' && !isPreviewed) {
+            return;
+        }
+        // In the case we notify a change update, force a preview update if it
+        // was not already previewed
+        if (!previewMode && !isPreviewed) {
+            this.notifyValueChange(true);
+        }
+
+        const data = {
+            previewMode: previewMode || false,
+            isSimulatedEvent: !!isSimulatedEvent,
+        };
+        // TODO improve this. The preview state has to be updated only when the
+        // actual option _select is gonna be called... but this is delayed by a
+        // mutex. So, during test tours, we would notify both 'preview' and
+        // 'reset' before the 'preview' handling is done: and so the widget
+        // would not be considered in preview during that 'preview' handling.
+        if (previewMode === true) {
+            data.prepare = () => this.el.classList.add('o_we_preview');
+        } else if (previewMode === 'reset') {
+            data.prepare = () => this.el.classList.remove('o_we_preview');
+        }
+
+        this.trigger_up('user_value_update', data);
     },
     /**
      * Adds the given widget to the known list of user value sub-widgets (useful
@@ -376,44 +425,21 @@ const UserValueWidget = Widget.extend({
 
     /**
      * @private
-     * @param {boolean} [previewMode=false]
+     * @param {OdooEvent|Event}
+     * @returns {boolean}
      */
-    _notifyValueChange: function (previewMode) {
-        if (!this._methodsNames.length) {
-            return;
+    _handleNotifierEvent: function (ev) {
+        if (!ev) {
+            return true;
         }
-
-        const data = {
-            widget: this,
-        };
-        switch (previewMode) {
-            case undefined:
-            case false: {
-                this.trigger_up('user_value_change', data);
-                break;
-            }
-            case true: {
-                // TODO improve this. The preview state has to be updated only
-                // when the actual option _select is gonna be called... but this
-                // is delayed by a mutex. So, during test tours, we would notify
-                // both 'preview' and 'reset' before the 'preview' handling is
-                // done: and so the widget would be considered not in preview
-                // during that preview action handling.
-                data.prepare = () => this.el.classList.add('o_we_preview');
-                this.trigger_up('user_value_preview', data);
-                break;
-            }
-            default: {
-                // TODO improve this. The preview state has to be updated only
-                // when the actual option _select is gonna be called... but this
-                // is delayed by a mutex. So, during test tours, we would notify
-                // both 'preview' and 'reset' before the 'preview' handling is
-                // done: and so the widget would be considered not in preview
-                // during that preview action handling.
-                data.prepare = () => this.el.classList.remove('o_we_preview');
-                this.trigger_up('user_value_reset', data);
-            }
+        if (ev._seen) {
+            return false;
         }
+        ev._seen = true;
+        if (ev.preventDefault) {
+            ev.preventDefault();
+        }
+        return true;
     },
     /**
      * Updates the UI to match the user value the widget currently holds (this
@@ -438,18 +464,12 @@ const UserValueWidget = Widget.extend({
      * change.
      *
      * @private
-     * @param {Event} ev
+     * @param {OdooEvent|Event} [ev]
      */
     _onUserValueChange: function (ev) {
-        if (ev.isDefaultPrevented()) {
-            return;
+        if (this._handleNotifierEvent(ev)) {
+            this.notifyValueChange(false);
         }
-        if (!this.isPreviewed()) {
-            this._onUserValuePreview(ev);
-        }
-        ev.preventDefault();
-
-        this._notifyValueChange(false);
     },
     /**
      * Allows container widgets to add additional data if needed.
@@ -459,39 +479,40 @@ const UserValueWidget = Widget.extend({
      */
     _onUserValueNotification: function (ev) {
         ev.data.widget = this;
+
+        if (!ev.data.triggerWidgetsNames) {
+            ev.data.triggerWidgetsNames = [];
+        }
+        ev.data.triggerWidgetsNames.push(...this._triggerWidgetsNames);
+
+        if (!ev.data.triggerWidgetsValues) {
+            ev.data.triggerWidgetsValues = [];
+        }
+        ev.data.triggerWidgetsValues.push(...this._triggerWidgetsValues);
     },
     /**
      * Should be called when an user event on the widget indicates a value
      * preview.
      *
      * @private
-     * @param {Event} ev
+     * @param {OdooEvent|Event} [ev]
      */
     _onUserValuePreview: function (ev) {
-        if (ev.isDefaultPrevented()) {
-            return;
+        if (this._handleNotifierEvent(ev)) {
+            this.notifyValueChange(true);
         }
-        ev.preventDefault();
-
-        this._notifyValueChange(true);
     },
     /**
      * Should be called when an user event on the widget indicates a value
      * reset.
      *
      * @private
-     * @param {Event} ev
+     * @param {OdooEvent|Event} [ev]
      */
     _onUserValueReset: function (ev) {
-        if (!this.isPreviewed()) {
-            return;
+        if (this._handleNotifierEvent(ev)) {
+            this.notifyValueChange('reset');
         }
-        if (ev.isDefaultPrevented()) {
-            return;
-        }
-        ev.preventDefault();
-
-        this._notifyValueChange('reset');
     },
 });
 
@@ -925,13 +946,13 @@ const MultiUserValueWidget = UserValueWidget.extend({
 });
 
 const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
-    className: (ButtonUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
-    custom_events: {
+    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
+    custom_events: _.extend({}, SelectUserValueWidget.prototype.custom_events, {
         'color_picked': '_onColorPicked',
         'color_hover': '_onColorHovered',
         'color_leave': '_onColorLeft',
         'color_reset': '_onColorReset',
-    },
+    }),
 
     /**
      * @override
@@ -968,7 +989,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     getValue: function (methodName) {
-        return this._previewColor || this._super(...arguments);
+        if (typeof this._previewColor === 'string') {
+            return this._previewColor;
+        }
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -1035,7 +1059,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     _onColorPicked: function (ev) {
         this._previewColor = false;
         this._value = ev.data.color;
-        this._notifyValueChange(false);
+        this._onUserValueChange(ev);
     },
     /**
      * Called when a color button is entered -> previews the background color.
@@ -1045,7 +1069,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onColorHovered: function (ev) {
         this._previewColor = ev.data.color;
-        this._notifyValueChange(true);
+        this._onUserValuePreview(ev);
     },
     /**
      * Called when a color button is left -> cancels the preview.
@@ -1055,7 +1079,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onColorLeft: function (ev) {
         this._previewColor = false;
-        this._notifyValueChange('reset');
+        this._onUserValueReset(ev);
     },
     /**
      * Called when the color reset button is clicked -> removes all color
@@ -1063,9 +1087,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      *
      * @private
      */
-    _onColorReset: function () {
+    _onColorReset: function (ev) {
         this._value = '';
-        this._notifyValueChange(false);
+        this._onUserValueChange(ev);
     },
 });
 
@@ -1152,7 +1176,7 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
                 this._value = dummyEl.getAttribute('src');
                 this.isVideo = false;
             }
-            this._notifyValueChange(false);
+            this._onUserValueChange();
         });
     },
     /**
@@ -1163,7 +1187,7 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
     _onRemoveImage: function (ev) {
         this._value = '';
         this.isVideo = false;
-        this._notifyValueChange(false);
+        this._onUserValueChange(ev);
     },
 });
 
@@ -1309,9 +1333,7 @@ const userValueWidgetsRegistry = {
 const SnippetOptionWidget = Widget.extend({
     tagName: 'we-customizeblock-option',
     custom_events: {
-        'user_value_change': '_onOptionSelection',
-        'user_value_preview': '_onOptionPreview',
-        'user_value_reset': '_onOptionCancel',
+        'user_value_update': '_onUserValueUpdate',
     },
     /**
      * Indicates if the option should be displayed in the button group at the
@@ -1720,7 +1742,8 @@ const SnippetOptionWidget = Widget.extend({
             }
 
             const dependencies = widget.getDependencies();
-            const dependenciesOK = !dependencies.length || dependencies.some(depName => {
+            const dependenciesData = [];
+            dependencies.forEach(depName => {
                 const toBeActive = (depName[0] !== '!');
                 if (!toBeActive) {
                     depName = depName.substr(1);
@@ -1731,7 +1754,15 @@ const SnippetOptionWidget = Widget.extend({
                     name: depName,
                     onSuccess: _widget => widget = _widget,
                 });
-                return widget && (widget.isActive() === toBeActive);
+                if (widget) {
+                    dependenciesData.push({
+                        widget: widget,
+                        toBeActive: toBeActive,
+                    });
+                }
+            });
+            const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
+                return (depData.widget.isActive() === depData.toBeActive);
             });
 
             widget.toggleVisibility(dependenciesOK);
@@ -1838,48 +1869,10 @@ const SnippetOptionWidget = Widget.extend({
             options: {
                 classes: el.classList,
                 dataAttributes: el.dataset,
+                tooltip: el.title,
                 childNodes: [...el.childNodes],
             },
         };
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {boolean|string} previewMode
-     */
-    _handleUserValueEvent: function (ev, previewMode) {
-        ev.stopPropagation();
-        this.trigger_up('snippet_edition_request', {exec: async () => {
-            if (ev.data.prepare) {
-                ev.data.prepare();
-            }
-
-            const widget = ev.data.widget;
-            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
-                // TODO the flag should be fetched through widget params somehow
-                return;
-            }
-
-            // If it is not preview mode, the user selected the option for good
-            // (so record the action)
-            if (!previewMode) {
-                this.trigger_up('request_history_undo_record', {$target: this.$target});
-            }
-
-            // Call widget option methods and update $target
-            await this._select(previewMode, widget);
-            this.$target.trigger('content_changed');
-
-            await new Promise(resolve => {
-                // Will update the UI of the correct widgets for all options
-                // related to the same $target/editor if necessary
-                this.trigger_up('snippet_option_update', {
-                    widget: widget,
-                    previewMode: previewMode,
-                    onSuccess: () => resolve(),
-                });
-            });
-        }});
     },
     /**
      * @private
@@ -2039,34 +2032,80 @@ const SnippetOptionWidget = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when a option link is entered or an option input content is being
-     * modified -> activates the related option in preview mode.
+     * Called when a widget notifies a preview/change/reset.
      *
      * @private
      * @param {Event} ev
      */
-    _onOptionPreview: function (ev) {
-        this._handleUserValueEvent(ev, true);
-    },
-    /**
-     * Called when an option link is clicked or an option input content is
-     * validated -> activates the related option.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onOptionSelection: function (ev) {
-        this._handleUserValueEvent(ev, false);
-    },
-    /**
-     * Called when an option link/menu is left -> reactivate the options that
-     * were activated before previews.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onOptionCancel: function (ev) {
-        this._handleUserValueEvent(ev, 'reset');
+    _onUserValueUpdate: function (ev) {
+        ev.stopPropagation();
+        const widget = ev.data.widget;
+        const previewMode = ev.data.previewMode;
+
+        // Ask a mutexed snippet update according to the widget value change
+        const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            if (ev.data.prepare) {
+                ev.data.prepare();
+            }
+
+            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
+                // TODO the flag should be fetched through widget params somehow
+                return;
+            }
+
+            // If it is not preview mode, the user selected the option for good
+            // (so record the action)
+            if (shouldRecordUndo) {
+                this.trigger_up('request_history_undo_record', {$target: this.$target});
+            }
+
+            // Call widget option methods and update $target
+            await this._select(previewMode, widget);
+            this.$target.trigger('content_changed');
+
+            await new Promise(resolve => {
+                // Will update the UI of the correct widgets for all options
+                // related to the same $target/editor if necessary
+                this.trigger_up('snippet_option_update', {
+                    widget: widget,
+                    previewMode: previewMode,
+                    onSuccess: () => resolve(),
+                });
+            });
+        }});
+
+        // Check linked widgets: force their value and simulate a notification
+        const triggerWidgetsNames = ev.data.triggerWidgetsNames;
+        const triggerWidgetsValues = ev.data.triggerWidgetsValues;
+        for (let i = 0, l = triggerWidgetsNames.length; i < l; i++) {
+            const widgetName = triggerWidgetsNames[i];
+            const widgetValue = triggerWidgetsValues[i];
+
+            let linkedWidget = null;
+            this.trigger_up('user_value_widget_request', {
+                name: widgetName,
+                onSuccess: _widget => linkedWidget = _widget,
+            });
+            if (linkedWidget) {
+                if (widgetValue !== undefined) {
+                    // FIXME right now only make this work supposing it is a
+                    // colorpicker widget with big big hacks, this should be
+                    // improved a lot
+                    const normValue = this._normalizeWidgetValue(widgetValue);
+                    if (previewMode === true) {
+                        linkedWidget._previewColor = normValue;
+                    } else if (previewMode === false) {
+                        linkedWidget._previewColor = false;
+                        linkedWidget._value = normValue;
+                    } else {
+                        linkedWidget._previewColor = false;
+                    }
+                }
+
+                linkedWidget.notifyValueChange(previewMode, true);
+            }
+        }
     },
 });
 const registry = {};
@@ -2943,6 +2982,60 @@ registry.many2one = SnippetOptionWidget.extend({
         });
     }
 });
+
+/**
+ * Handle the save of a snippet as a template that can be reused later
+ */
+registry.SnippetSave = SnippetOptionWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    isTopOption: true,
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    saveSnippet: function (previewMode, widgetValue, params) {
+        return new Promise(resolve => {
+            const dialog = new Dialog(this, {
+                title: _t("Save Your Block"),
+                size: 'small',
+                $content: $(qweb.render('web_editor.dialog.save_snippet', {
+                    currentSnippetName: _.str.sprintf(_t("Custom %s"), this.data.snippetName),
+                })),
+                buttons: [{
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: async () => {
+                        const snippetName = dialog.el.querySelector('.o_we_snippet_name_input').value;
+                        const targetCopyEl = this.$target[0].cloneNode(true);
+                        delete targetCopyEl.dataset.name;
+                        await this._rpc({
+                            model: 'ir.ui.view',
+                            method: 'save_snippet',
+                            kwargs: {
+                                'name': snippetName,
+                                'arch': targetCopyEl.outerHTML,
+                                'template_key': this.options.snippets,
+                                'snippet_class': [...this.$target[0].classList].filter(x => /\bs_./g.test(x))[0],
+                            },
+                        });
+                        this.trigger_up('reload_snippet_template');
+                        resolve();
+                    },
+                }, {
+                    text: _t("Discard"),
+                    close: true,
+                    click: () => resolve(),
+                }],
+            }).open();
+        });
+    },
+});
+
 
 return {
     SnippetOptionWidget: SnippetOptionWidget,

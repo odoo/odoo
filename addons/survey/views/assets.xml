@@ -8,12 +8,15 @@
         <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
 
         <script type="text/javascript" src="/survey/static/src/js/survey_timer.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey_breadcrumb.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey_form.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey_print.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
 
+        <t t-call="web._assets_helpers"/>
         <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
         <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
-        <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_templates.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_form.scss"/>
     </template>
 
     <template id="survey_report_assets_pdf" inherit_id="web.report_assets_pdf">

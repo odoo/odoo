@@ -3,15 +3,16 @@
 
 from collections import defaultdict
 from datetime import datetime
-from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
-from re import findall as regex_findall, split as regex_split
+from re import findall as regex_findall
+from re import split as regex_split
 
-from odoo import api, fields, models, _, SUPERUSER_ID
+from dateutil import relativedelta
+
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
-from odoo.tools.float_utils import float_compare, float_round, float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -149,9 +150,6 @@ class StockMove(models.Model):
     availability = fields.Float(
         'Forecasted Quantity', compute='_compute_product_availability',
         readonly=True, help='Quantity in stock that can still be reserved for this move')
-    string_availability_info = fields.Text(
-        'Availability', compute='_compute_string_qty_information',
-        readonly=True, help='Show various information on stock availability for this move')
     restrict_partner_id = fields.Many2one(
         'res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'",
         check_company=True)
@@ -177,6 +175,7 @@ class StockMove(models.Model):
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
+    orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
@@ -356,30 +355,6 @@ class StockMove(models.Model):
             else:
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
-
-    def _compute_string_qty_information(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        void_moves = self.filtered(lambda move: move.state in ('draft', 'done', 'cancel') or move.location_id.usage != 'internal')
-        other_moves = self - void_moves
-        for move in void_moves:
-            move.string_availability_info = ''  # 'not applicable' or 'n/a' could work too
-        for move in other_moves:
-            total_available = min(move.product_qty, move.reserved_availability + move.availability)
-            total_available = move.product_id.uom_id._compute_quantity(total_available, move.product_uom, round=False)
-            total_available = float_round(total_available, precision_digits=precision)
-            info = str(total_available)
-            if self.user_has_groups('uom.group_uom'):
-                info += ' ' + move.product_uom.name
-            if move.reserved_availability:
-                if move.reserved_availability != total_available:
-                    # some of the available quantity is assigned and some are available but not reserved
-                    reserved_available = move.product_id.uom_id._compute_quantity(move.reserved_availability, move.product_uom, round=False)
-                    reserved_available = float_round(reserved_available, precision_digits=precision)
-                    info += _(' (%s reserved)') % str(reserved_available)
-                else:
-                    # all available quantity is assigned
-                    info += _(' (reserved)')
-            move.string_availability_info = info
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -829,19 +804,6 @@ class StockMove(models.Model):
             else:
                 return moves_todo[-1].state or 'draft'
 
-    @api.onchange('product_id', 'product_qty')
-    def onchange_quantity(self):
-        if not self.product_id or self.product_qty < 0.0:
-            self.product_qty = 0.0
-        if self.product_qty < self._origin.product_qty:
-            warning_mess = {
-                'title': _('Quantity decreased!'),
-                'message' : _("By changing this quantity here, you accept the "
-                              "new quantity as complete: Odoo will not "
-                              "automatically generate a back order."),
-            }
-            return {'warning': warning_mess}
-
     @api.onchange('product_id')
     def onchange_product_id(self):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
@@ -1062,7 +1024,7 @@ class StockMove(models.Model):
                 move.product_id, move.product_uom_qty, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
-        self.env['procurement.group'].run(procurement_requests)
+        self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
@@ -1095,6 +1057,7 @@ class StockMove(models.Model):
             'route_ids': self.route_ids,
             'warehouse_id': self.warehouse_id or self.picking_id.picking_type_id.warehouse_id or self.picking_type_id.warehouse_id,
             'priority': self.priority,
+            'orderpoint_id': self.orderpoint_id,
         }
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):

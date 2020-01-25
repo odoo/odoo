@@ -40,6 +40,7 @@
         <field name="seats_max">500</field>
         <field name="address_id" ref="base.res_partner_1"/>
         <field name="event_type_id" ref="event_type_1"/>
+        <field name="stage_id" ref="event_stage_booked"/>
     </record>
 
     <record id="event.event_1" model="event.event">
@@ -50,6 +51,7 @@
         <field name="event_type_id" ref="event_type_1"/>
         <field name="address_id" ref="base.res_partner_1"/>
         <field name="seats_availability">unlimited</field>
+        <field name="stage_id" ref="event_stage_booked"/>
     </record>
 
     <record id="event_2" model="event.event">
@@ -61,6 +63,7 @@
         <field name="address_id" ref="base.res_partner_4"/>
         <field name="seats_availability">limited</field>
         <field name="seats_max">200</field>
+        <field name="stage_id" ref="event_stage_booked"/>
     </record>
 
     <record id="event.event_3" model="event.event">
@@ -71,6 +74,7 @@
         <field name="event_type_id" ref="event_type_3"/>
         <field name="address_id" ref="base.res_partner_3"/>
         <field name="seats_availability">unlimited</field>
+        <field name="stage_id" ref="event_stage_announced"/>
     </record>
 
     <record id="event.event_4" model="event.event">
@@ -80,6 +84,7 @@
         <field eval="(DateTime.today()+ timedelta(days=50)).strftime('%Y-%m-%d 22:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_4"/>
         <field name="address_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="event_stage_announced"/>
     </record>
 
     <record id="event.event_5" model="event.event">
@@ -100,14 +105,6 @@
         <field name="address_id" ref="base.res_partner_1"/>
     </record>
 
-    <function model="event.event" name="button_confirm" eval="[ref('event_0')]"/>
-    <function model="event.event" name="button_confirm" eval="[ref('event_1')]"/>
-    <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
-    <function model="event.event" name="button_confirm" eval="[ref('event_3')]"/>
-    <function model="event.event" name="button_confirm" eval="[ref('event_4')]"/>
-    <function model="event.event" name="button_confirm" eval="[ref('event_5')]"/>
-    <function model="event.event" name="button_confirm" eval="[ref('event_6')]"/>
-
     <!-- Attendee -->
     <record id="reg_2_0" model="event.registration">
         <field name="name">Camptocamp</field>
@@ -116,6 +113,5 @@
         <field name="event_id" ref="event_2"/>
         <field name="partner_id" ref="base.res_partner_12"/>
     </record>
-
     </data>
 </odoo>

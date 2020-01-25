@@ -350,6 +350,74 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2many kanban: conditional create/delete actions', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.records[0].timmy = [12, 14];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="color"/>
+                        <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
+                            <kanban>
+                                <field name="display_name"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click">
+                                            <span><t t-esc="record.display_name.value"/></span>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </form>`,
+                archs: {
+                    'partner_type,false,form': '<form><field name="name"/></form>',
+                    'partner_type,false,list': '<tree><field name="name"/></tree>',
+                    'partner_type,false,search': '<search/>',
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // color is red
+            assert.containsOnce(form, '.o-kanban-button-new', '"Add" button should be available');
+
+            await testUtils.dom.click(form.$('.o_kanban_record:contains(silver)'));
+            assert.containsOnce(document.body, '.modal .modal-footer .o_btn_remove',
+                'remove button should be visible in modal');
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            await testUtils.dom.click(form.$('.o-kanban-button-new'));
+            assert.containsN(document.body, '.modal .modal-footer button', 3,
+                'there should be 3 buttons available in the modal');
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // set color to black
+            await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
+            assert.containsOnce(form, '.o-kanban-button-new',
+                '"Add" button should still be available even after color field changed');
+
+            await testUtils.dom.click(form.$('.o-kanban-button-new'));
+            // only select and cancel button should be available, create
+            // button should be removed based on color field condition
+            assert.containsN(document.body, '.modal .modal-footer button', 2,
+                '"Create" button should not be available in the modal after color field changed');
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            await testUtils.dom.click(form.$('.o_kanban_record:contains(silver)'));
+            assert.containsNone(document.body, '.modal .modal-footer .o_btn_remove',
+                'remove button should be visible in modal');
+
+            form.destroy();
+        });
+
         QUnit.test('many2many list (non editable): edition', async function (assert) {
             assert.expect(29);
 
@@ -638,6 +706,64 @@ QUnit.module('fields', {}, function () {
 
             assert.ok(!form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" link should not be available in edit either');
+
+            form.destroy();
+        });
+
+        QUnit.test('many2many list: conditional create/delete actions', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.records[0].timmy = [12, 14];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="color"/>
+                        <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                archs: {
+                    'partner_type,false,list': '<tree><field name="name"/></tree>',
+                    'partner_type,false,search': '<search/>',
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // color is red -> create and delete actions are available
+            assert.containsOnce(form, '.o_field_x2many_list_row_add',
+                "should have the 'Add an item' link");
+            assert.containsN(form, '.o_list_record_remove', 2,
+                "should have two remove icons");
+
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+
+            assert.containsN(document.body, '.modal .modal-footer button', 3,
+                'there should be 3 buttons available in the modal');
+
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // set color to black -> create and delete actions are no longer available
+            await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
+
+            // add a line and remove icon should still be there as they don't create/delete records,
+            // but rather add/remove links
+            assert.containsOnce(form, '.o_field_x2many_list_row_add',
+                '"Add a line" button should still be available even after color field changed');
+            assert.containsN(form, '.o_list_record_remove', 2,
+                "should still have remove icon even after color field changed");
+
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsN(document.body, '.modal .modal-footer button', 2,
+                '"Create" button should not be available in the modal after color field changed');
 
             form.destroy();
         });
@@ -1229,6 +1355,95 @@ QUnit.module('fields', {}, function () {
             pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
             assert.equal(pager_limit.text(), '51',
                 'We should have 51 records in the m2m field');
+
+            form.destroy();
+        });
+
+        QUnit.test('many2many_tags widget: conditional create/delete actions', async function (assert) {
+            assert.expect(10);
+
+            this.data.turtle.records[0].partner_ids = [2];
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner.records.push({ id: 100 + i, display_name: "Partner" + i });
+            }
+
+            const form = await createView({
+                View: FormView,
+                model: 'turtle',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="turtle_bar"/>
+                        <field name="partner_ids" options="{'create': [('turtle_bar', '=', True)], 'delete': [('turtle_bar', '=', True)]}" widget="many2many_tags"/>
+                    </form>`,
+                archs: {
+                    'partner,false,list': '<tree><field name="name"/></tree>',
+                    'partner,false,search': '<search/>',
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // turtle_bar is true -> create and delete actions are available
+            assert.containsOnce(form, '.o_field_many2manytags.o_field_widget .badge .o_delete',
+                'X icon on badges should not be available');
+
+            await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+
+            const $dropdown1 = form.$('.o_field_many2one input').autocomplete('widget');
+            assert.containsOnce($dropdown1, 'li.o_m2o_dropdown_option:contains(Create and Edit...)',
+                'autocomplete should contain Create and Edit...');
+
+            await testUtils.fields.many2one.clickItem('partner_ids', 'Search More');
+
+            assert.containsN(document.body, '.modal .modal-footer button', 3,
+                'there should be 3 buttons (Select, Create and Cancel) available in the modal footer');
+
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // type something that doesn't exist
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
+                'Something that does not exist', 'keydown');
+            // await testUtils.nextTick();
+            assert.containsN($dropdown1, 'li.o_m2o_dropdown_option', 2,
+                'autocomplete should contain Create and Create and Edit... options');
+
+            // set turtle_bar false -> create and delete actions are no longer available
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtle_bar"] input').first());
+
+            // remove icon should still be there as it doesn't delete records but rather remove links
+            assert.containsOnce(form, '.o_field_many2manytags.o_field_widget .badge .o_delete',
+                'X icon on badge should still be there even after turtle_bar is not checked');
+
+            await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+            const $dropdown2 = form.$('.o_field_many2one input').autocomplete('widget');
+
+            // only Search More option should be available
+            assert.containsOnce($dropdown2, 'li.o_m2o_dropdown_option',
+                'autocomplete should contain only one option');
+            assert.containsOnce($dropdown2, 'li.o_m2o_dropdown_option:contains(Search More)',
+                'autocomplete option should be Search More');
+
+            await testUtils.fields.many2one.clickItem('partner_ids', 'Search More');
+
+            assert.containsN(document.body, '.modal .modal-footer button', 2,
+                'there should be 2 buttons (Select and Cancel) available in the modal footer');
+
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // type something that doesn't exist
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
+                'Something that does not exist', 'keyup');
+            // await testUtils.nextTick();
+
+            // only Search More option should be available
+            assert.containsOnce($dropdown2, 'li.o_m2o_dropdown_option',
+                'autocomplete should contain only one option');
+            assert.containsOnce($dropdown2, 'li.o_m2o_dropdown_option:contains(Search More)',
+                'autocomplete option should be Search More');
 
             form.destroy();
         });

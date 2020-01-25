@@ -2,7 +2,6 @@ odoo.define('web.KanbanView', function (require) {
 "use strict";
 
 var BasicView = require('web.BasicView');
-var config = require('web.config');
 var core = require('web.core');
 var KanbanController = require('web.KanbanController');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
@@ -82,12 +81,6 @@ var KanbanView = BasicView.extend({
         this.controllerParams.on_create = archAttrs.on_create;
         this.controllerParams.hasButtons = !params.selectionMode ? true : false;
         this.controllerParams.quickCreateEnabled = this.rendererParams.quickCreateEnabled;
-
-
-        if (config.device.isMobile) {
-            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
-        }
-
     },
 
     //--------------------------------------------------------------------------
