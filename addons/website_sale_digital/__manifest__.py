@@ -15,6 +15,7 @@ Once the order is paid, the file is made available in the order confirmation pag
     ],
     'installable': True,
     'data': [
+        'security/website_sale_digital_security.xml',
         'views/website_sale_digital.xml',
         'views/website_sale_digital_view.xml',
     ],
