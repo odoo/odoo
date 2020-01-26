@@ -36,13 +36,13 @@
             <field name="model">website.rewrite</field>
             <field name="arch" type="xml">
                 <tree string="Website rewrites">
+                    <field name="sequence" widget="handle" />
                     <field name="redirect_type"/>
                     <field name="name"/>
                     <field name="url_from"/>
                     <field name="url_to"/>
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="active"/>
-                    <field name="sequence" widget="handle" />
                 </tree>
             </field>
         </record>
