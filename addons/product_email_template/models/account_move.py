@@ -14,8 +14,10 @@ class AccountMove(models.Model):
                 invoice.message_subscribe([invoice.partner_id.id])
             for line in invoice.invoice_line_ids:
                 if line.product_id.email_template_id:
-                    invoice.with_context(custom_layout="mail.mail_notification_light").message_post_with_template(
-                        line.product_id.email_template_id.id, composition_mode="comment"
+                    invoice.message_post_with_template(
+                        line.product_id.email_template_id.id,
+                        composition_mode="comment",
+                        email_layout_xmlid="mail.mail_notification_light"
                     )
         return True
 
