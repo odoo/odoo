@@ -14,7 +14,7 @@
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Martin Trigaux, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2371,7 +2371,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:178
 #, python-format
 msgid "Bills to pay"
-msgstr ""
+msgstr "Účty k zaplacení"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -2835,7 +2835,7 @@ msgstr "Podřízené daně"
 #: code:addons/account/models/chart_template.py:349
 #, python-format
 msgid "Choose Accounting Template"
-msgstr ""
+msgstr "Zvolit účetní šablonu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
@@ -4577,7 +4577,7 @@ msgstr "Federální státy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_import_wizard__attachment_ids
 msgid "Files"
-msgstr ""
+msgstr "Soubory"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.cash_box_in_form
@@ -4628,6 +4628,7 @@ msgstr "Fiskální období"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -6736,7 +6737,7 @@ msgstr "Memo bude počítáno z faktur"
 #: code:addons/account/static/src/xml/account_payment.xml:64
 #, python-format
 msgid "Memo:"
-msgstr ""
+msgstr "Pozn: "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
@@ -6815,7 +6816,7 @@ msgstr "Stav moderování"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:175
 #, python-format
 msgid "Modify models"
-msgstr ""
+msgstr "Upravit modely"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -7220,7 +7221,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "On the"
-msgstr ""
+msgstr "Na"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_confirm_view
@@ -7294,7 +7295,7 @@ msgstr "Datum otevření"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_journal_id
 msgid "Opening Journal"
-msgstr ""
+msgstr "Otevírání deníku"
 
 #. module: account
 #: code:addons/account/models/company.py:343
@@ -7730,7 +7731,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
 msgid "Payment Receipt"
-msgstr ""
+msgstr "Stvrzenka platby"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -9730,7 +9731,7 @@ msgstr "Bez daně"
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Included"
-msgstr ""
+msgstr "včetně daně"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10512,7 +10513,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
-msgstr ""
+msgstr "Pro váš účet momentálně neexistují žádné faktury ani platby."
 
 #. module: account
 #: code:addons/account/models/company.py:248
@@ -10851,6 +10852,7 @@ msgstr "K platbě"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
+"Pro spárování  záznamů by společnost měla být stejná pro všechny položky."
 
 #. module: account
 #. openerp-web
@@ -10981,7 +10983,7 @@ msgstr "Celkem v měně faktury"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__total_entry_encoding
 msgid "Total of transaction lines."
-msgstr ""
+msgstr "Celkem transakčních řádků."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12145,7 +12147,7 @@ msgstr "o_manual_statement"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "of the current month"
-msgstr ""
+msgstr "aktuálního měsíce"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
