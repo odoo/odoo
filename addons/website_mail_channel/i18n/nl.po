@@ -3,18 +3,18 @@
 # 	* website_mail_channel
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Julia van Orsouw <julia@odooexperts.nl>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Julia van Orsouw <julia@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2019\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alia\" title=\"Alias\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -128,7 +128,7 @@ msgstr "<i class=\"fa fa-times\"/> uitschrijven"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Discussiegroep</span>"
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Discussie groep</span>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
@@ -266,8 +266,8 @@ msgstr ""
 "                    % if user.company_id.phone\n"
 "                        ${user.company_id.phone} |\n"
 "                    %endif\n"
-"                    % if user.company_id.e-mail\n"
-"                        <a href=\"'mailto:%s' % ${user.company_id.e-mail}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.e-mail}</a> |\n"
+"                    % if user.company_id.email\n"
+"                        <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a> |\n"
 "                    % endif\n"
 "                    % if user.company_id.website\n"
 "                        <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.website}\n"
@@ -427,8 +427,8 @@ msgstr ""
 "                    % if user.company_id.phone\n"
 "                        ${user.company_id.phone} |\n"
 "                    %endif\n"
-"                    % if user.company_id.e-mail\n"
-"                        <a href=\"'mailto:%s' % ${user.company_id.e-mail}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.e-mail}</a> |\n"
+"                    % if user.company_id.email\n"
+"                        <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a> |\n"
 "                    % endif\n"
 "                    % if user.company_id.website\n"
 "                        <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.website}\n"
@@ -454,7 +454,7 @@ msgstr ""
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:15
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:0
 #, python-format
 msgid "Add a Subscribe Button"
 msgstr "Voeg een aanmeldingsknop toe"
@@ -514,15 +514,15 @@ msgstr "Discussiekanaal"
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:16
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:0
 #, python-format
 msgid "Discussion List"
-msgstr "Discussielijst"
+msgstr "Discussie lijst"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
-msgstr "Opvolgingen"
+msgstr "Betalingsherinneringen"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -535,17 +535,17 @@ msgid "Invalid or expired confirmation link."
 msgstr "Ongeldige of verlopen bevesttigingslink."
 
 #. module: website_mail_channel
+#: model:website.menu,name:website_mail_channel.menu_mailing_list
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
-#: model:website.menu,name:website_mail_channel.menu_mailing_list
 msgid "Mailing Lists"
 msgstr "Mailinglijsten"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:20
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Mailing-List"
-msgstr "Mailinglijst"
+msgstr "Mailing-lijst"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -554,7 +554,7 @@ msgid ""
 "float-right\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
 "Wilt u zich uitschrijven? Dat kan hier! <span class=\"fa fa-2x fa-arrow-down"
-" float-right\" role=\"img\" aria-label=\"\" title=\"Lees dit!\"/>"
+" float-right\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
@@ -562,7 +562,7 @@ msgid "Outgoing Mails"
 msgstr "Uitgaande e-mails"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:21
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Post to"
 msgstr "Versturen naar"
@@ -589,7 +589,7 @@ msgid "The address"
 msgstr "Het adres"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:245
+#: code:addons/website_mail_channel/controllers/main.py:0
 #, python-format
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
@@ -599,7 +599,7 @@ msgstr ""
 "mailinglijst"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
@@ -641,7 +641,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "mailing list archives"
-msgstr "mailinglijst archieven"
+msgstr "Mailing lijst archieven"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -650,7 +650,7 @@ msgid ""
 "                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
 "leden<br/>\n"
-"                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Verkeer\" title=\"Verkeer\"/>"
+"                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -680,7 +680,7 @@ msgstr "ingeschreven"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr "aan de mailinglijst."
+msgstr "aan de mailing lijst."
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -691,4 +691,4 @@ msgstr "uitgeschreven"
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
-msgstr "Uw e-mail..."
+msgstr "uw e-mail..."
