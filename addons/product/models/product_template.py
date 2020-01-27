@@ -6,6 +6,7 @@ import logging
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -897,10 +898,15 @@ class ProductTemplate(models.Model):
         Use sudo because the same result should be cached for all users.
         """
         self.ensure_one()
-        return self.env['product.product'].sudo().with_context(active_test=False).search([
-            ('product_tmpl_id', '=', self.id),
-            ('combination_indices', '=', filtered_combination._ids2str())
-        ], order='active DESC', limit=1).id
+        domain = [('product_tmpl_id', '=', self.id)]
+        combination_indices_ids = filtered_combination._ids2str()
+
+        if combination_indices_ids:
+            domain = expression.AND([domain, [('combination_indices', '=', combination_indices_ids)]])
+        else:
+            domain = expression.AND([domain, [('combination_indices', 'in', ['', False])]])
+
+        return self.env['product.product'].sudo().with_context(active_test=False).search(domain, order='active DESC', limit=1).id
 
     @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):

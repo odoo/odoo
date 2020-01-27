@@ -19,9 +19,9 @@ class Contract(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
     job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True,
         help="Start date of the contract.")
-    date_end = fields.Date('End Date',
+    date_end = fields.Date('End Date', tracking=True,
         help="End date of the contract (if it's a fixed-term contract).")
     trial_date_end = fields.Date('End of Trial Period',
         help="End date of the trial period (if there is one).")
@@ -133,6 +133,26 @@ class Contract(models.Model):
         self.search([('state', '=', 'draft'), ('kanban_state', '=', 'done'), ('date_start', '<=', fields.Date.to_string(date.today())),]).write({
             'state': 'open'
         })
+
+        contract_ids = self.search([('date_end', '=', False), ('state', '=', 'close'), ('employee_id', '!=', False)])
+        # Ensure all closed contract followed by a new contract have a end date.
+        # If closed contract has no closed date, the work entries will be generated for an unlimited period.
+        for contract in contract_ids:
+            next_contract = self.search([
+                ('employee_id', '=', contract.employee_id.id),
+                ('state', 'not in', ['cancel', 'new']),
+                ('date_start', '>', contract.date_start)
+            ], order="date_start asc", limit=1)
+            if next_contract:
+                contract.date_end = next_contract.date_start - relativedelta(days=1)
+                continue
+            next_contract = self.search([
+                ('employee_id', '=', contract.employee_id.id),
+                ('date_start', '>', contract.date_start)
+            ], order="date_start asc", limit=1)
+            if next_contract:
+                contract.date_end = next_contract.date_start - relativedelta(days=1)
+
         return True
 
     def _assign_open_contract(self):
@@ -143,6 +163,9 @@ class Contract(models.Model):
         res = super(Contract, self).write(vals)
         if vals.get('state') == 'open':
             self._assign_open_contract()
+        if vals.get('state') == 'close':
+            for contract in self.filtered(lambda c: not c.date_end):
+                contract.date_end = max(date.today(), contract.date_start)
 
         calendar = vals.get('resource_calendar_id')
         if calendar and (self.state == 'open' or (self.state == 'draft' and self.kanban_state == 'done')):
