@@ -904,6 +904,46 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('Percentage');
+
+    QUnit.test('percentage widget in form view', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: ` <form string="Partners">
+                        <field name="qux" widget="percentage"/>
+                    </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].qux, 0.24, 'the correct float value should be saved');
+                }
+                return this._super(...arguments);
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '44.4%',
+            'The value should be displayed properly.');
+
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '44.4',
+            'The input should be rendered without the percentage symbol.');
+        assert.strictEqual(form.$('.o_field_widget[name=qux] span').text(), '%',
+            'The input should be followed by a span containing the percentage symbol.');
+
+        await testUtils.fields.editInput(form.$('.o_field_float_percentage input'), '24');
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '24',
+            'The value should not be formated yet.');
+
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), '24%',
+            'The new value should be formatted properly.');
+
+        form.destroy();
+    });
 
     QUnit.module('FieldEmail');
 
