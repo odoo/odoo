@@ -49,7 +49,7 @@ class SlideQuestion(models.Model):
 class SlideAnswer(models.Model):
     _name = "slide.answer"
     _rec_name = "text_value"
-    _description = "Answer for a slide question"
+    _description = "Slide Question's Answer"
     _order = 'question_id, sequence'
 
     sequence = fields.Integer("Sequence")
