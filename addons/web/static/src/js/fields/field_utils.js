@@ -370,11 +370,11 @@ function formatMonetary(value, field, options) {
  */
 function formatPercentage(value, field, options) {
     options = options || {};
-    var result = formatFloat(value * 100, field, options) || '0';
-    if (options.humanReadable && options.humanReadable(value * 100)) {
-        return result + "%";
+    let result = formatFloat(value * 100, field, options) || '0';
+    if (!options.humanReadable || !options.humanReadable(value * 100)) {
+        result = parseFloat(result).toString().replace('.', _t.database.parameters.decimal_point);
     }
-    return (parseFloat(result) + "%").replace('.', _t.database.parameters.decimal_point);
+    return result + (options.noSymbol ? '' : '%');
 }
 /**
  * Returns a string representing the value of the selection.
@@ -598,8 +598,8 @@ function parseFloatTime(value) {
 }
 
 /**
- * Parse a String containing a percentage and convert it to float.
- * The percentage can be a regular xx.xx float or a xx%.
+ * Parse a String containing float and unconvert it with a conversion factor
+ * of 100. The percentage can be a regular xx.xx float or a xx%.
  *
  * @param {string} value
  *                The string to be parsed
@@ -607,10 +607,7 @@ function parseFloatTime(value) {
  * @throws {Error} if the value couldn't be converted to float
  */
 function parsePercentage(value) {
-    if (value.slice(-1) === '%') {
-        return parseFloat(value.slice(0, -1)) / 100;
-    }
-    return parseFloat(value);
+    return parseFloat(value) / 100;
 }
 
 /**

@@ -38,7 +38,7 @@
     }
 
     // Flex fields (inline)
-    &.o_field_many2one, &.o_field_radio, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file {
+    &.o_field_many2one, &.o_field_radio, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file, &.o_field_float_percentage {
         display: inline-flex;
         > span, > button {
             flex: 0 0 auto;
@@ -72,7 +72,7 @@
     }
 
     // Monetary
-    &.o_field_monetary {
+    &.o_field_monetary, &.o_field_float_percentage {
         &.o_input {
             align-items: baseline;
 
