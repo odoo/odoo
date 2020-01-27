@@ -123,7 +123,7 @@ odoo.define('web.OwlCompatibility', function () {
          */
         willUpdateProps(nextProps) {
             if (this.widget) {
-                return this.update(nextProps);
+                return this.updateWidget(nextProps);
             }
         }
 
@@ -138,7 +138,7 @@ odoo.define('web.OwlCompatibility', function () {
         __patch(vnode) {
             if (this.widget) {
                 if (this.__owl__.vnode) { // not at first rendering
-                    this.render();
+                    this.renderWidget();
                 }
                 vnode.elm = this.widget.el;
             }
@@ -202,8 +202,8 @@ odoo.define('web.OwlCompatibility', function () {
          * @param {Object} nextProps
          * @returns {Promise}
          */
-        update(/*nextProps*/) {
-            console.warn(`ComponentAdapter: Widget could not be updated, maybe override 'update' function?`);
+        updateWidget(/*nextProps*/) {
+            console.warn(`ComponentAdapter: Widget could not be updated, maybe override 'updateWidget' function?`);
         }
 
         /**
@@ -211,8 +211,8 @@ odoo.define('web.OwlCompatibility', function () {
          * function will be called just before patchin the DOM, s.t. the DOM is
          * updated at once. It must be synchronous
          */
-        render() {
-            console.warn(`ComponentAdapter: Widget could not be re-rendered, maybe override 'render' function?`);
+        renderWidget() {
+            console.warn(`ComponentAdapter: Widget could not be re-rendered, maybe override 'renderWidget' function?`);
         }
 
         /**

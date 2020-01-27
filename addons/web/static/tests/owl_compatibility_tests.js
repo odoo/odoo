@@ -214,10 +214,10 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                 },
             });
             class MyWidgetAdapter extends ComponentAdapter {
-                update(nextProps) {
+                updateWidget(nextProps) {
                     return this.widget.update(nextProps.name);
                 }
-                render() {
+                renderWidget() {
                     this.widget.render();
                 }
             }
@@ -272,10 +272,10 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                 },
             });
             class MyWidgetAdapter extends ComponentAdapter {
-                update(nextProps) {
+                updateWidget(nextProps) {
                     return this.widget.update(nextProps.name);
                 }
-                render() {
+                renderWidget() {
                     this.widget.render();
                 }
             }
