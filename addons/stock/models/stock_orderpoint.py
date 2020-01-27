@@ -170,7 +170,7 @@ class StockWarehouseOrderpoint(models.Model):
             'to_date': datetime.combine(self.lead_days_date, time.max)
         }
 
-    def _prepare_procurement_values(self, product_qty, date=False, group=False):
+    def _prepare_procurement_values(self, date=False, group=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from an orderpoint. This method could be override in order to add other custom key that could
         be used in move/po creation.
@@ -204,7 +204,7 @@ class StockWarehouseOrderpoint(models.Model):
                 for orderpoint in orderpoints_batch:
                     if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
                         date = datetime.combine(orderpoint.lead_days_date, time.min)
-                        values = orderpoint._prepare_procurement_values(orderpoint.qty_to_order, date=date)
+                        values = orderpoint._prepare_procurement_values(date=date)
                         procurements.append(self.env['procurement.group'].Procurement(
                             orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
                             orderpoint.location_id, orderpoint.name, orderpoint.name,
