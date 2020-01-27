@@ -49,17 +49,17 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 msgid "<span class=\"o_label\">Timesheets</span>"
-msgstr "<span class=\"o_label\">Planilhas de Horário</span>"
+msgstr "<span class=\"o_label\">Planilhas de Horas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Planilhas de Horário</span>"
+msgstr "<span class=\"o_stat_text\">Planilha de Horas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span> planned hours</span>"
-msgstr ""
+msgstr "<span> horas previstas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -79,12 +79,12 @@ msgstr "<span>Responsável</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Time</span>"
-msgstr ""
+msgstr "<span>Hora</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Timesheet Entries</span>"
-msgstr ""
+msgstr "<span>Entradas da Planilha de Horas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -172,7 +172,7 @@ msgstr "UdM da Empresa"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Computed as: Time Spent + Sub-tasks Hours."
-msgstr ""
+msgstr "Calculado como: Tempo gasto + Sub-tarefas Horas."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
@@ -241,7 +241,7 @@ msgstr "Funcionário"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
 msgid "Encoding Unit"
-msgstr "Unidade de codificação"
+msgstr "Unidade de Codificação"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -421,12 +421,12 @@ msgstr "Horas Gastas em Subtarefas"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sum of actually spent hours on the subtask(s)"
-msgstr ""
+msgstr "Soma das horas realmente passadas na(s) sub-tarefa(s)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Synchronize time spent with web/mobile app"
-msgstr ""
+msgstr "Sincronizar o tempo gasto com a aplicação web/móvel"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -475,7 +475,7 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
-"isto definirá a unidade de medida utilizada para codificar a planilha de horas. Isto simplificará as ferramentas fornecidas\n"
+"Isto definirá a unidade de medida utilizada para codificar a planilha de horas. Isto simplificará as ferramentas fornecidas\n"
 "para ajudar na codificação. todos os relatórios ainda serão expressos em horas (valor padrão)."
 
 #. module: hr_timesheet
@@ -505,7 +505,7 @@ msgstr "Custo do Quadro de Horários"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Date"
-msgstr ""
+msgstr "Data do Quadro de Horários"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
@@ -606,6 +606,9 @@ msgid ""
 "analytic account. Please change it, or reactivate the current one to "
 "timesheet on the project."
 msgstr ""
+"Você não pode registrar os quadros de horários neste projeto, pois está vinculado a um inativo"
+"conta analítica. Altere-a ou reative a conta atual para"
+"Planilhas de Horas no projeto."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -618,6 +621,9 @@ msgid ""
 "                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                customers if required."
 msgstr ""
+"Você pode registrar e rastrear suas horas de trabalho por projeto a cada \ n"
+"dia. Cada tempo gasto em um projeto se tornará um custo e poderá ser re-faturado para \ n"
+"clientes, se necessário."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/analytic_account.py:53
