@@ -32,10 +32,13 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var self = this;
         var $el = $(ev.currentTarget);
         var nexInfo = $el.find('#o_wblog_next_post_info').data();
-
-        $el.css('height', $(window).height())
-           .find('.o_record_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
+        $el.find('.o_record_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
            .find('.o_wblog_toggle').toggleClass('d-none');
+        // Appending a placeholder so that the cover can scroll to the top of the
+        // screen, regardless of its height.
+        const placeholder = document.createElement('div');
+        placeholder.style.minHeight = '100vh';
+        this.$('#o_wblog_next_container').append(placeholder);
 
         // Use _.defer to calculate the 'offset()'' only after that size classes
         // have been applyed and that $el has been resized.
