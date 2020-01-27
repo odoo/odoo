@@ -61,8 +61,20 @@ class EventRegistration(models.Model):
     def create(self, vals):
         registration = super(EventRegistration, self).create(vals)
         if registration._check_auto_confirmation():
-            registration.sudo().confirm_registration()
+            registration.sudo().action_confirm()
         return registration
+
+    def write(self, vals):
+        ret = super(EventRegistration, self).write(vals)
+
+        if vals.get('state') == 'open':
+            # auto-trigger after_sub (on subscribe) mail schedulers, if needed
+            onsubscribe_schedulers = self.mapped('event_id.event_mail_ids').filtered(lambda s: s.interval_type == 'after_sub')
+            onsubscribe_schedulers.execute()
+        elif vals.get('state') == 'done' and 'date_closed' not in vals:
+            vals['date_closed'] = fields.Datetime.now()
+
+        return ret
 
     @api.model
     def _prepare_attendee_values(self, registration):
@@ -83,23 +95,38 @@ class EventRegistration(models.Model):
         data.update({key: value for key, value in registration.items() if key in self._fields})
         return data
 
-    def do_draft(self):
+    def name_get(self):
+        """ Custom name_get implementation to better differentiate registrations
+        linked to a given partner but with different name (one partner buying
+        several registrations)
+
+          * name, partner_id has no name -> take name
+          * partner_id has name, name void or same -> take partner name
+          * both have name: partner + name
+        """
+        ret_list = []
+        for registration in self:
+            if registration.partner_id.name:
+                if registration.name and registration.name != registration.partner_id.name:
+                    name = '%s, %s' % (registration.partner_id.name, registration.name)
+                else:
+                    name = registration.partner_id.name
+            else:
+                name = registration.name
+            ret_list.append((registration.id, name))
+        return ret_list
+
+    def action_set_draft(self):
         self.write({'state': 'draft'})
 
-    def confirm_registration(self):
+    def action_confirm(self):
         self.write({'state': 'open'})
 
-        # auto-trigger after_sub (on subscribe) mail schedulers, if needed
-        onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
-            lambda s: s.interval_type == 'after_sub')
-        onsubscribe_schedulers.execute()
-
-    def button_reg_close(self):
+    def action_set_done(self):
         """ Close Registration """
-        for registration in self:
-            registration.write({'state': 'done', 'date_closed': fields.Datetime.now()})
+        self.write({'state': 'done'})
 
-    def button_reg_cancel(self):
+    def action_cancel(self):
         self.write({'state': 'cancel'})
 
     @api.onchange('partner_id')
