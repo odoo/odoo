@@ -1552,16 +1552,9 @@ class AccountMove(models.Model):
 
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
 
-        moves = super(AccountMove, self).create(vals_list)
-
-        # Trigger 'action_invoice_paid' when the invoice is directly paid at its creation.
-        moves.filtered(lambda move: move.is_invoice(include_receipts=True) and move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
-
-        return moves
+        return super(AccountMove, self).create(vals_list)
 
     def write(self, vals):
-        not_paid_invoices = self.filtered(lambda move: move.is_invoice(include_receipts=True) and move.invoice_payment_state not in ('paid', 'in_payment'))
-
         for move in self:
             if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
@@ -1603,9 +1596,23 @@ class AccountMove(models.Model):
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
             self._check_balanced()
 
-        # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
-        not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
+        return res
 
+    def _write(self, vals):
+        # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
+        new_paid_invoices = self.env['account.move']
+        if vals.get('invoice_payment_state') in ('in_payment', 'paid'):
+            # Alas we need to look inside the database to get the previous value of the 'invoice_payment_state' field.
+            # Unfortunately, using 'read' doesn't work since it will trigger a 'flush' and then make the cache not
+            # consistent.
+            self._cr.execute('SELECT id, invoice_payment_state FROM account_move WHERE id IN %s', [tuple(self.ids)])
+            old_payment_state_map = dict(self._cr.fetchall())
+            new_paid_invoices = self.filtered(lambda move: move.is_invoice(include_receipts=True) and move.id in old_payment_state_map)
+
+        res = super()._write(vals)
+
+        if new_paid_invoices:
+            new_paid_invoices.action_invoice_paid()
         return res
 
     def unlink(self):
