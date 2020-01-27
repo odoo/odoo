@@ -256,7 +256,6 @@ VIEW_TYPES = [
     ('graph', 'Graph'),
     ('pivot', 'Pivot'),
     ('calendar', 'Calendar'),
-    ('gantt', 'Gantt'),
     ('kanban', 'Kanban'),
 ]
 
