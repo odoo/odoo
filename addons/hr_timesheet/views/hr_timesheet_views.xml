@@ -23,9 +23,9 @@
             <field name="arch" type="xml">
                 <tree editable="top" string="Timesheet Activities" js_class="timesheet_tree">
                     <field name="date"/>
-                    <field name="name"/>
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="name" required="0"/>
                     <field name="is_timer_running" string="Timer" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
                     <field name="unit_amount" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
