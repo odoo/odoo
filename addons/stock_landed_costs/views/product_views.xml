@@ -10,6 +10,7 @@
                     <div attrs="{'invisible':[('type', '!=', 'service')]}">
                         <group string="Landed Costs" name="landedcosts">
                             <field name="landed_cost_ok"/>
+                            <field name="split_method_landed_cost" attrs="{'invisible': [('landed_cost_ok', '=', False)]}" class="col-4"/>
                         </group>
                     </div>
                 </group>
