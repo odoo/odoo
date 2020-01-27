@@ -1110,6 +1110,7 @@ registry.facebookPage = publicWidget.Widget.extend({
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {
             src: src,
+            class: 'o_temp_auto_element',
             width: params.width,
             height: params.height,
             css: {
