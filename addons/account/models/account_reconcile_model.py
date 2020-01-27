@@ -569,12 +569,14 @@ class AccountReconcileModel(models.Model):
         if float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):
             return True
 
-        if line_residual > total_residual:
-            amount_percentage = (total_residual / line_residual) * 100
-        elif total_residual:
-            amount_percentage = (line_residual / total_residual) * 100
-        else:
+        if float_is_zero(line_residual, precision_rounding=line_currency.rounding):
+            # Avoid divide by zero by not accepting proposals for 0.0 statement lines
+            # Return False to avoid large open balance proposal
             return False
+
+        # https://math.stackexchange.com/questions/2284623/how-much-percent-this-number-is-close-to-another
+        amount_percentage = (1 - abs((total_residual - line_residual) / line_residual)) * 100
+
         return amount_percentage >= self.match_total_amount_param
 
     @api.multi
