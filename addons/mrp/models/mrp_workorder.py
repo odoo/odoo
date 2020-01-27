@@ -789,6 +789,13 @@ class MrpWorkorderLine(models.Model):
     finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder',
         ondelete='cascade')
 
+    @api.onchange('qty_to_consume')
+    def _onchange_qty_to_consume(self):
+        # Update qty_done for products added in ready state
+        wo = self.raw_workorder_id or self.finished_workorder_id
+        if wo.state == 'ready':
+            self.qty_done = self.qty_to_consume
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
