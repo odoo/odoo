@@ -453,20 +453,17 @@ list of filtered posts (by date or tag).
                                 </span>
                             </div>
 
-                            <!-- Emulate the next post's cover's height. For full-screen covers,
+                            <!-- Emulate the next post's cover's height. For non-auto covers,
                             the room that will be occupied by the 'scroll-down' link is temporary
-                            occupied  by the loader circle. For other layouts, an empty <div>
+                            occupied  by the loader circle. For auto covers, an empty <div>
                             creates enought separation.
                             -->
-                            <div t-if="next_cover_is_full" class="o_wblog_next_loader justify-content-center align-items-center mx-auto position-relative">
-                                <div class="o_wblog_toggle d-none rounded-circle bg-white-50"/>
+                            <div t-if="not next_cover_is_auto" class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
+                                <div class="rounded-circle bg-black-50"/>
                             </div>
-                            <div t-else="" t-attf-class="o_wblog_next_fake_btn #{next_cover_is_auto and 'd-flex o_wblog_toggle'}"/>
+                            <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
                         </div>
                     </t>
-                    <div t-if="not next_cover_is_full" class="o_wblog_next_loader o_wblog_toggle d-none justify-content-center align-items-center flex-grow-1 position-relative">
-                        <div class="d-inline-block rounded-circle"/>
-                    </div>
                 </div>
             </t>
         </div>
