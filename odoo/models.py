@@ -3364,7 +3364,7 @@ Record ids: %(records)s
 
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
-            self.invalidate_cache()
+            self._invalidate_deleted()
             if ir_model_data_unlink:
                 ir_model_data_unlink.unlink()
             if ir_attachment_unlink:
@@ -3377,6 +3377,36 @@ Record ids: %(records)s
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
 
         return True
+
+    def _invalidate_deleted(self):
+        """ Invalidate the cache of ``self``. """
+        if not self:
+            return
+
+        # invalidate all the fields of 'self'
+        self.env.cache.invalidate([
+            (field, self._ids)
+            for field in self._fields.values()
+        ])
+
+        # invalidate all the relational fields referring to 'self'
+        ids = set(self._ids)
+        for model in self.env.values():
+            for field in model._fields.values():
+                if field.comodel_name != self._name:
+                    continue
+                if field.type == 'many2one':
+                    func = ids.__contains__
+                    cascade = field.ondelete == 'cascade'
+                else:
+                    func = ids.intersection
+                    cascade = False
+                recs = self.env.cache.get_records_matching(model, field, func)
+                if not recs:
+                    continue
+                self.env.cache.invalidate([(field, recs._ids)])
+                if cascade:
+                    recs._invalidate_deleted()
 
     def write(self, vals):
         """ write(vals)

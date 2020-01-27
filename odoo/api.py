@@ -797,6 +797,25 @@ class Cache(object):
             except KeyError:
                 pass
 
+    def get_records_matching(self, model, field, predicate):
+        """ Return the records of ``model`` where the value of ``field``
+        satisfies some predicate.
+        """
+        field_cache = self._data[field]
+        if field.depends_context:
+            ids = [
+                record_id
+                for record_id, record_values in field_cache.items()
+                if any(predicate(val) for val in record_values.values())
+            ]
+        else:
+            ids = [
+                record_id
+                for record_id, value in field_cache.items()
+                if predicate(value)
+            ]
+        return model.browse(ids)
+
     def get_records_different_from(self, records, field, value):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
         field_cache = self._data[field]
