@@ -13,7 +13,7 @@ from odoo.tools import html2plaintext
 
 class Blog(models.Model):
     _name = 'blog.blog'
-    _description = 'Blogs'
+    _description = 'Blog'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
     _order = 'name'
 
