@@ -8,7 +8,7 @@ import math
 
 from collections import namedtuple
 
-from datetime import datetime, time
+from datetime import datetime, date, timedelta, time
 from dateutil.rrule import rrule, DAILY
 from pytz import timezone, UTC
 
@@ -356,6 +356,9 @@ class HolidaysRequest(models.Model):
             # find last attendance coming before last_day
             attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()), attendances[-1] if attendances else default_value)
 
+        compensated_request_date_from = self.request_date_from
+        compensated_request_date_to = self.request_date_to
+
         if self.request_unit_half:
             if self.request_date_from_period == 'am':
                 hour_from = float_to_time(attendance_from.hour_from)
@@ -369,12 +372,15 @@ class HolidaysRequest(models.Model):
         elif self.request_unit_custom:
             hour_from = self.date_from.time()
             hour_to = self.date_to.time()
+            compensated_request_date_from = self._adjust_date_based_on_tz(self.request_date_from, hour_from)
+            compensated_request_date_to = self._adjust_date_based_on_tz(self.request_date_to, hour_to)
         else:
             hour_from = float_to_time(attendance_from.hour_from)
             hour_to = float_to_time(attendance_to.hour_to)
 
-        self.date_from = timezone(self.tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
-        self.date_to = timezone(self.tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+        self.date_from = timezone(self.tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+        self.date_to = timezone(self.tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+
         self._onchange_leave_dates()
 
     @api.onchange('request_unit_half')
@@ -570,6 +576,28 @@ class HolidaysRequest(models.Model):
         hours = self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to)
 
         return {'days': hours / (today_hours or HOURS_PER_DAY), 'hours': hours}
+
+    def _adjust_date_based_on_tz(self, leave_date, hour):
+        """ request_date_{from,to} are local to the user's tz but hour_{from,to} are in UTC.
+
+        In some cases they are combined (assuming they are in the same tz) as a datetime. When
+        that happens it's possible we need to adjust one of the dates. This function adjust the
+        date, so that it can be passed to datetime().
+
+        E.g. a leave in US/Pacific for one day:
+        - request_date_from: 1st of Jan
+        - request_date_to:   1st of Jan
+        - hour_from:         15:00 (7:00 local)
+        - hour_to:           03:00 (19:00 local) <-- this happens on the 2nd of Jan in UTC
+        """
+        user_tz = timezone(self.env.user.tz if self.env.user.tz else 'UTC')
+        request_date_to_utc = UTC.localize(datetime.combine(leave_date, hour)).astimezone(user_tz).replace(tzinfo=None)
+        if request_date_to_utc.date() < leave_date:
+            return leave_date + timedelta(days=1)
+        elif request_date_to_utc.date() > leave_date:
+            return leave_date - timedelta(days=1)
+        else:
+            return leave_date
 
     ####################################################
     # ORM Overrides methods
