@@ -15,6 +15,7 @@ var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var round_di = utils.round_decimals;
 
+const { PosComponent } = require('point_of_sale.PosComponent');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -578,7 +579,7 @@ var ClientScreenWidget = PosBaseWidget.extend({
 // - .gui which controls the switching between 
 //   screens and the showing/closing of popups
 
-class Chrome extends owl.Component {
+class Chrome extends PosComponent {
     constructor() {
         super(...arguments);
         this.$ = $;

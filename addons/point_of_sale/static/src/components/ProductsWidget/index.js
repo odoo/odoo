@@ -1,18 +1,18 @@
 odoo.define('point_of_sale.ProductsWidget', function(require) {
     'use strict';
 
-    const { Component } = owl;
+    const { PosComponent } = require('point_of_sale.PosComponent');
     const { useState, useRef } = owl.hooks;
 
-    class HomeCategoryBreadcrumb extends Component {}
-    class CategoryBreadcrumb extends Component {}
-    class CategorySimpleButton extends Component {}
-    class CategoryButton extends Component {
+    class HomeCategoryBreadcrumb extends PosComponent {}
+    class CategoryBreadcrumb extends PosComponent {}
+    class CategorySimpleButton extends PosComponent {}
+    class CategoryButton extends PosComponent {
         get imageUrl() {
             return `${window.location.origin}/web/image?model=pos.category&field=image_128&id=${this.props.category.id}`;
         }
     }
-    class ProductsWidgetControl extends Component {
+    class ProductsWidgetControl extends PosComponent {
         constructor() {
             super(...arguments);
             this.searchTimeout = null;
@@ -29,14 +29,14 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             }, 70);
         }
     }
-    ProductsWidgetControl.components = {
+    ProductsWidgetControl.addComponents([
         HomeCategoryBreadcrumb,
         CategoryBreadcrumb,
         CategorySimpleButton,
         CategoryButton,
-    };
+    ]);
 
-    class ProductDisplay extends Component {
+    class ProductDisplay extends PosComponent {
         /**
          * For accessibility, pressing <space> should be like clicking the product.
          * <enter> is not considered because it conflicts with the barcode.
@@ -72,10 +72,10 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             }
         }
     }
-    class ProductsList extends Component {}
-    ProductsList.components = { ProductDisplay };
+    class ProductsList extends PosComponent {}
+    ProductsList.addComponents([ProductDisplay]);
 
-    class ProductsWidget extends Component {
+    class ProductsWidget extends PosComponent {
         constructor() {
             super(...arguments);
             this.pos = this.props.pos;
@@ -126,7 +126,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             this.state.searchWord = '';
         }
     }
-    ProductsWidget.components = { ProductsWidgetControl, ProductsList };
+    ProductsWidget.addComponents([ProductsWidgetControl, ProductsList]);
 
     return {
         HomeCategoryBreadcrumb,

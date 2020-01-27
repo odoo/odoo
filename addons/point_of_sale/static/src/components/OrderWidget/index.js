@@ -2,9 +2,9 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     'use strict';
 
     const { useRef, onPatched } = owl.hooks;
-    const { Component } = owl;
+    const { PosComponent } = require('point_of_sale.PosComponent');
 
-    class Orderline extends Component {
+    class Orderline extends PosComponent {
         constructor() {
             super(...arguments);
             this.line = this.props.line;
@@ -18,7 +18,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         }
     }
 
-    class OrderSummary extends Component {
+    class OrderSummary extends PosComponent {
         constructor() {
             super(...arguments);
             this.order = this.props.order;
@@ -38,7 +38,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         }
     }
 
-    class OrderWidget extends Component {
+    class OrderWidget extends PosComponent {
         constructor() {
             super(...arguments);
             this.pos = this.props.pos;
