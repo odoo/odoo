@@ -25,6 +25,9 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
 
+MODELS_TO_UPDATE = set()
+
+
 def load_data(cr, idref, mode, kind, package, report):
     """
 
@@ -276,6 +279,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             registry._init_modules.add(package.name)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+    global MODELS_TO_UPDATE
+    MODELS_TO_UPDATE = models_updated
 
     return loaded_modules, processed_modules
 
@@ -439,6 +444,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
+
+        # STEP 3.6: re-apply constraints on updated models
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        global MODELS_TO_UPDATE
+        models = [env[model_name] for model_name in list(MODELS_TO_UPDATE)]
+        for model in models:
+            model._auto_end()
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
