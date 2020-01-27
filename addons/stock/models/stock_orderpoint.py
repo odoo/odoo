@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from collections import defaultdict
 from datetime import datetime, time
 from dateutil import relativedelta
 from json import dumps
@@ -11,7 +12,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, split_every
+from odoo.tools import float_compare, frozendict, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -107,10 +108,28 @@ class StockWarehouseOrderpoint(models.Model):
             })
             orderpoint.lead_days_date = lead_days_date
 
-    def _quantity_in_progress(self):
-        """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
-        (example: purchases created from orderpoints)"""
-        return dict(self.mapped(lambda x: (x.id, 0.0)))
+    def _compute_qty(self):
+        orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
+        for orderpoint in self:
+            orderpoint_context = orderpoint._get_product_context()
+            product_context = frozendict({**self.env.context, **orderpoint_context})
+            orderpoints_contexts[product_context] |= orderpoint
+        for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
+            products_qty = orderpoints_by_context.product_id.with_context(orderpoint_context)._product_available()
+            products_qty_in_progress = orderpoints_by_context._quantity_in_progress()
+            for orderpoint in orderpoints_by_context:
+                orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
+                orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
+
+                qty_to_order = 0.0
+                rounding = orderpoint.product_uom.rounding
+                if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
+                    qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - orderpoint.qty_forecast
+
+                    remainder = orderpoint.qty_multiple > 0 and qty_to_order % orderpoint.qty_multiple or 0.0
+                    if float_compare(remainder, 0.0, precision_rounding=rounding) > 0:
+                        qty_to_order += orderpoint.qty_multiple - remainder
+                orderpoint.qty_to_order = qty_to_order
 
     @api.constrains('product_id')
     def _check_product_uom(self):
@@ -119,7 +138,7 @@ class StockWarehouseOrderpoint(models.Model):
             raise ValidationError(_('You have to select a product unit of measure that is in the same category than the default unit of measure of the product'))
 
     @api.onchange('warehouse_id')
-    def onchange_warehouse_id(self):
+    def _onchange_warehouse_id(self):
         """ Finds location id for changed warehouse. """
         if self.warehouse_id:
             self.location_id = self.warehouse_id.lot_stock_id.id
@@ -234,3 +253,8 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _post_process_scheduler(self):
         return True
+
+    def _quantity_in_progress(self):
+        """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
+        (example: purchases created from orderpoints)"""
+        return dict(self.mapped(lambda x: (x.id, 0.0)))
