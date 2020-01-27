@@ -518,16 +518,19 @@ class Product(models.Model):
             })
         return super().write(values)
 
-    def _get_rules_from_location(self, location, seen_rules=False):
+    def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:
             seen_rules = self.env['stock.rule']
-        rule = self.env['procurement.group']._get_rule(self, location, {'warehouse_id': location.get_warehouse()})
+        rule = self.env['procurement.group']._get_rule(self, location, {
+            'route_ids': route_ids,
+            'warehouse_id': location.get_warehouse()
+        })
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
             return seen_rules | rule
         else:
-            return self._get_rules_from_location(rule.location_src_id, seen_rules | rule)
+            return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
 
 class ProductTemplate(models.Model):
