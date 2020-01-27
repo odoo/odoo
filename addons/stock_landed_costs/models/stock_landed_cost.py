@@ -300,7 +300,15 @@ class LandedCostLine(models.Model):
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
     price_unit = fields.Float('Cost', digits='Product Price', required=True)
-    split_method = fields.Selection(SPLIT_METHOD, string='Split Method', required=True)
+    split_method = fields.Selection(
+        SPLIT_METHOD,
+        string='Split Method',
+        required=True,
+        help="Equal : Cost will be equally divided.\n"
+             "By Quantity : Cost will be divided according to product's quantity.\n"
+             "By Current cost : Cost will be divided according to product's current cost.\n"
+             "By Weight : Cost will be divided depending on its weight.\n"
+             "By Volume : Cost will be divided depending on its volume.")
     account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
 
     @api.onchange('product_id')
@@ -308,7 +316,7 @@ class LandedCostLine(models.Model):
         if not self.product_id:
             self.quantity = 0.0
         self.name = self.product_id.name or ''
-        self.split_method = self.split_method or 'equal'
+        self.split_method = self.product_id.product_tmpl_id.split_method_landed_cost or self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
         self.account_id = accounts_data['stock_input']
