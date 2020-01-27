@@ -6,6 +6,16 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    def write(self, vals):
+        """ Synchronize partner from SO to registrations. This is done notably
+        in website_sale controller shop/address that updates customer, but not
+        only. """
+        result = super(SaleOrder, self).write(vals)
+        if vals.get('partner_id'):
+            registrations_toupdate = self.env['event.registration'].search([('sale_order_id', 'in', self.ids)])
+            registrations_toupdate.write({'partner_id': vals['partner_id']})
+        return result
+
     def _action_confirm(self):
         res = super(SaleOrder, self)._action_confirm()
         for so in self:
@@ -27,10 +37,12 @@ class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
 
-    event_id = fields.Many2one('event.event', string='Event',
-       help="Choose an event and it will automatically create a registration for this event.")
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', help="Choose "
-        "an event ticket and it will automatically create a registration for this event ticket.")
+    event_id = fields.Many2one(
+        'event.event', string='Event',
+        help="Choose an event and it will automatically create a registration for this event.")
+    event_ticket_id = fields.Many2one(
+        'event.event.ticket', string='Event Ticket',
+        help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
@@ -43,9 +55,9 @@ class SaleOrderLine(models.Model):
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
-                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).confirm_registration()
+                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
             if cancel_to_draft:
-                existing_registrations.filtered(lambda self: self.state == 'cancel').do_draft()
+                existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
                 registration = {}
