@@ -311,6 +311,10 @@ class Registry(Mapping):
             The ``context`` may contain the following items:
              - ``module``: the name of the module being installed/updated, if any;
              - ``update_custom_fields``: whether custom fields should be updated.
+             - ``models_to_check``: if the models being initialized are not a direct dependency
+                of the modules being updated/installed.
+             - ``will_raise``: whether the call to :meth:`~odoo.models.BaseModel._auto_end()`
+                should raise an exception if an error is encountered or not (for migrations).
         """
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
@@ -326,7 +330,7 @@ class Registry(Mapping):
         for model in models:
             model._auto_init()
             model.init()
-            model._auto_end()
+            model._auto_end(will_raise=context.get('will_raise', True))
 
         self._ordinary_tables = None
 

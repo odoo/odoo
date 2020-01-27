@@ -186,13 +186,19 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 getattr(py_module, pre_init)(cr)
 
         model_names = registry.load(cr, package)
+        mode = 'update'
+        if hasattr(package, 'init') or package.state == 'to install':
+            mode = 'init'
 
         loaded_modules.append(package.name)
         if needs_update:
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry.setup_models(cr)
-            registry.init_models(cr, model_names, {'module': package.name})
+            init_ctx = {'module': package.name}
+            if mode == 'update':
+                init_ctx['will_raise'] = False
+            registry.init_models(cr, model_names, init_ctx)
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -202,10 +208,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check |= set(model_names) & models_updated
 
         idref = {}
-
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
-            mode = 'init'
 
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
