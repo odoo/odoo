@@ -9,7 +9,7 @@
     'category': 'Hidden',
     'version': '1.0',
 
-    'depends': ['hr_timesheet', 'hr_attendance'],
+    'depends': ['hr_timesheet', 'hr_attendance', 'project_management'],
     'data': [
         'security/ir.model.access.csv',
         'report/hr_timesheet_attendance_report_view.xml',

@@ -9,7 +9,7 @@ This module adds a PAD in all project form views.
 =================================================
     """,
     'depends': [
-        'project',
+        'project_management',
         'pad'
     ],
     'data': [
