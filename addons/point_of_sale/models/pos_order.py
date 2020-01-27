@@ -872,7 +872,7 @@ class ReportSaleDetails(models.AbstractModel):
         domain = [('state', 'in', ['paid','invoiced','done'])]
 
         if (session_ids):
-            domain = AND([domain, [('session_id', 'in', session_ids.ids)]])
+            domain = AND([domain, [('session_id', 'in', session_ids)]])
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
@@ -897,7 +897,7 @@ class ReportSaleDetails(models.AbstractModel):
             ])
 
             if config_ids:
-                domain = AND([domain, [('config_id', 'in', config_ids.ids)]])
+                domain = AND([domain, [('config_id', 'in', config_ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
@@ -963,5 +963,5 @@ class ReportSaleDetails(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])
-        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
+        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids))
         return data
