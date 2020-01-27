@@ -291,18 +291,21 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" decoration-bf="message_needaction==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)">
+                <tree string="Events"
+                    decoration-bf="message_needaction==True"
+                    decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)"
+                    multi_edit="1">
                     <field name="name"/>
-                    <field name="event_type_id"/>
-                    <field name="date_begin"/>
-                    <field name="date_end"/>
-                    <field name="seats_reserved" sum="Total"/>
-                    <field name="seats_min"/>
-                    <field name="seats_max" invisible="1"/>
-                    <field name="user_id"/>
-                    <field name="message_needaction" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="event_type_id" readonly="1"/>
+                    <field name="date_begin" readonly="1"/>
+                    <field name="date_end" readonly="1"/>
+                    <field name="seats_reserved" sum="Total" readonly="1"/>
+                    <field name="seats_min" readonly="1"/>
+                    <field name="seats_max" invisible="1" readonly="1"/>
+                    <field name="user_id" readonly="1"/>
+                    <field name="message_needaction" invisible="1" readonly="1"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
                 </tree>
             </field>
         </record>
@@ -485,18 +488,20 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" decoration-bf="message_needaction==True">
-                    <field name="create_date"/>
+                <tree string="Registration" decoration-bf="message_needaction==True" multi_edit="1">
+                    <field name="create_date" optional="hide"/>
+                    <field name="date_open" optional="hide"/>
                     <field name="partner_id"/>
                     <field name="name"/>
-                    <field name="email"/>
+                    <field name="email" optional="hide"/>
                     <field name="event_id" />
-                    <field name="state"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="origin" optional="hide"/>
+                    <field name="state" readonly="0"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
-                    <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
-                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
+                    <button name="action_confirm" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
+                    <button name="action_set_done" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
+                    <button name="action_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
@@ -509,10 +514,10 @@
                 <form string="Event Registration">
                     <header>
                         <button name="action_send_badge_email" string="Send by Email" type="object" states="open,done" class="oe_highlight"/>
-                        <button name="confirm_registration" string="Confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
-                        <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
-                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                        <button name="action_confirm" string="Confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button name="action_set_done" string="Attended" states="open" type="object" class="oe_highlight"/>
+                        <button name="action_set_draft" string="Set To Unconfirmed" states="cancel,done" type="object" />
+                        <button name="action_cancel" string="Cancel Registration" states="draft,open" type="object"/>
                         <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                     </header>
                     <sheet string="Registration">
@@ -552,30 +557,22 @@
                     <field name="email"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <div class="oe_kanban_details">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="float-right">
+                                    <a class="btn btn-sm btn-success" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
+                                        <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                    </a>
+                                    <a class="btn btn-sm btn-success" string="Attended the Event" name="action_close" type="object" states="open" role="button">
+                                        <i class="fa fa-level-down" role="img" aria-label="Attended button" title="Attended the Event"/>
+                                    </a>
+                                </div>
+                                <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
-                                        <div class="o_kanban_record_headings">
-                                            <strong class="o_kanban_record_title">
-                                                <field name="name"/>
-                                            </strong>
-                                        </div>
-                                        <div class="float-right">
-                                            <a class="btn btn-sm btn-success" string="Confirm Registration" name="confirm_registration" type="object" states="draft" role="button">
-                                                <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
-                                            </a>
-                                            <a class="btn btn-sm btn-success" string="Attended the Event" name="button_reg_close" type="object" states="open" role="button">
-                                                <i class="fa fa-level-down" role="img" aria-label="Attended button" title="Attended the Event"/>
-                                            </a>
-                                            <a class="btn btn-sm btn-danger" string="Cancel Registration" name="button_reg_cancel" type="object" states="draft,open" role="button">
-                                                <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel Registration"/>
-                                            </a>
-                                        </div>
+                                        <b class="o_kanban_record_title"><field name="display_name"/></b>
                                     </div>
-                                    <ul>
-                                        <li><field name="partner_id"/></li>
-                                        <li><field name="email"/></li>
-                                    </ul>
+                                    <div class="o_kanban_record_body">
+                                        <field name="event_id"/>
+                                    </div>
                                 </div>
                             </div>
                         </t>
