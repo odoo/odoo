@@ -167,6 +167,8 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             ('model', '=', 'mail.test.full'),
             ('name', '=', 'email_from')])
         ir_model_field.with_context(_force_unlink=True).unlink()
+        self.record.flush()
+        self.record.invalidate_cache()
         self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
 
     def test_create_partner_from_tracking_multicompany(self):
