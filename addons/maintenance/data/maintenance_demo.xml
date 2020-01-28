@@ -14,26 +14,21 @@
     <!-- Equipment categories -->
     <record id="equipment_computer" model="maintenance.equipment.category">
         <field name="name">Computers</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
     </record>
     <record id="equipment_software" model="maintenance.equipment.category">
         <field name="name">Software</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
     </record>
     <record id="equipment_printer" model="maintenance.equipment.category">
         <field name="name">Printers</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
     </record>
     <record id="equipment_monitor" model="maintenance.equipment.category">
         <field name="name">Monitors</field>
         <field name="technician_user_id" ref="base.user_admin"/>
         <field name="color">3</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
     </record>
     <record id="equipment_phone" model="maintenance.equipment.category">
         <field name="name">Phones</field>
         <field name="technician_user_id" ref="base.user_admin"/>
-        <field name="alias_id" ref="mail_alias_equipment"/>
     </record>
 
     <!-- Equipments -->
