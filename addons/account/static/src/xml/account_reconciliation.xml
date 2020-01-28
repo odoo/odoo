@@ -285,7 +285,7 @@
 <t t-name="reconciliation.line.mv_line.details">
     <table class='details'>
         <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
-        <tr><td>Journal</td><td><t t-esc="line.journal_id[1]"/></td></tr>
+        <tr><td>Journal</td><td><t t-esc="line.journal_id.display_name"/></td></tr>
         <tr><td>Label</td><td><t t-esc="line.label"/></td></tr>
         <tr t-if="line.ref"><td>Ref</td><td><t t-esc="line.ref"/></td></tr>
         <tr t-if="line.partner_id"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
