@@ -420,7 +420,7 @@ var ControlPanelModel = mvc.Model.extend({
                         }
                         if (filter.currentOptionIds) {
                             filter.currentOptionIds.clear();
-                        }   
+                        }
                     })
                     group.activeFilterIds = [];
                 });
@@ -459,9 +459,13 @@ var ControlPanelModel = mvc.Model.extend({
                     acc.push(y.optionId);
                 }
                 return acc;
-            }, 
+            },
             []
         );
+        const defaultYearId = (optionId) => {
+            const year = filter.options.find(o => o.optionId === optionId).defaultYear;
+            return filter.options.find(o => o.setParam.year === year).optionId;
+        };
 
         if (filter.type === 'filter') {
             const alreadyActive = group.activeFilterIds.some(isEqualTo([filterId]));
@@ -486,7 +490,7 @@ var ControlPanelModel = mvc.Model.extend({
                 filter.currentOptionIds.add(optionId);
                 if (!selectedYears().length) {
                     // Here we add 'this_year' as options if no option of type year is already selected.
-                    filter.currentOptionIds.add('this_year');
+                    filter.currentOptionIds.add(defaultYearId(optionId));
                 }
             }
         } else if (filter.type === 'groupBy') {
@@ -726,8 +730,8 @@ var ControlPanelModel = mvc.Model.extend({
         return pyUtils.assembleDomains(domains, 'AND');
     },
     /**
-     * Return an array containing 'facets' used to create the content of the search bar. 
-     * 
+     * Return an array containing 'facets' used to create the content of the search bar.
+     *
      * @returns {Object}
      */
     _getFacets: function () {
