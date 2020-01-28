@@ -60,13 +60,12 @@ class SaleOrderLine(models.Model):
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
-                registration = {}
+                registration_vals = {}
                 if registration_data:
-                    registration = registration_data.pop()
+                    registration_vals = registration_data.pop()
                 # TDE CHECK: auto confirmation
-                registration['sale_order_line_id'] = so_line
-                Registration.with_context(registration_force_draft=True).create(
-                    Registration._prepare_attendee_values(registration))
+                registration_vals['sale_order_line_id'] = so_line.id
+                Registration.with_context(registration_force_draft=True).create(registration_vals)
         return True
 
     @api.onchange('product_id')
