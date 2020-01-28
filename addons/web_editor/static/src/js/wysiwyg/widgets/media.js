@@ -1102,7 +1102,7 @@ var VideoWidget = MediaWidget.extend({
         var vimRegExp = /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/;
         var vimMatch = url.match(vimRegExp);
 
-        var dmRegExp = /.+dailymotion.com\/(video|hub|embed)\/([^_]+)[^#]*(#video=([^_&]+))?/;
+        var dmRegExp = /.+dailymotion.com\/(video|hub|embed)\/([^_?]+)[^#]*(#video=([^_&]+))?/;
         var dmMatch = url.match(dmRegExp);
 
         var ykuRegExp = /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/;
