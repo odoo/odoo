@@ -1228,7 +1228,8 @@ var VideoWidget = MediaWidget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        const _super = this._super.bind(this);
         this.$content = this.$('.o_video_dialog_iframe');
 
         if (this.media) {
@@ -1244,7 +1245,7 @@ var VideoWidget = MediaWidget.extend({
             this.$('input#o_video_hide_dm_logo').prop('checked', src.indexOf('ui-logo=0') >= 0);
             this.$('input#o_video_hide_dm_share').prop('checked', src.indexOf('sharing-enable=0') >= 0);
 
-            this._updateVideo();
+            await this._updateVideo();
         }
 
         // loads the thumbnail of vimeo video previews.
@@ -1264,7 +1265,7 @@ var VideoWidget = MediaWidget.extend({
                 });
         });
 
-        return this._super.apply(this, arguments);
+        return _super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1274,8 +1275,8 @@ var VideoWidget = MediaWidget.extend({
     /**
      * @override
      */
-    save: function () {
-        this._updateVideo();
+    save: async function () {
+        await this._updateVideo();
         const videoSrc = this.$content.attr('src');
         if (this.isForBgVideo) {
             return Promise.resolve({bgVideoSrc: videoSrc});
@@ -1337,28 +1338,28 @@ var VideoWidget = MediaWidget.extend({
      *          errorCode -> if defined, either '0' for invalid URL or '1' for
      *              unsupported video provider
      */
-    _createVideoNode: function (url, options) {
+    _createVideoNode: async function (url, options) {
         options = options || {};
-        const videoData = this._getVideoURLData(url, options);
+        const videoData = await this._getVideoURLData(url, options);
         if (videoData.error) {
             return {errorCode: 0};
         }
-        if (!videoData.type) {
+        if (!videoData.platform) {
             return {errorCode: 1};
         }
         const $video = $('<iframe>').width(1280).height(720)
             .attr('frameborder', 0)
-            .attr('src', videoData.embedURL)
+            .attr('src', videoData.embed_url)
             .addClass('o_video_dialog_iframe');
 
-        return {$video: $video, type: videoData.type};
+        return {$video: $video, platform: videoData.platform};
     },
     /**
      * Updates the video preview according to video code and enabled options.
      *
      * @private
      */
-    _updateVideo: function () {
+    _updateVideo: async function () {
         // Reset the feedback
         this.$content.empty();
         this.$('#o_video_form_group').removeClass('o_has_error o_has_success').find('.form-control, .custom-select').removeClass('is-invalid is-valid');
@@ -1378,7 +1379,7 @@ var VideoWidget = MediaWidget.extend({
         }
         var url = embedMatch ? embedMatch[1] : code;
 
-        var query = this._createVideoNode(url, {
+        const query = await this._createVideoNode(url, {
             'autoplay': this.isForBgVideo || this.$('input#o_video_autoplay').is(':checked'),
             'hide_controls': this.isForBgVideo || this.$('input#o_video_hide_controls').is(':checked'),
             'loop': this.isForBgVideo || this.$('input#o_video_loop').is(':checked'),
@@ -1399,13 +1400,13 @@ var VideoWidget = MediaWidget.extend({
             .toggleClass('o_has_success', !!query.$video).find('.form-control, .custom-select').toggleClass('is-valid', !!query.$video);
 
         // Individually show / hide options base on the video provider
-        $optBox.find('div.o_' + query.type + '_option').removeClass('d-none');
+        $optBox.find('div.o_' + query.platform + '_option').removeClass('d-none');
 
         // Hide the entire options box if no options are available or if the
         // dialog is opened for a background-video
         $optBox.toggleClass('d-none', this.isForBgVideo || $optBox.find('div:not(.d-none)').length === 0);
 
-        if (query.type === 'youtube') {
+        if (query.platform === 'youtube') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
             // and 'youtube logo' options too
             this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
@@ -1481,56 +1482,10 @@ var VideoWidget = MediaWidget.extend({
      * @private
      */
     _getVideoURLData: function (url, options) {
-        if (!url.match(/^(http:\/\/|https:\/\/|\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i)) {
-            return {
-                error: true,
-                message: 'The provided url is invalid',
-            };
-        }
-        const regexes = {
-            youtube: /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?$/,
-            instagram: /(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)/,
-            vine: /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/,
-            vimeo: /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/,
-            dailymotion: /.+dailymotion.com\/(video|hub|embed)\/([^_?]+)[^#]*(#video=([^_&]+))?/,
-            youku: /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/,
-        };
-        const matches = _.mapObject(regexes, regex => url.match(regex));
-        const autoplay = options.autoplay ? '?autoplay=1&mute=1' : '?autoplay=0';
-        const controls = options.hide_controls ? '&controls=0' : '';
-        const loop = options.loop ? '&loop=1' : '';
-
-        let embedURL;
-        let type;
-        if (matches.youtube && matches.youtube[2].length === 11) {
-            const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
-            const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
-            const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
-            type = 'youtube';
-        } else if (matches.instagram && matches.instagram[2].length) {
-            embedURL = `//www.instagram.com/p/${matches.instagram[2]}/embed/`;
-            type = 'instagram';
-        } else if (matches.vine && matches.vine[0].length) {
-            embedURL = `${matches.vine[0]}/embed/simple`;
-            type = 'vine';
-        } else if (matches.vimeo && matches.vimeo[3].length) {
-            const vimeoAutoplay = autoplay.replace('mute', 'muted');
-            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}`;
-            type = 'vimeo';
-        } else if (matches.dailymotion && matches.dailymotion[2].length) {
-            const videoId = matches.dailymotion[2].replace('video/', '');
-            const logo = options.hide_dm_logo ? '&ui-logo=0' : '';
-            const share = options.hide_dm_share ? '&sharing-enable=0' : '';
-            embedURL = `//www.dailymotion.com/embed/video/${videoId}${autoplay}${controls}${logo}${share}`;
-            type = 'dailymotion';
-        } else if (matches.youku && matches.youku[3].length) {
-            const videoId = matches.youku[3].indexOf('.html?') >= 0 ? matches.youku[3].substring(0, matches.youku[3].indexOf('.html?')) : matches.youku[3];
-            embedURL = `//player.youku.com/embed/${videoId}`;
-            type = 'youku';
-        }
-
-        return {type: type, embedURL: embedURL};
+        return this._rpc({
+            route: '/web_editor/video_url/data',
+            params: Object.assign({video_url: url}, options),
+        });
     },
 });
 
