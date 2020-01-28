@@ -103,12 +103,8 @@
                     <field name="allow_timesheets" invisible="1"/>
                     <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <group>
-                            <group>
+                            <group name="hours">
                                 <field name="planned_hours" widget="float_time"/>
-                                    <label for="subtask_planned_hours" groups="project.group_subtask_project" attrs="{'invisible': [('subtask_count', '=', 0)]}"/>
-                                    <div class="o_row" groups="project.group_subtask_project" attrs="{'invisible': [('subtask_count', '=', 0)]}">
-                                        <field name="subtask_planned_hours" widget="float_time"/><span> planned hours</span>
-                                    </div>
                             </group>
                             <group>
                                 <field name="progress" widget="progressbar"/>
