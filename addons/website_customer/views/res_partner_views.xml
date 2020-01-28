@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="website_partner.view_partners_form_website" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='company_id']" position="after">
+                    <xpath expr="//field[@name='website_id']" position="after">
                         <field name="website_tag_ids" widget="many2many_tags" string="Website Tags"/>
                     </xpath>
                 </data>
