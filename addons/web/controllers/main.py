@@ -1103,6 +1103,7 @@ class Database(http.Controller):
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
+            request._cr = None  # duplicating a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database duplication error: %s" % (str(e) or repr(e))
