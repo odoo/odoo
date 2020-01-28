@@ -44,7 +44,7 @@ class TestEventCommon(common.SavepointCase):
 
         cls.customer = cls.env['res.partner'].create({
             'name': 'Constantin Customer',
-            'email': 'constantin@example.com',
+            'email': 'constantin@test.example.com',
             'country_id': cls.env.ref('base.be').id,
             'phone': '0485112233',
         })
