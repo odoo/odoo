@@ -567,6 +567,19 @@ class IrTranslation(models.Model):
     def unlink(self):
         self.check('unlink')
         self._modified()
+
+        # invalidate the cache of the fields losing their translation
+        field_ids = defaultdict(list)
+        for trans in self:
+            if trans.type in ('model', 'model_terms'):
+                try:
+                    mname, fname = trans.name.split(',')
+                    field = self.env[mname]._fields[fname]
+                    field_ids[field].append(trans.res_id)
+                except KeyError:
+                    pass
+        self.env.cache.invalidate(field_ids.items())
+
         return super(IrTranslation, self.sudo()).unlink()
 
     @api.model
