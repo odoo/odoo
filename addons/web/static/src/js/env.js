@@ -5,7 +5,6 @@ odoo.define("web.env", function (require) {
     const { device, isDebug } = require("web.config");
     const { _lt, _t, bus, serviceRegistry } = require("web.core");
     const dataManager = require('web.data_manager');
-    const { blockUI, unblockUI } = require("web.framework");
     const rpc = require("web.rpc");
     const session = require("web.session");
     const utils = require("web.utils");
@@ -131,14 +130,12 @@ odoo.define("web.env", function (require) {
         qweb,
         services: Object.assign(services, {
             ajaxJsonRPC,
-            blockUI,
             getCookie,
             httpRequest,
             navigate,
             reloadPage,
             rpc: performRPC,
             setCookie,
-            unblockUI,
         }),
         session,
     };
