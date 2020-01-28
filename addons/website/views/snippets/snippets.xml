@@ -123,14 +123,14 @@
 </template>
 
 <template id="website.snippet_options_border">
-    <we-row string="Border" class="o_we_inline">
+    <we-row string="Border">
         <we-colorpicker data-dependencies="border_width_opt"
                         data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
-        <we-input class="o_we_inline" data-name="border_width_opt"
+        <we-input data-name="border_width_opt"
                   data-select-style="0" data-css-property="border-width"
                   data-unit="px" data-extra-class="border"/>
     </we-row>
-    <we-input string="Rounded" class="o_we_inline"
+    <we-input string="Rounded"
               data-dependencies="border_width_opt"
               data-select-style="0" data-css-property="border-radius"
               data-unit="px" data-extra-class="rounded"/>
@@ -193,7 +193,7 @@
             <we-divider/>
             <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
-        <we-input string="Speed" class="o_we_inline"
+        <we-input string="Speed"
                   data-select-data-attribute="0s" data-attribute-name="interval"
                   data-unit="s" data-save-unit="ms" data-step="0.1"/>
     </div>
@@ -251,7 +251,7 @@
     <div data-js="background" string="Background"
         data-selector="section, .parallax, .carousel-item"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
-        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-first-filters="background"/>
+        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-first-filters="background"/>
     </div>
 
     <!-- Background Image Size/Position -->
@@ -392,7 +392,7 @@
          data-drop-near=".o_mega_menu .nav-link"/>
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <we-imagepicker class="o_we_inline" string="Cover" data-background="" data-first-filters="cover"/>
+        <we-imagepicker string="Cover" data-background="" data-first-filters="cover"/>
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_record_has_cover o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover o_half_screen_height">Half Screen</we-button>
@@ -433,7 +433,7 @@
     <!-- Stretch section -->
     <div data-selector="section"
         data-target="> .container, > .container-fluid, > .o_container_small">
-        <we-select string="Width" class="o_we_inline">
+        <we-select string="Width">
             <we-button data-select-class="container-fluid">Full</we-button>
             <we-button data-select-class="container">Regular</we-button>
             <we-button data-select-class="o_container_small">Small</we-button>
@@ -442,7 +442,7 @@
 
     <!-- Min height of section -->
     <div data-selector="section">
-        <we-select string="Height" class="o_we_inline">
+        <we-select string="Height">
             <we-button data-select-class="">Fit content</we-button>
             <we-button data-select-class="o_half_screen_height">Half screen</we-button>
             <we-button data-select-class="o_full_screen_height">Full screen</we-button>
@@ -450,7 +450,7 @@
     </div>
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section">
-        <we-row string="Scroll down button" class="o_we_inline o_scroll_button_opt">
+        <we-row string="Scroll down button" class="o_scroll_button_opt">
             <we-colorpicker data-select-style="true"
                 data-css-property="color"
                 data-color-prefix="text-"
