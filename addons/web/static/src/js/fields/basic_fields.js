@@ -1465,9 +1465,13 @@ var FieldEmail = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.text(this.value)
-            .addClass('o_form_uri o_text_overflow')
-            .attr('href', this.prefix + ':' + this.value);
+        if (this.value) {
+            this.$el.text(this.value)
+                .addClass('o_form_uri o_text_overflow')
+                .attr('href', this.prefix + ':' + this.value);
+        } else {
+            this.$el.text('');
+        }
     },
 
     //--------------------------------------------------------------------------
