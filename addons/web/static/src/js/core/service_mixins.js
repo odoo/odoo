@@ -1,41 +1,13 @@
 odoo.define('web.ServiceProviderMixin', function (require) {
 "use strict";
 
-var core = require('web.core');
-
 var ServiceProviderMixin = {
     services: {}, // dict containing deployed service instances
     UndeployedServices: {}, // dict containing classes of undeployed services
     /**
      * @override
      */
-    init: function (parent) {
-        var self = this;
-        // to properly instantiate services with this as parent, this mixin
-        // assumes that it is used along the EventDispatcherMixin, and that
-        // EventDispatchedMixin's init is called first
-        // as EventDispatcherMixin's init is already called, this handler has
-        // to be bound manually
-        this.on('call_service', this, this._call_service.bind(this));
-
-        // add already registered services from the service registry
-        _.each(core.serviceRegistry.map, function (Service, serviceName) {
-            if (serviceName in self.UndeployedServices) {
-                throw new Error('Service "' + serviceName + '" is already loaded.');
-            }
-            self.UndeployedServices[serviceName] = Service;
-        });
-        this._deployServices();
-
-        // listen on newly added services
-        core.serviceRegistry.onAdd(function (serviceName, Service) {
-            if (serviceName in self.services || serviceName in self.UndeployedServices) {
-                throw new Error('Service "' + serviceName + '" is already loaded.');
-            }
-            self.UndeployedServices[serviceName] = Service;
-            self._deployServices();
-        });
-    },
+    init: function (parent) {},
 
     //--------------------------------------------------------------------------
     // Private
@@ -98,6 +70,7 @@ return ServiceProviderMixin;
 odoo.define('web.ServicesMixin', function (require) {
 "use strict";
 
+const env = require('web.env');
 var rpc = require('web.rpc');
 
 /**
@@ -106,22 +79,18 @@ var rpc = require('web.rpc');
  */
 var ServicesMixin = {
     /**
-     * @param  {string} service
-     * @param  {string} method
+     * @param {string} serviceName
+     * @param {string} methodName
+     * @param {...any} args
      * @return {any} result of the service called
      */
-    call: function (service, method) {
-        var args = Array.prototype.slice.call(arguments, 2);
-        var result;
-        this.trigger_up('call_service', {
-            service: service,
-            method: method,
-            args: args,
-            callback: function (r) {
-                result = r;
-            },
-        });
-        return result;
+    call(serviceName, methodName, ...args) {
+        if (serviceName === 'ajax' && methodName === 'rpc') {
+            // ajax service uses an extra 'target' argument for rpc
+            args = args.concat(this);
+        }
+        const service = env.services[serviceName];
+        return service[methodName].apply(service, args);
     },
     /**
      * Builds and executes RPC query. Returns a promise resolved with
