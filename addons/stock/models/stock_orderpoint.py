@@ -22,6 +22,7 @@ class StockWarehouseOrderpoint(models.Model):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
     _check_company_auto = True
+    _order = "location_id,company_id,id"
 
     @api.model
     def default_get(self, fields):
