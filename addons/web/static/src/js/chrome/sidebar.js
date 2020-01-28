@@ -141,6 +141,7 @@ var Sidebar = Widget.extend({
                     active_id: env.activeIds[0],
                     active_ids: env.activeIds,
                     active_model: env.model,
+                    select_all: !!env.selectAll,
                 };
                 if (env.domain) {
                     activeIdsContext.active_domain = env.domain;

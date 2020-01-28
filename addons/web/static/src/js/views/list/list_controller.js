@@ -363,7 +363,10 @@ var ListController = BasicController.extend({
     _getSidebarEnv: function () {
         var env = this._super.apply(this, arguments);
         var record = this.model.get(this.handle);
-        return _.extend(env, {domain: record.getDomain()});
+        return _.extend(env, {
+            domain: record.getDomain(),
+            selectAll: !!this.$('thead .o_list_record_selector input').prop('checked'),
+        });
     },
     /**
      * Only display the pager when there are data to display.
