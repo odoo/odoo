@@ -10,19 +10,19 @@ class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
     use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away.")
-    invoiced = fields.Integer(
+    invoiced = fields.Float(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,
         help="Invoice revenue for the current month. This is the amount the sales "
                 "channel has invoiced this month. It is used to compute the progression ratio "
                 "of the current and target revenue on the kanban view.")
-    invoiced_target = fields.Integer(
+    invoiced_target = fields.Float(
         string='Invoicing Target',
         help="Revenue target for the current month (untaxed total of confirmed invoices).")
     quotations_count = fields.Integer(
         compute='_compute_quotations_to_invoice',
         string='Number of quotations to invoice', readonly=True)
-    quotations_amount = fields.Integer(
+    quotations_amount = fields.Float(
         compute='_compute_quotations_to_invoice',
         string='Amount of quotations to invoice', readonly=True)
     sales_to_invoice_count = fields.Integer(
