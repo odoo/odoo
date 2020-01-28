@@ -301,12 +301,12 @@
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
-                                    <field name="salesteam_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" />
+                                    <label class="o_light_label col-md-3" string="Sales Team" for="salesteam_id"/>
+                                    <field name="salesteam_id" class="col-md-9" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" />
                                 </div>
                                 <div class="row">
-                                    <label class="o_light_label col-lg-3" for="salesperson_id"/>
-                                    <field name="salesperson_id"/>
+                                    <label class="o_light_label col-md-3" for="salesperson_id"/>
+                                    <field name="salesperson_id" class="col-md-9"/>
                                 </div>
                             </div>
                         </div>
@@ -317,7 +317,7 @@
                             <div class="text-muted">
                                 Email sent to the customer after the checkout
                             </div>
-                            <div class="row mt16">
+                            <div class="row no-gutters mt16">
                                 <label for="confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
                                 <field name="confirmation_template_id" class="oe_inline"/>
                             </div>
@@ -332,7 +332,7 @@
                                 Send a recovery email when a cart is abandoned
                             </div>
                             <div class="content-group" title="This email template is suggested by default when you send a recovery email.">
-                                <div class="row mt16">
+                                <div class="row no-gutters mt16">
                                     <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-4 o_light_label"/>
                                     <field name="cart_recovery_mail_template" class="oe_inline"/>
                                 </div>

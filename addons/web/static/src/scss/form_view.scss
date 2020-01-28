@@ -915,6 +915,12 @@
 
     .o_form_label.o_light_label, .o_light_label .o_form_label {
         font-weight: normal;
+
+        // FIXME: col elements shoudn't have margin-right added by .o_form_label.
+        // This allows us to have items on the same row.
+        &[class*="col-"] {
+            margin-right: 0;
+        }
     }
     .o_setting_box:visible:nth-child(odd) {
         clear: left;
@@ -942,8 +948,10 @@
                 width: 100%;
             }
             .o_field_widget {
-                width: 50%;
-                flex: 0 0 auto;
+                @include media-breakpoint-up(sm) {            
+                    width: auto;
+                    flex: 0 0 auto;
+                }
 
                 &.o_field_many2manytags > .o_field_widget {
                     flex: 1 0 50px;

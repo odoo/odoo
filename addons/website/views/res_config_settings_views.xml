@@ -52,8 +52,8 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Name" for="website_name"/>
-                                            <field name="website_name" attrs="{'required': [('website_id', '!=', False)]}"/>
+                                            <label class="col-md-3 o_light_label" string="Name" for="website_name"/>
+                                            <field name="website_name" class="col-md-9" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
                                         <div class="row">
                                             <label class="col-lg-3 o_light_label" for="favicon" />
@@ -178,27 +178,27 @@
                                     <div class="content-group" attrs="{'invisible': [('has_social_network', '=', False)]}">
                                         <div class="row">
                                             <label for="social_twitter" string="Twitter" class="col-md-3 o_light_label"/>
-                                            <field name="social_twitter"/>
+                                            <field name="social_twitter" class="col-md-9"/>
                                         </div>
                                         <div class="row">
                                             <label for="social_facebook" string="Facebook" class="col-md-3 o_light_label"/>
-                                            <field name="social_facebook"/>
+                                            <field name="social_facebook" class="col-md-9"/>
                                         </div>
                                         <div class="row">
                                             <label for="social_github" string="GitHub" class="col-md-3 o_light_label"/>
-                                            <field name="social_github"/>
+                                            <field name="social_github" class="col-md-9"/>
                                         </div>
                                         <div class="row">
                                             <label for="social_linkedin" string="LinkedIn" class="col-md-3 o_light_label"/>
-                                            <field name="social_linkedin"/>
+                                            <field name="social_linkedin" class="col-md-9"/>
                                         </div>
                                         <div class="row">
                                             <label for="social_youtube" string="YouTube" class="col-md-3 o_light_label"/>
-                                            <field name="social_youtube"/>
+                                            <field name="social_youtube" class="col-md-9"/>
                                         </div>
                                         <div class="row">
                                             <label for="social_instagram" string="Instagram" class="col-md-3 o_light_label"/>
-                                            <field name="social_instagram"/>
+                                            <field name="social_instagram" class="col-md-9"/>
                                         </div>
                                     </div>
                                 </div>
@@ -279,8 +279,8 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
-                                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
+                                            <label class="col-md-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
+                                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y" class="col-md-9"
                                                 attrs="{'required': [('has_google_analytics', '=', True)]}"/>
                                         </div>
                                     </div>
@@ -305,8 +305,9 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
+                                            <label class="col-md-3 o_light_label" string="Code" for="google_search_console"/>
                                             <field name="google_search_console" placeholder="google1234567890123456.html"
+                                                class="col-md-9"
                                                 attrs="{'required': [('has_google_search_console', '=', True)]}"/>
                                         </div>
                                     </div>
