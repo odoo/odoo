@@ -29,15 +29,15 @@ const MONTH_OPTIONS = [
     { optionId: 'antepenultimate_month', groupId: 1, format: 'MMMM', addParam: { months: -2 }, setParam: {}, granularity: 'month' }
 ]
 const QUARTER_OPTIONS = [
-    { optionId: 'fourth_quarter', groupId: 1, description: _lt("Q4"), addParam: {}, setParam: { quarter: 4 }, granularity: 'quarter' },
-    { optionId: 'third_quarter', groupId: 1, description: _lt("Q3"), addParam: {}, setParam: { quarter: 3 }, granularity: 'quarter' },
-    { optionId: 'second_quarter', groupId: 1, description: _lt("Q2"), addParam: {}, setParam: { quarter: 2 }, granularity: 'quarter' },
-    { optionId: 'first_quarter', groupId: 1, description: _lt("Q1"), addParam: {}, setParam: { quarter: 1 }, granularity: 'quarter' }
+    { optionId: 'fourth_quarter', groupId: 2, description: _lt("Q4"), addParam: {}, setParam: { quarter: 4 }, granularity: 'quarter' },
+    { optionId: 'third_quarter', groupId: 2, description: _lt("Q3"), addParam: {}, setParam: { quarter: 3 }, granularity: 'quarter' },
+    { optionId: 'second_quarter', groupId: 2, description: _lt("Q2"), addParam: {}, setParam: { quarter: 2 }, granularity: 'quarter' },
+    { optionId: 'first_quarter', groupId: 2, description: _lt("Q1"), addParam: {}, setParam: { quarter: 1 }, granularity: 'quarter' }
 ]
 const YEAR_OPTIONS = [
-    { optionId: 'this_year', groupId: 2, format: 'YYYY', addParam: {}, setParam: {}, granularity: 'year' },
-    { optionId: 'last_year', groupId: 2, format: 'YYYY', addParam: { years: -1 }, setParam: {}, granularity: 'year' },
-    { optionId: 'antepenultimate_year', groupId: 2, format: 'YYYY', addParam: { years: -2 }, setParam: {}, granularity: 'year' },
+    { optionId: 'this_year', groupId: 3, format: 'YYYY', addParam: {}, setParam: {}, granularity: 'year' },
+    { optionId: 'last_year', groupId: 3, format: 'YYYY', addParam: { years: -1 }, setParam: {}, granularity: 'year' },
+    { optionId: 'antepenultimate_year', groupId: 3, format: 'YYYY', addParam: { years: -2 }, setParam: {}, granularity: 'year' },
 ];
 const OPTION_GENERATORS =  [...MONTH_OPTIONS, ...QUARTER_OPTIONS, ...YEAR_OPTIONS];
 
@@ -71,6 +71,8 @@ return {
     PERIOD_OPTIONS: PERIOD_OPTIONS,
     TIME_RANGE_OPTIONS: TIME_RANGE_OPTIONS,
     YEAR_OPTIONS: YEAR_OPTIONS,
+    MONTH_OPTIONS: MONTH_OPTIONS,
+    QUARTER_OPTIONS: QUARTER_OPTIONS,
 };
 
 });

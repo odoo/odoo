@@ -13,8 +13,8 @@ var Domain = require('web.Domain');
 var DEFAULT_INTERVAL = controlPanelViewParameters.DEFAULT_INTERVAL;
 var DEFAULT_PERIOD = controlPanelViewParameters.DEFAULT_PERIOD;
 var INTERVAL_OPTIONS = controlPanelViewParameters.INTERVAL_OPTIONS;
-var PERIOD_OPTIONS = controlPanelViewParameters.PERIOD_OPTIONS;
-const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
+let { MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS } = controlPanelViewParameters;
+
 
 var Factory = mvc.Factory;
 
@@ -74,18 +74,34 @@ var ControlPanelView = Factory.extend({
         this.fields = viewInfo.fields;
 
         this.referenceMoment = moment();
-        this.optionGenerators = OPTION_GENERATORS.map(o => {
-            const description = o.description ?
+
+        const setDescriptions = (options) => {
+            return options.map(o => {
+                const oClone = JSON.parse(JSON.stringify(o));
+                const description = o.description ?
                                     o.description.toString () :
-                                    this.referenceMoment.clone().set(o.setParam).add(o.addParam).format(o.format);
-            return _.extend({}, o, {description:  description});
-        });
-        PERIOD_OPTIONS = PERIOD_OPTIONS.map(option =>
-            _.extend({}, option, {description: option.description.toString()})
-        );
-        INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(option =>
-            _.extend({}, option, {description: option.description.toString()})
-        );
+                                    this.referenceMoment.clone().add(o.addParam).format(o.format);
+                return _.extend(oClone, {description:  description});
+            });
+        };
+
+        const process = (options) => {
+            return options.map(o => {
+                const date = this.referenceMoment.clone().set(o.setParam).add(o.addParam);
+                const oClone = JSON.parse(JSON.stringify(o));
+                delete oClone.addParam;
+                oClone.setParam[oClone.granularity] = date[oClone.granularity]();
+                oClone.defaultYear = date.year();
+                return oClone;
+            });
+        }
+
+        this.intervalOptions = setDescriptions(INTERVAL_OPTIONS);
+
+        this.monthOptions = process(setDescriptions(MONTH_OPTIONS));
+        this.quarterOptions = process(setDescriptions(QUARTER_OPTIONS));
+        this.yearOptions = process(setDescriptions(YEAR_OPTIONS));
+        this.optionGenerators = [...this.monthOptions, ...this.quarterOptions, ...this.yearOptions];
 
         this.controllerParams.modelName = params.modelName;
 
@@ -196,7 +212,7 @@ var ControlPanelView = Factory.extend({
             filter.fieldType = this.fields[attrs.fieldName].type;
             if (_.contains(['date', 'datetime'], filter.fieldType)) {
                 filter.hasOptions = true;
-                filter.options = INTERVAL_OPTIONS;
+                filter.options = this.intervalOptions;
                 filter.defaultOptionId = attrs.defaultInterval ||
                                             DEFAULT_INTERVAL;
                 filter.currentOptionIds = new Set();
@@ -226,11 +242,11 @@ var ControlPanelView = Factory.extend({
      * @returns {Object}
      */
     _getDateFilterBasicDomains: function (filter) {
-        const _constructBasicDomain = (y, o) => {
-            const addParam = _.extend({}, y.addParam, o ? o.addParam : {});
-            const setParam = _.extend({}, y.setParam, o ? o.setParam : {});
-            const granularity = o ? o.granularity : y.granularity;
-            const date = this.referenceMoment.clone().set(setParam).add(addParam);
+        const _constructBasicDomain = (o1, o2) => {
+            const setParam = Object.assign({}, o1.setParam, o2 ? o2.setParam : {});
+            const granularity = o2 ? o2.granularity : o1.granularity;
+
+            const date = this.referenceMoment.clone().set(setParam);
             let leftBound = date.clone().startOf(granularity).locale('en');
             let rightBound = date.clone().endOf(granularity).locale('en');
 
@@ -248,22 +264,23 @@ var ControlPanelView = Factory.extend({
             ]);
 
             let description;
-            if (o) {
-                description = o.description + " " + y.description;
+            if (o2) {
+                description = o2.description + " " + o1.description;
             } else {
-                description = y.description;
+                description = o1.description;
             }
 
             return { domain, description };
         };
 
         const domains = {};
-        this.optionGenerators.filter(y => y.groupId === 2).forEach(y => {
+        this.yearOptions.forEach(y => {
             domains[y.optionId] = _constructBasicDomain(y);
-            this.optionGenerators.filter(y => y.groupId === 1).forEach(o => {
+            [...this.monthOptions, ...this.quarterOptions].forEach(o => {
                 domains[y.optionId + "__" + o.optionId] = _constructBasicDomain(y, o);
             });
         });
+
         return domains;
     },
     /**

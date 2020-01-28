@@ -52,24 +52,30 @@ var SearchFacet = Widget.extend({
                 const optionDescriptions = [];
                 const sortFunction = (o1, o2) =>
                     filter.options.findIndex(o => o.optionId === o1) - filter.options.findIndex(o => o.optionId === o2);
-                const p = _.partition([...filter.currentOptionIds], optionId =>
-                    filter.options.find(o => o.optionId === optionId).groupId === 1);
-                const yearIds = p[1].sort(sortFunction);
-                const otherOptionIds = p[0].sort(sortFunction);
-                // the following case corresponds to years selected only
-                if (otherOptionIds.length === 0) {
+
+                const [otherIds, yearIds]  = [...filter.currentOptionIds].reduce((acc, optionId) => {
+                    const index = Number(filter.options.find(o => o.optionId === optionId).groupId === 3);
+                    acc[index].push(optionId);
+                    return acc;
+                }, [[], []]);
+
+                otherIds.sort(sortFunction);
+                yearIds.sort(sortFunction);
+
+                if (otherIds.length === 0) {
                     yearIds.forEach(yearId => {
                         const d = filter.basicDomains[yearId];
                         optionDescriptions.push(d.description);
                     });
                 } else {
-                    otherOptionIds.forEach(optionId => {
+                    otherIds.forEach(optionId => {
                         yearIds.forEach(yearId => {
                             const d = filter.basicDomains[yearId + '__' + optionId];
                             optionDescriptions.push(d.description);
                         });
                     });
                 }
+
                 description += ': ' + optionDescriptions.join('/');
             } else {
                 description = description += ': ' +
