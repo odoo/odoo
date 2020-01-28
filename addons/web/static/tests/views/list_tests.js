@@ -4200,6 +4200,73 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('execute a sidebar actions with correct params', async function (assert) {
+        assert.expect(12);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            toolbar: {
+                action: [{
+                    id: 44,
+                    name: 'Custom Action',
+                    type: 'ir.actions.server',
+                }],
+                print: [],
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/action/load') {
+                    assert.step(JSON.stringify(args));
+                    return Promise.resolve({});
+                }
+                return this._super(...arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+
+        let $actionMenu = list.$('.o_cp_sidebar .o_dropdown:contains(Action)');
+        assert.isNotVisible($actionMenu);
+        assert.containsN(list, '.o_data_row', 4);
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 5);
+
+        assert.isVisible($actionMenu);
+
+        await testUtils.dom.click($actionMenu.find('button')); // open Action menu
+        await testUtils.dom.click($actionMenu.find('.dropdown-item:contains(Custom Action)'));
+
+        // unselect first record (will unselect the thead checkbox as well)
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector:first input'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 3);
+        await testUtils.dom.click($actionMenu.find('button')); // open Action menu
+        await testUtils.dom.click($actionMenu.find('.dropdown-item:contains(Custom Action)'));
+
+        // add a domain and select first two records
+        await list.reload({ domain: [['bar', '=', true]] });
+        assert.containsN(list, '.o_data_row', 3);
+        assert.containsNone(list, '.o_list_record_selector input:checked');
+        $actionMenu = list.$('.o_cp_sidebar .o_dropdown:contains(Action)');
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector:nth(0) input'));
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector:nth(1) input'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 2);
+        await testUtils.dom.click($actionMenu.find('button')); // open Action menu
+        await testUtils.dom.click($actionMenu.find('.dropdown-item:contains(Custom Action)'));
+
+        assert.verifySteps([
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","select_all":true,"active_domain":[]}}',
+            '{"action_id":44,"context":{"active_id":2,"active_ids":[2,3,4],"active_model":"foo","select_all":false,"active_domain":[]}}',
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2],"active_model":"foo","select_all":false,"active_domain":[["bar","=",true]]}}',
+        ]);
+
+        list.destroy();
+    });
+
     QUnit.test('edit list line after line deletion', async function (assert) {
         assert.expect(5);
 
