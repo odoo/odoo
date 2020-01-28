@@ -15,6 +15,7 @@ from base64 import b64decode, b64encode
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.web_editor.tools import get_video_url_data
 from odoo.exceptions import UserError
 from odoo.modules.module import get_resource_path
 from odoo.tools.mimetypes import guess_mimetype
@@ -173,6 +174,19 @@ class Web_Editor(http.Controller):
                 self._update_checklist_recursive(node, allSelected, ancestors=True)
 
         return True
+
+    @http.route('/web_editor/video_url/data', type='json', auth='user', website=True)
+    def video_url_data(self, video_url, autoplay=False, loop=False,
+                       hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
+                       hide_dm_logo=False, hide_dm_share=False):
+        if not request.env.user.has_group('base.group_user'):
+            raise werkzeug.exceptions.Forbidden()
+        return get_video_url_data(
+            video_url, autoplay=autoplay, loop=loop,
+            hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
+            hide_yt_logo=hide_yt_logo, hide_dm_logo=hide_dm_logo,
+            hide_dm_share=hide_dm_share
+        )
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
