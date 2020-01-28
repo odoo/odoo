@@ -31,6 +31,7 @@ QUnit.module('basic_fields', {
                     display_name: {string: "Displayed name", type: "char", searchable: true},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true, trim: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
+                    empty_string: {string: "Empty string", type: "char", default: false, searchable: true, trim: true},
                     txt: {string: "txt", type: "text", default: "My little txt Value\nHo-ho-hoooo Merry Christmas"},
                     int_field: {string: "int_field", type: "integer", sortable: true, searchable: true},
                     qux: {string: "Qux", type: "float", digits: [16,1], searchable: true},
@@ -994,6 +995,30 @@ QUnit.module('basic_fields', {
             "should still have proper mailto prefix");
 
         list.destroy();
+    });
+
+    QUnit.test('email field with empty value', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="empty_string" widget="email"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        assert.strictEqual($mailtoLink.text(), '',
+            "the value should be displayed properly");
+
+        form.destroy();
     });
 
 

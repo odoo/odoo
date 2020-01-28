@@ -4,8 +4,7 @@
 from ast import literal_eval
 
 from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
-from odoo.tests.common import users
-from odoo.tools import mute_logger
+from odoo.tests.common import users, Form
 
 
 class TestMassMailValues(TestMassMailCommon):
@@ -71,3 +70,15 @@ class TestMassMailValues(TestMassMailCommon):
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
         self.assertEqual(literal_eval(mailing.mailing_domain), [('email', 'ilike', 'test.example.com')])
+
+    @users('user_marketing')
+    def test_mailing_computed_fields_form(self):
+        mailing_form = Form(self.env['mailing.mailing'].with_context(
+            default_mailing_domain="[('email', 'ilike', 'test.example.com')]",
+            default_mailing_model_id=self.env['ir.model']._get('res.partner').id,
+        ))
+        self.assertEqual(
+            literal_eval(mailing_form.mailing_domain),
+            ['&', ('is_blacklisted', '=', False), ('email', 'ilike', 'test.example.com')]
+        )
+        self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
