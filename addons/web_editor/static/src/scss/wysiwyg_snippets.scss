@@ -323,7 +323,8 @@ body.editor_enable.editor_has_snippets {
 
         .o_we_user_value_widget {
             flex: 1 1 auto;
-            display: block;
+            min-width: 0;
+            @extend %o-we-inline;
 
             > div {
                 display: flex;
@@ -345,7 +346,7 @@ body.editor_enable.editor_has_snippets {
 
         // Checkboxes
         .o_we_checkbox_wrapper.o_we_user_value_widget {
-            @extend .o_we_inline;
+            @extend .o_we_force_inline;
             flex: 0 0 auto;
             padding: 0;
             border: none;
@@ -419,7 +420,7 @@ body.editor_enable.editor_has_snippets {
 
         // Color Pickers
         .o_we_so_color_palette.o_we_user_value_widget {
-            @extend .o_we_inline;
+            @extend .o_we_force_inline;
             flex: 0 0 auto;
 
             .o_we_color_preview {
@@ -484,7 +485,8 @@ body.editor_enable.editor_has_snippets {
         we-row {
             position: relative;
             flex: 1 1 auto;
-            display: block;
+            min-width: 0;
+            @extend %o-we-inline;
 
             > div {
                 display: flex;
@@ -501,18 +503,27 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
-        .o_we_inline {
-            &, &.o_we_user_value_widget {
-                display: flex;
-                align-items: center;
+        %o-we-inline:not(.o_we_fw) {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
 
-                > we-title {
-                    @include o-text-overflow();
-                    min-width: 60%;
-                    margin-right: 5%;
-                }
+            > we-title {
+                @include o-text-overflow();
+                max-width: 95%;
+                min-width: 30%;
+                margin-right: 5%;
+            }
+            > div {
+                flex: 1 1 auto;
+                min-width: 30%;
+            }
+
+            &.o_we_force_inline {
+                flex-flow: row nowrap;
+
                 > div {
-                    flex: 1 1 auto;
+                    min-width: 0;
                 }
             }
         }
