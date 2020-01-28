@@ -753,7 +753,7 @@ QUnit.module('Search View', {
         var self = this;
 
         this.archs['partner,4,search'] = '<search>'+
-            '<filter string="AAA" name="some_filter" date="date_field" default_period="this_week"></filter>' +
+            '<filter string="AAA" name="some_filter" date="date_field"></filter>' +
         '</search>';
 
         var unpatchDate = patchDate(2017,2,22,1,0,0);
@@ -799,6 +799,45 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="antepenultimate_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
+        actionManager.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('filter by a date field using period works even in January', async function (assert) {
+        assert.expect(3);
+
+        this.archs['partner,4,search'] = '<search>'+
+            '<filter string="AAA" name="some_filter" date="date_field" default_period="last_month"></filter>' +
+        '</search>';
+
+        var unpatchDate = patchDate(2017,0,7,3,0,0);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function(route, args) {
+                if (route === '/web/dataset/search_read' && args.domain.length) {
+                    assert.deepEqual(args.domain,
+                        ['&', ["date_field", ">=", "2016-12-01"], ["date_field", "<=", "2016-12-31"]]
+                    );
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        this.actions[4].context = {search_default_some_filter: true};
+
+        await actionManager.doAction(5);
+
+        // open menu 'Filter'
+        await testUtils.dom.click($('.o_search_options .fa-filter'));
+        // open menu options
+        await testUtils.dom.click($('.o_menu_item'));
+
+        assert.hasClass($('.o_item_option[data-option_id="last_month"] a'), 'selected');
+        assert.hasClass($('.o_item_option[data-option_id="last_year"] a'), 'selected');
+
         actionManager.destroy();
         unpatchDate();
     });
