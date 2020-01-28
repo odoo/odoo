@@ -87,7 +87,7 @@
         @param {mail.DocumentViewer} widget
     -->
     <t t-name="DocumentViewer">
-        <div class="modal o_modal_fullscreen o_active_modal" tabindex="-1" data-keyboard="false" role="dialog">
+        <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog">
             <t class="o_document_viewer_content_call" t-call="DocumentViewer.Content"/>
 
             <t t-if="widget.attachment.length !== 1">
