@@ -1224,7 +1224,7 @@ var VideoWidget = MediaWidget.extend({
             instagram: /(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)/,
             vine: /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/,
             vimeo: /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/,
-            dailymotion: /.+dailymotion.com\/(video|hub|embed)\/([^_]+)[^#]*(#video=([^_&]+))?/,
+            dailymotion: /.+dailymotion.com\/(video|hub|embed)\/([^_?]+)[^#]*(#video=([^_&]+))?/,
             youku: /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/,
         };
         const matches = _.mapObject(regexes, regex => url.match(regex));
