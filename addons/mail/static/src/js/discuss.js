@@ -56,13 +56,13 @@ var PartnerInviteDialog = Dialog.extend({
             multiple: true,
             formatResult: function (item) {
                 var status = QWeb.render('mail.UserStatus', {
-                    status: self.call('mail_service', 'getImStatus', { partnerID: item.id }),
+                    status: self.env.services.mail.getImStatus({ partnerID: item.id }),
                     partnerID: item.id,
                 });
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('mail_service', 'searchPartner', query.term, 20)
+                self.env.services.mail.searchPartner(query.term, 20)
                     .then(function (partners) {
                         query.callback({
                             results: _.map(partners, function (partner) {
@@ -102,7 +102,7 @@ var PartnerInviteDialog = Dialog.extend({
                     self.do_notify(_t("New people"), notification);
                     // Update list of members with the invited user, so that
                     // we can mention this user in this channel right away.
-                    var channel = self.call('mail_service', 'getChannel', self._channelID);
+                    var channel = self.env.services.mail.getChannel(self._channelID);
                     channel.forceFetchMembers();
                 });
         }
@@ -144,7 +144,7 @@ var RenameConversationDialog = Dialog.extend({
      * @returns {$.Promise}
      */
     start: function () {
-        var channel = this.call('mail_service', 'getChannel', this._channelID);
+        var channel = this.env.services.mail.getChannel(this._channelID);
         this.$('input').val(channel.getName());
         return this._super.apply(this, arguments);
     },
@@ -168,7 +168,7 @@ var RenameConversationDialog = Dialog.extend({
                 name: name,
             }
         }).then(function () {
-            var channel = self.call('mail_service', 'getThread', self._channelID);
+            var channel = self.env.services.mail.getThread(self._channelID);
             channel.setName(name);
             self._callback();
         });
@@ -280,7 +280,7 @@ var Discuss = AbstractAction.extend({
             this.options.channelQuickSearchThreshold = 20;
         }
 
-        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isMessagingReady = this.env.services.mail.isReady();
         this._isStarted = false;
         this._threadsScrolltop = {};
         this._composerStates = {};
@@ -293,7 +293,7 @@ var Discuss = AbstractAction.extend({
             this._updateThreads.bind(this), 100, { leading: false });
 
         this.controlPanelParams.modelName = 'mail.message';
-        this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
+        this.env.services.mail.getMailBus().on('messaging_ready', this, this._onMessagingReady);
     },
     /**
      * @override
@@ -332,7 +332,7 @@ var Discuss = AbstractAction.extend({
      * @override
      */
     on_attach_callback: function () {
-        this.call('mail_service', 'getMailBus').trigger('discuss_open', true);
+        this.env.services.mail.getMailBus().trigger('discuss_open', true);
         if (this._thread) {
             this._threadWidget.scrollToPosition(this._threadsScrolltop[this._thread.getID()]);
             this._loadEnoughMessages();
@@ -342,7 +342,7 @@ var Discuss = AbstractAction.extend({
      * @override
      */
     on_detach_callback: function () {
-        this.call('mail_service', 'getMailBus').trigger('discuss_open', false);
+        this.env.services.mail.getMailBus().trigger('discuss_open', false);
         this._threadsScrolltop[this._thread.getID()] = this._threadWidget.getScrolltop();
     },
 
@@ -386,7 +386,7 @@ var Discuss = AbstractAction.extend({
     _banAuthorsFromMessageIDs: function (messageIDs) {
         var self = this;
         var emailList = _.map(messageIDs, function (messageID) {
-            return self.call('mail_service', 'getMessage', messageID).getEmailFrom();
+            return self.env.services.mail.getMessage(messageID).getEmailFrom();
         }).join(", ");
         var text = _.str.sprintf(
             _t("You are going to ban: %s. Do you confirm the action?"),
@@ -678,12 +678,12 @@ var Discuss = AbstractAction.extend({
                     if (self._lastSearchVal) {
                         if (ui.item.special) {
                             if (ui.item.special === 'public') {
-                                self.call('mail_service', 'createChannel', self._lastSearchVal, 'public');
+                                self.env.services.mail.createChannel(self._lastSearchVal, 'public');
                             } else {
-                                self.call('mail_service', 'createChannel', self._lastSearchVal, 'private');
+                                self.env.services.mail.createChannel(self._lastSearchVal, 'private');
                             }
                         } else {
-                            self.call( 'mail_service', 'joinChannel', ui.item.id);
+                            self.env.services.mail.joinChannel(ui.item.id);
                         }
                     }
                 },
@@ -697,15 +697,15 @@ var Discuss = AbstractAction.extend({
                 autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
-                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).then(response);
+                    self.env.services.mail.searchPartner(self._lastSearchVal, 10).then(response);
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;
-                    var dmChat = self.call('mail_service', 'getDMChatFromPartnerID', partnerID);
+                    var dmChat = self.env.services.mail.getDMChatFromPartnerID(partnerID);
                     if (dmChat) {
                         self._setThread(dmChat.getID());
                     } else {
-                        self.call('mail_service', 'createChannel', partnerID, 'dm_chat');
+                        self.env.services.mail.createChannel(partnerID, 'dm_chat');
                     }
                     // clear the input
                     $(this).val('');
@@ -756,15 +756,15 @@ var Discuss = AbstractAction.extend({
      * @returns {jQueryElement}
      */
     _renderSidebar: function () {
-        var channels = this.call('mail_service', 'getChannels');
+        var channels = this.env.services.mail.getChannels();
         channels = this._sortChannels(channels);
         var $sidebar = $(QWeb.render('mail.discuss.Sidebar', {
             activeThreadID: this._thread ? this._thread.getID() : undefined,
-            inbox: this.call('mail_service', 'getMailbox', 'inbox'),
-            starred: this.call('mail_service', 'getMailbox', 'starred'),
-            moderation: this.call('mail_service', 'getMailbox', 'moderation'),
+            inbox: this.env.services.mail.getMailbox('inbox'),
+            starred: this.env.services.mail.getMailbox('starred'),
+            moderation: this.env.services.mail.getMailbox('moderation'),
             channels: channels,
-            isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
+            isMyselfModerator: this.env.services.mail.isMyselfModerator(),
             displayQuickSearch: channels.length >= this.options.channelQuickSearchThreshold,
             options: this.options,
         }));
@@ -777,7 +777,7 @@ var Discuss = AbstractAction.extend({
      */
     _renderSidebarChannels: function (options) {
         options.searchChannelVal = options.searchChannelVal || '';
-        var channels = this.call('mail_service', 'getChannels');
+        var channels = this.env.services.mail.getChannels();
         var searchChannelValLowerCase = options.searchChannelVal.toLowerCase();
         channels = _.filter(channels, function (channel) {
             var channelNameLowerCase = channel.getName().toLowerCase();
@@ -799,10 +799,10 @@ var Discuss = AbstractAction.extend({
         this.$('.o_mail_discuss_sidebar_mailboxes').html(
             QWeb.render('mail.discuss.SidebarMailboxes', {
                 activeThreadID: this._thread ? this._thread.getID() : undefined,
-                inbox: this.call('mail_service', 'getMailbox', 'inbox'),
-                starred: this.call('mail_service', 'getMailbox', 'starred'),
-                moderation: this.call('mail_service', 'getMailbox', 'moderation'),
-                isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
+                inbox: this.env.services.mail.getMailbox('inbox'),
+                starred: this.env.services.mail.getMailbox('starred'),
+                moderation: this.env.services.mail.getMailbox('moderation'),
+                isMyselfModerator: this.env.services.isMyselfModerator(),
             })
         );
     },
@@ -836,17 +836,17 @@ var Discuss = AbstractAction.extend({
 
         this._threadWidget
             .on('redirect', this, function (resModel, resID) {
-                this.call('mail_service', 'redirect', resModel, resID, this._setThread.bind(this));
+                this.env.services.mail.redirect(resModel, resID, this._setThread.bind(this));
             })
             .on('redirect_to_channel', this, function (channelID) {
-                this.call('mail_service', 'joinChannel', channelID).then(this._setThread.bind(this));
+                this.env.services.mail.joinChannel(channelID).then(this._setThread.bind(this));
             })
             .on('load_more_messages', this, this._loadMoreMessages)
             .on('mark_as_read', this, function (messageID) {
-                this.call('mail_service', 'markMessagesAsRead', [messageID]);
+                this.env.services.mail.markMessagesAsRead([messageID]);
             })
             .on('toggle_star_status', this, function (messageID) {
-                var message = this.call('mail_service', 'getMessage', messageID);
+                var message = this.env.services.mail.getMessage(messageID);
                 message.toggleStarStatus();
             })
             .on('select_message', this, this._selectMessage)
@@ -911,7 +911,7 @@ var Discuss = AbstractAction.extend({
      */
     _selectMessage: function (messageID) {
         this.$el.addClass('o_mail_selection_mode');
-        var message = this.call('mail_service', 'getMessage', messageID);
+        var message = this.env.services.mail.getMessage(messageID);
         this._selectedMessage = message;
         var subject = "Re: " + message.getDocumentName();
         this._extendedComposer.setSubject(subject);
@@ -944,8 +944,8 @@ var Discuss = AbstractAction.extend({
         // Store scroll position and composer state of the previous thread
         this._storeThreadState();
 
-        this._thread = this.call('mail_service', 'getThread', threadID) ||
-                        this.call('mail_service', 'getMailbox', 'inbox');
+        this._thread = this.env.services.mail.getThread(threadID) ||
+            this.env.services.mail.getMailbox('inbox');
 
         // reset value on channel change
         this.messagesSeparatorPosition = undefined;
@@ -1006,7 +1006,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _startListening: function () {
-        this.call('mail_service', 'getMailBus')
+        this.env.services.mail.getMailBus()
             .on('open_thread_in_discuss', this, this._onOpenThreadInDiscuss)
             .on('new_message', this, this._onNewMessage)
             .on('update_message', this, this._onMessageUpdated)
@@ -1287,7 +1287,7 @@ var Discuss = AbstractAction.extend({
     _onChannelSettingsClicked: function (ev) {
         ev.stopPropagation();
         var threadID = $(ev.currentTarget).data('thread-id');
-        var thread = this.call('mail_service', 'getThread', threadID);
+        var thread = this.env.services.mail.getThread(threadID);
         if (thread.getType() === 'dm_chat') {
             new RenameConversationDialog(this, threadID, this._updateThreads.bind(this)).open();
             return;
@@ -1566,7 +1566,7 @@ var Discuss = AbstractAction.extend({
     _onUnpinChannel: function (ev) {
         ev.stopPropagation();
         var channelID = $(ev.target).data('thread-id');
-        var channel = this.call('mail_service', 'getChannel', channelID);
+        var channel = this.env.services.mail.getChannel(channelID);
         if (channel.isMyselfAdministrator()) {
             this._askConfirmationAdminUnsubscribe(channel);
         } else {
@@ -1588,7 +1588,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _onUnstarAllClicked: function () {
-        this.call('mail_service', 'unstarAll');
+        this.env.services.mail.unstarAll();
     },
     /**
      * @private

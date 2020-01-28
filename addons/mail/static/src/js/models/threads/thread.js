@@ -364,7 +364,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * @private
      */
     _warnUpdatedUnreadCounter: function () {
-        this.call('mail_service', 'getMailBus').trigger('update_thread_unread_counter', this);
+        this.env.services.mail.getMailBus().trigger('update_thread_unread_counter', this);
     },
     /**
      * Warn other mail components that the window state of this thread has
@@ -377,7 +377,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      */
     _warnUpdatedWindowState: function (options) {
         options = options || {};
-        return this.call('mail_service', 'updateThreadWindow', this.getID(), options);
+        return this.env.services.mail.updateThreadWindow(this.getID(), options);
     },
 });
 

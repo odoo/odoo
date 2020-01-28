@@ -453,7 +453,7 @@ var SearchPanel = Widget.extend({
         // from localStorage
         if (!_.contains(validValues, value)) {
             var storageKey = this._getLocalStorageKey(category);
-            return this.call('local_storage', 'getItem', storageKey);
+            return this.env.services.localStorage.getItem(storageKey);
         }
         return value;
     },
@@ -660,7 +660,7 @@ var SearchPanel = Widget.extend({
             category.values[valueId].folded = !category.values[valueId].folded;
         }
         var storageKey = this._getLocalStorageKey(category);
-        this.call('local_storage', 'setItem', storageKey, valueId);
+        this.env.services.localStorage.setItem(storageKey, valueId);
         this._notifyDomainUpdated();
     },
     /**

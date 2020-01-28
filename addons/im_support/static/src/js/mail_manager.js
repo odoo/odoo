@@ -23,7 +23,7 @@ var SUPPORT_CHANNEL_STATE_KEY = 'im_support.channel_state';
  * livechat operators from another database (the Support database).
  */
 MailManager.include({
-    dependencies: (MailManager.prototype.dependencies || []).concat(['support_bus_service']),
+    dependencies: (MailManager.prototype.dependencies || []).concat(['support_bus']),
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -43,13 +43,13 @@ MailManager.include({
         this.pollingSupport = false;
 
         // listen to notifications coming from Support longpolling
-        this.call('support_bus_service', 'onNotification', this, this._onSupportNotification);
+        this.env.services.support_bus.onNotification(this, this._onSupportNotification);
 
         // check if there is a pending chat session with the Support
-        var timeoutTimestamp = this.call('local_storage', 'getItem', POLL_TIMEOUT_KEY);
+        var timeoutTimestamp = this.env.services.localStorage.getItem(POLL_TIMEOUT_KEY);
         var pollingDelay = timeoutTimestamp && (JSON.parse(timeoutTimestamp) - Date.now());
         if (pollingDelay && pollingDelay > 0) {
-            var channelState = this.call('local_storage', 'getItem', SUPPORT_CHANNEL_STATE_KEY);
+            var channelState = this.env.services.localStorage.getItem(SUPPORT_CHANNEL_STATE_KEY);
             this.startSupportLivechat(channelState).then(function () {
                 var supportChannel = self.getChannel(self.supportChannelUUID);
                 if (supportChannel.isAvailable()) {
@@ -84,8 +84,8 @@ MailManager.include({
         }
         if (!this.pollingSupport) {
             this.pollingSupport = true;
-            this.call('support_bus_service', 'addChannel', this.supportChannelUUID);
-            this.call('support_bus_service', 'startPolling');
+            this.env.services.support_bus.addChannel(this.supportChannelUUID);
+            this.env.services.support_bus.startPolling();
             this._setPollTimeout(pollingDelay);
         }
     },
@@ -123,7 +123,7 @@ MailManager.include({
             }
             if (!channelState) {
                 channelState = self._isDiscussOpen() ? 'closed' : 'open';
-                self.call('local_storage', 'setItem', SUPPORT_CHANNEL_STATE_KEY, channelState);
+                self.env.services.localStorage.setItem(SUPPORT_CHANNEL_STATE_KEY, channelState);
             }
             if (!self.supportChannelUUID) {
                 // this part is only executed the first time the RPC is resolved
@@ -159,7 +159,7 @@ MailManager.include({
      * @param {string} state ('closed', 'folded' or 'open')
      */
     updateSupportChannelState: function (state) {
-        this.call('local_storage', 'setItem', SUPPORT_CHANNEL_STATE_KEY, state);
+        this.env.services.localStorage.setItem(SUPPORT_CHANNEL_STATE_KEY, state);
     },
 
     //--------------------------------------------------------------------------
@@ -209,7 +209,7 @@ MailManager.include({
         // save the timeout expiration datetime into the LocalStorage so that
         // we can re-open the Support channel if necessary on F5
         var timeoutTimestamp = Date.now() + pollingDelay;
-        this.call('local_storage', 'setItem', POLL_TIMEOUT_KEY, timeoutTimestamp);
+        this.env.services.localStorage.setItem(POLL_TIMEOUT_KEY, timeoutTimestamp);
     },
     /**
      * Stops the longpoll with the server hosting the Support channel.
@@ -218,8 +218,8 @@ MailManager.include({
      */
     _stopPollingSupport: function () {
         this.pollingSupport = false;
-        this.call('support_bus_service', 'stopPolling');
-        this.call('local_storage', 'removeItem', POLL_TIMEOUT_KEY);
+        this.env.services.support_bus.stopPolling();
+        this.env.services.localStorage.removeItem(POLL_TIMEOUT_KEY);
     },
 
     //--------------------------------------------------------------------------
@@ -262,7 +262,7 @@ WebClient.include({
      * @override
      */
     show_application: function () {
-        this.call('mail_service', 'initSupport');
+        this.env.services.mail.initSupport();
         return this._super.apply(this, arguments);
     },
 });

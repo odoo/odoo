@@ -16,7 +16,7 @@ var SupportMessage = Message.extend({
         this._super.apply(this, arguments);
         if (
             !this._serverAuthorID ||
-            this._serverAuthorID[0] !== this.call('mail_service', 'getOdoobotID')[0]
+            this._serverAuthorID[0] !== this.env.services.getOdoobotID()[0]
         ) {
             if (!this._serverAuthorID[0]) {
                 // the author is the client

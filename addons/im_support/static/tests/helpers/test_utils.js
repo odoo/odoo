@@ -9,8 +9,8 @@ var testUtils = require('web.test_utils');
 
 mailTestUtils.MockMailService.include({
     getServices: function () {
-        return _.extend(this._super(), {
-            support_bus_service: this.bus_service(),
+        return Object.assign(this._super(), {
+            support_bus: this.bus(),
         });
     },
 });
@@ -79,7 +79,7 @@ function addMockSupportEnvironment(widget, params) {
             }
         }, true);
         // manually call initSupport (which is supposed to be called at webclient startup)
-        widget.call('mail_service', 'initSupport');
+        widget.env.services.mail.initSupport();
     }
 }
 

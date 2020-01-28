@@ -2,6 +2,7 @@ odoo.define('mail_bot.systray.MessagingMenu', function (require) {
 "use strict";
 
 var MessagingMenu = require('mail.systray.MessagingMenu');
+
 var core = require('web.core');
 
 var _t = core._t;
@@ -22,7 +23,7 @@ return MessagingMenu.include({
      */
     _computeCounter: function () {
         var counter = this._super.apply(this, arguments);
-        if (this.call('mailbot_service', 'isRequestingForNativeNotifications')) {
+        if (this.env.services.mailbot.isRequestingForNativeNotifications()) {
             counter++;
         }
         return counter;
@@ -37,7 +38,7 @@ return MessagingMenu.include({
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {
-        var mailbotPreviews = this.call('mailbot_service', 'getPreviews', this._filter);
+        var mailbotPreviews = this.env.services.mailbot.getPreviews(this._filter);
         return this._super.apply(this, arguments).then(function (previews) {
             return _.union(mailbotPreviews, previews);
         });
@@ -56,9 +57,9 @@ return MessagingMenu.include({
      * @param {string} value
      */
     _handleResponseNotificationPermission: function (value) {
-        this.call('mailbot_service', 'removeRequest');
+        this.env.services.mailbot.removeRequest();
         if (value !== 'granted') {
-            this.call('bus_service', 'sendNotification', _t('Permission denied'),
+            this.env.services.bus.sendNotification(_t('Permission denied'),
                 _t('Odoo will not have the permission to send native notifications on this device.'));
         }
         this._updateCounter();

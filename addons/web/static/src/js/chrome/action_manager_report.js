@@ -55,7 +55,7 @@ ActionManager.include({
                 },
                 success: resolve,
                 error: (error) => {
-                    self.call('crash_manager', 'rpc_error', error);
+                    self.env.services.crashManager.rpc_error(error);
                     reject();
                 },
                 complete: framework.unblockUI,
@@ -107,7 +107,7 @@ ActionManager.include({
             return this._executeReportClientAction(action, options);
         } else if (action.report_type === 'qweb-pdf') {
             // check the state of wkhtmltopdf before proceeding
-            return this.call('report', 'checkWkhtmltopdf').then(function (state) {
+            return this.env.services.report.checkWkhtmltopdf().then(function (state) {
                 // display a notification according to wkhtmltopdf's state
                 if (state in WKHTMLTOPDF_MESSAGES) {
                     self.do_notify(_t('Report'), WKHTMLTOPDF_MESSAGES[state], true);

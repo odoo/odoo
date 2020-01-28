@@ -218,7 +218,7 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
     var notifications = [
         [['myDB', 'ir.needaction'], message]
     ];
-    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+    messagingMenu.env.services.bus.trigger('notification', notifications);
 
     // Open messaging menu
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
@@ -456,7 +456,7 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
         channel_ids: [1],
     };
     var notification = [[false, 'mail.channel', 1], data];
-    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+    messagingMenu.env.services.bus.trigger('notification', [notification]);
     await testUtils.nextTick();
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should still display a single channel preview");
@@ -523,7 +523,7 @@ QUnit.test('new message of type "notification" are not considered as unread mess
         message_type: 'notification',
     };
     const notification = [[false, 'mail.channel', 1], data];
-    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+    messagingMenu.env.services.bus.trigger('notification', [notification]);
     await testUtils.nextTick();
     // open messaging menu
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
@@ -743,7 +743,7 @@ QUnit.test("messaging menu widget: channel seen notification", async function (a
     var notifications = [
         [['myDB', 'mail.channel', 1], message]
     ];
-    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+    messagingMenu.env.services.bus.trigger('notification', notifications);
     await testUtils.nextTick();
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should no longer have a messaging menu counter (no unread message in channel)");
@@ -792,7 +792,7 @@ QUnit.test("messaging menu widget: no traceback when receiving channel_fetched n
     var notifications = [
         [['myDB', 'mail.channel', 1], message]
     ];
-    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+    messagingMenu.env.services.bus.trigger('notification', notifications);
     await testUtils.nextTick();
 
     messagingMenu.destroy();
@@ -986,7 +986,7 @@ QUnit.test('messaging menu widget: do not open chat window twice on preview clic
                     state: 'open',
                 });
                 var notifications = [ [['myDB', 'res.partner'], channelInfo] ];
-                messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+                messagingMenu.env.services.bus.trigger('notification', notifications);
             }
             return this._super.apply(this, arguments);
         },
@@ -1081,7 +1081,7 @@ QUnit.test('messaging menu widget: click twice preview on slow message_fetch sho
                     state: 'open',
                 };
                 const notifications = [ [['myDB', 'res.partner'], channelInfo] ];
-                messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+                messagingMenu.env.services.bus.trigger('notification', notifications);
             }
             return this._super(...arguments);
         },

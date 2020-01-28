@@ -18,13 +18,12 @@ odoo.define('mail.Manager', function (require) {
  *
  * To get all threads that have been fetched from the server:
  *
- *      this.call('mail_service', 'getThreads');
+ *      this.env.services.mail.getThreads();
  *
  * To get a particular thread with server ID 1:
  *
- *      this.call('mail_service', 'getThread', 1);
+ *      this.env.services.mail.getThread(1);
  */
-var AbstractService = require('web.AbstractService');
 
 var DMChat = require('mail.model.DMChat');
 var Livechat = require('mail.model.Livechat');
@@ -35,6 +34,7 @@ var MultiUserChannel = require('mail.model.MultiUserChannel');
 var mailUtils = require('mail.utils');
 var utils = require('web.utils');
 
+var AbstractService = require('web.AbstractService');
 var Bus = require('web.Bus');
 var config = require('web.config');
 var core = require('web.core');
@@ -45,7 +45,7 @@ var _t = core._t;
 var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 
 var MailManager =  AbstractService.extend({
-    dependencies: ['ajax', 'bus_service', 'local_storage'],
+    dependencies: ['ajax', 'bus', 'local_storage'],
     _isReady: false,
     _ODOOBOT_ID: ["ODOOBOT", "ODOOBOT"], // authorID for transient messages
 
@@ -574,7 +574,7 @@ var MailManager =  AbstractService.extend({
                         prom.then(function () {
                             var query = { isVisible: false };
                             self._mailBus.trigger('is_thread_bottom_visible', thread, query);
-                            if (!self.call('bus_service', 'isOdooFocused') || !query.isVisible) {
+                            if (!self.env.services.bus.isOdooFocused() || !query.isVisible) {
                                 self._notifyIncomingMessage(message);
                             }
                         });
@@ -647,7 +647,7 @@ var MailManager =  AbstractService.extend({
             });
         }).then(function (result) {
             self._updateInternalStateFromServer(result);
-            self.call('bus_service', 'startPolling');
+            self.env.services.bus.startPolling();
             self._isReady = true;
             self._mailBus.trigger('messaging_ready');
         });
@@ -906,7 +906,7 @@ var MailManager =  AbstractService.extend({
      */
     _listenOnBuses: function () {
         this._mailBus.on('discuss_open', this, this._onDiscussOpen);
-        this.call('bus_service', 'on', 'window_focus', this, this._onWindowFocus);
+        this.env.services.bus.on('window_focus', this, this._onWindowFocus);
     },
     /**
      * Creates a new instance of Channel with the given data and options.
@@ -979,7 +979,7 @@ var MailManager =  AbstractService.extend({
      * @param {mail.model.Message} message message received
      */
     _notifyIncomingMessage: function (message) {
-        if (this.call('bus_service', 'isOdooFocused')) {
+        if (this.env.services.bus.isOdooFocused()) {
             // no need to notify
             return;
         }
@@ -990,7 +990,7 @@ var MailManager =  AbstractService.extend({
         var content = mailUtils.parseAndTransform(message.getBody(), mailUtils.stripHTML)
             .substr(0, PREVIEW_MSG_MAX_SIZE);
 
-        if (!this.call('bus_service', 'isOdooFocused')) {
+        if (!this.env.services.bus.isOdooFocused()) {
             this._outOfFocusUnreadMessageCounter++;
             var tabTitle = _.str.sprintf(
                 _t("%d Messages"),
@@ -1002,7 +1002,7 @@ var MailManager =  AbstractService.extend({
             });
         }
 
-        this.call('bus_service', 'sendNotification', title, content);
+        this.env.services.bus.sendNotification(title, content);
     },
     /**
      * Open the thread in the Discuss app

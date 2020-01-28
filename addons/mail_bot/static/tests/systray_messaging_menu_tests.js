@@ -51,7 +51,7 @@ QUnit.module('MessagingMenu', {
 
         // Patch Bus Service so that it does not play any audio (may raise
         // Uncaught rejected Promise due to Chrome autoplay policy: https://goo.gl/xX8pDD)
-        testUtils.patch(this.services.bus_service, {
+        testUtils.patch(this.services.bus, {
             /**
              * @override
              */
@@ -61,7 +61,7 @@ QUnit.module('MessagingMenu', {
     afterEach: function () {
         // unpatch MailBotService and BusService
         testUtils.mock.unpatch(MailBotService);
-        testUtils.mock.unpatch(this.services.bus_service);
+        testUtils.mock.unpatch(this.services.bus);
         window.Notification = this.ORIGINAL_WINDOW_NOTIFICATION;
     }
 });

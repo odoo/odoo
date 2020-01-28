@@ -188,7 +188,7 @@ var SearchableThread = Thread.extend({
             }
             cache.loaded = true;
             _.each(messages, function (message) {
-                self.call('mail_service', 'addMessage', message, {
+                self.env.services.mail.addMessage(message, {
                     silent: true,
                     domain: pDomain,
                 });

@@ -30,7 +30,7 @@ QUnit.module('Blank', {
             },
         };
         this.services = mailTestUtils.getMailServices();
-        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
+        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail.prototype.THREAD_WINDOW_APPENDTO;
 
         this.createParent = function (params) {
             var widget = new Widget();
@@ -39,9 +39,9 @@ QUnit.module('Blank', {
             // note that it does not hide thread window because it uses fixed
             // position, and qunit-fixture uses absolute...
             if (params.debug) {
-                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+                self.services.mail.prototype.THREAD_WINDOW_APPENDTO = 'body';
             } else {
-                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
+                self.services.mail.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
             testUtils.mock.addMockEnvironment(widget, params);
@@ -83,7 +83,7 @@ QUnit.module('Blank', {
     },
     afterEach: function () {
         // reset thread window append to body
-        this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+        this.services.mail.prototype.THREAD_WINDOW_APPENDTO = 'body';
     },
 });
 
@@ -96,7 +96,7 @@ QUnit.test('basic rendering blank thread window', async function (assert) {
     });
 
     // open blank thread window
-    parent.call('mail_service', 'openBlankThreadWindow');
+    parent.env.services.mail.openBlankThreadWindow();
     await testUtils.nextMicrotaskTick();
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have a thread window open");
@@ -123,7 +123,7 @@ QUnit.test('close blank thread window', async function (assert) {
     });
 
     // open blank thread window
-    parent.call('mail_service', 'openBlankThreadWindow');
+    parent.env.services.mail.openBlankThreadWindow();
     await testUtils.nextMicrotaskTick();
 
     await testUtils.dom.click($('.o_thread_window_close'));
@@ -153,7 +153,7 @@ QUnit.test('fold blank thread window', async function (assert) {
     });
 
     // Open blank thread window
-    parent.call('mail_service', 'openBlankThreadWindow');
+    parent.env.services.mail.openBlankThreadWindow();
     await testUtils.nextTick();
 
     assert.containsOnce(document.body, '.o_thread_window');
@@ -216,7 +216,7 @@ QUnit.test('open new DM chat from blank thread window', async function (assert) 
     });
 
     // open blank thread window
-    parent.call('mail_service', 'openBlankThreadWindow');
+    parent.env.services.mail.openBlankThreadWindow();
     await testUtils.nextMicrotaskTick();
     await testUtils.fields.editAndTrigger($('.o_thread_search_input input'), 'D', 'keydown');
     await testUtils.nextTick();
@@ -297,7 +297,7 @@ QUnit.test('open already detached DM chat from blank thread window', async funct
         "should have a composer in the DM chat window");
 
     // open blank thread window
-    parent.call('mail_service', 'openBlankThreadWindow');
+    parent.env.services.mail.openBlankThreadWindow();
     await testUtils.nextMicrotaskTick();
     assert.strictEqual($('.o_thread_window').length, 2,
         "should have two thread windows open");

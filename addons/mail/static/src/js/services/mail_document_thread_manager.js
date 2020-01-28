@@ -4,8 +4,6 @@ odoo.define('mail.Manager.DocumentThread', function (require) {
 var MailManager = require('mail.Manager');
 var DocumentThread = require('mail.model.DocumentThread');
 
-var session = require('web.session');
-
 /**
  * Document Thread Manager
  *
@@ -22,22 +20,22 @@ MailManager.include({
     start: function () {
         this._super.apply(this, arguments);
         this._documentThreadWindowStates = {};
-        this._tabId = this.call('bus_service', 'getTabId');
+        this._tabId = this.env.services.bus.getTabId();
         // retrieve the open DocumentThreads from the localStorage
-        var localStorageLength = this.call('local_storage', 'length');
+        var localStorageLength = this.env.services.localStorage.length();
         for (var i = 0; i < localStorageLength; i++) {
-            var key = this.call('local_storage', 'key', i);
+            var key = this.env.services.localStorage.key(i);
             if (key.indexOf(this.DOCUMENT_THREAD_STATE_KEY) === 0) {
                 // key format: DOCUMENT_THREAD_STATE_KEY + '/' + threadId
                 var documentThreadId = key.substring(this.DOCUMENT_THREAD_STATE_KEY.length+1);
                 this._documentThreadWindowStates[documentThreadId] =
-                    this.call('local_storage', 'getItem', key);
+                    this.env.services.localStorage.getItem(key);
             }
         }
         this._mailBus.on('messaging_ready', this, this._updateDocumentThreadWindows.bind(this, this._documentThreadWindowStates));
         // listen to localStorage changes to synchronize DocumentThread's
         // windows between tabs
-        this.call('local_storage', 'onStorage', this, this._onStorage);
+        this.env.services.localStorage.onStorage(this, this._onStorage);
     },
 
     //--------------------------------------------------------------------------
@@ -66,7 +64,7 @@ MailManager.include({
             options.postedFromDocumentThread
         ) {
             var key = this.DOCUMENT_THREAD_MESSAGE_KEY;
-            this.call('local_storage', 'setItem', key, {
+            this.env.services.localStorage.setItem(key, {
                 messageData: data,
                 tabId: this._tabId,
             });
@@ -154,7 +152,7 @@ MailManager.include({
      */
     updateDocumentThreadState: function (threadID, state) {
         this._documentThreadWindowStates[threadID] = state;
-        this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY + '/' + threadID, {
+        this.env.services.localStorage.setItem(this.DOCUMENT_THREAD_STATE_KEY + '/' + threadID, {
             state: state,
             tabId: this._tabId,
         });

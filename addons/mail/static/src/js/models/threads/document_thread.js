@@ -72,7 +72,7 @@ var DocumentThread = Thread.extend({
         if (options && options.skipCrossTabSync) {
             return;
         }
-        this.call('mail_service', 'updateDocumentThreadState', this._id, {
+        this.env.services.mail.updateDocumentThreadState(this._id, {
             name: this.getName(),
             windowState: 'closed',
         });
@@ -93,7 +93,7 @@ var DocumentThread = Thread.extend({
             return;
         }
         var windowState = this._folded ? 'folded' : 'open';
-        this.call('mail_service', 'updateDocumentThreadState', this._id, {
+        this.env.services.mail.updateDocumentThreadState(this._id, {
             name: this.getName(),
             windowState: windowState,
         });
@@ -130,7 +130,7 @@ var DocumentThread = Thread.extend({
             return;
         }
         var windowState = this._folded ? 'folded' : 'open';
-        this.call('mail_service', 'updateDocumentThreadState', this._id, {
+        this.env.services.mail.updateDocumentThreadState(this._id, {
             name: this.getName(),
             windowState: windowState,
         });
@@ -289,7 +289,7 @@ var DocumentThread = Thread.extend({
                     })
                     .then(function (messagesData) {
                         _.each(messagesData, function (messageData) {
-                            self.call('mail_service', 'addMessage', messageData, { silent: true });
+                            self.env.services.mail.addMessage(messageData, { silent: true });
                         });
                     });
             } else {
@@ -310,7 +310,7 @@ var DocumentThread = Thread.extend({
     _markAsRead: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.call('mail_service', 'markMessagesAsRead', self._messageIDs);
+            self.env.services.mail.markMessagesAsRead(self._messageIDs);
         });
     },
     /**
@@ -349,7 +349,7 @@ var DocumentThread = Thread.extend({
                             .then(function (messages) {
                                 messages[0].model = resModel;
                                 messages[0].res_id = resID;
-                                self.call('mail_service', 'addMessage', messages[0], {
+                                self.env.services.mail.addMessage(messages[0], {
                                     postedFromDocumentThread: true,
                                 });
                                 return messages[0];

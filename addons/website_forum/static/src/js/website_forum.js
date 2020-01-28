@@ -192,7 +192,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             msg = _t("Sorry you must be logged in to perform this action");
             title = _t("Access Denied");
         }
-        this.call('crash_manager', 'show_warning', {
+        this.env.services.crashManager.show_warning({
             message: msg,
             title: title,
         }, {
@@ -254,7 +254,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'post_non_flaggable') {
                     message = _t("This post can not be flagged");
                 }
-                self.call('crash_manager', 'show_warning', {
+                self.env.services.crashManager.show_warning({
                     message: message,
                     title: _t("Access Denied"),
                 }, {
@@ -294,7 +294,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                self.call('crash_manager', 'show_warning', {
+                self.env.services.crashManager.show_warning({
                     message: message,
                     title: _t("Access Denied"),
                 }, {
@@ -363,7 +363,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (data.error === 'anonymous_user') {
                     var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                this.call('crash_manager', 'show_warning', {
+                this.env.services.crashManager.show_warning({
                     message: message,
                     title: _t("Access Denied"),
                 }, {

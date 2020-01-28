@@ -74,7 +74,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (!this.hasAuthor()) {
             return undefined;
         }
-        return this.call('mail_service', 'getImStatus', { partnerID: this.getAuthorID() });
+        return this.env.services.getImStatus({ partnerID: this.getAuthorID() });
     },
     /**
      * Get the name of the author of this message
@@ -184,7 +184,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         }
         var model = this.getDocumentModel();
         var id = this.getDocumentID();
-        var documentThread = this.call('mail_service', 'getDocumentThread', model, id);
+        var documentThread = this.env.services.mail.getDocumentThread(model, id);
         if (documentThread) {
             this._documentName = documentThread.getName();
         }
@@ -227,10 +227,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             return "";
         }
         var originChannelID = this.getOriginChannelID();
-        var channel = originChannelID && this.call(
-                                            'mail_service',
-                                            'getChannel',
-                                            originChannelID);
+        var channel = originChannelID && this.env.services.mail.getChannel(originChannelID);
         if (!channel) {
             return "";
         }
@@ -581,7 +578,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     _isOdoobotAuthor: function () {
         return this._serverAuthorID &&
-            this._serverAuthorID[0] === this.call('mail_service', 'getOdoobotID')[0];
+            this._serverAuthorID[0] === this.env.services.mail.getOdoobotID()[0];
     },
     /**
      * State whether the message is transient or not
@@ -630,7 +627,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         }
         var resModel = this.getDocumentModel();
         var resID = this.getDocumentID();
-        var documentThread = this.call('mail_service', 'getOrAddDocumentThread', {
+        var documentThread = this.env.services.mail.getOrAddDocumentThread({
                 resModel: resModel,
                 resID: resID,
                 name: this.getDocumentName(),
@@ -655,7 +652,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (
             this.originatesFromChannel() &&
             _.contains(
-                this.call('mail_service', 'getModeratedChannelIDs'),
+                this.env.services.mail.getModeratedChannelIDs(),
                 this.getOriginChannelID()
             ) &&
             this.needsModeration()
@@ -821,16 +818,16 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @private
      */
     _warnMessageModerated: function () {
-        var mailBus = this.call('mail_service', 'getMailBus');
+        var mailBus = this.env.services.mail.getMailBus();
         if (this.needsModerationByUser()) {
             this._setModeratedByUser(false);
-            var moderationBox = this.call('mail_service', 'getMailbox', 'moderation');
+            var moderationBox = this.env.services.mail.getMailbox('moderation');
             moderationBox.decrementMailboxCounter();
             moderationBox.removeMessage(this.getID());
             mailBus.trigger('update_moderation_counter');
         }
         if (this._moderationStatus !== 'accepted') {
-            this.call('mail_service', 'removeMessageFromThreads', this);
+            this.env.services.mail.removeMessageFromThreads(this);
         }
         mailBus.trigger('update_message', this);
     },

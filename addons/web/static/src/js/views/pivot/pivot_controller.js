@@ -118,7 +118,7 @@ odoo.define('web.PivotController', function (require) {
          */
         _downloadTable: function () {
             if (this.model.getTableWidth() > 16384) {
-                this.call('crash_manager', 'show_message', _t("For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
+                this.env.services.crashManager.show_message(_t("For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
                 framework.unblockUI();
                 return;
             }
@@ -128,7 +128,7 @@ odoo.define('web.PivotController', function (require) {
                 url: '/web/pivot/export_xlsx',
                 data: { data: JSON.stringify(table) },
                 complete: framework.unblockUI,
-                error: (error) => this.call('crash_manager', 'rpc_error', error),
+                error: (error) => this.env.services.crashManager.rpc_error(error),
             });
         },
         /**

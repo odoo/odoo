@@ -2,11 +2,11 @@ odoo.define('web.bus_tests', function (require) {
 "use strict";
 
 var BusService = require('bus.BusService');
+
 var AbstractStorageService = require('web.AbstractStorageService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
-
 
 var LocalStorageServiceMock;
 
@@ -30,7 +30,7 @@ QUnit.module('Bus', {
         testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
-                bus_service: BusService,
+                bus: BusService,
                 local_storage: LocalStorageServiceMock,
             },
             mockRPC: function (route, args) {
@@ -50,10 +50,10 @@ QUnit.module('Bus', {
         var widget = new Widget(parent);
         await widget.appendTo($('#qunit-fixture'));
 
-        widget.call('bus_service', 'onNotification', this, function (notifications) {
+        widget.env.services.bus.onNotification(this, function (notifications) {
             assert.step('notification - ' + notifications.toString());
         });
-        widget.call('bus_service', 'addChannel', 'lambda');
+        widget.env.services.bus.addChannel('lambda');
 
         pollPromise.resolve([{
             id: 1,
@@ -104,7 +104,7 @@ QUnit.module('Bus', {
         testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
-                bus_service: BusService,
+                bus: BusService,
                 local_storage: LocalStorageServiceMock,
             },
             mockRPC: function (route, args) {
@@ -127,7 +127,7 @@ QUnit.module('Bus', {
         await widget.appendTo($('#qunit-fixture'));
 
         // trigger longpolling poll RPC
-        widget.call('bus_service', 'addChannel', 'lambda');
+        widget.env.services.bus.addChannel('lambda');
         assert.verifySteps(['/longpolling/poll']);
 
         testUtils.mock.unpatch(LocalStorageServiceMock);
@@ -145,7 +145,7 @@ QUnit.module('Bus', {
         testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
-                bus_service: BusService,
+                bus: BusService,
                 local_storage: LocalStorageServiceMock,
             },
             mockRPC: function (route, args) {
@@ -165,10 +165,10 @@ QUnit.module('Bus', {
         var master = new Widget(parentMaster);
         await master.appendTo($('#qunit-fixture'));
 
-        master.call('bus_service', 'onNotification', master, function (notifications) {
+        master.env.services.bus.onNotification(master, function (notifications) {
             assert.step('master - notification - ' + notifications.toString());
         });
-        master.call('bus_service', 'addChannel', 'lambda');
+        master.env.services.bus.addChannel('lambda');
 
         // slave
         await testUtils.nextTick();
@@ -176,7 +176,7 @@ QUnit.module('Bus', {
         testUtils.mock.addMockEnvironment(parentSlave, {
             data: {},
             services: {
-                bus_service: BusService,
+                bus: BusService,
                 local_storage: LocalStorageServiceMock,
             },
             mockRPC: function (route, args) {
@@ -190,10 +190,10 @@ QUnit.module('Bus', {
         var slave = new Widget(parentSlave);
         await slave.appendTo($('#qunit-fixture'));
 
-        slave.call('bus_service', 'onNotification', slave, function (notifications) {
+        slave.env.services.bus.onNotification(slave, function (notifications) {
             assert.step('slave - notification - ' + notifications.toString());
         });
-        slave.call('bus_service', 'addChannel', 'lambda');
+        slave.env.services.bus.addChannel('lambda');
 
         pollPromiseMaster.resolve([{
             id: 1,
@@ -223,7 +223,7 @@ QUnit.module('Bus', {
         testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
-                bus_service: BusService,
+                bus: BusService,
                 local_storage: LocalStorageServiceMock,
             },
             mockRPC: function (route, args) {
@@ -243,10 +243,10 @@ QUnit.module('Bus', {
         var master = new Widget(parentMaster);
         await master.appendTo($('#qunit-fixture'));
 
-        master.call('bus_service', 'onNotification', master, function (notifications) {
+        master.env.services.bus.onNotification(master, function (notifications) {
             assert.step('master - notification - ' + notifications.toString());
         });
-        master.call('bus_service', 'addChannel', 'lambda');
+        master.env.services.bus.addChannel('lambda');
 
         // slave
         await testUtils.nextTick();
@@ -255,7 +255,7 @@ QUnit.module('Bus', {
         testUtils.mock.addMockEnvironment(parentSlave, {
             data: {},
             services: {
-                bus_service: BusService,
+                bus: BusService,
                 local_storage: LocalStorageServiceMock,
             },
             mockRPC: function (route, args) {
@@ -275,10 +275,10 @@ QUnit.module('Bus', {
         var slave = new Widget(parentSlave);
         await slave.appendTo($('#qunit-fixture'));
 
-        slave.call('bus_service', 'onNotification', slave, function (notifications) {
+        slave.env.services.bus.onNotification(slave, function (notifications) {
             assert.step('slave - notification - ' + notifications.toString());
         });
-        slave.call('bus_service', 'addChannel', 'lambda');
+        slave.env.services.bus.addChannel('lambda');
 
         pollPromiseMaster.resolve([{
             id: 1,
@@ -288,7 +288,7 @@ QUnit.module('Bus', {
         await testUtils.nextTick();
 
         // simulate unloading master
-        master.call('bus_service', '_onUnload');
+        master.env.services.bus._onUnload();
 
         pollPromiseSlave.resolve([{
             id: 2,

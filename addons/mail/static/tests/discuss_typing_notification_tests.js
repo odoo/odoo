@@ -129,7 +129,7 @@ QUnit.module('Discuss (Typing Notifications)', {
          * @param {integer} params.channelID
          * @param {boolean} params.isTyping
          * @param {integer} params.partnerID
-         * @param {Widget} params.widget a widget that can call the bus_service
+         * @param {Widget} params.widget a widget that can call the service bus
          */
         this.simulateIsTyping = function (params) {
             var typingData = {
@@ -138,7 +138,7 @@ QUnit.module('Discuss (Typing Notifications)', {
                 is_typing: params.isTyping,
             };
             var notification = [[false, 'mail.channel', params.channelID], typingData];
-            params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            params.widget.env.services.bus.trigger('notification', [notification]);
         };
 
     },
@@ -358,7 +358,7 @@ QUnit.test('receive message of someone that was typing something', async functio
         res_id: 1,
     };
     var notification = [[false, 'mail.channel', 1], messageData];
-    await discuss.call('bus_service', 'trigger', 'notification', [notification]);
+    await discuss.env.services.bus.trigger('notification', [notification]);
     await testUtils.nextTick();
 
     $general = discuss.$('.o_mail_discuss_sidebar')
@@ -615,7 +615,7 @@ QUnit.test('long typing partner A and in-between short typing partner B', async 
         res_id: 1,
     };
     var notification = [[false, 'mail.channel', 1], messageData];
-    await discuss.call('bus_service', 'trigger', 'notification', [notification]);
+    await discuss.env.services.bus.trigger('notification', [notification]);
     await testUtils.nextTick();
 
     $general = discuss.$('.o_mail_discuss_sidebar')

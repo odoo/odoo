@@ -362,7 +362,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
      */
     _onConnectionRestored: function () {
         if (this.connectionNotificationID) {
-            this.call('notification', 'close', this.connectionNotificationID);
+            this.env.services.notification.close(this.connectionNotificationID);
             this.displayNotification({
                 type: 'info',
                 title: _t('Connection restored'),
@@ -415,7 +415,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
             }, data).open();
         } else {
             data.type = 'warning';
-            this.call('notification', 'notify', data);
+            this.env.services.notification.notify(data);
         }
     },
     /**
@@ -503,7 +503,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 new RainbowMan(data).appendTo(this.$el);
             } else {
                 // For instance keep title blank, as we don't have title in data
-                this.call('notification', 'notify', {
+                this.env.services.notification.notify({
                     title: "",
                     message: data.message,
                     sticky: false

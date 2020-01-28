@@ -420,7 +420,7 @@ QUnit.test('@ mention in channel', async function (assert) {
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 receiveMessageDef.resolve();
                 return Promise.resolve(42);
             }
@@ -582,7 +582,7 @@ QUnit.test('@ mention with special chars', async function (assert) {
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 receiveMessageDef.resolve();
                 return Promise.resolve(42);
             }
@@ -675,7 +675,7 @@ QUnit.test('@ mention with removed space', async function (assert) {
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 receiveMessageDef.resolve();
                 return Promise.resolve(42);
             }
@@ -946,7 +946,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', async functio
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 return Promise.resolve(42);
             }
             return this._super.apply(this, arguments);
@@ -1046,7 +1046,7 @@ QUnit.test('convert emoji sources to unicodes on message_post', async function (
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 receiveMessageDef.resolve();
                 return Promise.resolve(42);
             }
@@ -1116,7 +1116,7 @@ QUnit.test('mark all messages as read from Inbox', async function (assert) {
                     message_ids: [1, 2],
                 };
                 var notification = [[false, 'res.partner', 3], notificationData];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 markAllReadDef.resolve();
                 return Promise.resolve();
             }
@@ -1715,13 +1715,13 @@ QUnit.test('receive channel message notification then delayed needaction notific
     // simulate new needaction message posted on channnel
     this.data['mail.message'].records.push(message);
     // simulate receiving channel notification
-    discuss.call('bus_service', 'trigger', 'notification', [
+    discuss.env.services.bus.trigger('notification', [
         [['myDB', 'mail.channel', 1], message]
     ]);
     // short delay after receiving needaction notification
     await testUtils.nextTick();
     // simulate receiving needaction message notification after a short delay
-    discuss.call('bus_service', 'trigger', 'notification', [
+    discuss.env.services.bus.trigger('notification', [
         [['myDB', 'ir.needaction', 3], message]
     ]);
     await testUtils.nextTick();
@@ -1786,7 +1786,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                     message_ids: [1, 2],
                 };
                 const notification = [[false, 'res.partner', 3], notificationData];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 markAllReadDef.resolve();
                 return Promise.resolve(3);
             }
@@ -1865,7 +1865,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                     message_ids: messageIDs,
                 };
                 const notification = [[false, 'res.partner', 3], notificationData];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 markAllReadDef.resolve();
                 return Promise.resolve(3);
             }

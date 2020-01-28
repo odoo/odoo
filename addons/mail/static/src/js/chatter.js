@@ -67,7 +67,7 @@ var Chatter = Widget.extend({
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
-        this._mentionPartnerSuggestions = this.call('mail_service', 'getMentionPartnerSuggestions');
+        this._mentionPartnerSuggestions = this.env.services.mail.getMentionPartnerSuggestions();
         this._mentionSuggestions = this._mentionPartnerSuggestions;
         /**
          * List of fetched suggested partners. This is lazy-loaded on opening

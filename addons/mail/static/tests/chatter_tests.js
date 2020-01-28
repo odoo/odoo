@@ -559,7 +559,7 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
     assert.hasAttrValue(form.$('.o_attachment_download').eq(1), 'href', '/web/content/2?download=true',
         "the download URL of name2 must be correct");
     await testUtils.dom.click($button);
-    assert.containsNone(form, '.o_mail_chatter_attachments')
+    assert.containsNone(form, '.o_mail_chatter_attachments');
     form.destroy();
 });
 
@@ -1025,7 +1025,7 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
                     { id: args.args[0][0] }
                 );
                 messageData.is_starred = !messageData.is_starred;
-                // simulate notification received by mail_service from longpoll
+                // simulate notification received by mail service from longpoll
                 var data = {
                     info: false,
                     message_ids: [messageData.id],
@@ -1033,7 +1033,7 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                form.call('bus_service', 'trigger', 'notification', [notification]);
+                form.env.services.bus.trigger('notification', [notification]);
                 return Promise.resolve();
             }
             return this._super(route, args);
@@ -1231,7 +1231,7 @@ QUnit.test('chatter: receive notif when document is open', async function (asser
         },
     });
 
-    var thread = form.call('mail_service', 'getDocumentThread', 'partner', 2);
+    var thread = form.env.services.mail.getDocumentThread('partner', 2);
     assert.strictEqual(thread.getUnreadCounter(), 0,
         "document thread should have no unread messages initially");
 
@@ -1248,7 +1248,7 @@ QUnit.test('chatter: receive notif when document is open', async function (asser
     };
     this.data['mail.message'].records.push(needactionMessageData);
     var notification = [[false, 'mail.channel', 1], needactionMessageData];
-    form.call('bus_service', 'trigger', 'notification', [notification]);
+    form.env.services.bus.trigger('notification', [notification]);
     await testUtils.nextMicrotaskTick();
     assert.strictEqual(thread.getUnreadCounter(), 1,
         "document thread should now have one unread message");
@@ -1302,7 +1302,7 @@ QUnit.test('chatter: access document with some notifs', async function (assert) 
 
     assert.verifySteps(['set_message_done']);
 
-    var thread = form.call('mail_service', 'getDocumentThread', 'partner', 2);
+    var thread = form.env.services.mail.getDocumentThread('partner', 2);
     assert.strictEqual(thread.getUnreadCounter(), 0,
         "document thread should have no unread messages (marked as read)");
 
@@ -1339,7 +1339,7 @@ QUnit.test('chatter: new message notification from document', async function (as
         },
     });
 
-    var thread = form.call('mail_service', 'getDocumentThread', 'partner', 2);
+    var thread = form.env.services.mail.getDocumentThread('partner', 2);
     assert.strictEqual(
         thread.getUnreadCounter(),
         0,
@@ -1360,7 +1360,7 @@ QUnit.test('chatter: new message notification from document', async function (as
         res_id: 2,
     };
     const notifications = [ [['myDB', 'ir.needaction'], message] ];
-    form.call('bus_service', 'trigger', 'notification', notifications);
+    form.env.services.bus.trigger('notification', notifications);
     await testUtils.nextTick();
     assert.strictEqual(
         thread.getUnreadCounter(),
@@ -2437,7 +2437,7 @@ QUnit.test('form activity widget: mark as done and remove', async function (asse
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     await testUtils.dom.click(form.$('.o_activity_popover_done'));
-    assert.containsNone(form, '.o_mail_activity_feedback.popover')
+    assert.containsNone(form, '.o_mail_activity_feedback.popover');
     assert.ok(!form.$('.o_mail_activity .o_thread_message').length,
         "there should be no more activity");
     assert.containsOnce(form, '.o_mail_thread .o_thread_message',
@@ -2562,14 +2562,14 @@ QUnit.test('followers widget: follow/unfollow confirmation dialog', async functi
         email: "admin@example.com",
         partner_id: partnerID,
         channel_id: null,
-        is_active: true   
+        is_active: true,
     }, {
         id: 2,
         name: "Demo",
         email: "demo@example.com",
         partner_id: 1,
         channel_id: null,
-        is_active: true
+        is_active: true,
     }];
 
     var form = await createView({
@@ -2631,7 +2631,7 @@ QUnit.test('followers widget: do not display follower duplications', async funct
         email: "admin@example.com",
         partner_id: partnerID,
         channel_id: null,
-        is_active: true   
+        is_active: true,
     }];
     var def;
     var form = await createView({
@@ -2844,7 +2844,7 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', async funct
                     { id: args.args[0][0] }
                 );
                 messageData.is_starred = !messageData.is_starred;
-                // simulate notification received by mail_service from longpoll
+                // simulate notification received by mail service from longpoll
                 var data = {
                     info: false,
                     message_ids: [messageData.id],
@@ -2852,7 +2852,7 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', async funct
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                form.call('bus_service', 'trigger', 'notification', [notification]);
+                form.env.services.bus.trigger('notification', [notification]);
                 return Promise.resolve();
             }
             return this._super(route, args);
@@ -2898,17 +2898,17 @@ QUnit.test('test open attachment option', async function (assert) {
                 </div>
             </form>`,
     });
-    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should be open by default")
+    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should be open by default");
     await testUtils.form.clickEdit(form);
-    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should still be open")
+    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should still be open");
     await testUtils.fields.editInput(form.$('.o_field_char'), 'Coucou Petite Perruche');
-    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should still be open")
+    assert.containsOnce(form, '.o_mail_chatter_attachments', "Attachment box should still be open");
 
     // Close the attachment box with the button
-    await testUtils.dom.click(form.$('.o_chatter_button_attachment'))
-    assert.containsNone(form, '.o_mail_chatter_attachments', "Attachment box should be closed")
+    await testUtils.dom.click(form.$('.o_chatter_button_attachment'));
+    assert.containsNone(form, '.o_mail_chatter_attachments', "Attachment box should be closed");
     await testUtils.form.clickSave(form);
-    assert.containsNone(form, '.o_mail_chatter_attachments', "Attachment box should still be closed")
+    assert.containsNone(form, '.o_mail_chatter_attachments', "Attachment box should still be closed");
 
     form.destroy();
 });

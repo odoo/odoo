@@ -26,23 +26,15 @@ var session = require('web.session');
  * - become_master : when this tab became the master
  * - no_longer_master : when this tab is not longer the master (the user swith tab)
  */
-var CrossTabBus = Longpolling.extend({
-    // constants
-    TAB_HEARTBEAT_PERIOD: 10000, // 10 seconds
-    MASTER_TAB_HEARTBEAT_PERIOD: 1500, // 1.5 seconds
-    HEARTBEAT_OUT_OF_DATE_PERIOD: 5000, // 5 seconds
-    HEARTBEAT_KILL_OLD_PERIOD: 15000, // 15 seconds
-    LOCAL_STORAGE_PREFIX: 'bus',
 
-    // properties
-    _isMasterTab: false,
-    _isRegistered: false,
+class CrossTabBus extends Longpolling {
 
     /**
      * @override
+     * @param {...any} args
      */
-    init: function () {
-        this._super.apply(this, arguments);
+    constructor(...args) {
+        super(...args);
         var now = new Date().getTime();
         // used to prefix localStorage keys
         this._sanitizedOrigin = session.origin.replace(/:\/{0,2}/g, '_');
@@ -52,53 +44,66 @@ var CrossTabBus = Longpolling.extend({
             this._callLocalStorage('removeItem', 'last');
         }
         this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
-        this.call('local_storage', 'onStorage', this, this._onStorage);
-    },
-    destroy: function () {
-        this._super();
+        this.env.services.local_storage.onStorage(this, this._onStorage);
+    }
+
+    /**
+     * @override
+     */
+    destroy() {
+        super.destroy();
         clearTimeout(this._heartbeatTimeout);
-    },
+    }
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
     /**
      * Share the bus channels with the others tab by the local storage
      *
      * @override
+     * @param {...any} args
      */
-    addChannel: function () {
-        this._super.apply(this, arguments);
+    addChannel(...args) {
+        super.addChannel(...args);
         this._callLocalStorage('setItem', 'channels', this._channels);
-    },
+    }
+
     /**
      * Share the bus channels with the others tab by the local storage
      *
      * @override
+     * @param {...any} args
      */
-    deleteChannel: function () {
-        this._super.apply(this, arguments);
+    deleteChannel(...args) {
+        super.deleteChannel(...args);
         this._callLocalStorage('setItem', 'channels', this._channels);
-    },
+    }
+
     /**
      * @return {string}
      */
-    getTabId: function () {
+    getTabId() {
         return this._id;
-    },
+    }
+
     /**
      * Tells whether this bus is related to the master tab.
      *
      * @returns {boolean}
      */
-    isMasterTab: function () {
+    isMasterTab() {
         return this._isMasterTab;
-    },
+    }
+
     /**
      * Use the local storage to share the long polling from the master tab.
      *
      * @override
+     * @param {...any} args
      */
-    startPolling: function () {
+    startPolling(...args) {
         if (this._isActive === null) {
             this._heartbeat = this._heartbeat.bind(this);
         }
@@ -128,33 +133,38 @@ var CrossTabBus = Longpolling.extend({
         }
 
         if (this._isMasterTab) {
-            this._super.apply(this, arguments);
+            super.startPolling(...args);
         }
-    },
+    }
+
     /**
      * Share the option with the local storage
      *
      * @override
+     * @param {...any} args
      */
-    updateOption: function () {
-        this._super.apply(this, arguments);
+    updateOption(...args) {
+        super.updateOption(...args);
         this._callLocalStorage('setItem', 'options', this._options);
-    },
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
      * Call local_storage service
      *
      * @private
-     * @param {string} method (getItem, setItem, removeItem, on)
+     * @param {string} methodName (getItem, setItem, removeItem, on)
      * @param {string} key
      * @param {any} param
      * @returns service information
      */
-    _callLocalStorage: function (method, key, param) {
-        return this.call('local_storage', method, this._generateKey(key), param);
-    },
+    _callLocalStorage(methodName, key, param) {
+        return this.env.services.local_storage[methodName](this._generateKey(key), param);
+    }
+
     /**
      * Generates localStorage keys prefixed by bus. (LOCAL_STORAGE_PREFIX = the name
      * of this addon), and the sanitized origin, to prevent keys from
@@ -165,16 +175,21 @@ var CrossTabBus = Longpolling.extend({
      * @param {string} key
      * @returns key prefixed with the origin
      */
-    _generateKey: function (key) {
+    _generateKey(key) {
         return this.LOCAL_STORAGE_PREFIX + '.' + this._sanitizedOrigin + '.' + key;
-    },
+    }
+
     /**
      * @override
      * @returns {integer} number of milliseconds since 1 January 1970 00:00:00
      */
-    _getLastPresence: function () {
-        return this._callLocalStorage('getItem', 'lastPresence') || this._super();
-    },
+    _getLastPresence() {
+        return (
+            this._callLocalStorage('getItem', 'lastPresence') ||
+            super._getLastPresence()
+        );
+    }
+
     /**
      * Check all the time (according to the constants) if the tab is the master tab and
      * check if it is active. Use the local storage for this checks.
@@ -182,7 +197,7 @@ var CrossTabBus = Longpolling.extend({
      * @private
      * @see _startElection method
      */
-    _heartbeat: function () {
+    _heartbeat() {
         var now = new Date().getTime();
         var heartbeatValue = parseInt(this._callLocalStorage('getItem', 'heartbeat', 0));
         var peers = this._callLocalStorage('getItem', 'peers', {});
@@ -229,20 +244,22 @@ var CrossTabBus = Longpolling.extend({
         }
 
         this._heartbeatTimeout = setTimeout(this._heartbeat.bind(this), hbPeriod);
-    },
+    }
+
     /**
      * @private
      */
-    _registerWindowUnload: function () {
+    _registerWindowUnload() {
         $(window).on('unload.' + this._id, this._onUnload.bind(this));
-    },
+    }
+
     /**
      * Check with the local storage if the current tab is the master tab.
      * If this tab became the master, trigger 'become_master' event
      *
      * @private
      */
-    _startElection: function () {
+    _startElection() {
         if (this._isMasterTab) {
             return;
         }
@@ -273,31 +290,35 @@ var CrossTabBus = Longpolling.extend({
             delete peers[newMaster];
             this._callLocalStorage('setItem', 'peers', peers);
         }
-    },
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
      * @override
      */
-    _onFocusChange: function (params) {
-        this._super.apply(this, arguments);
+    _onFocusChange(params) {
+        super._onFocusChange(...arguments);
         this._callLocalStorage('setItem', 'focus', params.focus);
-    },
+    }
+
     /**
      * If it's the master tab, the notifications ares broadcasted to other tabs by the
      * local storage.
      *
      * @override
      */
-    _onPoll: function (notifications) {
-        var notifs = this._super(notifications);
+    _onPoll(notifications) {
+        var notifs = super._onPoll(notifications);
         if (this._isMasterTab && notifs.length) {
             this._callLocalStorage('setItem', 'last', this._lastNotificationID);
             this._callLocalStorage('setItem', 'last_ts', new Date().getTime());
             this._callLocalStorage('setItem', 'notification', notifs);
         }
-    },
+    }
+
     /**
      * Handler when the local storage is updated
      *
@@ -306,7 +327,7 @@ var CrossTabBus = Longpolling.extend({
      * @param {string} event.key
      * @param {string} event.newValue
      */
-    _onStorage: function (e) {
+    _onStorage(e) {
         var value = JSON.parse(e.newValue);
         var key = e.key;
 
@@ -340,13 +361,14 @@ var CrossTabBus = Longpolling.extend({
             this._isOdooFocused = value;
             this.trigger('window_focus', this._isOdooFocused);
         }
-    },
+    }
+
     /**
      * Handler when unload the window
      *
      * @private
      */
-    _onUnload: function () {
+    _onUnload() {
         // unload peer
         var peers = this._callLocalStorage('getItem', 'peers') || {};
         delete peers[this._id];
@@ -356,7 +378,20 @@ var CrossTabBus = Longpolling.extend({
         if (this._isMasterTab) {
             this._callLocalStorage('removeItem', 'master');
         }
-    },
+    }
+}
+
+Object.assign(CrossTabBus, {
+    // constants
+    TAB_HEARTBEAT_PERIOD: 10000, // 10 seconds
+    MASTER_TAB_HEARTBEAT_PERIOD: 1500, // 1.5 seconds
+    HEARTBEAT_OUT_OF_DATE_PERIOD: 5000, // 5 seconds
+    HEARTBEAT_KILL_OLD_PERIOD: 15000, // 15 seconds
+    LOCAL_STORAGE_PREFIX: 'bus',
+
+    // properties
+    _isMasterTab: false,
+    _isRegistered: false,
 });
 
 return CrossTabBus;

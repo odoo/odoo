@@ -79,7 +79,7 @@ var SupportChannel = SearchableThread.extend({
      */
     close: function () {
         this._super.apply(this, arguments);
-        this.call('mail_service', 'updateSupportChannelState', 'closed');
+        this.env.services.mail.updateSupportChannelState('closed');
     },
     /**
      * Overrides to store the state of the Support channel in the localStorage.
@@ -88,7 +88,7 @@ var SupportChannel = SearchableThread.extend({
      */
     detach: function () {
         this._super.apply(this, arguments);
-        this.call('mail_service', 'updateSupportChannelState', 'open');
+        this.env.services.mail.updateSupportChannelState('open');
     },
     /**
      * Overrides to store the state of the Support channel in the localStorage.
@@ -98,7 +98,7 @@ var SupportChannel = SearchableThread.extend({
     fold: function (folded) {
         this._super.apply(this, arguments);
         var value = folded ? 'folded' : 'open';
-        this.call('mail_service', 'updateSupportChannelState', value);
+        this.env.services.mail.updateSupportChannelState(value);
     },
     /**
      * FIXME: this override is necessary just because the support channel is
@@ -164,10 +164,10 @@ var SupportChannel = SearchableThread.extend({
         }
 
         if (!this._detached) {
-            this.call('mail_service', 'updateSupportChannelState', 'closed');
+            this.env.services.mail.updateSupportChannelState('closed');
         } else {
             var value = this._folded ? 'folded' : 'open';
-            this.call('mail_service', 'updateSupportChannelState', value);
+            this.env.services.mail.updateSupportChannelState(value);
         }
     },
 
@@ -183,13 +183,13 @@ var SupportChannel = SearchableThread.extend({
      */
     _addSupportNotAvailableMessage: function () {
         var msg = {
-            author_id: this.call('mail_service', 'getOdoobotID'),
+            author_id: this.env.services.mail.getOdoobotID(),
             body: _t("None of our operators are available. <a href='https://www.odoo.com/help' " +
                 "target='_blank'>Submit a ticket</a> to ask your question now."),
             channel_ids: [this.getID()],
             id: Number.MAX_SAFE_INTEGER, // last message in the channel
         };
-        this.call('mail_service', 'addMessage', msg, { silent: true });
+        this.env.services.mail.addMessage(msg, { silent: true });
     },
     /**
      * Adds the welcome message as first message of the Support channel.
@@ -204,7 +204,7 @@ var SupportChannel = SearchableThread.extend({
                 channel_ids: [this.getID()],
                 id: -1, // first message of the channel
             };
-            this.call('mail_service', 'addMessage', msg, { silent: true });
+            this.env.services.mail.addMessage(msg, { silent: true });
         }
     },
     /**
@@ -238,7 +238,7 @@ var SupportChannel = SearchableThread.extend({
             _.each(messages, function (message) {
                 message.channel_ids = [self.getID()];
                 message.channel_id = self.getID();
-                self.call('mail_service', 'addMessage', message, {
+                self.env.services.mail.addMessage(message, {
                     silent: true,
                     domain: pDomain,
                 });
@@ -257,7 +257,7 @@ var SupportChannel = SearchableThread.extend({
      */
     _postMessage: function (data) {
         // ensure that the poll is active before posting the message
-        this.call('mail_service', 'startPollingSupport');
+        this.env.services.mail.startPollingSupport();
         return supportSession.rpc('/odoo_im_support/chat_post', {
             uuid: this._supportChannelUUID,
             message_content: data.content,

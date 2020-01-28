@@ -15,7 +15,7 @@ ThreadWindow.include({
      */
     init: function () {
         this._super.apply(this, arguments);
-        var channel = this.call('mail_service', 'getChannel', this._getThreadID());
+        var channel = this.env.services.mail.getChannel(this._getThreadID());
         if (channel && channel.getType() === 'support_channel') {
             this.options.displayStars = false;
         }
@@ -30,7 +30,7 @@ ThreadWindow.include({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        var channel = this.call('mail_service', 'getChannel', this._getThreadID());
+        var channel = this.env.services.mail.getChannel(this._getThreadID());
         if (channel && channel.getType() === 'support_channel') {
             this.$('.o_composer .o_composer_button_add_attachment').remove();
             if (!channel.isAvailable()) {
@@ -52,7 +52,7 @@ ThreadWindow.include({
      * @private
      */
     _needsComposer: function () {
-        var channel = this.call('mail_service', 'getChannel', this._getThreadID());
+        var channel = this.env.services.mail.getChannel(this._getThreadID());
         if (
             channel &&
             channel.getType() === 'support_channel' &&

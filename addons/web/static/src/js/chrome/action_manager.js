@@ -336,7 +336,7 @@ var ActionManager = Widget.extend({
 
                 // store the action into the sessionStorage so that it can be
                 // fully restored on F5
-                self.call('session_storage', 'setItem', 'current_action', action._originalAction);
+                self.env.services.sessionStorage.setItem('current_action', action._originalAction);
 
                 return action;
             })

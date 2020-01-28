@@ -104,7 +104,7 @@ var LivechatButton = Widget.extend({
                     setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer*1000);
             }
         }
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        this.env.services.bus.onNotification(this, this._onNotification);
         if (this.options.button_background_color) {
             this.$el.css('background-color', this.options.button_background_color);
         }
@@ -250,8 +250,8 @@ var LivechatButton = Widget.extend({
                         self._sendWelcomeMessage();
                     }
                     self._renderMessages();
-                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                    self.call('bus_service', 'startPolling');
+                    self.env.services.bus.addChannel(self._livechat.getUUID());
+                    self.env.services.bus.startPolling();
 
                     utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);

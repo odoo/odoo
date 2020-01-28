@@ -7,22 +7,30 @@ odoo.define('im_support.SupportBus', function (require) {
  */
 
 var BusService = require('bus.BusService');
-var supportSession = require('im_support.SupportSession');
-var core = require('web.core');
 
-var SupportBusService =  BusService.extend({
-    LOCAL_STORAGE_PREFIX: 'im_support',
-    POLL_ROUTE: '/longpolling/support_poll',
+var supportSession = require('im_support.SupportSession');
+
+var { serviceRegistry } = require('web.core');
+
+class SupportBusService extends BusService {
 
     /**
      * @override _makePoll to force the remote session
      */
-    _makePoll: function(data) {
-        return supportSession.rpc(this.POLL_ROUTE, data, {shadow : true, timeout: 60000});
-    },
+    _makePoll(data) {
+        return supportSession.rpc(this.POLL_ROUTE, data, {
+            shadow : true,
+            timeout: 60000,
+        });
+    }
+}
+
+Object.assign(SupportBusService, {
+    LOCAL_STORAGE_PREFIX: 'im_support',
+    POLL_ROUTE: '/longpolling/support_poll',
 });
 
-core.serviceRegistry.add('support_bus_service', SupportBusService);
+serviceRegistry.add('support_bus', SupportBusService);
 
 return SupportBusService;
 

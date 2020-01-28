@@ -62,7 +62,7 @@ QUnit.module('Discuss (Seen Indicator)', {
          * @param {integer} params.channelID
          * @param {integer} params.partnerID
          * @param {integer} params.lastMessageID
-         * @param {Widget} params.widget a widget that can call the bus_service
+         * @param {Widget} params.widget a widget that can call the service bus
          */
         this.simulate = function (params) {
             var data = {
@@ -71,7 +71,7 @@ QUnit.module('Discuss (Seen Indicator)', {
                 partner_id: params.partnerID,
             };
             var notification = [[false, 'mail.channel', params.channelID], data];
-            params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            params.widget.env.services.bus.trigger('notification', [notification]);
             return testUtils.nextTick();
         };
     },

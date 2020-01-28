@@ -10,14 +10,14 @@ Message.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Cancels the 'snailmail.letter' which has a message_id corresponding to 
+     * Cancels the 'snailmail.letter' which has a message_id corresponding to
      * the ID of this message, then update the status of the message
-     * 
+     *
      * @returns {Deferred}
      */
     cancelLetter: function () {
         var self = this;
-        var mailBus = this.call('mail_service', 'getMailBus');
+        var mailBus = this.env.services.mail.getMailBus();
         return this._rpc({
             model: 'mail.message',
             method: 'cancel_letter',

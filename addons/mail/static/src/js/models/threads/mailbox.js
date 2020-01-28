@@ -203,9 +203,7 @@ var Mailbox = SearchableThread.extend({
      * @returns {$.Promise}
      */
     _postMessage: function (messageData, options) {
-        var documentThread = this.call(
-            'mail_service',
-            'getDocumentThread',
+        var documentThread = this.env.services.mail.getDocumentThread(
             options.documentModel,
             options.documentID
         );

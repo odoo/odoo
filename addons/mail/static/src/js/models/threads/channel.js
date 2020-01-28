@@ -464,7 +464,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * @private
      */
     _warnUpdatedTypingPartners: function () {
-        this.call('mail_service', 'getMailBus')
+        this.env.services.mail.getMailBus()
             .trigger('update_typing_partners', this.getID());
     },
 });

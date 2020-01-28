@@ -108,7 +108,7 @@ ActionManager.include({
         } else if (state.model && state.view_type) {
             // this is a window action on a multi-record view, so restore it
             // from the session storage
-            var storedAction = this.call('session_storage', 'getItem', 'current_action');
+            var storedAction = this.env.services.sessionStorage.getItem('current_action');
             var lastAction = JSON.parse(storedAction || '{}');
             if (lastAction.res_model === state.model) {
                 action = lastAction;

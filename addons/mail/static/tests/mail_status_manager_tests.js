@@ -28,11 +28,11 @@ QUnit.test('simple set im_status', function (assert) {
             throw new Error(_.str.sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
         },
     });
-    parent.call('mail_service', 'updateImStatus', [{
+    parent.env.services.mail.updateImStatus([{
         id: 1,
         im_status: 'online',
     }]);
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 1 }), 'online');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 1 }), 'online');
 
     this.timeoutMock.runPendingTimeouts();
     parent.destroy();
@@ -59,21 +59,21 @@ QUnit.test('multi get_im_status', async function (assert) {
             throw new Error(_.str.sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
         },
     });
-    parent.call('mail_service', 'updateImStatus', [{
+    parent.env.services.mail.updateImStatus([{
         id: 1,
         im_status: 'online',
     }]);
     await testUtils.nextTick();
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 1 }), 'online');
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 2 }), undefined);
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 3 }), undefined);
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 1 }), 'online');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 2 }), undefined);
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 3 }), undefined);
 
     this.timeoutMock.runPendingTimeouts();
     await testUtils.nextTick();
 
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 1 }), 'online');
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 2 }), 'away');
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 3 }), 'im_partner');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 1 }), 'online');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 2 }), 'away');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 3 }), 'im_partner');
 
     this.timeoutMock.runPendingTimeouts();
     await testUtils.nextTick();
@@ -104,7 +104,7 @@ QUnit.test('update loop', async function (assert) {
         },
     });
     // set initial status
-    parent.call('mail_service', 'updateImStatus', [
+    parent.env.services.mail.updateImStatus([
         { id: 1, im_status: 'offline' },
         { id: 2, im_status: 'offline' },
         { id: 3, im_status: 'im_partner' }, //shouldn't be updated !!!!
@@ -118,12 +118,12 @@ QUnit.test('update loop', async function (assert) {
     this.timeoutMock.addTime(1000);
     await testUtils.nextTick();
     assert.strictEqual(readCount, 1, 'one call should have been made after 50 seconds' );
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 1 }), 'online');
-    assert.strictEqual(parent.call('mail_service', 'getImStatus', { partnerID: 2 }), 'away');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 1 }), 'online');
+    assert.strictEqual(parent.env.services.mail.getImStatus({ partnerID: 2 }), 'away');
 
     //simulate change of focus
     //original listener:  $(window).on("blur", this._onWindowFocusChange.bind(this, false); + unload, ...
-    parent.call('mail_service', '_onWindowFocusChange', false); // remove focus from tab
+    parent.env.services.mail._onWindowFocusChange(false); // remove focus from tab
     await testUtils.nextTick();
 
     this.timeoutMock.addTime(5*60*1000); // x minutes without focus, no rpc should be done during this time
@@ -131,7 +131,7 @@ QUnit.test('update loop', async function (assert) {
     assert.strictEqual(readCount, 1, 'No more call should have been performed');
     //simulate change of focus
     //original listener:  $(window).on("focus", this._onWindowFocusChange.bind(this, true);
-    parent.call('mail_service', '_onWindowFocusChange', true); // give focus to tab
+    parent.env.services.mail._onWindowFocusChange(true); // give focus to tab
     await testUtils.nextTick();
     var nextUpdateDelay = this.timeoutMock.getNextTimeoutDelay();
     await testUtils.nextTick();
@@ -176,7 +176,7 @@ QUnit.test('update status', async function (assert) {
     // set initial status
     assert.ok(statusWidget.$('.o_updatable_im_status i').hasClass('o_user_online'));
 
-    statusWidget.call('mail_service', 'updateImStatus', [
+    statusWidget.env.services.mail.updateImStatus([
         { id: 1, im_status: 'offline' },
     ]);
     await testUtils.nextTick();

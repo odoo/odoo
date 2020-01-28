@@ -52,7 +52,7 @@ QUnit.module('Services', {
         assert.expect(4);
 
         var view = await createView(this.viewParams);
-        view.call('notification', 'notify', {
+        view.env.services.notification.notify({
             title: 'a',
             message: 'b',
         });
@@ -72,7 +72,7 @@ QUnit.module('Services', {
         assert.expect(1);
 
         var view = await createView(this.viewParams);
-        view.call('notification', 'notify', {
+        view.env.services.notification.notify({
             title: 'a',
             message: 'b',
             type: 'danger'
@@ -89,7 +89,7 @@ QUnit.module('Services', {
         assert.expect(3);
 
         var view = await createView(this.viewParams);
-        view.call('notification', 'notify', {
+        view.env.services.notification.notify({
             title: 'a',
             message: 'b',
             sticky: true,
@@ -111,7 +111,7 @@ QUnit.module('Services', {
 
         var close = 0;
         var view = await createView(this.viewParams);
-        view.call('notification', 'notify', {
+        view.env.services.notification.notify({
             title: 'a',
             message: 'b',
             onClose: function () {
@@ -136,7 +136,7 @@ QUnit.module('Services', {
         var view = await createView(this.viewParams);
 
         var close = 0;
-        view.call('notification', 'notify', {
+        view.env.services.notification.notify({
             title: 'a',
             message: 'b',
             sticky: true,
@@ -179,9 +179,9 @@ QUnit.module('Services', {
                 }
             };
         };
-        view.call('notification', 'notify', notification(0));
-        view.call('notification', 'notify', notification(1));
-        view.call('notification', 'notify', notification(2));
+        view.env.services.notification.notify(notification(0));
+        view.env.services.notification.notify(notification(1));
+        view.env.services.notification.notify(notification(2));
         await testUtils.nextTick();
 
         var $notification = $('body .o_notification_manager .o_notification');
@@ -213,14 +213,14 @@ QUnit.module('Services', {
         var view = await createView(this.viewParams);
 
         var close = 0;
-        var notificationId0 = view.call('notification', 'notify', {
+        var notificationId0 = view.env.services.notification.notify({
             title: 'a',
             message: 'b',
             onClose: function () {
                 close++;
             }
         });
-        var notificationId1 = view.call('notification', 'notify', {
+        var notificationId1 = view.env.services.notification.notify({
             title: 'a',
             message: 'b',
             sticky: true,
@@ -230,8 +230,8 @@ QUnit.module('Services', {
         });
         await testUtils.nextTick();
 
-        view.call('notification', 'close', notificationId0);
-        view.call('notification', 'close', notificationId1);
+        view.env.services.notification.close(notificationId0);
+        view.env.services.notification.close(notificationId1);
         await testUtils.nextTick();
 
         assert.strictEqual($('body .o_notification_manager .o_notification').length, 0, "should destroy the notifications");
@@ -256,7 +256,7 @@ QUnit.module('Services', {
         });
 
         var view = await createView(this.viewParams);
-        view.call('notification', 'notify', {
+        view.env.services.notification.notify({
             Notification: Custom,
             customParams: true,
         });

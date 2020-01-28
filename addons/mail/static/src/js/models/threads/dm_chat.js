@@ -38,7 +38,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
         this._outOfOfficeDateEnd = data.direct_partner[0].out_of_office_date_end;
         this._type = 'dm_chat';
 
-        this.call('mail_service', 'updateImStatus', [{
+        this.env.services.mail.updateImStatus([{
             id: this._directPartnerID,
             im_status: data.direct_partner[0].im_status
         }]);
@@ -99,7 +99,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
      * @return {string}
      */
     getStatus: function () {
-        return this.call('mail_service', 'getImStatus', { partnerID: this._directPartnerID });
+        return this.env.services.mail.getImStatus({ partnerID: this._directPartnerID });
     },
 
     /**
@@ -110,7 +110,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
     updateOutOfOfficeInfo: function (data) {
         this._outOfOfficeMessage = data.outOfOfficeMessage;
         this._outOfOfficeDateEnd = data.outOfOfficeDateEnd;
-        this.call('mail_service', 'getMailBus').trigger('updated_out_of_office', {
+        this.env.services.mail.getMailBus().trigger('updated_out_of_office', {
             threadID: this.getID(),
         });
     }

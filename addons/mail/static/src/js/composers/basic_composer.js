@@ -124,7 +124,7 @@ var BasicComposer = Widget.extend({
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 
-        this.call('mail_service', 'getMailBus')
+        this.env.services.mail.getMailBus()
             .on('update_typing_partners', this, this._onUpdateTypingPartners);
 
         // Mention
@@ -306,7 +306,7 @@ var BasicComposer = Widget.extend({
         var def = new Promise(function (resolve, reject) {
             clearTimeout(self._cannedTimeout);
             self._cannedTimeout = setTimeout(function () {
-                var cannedResponses = self.call('mail_service', 'getCannedResponses');
+                var cannedResponses = self.env.services.mail.getCannedResponses();
                 var matches = fuzzy.filter(utils.unaccent(search), _.pluck(cannedResponses, 'source'));
                 var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
                 resolve(_.map(indexes, function (index) {
@@ -376,7 +376,7 @@ var BasicComposer = Widget.extend({
                 //add im_status on suggestions
                 _.each(suggestions, function (suggestionsSet) {
                     _.each(suggestionsSet, function (suggestion) {
-                        suggestion.im_status = self.call('mail_service', 'getImStatus', { partnerID: suggestion.id });
+                        suggestion.im_status = self.env.services.mail.getImStatus({ partnerID: suggestion.id });
                     });
                 });
                 return suggestions;

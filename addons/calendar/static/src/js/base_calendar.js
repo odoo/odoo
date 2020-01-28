@@ -66,7 +66,7 @@ WebClient.include({
                 return;
             }
             self.calendar_notif_timeouts[key] = setTimeout(function () {
-                var notificationID = self.call('notification', 'notify', {
+                var notificationID = self.env.services.notification.notify({
                     Notification: CalendarNotification,
                     title: notif.title,
                     message: notif.message,
@@ -103,7 +103,7 @@ WebClient.include({
         // in which the current user is involved is created, edited or deleted
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
-        this.call('bus_service', 'onNotification', this, function (notifications) {
+        this.env.services.bus.onNotification(this, function (notifications) {
             _.each(notifications, (function (notification) {
                 if (notification[0][1] === 'calendar.alarm') {
                     this.display_calendar_notif(notification[1]);

@@ -20,9 +20,9 @@ var ThreadField = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isMessagingReady = this.env.services.mail.isReady();
         this._isStarted = false;
-        this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
+        this.env.services.mail.getMailBus().on('messaging_ready', this, this._onMessagingReady);
         // Used to automatically mark document thread as read at the moment we
         // access the document and render the thread.
         this._markAsReadOnNextRender = false;
@@ -49,7 +49,7 @@ var ThreadField = AbstractField.extend({
         this._threadWidget.on('redirect', this, this._onRedirect);
         this._threadWidget.on('redirect_to_channel', this, this._onRedirectToChannel);
         this._threadWidget.on('toggle_star_status', this, function (messageID) {
-            var message = self.call('mail_service', 'getMessage', messageID);
+            var message = self.env.services.mail.getMessage(messageID);
             message.toggleStarStatus();
         });
 
@@ -59,7 +59,7 @@ var ThreadField = AbstractField.extend({
         return this.alive(Promise.all([def1, def2])).then(function () {
             // unwrap the thread to remove an unnecessary level on div
             self.setElement(self._threadWidget.$el);
-            var mailBus = self.call('mail_service', 'getMailBus');
+            var mailBus = self.env.services.mail.getMailBus();
             mailBus.on('new_message', self, self._onNewMessage);
             mailBus.on('update_message', self, self._onUpdateMessage);
         });
@@ -173,7 +173,7 @@ var ThreadField = AbstractField.extend({
         if (!params.resID) {
             this._documentThread = null;
         } else {
-            this._documentThread = this.call('mail_service', 'getOrAddDocumentThread', params);
+            this._documentThread = this.env.services.mail.getOrAddDocumentThread(params);
             this._markAsReadOnNextRender = true;
         }
     },
@@ -227,7 +227,7 @@ var ThreadField = AbstractField.extend({
      */
     _onRedirectToChannel: function (channelID) {
         var self = this;
-        this.call('mail_service', 'joinChannel', channelID).then(function () {
+        this.env.services.mail.joinChannel(channelID).then(function () {
             // Execute Discuss with 'channel' as default channel
             self.do_action('mail.action_discuss', { active_id: channelID });
         });

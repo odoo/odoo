@@ -9,7 +9,6 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 ThreadWidget.include({
-    dependencies: ['bus_service'],
     events: _.extend({}, ThreadWidget.prototype.events, {
         'click .o_thread_message_snailmail_missing_required_fields': '_onClickMissingRequiredFields',
         'click .o_thread_message_snailmail_credit_error': '_onClickCreditError',

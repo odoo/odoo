@@ -13,8 +13,8 @@ var testUtils = require('web.test_utils');
 
 mailTestUtils.MockMailService.include({
     getServices: function () {
-        return _.extend(this._super(), {
-            support_bus_service: this.bus_service(),
+        return Object.assign(this._super(), {
+            support_bus: this.bus(),
         });
     },
 });

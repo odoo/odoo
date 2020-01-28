@@ -60,7 +60,7 @@ QUnit.module('Moderation', {
             },
         };
         this.services = mailTestUtils.getMailServices();
-        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
+        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail.prototype.THREAD_WINDOW_APPENDTO;
 
         this.createParent = function (params) {
             var widget = new Widget();
@@ -69,9 +69,9 @@ QUnit.module('Moderation', {
             // note that it does not hide thread window because it uses fixed
             // position, and qunit-fixture uses absolute...
             if (params.debug) {
-                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+                self.services.mail.prototype.THREAD_WINDOW_APPENDTO = 'body';
             } else {
-                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
+                self.services.mail.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
             testUtils.mock.addMockEnvironment(widget, params);
@@ -80,7 +80,7 @@ QUnit.module('Moderation', {
     },
     afterEach: function () {
         // reset thread window append to body
-        this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = this.ORIGINAL_THREAD_WINDOW_APPENDTO;
+        this.services.mail.prototype.THREAD_WINDOW_APPENDTO = this.ORIGINAL_THREAD_WINDOW_APPENDTO;
     },
 });
 
@@ -116,7 +116,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', async
     });
     await testUtils.nextTick();
     // detach channel 1, so that it opens corresponding thread window.
-    parent.call('mail_service', 'getChannel', 1).detach();
+    parent.env.services.mail.getChannel(1).detach();
     await testUtils.nextTick();
 
     assert.strictEqual($('.o_thread_message ').length, 1,

@@ -571,7 +571,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
                     message: message,
                 };
                 var notification = [metaData, notifData];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.env.services.bus.trigger('notification', [notification]);
                 await testUtils.nextTick();
 
                 messagePostDef.resolve();
@@ -674,7 +674,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         };
         var metaData = [dbName, 'mail.channel'];
         var notification = [metaData, messageData];
-        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        discuss.env.services.bus.trigger('notification', [notification]);
         await testUtils.nextTick();
         // check message is accepted
         $message = discuss.$('.o_thread_message');
@@ -751,7 +751,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         };
         var metaData = [dbName, 'res.partner'];
         var notification = [metaData, notifData];
-        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        discuss.env.services.bus.trigger('notification', [notification]);
         await testUtils.nextTick();
         // // check no message
         assert.containsNone(discuss, '.o_thread_message',

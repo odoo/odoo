@@ -545,8 +545,8 @@ MailManager.include({
     _handlePartnerUserConnectionNotification: function (data) {
         var self = this;
         var partnerID = data.partner_id;
-        this.call('bus_service', 'sendNotification', data.title, data.message, function ( ){
-            self.call('mail_service', 'openDMChatWindowFromBlankThreadWindow', partnerID);
+        this.env.services.bus.sendNotification(data.title, data.message, function ( ){
+            self.env.services.mail.openDMChatWindowFromBlankThreadWindow(partnerID);
         });
     },
     /**
@@ -555,7 +555,7 @@ MailManager.include({
      */
     _listenOnBuses: function () {
         this._super.apply(this, arguments);
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        this.env.services.bus.onNotification(this, this._onNotification);
     },
     /**
      * Update the message notification status of message based on update_message

@@ -78,6 +78,7 @@ var rpc = require('web.rpc');
  * @name ServicesMixin
  */
 var ServicesMixin = {
+    env,
     /**
      * @param {string} serviceName
      * @param {string} methodName
@@ -89,7 +90,7 @@ var ServicesMixin = {
             // ajax service uses an extra 'target' argument for rpc
             args = args.concat(this);
         }
-        const service = env.services[serviceName];
+        const service = this.env.services[serviceName];
         return service[methodName].apply(service, args);
     },
     /**
@@ -102,7 +103,7 @@ var ServicesMixin = {
      */
     _rpc: function (params, options) {
         var query = rpc.buildQuery(params);
-        var prom = this.call('ajax', 'rpc', query.route, query.params, options, this);
+        var prom = this.env.services.ajax.rpc(query.route, query.params, options, this);
         if (!prom) {
             prom = new Promise(function () {});
             prom.abort = function () {};
@@ -203,7 +204,7 @@ var ServicesMixin = {
      * @param {string} [options.className]
      */
     displayNotification: function (options) {
-        return this.call('notification', 'notify', options);
+        return this.env.services.notification.notify(options);
     },
     /**
      * @deprecated will be removed as soon as the notification system is reviewed

@@ -765,9 +765,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      */
     _onLoadOptionalFields: function (ev) {
-        var res = this.call(
-            'local_storage',
-            'getItem',
+        var res = this.env.services.localStorage.getItem(
             this._getOptionalFieldsLocalStorageKey(ev.data.keyParts)
         );
         ev.data.callback(res);
@@ -782,9 +780,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      */
     _onSaveOptionalFields: function (ev) {
-        this.call(
-            'local_storage',
-            'setItem',
+        this.env.services.localStorage.setItem(
             this._getOptionalFieldsLocalStorageKey(ev.data.keyParts),
             ev.data.optionalColumnsEnabled
         );

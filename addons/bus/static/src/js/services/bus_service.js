@@ -2,21 +2,16 @@ odoo.define('bus.BusService', function (require) {
 "use strict";
 
 var CrossTab = require('bus.CrossTab');
-var core = require('web.core');
-var ServicesMixin = require('web.ServicesMixin');
+var { serviceRegistry } = require('web.core');
 
-var BusService =  CrossTab.extend(ServicesMixin, {
-    dependencies : ['local_storage'],
-
-    // properties
-    _audio: null,
+class BusService extends CrossTab {
 
     /**
      * This method is necessary in order for this Class to be used to instantiate services
      *
      * @abstract
      */
-    start: function () {},
+    start() {}
 
     //--------------------------------------------------------------------------
     // Public
@@ -26,30 +21,31 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      * Send a notification, and notify once per browser's tab
      *
      * @param {string} title
-     * @param {string} content
+     * @param {string} message
      * @param {function} [callback] if given callback will be called when user clicks on notification
      */
-    sendNotification: function (title, content, callback) {
-        if (window.Notification && Notification.permission === "granted") {
+    sendNotification(title, message, callback) {
+        if (window.Notification && window.Notification.permission === "granted") {
             if (this.isMasterTab()) {
-                this._sendNativeNotification(title, content, callback);
+                this._sendNativeNotification(title, message, callback);
             }
         } else {
-            this.do_notify(title, content);
+            this.env.services.notification.notify({ title, message });
             if (this.isMasterTab()) {
                 this._beep();
             }
         }
-    },
+    }
+
     /**
      * Register listeners on notifications received on this bus service
      *
      * @param {Object} receiver
      * @param {function} func
      */
-    onNotification: function () {
+    onNotification() {
         this.on.apply(this, ["notification"].concat(Array.prototype.slice.call(arguments)));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -60,17 +56,17 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      *
      * @private
      */
-    _beep: function () {
+    _beep() {
         if (typeof(Audio) !== "undefined") {
             if (!this._audio) {
-                this._audio = new Audio();
+                this._audio = new window.Audio();
                 var ext = this._audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-                var session = this.getSession();
-                this._audio.src = session.url("/mail/static/src/audio/ting" + ext);
+                this._audio.src = this.env.session.url("/mail/static/src/audio/ting" + ext);
             }
             Promise.resolve(this._audio.play()).catch(_.noop);
         }
-    },
+    }
+
     /**
      * Show a browser notification
      *
@@ -79,8 +75,11 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      * @param {string} content
      * @param {function} [callback] if given callback will be called when user clicks on notification
      */
-    _sendNativeNotification: function (title, content, callback) {
-        var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoobot_transparent.png"});
+    _sendNativeNotification(title, content, callback) {
+        var notification = new window.Notification(title, {
+            body: content,
+            icon: "/mail/static/src/img/odoobot_transparent.png",
+        });
         notification.onclick = function () {
             window.focus();
             if (this.cancel) {
@@ -92,11 +91,16 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                 callback();
             }
         };
-    },
+    }
+}
 
+Object.assign(BusService, {
+    dependencies : ['local_storage'],
+    // properties
+    _audio: null,
 });
 
-core.serviceRegistry.add('bus_service', BusService);
+serviceRegistry.add('bus', BusService);
 
 return BusService;
 

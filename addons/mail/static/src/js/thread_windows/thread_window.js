@@ -59,7 +59,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
 
         var superDef = this._super().then(this._listenThreadWidget.bind(this));
 
-        this.call('mail_service', 'getMailBus')
+        this.env.services.mail.getMailBus()
             .on('update_typing_partners', this, this._onUpdateTypingPartners)
             .on('update_channel', this, this._onUpdateChannel);
 
@@ -227,7 +227,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @private
      */
     _open: function () {
-        this.call('mail_service', 'openThreadWindow', this.getID());
+        this.env.services.mail.openThreadWindow(this.getID());
     },
     /**
      * Set the thread window in passive mode, so that new received message will
@@ -249,7 +249,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
             .autocomplete({
                 autoFocus: true,
                 source: function (request, response) {
-                    self.call('mail_service', 'searchPartner', request.term, 10)
+                    self.env.services.mail.searchPartner(request.term, 10)
                         .then(response);
                 },
                 select: function (event, ui) {
@@ -257,7 +257,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
                     // with new DM chat window
                     var partnerID = ui.item.id;
                     self.directPartnerID = partnerID;
-                    self.call('mail_service', 'openDMChatWindowFromBlankThreadWindow', partnerID);
+                    self.env.services.mail.openDMChatWindowFromBlankThreadWindow(partnerID);
                 },
             })
             .focus();
@@ -305,7 +305,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 clear_breadcrumbs: false,
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
-                    var mailBus = self.call('mail_service', 'getMailBus');
+                    var mailBus = self.env.services.mail.getMailBus();
                     if (mailBus) {
                         mailBus.trigger('discuss_open', false);
                     }
@@ -344,16 +344,16 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     _onRedirect: function (resModel, resID) {
         var callback = this._open.bind(this);
-        this.call('mail_service', 'redirect', resModel, resID, callback);
+        this.env.services.mail.redirect(resModel, resID, callback);
     },
     /**
      * @private
      * @param {integer} channelID
      */
     _onRedirectToChannel: function (channelID) {
-        var thread = this.call('mail_service', 'getThread', channelID);
+        var thread = this.env.services.getThread(channelID);
         if (!thread) {
-            this.call('mail_service', 'joinChannel', channelID)
+            this.env.services.mail.joinChannel(channelID)
                 .then(function (channel) {
                     channel.detach();
                 });
@@ -390,7 +390,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @param {integer} messageID
      */
     _onToggleStarStatus: function (messageID) {
-        var message = this.call('mail_service', 'getMessage', messageID);
+        var message = this.env.services.mail.getMessage(messageID);
         message.toggleStarStatus();
     },
     /**

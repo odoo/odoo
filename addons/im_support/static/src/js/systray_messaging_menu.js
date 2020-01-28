@@ -61,7 +61,7 @@ MessagingMenu.include({
     _onClickPreview: function (ev) {
         var id = $(ev.currentTarget).data('preview-id');
         if (id === SUPPORT_CHANNEL_ID) {
-            this.call('mail_service', 'startSupportLivechat');
+            this.env.services.mail.startSupportLivechat();
         } else {
             this._super.apply(this, arguments);
         }

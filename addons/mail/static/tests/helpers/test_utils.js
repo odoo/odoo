@@ -23,7 +23,7 @@ var Widget = require('web.Widget');
 
 /**
  * Create asynchronously a discuss widget.
- * This is async due to mail_manager/mail_service that needs to be ready.
+ * This is async due to mail service that needs to be ready.
  *
  * @param {Object} params
  * @return {Promise} resolved with the discuss widget
@@ -56,15 +56,15 @@ async function createDiscuss(params) {
 
 
 var MockMailService = Class.extend({
-    bus_service: function () {
-        return BusService.extend({
-            _poll: function () {}, // Do nothing
-            _registerWindowUnload: function () {}, // Do nothing
-            isOdooFocused: function () { return true; },
-            updateOption: function () {},
-        });
+    bus() {
+        return class B extends BusService {
+            _poll() {} // Do nothing
+            _registerWindowUnload() {} // Do nothing
+            isOdooFocused() { return true; }
+            updateOption() {}
+        };
     },
-    mail_service: function () {
+    mail: function () {
         return MailService;
     },
     local_storage: function () {
@@ -74,8 +74,8 @@ var MockMailService = Class.extend({
     },
     getServices: function () {
         return {
-            mail_service: this.mail_service(),
-            bus_service: this.bus_service(),
+            mail: this.mail(),
+            bus: this.bus(),
             local_storage: this.local_storage(),
         };
     },
@@ -188,10 +188,10 @@ var patchMailTimeouts = function () {
 
 /**
  * Returns the list of mail services required by the mail components: a
- * mail_service, and its two dependencies bus_service and local_storage.
+ * mail service, and its two dependencies bus and local_storage.
  *
- * @return {AbstractService[]} an array of 3 services: mail_service, bus_service
- * and local_storage, in that order
+ * @return {AbstractService[]} an array of 3 services: mail, bus and
+ * local_storage, in that order
  */
 function getMailServices() {
     patchMailTimeouts();

@@ -34,9 +34,9 @@ var MessagingMenu = Widget.extend({
         this._$filterButtons = this.$('.o_filter_button');
         this._$previews = this.$('.o_mail_systray_dropdown_items');
         this._filter = false;
-        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isMessagingReady = this.env.services.mail.isReady();
         this._updateCounter();
-        var mailBus = this.call('mail_service', 'getMailBus');
+        var mailBus = this.env.services.mail.getMailBus();
         mailBus.on('messaging_ready', this, this._onMessagingReady);
         mailBus.on('update_needaction', this, this._updateCounter);
         mailBus.on('new_channel', this, this._updateCounter);
@@ -95,15 +95,15 @@ var MessagingMenu = Widget.extend({
      * @returns {integer}
      */
     _computeCounter: function () {
-        var channels = this.call('mail_service', 'getChannels');
+        var channels = this.env.services.mail.getChannels();
         var channelUnreadCounters = _.map(channels, function (channel) {
             return channel.getUnreadCounter();
         });
         var unreadChannelCounter = _.reduce(channelUnreadCounters, function (acc, c) {
             return c > 0 ? acc + 1 : acc;
         }, 0);
-        var inboxCounter = this.call('mail_service', 'getMailbox', 'inbox').getMailboxCounter();
-        var mailFailureCounter = this.call('mail_service', 'getMailFailures').length;
+        var inboxCounter = this.env.services.mail.getMailbox('inbox').getMailboxCounter();
+        var mailFailureCounter = this.env.services.mail.getMailFailures().length;
 
         return unreadChannelCounter + inboxCounter + mailFailureCounter;
     },
@@ -113,7 +113,7 @@ var MessagingMenu = Widget.extend({
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {
-        return this.call('mail_service', 'getSystrayPreviews', this._filter);
+        return this.env.services.mail.getSystrayPreviews(this._filter);
     },
     /**
      * @private
@@ -132,7 +132,7 @@ var MessagingMenu = Widget.extend({
         var previewID = $preview.data('preview-id');
         if (previewID === 'mailbox_inbox') {
             var messageIDs = [].concat($preview.data('message-ids'));
-            this.call('mail_service', 'markMessagesAsRead', messageIDs);
+            this.env.services.mail.markMessagesAsRead(messageIDs);
         } else if (previewID === 'mail_failure') {
             var documentModel = $preview.data('document-model');
             var unreadCounter = $preview.data('unread-counter');
@@ -144,7 +144,7 @@ var MessagingMenu = Widget.extend({
             });
         } else {
             // this is mark as read on a thread
-            var thread = this.call('mail_service', 'getThread', previewID);
+            var thread = this.env.services.mail.getThread(previewID);
             if (thread) {
                 thread.markAsRead();
             }
@@ -170,7 +170,7 @@ var MessagingMenu = Widget.extend({
                 // we cannot 'go back to previous page' otherwise
                 self.trigger_up('hide_home_menu');
                 core.bus.trigger('change_menu_section',
-                    self.call('mail_service', 'getDiscussMenuID'));
+                    self.env.services.mail.getDiscussMenuID());
             });
     },
     /**
@@ -307,7 +307,7 @@ var MessagingMenu = Widget.extend({
      * @private
      */
     _onClickNewMessage: function () {
-        this.call('mail_service', 'openBlankThreadWindow');
+        this.env.services.mail.openBlankThreadWindow();
     },
     /**
      * When a preview is clicked on, we want to open the related object
@@ -334,7 +334,7 @@ var MessagingMenu = Widget.extend({
             }
         } else {
             // preview of thread
-            this.call('mail_service', 'openThread', previewID);
+            this.env.services.mail.openThread(previewID);
         }
     },
     /**

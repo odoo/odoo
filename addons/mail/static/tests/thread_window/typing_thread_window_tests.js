@@ -29,7 +29,7 @@ QUnit.module('Typing', {
             },
         };
         this.services = mailTestUtils.getMailServices();
-        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
+        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail.prototype.THREAD_WINDOW_APPENDTO;
 
         /**
          * Simulate that someone typing something (or stops typing)
@@ -38,7 +38,7 @@ QUnit.module('Typing', {
          * @param {integer} params.channelID
          * @param {boolean} params.isTyping
          * @param {integer} params.partnerID
-         * @param {Widget} params.widget a widget that can call the bus_service
+         * @param {Widget} params.widget a widget that can call the service bus
          */
         this.simulateIsTyping = async function (params) {
             var typingData = {
@@ -47,7 +47,7 @@ QUnit.module('Typing', {
                 is_typing: params.isTyping,
             };
             var notification = [[false, 'mail.channel', params.channelID], typingData];
-            params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            params.widget.env.services.bus.trigger('notification', [notification]);
             await testUtils.nextMicrotaskTick();
         };
 
@@ -58,9 +58,9 @@ QUnit.module('Typing', {
             // note that it does not hide thread window because it uses fixed
             // position, and qunit-fixture uses absolute...
             if (params.debug) {
-                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+                self.services.mail.prototype.THREAD_WINDOW_APPENDTO = 'body';
             } else {
-                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
+                self.services.mail.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
             testUtils.mock.addMockEnvironment(widget, params);
@@ -69,7 +69,7 @@ QUnit.module('Typing', {
     },
     afterEach: function () {
         // reset thread window append to body
-        this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+        this.services.mail.prototype.THREAD_WINDOW_APPENDTO = 'body';
     },
 });
 
@@ -93,7 +93,7 @@ QUnit.test('receive typing notification', async function (assert) {
     await testUtils.nextTick();
 
     // detach channel 1, so that it opens corresponding thread window.
-    parent.call('mail_service', 'getChannel', 1).detach();
+    parent.env.services.mail.getChannel(1).detach();
     await testUtils.nextTick();
 
     var $threadWindow = $('.o_thread_window');

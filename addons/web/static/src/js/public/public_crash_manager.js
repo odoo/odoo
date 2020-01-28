@@ -1,7 +1,7 @@
 odoo.define('web.PublicCrashManager', function (require) {
 "use strict";
 
-const core = require('web.core');
+const { serviceRegistry } = require('web.core');
 const CrashManager = require('web.CrashManager').CrashManager;
 
 const PublicCrashManager = CrashManager.extend({
@@ -22,7 +22,7 @@ const PublicCrashManager = CrashManager.extend({
     },
 });
 
-core.serviceRegistry.add('crash_manager', PublicCrashManager);
+serviceRegistry.add('crashManager', PublicCrashManager);
 
 return {
     CrashManager: PublicCrashManager,
