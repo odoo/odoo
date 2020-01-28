@@ -2433,7 +2433,7 @@ class TestStockValuation(SavepointCase):
 
         self.assertAlmostEqual(self.product1.standard_price, 10.0)
 
-    def test_average_perpetual_8(self):
+    def test_average_perpetual_9(self):
         """ When a product has an available quantity of -5, edit an incoming shipment and increase
         the received quantity by 5 units.
         """

@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_is_zero
+from odoo.tools import float_is_zero
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -240,7 +240,6 @@ class StockMove(models.Model):
             for valued_type in self._get_valued_types():
                 if getattr(move, '_is_%s' % valued_type)():
                     valued_moves[valued_type] |= move
-                    continue
 
         # AVCO application
         valued_moves['in'].product_price_update_before_done()
@@ -252,7 +251,6 @@ class StockMove(models.Model):
             for valued_type in self._get_valued_types():
                 if getattr(move, '_is_%s' % valued_type)():
                     valued_moves[valued_type] |= move
-                    continue
 
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
@@ -261,8 +259,6 @@ class StockMove(models.Model):
             if todo_valued_moves:
                 todo_valued_moves._sanity_check_for_valuation()
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
-                continue
-
 
         for svl in stock_valuation_layers:
             if not svl.product_id.valuation == 'real_time':
@@ -509,10 +505,10 @@ class StockMove(models.Model):
                     self.with_company(self.company_id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
-            #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
             self._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=self.product_id)
 
-    def _get_related_invoices(self): # To be overridden in purchase and sale_stock
+    def _get_related_invoices(self):  # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt
         to the way they mix stock moves with invoices.
         """
