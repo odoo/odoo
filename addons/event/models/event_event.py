@@ -33,12 +33,6 @@ class EventType(models.Model):
             'template_id': self.env.ref('event.event_subscription').id,
         }), (0, 0, {
             'notification_type': 'mail',
-            'interval_nbr': 1,
-            'interval_unit': 'days',
-            'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder').id,
-        }), (0, 0, {
-            'notification_type': 'mail',
             'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
@@ -48,8 +42,7 @@ class EventType(models.Model):
     name = fields.Char('Event Category', required=True, translate=True)
     sequence = fields.Integer()
     # registration
-    has_seats_limitation = fields.Boolean(
-        'Limited Seats', default=False)
+    has_seats_limitation = fields.Boolean('Limited Seats')
     default_registration_min = fields.Integer(
         'Minimum Registrations', default=0,
         help="It will select this default minimum value when you choose this event")
@@ -94,28 +87,22 @@ class EventEvent(models.Model):
         event_stages = self.env['event.stage'].search([])
         return event_stages[0] if event_stages else False
 
-    name = fields.Char(
-        string='Event', translate=True, required=True,
-        readonly=False)
+    name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
-        'res.users', string='Responsible',
-        default=lambda self: self.env.user,
-        tracking=True,
-        readonly=False)
+        'res.users', string='Responsible', tracking=True,
+        default=lambda self: self.env.user)
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
         default=lambda self: self.env.company,
-        required=False, readonly=False)
+        required=False)
     organizer_id = fields.Many2one(
-        'res.partner', string='Organizer',
-        tracking=True,
+        'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    event_type_id = fields.Many2one(
-        'event.type', string='Category',
-        readonly=False)
+    event_type_id = fields.Many2one('event.type', string='Category', ondelete='set null')
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
     # Kanban fields
@@ -130,7 +117,6 @@ class EventEvent(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
-        readonly=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
@@ -154,36 +140,26 @@ class EventEvent(models.Model):
         string='Number of Expected Attendees',
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
-    registration_ids = fields.One2many(
-        'event.registration', 'event_id', string='Attendees',
-        readonly=False)
+    auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
+    registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self.env.user.tz or 'UTC')
-    date_begin = fields.Datetime(
-        string='Start Date', required=True,
-        tracking=True)
-    date_end = fields.Datetime(
-        string='End Date', required=True,
-        tracking=True)
+    date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
+    date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
-    auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
+    # Location and communication
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
-        'res.partner', string='Location',
+        'res.partner', string='Location', tracking=True,
         default=lambda self: self.env.company.partner_id,
-        readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        tracking=True)
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
     twitter_hashtag = fields.Char('Twitter Hashtag')
-    description = fields.Html(
-        string='Description', translate=html_translate, sanitize_attributes=False,
-        readonly=False)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -287,7 +263,7 @@ class EventEvent(models.Model):
 
             self.is_online = self.event_type_id.is_online
 
-            if self.event_type_id.event_type_mail_ids:
+            if self.event_type_id.use_mail_schedule and self.event_type_id.event_type_mail_ids:
                 self.event_mail_ids = [(5, 0, 0)] + [
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id

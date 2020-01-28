@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="view_event_registration_ticket_search" model="ir.ui.view">
+        <field name="name">event.registration.search.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_registration_search" />
+        <field name="arch" type="xml">
+            <filter name="group_event" position="after">
+                <filter string="Ticket Type" name ="tickettype" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'group_by':'event_ticket_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+        <field name="name">event.registration.tree.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree" />
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="event_ticket_id"/>
+                <field name="origin"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_view_kanban" model="ir.ui.view">
+        <field name="name">event.registration.kanban.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.event_registration_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_id']" position="after">
+                <br/>
+                <field name="event_ticket_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_registration_ticket_form" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field
+                    name="event_ticket_id"
+                    domain="[
+                        ('event_id', '=', event_id),
+                        '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                    ]"
+                    attrs="{'invisible': [('event_id', '=', False)]}"
+                    options="{'no_open': True, 'no_create': True}"
+                />
+            </field>
+            <group name="event" position="after">
+                <group string="Origin">
+                    <field name="sale_order_id"/>
+                    <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
+                    <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+                </group>
+                <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                    <field name="campaign_id"/>
+                    <field name="medium_id"/>
+                    <field name="source_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</data></odoo>
