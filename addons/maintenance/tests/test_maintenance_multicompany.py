@@ -78,21 +78,21 @@ class TestEquipmentMulticompany(TransactionCase):
 
         # create equipment category for equipment manager
         category_1 = Category.with_user(equipment_manager).with_context(allowed_company_ids=cids).create({
-            'name': 'Monitors',
+            'name': 'Monitors - Test',
             'company_id': company_b.id,
             'technician_user_id': equipment_manager.id,
         })
 
         # create equipment category for equipment manager
         Category.with_user(equipment_manager).with_context(allowed_company_ids=cids).create({
-            'name': 'Computers',
+            'name': 'Computers - Test',
             'company_id': company_b.id,
             'technician_user_id': equipment_manager.id,
         })
 
         # create equipment category for equipment user
         Category.with_user(equipment_manager).create({
-            'name': 'Phones',
+            'name': 'Phones - Test',
             'company_id': company_a.id,
             'technician_user_id': equipment_manager.id,
         })

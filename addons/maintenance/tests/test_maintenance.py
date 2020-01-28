@@ -37,8 +37,7 @@ class TestEquipment(TransactionCase):
         ))
 
         self.equipment_monitor = self.env['maintenance.equipment.category'].create({
-            'name': 'Monitors',
-            'alias_id': self.env.ref('maintenance.mail_alias_equipment').id,
+            'name': 'Monitors - Test',
         })
 
     def test_10_equipment_request_category(self):
