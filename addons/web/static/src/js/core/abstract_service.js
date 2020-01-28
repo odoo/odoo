@@ -1,20 +1,18 @@
 odoo.define('web.AbstractService', function (require) {
-"use strict";
+'use strict';
 
-var Class = require('web.Class');
-var Mixins = require('web.mixins');
-var ServicesMixin = require('web.ServicesMixin');
+const env = require('web.env');
 
-var AbstractService = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
-    dependencies: [],
-    init: function (parent) {
-        Mixins.EventDispatcherMixin.init.call(this, arguments);
-        this.setParent(parent);
-    },
+class AbstractService {
     /**
      * @abstract
      */
-    start: function () {},
+    start() {}
+}
+
+Object.assign(AbstractService, {
+    env,
+    dependencies: [],
 });
 
 return AbstractService;

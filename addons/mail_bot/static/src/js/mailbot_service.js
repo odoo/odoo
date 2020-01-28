@@ -1,22 +1,21 @@
 odoo.define('mail_bot.MailBotService', function (require) {
 "use strict";
 
-var AbstractService = require('web.AbstractService');
-var core = require('web.core');
+const AbstractService = require('web.AbstractService');
+var { _t, serviceRegistry } = require('web.core');
 var session = require('web.session');
 
-var _t = core._t;
+class MailBotService extends AbstractService {
 
-var MailBotService =  AbstractService.extend({
     /**
      * @override
      */
-    start: function () {
+    start() {
         this._hasRequest = (window.Notification && window.Notification.permission === "default") || false;
         if ('odoobot_initialized' in session && ! session.odoobot_initialized) {
             this._showOdoobotTimeout();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -31,7 +30,7 @@ var MailBotService =  AbstractService.extend({
      * @returns {Object[]} list of objects that are compatible with the
      *   'mail.Preview' template.
      */
-    getPreviews: function (filter) {
+    getPreviews(filter) {
         if (!this.isRequestingForNativeNotifications()) {
             return [];
         }
@@ -47,21 +46,23 @@ var MailBotService =  AbstractService.extend({
             unreadCounter: 1,
         }];
         return previews;
-    },
+    }
+
     /**
      * Tell whether OdooBot is requesting to enable push notifications.
      *
      * @returns {boolean}
      */
-    isRequestingForNativeNotifications: function () {
+    isRequestingForNativeNotifications() {
         return this._hasRequest;
-    },
+    }
+
     /**
      * Called when user either accepts or refuses push notifications.
      */
-    removeRequest: function () {
+    removeRequest() {
         this._hasRequest = false;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -70,19 +71,20 @@ var MailBotService =  AbstractService.extend({
     /**
      * @private
      */
-    _showOdoobotTimeout: function () {
+    _showOdoobotTimeout() {
         var self = this;
         setTimeout(function () {
             session.odoobot_initialized = true;
-            self._rpc({
+            self.env.services.rpc({
                 model: 'mail.channel',
                 method: 'init_odoobot',
             });
         }, 2*60*1000);
-    },
-});
+    }
+}
 
-core.serviceRegistry.add('mailbot_service', MailBotService);
+serviceRegistry.add('mailbot_service', MailBotService);
+
 return MailBotService;
 
 });
