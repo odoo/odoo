@@ -1150,7 +1150,18 @@ class Lead(models.Model):
                 'actions': salesman_actions,
             })
 
-        return [new_group] + groups
+        groups = [new_group] + groups
+
+        # Add action & view_type to URL to have the right view when opening it from an email
+        action_id = self.env.ref('crm.crm_lead_all_leads').id if self.type == 'lead' else self.env.ref('crm.crm_lead_opportunities_tree_view').id
+        groups = [(group[0], group[1], {
+            'button_access': {
+                'url': self._notify_get_action_link('view', action=action_id),
+                'title': _('View %s' % self._description)
+            },
+        }) for group in groups]
+
+        return groups
 
     @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):

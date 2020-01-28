@@ -679,6 +679,7 @@ class MailThread(models.AbstractModel):
         base_params = {
             'model': kwargs.get('model', self._name),
             'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
+            'action': kwargs.get('action', False),
         }
 
         local_kwargs.pop('message_id', None)
@@ -692,6 +693,7 @@ class MailThread(models.AbstractModel):
             controller = local_kwargs.pop('controller')
             params = dict(base_params, **local_kwargs)
             params.pop('model')
+            params.pop('action')
             base_link = '%s' % controller
         else:
             return ''

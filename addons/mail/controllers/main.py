@@ -93,7 +93,7 @@ class MailController(http.Controller):
             'model': model,
             'id': res_id,
             'active_id': res_id,
-            'action': record_action.get('id'),
+            'action': record_action.get('id') or kwargs.get('action', None),
         }
         view_id = record_sudo.get_formview_id()
         if view_id:

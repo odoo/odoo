@@ -171,4 +171,4 @@ class MailController(MailController):
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
                         return werkzeug.utils.redirect(url)
-        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
+        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
