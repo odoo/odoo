@@ -4,7 +4,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.website.tools import get_video_embed_code
+from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
 
 
 class ProductImage(models.Model):
@@ -16,7 +16,7 @@ class ProductImage(models.Model):
     name = fields.Char("Name", required=True)
     sequence = fields.Integer(default=10, index=True)
 
-    image_1920 = fields.Image(required=True)
+    image_1920 = fields.Image()
 
     product_tmpl_id = fields.Many2one('product.template', "Product Template", index=True, ondelete='cascade')
     product_variant_id = fields.Many2one('product.product', "Product Variant", index=True, ondelete='cascade')
@@ -31,10 +31,15 @@ class ProductImage(models.Model):
         for image in self:
             image.can_image_1024_be_zoomed = image.image_1920 and tools.is_image_size_above(image.image_1920, image.image_1024)
 
+    @api.onchange('video_url')
+    def _onchange_video_url(self):
+        if not self.image_1920:
+            self.image_1920 = get_video_thumbnail(self.video_url) or False
+
     @api.depends('video_url')
     def _compute_embed_code(self):
         for image in self:
-            image.embed_code = get_video_embed_code(image.video_url)
+            image.embed_code = get_video_embed_code(image.video_url) or False
 
     @api.constrains('video_url')
     def _check_valid_video_url(self):
