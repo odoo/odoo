@@ -29,6 +29,12 @@ class WebsiteEventSaleController(WebsiteEventController):
         tickets = request.env['event.event.ticket'].browse(tuple(ticket_post))
         return [{'id': ticket.id, 'name': ticket.name, 'quantity': ticket_post[ticket.id], 'price': ticket.price} for ticket in tickets if ticket_post[ticket.id]]
 
+    def _process_registration_details(self, details):
+        res = super(WebsiteEventSaleController, self)._process_registration_details(details)
+        for registration_vals in res:
+            registration_vals['event_ticket_id'] = int(registration_vals.pop('ticket_id')) if registration_vals.get('ticket_id') else False
+        return res
+
     @http.route()
     def registration_confirm(self, event, **post):
         order = request.website.sale_get_order(force_create=1)
@@ -36,7 +42,7 @@ class WebsiteEventSaleController(WebsiteEventController):
 
         registrations = self._process_registration_details(post)
         for registration in registrations:
-            ticket = request.env['event.event.ticket'].sudo().browse(int(registration['ticket_id']))
+            ticket = request.env['event.event.ticket'].sudo().browse(int(registration['event_ticket_id']))
             cart_values = order.with_context(event_ticket_id=ticket.id, fixed_price=True)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
             attendee_ids |= set(cart_values.get('attendee_ids', []))
 

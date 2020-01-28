@@ -290,10 +290,11 @@ class WebsiteEventController(http.Controller):
         Attendees = request.env['event.registration']
         registrations = self._process_registration_details(post)
 
-        for registration in registrations:
-            registration['event_id'] = event
-            Attendees += Attendees.sudo().create(
-                Attendees._prepare_attendee_values(registration))
+        for registration_vals in registrations:
+            registration_vals['event_id'] = event.id
+            if not registration_vals.get('partner_id'):
+                registration_vals['partner_id'] = request.env.user.partner_id.id
+            Attendees += Attendees.sudo().create(registration_vals)
 
         urls = event._get_event_resource_urls()
         return request.render("website_event.registration_complete", {
