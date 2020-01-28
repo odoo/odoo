@@ -67,6 +67,7 @@ class AccountMove(models.Model):
 
         self.purchase_id = False
         self._onchange_currency()
+        self.invoice_partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
 
     @api.model_create_multi
     def create(self, vals_list):
