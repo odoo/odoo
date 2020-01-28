@@ -125,6 +125,10 @@ class configmanager(object):
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
+
+        group.add_option("--neuter-mode",dest="neuter-mode",my_default=False,
+                         help="Specify if odoo is launched in test mode \"test\" or in production mode \"prod\"")#switch
+
         parser.add_option_group(group)
 
         # HTTP
@@ -426,7 +430,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrades_paths',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface','neuter-mode'
         ]
 
         for arg in keys:

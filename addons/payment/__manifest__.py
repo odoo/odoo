@@ -27,4 +27,6 @@
     ],
     'installable': True,
     'auto_install': True,
+    'neuter':'neuter',
+    'reverse_neuter':'reverse_neuter',
 }

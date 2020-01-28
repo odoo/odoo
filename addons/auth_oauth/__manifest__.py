@@ -18,4 +18,6 @@ Allow users to login through OAuth2 Provider.
         'views/auth_oauth_templates.xml',
         'security/ir.model.access.csv',
     ],
+    'neuter':'neuter',
+    'reverse_neuter':'reverse_neuter',
 }

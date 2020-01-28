@@ -21,3 +21,4 @@ class AuthOAuthProvider(models.Model):
     css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
     body = fields.Char(required=True, help='Link text in Login Dialog', translate=True)
     sequence = fields.Integer()
+    has_been_neutered = fields.Boolean(required= True,default=False, string='Neutralized')
