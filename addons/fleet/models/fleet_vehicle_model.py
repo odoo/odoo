@@ -14,7 +14,7 @@ class FleetVehicleModel(models.Model):
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
     manager_id = fields.Many2one('res.users', 'Fleet Manager', default=lambda self: self.env.uid,
                                  domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)])
-    image_128 = fields.Image(related='brand_id.image_128', readonly=False)
+    image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     active = fields.Boolean(default=True)
 
     @api.depends('name', 'brand_id')
