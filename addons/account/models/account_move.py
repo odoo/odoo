@@ -2147,14 +2147,19 @@ class AccountMove(models.Model):
                 move.company_id.account_bank_reconciliation_start = move.date
 
         for move in self:
-            if not move.partner_id:
-                continue
-            if move.type.startswith('out_'):
+            if move.is_sale_document() and move.journal_id.sale_activity_type_id:
+                move.activity_schedule(
+                    date_deadline=min((date for date in move.line_ids.mapped('date_maturity') if date), default=move.date),
+                    activity_type_id=move.journal_id.sale_activity_type_id.id,
+                    summary=move.journal_id.sale_activity_note,
+                    user_id=move.journal_id.sale_activity_user_id.id or move.invoice_user_id.id,
+                )
+
+        for move in self:
+            if move.is_sale_document():
                 move.partner_id._increase_rank('customer_rank')
-            elif move.type.startswith('in_'):
+            elif move.is_purchase_document():
                 move.partner_id._increase_rank('supplier_rank')
-            else:
-                continue
 
         # Trigger action for paid invoices in amount is zero
         self.filtered(
