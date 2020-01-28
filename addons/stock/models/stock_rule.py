@@ -464,6 +464,8 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
+        if use_new_cursor:
+            self._cr.commit()
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
