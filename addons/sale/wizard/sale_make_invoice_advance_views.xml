@@ -15,7 +15,8 @@
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
                         <field name="has_down_payments" invisible="1" />
                         <label for="deduct_down_payments" string="" attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
-                        <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
+                        <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"
+                            id="down_payment_details">
                             <field name="deduct_down_payments" nolabel="1"/>
                             <label for="deduct_down_payments"/>
                         </div>
@@ -23,7 +24,8 @@
                             context="{'default_invoice_policy': 'order'}" class="oe_inline"
                             invisible="1"/>
                         <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
-                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
+                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"
+                            id="payment_method_details">
                             <field name="currency_id" invisible="1"/>
                             <field name="fixed_amount"
                                 attrs="{'required': [('advance_payment_method', '=', 'fixed')], 'invisible': [('advance_payment_method', '!=','fixed')]}" class="oe_inline"/>
@@ -39,9 +41,9 @@
                             attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
                     </group>
                     <footer>
-                        <button name="create_invoices" string="Create and View Invoice" type="object"
+                        <button name="create_invoices" id="create_invoice_open" string="Create and View Invoice" type="object"
                             context="{'open_invoices': True}" class="btn-primary"/>
-                        <button name="create_invoices" string="Create Invoice" type="object"/>
+                        <button name="create_invoices" id="create_invoice" string="Create Invoice" type="object"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
