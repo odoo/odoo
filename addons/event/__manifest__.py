@@ -34,7 +34,9 @@ Key Features
         'views/res_partner_views.xml',
     ],
     'demo': [
+        'data/res_users_demo.xml',
         'data/event_demo.xml',
+        'data/event_registration_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
