@@ -6,7 +6,7 @@ import logging
 import re
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools import remove_accents, is_html_empty
 
 _logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class Alias(models.Model):
     _rec_name = 'alias_name'
     _order = 'alias_model_id, alias_name'
 
-    alias_name = fields.Char('Alias Name', help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
+    alias_name = fields.Char('Alias Name', copy=False, help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                      help="The model (Odoo Document Kind) to which this alias "
                                           "corresponds. Any incoming email that does not reply to an "
@@ -92,15 +92,15 @@ class Alias(models.Model):
     @api.model
     def create(self, vals):
         """ Creates an email.alias record according to the values provided in ``vals``,
-            with 2 alterations: the ``alias_name`` value may be suffixed in order to
-            make it unique (and certain unsafe characters replaced), and
-            he ``alias_model_id`` value will set to the model ID of the ``model_name``
-            context value, if provided.
+            with 2 alterations: the ``alias_name`` value may be cleaned  by replacing
+            certain unsafe characters, and the ``alias_model_id`` value will set to the
+            model ID of the ``model_name`` context value, if provided. Also, it raises
+            UserError if given alias name is already assigned.
         """
         model_name = self._context.get('alias_model_name')
         parent_model_name = self._context.get('alias_parent_model_name')
         if vals.get('alias_name'):
-            vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'))
+            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
         if model_name:
             model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
@@ -110,9 +110,9 @@ class Alias(models.Model):
         return super(Alias, self).create(vals)
 
     def write(self, vals):
-        """"give a unique alias name if given alias name is already assigned"""
+        """"Raises UserError if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
-            vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
+            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'), alias_ids=self.ids)
         return super(Alias, self).write(vals)
 
     def name_get(self):
@@ -131,28 +131,21 @@ class Alias(models.Model):
         return res
 
     @api.model
-    def _find_unique(self, name, alias_ids=False):
-        """Find a unique alias name similar to ``name``. If ``name`` is
-           already taken, make a variant by adding an integer suffix until
-           an unused alias is found.
+    def _clean_and_check_unique(self, name, alias_ids=False):
+        """When an alias name appears to already be an email, we keep the local part only.
+           Also, if ``name`` is already taken, it raises UserError.
         """
-        sequence = None
-        while True:
-            new_name = "%s%s" % (name, sequence) if sequence is not None else name
-            domain = [('alias_name', '=', new_name)]
-            if alias_ids:
-                domain += [('id', 'not in', alias_ids)]
-            if not self.search(domain):
-                break
-            sequence = (sequence + 1) if sequence else 2
-        return new_name
-
-    @api.model
-    def _clean_and_make_unique(self, name, alias_ids=False):
-        # when an alias name appears to already be an email, we keep the local part only
         name = remove_accents(name).lower().split('@')[0]
         name = re.sub(r'[^\w+.]+', '-', name)
-        return self._find_unique(name, alias_ids=alias_ids)
+        ICP = self.env['ir.config_parameter'].sudo()
+        catchall_alias = ICP.get_param('mail.catchall.alias')
+        bounce_alias = ICP.get_param('mail.bounce.alias')
+        domain = [('alias_name', '=', name)]
+        if alias_ids:
+            domain += [('id', 'not in', alias_ids)]
+        if name in [catchall_alias, bounce_alias] or self.search(domain):
+            raise UserError(_('The e-mail alias is already used. Please enter another one.'))
+        return name
 
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:

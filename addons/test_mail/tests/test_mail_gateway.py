@@ -77,6 +77,36 @@ class TestMailAlias(TestMailCommon):
         alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
+    def test_unique_alias_name(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+        MAIL_ALIAS = self.env['mail.alias'].with_context(alias_model_name='mail.test')
+        catchall_alias = ICP.get_param('mail.catchall.alias')
+        bounce_alias = ICP.get_param('mail.bounce.alias')
+
+        # test that re-using catchall and bounce alias raises UserError
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            MAIL_ALIAS.create({'alias_name': catchall_alias})
+            MAIL_ALIAS.create({'alias_name': bounce_alias})
+
+        new_mail_alias = MAIL_ALIAS.create({
+            'alias_name': 'chutki'
+        })
+
+        # test that re-using catchall and bounce alias raises UserError
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            new_mail_alias.write({
+                'alias_name': 'catchall.test'
+            })
+
+        # test that duplicating an alias should have blank name
+        copy_new_mail_alias = new_mail_alias.copy()
+        self.assertEqual(copy_new_mail_alias.alias_name, False)
+
+        # test that using existing alias name to set catchall / bounce alias raises UserError
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            ICP.set_param('mail.catchall.alias', new_mail_alias.alias_name)
+            ICP.set_param('mail.bounce.alias', new_mail_alias.alias_name)
+
 
 @tagged('mail_gateway')
 class TestMailgateway(TestMailCommon):
