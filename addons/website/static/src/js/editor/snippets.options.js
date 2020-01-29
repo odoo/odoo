@@ -319,7 +319,14 @@ options.registry.Carousel = options.Class.extend({
         const id = 'myCarousel' + Date.now();
         this.$target.attr('id', id);
         this.$target.find('[data-target]').attr('data-target', '#' + id);
-        this.$target.find('[data-slide]').attr('href', '#' + id);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#' + id);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#' + id);
+            }
+        });
     },
 });
 
@@ -1097,9 +1104,13 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     onBuilt: function () {
-        var uuid = new Date().getTime();
-        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        this.$target.find('[data-target]').attr('data-target', '#slideshow_' + uuid);
+        this._adaptNavigationIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._adaptNavigationIDs();
     },
     /**
      * @override
@@ -1387,6 +1398,21 @@ options.registry.gallery = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /*
+     * @private
+     */
+    _adaptNavigationIDs: function () {
+        var uuid = new Date().getTime();
+        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#slideshow_' + uuid);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#slideshow_' + uuid);
+            }
+        });
+    },
     /**
      * @override
      */
