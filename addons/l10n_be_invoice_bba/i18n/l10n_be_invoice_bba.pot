@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* l10n_be_invoice_bba
+# 	* l10n_be_invoice_bba
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-17 13:44+0000\n"
-"PO-Revision-Date: 2018-09-17 13:44+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2020-01-29 15:05+0000\n"
+"PO-Revision-Date: 2020-01-29 15:05+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,66 +16,28 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_be_invoice_bba
-#: selection:res.company,l10n_be_structured_comm:0
-msgid "Based on Customer's Internal Reference"
+#: model:ir.model.fields.selection,name:l10n_be_invoice_bba.selection__account_journal__invoice_reference_model__be
+msgid "Belgium"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: selection:res.company,l10n_be_structured_comm:0
-msgid "Based on Invoice's Creation Date"
+#: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_account_journal__invoice_reference_model
+msgid "Communication Standard"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_company__l10n_be_structured_comm
-#: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_config_settings__l10n_be_structured_comm
-msgid "Choose an algorithm to generate the structured communication."
+#: model:ir.model,name:l10n_be_invoice_bba.model_account_journal
+msgid "Journal"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_company__l10n_be_structured_comm
-#: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_config_settings__l10n_be_structured_comm
-msgid "Communication Algorithm"
+#: model:ir.model,name:l10n_be_invoice_bba.model_account_move
+msgid "Journal Entries"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: model:ir.model,name:l10n_be_invoice_bba.model_res_company
-msgid "Companies"
+#: model:ir.model.fields,help:l10n_be_invoice_bba.field_account_journal__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
 msgstr ""
-
-#. module: l10n_be_invoice_bba
-#: model:ir.model,name:l10n_be_invoice_bba.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: l10n_be_invoice_bba
-#: selection:res.company,l10n_be_structured_comm:0
-msgid "Random Reference"
-msgstr ""
-
-#. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:47
-#, python-format
-msgid "The Customer should have an Internal Reference with min 3 and max 7 digits\n"
-"for the generation of BBA Structured Communications!"
-msgstr ""
-
-#. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:36
-#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:59
-#, python-format
-msgid "The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\n"
-"Please create manually a unique BBA Structured Communication."
-msgstr ""
-
-#. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:73
-#, python-format
-msgid "Unsupported Structured Communication Type Algorithm '%s' !\n"
-"Please contact your Odoo support channel."
-msgstr ""
-
-#. module: l10n_be_invoice_bba
-#: model:ir.model,name:l10n_be_invoice_bba.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
-

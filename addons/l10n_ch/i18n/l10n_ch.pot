@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* l10n_ch
+# 	* l10n_ch
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-28 11:37+0000\n"
-"PO-Revision-Date: 2018-09-28 11:37+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2020-01-29 15:08+0000\n"
+"PO-Revision-Date: 2020-01-29 15:08+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,38 +16,160 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__state
-msgid " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
-" * The 'In Payment' status is used when payments have been registered for the entirety of the invoice in a journal configured to post entries at bank reconciliation only, and some of them haven't been reconciled with a bank statement line yet.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
-" * The 'Cancelled' status is used when user cancel invoice."
+#: model:ir.actions.report,print_report_name:l10n_ch.l10n_ch_isr_report
+msgid "'ISR-%s' % object.name"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_302a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_302a
+msgid "302a Chiffre d'affaires imposable a 7.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_302b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_302b
+msgid "302b TVA due a 7.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_312a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_312a
+msgid "312a Chiffre d'affaires imposable a 2.5% (TR)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_312b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_312b
+msgid "312b TVA due a 2.5% (TR)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_342a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_342a
+msgid "342a Chiffre d'affaires imposable a 3.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_342b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_342b
+msgid "342b TVA due a 3.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_381a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_381a
+msgid "381a Impots sur les acquisitions"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_381b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_381b
+msgid "381b Impots sur les acquisitions "
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_382a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_382a
+msgid "382a Impots sur les acquisitions"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_382b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_382b
+msgid "382b Impots sur les acquisitions "
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_399
+msgid "399 TVA Due "
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_400
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_400
+msgid "400 TVA préalable sur biens et services"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_405
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_405
+msgid "405 TVA préalable sur invest. et autres ch."
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_410
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_410
+msgid "410 Dégrèvement ultérieur de l'impot préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_415
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_415
+msgid "415 Correction de l'impot préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_420
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_420
+msgid "420 Réduction de la déduction de l'impot préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_479
+msgid "479 TVA préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_500
+msgid "500 Solde de TVA a payer a l'AFC"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_510
+msgid "510 Solde de TVA a recevoir de l'AFC"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_900
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_900
+msgid "900 Subventions, taxes touristiques"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_910
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_910
+msgid "910 Les dons, les dividendes, les dédommagements, ..."
 msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<br/>\n"
+msgid ""
+"<br/>\n"
 "\n"
 "                            <span class=\"swissqr_text title\">Creditor</span><br/>"
 msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<br/>\n"
+msgid ""
+"<br/>\n"
 "\n"
 "                            <span class=\"swissqr_text title\">Debtor</span><br/>"
 msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<br/>\n"
+msgid ""
+"<br/>\n"
 "\n"
 "                            <span class=\"swissqr_text title\">Due date</span><br/>"
 msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<br/>\n"
+msgid ""
+"<br/>\n"
 "\n"
 "                            <span class=\"swissqr_text title\">Reference number</span><br/>"
 msgstr ""
@@ -59,7 +181,9 @@ msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<span class=\"swissqr_text title title_zone\">QR-bill payment part</span><br/>"
+msgid ""
+"<span class=\"swissqr_text title title_zone\">QR-bill payment "
+"part</span><br/>"
 msgstr ""
 
 #. module: l10n_ch
@@ -84,15 +208,17 @@ msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<span class=\"swissqr_text title\">Supports</span><br/>\n"
+msgid ""
+"<span class=\"swissqr_text title\">Supports</span><br/>\n"
 "                            <span class=\"swissqr_text content\">Credit transfer</span>"
 msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<span>Some pieces of this information are not set correctly to display the Swiss QR Code.<br/>\n"
-"                            -Bank &gt; CHF ISR reference<br/>\n"
-"                            -Bank &gt; EUR ISR reference<br/>\n"
+msgid ""
+"<span>Some pieces of this information are not set correctly to display the Swiss QR Code.<br/>\n"
+"                            -Bank &gt; CHF ISR subscription<br/>\n"
+"                            -Bank &gt; EUR ISR subscription<br/>\n"
 "                            -Your company &gt; Street with number<br/>\n"
 "                            -Your company &gt; City<br/>\n"
 "                            -Your company &gt; Zip<br/>\n"
@@ -105,497 +231,67 @@ msgid "<span>Some pieces of this information are not set correctly to display th
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__user_ids
-msgid "Accepted Users"
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_autres_mouv
+msgid "AUTRES MOUVEMENTS DE FONDS"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__unsplash_access_key
-msgid "Access Key"
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid ""
+"Append the QR Code ISR at the end of customer invoices for Swiss customers"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__access_warning
-msgid "Access warning"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__account_id
-msgid "Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__company_partner_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__partner_id
-msgid "Account Holder"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__acc_holder_name
-msgid "Account Holder Name"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__journal_id
-msgid "Account Journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_no
-msgid "Account No."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__bank_acc_number
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__acc_number
-msgid "Account Number"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_taxcloud
-msgid "Account TaxCloud"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__property_stock_valuation_account_id
-msgid "Account Template for Stock Valuation"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__type_control_ids
-msgid "Account Types Allowed"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__acc_holder_name
-msgid "Account holder name, in case it is different than the name of the Account Holder"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_accountant
-msgid "Accounting"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__date
-msgid "Accounting Date"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__account_control_ids
-msgid "Accounts Allowed"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__active
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__active
-msgid "Active"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__activity_ids
-msgid "Activities"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__activity_state
-msgid "Activity State"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__user_signature
-msgid "Add Signature"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__comment
-msgid "Additional Information"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__alias_id
-msgid "Alias"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__alias_domain
-msgid "Alias Domain"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__alias_name
-msgid "Alias Name for Vendor Bills"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__alias_domain
-msgid "Alias domain"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__update_posted
-msgid "Allow Cancelling Entries"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_product_margin
-msgid "Allow Product Margin"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_check_printing
-msgid "Allow check printing and deposits"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_google_calendar
-msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_base_import
-msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__group_sale_pricelist
-msgid "Allows to manage different prices based on rules per category of customers.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__group_multi_currency
-msgid "Allows to work in a multi currency environment"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__residual
-msgid "Amount Due"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__residual_company_signed
-msgid "Amount Due in Company Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__residual_signed
-msgid "Amount Due in Invoice Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_analytic_accounting
-msgid "Analytic Accounting"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_analytic_tags
-msgid "Analytic Tags"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__report_header
-msgid "Appears by default on the top right corner of your printed documents (report header)."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__model_id
-msgid "Applies to"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "April"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_asset
-msgid "Assets Management"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_voip
-msgid "Asterisk (VoIP)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__at_least_one_inbound
-msgid "At Least One Inbound"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__at_least_one_outbound
-msgid "At Least One Outbound"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_google_drive
-msgid "Attach Google documents to any record"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_attachment_count
-msgid "Attachment Count"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__attachment_ids
-msgid "Attachments"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "August"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__authorized_transaction_ids
-msgid "Authorized Transactions"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__auto_delete
-msgid "Auto Delete"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__vendor_bill_id
-msgid "Auto-complete from a past bill."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_partner_autocomplete
-msgid "Auto-populate company data"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_invoice_extract
-msgid "Automate Bill Processing"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_currency_rate_live
-msgid "Automatic Currency Rates"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.journal,type:0
-#: model:ir.model,name:l10n_ch.model_res_bank
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__bank_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__bank_id
-msgid "Bank"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__partner_bank_id
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__bank_account_id
-msgid "Bank Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__partner_bank_id
-msgid "Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model,name:l10n_ch.model_res_partner_bank
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__bank_ids
-msgid "Bank Accounts"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__bank_statements_source
-msgid "Bank Feeds"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__bic
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__bank_bic
-msgid "Bank Identifier Code"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_yodlee
-msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__bank_journal_ids
-msgid "Bank Journals"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_bank_reconciliation_start
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__account_bank_reconciliation_start
-msgid "Bank Reconciliation Threshold"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__acc_type
-msgid "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__bank_ids
-msgid "Bank accounts related to this company"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__belongs_to_company
-msgid "Belong to the user's current company"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__body_html
-msgid "Body"
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot_base
+msgid "Base Impôt sur acquisitions de services"
 msgstr ""
 
 #. module: l10n_ch
 #: model:ir.model.fields,help:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
 #: model:ir.model.fields,help:l10n_ch.field_res_config_settings__l10n_ch_isr_print_bank_location
-msgid "Boolean option field indicating whether or not the alternate layout (the one printing bank name and address) must be used when generating an ISR."
+msgid ""
+"Boolean option field indicating whether or not the alternate layout (the one"
+" printing bank name and address) must be used when generating an ISR."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_sent
-msgid "Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail."
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_sent
+msgid ""
+"Boolean value telling whether or not the ISR corresponding to this invoice "
+"has already been printed or sent by mail."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_valid
-msgid "Boolean value. True iff all the data required to generate the ISR are present"
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_valid
+msgid ""
+"Boolean value. True iff all the data required to generate the ISR are "
+"present"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__snailmail_duplex
-msgid "Both sides"
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_chf
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_chf
+msgid "CHF ISR Subscription Number"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_budget
-msgid "Budget Management"
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot_chiffre
+msgid "Chiffre d'affaires imposable"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__l10n_ch_postal_chf
-msgid "CHF ISR reference"
+#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__l10n_ch_postal
+msgid "Client Number"
 msgstr ""
 
 #. module: l10n_ch
-#: selection:account.invoice,state:0
-msgid "Cancelled"
+#: model:account.cash.rounding,name:l10n_ch.cash_rounding_5_centime
+msgid "Coinage 0.05"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__email_cc
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.journal,type:0
-msgid "Cash"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__tax_exigibility
-msgid "Cash Basis"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__tax_cash_basis_journal_id
-msgid "Cash Basis Journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_cash_rounding
-msgid "Cash Rounding"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__cash_rounding_id
-msgid "Cash Rounding Method"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__catchall
-msgid "Catchall Email"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__email_cc
-msgid "Cc"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__chart_template_id
-msgid "Chart Template"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__refund_sequence
-msgid "Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__update_posted
-msgid "Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__child_ids
-msgid "Child Companies"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__city
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__city
-msgid "City"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,account_dashboard_onboarding_state:0
-#: selection:res.company,account_invoice_onboarding_state:0
-msgid "Closed"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_pad
-msgid "Collaborative Pads"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__snailmail_color
-msgid "Color"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__color
-msgid "Color Index"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__partner_to
-msgid "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__email_to
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__commercial_partner_id
-msgid "Commercial Entity"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__invoice_reference_type
-msgid "Communication"
+#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__invoice_reference_model
+msgid "Communication Standard"
 msgstr ""
 
 #. module: l10n_ch
@@ -604,300 +300,19 @@ msgid "Companies"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__company_id
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__company_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__company_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__company_id
-msgid "Company"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__company_currency_id
-msgid "Company Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__logo
-msgid "Company Logo"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__name
-msgid "Company Name"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__company_registry
-msgid "Company Registry"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__report_header
-msgid "Company Tagline"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__partner_gid
-msgid "Company database ID"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__has_chart_of_accounts
-msgid "Company has a chart of accounts"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__company_id
-msgid "Company related to this journal"
-msgstr ""
-
-#. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__country
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__country_id
-msgid "Country"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__create_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__create_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__create_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__create_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__create_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__create_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__create_date
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__create_date
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__create_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__create_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__create_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__create_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__create_date
-msgid "Created on"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__refund_sequence_id
-msgid "Credit Note Entry Sequence"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__refund_sequence_number_next
-msgid "Credit Notes: Next Number"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__currency_id
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__currency_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__currency_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__currency_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__currency_id
-msgid "Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_currency_name
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_currency_name
 msgid "Currency Name"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__report_footer
-msgid "Custom Report Footer"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__auth_signup_uninvited
-msgid "Customer Account"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,type:0
-msgid "Customer Credit Note"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,type:0
-msgid "Customer Invoice"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__access_url
-msgid "Customer Portal URL"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__account_opening_date
-msgid "Date at which the opening entry of this company's accounting has been posted."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "December"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__refund_sequence
-msgid "Dedicated Credit Note Sequence"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__user_default_rights
-msgid "Default Access Rights"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__invoice_reference_type
-msgid "Default Communication Type"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__default_credit_account_id
-msgid "Default Credit Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__default_debit_account_id
-msgid "Default Debit Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_purchase_tax_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__purchase_tax_id
-msgid "Default Purchase Tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__invoice_reference_type
-msgid "Default Reference Type on Invoices."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_sale_tax_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__sale_tax_id
-msgid "Default Sale Tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__null_value
-msgid "Default Value"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__incoterm_id
-msgid "Default incoterm"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__use_default_to
-msgid "Default recipients"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__use_default_to
-msgid "Default recipients of the record:\n"
-"- partner (using id on a partner or the partner_id field) OR\n"
-"- email (using email_from or email field)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__bank_statements_source
-msgid "Defines how the bank statements will be registered"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__cash_rounding_id
-msgid "Defines the smallest coinage of the currency that can be used to pay by cash."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__digest_id
-msgid "Digest Email"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__digest_emails
-msgid "Digest Emails"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__group_products_in_bills
-msgid "Disable this option to use a simplified versions of vendor bills, where products are hidden."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__display_name
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__display_name
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__display_name
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__display_name
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__display_name
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__qr_code
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__qr_code
-msgid "Display SEPA QR code"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__external_report_layout_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__external_report_layout_id
-msgid "Document Template"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,account_dashboard_onboarding_state:0
-#: selection:res.company,account_invoice_onboarding_state:0
-#: selection:res.company,account_onboarding_invoice_layout_state:0
-#: selection:res.company,account_onboarding_sale_tax_state:0
-#: selection:res.company,account_onboarding_sample_invoice_state:0
-#: selection:res.company,account_setup_bank_data_state:0
-#: selection:res.company,account_setup_coa_state:0
-#: selection:res.company,account_setup_fy_data_state:0
-#: selection:res.company,base_onboarding_company_state:0
-#: selection:res.company,payment_acquirer_onboarding_state:0
-msgid "Done"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,state:0
-msgid "Draft"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__date_due
-msgid "Due Date"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_reports
-msgid "Dynamic Reports"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_l10n_eu_service
-msgid "EU Digital Goods VAT"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__l10n_ch_postal_eur
-msgid "EUR ISR reference"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__email
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__email
-msgid "Email"
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_eur
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_eur
+msgid "EUR ISR Subscription Number"
 msgstr ""
 
 #. module: l10n_ch
@@ -906,172 +321,18 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__invoice_is_email
-msgid "Email by default"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__auth_signup_reset_password
-msgid "Enable password reset from Login page"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__sequence_id
-msgid "Entry Sequence"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__currency_exchange_journal_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__currency_exchange_journal_id
-msgid "Exchange Gain or Loss Journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__expects_chart_of_accounts
-msgid "Expects a Chart of Accounts"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__external_email_server_default
-msgid "External Email Servers"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__fail_counter
-msgid "Fail Mail"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "February"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__state
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__state_id
-msgid "Fed. State"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__model_object_field
-msgid "Field"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__copyvalue
-msgid "Final placeholder expression, to be copy-pasted in the desired template field."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__fiscal_position_id
-msgid "Fiscal Position"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_fiscal_year
-msgid "Fiscal Years"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__fiscalyear_last_day
-msgid "Fiscalyear Last Day"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__fiscalyear_last_month
-msgid "Fiscalyear Last Month"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_reports_followup
-msgid "Follow-up Levels"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_follower_ids
-msgid "Followers"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__report_footer
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__report_footer
-msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__inbound_payment_method_ids
-msgid "For Incoming Payments"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__outbound_payment_method_ids
-msgid "For Outgoing Payments"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "Free sign up"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__email_from
-msgid "From"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__income_currency_exchange_account_id
-msgid "Gain Exchange Rate Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_google_spreadsheet
-msgid "Google Spreadsheet"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__group_invoice_lines
-msgid "Group Invoice Lines"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__has_accounting_entries
-msgid "Has Accounting Entries"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__has_outstanding
-msgid "Has Outstanding"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__qr_code_valid
-msgid "Has all required arguments"
-msgstr ""
-
-#. module: l10n_ch
 #: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_scan_line_left
 msgid "Horizontal offset"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__id
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__id
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__id
-msgid "ID"
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chiffre_af
+msgid "I - CHIFFRE D'AFFAIRES"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot
+msgid "II - CALCUL DE L'IMPOT"
 msgstr ""
 
 #. module: l10n_ch
@@ -1080,19 +341,21 @@ msgid "ISR"
 msgstr ""
 
 #. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_partner_bank_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch.setup_bank_account_wizard_inherit
+msgid "ISR Client Identification Number"
+msgstr ""
+
+#. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_isr_report_template
 msgid "ISR for invoice"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_number_spaced
-msgid "ISR number split in blocks of 5 characters (right-justified), to generate ISR report."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__l10n_ch_postal
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_postal
-msgid "ISR reference"
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_number_spaced
+msgid ""
+"ISR number split in blocks of 5 characters (right-justified), to generate "
+"ISR report."
 msgstr ""
 
 #. module: l10n_ch
@@ -1101,531 +364,64 @@ msgid "ISR reference number"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__message_unread
-msgid "If checked new messages require your attention."
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_subscription
+msgid ""
+"ISR subscription number identifying your company or your bank to generate "
+"ISR."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__message_needaction
-msgid "If checked, new messages require your attention."
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_subscription_formatted
+msgid ""
+"ISR subscription number your company or your bank, formated with '-' and "
+"without the padding zeros, to generate ISR report."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__message_has_error
-msgid "If checked, some messages have a delivery error."
+#: model:account.fiscal.position,name:l10n_ch.1_fiscal_position_template_import
+#: model:account.fiscal.position.template,name:l10n_ch.fiscal_position_template_import
+msgid "Import/Export"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__user_signature
-msgid "If checked, the user's signature will be appended to the text version of the message"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__scheduled_date
-msgid "If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__group_invoice_lines
-msgid "If this box is checked, the system will try to group the accounting lines when generating them from invoices."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__alias_domain
-msgid "If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__payment_term_id
-msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment terms and the due date empty, it means direct payment. The payment terms may compute several due dates, for example 50% now, 50% in one month."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__date_due
-msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. The Payment terms may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the Payment terms and the due date empty, it means direct payment."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_bank_statement_import_qif
-msgid "Import .qif files"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_bank_statement_import_csv
-msgid "Import in .csv format"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_bank_statement_import_ofx
-msgid "Import in .ofx format"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_bank_statement_import_camt
-msgid "Import in CAMT.053 format"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,state:0
-msgid "In Payment"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__incoterm_id
-msgid "Incoterm"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__property_stock_account_input_categ_id
-msgid "Input Account for Stock Valuation"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__partner_autocomplete_insufficient_credit
-msgid "Insufficient credit"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__transfer_account_id
-msgid "Inter-Banks Transfer Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__transfer_account_id
-msgid "Intermediary account used when moving money from a liquidity account to another"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__incoterm_id
-#: model:ir.model.fields,help:l10n_ch.field_res_company__incoterm_id
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_intrastat
-msgid "Intrastat"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model,name:l10n_ch.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__date_invoice
-msgid "Invoice Date"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__invoice_icon
-msgid "Invoice Icon"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__invoice_line_ids
-msgid "Invoice Lines"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_payment
-msgid "Invoice Online Payment"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__refund_invoice_id
-msgid "Invoice for which this invoice is the credit note"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__default_credit_account_id
-#: model:ir.model.fields,help:l10n_ch.field_res_company__income_currency_exchange_account_id
-msgid "It acts as a default account for credit amount"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__default_debit_account_id
-#: model:ir.model.fields,help:l10n_ch.field_res_company__expense_currency_exchange_account_id
-msgid "It acts as a default account for debit amount"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__alias_name
-msgid "It creates draft vendor bill by sending an email."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__reconciled
-msgid "It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__sent
-msgid "It indicates that the invoice has been sent."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "January"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model,name:l10n_ch.model_account_journal
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__journal_id
-msgid "Journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__move_id
-msgid "Journal Entry"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__move_name
-msgid "Journal Entry Name"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__name
-msgid "Journal Name"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__account_opening_journal_id
-msgid "Journal where the opening entry of this company's accounting has been posted."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "July"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "June"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,account_dashboard_onboarding_state:0
-#: selection:res.company,account_invoice_onboarding_state:0
-#: selection:res.company,account_onboarding_invoice_layout_state:0
-#: selection:res.company,account_onboarding_sale_tax_state:0
-#: selection:res.company,account_onboarding_sample_invoice_state:0
-#: selection:res.company,account_setup_bank_data_state:0
-#: selection:res.company,account_setup_coa_state:0
-#: selection:res.company,account_setup_fy_data_state:0
-#: selection:res.company,base_onboarding_company_state:0
-#: selection:res.company,payment_acquirer_onboarding_state:0
-msgid "Just done"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__kanban_dashboard
-msgid "Kanban Dashboard"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__kanban_dashboard_graph
-msgid "Kanban Dashboard Graph"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__date_invoice
-msgid "Keep empty to use the current date"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__date
-msgid "Keep empty to use the invoice date."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.config.settings,product_weight_in_lbs:0
-msgid "Kilogram"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_number
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_number
 msgid "L10N Ch Isr Number"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_number_spaced
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_number_spaced
 msgid "L10N Ch Isr Number Spaced"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_optical_line
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_optical_line
 msgid "L10N Ch Isr Optical Line"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_postal
-msgid "L10N Ch Isr Postal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_postal_formatted
-msgid "L10N Ch Isr Postal Formatted"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_sent
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_sent
 msgid "L10N Ch Isr Sent"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_valid
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_subscription
+msgid "L10N Ch Isr Subscription"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_subscription_formatted
+msgid "L10N Ch Isr Subscription Formatted"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_valid
 msgid "L10N Ch Isr Valid"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_auth_ldap
-msgid "LDAP Authentication"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__lang
-msgid "Language"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice____last_update
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal____last_update
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template____last_update
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank____last_update
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company____last_update
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__write_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__write_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__write_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__write_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__write_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__write_uid
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__write_date
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__write_date
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__write_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__write_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__write_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__write_date
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__show_line_subtotals_tax_selection
-msgid "Line Subtotals Tax Display"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__move_id
-msgid "Link to the automatically generated Journal Items."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__fiscalyear_lock_date
-msgid "Lock Date"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__period_lock_date
-msgid "Lock Date for Non-Advisers"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__logo_web
-msgid "Logo Web"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__loss_account_id
-msgid "Loss Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__expense_currency_exchange_account_id
-msgid "Loss Exchange Rate Account"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_main_attachment_id
-msgid "Main Attachment"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__currency_id
-msgid "Main currency of the company."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_inter_company_rules
-msgid "Manage Inter Company"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_multi_company
-msgid "Manage multiple companies"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,payment_onboarding_payment_method:0
-msgid "Manual"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__inbound_payment_method_ids
-msgid "Manual: Get paid by cash, check or any other method outside of Odoo.\n"
-"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
-"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__outbound_payment_method_ids
-msgid "Manual:Pay bill by cash or any other method outside of Odoo.\n"
-"Check:Pay bill by check and print it from Odoo.\n"
-"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "March"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "May"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_has_error
-msgid "Message Delivery error"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_ids
-msgid "Messages"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.journal,type:0
-msgid "Miscellaneous"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_multi_currency
-msgid "Multi-Currencies"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__name
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__name
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__bank_name
-msgid "Name"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__report_name
-msgid "Name to use for the generated report file (may contain placeholders)\n"
-"The extension can be omitted and will then come from the report type."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__activity_date_deadline
-msgid "Next Activity Deadline"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__activity_summary
-msgid "Next Activity Summary"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__activity_type_id
-msgid "Next Activity Type"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__sequence_number_next
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__sequence_number_next
-msgid "Next Number"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__sequence_number_next_prefix
-msgid "Next Number Prefix"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__fiscalyear_lock_date
-msgid "No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,account_dashboard_onboarding_state:0
-#: selection:res.company,account_invoice_onboarding_state:0
-#: selection:res.company,account_onboarding_invoice_layout_state:0
-#: selection:res.company,account_onboarding_sale_tax_state:0
-#: selection:res.company,account_onboarding_sample_invoice_state:0
-#: selection:res.company,account_setup_bank_data_state:0
-#: selection:res.company,account_setup_coa_state:0
-#: selection:res.company,account_setup_fy_data_state:0
-#: selection:res.company,base_onboarding_company_state:0
-#: selection:res.company,payment_acquirer_onboarding_state:0
-msgid "Not done"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "November"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__number
-msgid "Number"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_has_error_counter
-msgid "Number of error"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__message_has_error_counter
-msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "October"
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_show_subscription
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_show_subscription
+msgid "L10N Ch Show Subscription"
 msgstr ""
 
 #. module: l10n_ch
@@ -1634,217 +430,19 @@ msgid "Offset to move the the scan line in mm"
 msgstr ""
 
 #. module: l10n_ch
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "On invitation"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__period_lock_date
-msgid "Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,state:0
-msgid "Open"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_opening_date
-msgid "Opening Date"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_opening_journal_id
-msgid "Opening Journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_opening_move_id
-msgid "Opening Journal Entry"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_optical_line
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_optical_line
 msgid "Optical reading line, as it will be printed on ISR"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__mail_server_id
-msgid "Optional preferred server for outgoing mails. If not set, the highest priority one will be used."
+#: model:account.chart.template,name:l10n_ch.l10nch_chart_template
+msgid "Plan comptable 2015 (Suisse)"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__report_template
-msgid "Optional report to print and attach"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__lang
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. ${object.partner_id.lang}."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__null_value
-msgid "Optional value to use if the target field is empty"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,payment_onboarding_payment_method:0
-msgid "Other"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__mail_server_id
-msgid "Outgoing Mail Server"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__property_stock_account_output_categ_id
-msgid "Output Account for Stock Valuation"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__outstanding_credits_debits_widget
-msgid "Outstanding Credits Debits Widget"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,activity_state:0
-msgid "Overdue"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__overdue_msg
-msgid "Overdue Payments Message"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,state:0
-msgid "Paid"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__reconciled
-msgid "Paid/Reconciled"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__paperformat_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__paperformat_id
-msgid "Paper format"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__parent_id
-msgid "Parent Company"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__partner_id
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__partner_id
-msgid "Partner"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,payment_onboarding_payment_method:0
-msgid "PayPal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__payment_move_line_ids
-msgid "Payment Move Lines"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__reference
-msgid "Payment Ref."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__payment_term_id
-msgid "Payment Terms"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__payment_ids
-msgid "Payments"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__payments_widget
-msgid "Payments Widget"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__auto_delete
-msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__phone
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__phone
-msgid "Phone"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__copyvalue
-msgid "Placeholder Expression"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_plaid
-msgid "Plaid Connector"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,activity_state:0
-msgid "Planned"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__access_url
-msgid "Portal Access URL"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__post_at_bank_rec
-msgid "Post At Bank Reconciliation"
-msgstr ""
-
-#. module: l10n_ch
-#: code:addons/l10n_ch/models/res_bank.py:37
+#: code:addons/l10n_ch/models/res_bank.py:0
 #, python-format
 msgid "Postal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_postal_formatted
-msgid "Postal reference of the bank, formated with '-' and without the padding zeros, to generate ISR report."
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.config.settings,product_weight_in_lbs:0
-msgid "Pound"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__reply_to
-msgid "Preferred response address (placeholders may be used here)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__bank_account_code_prefix
-msgid "Prefix of the bank accounts"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__cash_account_code_prefix
-msgid "Prefix of the cash accounts"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__transfer_account_code_prefix
-msgid "Prefix of the transfer accounts"
 msgstr ""
 
 #. module: l10n_ch
@@ -1860,23 +458,13 @@ msgid "Preprinted bank"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__invoice_is_print
-msgid "Print"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__snailmail_duplex
-msgid "Print Both sides"
-msgstr ""
-
-#. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_form
 msgid "Print ISR"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__snailmail_color
-msgid "Print In Color"
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_print_qrcode
+msgid "Print Swiss QR Code"
 msgstr ""
 
 #. module: l10n_ch
@@ -1890,119 +478,15 @@ msgid "Print bank on ISR"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__invoice_is_print
-msgid "Print by default"
-msgstr ""
-
-#. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
-msgid "Print the coordinates of your bank under the 'Payment for' title of the ISR.\n"
+msgid ""
+"Print the coordinates of your bank under the 'Payment for' title of the ISR.\n"
 "                                Your address will be moved to the 'in favour of' section."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_stock_packaging
-msgid "Product Packagings"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__profit_account_id
-msgid "Profit Account"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.journal,type:0
-msgid "Purchase"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__origin
-msgid "Reference of the document that produced this invoice."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__name
-msgid "Reference/Description"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__refund_invoice_ids
-msgid "Refund Invoices"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__model
-msgid "Related Document Model"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__residual_company_signed
-msgid "Remaining amount due in the currency of the company."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__residual_signed
-msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__residual
-msgid "Remaining amount due."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__reply_to
-msgid "Reply-To"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__report_name
-msgid "Report Filename"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__report_footer
-msgid "Report Footer"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__activity_user_id
-msgid "Responsible User"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_deferred_revenue
-msgid "Revenue Recognition"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,tax_calculation_rounding_method:0
-msgid "Round Globally"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,tax_calculation_rounding_method:0
-msgid "Round per Line"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_sepa
-msgid "SEPA Credit Transfer (SCT)"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.journal,type:0
-msgid "Sale"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__user_id
-msgid "Salesperson"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__sanitized_acc_number
-msgid "Sanitized Account Number"
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_solde
+msgid "SOLDE"
 msgstr ""
 
 #. module: l10n_ch
@@ -2016,643 +500,51 @@ msgid "Scan line vertical offset (mm)"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__scheduled_date
-msgid "Scheduled Date"
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_postal
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_postal
+msgid "Swiss Postal Account"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__access_token
-msgid "Security Token"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__type
-msgid "Select 'Sale' for customer invoices journals.\n"
-"Select 'Purchase' for vendor bills journals.\n"
-"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
-"Select 'General' for miscellaneous operations journals."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__model_object_field
-msgid "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__payment_onboarding_payment_method
-msgid "Selected onboarding payment method"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__invoice_is_email
-msgid "Send Email"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__invoice_is_snailmail
-msgid "Send by Letter by default"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__invoice_is_snailmail
-msgid "Send by Post"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__email_from
-msgid "Sender address (placeholders may be used here). If not set, the default value will be the author's email alias if configured, or email address."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__sent
-msgid "Sent"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,fiscalyear_last_month:0
-msgid "September"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__sequence
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__sequence
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__sequence
-msgid "Sequence"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__active
-msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__company_share_partner
-msgid "Share partners to all companies"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__company_share_product
-msgid "Share product to all companies"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__company_share_partner
-msgid "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__company_share_product
-msgid "Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__code
-msgid "Short Code"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__show_effect
-msgid "Show Effect"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__show_on_dashboard
-msgid "Show journal on dashboard"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_show_line_subtotals_tax_included
-msgid "Show line subtotals with taxes (B2C)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_show_line_subtotals_tax_excluded
-msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_product_pricelist
-msgid "Show pricelists On Products"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_pricelist_item
-msgid "Show pricelists to customers"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__ref_ir_act_window
-msgid "Sidebar action"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__ref_ir_act_window
-msgid "Sidebar action to make this template available on records of the related document model"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_bank__bic
-#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__bank_bic
-msgid "Sometimes called BIC or Swift."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__origin
-msgid "Source Document"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__source_email
-msgid "Source Email"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_dashboard_onboarding_state
-msgid "State of the account dashboard onboarding panel"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_invoice_onboarding_state
-msgid "State of the account invoice onboarding panel"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_setup_bank_data_state
-msgid "State of the onboarding bank data step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_setup_coa_state
-msgid "State of the onboarding charts of account step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__base_onboarding_company_state
-msgid "State of the onboarding company step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_setup_fy_data_state
-msgid "State of the onboarding fiscal year step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_onboarding_invoice_layout_state
-msgid "State of the onboarding invoice layout step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__payment_acquirer_onboarding_state
-msgid "State of the onboarding payment acquirer step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_onboarding_sale_tax_state
-msgid "State of the onboarding sale tax step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__account_onboarding_sample_invoice_state
-msgid "State of the onboarding sample invoice step"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__state
-msgid "Status"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__activity_state
-msgid "Status based on activities\n"
-"Overdue: Due date is already passed\n"
-"Today: Activity date is today\n"
-"Planned: Future activities."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__street
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__street
-msgid "Street"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__street2
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__street2
-msgid "Street2"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.company,payment_onboarding_payment_method:0
-msgid "Stripe"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__sub_model_object_field
-msgid "Sub-field"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__sub_object
-msgid "Sub-model"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__subject
-msgid "Subject"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__subject
-msgid "Subject (placeholders may be used here)"
-msgstr ""
-
-#. module: l10n_ch
+#: model:ir.model.fields.selection,name:l10n_ch.selection__account_journal__invoice_reference_model__ch
 #: model:ir.ui.menu,name:l10n_ch.account_reports_ch_statements_menu
 msgid "Switzerland"
 msgstr ""
 
 #. module: l10n_ch
-#: model:account.tax.group,name:l10n_ch.tax_group_tva_0
-msgid "TVA 0%"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.tax.group,name:l10n_ch.tax_group_tva_25
-msgid "TVA 2.5%"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.tax.group,name:l10n_ch.tax_group_tva_37
-msgid "TVA 3.7%"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.tax.group,name:l10n_ch.tax_group_tva_77
-msgid "TVA 7.7%"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__tax_calculation_rounding_method
-msgid "Tax Calculation Rounding Method"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__tax_cash_basis_journal_id
-msgid "Tax Cash Basis Journal"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__vat
-msgid "Tax ID"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__tax_line_ids
-msgid "Tax Lines"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_by_group
-msgid "Tax amount by group"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__tax_calculation_rounding_method
-msgid "Tax calculation rounding method"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.config.settings,show_line_subtotals_tax_selection:0
-msgid "Tax-Excluded"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:res.config.settings,show_line_subtotals_tax_selection:0
-msgid "Tax-Included"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__move_name
-msgid "Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__chart_template_id
-msgid "Template"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__auth_signup_template_user_id
-msgid "Template user for new users created through signup"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__l10n_ch_postal
-#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_postal
-msgid "The ISR number of the company within the bank"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__vat
-msgid "The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__journal_id
-msgid "The accounting journal corresponding to this bank account."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__currency_exchange_journal_id
-msgid "The accounting journal where automatic exchange differences will be registered"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__account_bank_reconciliation_start
-msgid "The bank reconciliation widget won't ask to reconcile payments older than this date.\n"
-"                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
-"                                                                                                       don't want to reconcile all the past payments with bank statements."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__account_bank_reconciliation_start
-msgid "The bank reconciliation widget won't ask to reconcile payments older than this date.\n"
-"               This is useful if you install accounting after having used invoicing for some time and\n"
-"               don't want to reconcile all the past payments with bank statements."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__chart_template_id
-msgid "The chart template for the company (if any)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__commercial_partner_id
-msgid "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__currency_id
-msgid "The currency used to enter statement"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__code
-msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__account_opening_move_id
-msgid "The journal entry containing the initial balance of all this company's accounts."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_currency_name
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_currency_name
 msgid "The name of this invoice's currency"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__name
-msgid "The name that will be used on account move lines"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__refund_sequence_number_next
-msgid "The next sequence number will be used for the next credit note."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__sequence_number_next
-msgid "The next sequence number will be used for the next invoice."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__account_id
-msgid "The partner account used for this invoice."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__reference
-msgid "The payment communication that will be automatically populated once the invoice validation. You can also write a free communication."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_postal
-msgid "The postal reference identifying the bank managing this ISR."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_bank__l10n_ch_postal_chf
-msgid "The postal reference of the bank, used to generate ISR payment slips in CHF."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_bank__l10n_ch_postal_eur
-msgid "The postal reference of the bank, used to generate ISR payment slips in EUR."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_number
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_number
 msgid "The reference number associated with this invoice"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__model_id
-msgid "The type of document this template can be used with"
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_chf
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_chf
+msgid ""
+"The subscription number provided by the bank or Postfinance to identify the "
+"bank, used to generate ISR in CHF. eg. 01-162-8"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__module_account_batch_payment
-msgid "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
-"-This installs the account_batch_payment module."
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_eur
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_eur
+msgid ""
+"The subscription number provided by the bank or Postfinance to identify the "
+"bank, used to generate ISR in EUR. eg. 03-162-5"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__refund_sequence_id
-msgid "This field contains the information related to the numbering of the credit note entries of this journal."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__sequence_id
-msgid "This field contains the information related to the numbering of the journal entries of this journal."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__logo
-msgid "This field holds the image used as avatar for this contact, limited to 1024x1024px"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__email_to
-msgid "To (Emails)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_mail_template__partner_to
-msgid "To (Partners)"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,activity_state:0
-msgid "Today"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_total
-msgid "Total"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__amount_total_company_signed
-msgid "Total amount in the currency of the company, negative for credit notes."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__amount_total_signed
-msgid "Total amount in the currency of the invoice, negative for credit notes."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_total_company_signed
-msgid "Total in Company Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_total_signed
-msgid "Total in Invoice Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__transaction_ids
-msgid "Transactions"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_base_gengo
-msgid "Translate Your Website with Gengo"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__type
-#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__type
-#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__acc_type
-msgid "Type"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_uom
-msgid "Units of Measure"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_web_unsplash
-msgid "Unsplash Image Library"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_untaxed
-msgid "Untaxed Amount"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__amount_untaxed_signed
-msgid "Untaxed Amount in Company Currency"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__tax_exigibility
-msgid "Use Cash Basis"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_sepa_direct_debit
-msgid "Use SEPA Direct Debit"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__anglo_saxon_accounting
-msgid "Use anglo-saxon accounting"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_account_batch_payment
-msgid "Use batch payments"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_sale_pricelist
-msgid "Use pricelists to adapt your price per customers"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_products_in_bills
-msgid "Use products in vendor bills"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__sequence
-msgid "Used to order Companies in the company switcher"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__sequence
-msgid "Used to order Journals in the dashboard view"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__loss_account_id
-msgid "Used to register a loss when the ending balance of a cash register differs from what the system computes"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__profit_account_id
-msgid "Used to register a profit when the ending balance of a cash register differs from what the system computes"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_product_variant
-msgid "Variants and Options"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,type:0
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__vendor_bill_id
-msgid "Vendor Bill"
-msgstr ""
-
-#. module: l10n_ch
-#: selection:account.invoice,type:0
-msgid "Vendor Credit Note"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__vendor_display_name
-msgid "Vendor Display Name"
+#: model:ir.model.fields,help:l10n_ch.field_account_journal__l10n_ch_postal
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_postal
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_postal
+msgid ""
+"This field is used for the Swiss postal account number on a vendor account "
+"and for the client number on your own account.  The client number is mostly "
+"6 numbers without -, while the postal account number can be e.g. 01-162-8"
 msgstr ""
 
 #. module: l10n_ch
@@ -2661,64 +553,17 @@ msgid "Vertical offset"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__group_warning_account
-msgid "Warnings in Invoices"
+#: model:ir.model.fields,help:l10n_ch.field_account_journal__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__website
-msgid "Website"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__product_weight_in_lbs
-msgid "Weight unit of measure"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__sub_model_object_field
-msgid "When a relationship field is selected as first field, this field lets you select the target field within the destination document model (sub-model)."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__sub_object
-msgid "When a relationship field is selected as first field, this field shows the document model the relationship goes to."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__post_at_bank_rec
-msgid "Whether or not the payments made in this journal should be generated in draft state, so that the related journal entries are only posted when performing bank reconciliation."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_journal__show_on_dashboard
-msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__partner_id
-msgid "You can find a contact by its Name, TIN, Email or Internal Reference."
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_res_company__invoice_reference_type
-msgid "You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment."
-msgstr ""
-
-#. module: l10n_ch
-#: code:addons/l10n_ch/models/account_invoice.py:154
+#: code:addons/l10n_ch/models/account_invoice.py:0
 #, python-format
-msgid "You cannot generate an ISR yet.\n"
+msgid ""
+"You cannot generate an ISR yet.\n"
 "\n"
 "                                   For this, you need to :\n"
 "\n"
@@ -2730,20 +575,3 @@ msgid "You cannot generate an ISR yet.\n"
 "\n"
 "                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."
 msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_mail_template__attachment_ids
-msgid "You may attach files to this template, to be added to all emails created from this template"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__zip
-#: model:ir.model.fields,field_description:l10n_ch.field_res_company__zip
-msgid "Zip"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.model.fields,help:l10n_ch.field_account_invoice__amount_by_group
-msgid "type: [(name, amount, base, formated amount, formated base)]"
-msgstr ""
-
