@@ -1791,3 +1791,37 @@ class TestRoutingAndKits(SavepointCase):
         wo1 = mo.workorder_ids[0]
         lines = wo1.raw_workorder_line_ids
         self.assertEqual(lines.product_id, add_product)
+
+    def test_add_move_2(self):
+        """ Make a production using multi step routing. Add an additional move
+        on a specific operation and check that the produce is consumed into the
+        right workorder. """
+        self.bom_finished1.consumption = 'flexible'
+        add_product = self.env['product.product'].create({
+            'name': 'Additional',
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 10.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as move:
+            move.name = mo.name
+            move.product_id = add_product
+            move.product_uom = add_product.uom_id
+            move.location_id = mo.location_src_id
+            move.location_dest_id = mo.production_location_id
+            move.product_uom_qty = 2
+            move.operation_id = mo.routing_id.operation_ids[0]
+        mo = mo_form.save()
+        new_move = mo.move_raw_ids.filtered(lambda move: move.additional)
+        self.assertEqual(len(mo.move_raw_ids), 3)
+        self.assertEqual(len(new_move), 1)
+        self.assertEqual(mo.move_raw_ids.mapped('state'), ['confirmed'] * 3)
+        mo.button_plan()
+        self.assertEqual(len(mo.workorder_ids), 3)
+        wo1 = mo.workorder_ids[0]
+        lines = wo1.raw_workorder_line_ids
+        self.assertEqual(lines.product_id, add_product)
