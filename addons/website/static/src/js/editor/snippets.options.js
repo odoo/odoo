@@ -311,7 +311,8 @@ options.registry.carousel = options.Class.extend({
         var $active = this.$inner.find('.carousel-item.active, .carousel-item.prev, .carousel-item.next').first();
         var index = $active.index();
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
-        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
+        // we added a space after the <li> in the line below to keep the same space between the indicators
+        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li> ');
         var $clone = $active.clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
