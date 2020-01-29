@@ -54,7 +54,7 @@ class AccountMove(models.Model):
             if move_type != 'entry' and journal.type != journal_type:
                 raise UserError(_("Cannot create an invoice of type %s with a journal having %s as type.") % (move_type, journal.type))
         else:
-            company_id = self._context.get('default_company_id', self.env.company.id)
+            company_id = self._context.get('force_company', self._context.get('default_company_id', self.env.company.id))
             domain = [('company_id', '=', company_id), ('type', '=', journal_type)]
 
             journal = None
