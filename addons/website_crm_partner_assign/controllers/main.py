@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import werkzeug
+import werkzeug.urls
 
 from collections import OrderedDict
 from werkzeug.exceptions import NotFound
@@ -308,7 +308,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
-            'search_path': "%s" % werkzeug.url_encode(post),
+            'search_path': "%s" % werkzeug.urls.url_encode(post),
             'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_crm_partner_assign.index", values, status=partners and 200 or 404)

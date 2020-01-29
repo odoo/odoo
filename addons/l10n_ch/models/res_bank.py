@@ -148,7 +148,7 @@ class ResPartnerBank(models.Model):
                           ref_type,
                           reference,
                           communication)
-        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 256, 256)
+        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.urls.url_quote_plus(qr_code_string), 256, 256)
         return qr_code_url
 
     def validate_swiss_code_arguments(self, currency, debitor):
