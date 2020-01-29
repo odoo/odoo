@@ -549,8 +549,9 @@ class Survey(http.Controller):
                     line_choices.append(answer_id)
                     answers = request.env['survey.question.answer'].browse([answer_id])
                 if answer_id:
+                    question_id = answers[0].matrix_question_id or answers[0].question_id
                     search_filters.append({
-                        'question': answers[0].question_id.title,
+                        'question': question_id.title,
                         'answers': '%s%s' % (answers[0].value, ': %s' % answers[1].value if len(answers) > 1 else '')
                     })
         if line_choices:
