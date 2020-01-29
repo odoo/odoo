@@ -2424,7 +2424,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.env.cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
         return self.env.cr.rowcount
 
-    def _auto_init(self):
+    def initialize(self):
         """ Initialize the database schema of ``self``:
             - create the corresponding table,
             - create/update the necessary columns/tables for fields,
@@ -2486,14 +2486,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     for field in fields_to_compute:
                         _logger.info("Storing computed values of %s", field)
                         self.env.add_to_compute(recs._fields[field], recs)
-
-            foreign, other = self._get_constraints()
-            for (key, definition) in foreign:
-                # FKs must be handled in post-init as it is very possible that the comodel has not
-                # yet been initialized
-                self.pool.post_init(self._drop_constraint_if_obsolete, key, definition)
-            for (key, definition) in other:
-                self._drop_constraint_if_obsolete(key, definition)
+        else:
+            self.init()
 
         if must_create_table:
             self._execute_sql()
@@ -2501,54 +2495,46 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if parent_path_compute:
             self._parent_store_compute()
 
-    def init(self):
-        """ This method is called after :meth:`~._auto_init`, and may be
-            overridden to create or modify a model's database schema.
-        """
-        pass
-
-    def _auto_end(self, *, will_raise=True):
-        """ This method is called right after :meth:`~.init`, it's main purpose is to perform
-            schema changes to the database after it has been completely initialised.
-        """
-        if self._auto:
-            try:
-                foreign, other = self._get_constraints()
-                for (key, definition) in foreign:
-                    # FKs must be handled in post-init as it is very possible that the comodel has
-                    # not yet been initialized
-                    self.pool.post_init(self._add_constraint, key, definition)
-
-                for (key, definition) in other:
-                    self._add_constraint(key, definition)
-            except Exception:
-                if will_raise:
-                    raise Exception from None
+    def finalize(self):
+        foreign, others = self._get_constraints()
+        self._process_constraints(others)
+        # FK constraints require both columns in the relation to have a UNIQUE constraint
+        # this implies that we must first apply *all* non-FK constraints on *all* models
+        # and *then* apply all FK constraints
+        return foreign
 
     def _get_constraints(self):
-        fk = []
-        other = []
-
+        foreign = []
+        others = []
         for (key, definition, _) in self._sql_constraints:
             if regex_foreign_key.match(definition):
-                fk.append((key, definition))
+                foreign.append((key, definition))
             else:
-                other.append((key, definition))
-        return fk, other
+                others.append((key, definition))
+        return foreign, others
 
-    def _drop_constraint_if_obsolete(self, key, definition):
+    @api.model
+    def _process_constraints(self, constraints):
+        # TODO: delegate to each field
         cr = self._cr
-        conname = f"{self._table}_{key}"
-        current_definition = tools.constraint_definition(cr, self._table, conname)
-        if current_definition and current_definition != definition:
-            tools.drop_constraint(cr, self._table, conname)
+        for key, definition in constraints:
+            conname = f"{self._table}_{key}"
+            current_def = tools.constraint_definition(cr, self._table, conname)
+            if not current_def:
+                # constraint does not exist, simply add it
+                tools.add_constraint(cr, self._table, conname, definition)
+            elif current_def != definition:
+                # constraint exists but its definition has changed
+                tools.drop_constraint(cr, self._table, conname)
+                tools.add_constraint(cr, self._table, conname, definition)
 
-    def _add_constraint(self, key, definition):
-        cr = self._cr
-        conname = f"{self._table}_{key}"
-        current_definition = tools.constraint_definition(cr, self._table, conname)
-        if not current_definition:
-            tools.add_constraint(cr, self._table, conname, definition)
+    def init(self):
+        """
+        .. deprecated:: 14.0
+
+            Override ``~odoo.models.BaseModel.initialize`` instead
+        """
+        pass
 
     def _create_parent_columns(self):
         tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
@@ -2556,33 +2542,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             _logger.error("add a field parent_path on model %s: parent_path = fields.Char(index=True)", self._name)
         elif not self._fields['parent_path'].index:
             _logger.error('parent_path field on model %s must be indexed! Add index=True to the field definition)', self._name)
-
-    def _add_sql_constraints(self):
-        """
-
-        Modify this model's database table constraints so they match the one in
-        _sql_constraints.
-
-        """
-        cr = self._cr
-        foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
-
-        def process(key, definition):
-            conname = '%s_%s' % (self._table, key)
-            current_definition = tools.constraint_definition(cr, self._table, conname)
-            if not current_definition:
-                # constraint does not exists
-                tools.add_constraint(cr, self._table, conname, definition)
-            elif current_definition != definition:
-                # constraint exists but its definition may have changed
-                tools.drop_constraint(cr, self._table, conname)
-                tools.add_constraint(cr, self._table, conname, definition)
-
-        for (key, definition, _) in self._sql_constraints:
-            if foreign_key_re.match(definition):
-                self.pool.post_init(process, key, definition)
-            else:
-                process(key, definition)
 
     def _execute_sql(self):
         """ Execute the SQL code from the _sql attribute (if any)."""

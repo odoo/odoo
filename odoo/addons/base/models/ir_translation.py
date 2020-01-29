@@ -183,8 +183,8 @@ class IrTranslation(models.Model):
     def _get_languages(self):
         return self.env['res.lang'].get_installed()
 
-    def _auto_init(self):
-        res = super(IrTranslation, self)._auto_init()
+    def initialize(self):
+        res = super(IrTranslation, self).initialize()
         # Add separate md5 index on src (no size limit on values, and good performance).
         tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
         # Cover 'model_terms' type

@@ -140,8 +140,8 @@ class ViewCustom(models.Model):
             return models.lazy_name_get(self.browse(view_ids).with_user(name_get_uid))
         return super(ViewCustom, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    def _auto_init(self):
-        res = super(ViewCustom, self)._auto_init()
+    def initialize(self):
+        res = super(ViewCustom, self).initialize()
         tools.create_index(self._cr, 'ir_ui_view_custom_user_id_ref_id',
                            self._table, ['user_id', 'ref_id'])
         return res
@@ -421,8 +421,8 @@ actual arch.
          "Invalid key: QWeb view should have a key"),
     ]
 
-    def _auto_init(self):
-        res = super(View, self)._auto_init()
+    def initialize(self):
+        res = super(View, self).initialize()
         tools.create_index(self._cr, 'ir_ui_view_model_type_inherit_id',
                            self._table, ['model', 'inherit_id'])
         return res

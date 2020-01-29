@@ -390,8 +390,8 @@ class Lead(models.Model):
     # ORM
     # ------------------------------------------------------------
 
-    def _auto_init(self):
-        res = super(Lead, self)._auto_init()
+    def initialize(self):
+        res = super(Lead, self).initialize()
         tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',
                            self._table, ['user_id', 'team_id', 'type'])
         tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',

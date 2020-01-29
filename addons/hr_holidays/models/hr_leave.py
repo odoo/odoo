@@ -260,8 +260,8 @@ class HolidaysRequest(models.Model):
         ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
 
-    def _auto_init(self):
-        res = super(HolidaysRequest, self)._auto_init()
+    def initialize(self):
+        res = super(HolidaysRequest, self).initialize()
         tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
                            self._table, ['date_to', 'date_from'])
         return res

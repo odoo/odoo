@@ -13,8 +13,8 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     @api.model
-    def _auto_init(self):
-        res = super(ResPartner, self)._auto_init()
+    def initialize(self):
+        res = super(ResPartner, self).initialize()
         # Remove constrains for vat, nrc on "commercial entities" because is not mandatory by legislation
         # Even that VAT numbers are unique, the NRC field is not unique, and there are certain entities that
         # doesn't have a NRC number plus the formatting was changed few times, so we cannot have a base rule for

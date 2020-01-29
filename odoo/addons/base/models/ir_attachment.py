@@ -324,8 +324,8 @@ class IrAttachment(models.Model):
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
-    def _auto_init(self):
-        res = super(IrAttachment, self)._auto_init()
+    def initialize(self):
+        res = super(IrAttachment, self).initialize()
         tools.create_index(self._cr, 'ir_attachment_res_idx',
                            self._table, ['res_model', 'res_id'])
         return res
