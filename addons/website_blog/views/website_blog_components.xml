@@ -37,7 +37,7 @@
                     <t t-esc="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1">&#215;</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 #{tag.id in active_tag_ids and 'badge-primary' or 'border'}" t-esc="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'}" t-esc="tag.name"/>
             </t>
         </t>
     </t>
@@ -99,7 +99,7 @@ Options:
 # opt_sidebar_blog_index_tags: Display tags cloud
 ============================================================================ -->
 <template id="sidebar_blog_index" name="Sidebar - Blog page">
-    <div id="o_wblog_sidebar">
+    <div id="o_wblog_sidebar" class="w-100">
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_1"/>
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom font-weight-bold">About us</h6>
