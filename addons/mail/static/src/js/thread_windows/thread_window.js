@@ -352,10 +352,12 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @param {integer} channelID
      */
     _onRedirectToChannel: function (channelID) {
+        var self = this;
         var thread = this.call('mail_service', 'getThread', channelID);
         if (!thread) {
             this.call('mail_service', 'joinChannel', channelID)
-                .then(function (channel) {
+                .then(function (channelID) {
+                    var channel = self.call('mail_service', 'getThread', channelID);
                     channel.detach();
                 });
         } else {
