@@ -87,7 +87,7 @@ class StockMove(models.Model):
     byproduct_id = fields.Many2one(
         'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
-    unit_factor = fields.Float('Unit Factor', default=1)
+    unit_factor = fields.Float('Unit Factor', compute='_compute_unit_factor', store=True)
     is_done = fields.Boolean(
         'Done', compute='_compute_is_done',
         store=True,
@@ -134,6 +134,15 @@ class StockMove(models.Model):
     def _compute_is_done(self):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
+
+    @api.depends('product_uom_qty')
+    def _compute_unit_factor(self):
+        for move in self:
+            mo = move.raw_material_production_id or move.production_id
+            if mo:
+                move.unit_factor = (move.product_uom_qty - move.quantity_done) / ((mo.product_qty - mo.qty_produced) or 1)
+            else:
+                move.unit_factor = 1.0
 
     @api.model
     def default_get(self, fields_list):

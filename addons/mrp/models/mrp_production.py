@@ -575,7 +575,6 @@ class MrpProduction(models.Model):
             'product_uom': product_uom,
             'operation_id': operation_id,
             'byproduct_id': byproduct_id,
-            'unit_factor': product_uom_qty / self.product_qty,
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_finished,
@@ -671,7 +670,6 @@ class MrpProduction(models.Model):
                 move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
                 move[0]._recompute_state()
                 move[0]._action_assign()
-                move[0].unit_factor = remaining_qty and (quantity - move[0].quantity_done) / remaining_qty or 1.0
                 return move[0], old_qty, quantity
             else:
                 if move[0].quantity_done > 0:
@@ -759,7 +757,6 @@ class MrpProduction(models.Model):
             for move_raw in production.move_raw_ids:
                 move_raw.write({
                     'group_id': production.procurement_group_id.id,
-                    'unit_factor': move_raw.product_uom_qty / production.product_qty,
                     'reference': production.name,  # set reference when MO name is different than 'New'
                 })
             production._generate_finished_moves()
