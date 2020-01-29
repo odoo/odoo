@@ -1221,12 +1221,31 @@ class Lead(models.Model):
             res.update(super(Lead, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
+<<<<<<< HEAD
     def _message_get_default_recipients(self):
         return {r.id: {
             'partner_ids': [],
             'email_to': r.email_normalized,
             'email_cc': False}
             for r in self}
+=======
+    @api.multi
+    def get_formview_id(self, access_uid=None):
+        if self.type == 'lead':
+            view_id = self.env.ref('crm.crm_case_form_view_leads').id
+        else:
+            view_id = super(Lead, self).get_formview_id()
+        return view_id
+
+    @api.multi
+    def message_get_default_recipients(self):
+        return {
+            r.id : {'partner_ids': [],
+                    'email_to': r.email_from,
+                    'email_cc': False}
+            for r in self.sudo()
+        }
+>>>>>>> 6526d17f9c6... temp
 
     def _message_get_suggested_recipients(self):
         recipients = super(Lead, self)._message_get_suggested_recipients()
