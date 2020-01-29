@@ -957,7 +957,14 @@ options.registry.Carousel = options.Class.extend({
         const id = 'myCarousel' + Date.now();
         this.$target.attr('id', id);
         this.$target.find('[data-target]').attr('data-target', '#' + id);
-        this.$target.find('[data-slide]').attr('href', '#' + id);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#' + id);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#' + id);
+            }
+        });
     },
 });
 
