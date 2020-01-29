@@ -1008,7 +1008,7 @@ take the following attributes:
   name of the field that describes if the task has to be excluded
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
-``create``, ``edit``, ``plan``
+``create``, ``edit``, ``delete``, ``plan``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``. If ``create`` is enabled, a "+" button
     will be displayed while hovering each time slot to create a new record in
