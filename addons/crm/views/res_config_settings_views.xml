@@ -58,11 +58,10 @@
                             <div class="o_setting_right_pane">
                                 <b>Predictive Lead Scoring</b>
                                 <div class="text-muted">
-                                    Let statistical analysis determine the probability to close a lead
+                                    The success rate is computed based on the stage, but you can add more fields in the statistical analysis.
                                 </div>
                                 <div class="mt16">
-                                    Fields used in probability computation:
-                                    <field name="predictive_lead_scoring_fields" class="oe_inline" widget="many2many_tags"/>
+                                    <field name="predictive_lead_scoring_fields" class="oe_inline" widget="many2many_tags" placeholder="Extra fields..."/>
                                     <field name="predictive_lead_scoring_fields_str" invisible="1"/>
                                 </div>
                                 <div class="mt16">
