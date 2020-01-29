@@ -3446,13 +3446,10 @@ class AccountMoveLine(models.Model):
         return result
 
     def unlink(self):
+        moves = self.mapped('move_id')
+
         # Check the lines are not reconciled (partially or not).
         self._check_reconciliation()
-
-        # Check total_debit == total_credit in the related moves.
-        moves = self.mapped('move_id')
-        if self._context.get('check_move_validity', True):
-            moves._check_balanced()
 
         # Check the lock date.
         moves._check_fiscalyear_lock_date()
@@ -3460,7 +3457,13 @@ class AccountMoveLine(models.Model):
         # Check the tax lock date.
         self._check_tax_lock_date()
 
-        return super(AccountMoveLine, self).unlink()
+        res = super(AccountMoveLine, self).unlink()
+
+        # Check total_debit == total_credit in the related moves.
+        if self._context.get('check_move_validity', True):
+            moves._check_balanced()
+
+        return res
 
     @api.model
     def default_get(self, default_fields):
