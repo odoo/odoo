@@ -69,7 +69,7 @@ define([
         var $anchor = $linkPopover.find('a');
         var href = $(styleInfo.anchor).attr('href');
         var target = $(styleInfo.anchor).attr('target');
-        $anchor.attr('href', href).html(href);
+        $anchor.attr('href', href).text(href);
         if (!target) {
           $anchor.removeAttr('target');
         } else {
