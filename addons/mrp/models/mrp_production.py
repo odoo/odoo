@@ -699,12 +699,14 @@ class MrpProduction(models.Model):
         # one opeation in the routing then it will need all BoM lines.
         bom_line_ids = self.env['mrp.bom.line']
         if len(self.routing_id.operation_ids) == 1:
-            bom_line_ids = self.bom_id.bom_line_ids
+            moves_in_first_operation = self.move_raw_ids
         else:
-            bom_line_ids = self.bom_id.bom_line_ids.filtered(lambda bl: bl.operation_id == first_operation)
-        bom_line_ids = bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(self.product_id))
+            moves_in_first_operation = self.move_raw_ids.filtered(lambda move: move.operation_id == first_operation)
+        moves_in_first_operation = moves_in_first_operation.filtered(
+            lambda move: move.bom_line_id and
+            not move.bom_line_id._skip_bom_line(self.product_id)
+        )
 
-        moves_in_first_operation = self.move_raw_ids.filtered(lambda m: m.bom_line_id in bom_line_ids)
         if all(move.state == 'assigned' for move in moves_in_first_operation):
             return 'assigned'
         return 'confirmed'
@@ -918,7 +920,13 @@ class MrpProduction(models.Model):
                 workorders[-1]._start_nextworkorder()
             workorders += workorder
 
-            moves_raw = self.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.bom_line_id.bom_id.routing_id == bom.routing_id)
+            # get the raw moves to attach to this operation
+            moves_raw = self.env['stock.move']
+            for move in self.move_raw_ids:
+                if move.operation_id == operation and move.bom_line_id.bom_id.routing_id == bom.routing_id:
+                    moves_raw |= move
+                if move.operation_id == operation and not move.bom_line_id:
+                    moves_raw |= move
             moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation)
 
             # - Raw moves from a BoM where a routing was set but no operation was precised should
