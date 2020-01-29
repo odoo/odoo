@@ -23,7 +23,7 @@
                         <span t-att-class="'badge only_left_radius filter-all %s' % 'badge-secondary' if search_finished else 'badge-primary o_active_filter'">All surveys</span>
                         <span t-att-class="'badge only_right_radius filter-finished %s' % 'badge-secondary' if not search_finished else 'badge-primary o_active_filter'">Finished surveys</span>
                         <span t-foreach="search_filters" t-as="filter_data">
-                            <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question_text']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
+                            <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['answers'])"></span>
                         </span>
                     </div>
                 </div>
@@ -244,7 +244,8 @@
                             <td class="survey_answer">
                                 <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
                                 <span t-esc="'%s Votes' % choice_data['count']" class="badge badge-primary"/>
-                                <i class="fa fa-filter text-primary survey_filter"
+                                <i t-if="choice_data['suggested_answer'].id"
+                                    class="fa fa-filter text-primary survey_filter"
                                     t-att-data-question_id="question.id"
                                     t-att-data-answer_id="choice_data['suggested_answer'].id"
                                     role="img" aria-label="Filter question" title="Filter question"/>
