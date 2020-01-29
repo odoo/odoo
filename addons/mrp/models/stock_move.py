@@ -151,8 +151,11 @@ class StockMove(models.Model):
         defaults = super(StockMove, self).default_get(fields_list)
         if self.env.context.get('default_raw_material_production_id'):
             production_id = self.env['mrp.production'].browse(self.env.context['default_raw_material_production_id'])
-            if production_id.state == 'done':
-                defaults['state'] = 'done'
+            if production_id.state in ('confirmed', 'done'):
+                if production_id.state == 'confirmed':
+                    defaults['state'] = 'draft'
+                else:
+                    defaults['state'] = 'done'
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
         return defaults
