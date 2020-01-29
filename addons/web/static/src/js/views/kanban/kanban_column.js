@@ -326,6 +326,7 @@ var KanbanColumn = Widget.extend({
             res_model: this.relation,
             res_id: this.id,
             title: _t("Edit Column"),
+            context: this.data.context,
             on_saved: this.trigger_up.bind(this, 'reload'),
         }).open();
     },
