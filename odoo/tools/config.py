@@ -694,7 +694,8 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
     def set_admin_password(self, new_password):
-        self.options['admin_passwd'] = crypt_context.encrypt(new_password)
+        hash_password = crypt_context.hash if hasattr(crypt_context, 'hash') else crypt_context.encrypt
+        self.options['admin_passwd'] = hash_password(new_password)
 
     def verify_admin_password(self, password):
         """Verifies the super-admin password, possibly updating the stored hash if needed"""
