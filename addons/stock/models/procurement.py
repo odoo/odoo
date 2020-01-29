@@ -249,6 +249,7 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
         if use_new_cursor:
             self._cr.commit()
 
