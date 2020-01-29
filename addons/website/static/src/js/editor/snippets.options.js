@@ -1029,6 +1029,7 @@ options.registry.CarouselItem = options.Class.extend({
             'data-target': '#' + this.$target.attr('id'),
             'data-slide-to': $items.length,
         }));
+        this.$indicators.append(' ');
         // Need to remove editor data from the clone so it gets its own.
         const $active = $items.filter('.active');
         $active.clone(false)
