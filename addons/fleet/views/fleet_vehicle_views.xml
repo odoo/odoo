@@ -15,7 +15,7 @@
                         <button name="open_assignation_logs"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-history">
+                            icon="fa-history" groups="fleet.fleet_group_manager">
                             <field name="history_count" widget="statinfo" string="Drivers History"/>
                         </button>
                         <button name="return_action_to_open"
@@ -23,7 +23,7 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             context="{'xml_id':'fleet_vehicle_log_contract_action'}"
-                            help="show the contract for this vehicle">
+                            help="show the contract for this vehicle" groups="fleet.fleet_group_manager">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
                         </button>
                         <button name="return_action_to_open"
@@ -31,7 +31,7 @@
                             class="oe_stat_button"
                             icon="fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action'}"
-                            help="show the services logs for this vehicle" >
+                            help="show the services logs for this vehicle" groups="fleet.fleet_group_manager">
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
                         <button name="return_action_to_open"
@@ -39,7 +39,7 @@
                             class="oe_stat_button"
                             icon="fa-tachometer"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
-                            help="show the odometer logs for this vehicle" >
+                            help="show the odometer logs for this vehicle" groups="fleet.fleet_group_manager">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
                     </div>
@@ -61,8 +61,8 @@
                         <group string="Driver">
                             <field name="active" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
-                            <label for="future_driver_id"/>
-                            <div class="o_row">
+                            <label for="future_driver_id"  groups="fleet.fleet_group_manager"/>
+                            <div class="o_row" groups="fleet.fleet_group_manager">
                                 <field name="future_driver_id"/>
                                 <button string="Apply Change"
                                     class="btn btn-primary"
@@ -71,20 +71,20 @@
                                     attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
                             </div>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager"/>
-                            <field name="next_assignation_date"/>
-                            <field name="location"/>
+                            <field name="next_assignation_date" groups="fleet.fleet_group_manager"/>
+                            <field name="location" groups="fleet.fleet_group_manager"/>
                         </group>
                         <group string="Vehicle">
-                            <label for="odometer"/>
-                            <div class="o_row">
+                            <label for="odometer" groups="fleet.fleet_group_manager"/>
+                            <div class="o_row" groups="fleet.fleet_group_manager">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
                             <field name="acquisition_date"/>
                             <field name="vin_sn"/>
-                            <field name="car_value" widget="monetary"/>
-                            <field name="net_car_value" widget="monetary"/>
-                            <field name="residual_value" widget="monetary"/>
+                            <field name="car_value" widget="monetary" groups="fleet.fleet_group_manager"/>
+                            <field name="net_car_value" widget="monetary" groups="fleet.fleet_group_manager"/>
+                            <field name="residual_value" widget="monetary" groups="fleet.fleet_group_manager"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Contract" name="contract">
@@ -116,12 +116,24 @@
                         </group>
                     </group>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- hide chatter for fleet user -->
+    <record id="fleet_vehicle_view_form_inherit_manager" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="groups_id" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                 </div>
-            </form>
+            </xpath>
         </field>
     </record>
 
@@ -129,23 +141,39 @@
         <field name="name">fleet.vehicle.tree</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <tree string="Vehicle" decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue" decoration-danger="contract_renewal_overdue">
+            <tree string="Vehicle">
                 <field name="active" invisible="1"/>
                 <field name="license_plate"/>
                 <field name="model_id"/>
                 <field name="driver_id"/>
-                <field name="future_driver_id"/>
+                <field name="future_driver_id" groups="fleet.fleet_group_manager"/>
                 <field name="log_drivers" invisible="1"/>
                 <field name="vin_sn"/>
                 <field name="co2"/>
                 <field name="acquisition_date"/>
                 <field name="state_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- fields for fleet manager -->
+    <record id="fleet_vehicle_view_tree_inherit_manager" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tree.inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="groups_id" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+        <field name="arch" type="xml">
+            <field name="license_plate" position="after">
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
-                <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </field>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-warning">contract_renewal_due_soon and not contract_renewal_overdue</attribute>
+                <attribute name="decoration-danger">contract_renewal_overdue</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -165,7 +193,7 @@
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), ('plan_to_change_car', '=', True)]"/>
                 <filter name="planned" string="Planned for Change" domain="[('plan_to_change_car', '=', True)]"/>
                 <separator/>
-                <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>
+                <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]" groups="fleet.fleet_group_manager"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
@@ -203,7 +231,7 @@
                 <field name="contract_renewal_overdue" />
                 <field name="contract_renewal_name" />
                 <field name="contract_renewal_total" />
-                <field name="contract_count" />
+                <field name="contract_count" groups="fleet.fleet_group_manager"/>
                 <field name="activity_ids"/>
                 <field name="activity_state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -234,9 +262,9 @@
                                 </ul>
                             </div>
                             <div class="o_kanban_button" t-if="!selection_mode">
-                                <a t-if="record.contract_count.raw_value>0" data-type="object"
+                                <a t-if="record.contract_count and record.contract_count.raw_value>0" data-type="object"
                                    data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
-                                   data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
+                                   data-context='{"xml_id":"fleet_vehicle_log_contract_action"}' groups="fleet.fleet_group_manager">
                                     <field name="contract_count"/>
                                     Contract(s)
                                     <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
@@ -389,7 +417,7 @@
         </field>
     </record>
 
-    <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet_group_user" sequence="10"/>
+    <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet.fleet_group_manager" sequence="10"/>
 
     <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
         <field name="name">fleet.service.type.tree</field>

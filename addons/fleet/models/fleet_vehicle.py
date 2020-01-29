@@ -42,10 +42,10 @@ class FleetVehicle(models.Model):
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
-    contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count')
-    service_count = fields.Integer(compute="_compute_count_all", string='Services')
-    odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
-    history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
+    contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count', groups="fleet.fleet_group_manager")
+    service_count = fields.Integer(compute="_compute_count_all", string='Services', groups="fleet.fleet_group_manager")
+    odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer', groups="fleet.fleet_group_manager")
+    history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count", groups="fleet.fleet_group_manager")
     next_assignation_date = fields.Date('Assignation Date', help='This is the date at which the car will be available, if not set it means available instantly')
     acquisition_date = fields.Date('Immatriculation Date', required=False,
         default=fields.Date.today, help='Date when the vehicle has been immatriculated')
@@ -61,7 +61,7 @@ class FleetVehicle(models.Model):
     doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', default=5)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
-        help='Odometer measure of the vehicle at the moment of this log')
+        help='Odometer measure of the vehicle at the moment of this log', groups="fleet.fleet_group_manager")
     odometer_unit = fields.Selection([
         ('kilometers', 'Kilometers'),
         ('miles', 'Miles')
@@ -80,12 +80,12 @@ class FleetVehicle(models.Model):
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
     image_128 = fields.Image(related='model_id.image_128', readonly=False)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
-        string='Has Contracts to renew', multi='contract_info')
+        string='Has Contracts to renew', multi='contract_info', groups="fleet.fleet_group_manager")
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
-        string='Has Contracts Overdue', multi='contract_info')
-    contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon', multi='contract_info')
+        string='Has Contracts Overdue', multi='contract_info', groups="fleet.fleet_group_manager")
+    contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon', multi='contract_info', groups="fleet.fleet_group_manager")
     contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one',
-        multi='contract_info')
+        multi='contract_info', groups="fleet.fleet_group_manager")
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
     net_car_value = fields.Float(string="Purchase Value", help="Purchase Value of the car")
     residual_value = fields.Float()
@@ -211,7 +211,7 @@ class FleetVehicle(models.Model):
     def write(self, vals):
         if 'driver_id' in vals and vals['driver_id']:
             driver_id = vals['driver_id']
-            self.filtered(lambda v: v.driver_id.id != driver_id).create_driver_history(driver_id)
+            self.filtered(lambda v: v.driver_id.id != driver_id).sudo().create_driver_history(driver_id)
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
