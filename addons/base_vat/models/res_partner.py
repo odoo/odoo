@@ -21,7 +21,7 @@ try:
 except ImportError:
     stdnum = None
 
-from odoo import api, models, _
+from odoo import api, models, tools, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 from stdnum.at.uid import compact as compact_at
@@ -134,11 +134,18 @@ class ResPartner(models.Model):
         return check_func(vat_number)
 
     @api.model
+    @tools.ormcache('vat')
+    def _check_vies(self, vat):
+        # Store the VIES result in the cache. In case an exception is raised during the request
+        # (e.g. service unavailable), the fallback on simple_vat_check is not kept in cache.
+        return vatnumber.check_vies(vat)
+
+    @api.model
     def vies_vat_check(self, country_code, vat_number):
         try:
             # Validate against  VAT Information Exchange System (VIES)
             # see also http://ec.europa.eu/taxation_customs/vies/
-            return vatnumber.check_vies(country_code.upper() + vat_number)
+            return self._check_vies(country_code.upper() + vat_number)
         except Exception:
             # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
             # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
