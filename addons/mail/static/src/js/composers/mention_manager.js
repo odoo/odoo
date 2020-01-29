@@ -317,8 +317,11 @@ var MentionManager = Widget.extend({
                     return _.extend({}, suggestion, { name: _.unescape(suggestion.name) });
                 })
             }));
+            var $composerField = $('.o_composer_text_field');
+            var position = this.getCaretCoordinates($composerField[0], $composerField[0].selectionStart);
             this.$el
                 .addClass('show')
+                .css({'top': position.top, 'left': position.left})
                 .find('.dropdown-menu')
                 .addClass('show')
                 .css('max-width', this._composer.$input.width())
@@ -333,6 +336,22 @@ var MentionManager = Widget.extend({
             this.$el.empty();
             this._open = false;
         }
+    },
+    getCaretCoordinates: function (element, position) {
+        // mirrored div
+        var $div = $('<div>', {text: element.value.substring(0, position)});
+        this.$el.append($div);
+
+        var style = $div[0].style;
+        style = _.extend(style, {whiteSpace: 'pre-wrap', wordWrap: 'break-word', position: 'absolute', visibility: 'hidden'});
+
+        var $span = $('<span>', {text: element.value.substring(position) || '@'});
+        $div.append($span);
+
+        return {
+            top: $span[0].offsetTop,
+            left: $span[0].offsetLeft
+        };
     },
     /*
      * Set cursor position
