@@ -36,11 +36,9 @@ class AccountMove(models.Model):
         if not self.purchase_id:
             return
 
-        # Copy partner.
-        self.partner_id = self.purchase_id.partner_id
-        self.fiscal_position_id = self.purchase_id.fiscal_position_id
-        self.invoice_payment_term_id = self.purchase_id.payment_term_id
-        self.currency_id = self.purchase_id.currency_id
+        # Copy data from PO
+        invoice_vals = self.purchase_id._prepare_invoice()
+        self.update(invoice_vals)
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')

@@ -278,9 +278,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(valuation_aml.credit, 0)
 
         # Create a vebdor bill for the RFQ
-        action = rfq.action_view_invoice()
-        vb = Form(self.env['account.move'].with_context(action['context']))
-        vb = vb.save()
+        action = rfq.action_create_invoice()
+        vb = self.env['account.move'].search([('id', '=', action['res_id'])])
         vb.post()
 
         input_aml = self._get_stock_input_move_lines()[-1]
@@ -366,9 +365,9 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(valuation_aml.debit, 100)
         self.assertEqual(valuation_aml.credit, 0)
 
-        # Create a vebdor bill for the RFQ and add to it the landed cost
-        action = rfq.action_view_invoice()
-        vb = Form(self.env['account.move'].with_context(action['context']))
+        # Create a vendor bill for the RFQ and add to it the landed cost
+        vb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        vb.partner_id = self.vendor1
         with vb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
             inv_line.price_unit = 50
@@ -419,9 +418,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(valuation_aml.credit, 0)
 
         # Create a vebdor bill for the RFQ
-        action = rfq.action_view_invoice()
-        vb = Form(self.env['account.move'].with_context(action['context']))
-        vb = vb.save()
+        action = rfq.action_create_invoice()
+        vb = self.env['account.move'].search([('id', '=', action['res_id'])])
         vb.post()
 
         expense_aml = self._get_expense_move_lines()[-1]

@@ -61,11 +61,9 @@ class TestPurchaseInvoice(SavepointCase):
         purchase_order = purchase_order_form.save()
         purchase_order.button_confirm()
 
-        action = purchase_order.with_user(self.purchase_user).action_view_invoice()
-        invoice_form = Form(self.env['account.move'].with_user(self.purchase_user).with_context(
-            action['context']
-        ))
-        invoice = invoice_form.save()
+        purchase_order.order_line.qty_received = 4
+        purchase_order.action_create_invoice()
+        invoice = purchase_order.invoice_ids
         with self.assertRaises(AccessError):
             invoice.post()
 
@@ -86,9 +84,11 @@ class TestPurchaseInvoice(SavepointCase):
             line.price_unit = 5
 
         purchase_order_user2 = purchase_order_form.save()
-        action = purchase_order_user2.with_user(purchase_user_2).action_view_invoice()
-        invoice_form = Form(self.env['account.move'].with_user(purchase_user_2).with_context(action['context']))
-        vendor_bill_user2 = invoice_form.save()
+        purchase_order_user2.button_confirm()
+
+        purchase_order_user2.order_line.qty_received = 4
+        purchase_order_user2.action_create_invoice()
+        vendor_bill_user2 = purchase_order_user2.invoice_ids
 
         # open purchase_order_user2 and vendor_bill_user2 with `self.purchase_user`
         purchase_order_user1 = Form(purchase_order_user2.with_user(self.purchase_user))
@@ -121,9 +121,11 @@ class TestPurchaseInvoice(SavepointCase):
             line.price_unit = 5
 
         purchase_order_user2 = purchase_order_form.save()
-        action = purchase_order_user2.with_user(purchase_user_2).action_view_invoice()
-        invoice_form = Form(self.env['account.move'].with_user(purchase_user_2).with_context(action['context']))
-        vendor_bill_user2 = invoice_form.save()
+        purchase_order_user2.button_confirm()
+
+        purchase_order_user2.order_line.qty_received = 4
+        purchase_order_user2.action_create_invoice()
+        vendor_bill_user2 = purchase_order_user2.invoice_ids
 
         # check user 1 cannot read the invoice
         with self.assertRaises(AccessError):
