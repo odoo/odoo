@@ -1579,17 +1579,9 @@ class AccountMove(models.Model):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
 
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
-
-        moves = super(AccountMove, self).create(vals_list)
-
-        # Trigger 'action_invoice_paid' when the invoice is directly paid at its creation.
-        moves.filtered(lambda move: move.is_invoice(include_receipts=True) and move.payment_state in ('paid', 'in_payment')).action_invoice_paid()
-
-        return moves
+        return super(AccountMove, self).create(vals_list)
 
     def write(self, vals):
-        not_paid_invoices = self.filtered(lambda move: move.is_invoice(include_receipts=True) and move.payment_state not in ('paid', 'in_payment'))
-
         for move in self:
             if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
@@ -1630,9 +1622,6 @@ class AccountMove(models.Model):
         # Ensure the move is still well balanced.
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
             self._check_balanced()
-
-        # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
-        not_paid_invoices.filtered(lambda move: move.payment_state in ('paid', 'in_payment')).action_invoice_paid()
 
         return res
 
@@ -2165,6 +2154,12 @@ class AccountMove(models.Model):
                 move.partner_id._increase_rank('supplier_rank')
             else:
                 continue
+
+        # Trigger action for paid invoices in amount is zero
+        self.filtered(
+            lambda m: m.is_invoice(include_receipts=True) and m.currency_id.is_zero(m.amount_total)
+        ).action_invoice_paid()
+
 
     def _auto_compute_invoice_reference(self):
         ''' Hook to be overridden to set custom conditions for auto-computed invoice references.
@@ -3784,6 +3779,11 @@ class AccountMoveLine(models.Model):
         if not self:
             return
 
+        # List unpaid invoices
+        not_paid_invoices = self.mapped('move_id').filtered(
+            lambda m: m.is_invoice(include_receipts=True) and m.payment_state not in ('paid', 'in_payment')
+        )
+
         self._check_reconcile_validity()
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
@@ -3803,6 +3803,12 @@ class AccountMoveLine(models.Model):
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
         # Check if reconciliation is total or needs an exchange rate entry to be created
         (self + writeoff_to_reconcile).check_full_reconcile()
+
+        # Trigger action for paid invoices
+        not_paid_invoices.filtered(
+            lambda m: m.payment_state in ('paid', 'in_payment')
+        ).action_invoice_paid()
+
         return True
 
     def _create_writeoff(self, writeoff_vals):
