@@ -182,7 +182,8 @@ options.registry.carousel = options.Class.extend({
         var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
         var index = $active.index();
         this.$('.carousel-control, .carousel-indicators').removeClass('hidden');
-        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
+        // we added a space after the <li> in the line below to keep the same space between the indicators
+        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li> ');
         var $clone = this.$('.item:first').clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
