@@ -45,7 +45,7 @@
             <ul class="list-group list-group-flush o_cw_popover_fields_secondary"/>
             <div class="card-footer border-top">
                 <a href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
-                <a href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
+                <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
             </div>
         </div>
     </t>

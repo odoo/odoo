@@ -247,6 +247,38 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('delete attribute on calendar doesn\'t show delete button in popover', async function (assert) {
+        assert.expect(2);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                '<calendar class="o_calendar_test" ' +
+                'string="Events" ' +
+                'event_open_popup="true" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'all_day="allday" ' +
+                'delete="0" ' +
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+
+        assert.containsOnce(calendar, '.o_cw_popover',
+            "should open a popover clicking on event");
+        assert.containsNone(calendar, '.o_cw_popover .o_cw_popover_delete',
+            "should not have the 'Delete' Button");
+
+        calendar.destroy();
+    });
+
     QUnit.test('breadcrumbs are updated with the displayed period', async function (assert) {
         assert.expect(3);
 

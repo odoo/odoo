@@ -191,6 +191,7 @@ return AbstractRenderer.extend({
         this.color_map = {};
         this.hideDate = params.hideDate;
         this.hideTime = params.hideTime;
+        this.canDelete = params.canDelete;
     },
     /**
      * @override
@@ -695,6 +696,7 @@ return AbstractRenderer.extend({
             displayFields: this.displayFields,
             event: eventData,
             modelName: this.model,
+            canDelete: this.canDelete,
         };
 
         var start = moment(eventData.r_start || eventData.start);

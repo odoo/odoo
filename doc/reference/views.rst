@@ -913,6 +913,9 @@ calendar view are:
 ``create``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
+``delete``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
 ``<field>``
   declares fields to aggregate or to use in kanban *logic*. If the field is
   simply displayed in the calendar cards.

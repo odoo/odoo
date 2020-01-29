@@ -27,6 +27,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
         this.fields = eventInfo.fields;
         this.event = eventInfo.event;
         this.modelName = eventInfo.modelName;
+        this.canDelete = eventInfo.canDelete;
     },
     /**
      * @override
