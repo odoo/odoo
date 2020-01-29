@@ -96,7 +96,7 @@ class AccountInvoiceReport(models.Model):
                 sub.payment_term_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.invoice_id, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
-                sub.product_qty, sub.price_total as price_total, sub.price_average as price_average, sub.amount_total / COALESCE(cr.rate, 1) as amount_total,
+                sub.product_qty, sub.price_total as price_total, sub.price_average as price_average, sub.amount_total as amount_total,
                 COALESCE(cr.rate, 1) as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
         """
         return select_str
@@ -113,7 +113,7 @@ class AccountInvoiceReport(models.Model):
                     ai.id AS invoice_id, ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM ((invoice_type.sign_qty * ail.quantity) / COALESCE(u.factor,1) * COALESCE(u2.factor,1)) AS product_qty,
-                    SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
+                    SUM(ail.price_subtotal * invoice_type.sign) AS price_total,
                     SUM(ail.price_total * invoice_type.sign_qty) AS amount_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / COALESCE(u.factor,1) * COALESCE(u2.factor,1)) <> 0::numeric
