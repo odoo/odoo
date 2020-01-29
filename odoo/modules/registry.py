@@ -336,6 +336,7 @@ class Registry(Mapping):
 
         env['base'].flush()
 
+        # upsert constraints
         self.finalize_models(models)
 
         # make sure all tables are present
@@ -343,6 +344,7 @@ class Registry(Mapping):
 
     def finalize_models(self, models):
         all_foreign = []
+        models = [model for model in models if model._auto]
         for model in models:
             all_foreign.append(model.finalize())
         for fks, model in zip(all_foreign, models):
