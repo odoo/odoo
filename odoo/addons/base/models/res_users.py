@@ -296,8 +296,9 @@ class Users(models.Model):
 
     def _set_password(self):
         ctx = self._crypt_context()
+        hash_password = ctx.hash if hasattr(ctx, 'hash') else ctx.encrypt
         for user in self:
-            self._set_encrypted_password(user.id, ctx.encrypt(user.password))
+            self._set_encrypted_password(user.id, hash_password(user.password))
 
     def _set_encrypted_password(self, uid, pw):
         assert self._crypt_context().identify(pw) != 'plaintext'
