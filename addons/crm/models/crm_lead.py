@@ -1164,8 +1164,8 @@ class Lead(models.Model):
 
     @api.multi
     def get_formview_id(self, access_uid=None):
-        if self.type == 'opportunity':
-            view_id = self.env.ref('crm.crm_case_form_view_oppor').id
+        if self.type == 'lead':
+            view_id = self.env.ref('crm.crm_case_form_view_leads').id
         else:
             view_id = super(Lead, self).get_formview_id()
         return view_id
