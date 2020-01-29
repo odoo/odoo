@@ -222,6 +222,13 @@ class MrpProduction(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
+    consumption = fields.Selection([
+        ('strict', 'Strict'),
+        ('flexible', 'Flexible')],
+        required=True,
+        readonly=True,
+        default='strict',
+    )
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
@@ -529,7 +536,7 @@ class MrpProduction(models.Model):
                 if production.workorder_ids and not self.env.context.get('force_date', False):
                     raise UserError(_('You cannot move a planned manufacturing order.'))
             if 'move_raw_ids' in vals and production.state != 'draft':
-                production.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
+                production._autoconfirm_production()
             if not production.routing_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
@@ -711,6 +718,22 @@ class MrpProduction(models.Model):
             return 'assigned'
         return 'confirmed'
 
+    def _autoconfirm_production(self):
+        """Automatically run `action_confirm` on `self`.
+
+        If the production has one of its move was added after the initial call
+        to `action_confirm`.
+        """
+        moves_to_confirm = self.env['stock.move']
+        for production in self:
+            if production.state in ('done', 'cancel'):
+                continue
+            moves_to_confirm |= (production.move_raw_ids | production.move_finished_ids).filtered(
+                lambda move: move.state == 'draft' and move.additional
+            )
+        if moves_to_confirm:
+            moves_to_confirm._action_confirm()
+
     def action_view_mrp_production_childs(self):
         self.ensure_one()
         mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.ids
@@ -754,6 +777,7 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._check_company()
         for production in self:
+            production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
             for move_raw in production.move_raw_ids:
