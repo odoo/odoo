@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    from configparser import ConfigParser
-except ImportError:
-    # python2 import
-    from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from os.path import join as opj
 import os
-import werkzeug
+import werkzeug.urls
 
 import odoo
 from odoo import models, fields
@@ -84,7 +80,7 @@ class IrTranslation(models.Model):
                     'project': project,
                     'lang': lang_code,
                     'module': translation.module,
-                    'src': "text:'" + werkzeug.url_quote_plus(
+                    'src': "text:'" + werkzeug.urls.url_quote_plus(
                                translation.src[:50].replace("\n", "").replace("'", "")
                            ) + "'",
                 }
