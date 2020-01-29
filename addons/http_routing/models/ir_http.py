@@ -5,7 +5,9 @@ import os
 import re
 import traceback
 import unicodedata
-import werkzeug
+import werkzeug.exceptions
+import werkzeug.routing
+import werkzeug.urls
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -553,8 +555,8 @@ class IrHttp(models.AbstractModel):
             return cls._handle_exception(e)
 
         if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
-            generated_path = werkzeug.url_unquote_plus(path)
-            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            generated_path = werkzeug.urls.url_unquote_plus(path)
+            current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
                 if request.lang != cls._get_default_lang():
                     path = '/' + request.lang.url_code + path

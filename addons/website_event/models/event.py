@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytz
-import werkzeug
+import werkzeug.urls
 import json
 
 from odoo import api, fields, models, _
@@ -148,7 +148,7 @@ class Event(models.Model):
         }
         if self.address_id:
             params.update(location=self.sudo().address_id.contact_address.replace('\n', ' '))
-        encoded_params = werkzeug.url_encode(params)
+        encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = '/event/%d/ics?%s' % (self.id, encoded_params)
         return {'google_url': google_url, 'iCal_url': iCal_url}

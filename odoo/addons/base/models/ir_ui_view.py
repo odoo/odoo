@@ -14,7 +14,7 @@ from dateutil.relativedelta import relativedelta
 from difflib import HtmlDiff
 from operator import itemgetter
 
-import werkzeug
+import werkzeug, werkzeug.urls
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
@@ -1198,7 +1198,7 @@ actual arch.
             debug=request.session.debug if request else '',
             test_mode_enabled=bool(config['test_enable'] or config['test_file']),
             json=json_scriptsafe,
-            quote_plus=werkzeug.url_quote_plus,
+            quote_plus=werkzeug.urls.url_quote_plus,
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,

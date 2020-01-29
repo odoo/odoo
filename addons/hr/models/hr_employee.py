@@ -4,14 +4,11 @@
 import base64
 from random import choice
 from string import digits
-import itertools
-from werkzeug import url_encode
-import pytz
+from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
-from odoo.addons.resource.models.resource_mixin import timezone_datetime
 
 
 class HrEmployeePrivate(models.Model):

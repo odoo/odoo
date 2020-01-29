@@ -4,9 +4,10 @@
 import base64
 import logging
 import psycopg2
-import werkzeug
+import werkzeug.utils
+import werkzeug.wrappers
 
-from werkzeug import url_encode
+from werkzeug.urls import url_encode
 
 from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.exceptions import AccessError

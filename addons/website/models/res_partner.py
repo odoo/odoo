@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
+import werkzeug.urls
 
 from odoo import models, fields
-
-
-def urlplus(url, params):
-    return werkzeug.Href(url)(params or None)
-
 
 class Partner(models.Model):
     _name = 'res.partner'
@@ -27,14 +22,14 @@ class Partner(models.Model):
             'sensor': 'false',
             'key': google_maps_api_key,
         }
-        return urlplus('//maps.googleapis.com/maps/api/staticmap', params)
+        return '//maps.googleapis.com/maps/api/staticmap?'+werkzeug.urls.url_encode(params)
 
     def google_map_link(self, zoom=10):
         params = {
             'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'z': zoom,
         }
-        return urlplus('https://maps.google.com/maps', params)
+        return 'https://maps.google.com/maps' + werkzeug.urls.url_encode(params)
 
     def _get_name(self):
         name = super(Partner, self)._get_name()
