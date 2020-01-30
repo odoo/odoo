@@ -274,7 +274,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.created_production_id,)
+        return keys + (self.created_production_id.id,)
 
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
