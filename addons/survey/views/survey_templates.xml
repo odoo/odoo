@@ -302,9 +302,10 @@
 
     <template id="question_suggested_value_image" name="Image from the question suggested answer">
         <div t-if="question.allow_value_image and label.value_image"
-            t-field="label.value_image"
-            class="d-flex my-3 justify-content-center"
-            t-options='{"widget": "image", "alt-field": "name", "itemprop": "image"}'/>
+             class="d-flex my-3 justify-content-center">
+            <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
+        </div>
+
     </template>
 
     <template id="question_simple_choice" name="Question: simple choice">
