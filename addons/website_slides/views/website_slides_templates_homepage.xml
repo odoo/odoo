@@ -360,7 +360,12 @@
                 <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="channel.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge #{'badge-primary' if tag in search_tags else 'badge-light'}" t-esc="tag.name"/>
+                        <t t-if="search_tags">
+                            <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge #{'badge-primary' if tag in search_tags else 'o_wslides_channel_tag o_tag_color_0'}" t-esc="tag.name"/>
+                        </t>
+                        <t t-else="">
+                            <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"/>
+                        </t>
                     </t>
                 </div>
             </div>

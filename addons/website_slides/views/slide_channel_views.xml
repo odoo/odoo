@@ -57,7 +57,7 @@
                         </div>
                         <div>
                             <field name="active" invisible="1"/>
-                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                         </div>
                         <notebook colspan="4">
                             <page name="content" string="Content">
