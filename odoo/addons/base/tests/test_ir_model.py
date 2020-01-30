@@ -186,6 +186,19 @@ class TestIrModel(SavepointCase):
         cls.registry.enter_test_mode(cls.cr)
         cls.addClassCleanup(cls.registry.leave_test_mode)
 
+        # model and records for banana stages
+        cls.env['ir.model'].create({
+            'name': 'Banana Ripeness',
+            'model': 'x_banana_ripeness',
+            'field_id': [
+                (0, 0, {'name': 'x_name', 'ttype': 'char', 'field_description': 'Name'}),
+            ]
+        })
+        # stage values are pairs (id, display_name)
+        cls.ripeness_green = cls.env['x_banana_ripeness'].name_create('Green')
+        cls.ripeness_okay = cls.env['x_banana_ripeness'].name_create('Okay, I guess?')
+        cls.ripeness_gone = cls.env['x_banana_ripeness'].name_create('Walked away on its own')
+
         # model and records for bananas
         cls.bananas_model = cls.env['ir.model'].create({
             'name': 'Bananas',
@@ -194,6 +207,9 @@ class TestIrModel(SavepointCase):
                 (0, 0, {'name': 'x_name', 'ttype': 'char', 'field_description': 'Name'}),
                 (0, 0, {'name': 'x_length', 'ttype': 'float', 'field_description': 'Length'}),
                 (0, 0, {'name': 'x_color', 'ttype': 'integer', 'field_description': 'Color'}),
+                (0, 0, {'name': 'x_ripeness_id', 'ttype': 'many2one',
+                        'field_description': 'Ripeness','relation': 'x_banana_ripeness',
+                        'group_expand': True})
             ]
         })
         # add non-stored field that is not valid in order
@@ -206,6 +222,8 @@ class TestIrModel(SavepointCase):
             'depends': 'x_color',
             'compute': "for banana in self:\n    banana['x_is_yellow'] = banana.x_color == 9"
         })
+        # default stage is ripeness_green
+        cls.env['ir.default'].set('x_bananas', 'x_ripeness_id', cls.ripeness_green[0])
         cls.env['x_bananas'].create([{
             'x_name': 'Banana #1',
             'x_length': 3.14159,
@@ -271,3 +289,23 @@ class TestIrModel(SavepointCase):
 
             bananas = self.env['x_bananas'].search([])
             self.assertEqual(bananas.mapped('x_name'), names, 'failed to order by %s' % order)
+
+    def test_group_expansion(self):
+        """Check that the basic custom group expansion works."""
+        groups = self.env['x_bananas'].read_group(domain=[],
+                                                  fields=['x_ripeness_id'],
+                                                  groupby=['x_ripeness_id'])
+        expected = [{
+            'x_ripeness_id': self.ripeness_green,
+            'x_ripeness_id_count': 3,
+            '__domain': [('x_ripeness_id', '=', self.ripeness_green[0])],
+        }, {
+            'x_ripeness_id': self.ripeness_okay,
+            'x_ripeness_id_count': 0,
+            '__domain': [('x_ripeness_id', '=', self.ripeness_okay[0])],
+        }, {
+            'x_ripeness_id': self.ripeness_gone,
+            'x_ripeness_id_count': 0,
+            '__domain': [('x_ripeness_id', '=', self.ripeness_gone[0])],
+        }]
+        self.assertEqual(groups, expected, 'should include 2 empty ripeness stages')
