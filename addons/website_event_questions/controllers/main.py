@@ -6,9 +6,9 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 class WebsiteEvent(WebsiteEventController):
 
-    def _process_registration_details(self, details):
+    def _process_attendees_form(self, event, form_details):
         ''' Process data posted from the attendee details form. '''
-        registrations = super(WebsiteEvent, self)._process_registration_details(details)
+        registrations = super(WebsiteEvent, self)._process_attendees_form(event, form_details)
         for registration in registrations:
             answer_ids = []
             for key, value in registration.items():
