@@ -70,11 +70,11 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (account_account.internal_type IN %s)
                 AND (
                         l.reconciled IS FALSE
-                        OR l.id IN(
+                        OR l.id = ANY(ARRAY(
                             SELECT credit_move_id FROM account_partial_reconcile where max_date > %s
                             UNION ALL
                             SELECT debit_move_id FROM account_partial_reconcile where max_date > %s
-                        )
+                        ))
                     )
                     ''' + partner_clause + '''
                 AND (l.date <= %s)
