@@ -652,12 +652,24 @@ class PosOrder(models.Model):
         orders = self.browse(order_ids) if order_ids else self
 
         message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+
+        filename = 'Receipt-' + name + '.jpg'
+        receipt = self.env['ir.attachment'].create({
+            'name': filename,
+            'type': 'binary',
+            'datas': ticket,
+            'res_model': 'pos.order',
+            'res_id': orders[:1].id,
+            'store_fname': filename,
+            'mimetype': 'image/jpeg',
+        })
         template_data = {
             'subject': _('Receipt %s') % name,
-            'body_html': message + '<img src="data:image/jpeg;base64,%s"/>' % ticket,
+            'body_html': message,
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.email or self.env.user.email_formatted,
-            'email_to': client['email']
+            'email_to': client['email'],
+            'attachment_ids': [(4, receipt.id)],
         }
 
         if orders.mapped('account_move'):
@@ -668,11 +680,11 @@ class PosOrder(models.Model):
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
                 'store_fname': filename,
-                'res_model': 'account.move',
-                'res_id': order_ids[0],
+                'res_model': 'pos.order',
+                'res_id': orders[:1].id,
                 'mimetype': 'application/x-pdf'
             })
-            template_data['attachment_ids'] = attachment
+            template_data['attachment_ids'] += [(4, attachment.id)]
 
         mail = self.env['mail.mail'].create(template_data)
         mail.send()

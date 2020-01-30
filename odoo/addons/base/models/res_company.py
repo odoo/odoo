@@ -329,6 +329,9 @@ class Company(models.Model):
         scss_data = base64.b64encode((scss_string).encode('utf-8'))
 
         attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
-        attachment.write({'datas': scss_data})
+        if attachment.datas != scss_data:
+            # this invalidates the corresponding asset (write_date is modified),
+            # so we do it only when necessary
+            attachment.write({'datas': scss_data})
 
         return ''
