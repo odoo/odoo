@@ -716,6 +716,197 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
         self.assertXMLEqual(contents, expected)
 
+    def test_inherit_from_dotted_tname_1(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="module_1.template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>
+                    <t t-name="template_1_2" t-inherit="template_1_1.dot" t-inherit-mode="primary">
+                        <xpath expr="." position="replace">
+                            <div overriden-attr="overriden">
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </t>
+                </templates>
+                """,
+        }
+
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="module_1.template_1_1.dot" random-attr="gloria">
+                    <div>At first I was afraid</div>
+                 </form>
+                 <div overriden-attr="overriden" t-name="template_1_2">
+                    And I grew strong
+                    <p>And I learned how to get along</p>
+                 </div>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
+    def test_inherit_from_dotted_tname_2(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>
+                    <t t-name="template_1_2" t-inherit="template_1_1.dot" t-inherit-mode="primary">
+                        <xpath expr="." position="replace">
+                            <div overriden-attr="overriden">
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </t>
+                </templates>
+                """,
+        }
+
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="template_1_1.dot" random-attr="gloria">
+                    <div>At first I was afraid</div>
+                 </form>
+                 <div overriden-attr="overriden" t-name="template_1_2">
+                    And I grew strong
+                    <p>And I learned how to get along</p>
+                 </div>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
+    def test_inherit_from_dotted_tname_2bis(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>
+                    <t t-name="template_1_2" t-inherit="module_1.template_1_1.dot" t-inherit-mode="primary">
+                        <xpath expr="." position="replace">
+                            <div overriden-attr="overriden">
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </t>
+                </templates>
+                """,
+        }
+
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="template_1_1.dot" random-attr="gloria">
+                    <div>At first I was afraid</div>
+                 </form>
+                 <div overriden-attr="overriden" t-name="template_1_2">
+                    And I grew strong
+                    <p>And I learned how to get along</p>
+                 </div>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
+    def test_inherit_from_dotted_tname_2ter(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="module_1" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>
+                    <t t-name="template_1_2" t-inherit="module_1" t-inherit-mode="primary">
+                        <xpath expr="." position="replace">
+                            <div overriden-attr="overriden">
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </t>
+                </templates>
+                """,
+        }
+
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="module_1" random-attr="gloria">
+                    <div>At first I was afraid</div>
+                 </form>
+                 <div overriden-attr="overriden" t-name="template_1_2">
+                    And I grew strong
+                    <p>And I learned how to get along</p>
+                 </div>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
+    def test_inherit_from_dotted_tname_3(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+            ('module_2_file_1', None, 'module_2'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="module_1.template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>
+                </templates>
+                """,
+
+            'module_2_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <t t-name="template_2_1" t-inherit="module_1.template_1_1.dot" t-inherit-mode="primary">
+                        <xpath expr="." position="replace">
+                            <div overriden-attr="overriden">
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </t>
+                </templates>
+            """
+        }
+
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="module_1.template_1_1.dot" random-attr="gloria">
+                    <div>At first I was afraid</div>
+                 </form>
+                 <div overriden-attr="overriden" t-name="template_2_1">
+                    And I grew strong
+                    <p>And I learned how to get along</p>
+                 </div>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
 
 @tagged('-standard', 'static_templates_performance')
 class TestStaticInheritancePerformance(TestStaticInheritanceCommon):

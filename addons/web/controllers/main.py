@@ -496,6 +496,9 @@ class HomeStaticTemplateHelpers(object):
         for template_tree in list(all_templates_tree):
             if self.NAME_TEMPLATE_DIRECTIVE in template_tree.attrib:
                 template_name = template_tree.attrib[self.NAME_TEMPLATE_DIRECTIVE]
+                dotted_names = template_name.split('.', 1)
+                if len(dotted_names) > 1 and dotted_names[0] == addon:
+                    template_name = dotted_names[1]
             else:
                 # self.template_dict[addon] grows after processing each template
                 template_name = 'anonymous_template_%s' % len(self.template_dict[addon])
