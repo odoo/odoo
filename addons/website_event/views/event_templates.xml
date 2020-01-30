@@ -537,7 +537,7 @@
 </template>
 
 <!-- Event - Registration -->
-<template id="registration_template">
+<template id="registration_template" name="Registration">
     <div t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today() and not event.event_registrations_open"
         class="alert alert-info mb-5" role="status">
         <em >Ticket Sales starting on <t t-esc="event.start_sale_date"/></em>
@@ -547,26 +547,27 @@
         t-attf-action="/event/#{slug(event)}/registration/new" method="post"
         class="mb-5" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <div id="o_wevent_tickets" class="bg-white rounded shadow-sm">
+        <div id="o_wevent_tickets" class="bg-white rounded shadow-sm o_wevent_js_ticket_details">
 
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
             <t t-if="len(event.event_ticket_ids) &gt; 1"> 
-                <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
+                <div class="d-flex justify-content-between align-items-center py-2 pl-3 pr-2 border-bottom">
                     <span t-if="not event.event_registrations_open" class="text-danger">
                         <i class="fa fa-ban mr-2"/>Sold Out
                     </span>
-                    <div class="ml-auto pr-3">
-                        <span t-if="event.is_participating" class="text-success ml-3">
+                    <div t-if="event.is_participating" id="registered" class="ml-auto pr-3 d-none">
+                        <span  class="text-success ml-3">
                             <i class="fa fa-check mr-2"/>Registered
                         </span>
                     </div>
-                    <a href="#" role="button" class="btn btn-primary o_wevent_registration_btn collapsed" data-toggle="collapse" data-target="#o_wevent_tickets_collapse">
+                    <div t-else="" id="price-range" class="pr-3 d-none"/>
+                    <a href="#" role="button" class="btn o_wevent_registration_btn text-left pl-0" data-toggle="collapse" data-folded="0" data-target="#o_wevent_tickets_collapse">
                         Tickets
                         <span class="close">×</span>
                     </a>
                 </div>
-                <div id="o_wevent_tickets_collapse" class="collapse">
+                <div id="o_wevent_tickets_collapse" class="collapse show">
                     <div t-foreach="tickets" t-as="ticket" class="row px-3 mx-0 bg-light border-bottom">
                         <div class="col-8 py-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
                             <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
@@ -834,6 +835,21 @@
 <template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
     <xpath expr="//li[@id='edit-page-menu']" position="after">
         <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'"/>
+    </xpath>
+</template>
+
+<template id="fold_register_details" inherit_id="website_event.registration_template" active="False" customize_show="True" name="Fold ticket details">
+    <xpath expr="//div[@id='registered']" position="attributes">
+        <attribute name="class">ml-auto pr-3</attribute>
+    </xpath>
+    <xpath expr="//div[@id='price-range']" position="attributes">
+        <attribute name="class">ml-0 pr-3</attribute>
+    </xpath>
+    <xpath expr="//div[@id='o_wevent_tickets_collapse']" position="attributes">
+        <attribute name="class">collapse</attribute>
+    </xpath>
+    <xpath expr="//a[hasclass('o_wevent_registration_btn')]" position="attributes">
+        <attribute name="class">btn btn-primary o_wevent_registration_btn collapsed</attribute>
     </xpath>
 </template>
 
