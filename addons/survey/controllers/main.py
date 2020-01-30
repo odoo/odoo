@@ -299,6 +299,24 @@ class Survey(http.Controller):
 
         return Binary._content_image_get_response(status, headers, image_base64)
 
+    @http.route('/survey/get_question_image/<string:survey_token>/<string:answer_token>/<int:question_id>/<int:suggested_answer_id>', type='http', auth="public", website=True, sitemap=False)
+    def survey_get_question_image(self, survey_token, answer_token, question_id, suggested_answer_id):
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True:
+            return werkzeug.exceptions.Forbidden()
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        if not survey_sudo.question_ids.filtered(lambda q: q.id == question_id)\
+                          .suggested_answer_ids.filtered(lambda a: a.id == suggested_answer_id):
+            return werkzeug.exceptions.NotFound()
+
+        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
+            model='survey.question.answer', id=suggested_answer_id, field='value_image',
+            default_mimetype='image/png')
+
+        return Binary._content_image_get_response(status, headers, image_base64)
+
     # ----------------------------------------------------------------
     # JSON ROUTES to begin / continue survey (ajax navigation) + Tools
     # ----------------------------------------------------------------
