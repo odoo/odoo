@@ -96,6 +96,7 @@ PaymentForm.include({
         }
         ajax.loadJS(AcceptJs).then(function () {
             self.$button.trigger('click');
+            self.enableButton(button);
         });
     },
     /**
