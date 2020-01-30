@@ -196,7 +196,7 @@
                                     <div class="mb-2 pt-1">
                                         <t t-if="channel.tag_ids">
                                             <t t-foreach="channel.tag_ids" t-as="channel_tag">
-                                                <span t-attf-class="badge badge-primary" t-esc="channel_tag.name"/>
+                                                <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
                                             </t>
                                         </t>
                                         <a t-if="channel.can_upload"
@@ -593,7 +593,7 @@
             <div class="mb-2 pt-1 text-left col">
                 <t t-if="channel.tag_ids">
                     <t t-foreach="channel.tag_ids" t-as="channel_tag">
-                        <span t-attf-class="badge badge-primary" t-esc="channel_tag.name"/>
+                        <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
                     </t>
                 </t>
                 <a t-if="channel.can_upload"
