@@ -47,8 +47,8 @@ def query_insert(cr, table, rows):
         rows = [rows]
     cols = list(rows[0])
     query = INSERT_QUERY.format(
-        table=table,
-        cols=",".join(cols),
+        table='"{}"'.format(table),
+        cols=",".join(['"{}"'.format(col) for col in cols]),
         rows=",".join("%s" for row in rows),
     )
     params = [tuple(row[col] for col in cols) for row in rows]
@@ -61,9 +61,9 @@ def query_update(cr, table, values, selectors):
     """
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
-        table=table,
-        assignment=",".join("{0}=%({0})s".format(s) for s in setters),
-        condition=" AND ".join("{0}=%({0})s".format(s) for s in selectors),
+        table='"{}"'.format(table),
+        assignment=",".join('"{0}"=%({0})s'.format(s) for s in setters),
+        condition=" AND ".join('"{0}"=%({0})s'.format(s) for s in selectors),
     )
     cr.execute(query, values)
     return [row[0] for row in cr.fetchall()]
