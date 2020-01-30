@@ -274,6 +274,9 @@
                                             attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                     'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                        <field name="group_expand" groups="base.group_no_one"
+                                            attrs="{'readonly': [('ttype','!=','many2one')],
+                                                    'invisible': [('ttype','!=','many2one')]}"/>
                                         <field name="on_delete" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','!=','many2one')],
                                                     'invisible': [('ttype','!=','many2one')]}"/>

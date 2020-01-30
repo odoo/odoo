@@ -397,6 +397,12 @@ class IrModelFields(models.Model):
                                             "specified as a Python expression defining a list of triplets. "
                                             "For example: [('color','=','red')]")
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id') # CLEANME unimplemented field (empty table)
+    group_expand = fields.Boolean(string="Expand Groups",
+                                  help="If checked, all the records of the target model will be included\n"
+                                        "in a grouped result (e.g. 'Group By' filters, Kanban columns, etc.).\n"
+                                        "Note that it can significantly reduce performance if the target model\n"
+                                        "of the field contains a lot of records; usually used on models with\n"
+                                        "few records (e.g. Stages, Job Positions, Event Types, etc.).")
     selectable = fields.Boolean(default=True)
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the field is defined')
     relation_table = fields.Char(help="Used for custom many2many fields to define a custom relation table name")
@@ -994,6 +1000,7 @@ class IrModelFields(models.Model):
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+            attrs['group_expand'] = '_read_group_expand_full' if field_data['group_expand'] else None
         elif field_data['ttype'] == 'one2many':
             if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
