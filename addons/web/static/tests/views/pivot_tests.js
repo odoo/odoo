@@ -2723,5 +2723,30 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test('pivot rendering with boolean field', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.bar = {string: "bar", type: "boolean", store: true, searchable: true, group_operator: 'bool_or'}
+        this.data.partner.records = [{id: 1, bar: true, date: '2019-12-14'}, {id: 2, bar: false, date: '2019-05-14'}];
+
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" type="row" interval="day"/>' +
+                        '<field name="bar" type="col"/>' +
+                        '<field name="bar" string="SLA status Failed" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('tbody tr:contains("2019-12-14")').length, 1, 'There should be a first column');
+        assert.ok(pivot.$('tbody tr:contains("2019-12-14") [type="checkbox"]').is(':checked'), 'first column contains checkbox and value should be ticked');
+        assert.strictEqual(pivot.$('tbody tr:contains("2019-05-14")').length, 1, 'There should be a second column');
+        assert.notOk(pivot.$('tbody tr:contains("2019-05-14") [type="checkbox"]').is(':checked'), "second column should have checkbox that is not checked by default");
+
+        pivot.destroy();
+    });
 });
 });
