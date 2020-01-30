@@ -37,6 +37,12 @@
                                          o_negative: cell.value &lt; 0,
                                          o_null: cell.value === 0,
                                     }" t-esc="_getFormattedVariation(cell)"/>
+                                <div t-elif="props.fields and props.fields[cell.measure].type === 'boolean'" class="o_value">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" t-attf-id="checkbox_{{cell_index}}_{{row_index}}" disabled="disabled" t-att-checked="cell.value" class="custom-control-input"/>
+                                        <label t-attf-for="checkbox_{{cell_index}}_{{row_index}}" class="custom-control-label"/>
+                                    </div>
+                                </div>
                                 <div t-else="1" class="o_value" t-esc="_getFormattedValue(cell)"/>
                             </t>
                         </td>
