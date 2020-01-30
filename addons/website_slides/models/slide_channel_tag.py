@@ -6,11 +6,11 @@ from odoo import fields, models
 
 class SlideChannelTagGroup(models.Model):
     _name = 'slide.channel.tag.group'
-    _description = 'Channel/Course Tag'
+    _description = 'Channel/Course Groups'
     _inherit = 'website.published.mixin'
     _order = 'sequence asc'
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Group Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10, index=True, required=True)
     tag_ids = fields.One2many('slide.channel.tag', 'group_id', string='Tags')
 
