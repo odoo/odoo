@@ -15,18 +15,25 @@
     & span {
         z-index: 1;
         position: absolute;
-        display: block;
+        display: grid;
+        align-items: center;
         width: 225px;
-        padding: 15px 40px;
+        height: 48px;
+        padding: 0 44px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
         color: #fff;
         font: 700 18px/1 'Lato', sans-serif;
         text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
         text-transform: uppercase;
         text-align: center;
-        white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
+        user-select: none;
+        &.o_small {
+            font-size: 12px;
+        }
+        &.o_medium {
+            font-size: 15px;
+        }
     }
 
     &-top-right {
