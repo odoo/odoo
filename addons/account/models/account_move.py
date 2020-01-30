@@ -99,7 +99,7 @@ class AccountMove(models.Model):
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
             ('posted', 'Posted'),
-            ('cancel', 'Cancelled')
+            ('cancel', 'Cancelled'),
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
         default='draft')
     type = fields.Selection(selection=[
@@ -162,7 +162,8 @@ class AccountMove(models.Model):
         ('in_payment', 'In Payment'),
         ('paid', 'Paid'),
         ('partial', 'Partially Paid'),
-        ('reversed', 'Reversed'),],
+        ('reversed', 'Reversed'),
+        ('invoicing_legacy', 'Invoicing App Legacy')],
         string='Payment', store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
 
@@ -976,6 +977,15 @@ class AccountMove(models.Model):
             in_payment_set = {}
 
         for move in self:
+
+            if move.payment_state == 'invoicing_legacy':
+                # invoicing_legacy state is set via SQL when setting setting field
+                # invoicing_switch_threshold (defined in account_accountant).
+                # The only way of going out of this state is through this setting,
+                # so we don't recompute it here.
+                move.payment_state = move.payment_state
+                continue
+
             total_untaxed = 0.0
             total_untaxed_currency = 0.0
             total_tax = 0.0
