@@ -327,16 +327,19 @@ class Registry(Mapping):
 
         for model in models:
             model.initialize()
+            # deprecated but kept for backwards-compatibility, must always be called
+            model.init()
+
+        for model in models:
+            model._reflect()
 
         self._ordinary_tables = None
 
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
             func()
-
         env['base'].flush()
 
-        # upsert constraints
         self.finalize_models(models)
 
         # make sure all tables are present
@@ -349,8 +352,6 @@ class Registry(Mapping):
             all_foreign.append(model.finalize())
         for fks, model in zip(all_foreign, auto_models):
             model._process_constraints(fks)
-        for model in models:
-            model._reflect()
 
     def check_tables_exist(self, cr):
         """

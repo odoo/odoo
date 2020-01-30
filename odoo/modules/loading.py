@@ -25,9 +25,6 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
 
-MODELS_TO_UPDATE = set()
-
-
 def load_data(cr, idref, mode, kind, package, report):
     """
 
@@ -205,6 +202,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check |= set(model_names) & models_updated
 
         idref = {}
+
         mode = 'update'
         if hasattr(package, 'init') or package.state == 'to install':
             mode = 'init'
@@ -276,8 +274,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             registry._init_modules.add(package.name)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
-    global MODELS_TO_UPDATE
-    MODELS_TO_UPDATE = models_updated
 
     return loaded_modules, processed_modules
 

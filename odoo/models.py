@@ -2448,8 +2448,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # has not been added in database yet!
         self = self.with_context(prefetch_fields=False)
 
-        self.pool.post_init(self._reflect)
-
         cr = self._cr
         update_custom_fields = self._context.get('update_custom_fields', False)
         must_create_table = not tools.table_exists(cr, self._table)
@@ -2486,8 +2484,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     for field in fields_to_compute:
                         _logger.info("Storing computed values of %s", field)
                         self.env.add_to_compute(recs._fields[field], recs)
-        else:
-            self.init()
 
         if must_create_table:
             self._execute_sql()
