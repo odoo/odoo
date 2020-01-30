@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import tagged, users, warmup, Form
+from odoo.tests.common import tagged, users, warmup
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -40,7 +40,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         partner = self.employee_hruser.user_id.partner_id
         partner2 = self.user_employee.partner_id
 
-        channel = self.env['mail.channel'].with_context({
+        channel = self.env['mail.channel'].with_user(self.user_employee).with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_channel_noautofollow': True,
@@ -51,7 +51,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'email_send': False,
             'name': 'test'
         })
-        infos = channel.with_user(self.user_employee).channel_info()
+        infos = channel.channel_info()
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end)
 
 @tagged('out_of_office')

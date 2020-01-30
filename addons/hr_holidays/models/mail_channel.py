@@ -24,4 +24,9 @@ class Channel(models.Model):
             out_of_office_infos = dict(((res['partner_id'], res) for res in self.env.cr.dictfetchall()))
             for partner_id, out_of_office_info in out_of_office_infos.items():
                 partner_infos[partner_id]['out_of_office_date_end'] = out_of_office_info['date_to']
+
+        # fill empty values for the consistency of the result
+        for partner_info in partner_infos.values():
+            partner_info.setdefault('out_of_office_date_end', False)
+
         return partner_infos
