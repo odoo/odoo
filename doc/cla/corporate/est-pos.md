@@ -8,8 +8,8 @@ declaration.
 
 Signed,
 
-Kristjan Vedler kristjan.vedler@estpos.ee https://github.com/vedler
+Kristjan Vedler kristjan.vedler@outlook.com https://github.com/vedler
 
 List of contributors:
 
-Kristjan Vedler kristjan.vedler@estpos.ee https://github.com/vedler
+Kristjan Vedler kristjan.vedler@outlook.com https://github.com/vedler
