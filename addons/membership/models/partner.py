@@ -93,7 +93,7 @@ class Partner(models.Model):
                         state = 'old'
                         break
 
-            if partner.free_member and state is not 'paid':
+            if partner.free_member and state != 'paid':
                 state = 'free'
             partner.membership_state = state
 
