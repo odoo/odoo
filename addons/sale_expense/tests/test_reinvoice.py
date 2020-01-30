@@ -13,7 +13,11 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
 
         cls.setUpExpenseProducts()
 
-        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
+        cls.public_pricelist = cls.env['product.pricelist'].create({
+            "name": "Public Pricelist",
+            "sequence": 1,
+            "currency_id": cls.env.user.company_id.currency_id.id,
+        })
 
         # partner and SO
         cls.partner_customer = cls.env['res.partner'].create({
@@ -26,6 +30,7 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'partner_id': cls.partner_customer_usd.id,
             'partner_invoice_id': cls.partner_customer_usd.id,
             'partner_shipping_id': cls.partner_customer_usd.id,
+            'pricelist_id': cls.public_pricelist.id,
         })
 
     def test_at_cost(self):

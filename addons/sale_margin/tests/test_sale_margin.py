@@ -19,12 +19,9 @@ class TestSaleMargin(common.TransactionCase):
             'name': 'A test partner address',
             'parent_id': self.partner_id,
         }).id
-        self.pricelist_id = self.ref('product.list0')
-        self.pricelist = self.env.ref('product.list0')
 
     def test_sale_margin(self):
         """ Test the sale_margin module in Odoo. """
-        self.pricelist.currency_id = self.env.company.currency_id
         self.product.standard_price = 700.0
         sale_order_so11 = self.SaleOrder.create({
             'date_order': datetime.today(),
@@ -46,7 +43,7 @@ class TestSaleMargin(common.TransactionCase):
             'partner_id': self.partner_id,
             'partner_invoice_id': self.partner_invoice_address_id,
             'partner_shipping_id': self.partner_invoice_address_id,
-            'pricelist_id': self.pricelist_id})
+        })
         # Confirm the sales order.
         sale_order_so11.action_confirm()
         # Verify that margin field gets bind with the value.
@@ -77,7 +74,7 @@ class TestSaleMargin(common.TransactionCase):
             'partner_id': self.partner_id,
             'partner_invoice_id': self.partner_invoice_address_id,
             'partner_shipping_id': self.partner_invoice_address_id,
-            'pricelist_id': self.pricelist_id})
+        })
         # Confirm the sales order.
         sale_order_so12.action_confirm()
         # Verify that margin field of Sale Order Lines gets bind with the value.
@@ -106,7 +103,7 @@ class TestSaleMargin(common.TransactionCase):
             'partner_id': self.partner_id,
             'partner_invoice_id': self.partner_invoice_address_id,
             'partner_shipping_id': self.partner_invoice_address_id,
-            'pricelist_id': self.pricelist_id})
+        })
         # Verify that margin field of Sale Order Lines gets bind with the value.
         self.assertEqual(sale_order_so13.order_line[0].margin, 70.00, "Sales order profit should be 70.00")
         self.assertEqual(sale_order_so13.order_line[0].margin_percent, 1.0, "Sales order margin percentage should be 100.00")
@@ -138,7 +135,7 @@ class TestSaleMargin(common.TransactionCase):
             'partner_id': self.partner_id,
             'partner_invoice_id': self.partner_invoice_address_id,
             'partner_shipping_id': self.partner_invoice_address_id,
-            'pricelist_id': self.pricelist_id})
+        })
         # Confirm the sales order.
         sale_order_so14.action_confirm()
         # Verify that margin field of Sale Order Lines gets bind with the value.

@@ -27,7 +27,6 @@ class TestSaleStock(TestSaleCommon):
                 'product_uom_qty': amount,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
         }
         sale_order = self.env['sale.order'].create(sale_order_vals)
         return sale_order
@@ -43,7 +42,6 @@ class TestSaleStock(TestSaleCommon):
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
             'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for p in self.products.values()],
-            'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
 
@@ -109,7 +107,6 @@ class TestSaleStock(TestSaleCommon):
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
             'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for p in self.products.values()],
-            'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
         for sol in self.so.order_line:
@@ -169,7 +166,6 @@ class TestSaleStock(TestSaleCommon):
                 'product_uom_qty': 5.0,
                 'product_uom': self.product.uom_id.id,
                 'price_unit': self.product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
         }
         self.so = self.env['sale.order'].create(so_vals)
 
@@ -240,7 +236,6 @@ class TestSaleStock(TestSaleCommon):
                 'product_uom_qty': 5.0,
                 'product_uom': self.product.uom_id.id,
                 'price_unit': self.product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
         }
         self.so = self.env['sale.order'].create(so_vals)
 
@@ -765,7 +760,6 @@ class TestSaleStock(TestSaleCommon):
                 'product_uom_qty': 5.0,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
         }
         so = self.env['sale.order'].create(so_vals)
 

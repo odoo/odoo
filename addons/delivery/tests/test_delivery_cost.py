@@ -16,7 +16,6 @@ class TestDeliveryCost(common.TransactionCase):
         self.Product = self.env['product.product']
 
         self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
-        self.pricelist = self.env.ref('product.list0')
         self.product_4 = self.env['product.product'].create({'name': 'A product to deliver'})
         self.product_uom_unit = self.env.ref('uom.product_uom_unit')
         self.product_delivery_normal = self.env['product.product'].create({
@@ -44,10 +43,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
         # that the company actually uses USD
-        self.env.cr.execute(
-            "UPDATE res_company SET currency_id = %s WHERE id = %s",
-            [self.env.ref('base.USD').id, self.env.company.id])
-        self.pricelist.currency_id = self.env.ref('base.USD').id
+        self.env.company.currency_id = self.env.ref('base.USD')
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
@@ -57,7 +53,6 @@ class TestDeliveryCost(common.TransactionCase):
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
-            'pricelist_id': self.pricelist.id,
             'order_line': [(0, 0, {
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product_4.id,
@@ -115,7 +110,6 @@ class TestDeliveryCost(common.TransactionCase):
             'partner_id': self.partner_4.id,
             'partner_invoice_id': self.partner_address_13.id,
             'partner_shipping_id': self.partner_address_13.id,
-            'pricelist_id': self.pricelist.id,
             'order_line': [(0, 0, {
                 'name': 'Service on demand',
                 'product_id': self.product_consultant.id,

@@ -34,7 +34,6 @@ class TestDropship(common.TransactionCase):
                 'product_uom': prod.uom_id.id,
                 'price_unit': 12,
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
         so.action_confirm()

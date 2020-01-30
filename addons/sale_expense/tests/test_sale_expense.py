@@ -9,9 +9,6 @@ from odoo.tests import tagged
 class TestSaleExpense(TestSaleCommon):
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
-        # force the pricelist to have the same currency as the company
-        self.env.ref('product.list0').currency_id = self.env.ref('base.main_company').currency_id
-
         # create a so with a product invoiced on delivery
         prod = self.env['product.product'].create({
             'name': 'A product',
@@ -25,7 +22,6 @@ class TestSaleExpense(TestSaleCommon):
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
             'order_line': [(0, 0, {'name': prod.name, 'product_id': prod.id, 'product_uom_qty': 2, 'product_uom': prod.uom_id.id, 'price_unit': prod.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
         })
         so._compute_tax_id()
         so.action_confirm()

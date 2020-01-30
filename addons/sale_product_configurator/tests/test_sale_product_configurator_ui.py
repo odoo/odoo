@@ -65,7 +65,6 @@ class TestUi(odoo.tests.HttpCase):
         # Apply a price_extra for the attribute Aluminium
         self.product_product_4_product_template.attribute_line_ids[0].product_template_value_ids[1].price_extra = 50.40
 
-
         # Add a Custom attribute
         product_attribute_value_7 = self.env['product.attribute.value'].create({
             'name': 'Custom',
@@ -239,7 +238,11 @@ class TestUi(odoo.tests.HttpCase):
 
         # Make sure pricelist rule exist
         product_template = self.product_product_4_product_template
-        pricelist = self.env.ref('product.list0')
+        self.env['product.pricelist'].search([]).active = False
+        pricelist = self.env['product.pricelist'].create({
+            "name": "Public Pricelist",
+            "sequence": 1,
+        })
 
         if not pricelist.item_ids.filtered(lambda i: i.product_tmpl_id == product_template and i.applied_on == '1_product' and i.price_discount == 20):
             self.env['product.pricelist.item'].create({

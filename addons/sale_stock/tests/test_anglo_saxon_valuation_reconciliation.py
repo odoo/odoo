@@ -12,6 +12,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
     def setUp(self):
         super(TestValuationReconciliation, self).setUp()
+
+        self.public_pricelist = self.env['product.pricelist'].create({
+            "name": "Public Pricelist",
+            "sequence": 1,
+            "currency_id": self.currency_two.id,
+        })
+
         self.account_receivable = self.env['account.account'].create({
             'code': 'X1111 - Test Sale Stock',
             'name': 'Sale - Test Receivable Account',
@@ -24,8 +31,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'name': 'Sale - Test Account',
             'user_type_id': self.env.ref('account.data_account_type_direct_costs').id
         })
-
-        self.env.ref('product.list0').currency_id = self.currency_two.id
 
         #set the invoice_policy to delivery to have an accurate COGS entry
         self.test_product_delivery.invoice_policy = "delivery"
@@ -43,6 +48,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                     'price_unit': self.product_price_unit,
                 })],
             'date_order': date,
+            "pricelist_id": self.public_pricelist.id,
         })
         rslt.action_confirm()
         return rslt

@@ -12,8 +12,11 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
 
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
-        pricelist = cls.env.ref('product.list0')
-        pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
+        cls.public_pricelist = cls.env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+            "currency_id": cls._setup_currency(cls.currency_ratio).id,
+            "sequence": 1,
+        })
 
         # Set all the existing programs to active=False to avoid interference
         cls.env['sale.coupon.program'].search([]).write({'active': False})
@@ -25,7 +28,8 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
         })
 
         cls.empty_order = cls.env['sale.order'].create({
-            'partner_id': cls.steve.id
+            'partner_id': cls.steve.id,
+            "pricelist_id": cls.public_pricelist.id,
         })
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
@@ -65,7 +69,6 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
             'list_price': 100,
             'sale_ok': True,
             'taxes_id': [(6, 0, [])],
-
         })
 
         # Immediate Program By A + B: get B free

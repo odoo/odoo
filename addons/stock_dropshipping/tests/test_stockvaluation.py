@@ -91,7 +91,6 @@ class TestStockValuation(StockAccountTestCommon):
                 'price_unit': 12,
                 'tax_id': [(6, 0, [])],
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
         self.sale_order1.action_confirm()

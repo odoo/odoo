@@ -45,15 +45,19 @@ class TestProductMargin(AccountTestCommon):
 
         # Sale turnover ( Quantity * Price Subtotal / Quantity)
         sale_turnover = ((20.0 * 750.00) + (10.0 * 550.00))
+        self.assertEqual(result[ipad.id]['turnover'], sale_turnover, "Wrong Turnover.")
 
         # Expected sale (Total quantity * Sale price)
         sale_expected = (750.00 * 30.0)
+        self.assertEqual(result[ipad.id]['sale_expected'], sale_expected, "Wrong Sale expected.")
 
         # Purchase total cost (Quantity * Unit price)
         purchase_total_cost = ((10.0 * 300.00) + (4.0 * 450.00))
+        self.assertEqual(result[ipad.id]['total_cost'], purchase_total_cost, "Wrong Total Cost.")
 
         # Purchase normal cost ( Total quantity * Cost price)
         purchase_normal_cost = (14.0 * 500.00)
+        self.assertEqual(result[ipad.id]['normal_cost'], purchase_normal_cost, "Wrong Normal Cost.")
 
         total_margin = sale_turnover - purchase_total_cost
         expected_margin = sale_expected - purchase_normal_cost

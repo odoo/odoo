@@ -143,7 +143,15 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.product_product_11_product_template.optional_product_ids = [(4, self.product_product_1_product_template.id)]
 
         # fix runbot, sometimes one pricelist is chosen, sometimes the other...
-        pricelists = self.env['website'].get_current_website().get_current_pricelist() | self.env.ref('product.list0')
+        # VFE TODO import Product Common ? or create a new pricelist
+        pricelists = self.env['website'].get_current_website().get_current_pricelist() | \
+            self.env['product.pricelist'].create({
+                'name': 'Public Pricelist',
+                "website_published": True,
+                "selectable": True,
+                "website_id": None,
+                "sequence": 1,
+            })
 
         for pricelist in pricelists:
             if not pricelist.item_ids.filtered(lambda i: i.product_tmpl_id == product_template and i.price_discount == 20):

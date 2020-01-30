@@ -14,7 +14,6 @@ class StockMoveInvoice(AccountTestCommon):
         self.AccountJournal = self.env['account.journal']
 
         self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
-        self.pricelist_id = self.env.ref('product.list0')
         self.product_11 = self.env['product.product'].create({'name': 'A product to deliver'})
         self.product_cable_management_box = self.env['product.product'].create({
             'name': 'Another product to deliver',
@@ -46,7 +45,6 @@ class StockMoveInvoice(AccountTestCommon):
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
-            'pricelist_id': self.pricelist_id.id,
             'order_line': [(0, 0, {
                 'name': 'Cable Management Box',
                 'product_id': self.product_cable_management_box.id,

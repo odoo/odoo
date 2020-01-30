@@ -15,10 +15,6 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()
 
-        # tweak demo data: force currency and remove confusing rates
-        company_currency = cls.env.user.company_id.currency_id
-        cls.env.ref('product.list0').currency_id = company_currency
-
         # expense product
         cls.product_expense = cls.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'name': "Expense service",

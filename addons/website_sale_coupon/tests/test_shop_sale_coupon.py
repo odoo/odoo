@@ -14,10 +14,12 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
         super(TestUi, cls).setUpClass()
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
-        pricelist = cls.env.ref('product.list0')
-        new_currency = cls._setup_currency(cls.currency_ratio)
-        pricelist.currency_id = new_currency
-        pricelist.flush()
+        cls.env['product.pricelist'].search([]).active = False
+        cls.public_pricelist = cls.env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+            "currency_id": cls._setup_currency(cls.currency_ratio).id,
+            "sequence": 1,
+        })
 
 
     def test_01_admin_shop_sale_coupon_tour(self):

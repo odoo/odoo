@@ -39,7 +39,16 @@ class TestWebsitePriceList(TransactionCase):
         self.website = self.env.ref('website.default_website')
         self.website.user_id = self.env.user
 
-        (self.env['product.pricelist'].search([]) - self.env.ref('product.list0')).write({'website_id': False, 'active': False})
+        # VFE TODO base on TestPricelistCommon data
+        self.env['product.pricelist'].search([]).active = False
+        self.env['res.partner'].invalidate_cache(['property_product_pricelist'])
+        self.public_pricelist = self.env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+            "website_published": True,
+            "selectable": True,
+            "website_id": None,
+            "sequence": 1,
+        })
         self.benelux = self.env['res.country.group'].create({
             'name': 'BeNeLux',
             'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
@@ -58,7 +67,6 @@ class TestWebsitePriceList(TransactionCase):
             'percent_price': 10,
             'currency_id': self.env.ref('base.EUR').id,
         })
-
 
         self.list_christmas = self.env['product.pricelist'].create({
             'name': 'Christmas',
@@ -87,8 +95,8 @@ class TestWebsitePriceList(TransactionCase):
             'compute_price': 'formula',
             'base': 'list_price',
         })
-        self.env.ref('product.list0').website_id = self.website.id
-        self.website.pricelist_id = self.ref('product.list0')
+        self.public_pricelist.website_id = self.website.id
+        self.website.pricelist_id = self.public_pricelist
 
         ca_group = self.env['res.country.group'].create({
             'name': 'Canada',
@@ -226,6 +234,8 @@ class TestWebsitePriceListAvailable(TransactionCase):
 
         # Remove existing pricelists and create new ones
         existing_pricelists = Pricelist.search([])
+        existing_pricelists.write({'active': False})
+        self.env['res.partner'].invalidate_cache(['property_product_pricelist'])
         self.backend_pl = Pricelist.create({
             'name': 'Backend Pricelist',
             'website_id': False,
@@ -270,7 +280,6 @@ class TestWebsitePriceListAvailable(TransactionCase):
             'name': 'Website 2 Pricelist',
             'website_id': self.website2.id,
         })
-        existing_pricelists.write({'active': False})
 
         simulate_frontend_context(self)
 
@@ -340,9 +349,6 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def test_get_pricelist_available_geoip(self):
         # Test get all available pricelists with geoip and no partner pricelist (ir.property)
 
-        # property_product_pricelist will also be returned in the available pricelists
-        self.website1_be_pl += self.env.user.partner_id.property_product_pricelist
-
         pls = self.get_pricelist_available(country_code=self.BE.code)
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, and the partner pl")
 
@@ -361,8 +367,6 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def test_get_pricelist_available_geoip4(self):
         # Test get all available with geoip and visible pricelists + promo pl
         pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_code_select
-        # property_product_pricelist will also be returned in the available pricelists
-        pls_to_return += self.env.user.partner_id.property_product_pricelist
 
         current_pl = self.w1_pl_code
         pls = self.get_pricelist_available(country_code=self.BE.code, show_visible=True, website_sale_current_pl=current_pl.id)

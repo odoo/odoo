@@ -15,7 +15,7 @@ class TestProductCommon(common.SavepointCase):
             'email': 'julia@agrolait.example.com',
         })
 
-        # Product environment related data
+        # Units of Measure
         Uom = cls.env['uom.uom']
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
@@ -25,8 +25,12 @@ class TestProductCommon(common.SavepointCase):
             'factor_inv': 0.1,
             'factor': 10.0,
             'uom_type': 'smaller',
-            'rounding': 0.001})
-        cls.uom_weight = cls.env.ref('uom.product_uom_kgm')
+            'rounding': 0.001
+        })
+        cls.uom_kgm = cls.env.ref('uom.product_uom_kgm')
+        cls.uom_ton = cls.env.ref('uom.product_uom_ton')
+
+        # Products
         Product = cls.env['product.product']
         cls.product_0 = Product.create({
             'name': 'Work',
@@ -101,6 +105,13 @@ class TestProductCommon(common.SavepointCase):
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
 
+        cls.env['product.pricelist'].search([]).active = False
+
+        cls.public_pricelist = cls.env['product.pricelist'].create({
+            "name": "Public Pricelist",
+            "sequence": 1,
+        })
+
 
 class TestAttributesCommon(common.SavepointCase):
 
@@ -116,3 +127,106 @@ class TestAttributesCommon(common.SavepointCase):
                 'value_ids': [(0, 0, {'name': n}) for n in range(10)]
             } for name in cls.att_names
         ])
+
+class TestPricelistCommon(TestProductCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestPricelistCommon, cls).setUpClass()
+
+        cls.partner_2 = cls.env['res.partner'].create({'name': 'Ready Mat'})
+        cls.partner_3 = cls.env['res.partner'].create({'name': 'Wood Corner'})
+        # VFE TODO set a different property_product_pricelist on those two partners
+
+        # Setup currencies
+        cls.currency_yuan = cls.env.ref("base.CNY")
+        cls.currency_eur = cls.env.ref("base.EUR")
+        cls.currency_usd = cls.env.ref("base.USD")
+
+        (cls.currency_yuan + cls.currency_eur + cls.currency_usd).active = True
+
+        # Ensure all tests are done in consistend currency.
+        cls.env.company.currrency_id = cls.currency_usd
+
+        # Setup uoms
+
+        uom_unit_category_id = cls.uom_unit.category_id.id
+        # cls.uom_unit already defined by TestProductCommon
+        cls.uom_half = cls.env["uom.uom"].create({
+            "name": "Half",
+            "factor": 2,
+            "uom_type": "smaller",
+            "category_id": uom_unit_category_id,
+        })
+        cls.uom_trio = cls.env["uom.uom"].create({
+            "name": "Trio",
+            "factor_inv": 3,
+            "uom_type": "bigger",
+            "category_id": uom_unit_category_id,
+        })
+
+        # Setup pricelists
+
+        cls.empty_pricelist = cls.public_pricelist
+        # VFE TODO fix public_pricelist currency to USD?
+
+        cls.basic_pricelist = cls.env['product.pricelist'].create({
+            "name": "Basic Test",
+            "currency_id": cls.currency_eur.id,
+            # TODO rules on product, variants, categories
+            # fixed, formulas and discounts
+        })
+
+        # cls.advanced_pricelist = cls.env['product.pricelist'].create({
+        #     "name": "Advanced Test",
+        #     "currency_id": cls.currency_3.id,
+        #     "item_ids": [(0, 0, {
+        #         "applied_on": "3_global/2_product_category/1_product/0_product_variant",
+        #         #categ_id,product_id,product_tmpl_id
+        #         "base": "list_price/standard_price/pricelist",
+        #         "compute_price": "percentage/formula",
+        #     })]
+        # })
+        #
+        # cls.pricelist_chain_3 = cls.env['product.pricelist'].create({
+        #     "name": "Chained Pricelist - End",
+        #     "currency_id": cls.currency_3.id,
+        #     "item_ids": [(0, 0, {
+        #         "applied_on": "3_global/2_product_category/1_product/0_product_variant",
+        #         #categ_id,product_id,product_tmpl_id
+        #         "base": "list_price/standard_price/pricelist",
+        #         "compute_price": "percentage",
+        #     })]
+        # })
+        #
+        # cls.pricelist_chain_2 = cls.env['product.pricelist'].create({
+        #     "name": "Chained Pricelist - Center",
+        #     "currency_id": cls.currency_3.id,
+        #     "item_ids": [(0, 0, {
+        #         "applied_on": "3_global/2_product_category/1_product/0_product_variant",
+        #         #categ_id,product_id,product_tmpl_id
+        #         "base": "pricelist",
+        #         "compute_price": "formula",
+        #     })]
+        # })
+        #
+        # cls.pricelist_chain_1 = cls.env['product.pricelist'].create({
+        #     "name": "Chained Pricelist - Begin",
+        #     "currency_id": cls.currency_3.id,
+        #     "item_ids": [],
+        # })
+
+        # VFE TODO set rules only for some products / categories in TestProductCommon
+        # VFE TODO rules for specific dates
+        # VFE TODO rules for specific quantities
+        # VFE TODO discount / no discount
+        # VFE TODO in website : country groups tests ?
+
+class TestNoPricelistCommon(TestProductCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestPricelistCommon, cls).setUpClass()
+
+        cls.public_pricelist.active = False
+        cls.env['product.pricelist'].search([]).active = False

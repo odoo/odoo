@@ -16,8 +16,6 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()
 
-        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
-
         # patch expense products to make them services creating task/project
         service_values = {
             'type': 'service',
@@ -38,11 +36,17 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'partner_id': cls.partner_customer_usd.id
         })
 
+        cls.public_pricelist = cls.env['product.pricelist'].create({
+            "name": "Public Pricelist",
+            "sequence": 1,
+        })
+
         cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'partner_id': cls.partner_customer_usd.id,
             'partner_invoice_id': cls.partner_customer_usd.id,
             'partner_shipping_id': cls.partner_customer_usd.id,
             'analytic_account_id': cls.analytic_account.id,
+            'pricelist_id': cls.public_pricelist.id,
         })
 
         cls.Invoice = cls.env['account.move'].with_context(mail_notrack=True, mail_create_nolog=True)

@@ -28,6 +28,11 @@ class TestProductAttributeValueCommon(SavepointCase):
             'name': 'Super Computer Case'
         })
 
+        cls.public_pricelist = cls.env['product.pricelist'].create({
+            "name": "Public Pricelist",
+            "sequence": 1,
+        })
+
         cls._add_size_attribute()
 
     @classmethod

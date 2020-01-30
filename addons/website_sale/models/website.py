@@ -343,6 +343,8 @@ class Website(models.Model):
             # code is not None when user removes code and click on "Apply"
             pricelist_id = partner.property_product_pricelist.id
             update_pricelist = True
+            if sale_order.pricelist_id.code and pricelist_id == sale_order.pricelist_id.id:
+                pricelist_id = False
 
         # update the pricelist
         if update_pricelist:
