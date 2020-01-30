@@ -1400,6 +1400,8 @@ const SnippetOptionWidget = Widget.extend({
      */
     selectStyle: async function (previewMode, widgetValue, params) {
         if (params.cssProperty === 'background-color') {
+            // Need a way for event handlers to signal that they need this code to wait.
+            // Can't just wait blindly because there might be no event listener for this event
             await new Promise(resolve => this.$target.trigger('background-color-event', {previewMode, callback: resolve}));
         }
 
@@ -2529,7 +2531,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
                 noVideos: true,
                 res_model: $editable.data('oe-model'),
                 res_id: $editable.data('oe-id'),
-                firstFilters: this.firstFilters,
+                firstFilters: params.firstFilters ? params.firstFilters.split(' ') : [],
             },
             targetEl: dummyEl
         };

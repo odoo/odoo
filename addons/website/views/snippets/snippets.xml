@@ -105,7 +105,11 @@
 <template id="option_imagepicker">
     <we-row t-att-string="title" class="o_we_inline">
         <!-- TODO: crop here? <we-button class="o_we_crop_image fa fa-fw fa-crop" data-crop-image="" data-no-preview="true"/> -->
-        <we-button class="o_we_edit_image fa fa-fw fa-edit" data-edit-image="true" t-att-data-allow-videos="allow_videos" data-no-preview="true"/>
+        <we-button class="o_we_edit_image fa fa-fw fa-edit"
+            data-edit-image="true"
+            t-att-data-allow-videos="allow_videos"
+            data-no-preview="true"
+            t-att-data-first-filters="first_filters"/>
         <we-button class="o_we_remove_image fa fa-fw fa-times" data-remove-image="" data-no-preview="true" data-name="remove"/>
     </we-row>
     <we-row string="Quality" class="o_we_inline o_we_quality_option">
