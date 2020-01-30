@@ -183,6 +183,13 @@ class Registry(Mapping):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
 
+    def __delitem__(self, model_name):
+        """ Remove a (custom) model from the registry. """
+        del self.models[model_name]
+        # the custom model can inherit from mixins ('mail.thread', ...)
+        for Model in self.models.values():
+            Model._inherit_children.discard(model_name)
+
     def descendants(self, model_names, *kinds):
         """ Return the models corresponding to ``model_names`` and all those
         that inherit/inherits from them.
