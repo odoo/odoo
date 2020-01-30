@@ -20,13 +20,13 @@
             </div>
 
             <ul class="carousel-indicators">
-                <li class="o_indicators_left text-center pt-2" aria-label="Previous" title="Previous">
+                <li class="o_indicators_left text-center" aria-label="Previous" title="Previous">
                     <i class="fa fa-chevron-left"/>
                 </li>
                 <t t-foreach="srcs" t-as="src">
                     <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="src_index == index and 'active'" t-attf-style="background-image: url(#{src})"></li>
                 </t>
-                <li class="o_indicators_right text-center pt-2" aria-label="Next" title="Next">
+                <li class="o_indicators_right text-center" aria-label="Next" title="Next">
                     <i class="fa fa-chevron-right"/>
                 </li>
             </ul>
