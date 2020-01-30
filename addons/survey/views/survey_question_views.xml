@@ -94,8 +94,8 @@
                             </div>
                         </group>
                     </group>
-                    <notebook attrs="{'invisible': [('is_page', '=', True)]}">
-                        <page string="Answers" name="answers">
+                    <notebook>
+                        <page string="Answers" name="answers" attrs="{'invisible': [('is_page', '=', True)]}">
                             <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                             <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/><br/>
                             <field name="save_as_email" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_email', '=', False)]}"/>
@@ -131,7 +131,7 @@
                         <page string="Description" name="survey_description">
                             <field name="description" widget="html"/>
                         </page>
-                        <page string="Options" name="options">
+                        <page string="Options" name="options" attrs="{'invisible': [('is_page', '=', True)]}">
                             <group string="Constraints">
                                 <group colspan="2" col="4">
                                     <field name="constr_mandatory" string="Mandatory Answer"/>

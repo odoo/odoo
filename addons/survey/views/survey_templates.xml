@@ -144,6 +144,7 @@
         <t t-if="survey.questions_layout == 'one_page'">
             <t t-foreach='survey.question_and_page_ids' t-as='question'>
                 <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16" />
+                <div t-if="question.is_page" t-field='question.description'/>
                 <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
 
@@ -210,7 +211,7 @@
                     </div>
                     <div class="col-3">
                         <div class="float-right">
-                            <t t-call="survey.survey_progression">
+                            <t t-if="not question.is_page" t-call="survey.survey_progression">
                                 <t t-set="page_ids" t-value="survey.question_ids.ids"/>
                                 <t t-set="page_number" t-value="page_ids.index(question.id)"/>
                             </t>

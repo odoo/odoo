@@ -442,7 +442,7 @@ class Survey(models.Model):
         elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
             return user_input.predefined_question_ids
         else:
-            return self.question_ids if self.questions_layout == 'page_per_question' else self.page_ids
+            return self.question_and_page_ids if self.questions_layout == 'page_per_question' else self.page_ids
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """
@@ -488,7 +488,6 @@ class Survey(models.Model):
             return pages_or_questions[current_page_index + (1 if not go_back else -1)]
 
         return Question
-
 
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
         """ Returns a tuple containing: the survey question and the passed question_id / page_id
