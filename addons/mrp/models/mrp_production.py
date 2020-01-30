@@ -184,8 +184,11 @@ class MrpProduction(models.Model):
         string="Stock Movements of Produced Goods")
 
     unreserve_visible = fields.Boolean(
-        'Allowed to Unreserve Inventory', compute='_compute_unreserve_visible',
+        'Allowed to Unreserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can unreserve')
+    reserve_visible = fields.Boolean(
+        'Allowed to Reserve Production', compute='_compute_unreserve_visible',
+        help='Technical field to check when we can reserve quantities')
     post_visible = fields.Boolean(
         'Allowed to Post Inventory', compute='_compute_post_visible',
         help='Technical field to check when we can post')
@@ -421,6 +424,7 @@ class MrpProduction(models.Model):
             already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
             order.unreserve_visible = not any_quantity_done and already_reserved
+            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state == 'confirmed' for move in order.move_raw_ids)
 
     @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
     def _compute_post_visible(self):
