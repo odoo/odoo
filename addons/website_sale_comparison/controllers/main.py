@@ -16,6 +16,24 @@ class WebsiteSaleProductComparison(WebsiteSale):
         # use search to check read access on each record/ids
         products = request.env['product.product'].search([('id', 'in', product_ids)])
         values['products'] = products.with_context(display_default_code=False)
+<<<<<<< HEAD
+=======
+
+        res = OrderedDict()
+        attrs = products.mapped('product_tmpl_id.valid_product_template_attribute_line_ids.attribute_id').filtered(lambda x: x.create_variant != 'no_variant')
+        for attr in attrs.sorted(lambda att: (att.category_id.sequence, att.sequence)):
+            cat_name = attr.category_id.name or _('Uncategorized')
+            res.setdefault(cat_name, OrderedDict()).setdefault(attr.name, [' - '] * len(products))
+        for num, product in enumerate(products):
+            for var in product.product_tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda x: x.attribute_id.create_variant != 'no_variant'):
+                cat_name = var.attribute_id.category_id.name or _('Uncategorized')
+                att_name = var.attribute_id.name
+                val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
+                if val:
+                    res[cat_name][att_name][num] = val[0].name
+        values['specs'] = res
+        values['compute_currency'] = self._get_compute_currency_and_context(products[:1].product_tmpl_id)[0]
+>>>>>>> ec542e75784... temp
         return request.render("website_sale_comparison.product_compare", values)
 
     @http.route(['/shop/get_product_data'], type='json', auth="public", website=True)
