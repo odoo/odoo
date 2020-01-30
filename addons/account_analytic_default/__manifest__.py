@@ -24,4 +24,5 @@ Allows to automatically select analytic accounts based on criterions:
         'views/account_analytic_default_view.xml',
     ],
     'installable': True,
+    'auto_install': True,
 }
