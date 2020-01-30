@@ -553,7 +553,7 @@ class SaleOrder(models.Model):
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
-        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+        if not self.env.is_superuser() and not self.user_has_groups('sales_team.group_sale_salesman'):
             return []
 
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

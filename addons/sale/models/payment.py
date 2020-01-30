@@ -133,7 +133,7 @@ class PaymentTransaction(models.Model):
                                'force_company': trans.acquirer_id.company_id.id}
                 trans = trans.with_context(**ctx_company)
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
-                invoices = trans.sale_order_ids._create_invoices()
+                invoices = trans.sale_order_ids.sudo()._create_invoices()
                 trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model
