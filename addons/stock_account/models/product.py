@@ -721,10 +721,10 @@ class ProductCategory(models.Model):
                 # Empty out the stock with the current cost method.
                 if new_cost_method:
                     description = _("Costing method change for product category %s: from %s to %s.") \
-                        % (self.display_name, self.property_cost_method, new_cost_method)
+                        % (product_category.display_name, product_category.property_cost_method, new_cost_method)
                 else:
                     description = _("Valuation method change for product category %s: from %s to %s.") \
-                        % (self.display_name, self.property_valuation, new_valuation)
+                        % (product_category.display_name, product_category.property_valuation, new_valuation)
                 out_svl_vals_list, products_orig_quantity_svl, products = Product\
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
