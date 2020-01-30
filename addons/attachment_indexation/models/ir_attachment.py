@@ -4,14 +4,22 @@ import io
 import logging
 import xml.dom.minidom
 import zipfile
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.pdfpage import PDFPage
 
 from odoo import api, models
 
 _logger = logging.getLogger(__name__)
+
+try:
+    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+    from pdfminer.converter import TextConverter
+    from pdfminer.pdfpage import PDFPage
+except ImportError:
+    PDFResourceManager = PDFPageInterpreter = TextConverter = PDFPage = None
+    _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer' Python library cannot be found on the system. "
+                    "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)")
+
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
+
 
 def textToString(element):
     buff = u""
@@ -93,6 +101,8 @@ class IrAttachment(models.Model):
 
     def _index_pdf(self, bin_data):
         '''Index PDF documents'''
+        if PDFResourceManager is None:
+            return
         buf = u""
         if bin_data.startswith(b'%PDF-'):
             f = io.BytesIO(bin_data)
