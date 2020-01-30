@@ -19,7 +19,7 @@ class ProductConfiguratorController(http.Controller):
             product_combination = request.env['product.template.attribute.value'].browse(attribute_value_ids)
 
         if pricelist:
-            product_template = product_template.with_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
+            product_template = product_template.with_context(pricelist_id=pricelist.id)
 
         return request.env['ir.ui.view'].render_template("sale_product_configurator.configure", {
             'product': product_template,

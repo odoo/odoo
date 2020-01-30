@@ -145,7 +145,7 @@ class ProductTemplate(models.Model):
                 }]
         return res
 
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=None, parent_combination=False, only_template=False, currency=None):
         """ Return info about a given combination.
 
         Note: this method does not take into account whether the combination is
@@ -196,71 +196,62 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         # get the name before the change of context to benefit from prefetch
         display_name = self.display_name
+        combination = combination or self.env['product.template.attribute.value']
+        pricelist = pricelist or self.env['product.pricelist']
+        currency = currency or pricelist.currency_id or self.currency_id
+        # company = self.company_id or pricelist.company_id or self.env.company
+        # VFE FIXME multi company checks
 
-        display_image = True
+        # VFE TODO remove this context bullshit at this step ?
         quantity = self.env.context.get('quantity', add_qty)
-        context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
-        product_template = self.with_context(context)
-
-        combination = combination or product_template.env['product.template.attribute.value']
 
         if not product_id and not combination and not only_template:
-            combination = product_template._get_first_possible_combination(parent_combination)
+            combination = self._get_first_possible_combination(parent_combination)
 
         if only_template:
-            product = product_template.env['product.product']
+            product = self.env['product.product']
         elif product_id and not combination:
-            product = product_template.env['product.product'].browse(product_id)
+            product = self.env['product.product'].browse(product_id)
         else:
-            product = product_template._get_variant_for_combination(combination)
+            product = self._get_variant_for_combination(combination)
+
+        # We need to add the price_extra for the attributes that are not
+        # in the variant, typically those of type no_variant, but it is
+        # possible that a no_variant attribute is still in a variant if
+        # the type of the attribute has been changed after creation.
+        # depends on context ptav_ids, pricelist_id, uom_id, quantity
+        if product:
+            product = product.with_context(ptav_ids=tuple(combination.ids))
+        else:
+            self = self.with_context(ptav_ids=tuple(combination.ids))
+        price = price_without_discount = 0.0
+        pricelist_kwargs = dict(
+            product=product or self,
+            quantity=quantity,
+            uom=self.uom_id,
+            date=fields.Date.today(),
+            currency=currency,
+        )
+        price, price_without_discount = pricelist._get_detailed_prices(**pricelist_kwargs)
 
         if product:
-            # We need to add the price_extra for the attributes that are not
-            # in the variant, typically those of type no_variant, but it is
-            # possible that a no_variant attribute is still in a variant if
-            # the type of the attribute has been changed after creation.
-            no_variant_attributes_price_extra = [
-                ptav.price_extra for ptav in combination.filtered(
-                    lambda ptav:
-                        ptav.price_extra and
-                        ptav not in product.product_template_attribute_value_ids
-                )
-            ]
-            if no_variant_attributes_price_extra:
-                product = product.with_context(
-                    no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
-                )
-            list_price = product.price_compute('list_price')[product.id]
-            price = product.price if pricelist else list_price
             display_image = bool(product.image_1920)
             display_name = product.display_name
         else:
-            product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
-            list_price = product_template.price_compute('list_price')[product_template.id]
-            price = product_template.price if pricelist else list_price
-            display_image = bool(product_template.image_1920)
+            display_image = bool(self.image_1920)
 
             combination_name = combination._get_combination_name()
             if combination_name:
                 display_name = "%s (%s)" % (display_name, combination_name)
 
-        if pricelist and pricelist.currency_id != product_template.currency_id:
-            list_price = product_template.currency_id._convert(
-                list_price, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
-                fields.Date.today()
-            )
-
-        price_without_discount = list_price if pricelist and pricelist.discount_policy == 'without_discount' else price
-        has_discounted_price = (pricelist or product_template).currency_id.compare_amounts(price_without_discount, price) == 1
-
         return {
             'product_id': product.id,
-            'product_template_id': product_template.id,
+            'product_template_id': self.id,
             'display_name': display_name,
             'display_image': display_image,
             'price': price,
-            'list_price': list_price,
-            'has_discounted_price': has_discounted_price,
+            'list_price': price_without_discount,
+            'has_discounted_price': price_without_discount != price,
         }
 
     def _is_add_to_cart_possible(self, parent_combination=None):
@@ -280,10 +271,3 @@ class ProductTemplate(models.Model):
             # for performance: avoid calling `_get_possible_combinations`
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False
-
-    def _get_current_company_fallback(self, **kwargs):
-        """Override: if a pricelist is given, fallback to the company of the
-        pricelist if it is set, otherwise use the one from parent method."""
-        res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
-        pricelist = kwargs.get('pricelist')
-        return pricelist and pricelist.company_id or res

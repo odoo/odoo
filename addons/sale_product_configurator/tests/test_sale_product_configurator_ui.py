@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64 
+import base64
 
 import odoo.tests
 from odoo.modules.module import get_module_resource
@@ -105,6 +105,10 @@ class TestUi(odoo.tests.HttpCase):
     def test_01_product_configurator(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        # No tax on the product s.t. the hardcoded SO total amount in the tour stays valid.
+        self.product_product_1_product_template.taxes_id = self.env['account.tax']
+        self.product_product_11_product_template.taxes_id = self.env['account.tax']
+        self.product_product_4_product_template.taxes_id = self.env['account.tax']
 
         self.start_tour("/web", 'sale_product_configurator_tour', login="admin")
 

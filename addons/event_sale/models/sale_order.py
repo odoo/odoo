@@ -71,6 +71,24 @@ class SaleOrderLine(models.Model):
         event_lines.update({'product_uom_readonly': True})
         super(SaleOrderLine, self - event_lines)._compute_product_uom_readonly()
 
+    @api.onchange('product_uom', 'product_uom_qty')
+    def quantity_change(self):
+        # removing attendees
+        if not (self.event_id and self.event_ticket_id) or self.product_uom_qty <= 0:
+            return super(SaleOrderLine, self).quantity_change()
+        registrations = self.env['event.registration'].search([
+                ('state', '!=', 'cancel'),
+                ('sale_order_id', '=', self.id),  # To avoid break on multi record set
+                ('event_ticket_id', '=', self.event_ticket_id.id),
+            ], order='create_date asc')
+        missing_qty = self.product_uom_qty - len(registrations)
+        if missing_qty > 0:
+            self._update_registrations()
+        else:
+            registrations[missing_qty::].action_cancel()
+
+        super(SaleOrderLine, self).quantity_change()
+
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None, mark_as_paid=False):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of

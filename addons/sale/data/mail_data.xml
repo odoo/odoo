@@ -91,13 +91,13 @@
             % if object.origin:
                 (with reference: ${object.origin} )
             % endif
-            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> is available.
+            amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong> is available.
         % else:
             ${doc_name} <strong>${object.name}</strong>
             % if object.origin:
                 (with reference: ${object.origin} )
             % endif
-            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> is ready for review.
+            amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong> is ready for review.
         % endif
         <br/><br/>
         Do not hesitate to contact us if you have any questions.

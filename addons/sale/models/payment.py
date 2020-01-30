@@ -173,6 +173,6 @@ class PaymentTransaction(models.Model):
         return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
             self.reference,
             order.amount_total,
-            order.pricelist_id.currency_id.id,
+            order.currency_id.id,
             values=values,
         )

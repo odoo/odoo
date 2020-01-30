@@ -31,6 +31,7 @@ class SaleOrder(models.Model):
 
     @api.constrains('company_id', 'sale_order_option_ids')
     def _check_optional_product_company_id(self):
+        # VFE TODO replace by check_company ?
         for order in self:
             companies = order.sale_order_option_ids.product_id.company_id
             if companies and companies != order.company_id:
@@ -101,16 +102,15 @@ class SaleOrder(models.Model):
             data = self._compute_line_data_for_template_change(line)
 
             if line.product_id:
-                price = line.product_id.lst_price
-                discount = 0
+                price, price_without_discount = self.pricelist_id.get_detailed_prices(
+                    line.product_id,
+                    line.product_uom_qty,
+                    line.product_uom_id,
+                    self.currency_id,
+                )
 
-                if self.pricelist_id:
-                    pricelist_price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
-
-                    if self.pricelist_id.discount_policy == 'without_discount' and price:
-                        discount = max(0, (price - pricelist_price) * 100 / price)
-                    else:
-                        price = pricelist_price
+                discount = 0 if price == price_without_discount else \
+                    ((price_without_discount - price) / (price_without_discount or 1.0)) * 100
 
                 data.update({
                     'price_unit': price,
@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
-            if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
+            if order.sale_order_template_id.mail_template_id:
                 self.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
@@ -155,6 +155,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
 
+        # VFE TODO check if this force_website ctxt key still has any sense...
         if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
             return super(SaleOrder, self).get_access_action(access_uid)
         return {
@@ -174,13 +175,13 @@ class SaleOrderLine(models.Model):
     # Take the description on the order template if the product is present in it
     @api.onchange('product_id')
     def product_id_change(self):
-        domain = super(SaleOrderLine, self).product_id_change()
+        res = super(SaleOrderLine, self).product_id_change()
         if self.product_id and self.order_id.sale_order_template_id:
             for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
                 if line.product_id == self.product_id:
                     self.name = line.with_context(lang=self.order_id.partner_id.lang).name
                     break
-        return domain
+        return res
 
 
 class SaleOrderOption(models.Model):
@@ -219,15 +220,15 @@ class SaleOrderOption(models.Model):
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
+        self = self.with_context(lang=self.order_id.partner_id.lang)
+        product = self.product_id
         self.name = product.get_product_multiline_description_sale()
-        self.uom_id = self.uom_id or product.uom_id
-        # To compute the dicount a so line is created in cache
         values = self._get_values_to_add_to_order()
         new_sol = self.env['sale.order.line'].new(values)
         new_sol._onchange_discount()
         self.discount = new_sol.discount
-        self.price_unit = new_sol._get_display_price(product)
+        self.uom_id = self.uom_id or product.uom_id
+        self.price_unit = self.order_id.pricelist_id.get_product_price(product, self.quantity, self.uom_id.id)
 
     def button_add_to_order(self):
         self.add_option_to_order()
@@ -235,9 +236,7 @@ class SaleOrderOption(models.Model):
     def add_option_to_order(self):
         self.ensure_one()
 
-        sale_order = self.order_id
-
-        if sale_order.state not in ['draft', 'sent']:
+        if self.order_id.state not in ['draft', 'sent']:
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()

@@ -259,10 +259,9 @@ class SaleOrder(models.Model):
 
     def _get_applicable_no_code_promo_program(self):
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
+        return self.env['sale.coupon.program'].search([
             ('promo_code_usage', '=', 'no_code_needed'),
         ])._filter_programs_from_common_rules(self)
-        return programs
 
     def _get_valid_applied_coupon_program(self):
         self.ensure_one()
@@ -422,6 +421,11 @@ class SaleOrderLine(models.Model):
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
+
+    def _compute_price(self):
+        self.ensure_one()
+        if not self.is_reward_line:
+            super(SaleOrderLine, self)._compute_price()
 
     # Invalidation of `sale.coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,

@@ -122,7 +122,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.sale_order.onchange_partner_id()
         for line in self.sale_order.order_line:
             line.product_id_change()
-            line._onchange_discount()
         # Check that pricelist of the SO has been applied on the sale order lines or not
         for line in self.sale_order.order_line:
             self.assertEqual(line.price_unit, line.product_id.list_price, 'Pricelist of the SO should not be applied on an order line %s' % (line.name,))
@@ -134,7 +133,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # Trigger onchange to reset discount, unit price, subtotal, ...
         for line in self.sale_order.order_line:
             line.product_id_change()
-            line._onchange_discount()
         # Check that pricelist of the SO has been applied on the sale order lines or not
         for line in self.sale_order.order_line:
             if line.product_id == self.product_order:
@@ -158,7 +156,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # Trigger onchange to reset discount, unit price, subtotal, ...
         for line in self.sale_order.order_line:
             line.product_id_change()
-            line._onchange_discount()
 
         # Check pricelist of the SO apply or not on order lines where pricelist contains formula that add 15% on the cost price
         for line in self.sale_order.order_line:

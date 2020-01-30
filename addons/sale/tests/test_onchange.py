@@ -75,6 +75,7 @@ class TestOnchangeProductId(TransactionCase):
 
         christmas_pricelist = self.env['product.pricelist'].create({
             'name': 'Christmas pricelist',
+            'currency_id': support_product.currency_id.id,
             'item_ids': [(0, 0, {
                 'date_start': "2017-12-01",
                 'date_end': "2017-12-24",
@@ -99,6 +100,8 @@ class TestOnchangeProductId(TransactionCase):
         order_form.partner_id = partner
         order_form.date_order = '2017-12-20'
         order_form.pricelist_id = christmas_pricelist
+        self.assertEqual(order_form.currency_id, christmas_pricelist.currency_id)
+        self.assertEqual(order_form.currency_id, support_product.currency_id)
         with order_form.order_line.new() as line:
             line.product_id = support_product
         so = order_form.save()
@@ -135,6 +138,7 @@ class TestOnchangeProductId(TransactionCase):
         christmas_pricelist = self.env['product.pricelist'].create({
             'name': 'Christmas pricelist',
             'discount_policy': 'without_discount',
+            'currency_id': computer_case.currency_id.id,
             'item_ids': [(0, 0, {
                 'date_start': "2017-12-01",
                 'date_end': "2017-12-30",
@@ -159,15 +163,13 @@ class TestOnchangeProductId(TransactionCase):
 
         # force compute uom and prices
         order_line.product_id_change()
-        order_line.product_uom_change()
-        order_line._onchange_discount()
+        self.assertEqual(so.currency_id, computer_case.currency_id)
         self.assertEqual(order_line.price_subtotal, 90, "Christmas discount pricelist rule not applied")
-        self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
+        self.assertEqual(order_line.discount, 10, "Christmas discount not equal to 10%")
         order_line.product_uom = new_uom
-        order_line.product_uom_change()
-        order_line._onchange_discount()
+        order_line.quantity_change()
         self.assertEqual(order_line.price_subtotal, 900, "Christmas discount pricelist rule not applied")
-        self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
+        self.assertEqual(order_line.discount, 10, "Christmas discount not equal to 10%")
 
     def test_pricelist_based_on_other(self):
         """ Test price and discount are correctly applied with a pricelist based on an other one"""
@@ -182,6 +184,7 @@ class TestOnchangeProductId(TransactionCase):
         first_pricelist = self.env['product.pricelist'].create({
             'name': 'First pricelist',
             'discount_policy': 'without_discount',
+            'currency_id': computer_case.currency_id.id,
             'item_ids': [(0, 0, {
                 'compute_price': 'percentage',
                 'base': 'list_price',
@@ -194,6 +197,7 @@ class TestOnchangeProductId(TransactionCase):
         second_pricelist = self.env['product.pricelist'].create({
             'name': 'Second pricelist',
             'discount_policy': 'without_discount',
+            'currency_id': computer_case.currency_id.id,
             'item_ids': [(0, 0, {
                 'compute_price': 'formula',
                 'base': 'pricelist',
@@ -213,11 +217,12 @@ class TestOnchangeProductId(TransactionCase):
         order_line = self.env['sale.order.line'].new({
             'order_id': so.id,
             'product_id': computer_case.id,
+            'product_uom': computer_case.uom_id,
+            'product_uom_qty': 1.0,
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
-        order_line._onchange_discount()
+        order_line._compute_price()
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
         self.assertEqual(order_line.discount, 19, "Second discount not applied")
 
@@ -276,5 +281,5 @@ class TestOnchangeProductId(TransactionCase):
         order_line.product_id_change()
         self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
         order_line.product_uom = new_uom
-        order_line.product_uom_change()
+        order_line.quantity_change()
         self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
