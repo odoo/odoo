@@ -1251,13 +1251,8 @@ class HttpCase(TransactionCase):
         - wait for ready object to be available
         - eval(code) inside the page
 
-        To signal success test do:
-        console.log('test successful')
-
-        To signal failure do:
-        console.error('test failed')
-
-        If neither are done before timeout test fails.
+        To signal success test do: console.log('test successful')
+        To signal test failure raise an exception or call console.error
         """
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
