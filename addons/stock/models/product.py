@@ -544,9 +544,25 @@ class Product(models.Model):
     def write(self, values):
         res = super(Product, self).write(values)
         if 'active' in values and not values['active']:
+            # check reordering rules
             products = self.mapped('orderpoint_ids').filtered(lambda r: r.active).mapped('product_id')
             if products:
                 msg = _('You still have some active reordering rules on this product. Please archive or delete them first.')
+                msg += '\n\n'
+                for product in products:
+                    msg += '- %s \n' % product.display_name
+                raise UserError(msg)
+            # check quantity on hand
+            companies = self.env['res.company'].search([])
+            company_ids = companies.ids
+            domain_quant = [('product_id', 'in', self.ids),
+                            ('location_id.company_id', 'in', company_ids),
+                            ('location_id.usage', 'in', ['internal', 'transit'])]
+            quant_group = self.env['stock.quant'].with_context(allowed_company_ids=company_ids).read_group(domain_quant, ['product_id', 'quantity'], ['product_id'])
+            not_zero_ids = [item['product_id'][0] for item in quant_group if item['quantity'] != 0]
+            if not_zero_ids:
+                products = self.filtered(lambda r: r.id in not_zero_ids)
+                msg = _("Please empty all companies' internal and transit locations for this product before archiving it.")
                 msg += '\n\n'
                 for product in products:
                     msg += '- %s \n' % product.display_name

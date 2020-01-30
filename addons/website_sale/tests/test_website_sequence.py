@@ -11,9 +11,14 @@ class TestWebsiteSequence(odoo.tests.TransactionCase):
 
         ProductTemplate = self.env['product.template']
         product_templates = ProductTemplate.search([])
-        # if stock is installed we can't archive since there is orderpoints
+        # if stock is installed we can't archive since there is orderpoints or quantity on hand
         if hasattr(self.env['product.product'], 'orderpoint_ids'):
             product_templates.mapped('product_variant_ids.orderpoint_ids').write({'active': False})
+            self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_manager').id)]})
+            self.env['product.template'].search([('tracking', '!=', 'none')])
+            quant = self.env['stock.quant'].search([('location_id.usage', 'in', ['internal', 'transit'])])
+            quant.mapped('product_tmpl_id').write({'tracking': 'none'})
+            quant.with_context(inventory_mode=True).write({'inventory_quantity': 0})
         product_templates.write({'active': False})
         self.p1, self.p2, self.p3, self.p4 = ProductTemplate.create([{
             'name': 'First Product',

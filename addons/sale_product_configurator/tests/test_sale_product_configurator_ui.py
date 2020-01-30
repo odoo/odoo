@@ -63,7 +63,8 @@ class TestUi(odoo.tests.HttpCase):
             'attribute_id': product_attribute.id
         } for i in range(1, 11) for product_attribute in product_attributes])
 
-        product_template = self.env.ref("product.product_product_4_product_template")
+        product_template = self.env.ref("product.product_product_4_product_template").copy()
+        product_template.write({'name': "product test"})
 
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,

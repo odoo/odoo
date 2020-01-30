@@ -31,13 +31,13 @@ tour.register('sale_product_configurator_advanced_tour', {
     run: function (){
         var $input = $('div[name="product_template_id"] input');
         $input.click();
-        $input.val('Custo');
+        $input.val('product test');
         var keyDownEvent = jQuery.Event("keydown");
         keyDownEvent.which = 42;
         $input.trigger(keyDownEvent);
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
+    trigger: 'ul.ui-autocomplete a:contains("product test")',
     run: 'click'
 }, {
     trigger: 'span:contains("Custom")',
@@ -126,7 +126,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Custom, White, PAV9, PAV5, PAV1)")',
+    trigger: 'td.o_data_cell:contains("product test (Custom, White, PAV9, PAV5, PAV1)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check
