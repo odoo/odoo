@@ -568,7 +568,7 @@ class configmanager(object):
 
     def _is_upgrades_path(self, res):
         return any(
-            glob.glob(os.path.join(res, f"*/*/{prefix}-*.py"))
+            glob.glob(os.path.join(res, "*/*/{}-*.py".format(prefix)))
             for prefix in ["pre", "post", "end"]
         )
 
