@@ -2515,6 +2515,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _process_constraints(self, constraints):
+        if not constraints:
+            return
+
         # TODO: delegate to each field
         cr = self._cr
         for key, definition in constraints:

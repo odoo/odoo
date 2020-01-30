@@ -344,11 +344,13 @@ class Registry(Mapping):
 
     def finalize_models(self, models):
         all_foreign = []
-        models = [model for model in models if model._auto]
-        for model in models:
+        auto_models = [model for model in models if model._auto]
+        for model in auto_models:
             all_foreign.append(model.finalize())
-        for fks, model in zip(all_foreign, models):
+        for fks, model in zip(all_foreign, auto_models):
             model._process_constraints(fks)
+        for model in models:
+            model._reflect()
 
     def check_tables_exist(self, cr):
         """
