@@ -649,7 +649,7 @@ exports.PosModel = Backbone.Model.extend({
                 if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
                     resolve();
                 } else {
-                    reject();
+                    reject('Failed in updating partners.');
                 }
             }, function (type, err) { reject(); });
         });
