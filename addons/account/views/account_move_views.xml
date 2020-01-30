@@ -554,6 +554,10 @@
                         <widget name="web_ribbon" title="Reversed"
                                 bg_color="bg-danger"
                                 attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"/>
+                         <widget name="web_ribbon" text="Invoicing App Legacy"
+                                bg_color="bg-info"
+                                attrs="{'invisible': [('payment_state', '!=', 'invoicing_legacy')]}"
+                                tooltip="This entry has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."/>
 
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
@@ -844,7 +848,8 @@
                                 <!-- Totals (only invoices / receipts) -->
                                 <group class="oe_right">
                                     <group class="oe_subtotal_footer"
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                       attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+                                                                  ('payment_state' ,'=', 'invoicing_legacy')]}">
                                         <field name="amount_tax" invisible="1"/>
                                         <field name="amount_untaxed" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
                                         <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
@@ -867,8 +872,12 @@
                                 <field name="narration" placeholder="Terms and Conditions" nolabel="1" height="50"/>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly">
+                                <div class="alert alert-info text-center mb-0" role="alert" attrs="{'invisible': ['|', ('payment_state', '!=', 'invoicing_legacy'), ('type', '=', 'entry')]}">
+                                    <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
+                                </div>
                                 <field name="line_ids"
-                                       context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
+                                       context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}"
+                                       attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
                                         <field name="account_id"

@@ -125,15 +125,16 @@
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
                         <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object" groups="account.group_account_invoice"/>
-                        <button name="cancel" states="draft" string="Cancel" type="object"/>
+                        <button name="cancel" attrs="{'invisible': [('state', 'in', ('cancelled', 'posted', 'invoicing_legacy'))]}" string="Cancel" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
                     </header>
+
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="button_journal_entries"
                                     string="Journal Items" type="object"
                                     groups="account.group_account_readonly"
-                                    attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                                    attrs="{'invisible':['|', ('move_line_ids','=',[]), ('state', '=', 'invoicing_legacy')]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
                             <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars" attrs="{'invisible':[('reconciled_invoices_count','=', 0)]}" >
                                 <field name="reconciled_invoices_count"/>
@@ -143,10 +144,18 @@
                             <field name="has_invoices" invisible="1"/>
                             <field name="move_reconciled" invisible="1"/>
                         </div>
+
+                        <widget name="web_ribbon" text="Invoicing App Legacy"
+                                bg_color="bg-info"
+                                attrs="{'invisible': [('state', '!=', 'invoicing_legacy')]}"
+                                tooltip="This payment has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."
+                        />
+
                         <field name="id" invisible="1"/>
                         <div class="oe_title" attrs="{'invisible': [('state', '=', 'draft')]}">
                             <h1><field name="name"/></h1>
                         </div>
+
                         <group>
                             <field name="invoice_ids" invisible="1"/>
                             <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
