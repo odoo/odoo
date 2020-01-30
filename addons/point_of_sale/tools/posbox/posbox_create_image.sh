@@ -28,8 +28,13 @@ __base="$(basename ${__file} .sh)"
 MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
+<<<<<<< HEAD
 VERSION=13.0
 VERSION_IOTBOX=20.01
+=======
+VERSION=12.0
+VERSION_IOTBOX=20.02
+>>>>>>> 01143c066cc... temp
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspbian*.img ; then
