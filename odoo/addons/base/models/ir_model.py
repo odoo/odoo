@@ -4,6 +4,7 @@ import datetime
 import dateutil
 import itertools
 import logging
+import re
 import time
 from ast import literal_eval
 from collections import defaultdict, Mapping
@@ -19,7 +20,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
-
+RE_ORDER_FIELDS = re.compile(r'"?(\w+)"?\s*(?:asc|desc)?', flags=re.I)
 
 # base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
@@ -99,6 +100,8 @@ class IrModel(models.Model):
 
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
+    order = fields.Char(string='Order', default='id', required=True,
+                        help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"')
     info = fields.Text(string='Information')
     field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
                                default=_default_field_id)
@@ -155,6 +158,24 @@ class IrModel(models.Model):
                     raise ValidationError(_("The model name must start with 'x_'."))
             if not models.check_object_name(model.model):
                 raise ValidationError(_("The model name can only contain lowercase characters, digits, underscores and dots."))
+
+    @api.constrains('order', 'field_id')
+    def _check_order(self):
+        for model in self:
+            try:
+                model._check_qorder(model.order)  # regex check for the whole clause ('is it valid sql?')
+            except UserError as e:
+                raise ValidationError(str(e))
+            stored_fields = model.field_id.filtered('store').mapped('name')
+            if self.env.get(model.model) is None:
+                # model hasn't been init'd yet, which means that some fields are not yet in its
+                # list of fields but will be right after its creation - these fields can be used
+                # for ordering, so let's add them to the list of stored fields manually
+                stored_fields += models.MAGIC_COLUMNS
+            order_fields = RE_ORDER_FIELDS.findall(model.order)
+            for field in order_fields:
+                if field not in stored_fields:
+                    raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.") % field)
 
     _sql_constraints = [
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
@@ -238,7 +259,12 @@ class IrModel(models.Model):
         # writes (4,id,False) even for non dirty items.
         if 'field_id' in vals:
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
-        return super(IrModel, self).write(vals)
+        res = super(IrModel, self).write(vals)
+        # ordering has been changed, reload registry to reflect update + signaling
+        if 'order' in vals:
+            self.flush()  # setup_models need to fetch the updated values from the db
+            self.pool.setup_models(self._cr)
+        return res
 
     @api.model
     def create(self, vals):
@@ -264,6 +290,7 @@ class IrModel(models.Model):
         return {
             'model': model._name,
             'name': model._description,
+            'order': model._order,
             'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
@@ -299,6 +326,7 @@ class IrModel(models.Model):
             _module = False
             _custom = True
             _transient = bool(model_data['transient'])
+            _order = model_data['order']
             __doc__ = model_data['info']
 
         return CustomModel
