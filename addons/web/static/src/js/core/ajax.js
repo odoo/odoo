@@ -322,12 +322,19 @@ function get_file(options) {
     return true;
 }
 
-function post (controller_url, data) {
+function post (controller_url, data, { files } = {}) {
     var postData = new FormData();
 
     $.each(data, function(i,val) {
         postData.append(i, val);
     });
+
+    if (files && files.length) {
+        for (const file of files) {
+            postData.append('ufile', file);
+        }
+    }
+
     if (core.csrf_token) {
         postData.append('csrf_token', core.csrf_token);
     }
