@@ -1,4 +1,4 @@
-odoo.define('survey.question_page_one2many', function (require){
+odoo.define('survey.question_page_one2many', function (require) {
 "use strict";
 
 var Context = require('web.Context');
@@ -12,12 +12,12 @@ var SectionListRenderer = ListRenderer.extend({
         this.sectionFieldName = "is_page";
         this._super.apply(this, arguments);
     },
-    _checkIfRecordIsSection: function (id){
+    _checkIfRecordIsSection: function (id) {
         var record = this._findRecordById(id);
         return record && record.data[this.sectionFieldName];
     },
-    _findRecordById: function (id){
-        return _.find(this.state.data, function (record){
+    _findRecordById: function (id) {
+        return _.find(this.state.data, function (record) {
             return record.id === id;
         });
     },
@@ -32,23 +32,23 @@ var SectionListRenderer = ListRenderer.extend({
      * @param {*} index
      * @param {*} options
      */
-    _renderBodyCell: function (record, node, index, options){
+    _renderBodyCell: function (record, node, index, options) {
         var $cell = this._super.apply(this, arguments);
 
         var isSection = record.data[this.sectionFieldName];
 
-        if (isSection){
-            if (node.attrs.widget === "handle" || node.attrs.name === "random_questions_count"){
+        if (isSection) {
+            if (node.attrs.widget === "handle" || node.attrs.name === "random_questions_count") {
                 return $cell;
-            } else if (node.attrs.name === "title"){
+            } else if (node.attrs.name === "title") {
                 var nbrColumns = this._getNumberOfCols();
-                if (this.handleField){
+                if (this.handleField) {
                     nbrColumns--;
                 }
-                if (this.addTrashIcon){
+                if (this.addTrashIcon) {
                     nbrColumns--;
                 }
-                if (record.data.questions_selection === "random"){
+                if (record.data.questions_selection === "random") {
                     nbrColumns--;
                 }
                 $cell.attr('colspan', nbrColumns);
@@ -67,7 +67,7 @@ var SectionListRenderer = ListRenderer.extend({
      * @param {*} record
      * @param {*} index
      */
-    _renderRow: function (record, index){
+    _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
         if (record.data[this.sectionFieldName]) {
             $row.addClass("o_is_section");
@@ -81,7 +81,7 @@ var SectionListRenderer = ListRenderer.extend({
      * @private
      * @override
      */
-    _renderView: function (){
+    _renderView: function () {
         var def = this._super.apply(this, arguments);
         var self = this;
         return def.then(function () {
@@ -98,11 +98,11 @@ var SectionListRenderer = ListRenderer.extend({
      * @override
      * @param {*} ev
      */
-    _onRowClicked: function (ev){
+    _onRowClicked: function (ev) {
         var parent = this.getParent();
         var recordId = $(ev.currentTarget).data('id');
         var is_section = this._checkIfRecordIsSection(recordId);
-        if (is_section && parent.mode === "edit"){
+        if (is_section && parent.mode === "edit") {
             this.editable = "bottom";
         } else {
             this.editable = null;
@@ -118,11 +118,11 @@ var SectionListRenderer = ListRenderer.extend({
      * @override
      * @param {*} ev
      */
-    _onCellClick: function (ev){
+    _onCellClick: function (ev) {
         var parent = this.getParent();
         var recordId = $(ev.currentTarget.parentElement).data('id');
         var is_section = this._checkIfRecordIsSection(recordId);
-        if (is_section && parent.mode === "edit"){
+        if (is_section && parent.mode === "edit") {
             this.editable = "bottom";
         } else {
             this.editable = null;
@@ -138,13 +138,13 @@ var SectionListRenderer = ListRenderer.extend({
      * @override
      * @param {*} ev
      */
-    _onNavigationMove: function (ev){
+    _onNavigationMove: function (ev) {
         this.unselectRow();
     },
 });
 
 var SectionFieldOne2Many = FieldOne2Many.extend({
-    init: function (parent, name, record, options){
+    init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
         this.sectionFieldName = "is_page";
         this.rendered = false;
@@ -154,8 +154,8 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
      * @private
      * @override
      */
-    _getRenderer: function (){
-        if (this.view.arch.tag === 'tree'){
+    _getRenderer: function () {
+        if (this.view.arch.tag === 'tree') {
             return SectionListRenderer;
         }
         return this._super.apply(this, arguments);
@@ -170,10 +170,10 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
      */
     _onAddRecord: function (ev) {
         this.editable = null;
-        if (!config.device.isMobile){
+        if (!config.device.isMobile) {
             var context_str = ev.data.context && ev.data.context[0];
             var context = new Context(context_str).eval();
-            if (context['default_' + this.sectionFieldName]){
+            if (context['default_' + this.sectionFieldName]) {
                 this.editable = "bottom";
             }
         }
