@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
     def copy(self, default=None):
         if self.sale_order_template_id and self.sale_order_template_id.number_of_days > 0:
             default = dict(default or {})
-            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.sale_order_template_id.number_of_days))
+            default['validity_date'] = fields.Date.context_today(self) + timedelta(self.sale_order_template_id.number_of_days)
         return super(SaleOrder, self).copy(default=default)
 
     @api.onchange('partner_id')
@@ -103,7 +103,7 @@ class SaleOrder(models.Model):
         self.sale_order_option_ids = option_lines
 
         if template.number_of_days > 0:
-            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
+            self.validity_date = fields.Date.context_today(self) + timedelta(template.number_of_days)
 
         self.require_signature = template.require_signature
         self.require_payment = template.require_payment
