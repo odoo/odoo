@@ -308,7 +308,7 @@ class IrModel(models.Model):
         # clean up registry first
         custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
         for name in custom_models:
-            del self.pool.models[name]
+            del self.pool[name]
         # add manual models
         cr = self.env.cr
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
