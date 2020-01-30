@@ -254,25 +254,62 @@ class WebsiteEventController(http.Controller):
                 "url": event.website_url})
         return request.env['ir.ui.view'].render_template("website_event.country_events_list", result)
 
-    def _process_tickets_details(self, data):
-        nb_register = int(data.get('nb_register-0', 0))
-        if nb_register:
-            return [{'id': 0, 'name': 'Registration', 'quantity': nb_register, 'price': 0}]
-        return []
+    def _process_tickets_form(self, event, form_details):
+        """ Process posted data about ticket order. Generic ticket are supported
+        for event without tickets (generic registration).
+
+        :return: list of order per ticket: [{
+            'id': if of ticket if any (0 if no ticket),
+            'ticket': browse record of ticket if any (None if no ticket),
+            'name': ticket name (or generic 'Registration' name if no ticket),
+            'quantity': number of registrations for that ticket,
+        }, {...}]
+        """
+        ticket_order = {}
+        for key, value in form_details.items():
+            registration_items = key.split('nb_register-')
+            if len(registration_items) != 2:
+                continue
+            ticket_order[int(registration_items[1])] = int(value)
+
+        ticket_dict = dict((ticket.id, ticket) for ticket in request.env['event.event.ticket'].search([
+            ('id', 'in', [tid for tid in ticket_order.keys() if tid]),
+            ('event_id', '=', event.id)
+        ]))
+
+        return [{
+            'id': tid if ticket_dict.get(tid) else 0,
+            'ticket': ticket_dict.get(tid),
+            'name': ticket_dict[tid]['name'] if ticket_dict.get(tid) else _('Registration'),
+            'quantity': count,
+        } for tid, count in ticket_order.items() if count]
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
-        tickets = self._process_tickets_details(post)
+        tickets = self._process_tickets_form(event, post)
         if not tickets:
             return False
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
-    def _process_registration_details(self, details):
-        ''' Process data posted from the attendee details form. '''
+    def _process_attendees_form(self, event, form_details):
+        """ Process data posted from the attendee details form.
+
+        :param details: posted data from frontend registration form, like
+            {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
+        """
+        registration_fields = request.env['event.registration']._fields
+
         registrations = {}
         global_values = {}
-        for key, value in details.items():
+        for key, value in form_details.items():
             counter, field_name = key.split('-', 1)
+            if field_name not in registration_fields:
+                continue
+            elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
+                value = int(value)
+            else:
+                value = value
+
             if counter == '0':
                 global_values[field_name] = value
             else:
@@ -282,22 +319,28 @@ class WebsiteEventController(http.Controller):
                 registration[key] = value
         return list(registrations.values())
 
+    def _create_attendees_from_registration_post(self, event, registration_data):
+        attendees_sudo = request.env['event.registration'].sudo()
+
+        for registration_values in registration_data:
+            registration_values['event_id'] = event.id
+            if not registration_values.get('partner_id'):
+                registration_values['partner_id'] = request.env.user.partner_id.id
+            attendees_sudo += request.env['event.registration'].sudo().create(registration_values)
+
+        return attendees_sudo
+
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        Attendees = request.env['event.registration']
-        registrations = self._process_registration_details(post)
-
-        for registration in registrations:
-            registration['event_id'] = event
-            Attendees += Attendees.sudo().create(
-                Attendees._prepare_attendee_values(registration))
+        registrations = self._process_attendees_form(event, post)
+        attendees = self._create_attendees_from_registration_post(event, registrations)
 
         urls = event._get_event_resource_urls()
         return request.render("website_event.registration_complete", {
-            'attendees': Attendees.sudo(),
+            'attendees': attendees,
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')

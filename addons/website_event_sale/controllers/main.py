@@ -17,44 +17,46 @@ class WebsiteEventSaleController(WebsiteEventController):
                 event = event.with_context(pricelist=pricelist.id)
         return super(WebsiteEventSaleController, self).event_register(event, **post)
 
-    def _process_tickets_details(self, data):
-        ticket_post = {}
-        for key, value in data.items():
-            if not key.startswith('nb_register') or '-' not in key:
-                continue
-            items = key.split('-')
-            if len(items) < 2:
-                continue
-            ticket_post[int(items[1])] = int(value)
-        tickets = request.env['event.event.ticket'].browse(tuple(ticket_post))
-        return [{'id': ticket.id, 'name': ticket.name, 'quantity': ticket_post[ticket.id], 'price': ticket.price} for ticket in tickets if ticket_post[ticket.id]]
+    def _process_tickets_form(self, event, form_details):
+        """ Add price information on ticket order """
+        res = super(WebsiteEventSaleController, self)._process_tickets_form(event, form_details)
+        for item in res:
+            item['price'] = item['ticket']['price'] if item['ticket'] else 0
+        return res
+
+    def _create_attendees_from_registration_post(self, event, registration_data):
+        # we have at least one registration linked to a ticket -> sale mode activate
+        if any(info.get('event_ticket_id') for info in registration_data):
+            order = request.website.sale_get_order(force_create=1)
+
+        order_attendee_ids = set()
+        for info in [r for r in registration_data if r.get('event_ticket_id')]:
+            ticket = request.env['event.event.ticket'].sudo().browse(info['event_ticket_id'])
+            cart_values = order.with_context(event_ticket_id=ticket.id, fixed_price=True)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[info])
+            order_attendee_ids |= set(cart_values.get('attendee_ids', []))
+
+        attendees_sudo = super(WebsiteEventSaleController, self)._create_attendees_from_registration_post(event, [r for r in registration_data if not r['event_ticket_id']])
+        if order_attendee_ids:
+            attendees_sudo |= request.env['event.registration'].sudo().browse(order_attendee_ids)
+
+        return attendees_sudo
 
     @http.route()
     def registration_confirm(self, event, **post):
-        order = request.website.sale_get_order(force_create=1)
-        attendee_ids = set()
+        res = super(WebsiteEventSaleController, self).registration_confirm(event, **post)
 
-        registrations = self._process_registration_details(post)
-        for registration in registrations:
-            ticket = request.env['event.event.ticket'].sudo().browse(int(registration['ticket_id']))
-            cart_values = order.with_context(event_ticket_id=ticket.id, fixed_price=True)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
-            attendee_ids |= set(cart_values.get('attendee_ids', []))
+        registrations = self._process_attendees_form(event, post)
 
-        # free tickets -> order with amount = 0: auto-confirm, no checkout
-        if not order.amount_total:
-            order.action_confirm()  # tde notsure: email sending ?
-            attendees = request.env['event.registration'].browse(list(attendee_ids)).sudo()
-            # clean context and session, then redirect to the confirmation page
-            request.website.sale_reset()
-            urls = event._get_event_resource_urls()
-            return request.render("website_event.registration_complete", {
-                'attendees': attendees,
-                'event': event,
-                'google_url': urls.get('google_url'),
-                'iCal_url': urls.get('iCal_url')
-            })
+        # we have at least one registration linked to a ticket -> sale mode activate
+        if any(info['event_ticket_id'] for info in registrations):
+            order = request.website.sale_get_order(force_create=False)
+            if order.amount_total:
+                return request.redirect("/shop/checkout")
+            # free tickets -> order with amount = 0: auto-confirm, no checkout
+            elif order:
+                order.action_confirm()  # tde notsure: email sending ?
 
-        return request.redirect("/shop/checkout")
+        return res
 
     def _add_event(self, event_name="New Event", context=None, **kwargs):
         product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
