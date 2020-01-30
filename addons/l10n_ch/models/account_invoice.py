@@ -91,7 +91,7 @@ class AccountInvoice(models.Model):
                 record.l10n_ch_isr_number = mod10r(invoice_issuer_ref + internal_ref)
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
 
-    @api.depends('currency_id.name', 'amount_total', 'partner_bank_id.bank_id', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
+    @api.depends('currency_id.name', 'residual', 'partner_bank_id.bank_id', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_optical_line(self):
         """ The optical reading line of the ISR looks like this :
                 left>isr_ref+ bank_ref>
@@ -117,7 +117,7 @@ class AccountInvoice(models.Model):
                     currency_code = '01'
                 elif record.currency_id.name == 'EUR':
                     currency_code = '03'
-                units, cents = float_split_str(record.amount_total, 2)
+                units, cents = float_split_str(record.residual, 2)
                 amount_to_display = units + cents
                 amount_ref = amount_to_display.zfill(10)
                 left = currency_code + amount_ref
@@ -145,7 +145,7 @@ class AccountInvoice(models.Model):
         This function is needed on the model, as it must be called in the report
         template, which cannot reference static functions
         """
-        return float_split_str(self.amount_total, 2)
+        return float_split_str(self.residual, 2)
 
     def display_swiss_qr_code(self):
         """ Trigger the print of the Swiss QR code in the invoice report or not
