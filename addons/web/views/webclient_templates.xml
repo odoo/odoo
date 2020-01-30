@@ -781,7 +781,6 @@
                     QUnit.config.hidepassed = false;
 
                     odoo.define('web.WebClientWithoutServices', function (require) {
-                        var ServiceProviderMixin = require('web.ServiceProviderMixin');
                         var WebClient = require('web.WebClient');
                         var WebClientWithoutServices = WebClient.extend({
                             /**
@@ -789,12 +788,7 @@
                              *
                              * @override
                              */
-                            init: function () {
-                                var originalServiceProviderMixinInit = ServiceProviderMixin.init;
-                                ServiceProviderMixin.init = function () {};
-                                this._super.apply(this, arguments);
-                                ServiceProviderMixin.init = originalServiceProviderMixinInit;
-                            },
+                            _onCallService: function () {},
                         });
                         return WebClientWithoutServices;
                     });

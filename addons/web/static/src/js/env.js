@@ -90,6 +90,15 @@ odoo.define("web.env", function (require) {
                             const service = services[payload.service];
                             const result = service[payload.method].apply(service, args);
                             payload.callback(result);
+                        } else {
+                            // historically, some services could reach the webclient
+                            // by triggering events up, as the webclient was their
+                            // parent. Since services have been moved to the env,
+                            // this is no longer the case, so we re-trigger those
+                            // events on the bus for now. Eventually, services
+                            // should stop triggering events up (they can still
+                            // communicate with other services through the env).
+                            bus.trigger('legacy_webclient_request', ev);
                         }
                     },
                 });
