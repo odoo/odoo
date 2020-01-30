@@ -6,7 +6,7 @@ const Dialog = require('web.Dialog');
 const Widget = require('web.Widget');
 
 const ProgressBar = Widget.extend({
-    template: 'web.ProgressBar',
+    template: 'web.FileUploadProgressBar',
 
     events: {
         'click .o_upload_cross': '_onClickCross',
