@@ -365,7 +365,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 });
                 console.log(document.body.parentElement.outerHTML);
                 console.error(error); // will be displayed as error info
-                console.error("test failed"); // browser_js wait for error message "test failed"
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
                 console.log("test successful"); // browser_js wait for message "test successful"
