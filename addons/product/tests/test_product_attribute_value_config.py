@@ -17,7 +17,7 @@ class TestProductAttributeValueCommon(SavepointCase):
 
         cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',
-            'price': 2000,
+            'list_price': 2000,
         })
 
         cls._add_ssd_attribute()

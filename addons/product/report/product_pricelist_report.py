@@ -64,5 +64,5 @@ class report_product_pricelist(models.AbstractModel):
             'price': dict.fromkeys(quantities, 0.0),
         }
         for qty in quantities:
-            data['price'][qty] = pricelist.get_product_price(product, qty, False)
+            data['price'][qty] = pricelist.get_product_price(product, qty, product.uom_id)
         return data

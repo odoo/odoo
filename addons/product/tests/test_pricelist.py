@@ -11,10 +11,10 @@ class TestPricelist(TransactionCase):
 
         self.datacard = self.env['product.product'].create({'name': 'Office Lamp'})
         self.usb_adapter = self.env['product.product'].create({'name': 'Office Chair'})
-        self.uom_ton = self.env.ref('uom.product_uom_ton')
-        self.uom_unit_id = self.ref('uom.product_uom_unit')
-        self.uom_dozen_id = self.ref('uom.product_uom_dozen')
-        self.uom_kgm_id = self.ref('uom.product_uom_kgm')
+        self.uom_ton_id = self.env.ref('uom.product_uom_ton')
+        self.uom_unit_id = self.env.ref('uom.product_uom_unit')
+        self.uom_dozen_id = self.env.ref('uom.product_uom_dozen')
+        self.uom_kgm_id = self.env.ref('uom.product_uom_kgm')
 
         self.public_pricelist = self.env.ref('product.list0')
         self.sale_pricelist_id = self.env['product.pricelist'].create({
@@ -39,11 +39,13 @@ class TestPricelist(TransactionCase):
         # applying the computation manually
         context = {}
 
-        public_context = dict(context, pricelist=self.public_pricelist.id)
-        pricelist_context = dict(context, pricelist=self.sale_pricelist_id.id)
+        public_context = dict(context, pricelist_id=self.public_pricelist.id)
+        pricelist_context = dict(context, pricelist_id=self.sale_pricelist_id.id)
 
         usb_adapter_without_pricelist = self.usb_adapter.with_context(public_context)
         usb_adapter_with_pricelist = self.usb_adapter.with_context(pricelist_context)
+        self.assertEqual(usb_adapter_with_pricelist.lst_price, usb_adapter_with_pricelist.lst_price)
+        self.assertEqual(usb_adapter_without_pricelist.lst_price, usb_adapter_without_pricelist.price)
         self.assertEqual(usb_adapter_with_pricelist.price, usb_adapter_without_pricelist.price*0.9)
 
         datacard_without_pricelist = self.datacard.with_context(public_context)
@@ -52,8 +54,8 @@ class TestPricelist(TransactionCase):
 
         # Make sure that changing the unit of measure does not break the unit
         # price (after converting)
-        unit_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_unit_id)
-        dozen_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_dozen_id)
+        unit_context = dict(context, pricelist_id=self.sale_pricelist_id.id, uom_id=self.uom_unit_id.id)
+        dozen_context = dict(context, pricelist_id=self.sale_pricelist_id.id, uom_id=self.uom_dozen_id.id)
 
         usb_adapter_unit = self.usb_adapter.with_context(unit_context)
         usb_adapter_dozen = self.usb_adapter.with_context(dozen_context)
@@ -67,16 +69,16 @@ class TestPricelist(TransactionCase):
         # Verify that the pricelist rules are correctly using the product's default UoM
         # as reference, and return a result according to the target UoM (as specific in the context)
 
-        kg, tonne = self.uom_kgm_id, self.uom_ton.id
+        kg, tonne = self.uom_kgm_id, self.uom_ton_id
         tonne_price = 100
 
         # make sure 'tonne' resolves down to 1 'kg'.
-        self.uom_ton.write({'rounding': 0.001})
+        self.uom_ton_id.write({'rounding': 0.001})
         # setup product stored in 'tonnes', with a discounted pricelist for qty > 3 tonnes
         spam_id = self.env['product.product'].create({
             'name': '1 tonne of spam',
-            'uom_id': self.uom_ton.id,
-            'uom_po_id': self.uom_ton.id,
+            'uom_id': self.uom_ton_id.id,
+            'uom_po_id': self.uom_ton_id.id,
             'list_price': tonne_price,
             'type': 'consu'
         })
@@ -93,8 +95,7 @@ class TestPricelist(TransactionCase):
         pricelist = self.public_pricelist
 
         def test_unit_price(qty, uom, expected_unit_price):
-            spam = spam_id.with_context({'uom': uom})
-            unit_price = pricelist.with_context({'uom': uom}).get_product_price(spam, qty, False)
+            unit_price = pricelist.get_product_price(spam_id, qty, uom)
             self.assertAlmostEqual(unit_price, expected_unit_price, msg='Computed unit price is wrong')
 
         # Test prices - they are *per unit*, the quantity is only here to match the pricelist rules!

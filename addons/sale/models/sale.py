@@ -359,9 +359,10 @@ class SaleOrder(models.Model):
             return
 
         self = self.with_company(self.company_id)
+        partner = self.partner_id
 
-        addr = self.partner_id.address_get(['delivery', 'invoice'])
-        partner_user = self.partner_id.user_id or self.partner_id.commercial_partner_id.user_id
+        addr = partner.address_get(['delivery', 'invoice'])
+        partner_user = partner.user_id or partner.commercial_partner_id.user_id
         values = {
             'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,

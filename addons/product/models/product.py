@@ -7,12 +7,11 @@ import re
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-
-
 from odoo.tools import float_compare
+from .product_template import compute_price
+
 
 _logger = logging.getLogger(__name__)
-
 
 
 class ProductCategory(models.Model):
@@ -74,10 +73,6 @@ class ProductProduct(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'
 
-    # price: total price, context dependent (partner, pricelist, quantity)
-    price = fields.Float(
-        'Price', compute='_compute_product_price',
-        digits='Product Price', inverse='_set_product_price')
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
@@ -88,6 +83,11 @@ class ProductProduct(models.Model):
         'Public Price', compute='_compute_product_lst_price',
         digits='Product Price', inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
+    price = fields.Float(
+        'Price', compute='_compute_price',
+        digits='Product Price', help="Used for display purposes"
+        "takes into account contextual infos", prefetch=False)
+    # VFE TODO display_currency_id for the price depending on the context.
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -222,48 +222,14 @@ class ProductProduct(models.Model):
     def _compute_is_product_variant(self):
         self.is_product_variant = True
 
-    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
-    def _compute_product_price(self):
-        prices = {}
-        pricelist_id_or_name = self._context.get('pricelist')
-        if pricelist_id_or_name:
-            pricelist = None
-            partner = self.env.context.get('partner', False)
-            quantity = self.env.context.get('quantity', 1.0)
-
-            # Support context pricelists specified as list, display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, list):
-                pricelist_id_or_name = pricelist_id_or_name[0]
-            if isinstance(pricelist_id_or_name, str):
-                pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
-                if pricelist_name_search:
-                    pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
-            elif isinstance(pricelist_id_or_name, int):
-                pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
-
-            if pricelist:
-                quantities = [quantity] * len(self)
-                partners = [partner] * len(self)
-                prices = pricelist.get_products_price(self, quantities, partners)
-
-        for product in self:
-            product.price = prices.get(product.id, 0.0)
-
-    def _set_product_price(self):
-        for product in self:
-            if self._context.get('uom'):
-                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
-            else:
-                value = product.price
-            value -= product.price_extra
-            product.write({'list_price': value})
-
     def _set_product_lst_price(self):
         for product in self:
-            if self._context.get('uom'):
-                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
-            else:
-                value = product.lst_price
+            if product.product_variant_count > 1:
+                # The field is readonly when product_variant_count > 1 in the view.
+                # It shouldn't be modified if the template has multiple variants
+                # because changing the price on the variant changes the template price.
+                raise ValidationError(_("You cannot modify the price of a variant if its template has multiple variants."))
+            value = product.lst_price
             value -= product.price_extra
             product.write({'list_price': value})
 
@@ -272,18 +238,25 @@ class ProductProduct(models.Model):
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
 
     @api.depends('list_price', 'price_extra')
-    @api.depends_context('uom')
     def _compute_product_lst_price(self):
-        to_uom = None
-        if 'uom' in self._context:
-            to_uom = self.env['uom.uom'].browse(self._context['uom'])
+        for product in self:
+            product.lst_price = product.list_price + product.price_extra
+
+    @api.depends_context('pricelist_id', 'quantity', 'uom_id', 'date', 'ptav_ids', 'currency_id')
+    def _compute_price(self):
+        # Code copy/pasted from Product Template
+        # s.t. self is a product.product for the variant price computation.
+        pricelist, quantity, uom, date, currency = self.product_tmpl_id._get_context_values()
+
+        prices = pricelist.get_products_price(
+            self, quantity,
+            uom=uom,
+            currency=currency,
+            date=date,
+        )
 
         for product in self:
-            if to_uom:
-                list_price = product.uom_id._compute_price(product.list_price, to_uom)
-            else:
-                list_price = product.list_price
-            product.lst_price = list_price + product.price_extra
+            product.price = prices.get(product.id)
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
@@ -607,42 +580,8 @@ class ProductProduct(models.Model):
                 res |= seller
         return res.sorted('price')[:1]
 
-    def price_compute(self, price_type, uom=False, currency=False, company=None):
-        # TDE FIXME: delegate to template or not ? fields are reencoded here ...
-        # compatibility about context keys used a bit everywhere in the code
-        if not uom and self._context.get('uom'):
-            uom = self.env['uom.uom'].browse(self._context['uom'])
-        if not currency and self._context.get('currency'):
-            currency = self.env['res.currency'].browse(self._context['currency'])
-
-        products = self
-        if price_type == 'standard_price':
-            # standard_price field can only be seen by users in base.group_user
-            # Thus, in order to compute the sale price from the cost for users not in this group
-            # We fetch the standard price as the superuser
-            products = self.with_company(company or self.env.company).sudo()
-
-        prices = dict.fromkeys(self.ids, 0.0)
-        for product in products:
-            prices[product.id] = product[price_type] or 0.0
-            if price_type == 'list_price':
-                prices[product.id] += product.price_extra
-                # we need to add the price from the attributes that do not generate variants
-                # (see field product.attribute create_variant)
-                if self._context.get('no_variant_attributes_price_extra'):
-                    # we have a list of price_extra that comes from the attribute values, we need to sum all that
-                    prices[product.id] += sum(self._context.get('no_variant_attributes_price_extra'))
-
-            if uom:
-                prices[product.id] = product.uom_id._compute_price(prices[product.id], uom)
-
-            # Convert from current user company currency to asked one
-            # This is right cause a field cannot be in more than one currency
-            if currency:
-                prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
-
-        return prices
+    def price_compute(self, price_type, currency=None, uom=None, company=None, date=False):
+        return compute_price(self, price_type, currency, uom, company, date)
 
     @api.model
     def get_empty_list_help(self, help):
