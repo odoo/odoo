@@ -51,6 +51,7 @@ class AccountMove(models.Model):
             new_line._onchange_price_subtotal()
             new_lines += new_line
         new_lines._onchange_mark_recompute_taxes()
+        self.line_ids += new_lines
 
         # Compute invoice_origin.
         origins = set(self.line_ids.mapped('purchase_line_id.order_id.name'))
