@@ -336,6 +336,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
         company = self.env['res.company'].create({'name': 'Oopo'})
+        company.flush()
         existing_partners = self.env['res.partner'].create([{
             'name': 'Jean',
             'company_id': company.id,
