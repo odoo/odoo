@@ -1,7 +1,7 @@
 #!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          odoo.py
-# Required-Start:    $remote_fs $syslog postgresql
+# Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
@@ -26,7 +26,7 @@ test -x $DAEMON || exit 0
 set -e
 
 function _start() {
-    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=web,hw_proxy,hw_posbox_homepage,hw_posbox_upgrade,hw_scale,hw_scanner,hw_escpos,hw_blackbox_be,hw_screen,hw_drivers
+    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=web,hw_proxy,hw_posbox_homepage,hw_escpos,hw_blackbox_be,hw_drivers --limit-time-cpu=600 --limit-time-real=1200
 }
 
 function _stop() {
