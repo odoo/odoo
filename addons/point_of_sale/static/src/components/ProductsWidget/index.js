@@ -114,11 +114,6 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             // event detail is the id of the selected category
             this.state.selectedCategoryId = event.detail;
         }
-        clickProduct(event) {
-            // event detail is the product
-            const product = event.detail;
-            this.clickProductHandler(product);
-        }
         updateSearch(event) {
             this.state.searchWord = event.detail;
         }

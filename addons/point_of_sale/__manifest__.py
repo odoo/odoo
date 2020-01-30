@@ -48,6 +48,7 @@
     'application': True,
     'qweb': [
         'static/src/xml/pos.xml',
+        'static/src/components/screens/ProductScreen/templates.xml',
         'static/src/components/OrderWidget/templates.xml',
         'static/src/components/NumpadWidget/templates.xml',
         'static/src/components/ActionpadWidget/templates.xml',

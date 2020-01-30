@@ -1,13 +1,12 @@
 odoo.define('point_of_sale.NumpadWidget', function(require) {
     'use strict';
 
-    const { NumpadState } = require('point_of_sale.models');
     const { PosComponent } = require('point_of_sale.PosComponent');
 
     class NumpadWidget extends PosComponent {
         constructor() {
             super(...arguments);
-            this.state = new NumpadState();
+            this.state = this.props.state;
             this.pos = this.props.pos;
         }
         mounted() {

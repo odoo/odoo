@@ -589,6 +589,8 @@ class Chrome extends PosComponent {
 
         this.pos = new models.PosModel(session, {chrome:this});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
+        this.state = owl.useState({ activeScreenName: null });
+        this.props = { pos: this.pos, gui: this.gui }
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
 
@@ -687,6 +689,14 @@ class Chrome extends PosComponent {
         }).guardedCatch((err) => { // error when loading models data from the backend
             this.loading_error(err);
         });
+    }
+
+    get screenComponent() {
+        return this.constructor.components[this.state.activeScreenName];
+    }
+
+    showScreen(event) {
+        this.state.activeScreenName = event.detail.screenName;
     }
 
     cleanup_dom() {
@@ -903,18 +913,6 @@ class Chrome extends PosComponent {
         var self = this;
         this.load_widgets(this.widgets);
 
-        this.screens = {};
-        var classe;
-        for (var i = 0; i < this.gui.screen_classes.length; i++) {
-            classe = this.gui.screen_classes[i];
-            if (!classe.condition || classe.condition.call(this)) {
-                var screen = new classe.widget(this,{});
-                    screen.appendTo(this.$('.screens'));
-                this.screens[classe.name] = screen;
-                this.gui.add_screen(classe.name, screen);
-            }
-        }
-
         this.popups = {};
         _.forEach(this.gui.popup_classes, function (classe) {
             if (!classe.condition || classe.condition.call(self)) {
@@ -925,15 +923,11 @@ class Chrome extends PosComponent {
                 });
             }
         });
-
-        this.gui.set_startup_screen('products');
-        this.gui.set_default_screen('products');
-
     }
 
     destroy() {
+        super.destroy(...arguments);
         this.pos.destroy();
-        this._super();
     }
 
     format_currency(amount, precision) {

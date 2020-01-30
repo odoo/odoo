@@ -37,12 +37,8 @@ var Gui = core.Class.extend({
     },
 
     _show_first_screen: function() {
-        var order = this.pos.get_order();
-        if (order) {
-            this.show_saved_screen(order);
-        } else {
-            this.show_screen(this.startup_screen);
-        }
+        this.chrome.state.activeScreenName = 'ProductScreen';
+        this.chrome.props = { pos: this.chrome.pos, gui: this.chrome.gui };
     },
 
     /* ---- Gui: SCREEN MANIPULATION ---- */

@@ -26,7 +26,8 @@
                     <div class='subwindow'>
                         <div class='subwindow-container'>
                             <div class='subwindow-container-fix screens'>
-                                <!-- here go the screens -->
+                                <t t-if="state.activeScreenName" t-component="screenComponent" t-props="props"
+                                   t-on-show-screen="showScreen" t-key="state.activeScreenName" />
                             </div>
                         </div>
                     </div>
@@ -146,36 +147,6 @@
     <t t-name="SetPricelistButton">
         <div class='control-button o_pricelist_button'>
             <i class='fa fa-th-list' role="img" aria-label="Price list" title="Price list"/> <t t-esc='widget.get_current_pricelist_name()'/>
-        </div>
-    </t>
-
-    <t t-name="ProductScreenWidget">
-        <div class="product-screen screen">
-            <div class="leftpane">
-                <div class='window'>
-                    <div class='subwindow'>
-                        <div class='subwindow-container'>
-                            <div class='subwindow-container-fix'>
-                                <div class="placeholder-OrderWidget"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class='subwindow collapsed'>
-                        <div class='subwindow-container'>
-                            <div class='subwindow-container-fix pads'>
-                                <div class="control-buttons oe_hidden"></div>
-                                <div class="placeholder-ActionpadWidget"></div>
-                                <div class="placeholder-NumpadWidget"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="rightpane">
-                <table class="placeholder-ProductsWidget"></table>
-            </div>
         </div>
     </t>
 

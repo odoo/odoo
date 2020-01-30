@@ -42,7 +42,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         constructor() {
             super(...arguments);
             this.pos = this.props.pos;
-            this.order = this.props.order;
             this.numpadState = this.props.numpadState;
             this.orderlinesArray = this.order.get_orderlines();
             this.numpadState.reset();
@@ -57,6 +56,9 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                     this.scrollToBottom = false;
                 }
             });
+        }
+        get order() {
+            return this.pos.get_order();
         }
         mounted() {
             this.numpadState.on('set_value', this.set_value, this);
