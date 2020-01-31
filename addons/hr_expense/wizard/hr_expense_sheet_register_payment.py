@@ -68,7 +68,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         won't be displayed but some modules might change that, depending on the payment type."""
         for payment in self:
             payment.show_partner_bank_account = payment.payment_method_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
-            payment.require_partner_bank_account = payment.payment_method_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
+            payment.require_partner_bank_account = payment.state == 'draft' and payment.payment_method_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
     @api.depends('journal_id')
     def _compute_hide_payment_method(self):
