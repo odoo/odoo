@@ -135,6 +135,12 @@ var Mailbox = SearchableThread.extend({
         }
         return Promise.resolve();
     },
+    /**
+     * @param {integer} newCounter
+     */
+    setMailboxCounter: function (newCounter) {
+        this._mailboxCounter = newCounter;
+    },
 
     //--------------------------------------------------------------------------
     // Private

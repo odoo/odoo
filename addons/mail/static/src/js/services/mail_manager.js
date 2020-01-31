@@ -865,6 +865,15 @@ var MailManager =  AbstractService.extend({
         this._pinnedDmPartners = [];
         // all threads, including channels, DM, mailboxes, document threads, ...
         this._threads = [];
+
+        this._addMailbox({
+            id: 'inbox',
+            name: _t("Inbox"),
+        });
+        this._addMailbox({
+            id: 'starred',
+            name: _t("Starred"),
+        });
     },
     /**
      * State whether discuss app is open or not
@@ -1276,16 +1285,8 @@ var MailManager =  AbstractService.extend({
      *   set to 'Starred'
      */
     _updateMailboxesFromServer: function (data) {
-        this._addMailbox({
-            id: 'inbox',
-            name: _t("Inbox"),
-            mailboxCounter: data.needaction_inbox_counter || 0,
-        });
-        this._addMailbox({
-            id: 'starred',
-            name: _t("Starred"),
-            mailboxCounter: data.starred_counter || 0,
-        });
+        this.getMailbox('inbox').setMailboxCounter(data.needaction_inbox_counter || 0);
+        this.getMailbox('starred').setMailboxCounter(data.starred_counter || 0);
 
         if (data.is_moderator) {
             this._addMailbox({
