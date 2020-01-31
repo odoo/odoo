@@ -11,6 +11,41 @@ var options = require('web_editor.snippets.options');
 var _t = core._t;
 var qweb = core.qweb;
 
+const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
+const UrlPickerUserValueWidget = InputUserValueWidget.extend({
+    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
+        website_url_chosen: '_onWebsiteURLChosen',
+    }),
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        $(this.inputEl).addClass('text-left');
+        wUtils.autocompleteWithPages(this, $(this.inputEl));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the autocomplete change the input value.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onWebsiteURLChosen: function (ev) {
+        $(this.inputEl).trigger('input');
+        this._onUserValueChange(ev);
+    },
+});
+
+options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 options.Class.include({
 
     //--------------------------------------------------------------------------
@@ -1139,37 +1174,6 @@ options.registry.SnippetMove = options.Class.extend({
     },
 });
 
-const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
-const UrlPickerUserValueWidget = InputUserValueWidget.extend({
-    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
-        website_url_chosen: '_onWebsiteURLChosen',
-    }),
-
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-        $(this.inputEl).addClass('text-left');
-        wUtils.autocompleteWithPages(this, $(this.inputEl));
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when the autocomplete change the input value.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onWebsiteURLChosen: function (ev) {
-        $(this.inputEl).trigger('input');
-        this._onUserValueChange(ev);
-    },
-});
-
 options.registry.ScrollButton = options.Class.extend({
     /**
      * @override
@@ -1246,7 +1250,6 @@ options.registry.ScrollButton = options.Class.extend({
     },
 });
 
-options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
 };
