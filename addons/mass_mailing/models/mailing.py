@@ -443,7 +443,7 @@ class MassMailing(models.Model):
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             """
-        elif issubclass(type(target), self.pool['mail.address.mixin']):
+        elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
         elif 'email_from' in target._fields:
             mail_field = 'email_from'
