@@ -7,7 +7,7 @@
 {
     'name' : 'OHADA - Accounting',
     'author' : 'Baamtu Senegal',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================

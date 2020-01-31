@@ -5,7 +5,7 @@
 {
     'name': 'Purchase and MRP Management',
     'version': '1.0',
-    'category': 'Operations/Purchase',
+    'category': 'Inventory/Purchase',
     'description': """
 This module provides facility to the user to install mrp and purchase modules at a time.
 ========================================================================================

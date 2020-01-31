@@ -3,7 +3,7 @@
     'name': "test read_group",
     'description': "Tests for read_group",
 
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'version': '0.1',
 
     'depends': ['base'],

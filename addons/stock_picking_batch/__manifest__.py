@@ -4,7 +4,7 @@
 {
     'name': 'Warehouse Management: Batch Transfer',
     'version': '1.0',
-    'category': 'Operations/Inventory',
+    'category': 'Inventory/Inventory',
     'description': """
 This module adds the batch transfer option in warehouse management
 ==================================================================

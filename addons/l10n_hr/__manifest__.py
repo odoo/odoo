@@ -40,7 +40,7 @@ Izvori podataka:
 """,
     "version": "13.0",
     "author": "OpenERP Croatian Community",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
 
     'depends': [
         'account',

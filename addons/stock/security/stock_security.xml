@@ -2,7 +2,7 @@
 <odoo>
 <data noupdate="0">
 
-    <record id="base.module_category_operations_inventory" model="ir.module.category">
+    <record id="base.module_category_inventory_inventory" model="ir.module.category">
         <field name="description">Helps you manage your inventory and main stock operations: delivery orders, receptions, etc.</field>
         <field name="sequence">4</field>
     </record>
@@ -19,12 +19,12 @@
 
     <record id="group_stock_user" model="res.groups">
         <field name="name">User</field>
-        <field name="category_id" ref="base.module_category_operations_inventory"/>
+        <field name="category_id" ref="base.module_category_inventory_inventory"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
     <record id="group_stock_manager" model="res.groups">
         <field name="name">Administrator</field>
-        <field name="category_id" ref="base.module_category_operations_inventory"/>
+        <field name="category_id" ref="base.module_category_inventory_inventory"/>
         <field name="implied_ids" eval="[(4, ref('group_stock_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>

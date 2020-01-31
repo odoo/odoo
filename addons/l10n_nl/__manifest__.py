@@ -6,7 +6,7 @@
 {
     'name': 'Netherlands - Accounting',
     'version': '3.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'author': 'Onestein',
     'website': 'http://www.onestein.eu',
     'depends': [

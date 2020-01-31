@@ -4,7 +4,7 @@
 {
     'name': 'Bootswatch Theme',
     'description': 'Bootswatch themes',
-    'category': 'Theme',
+    'category': 'Website/Theme',
     'sequence': 900,
     'version': '1.0',
     'depends': ['website'],

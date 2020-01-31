@@ -7,6 +7,7 @@
     'version': '1.0',
     'sequence': 24,
     'summary': 'Record time',
+    'category': 'Services/Timesheets',
     'description': """
 This module implements a timer.
 ==========================================

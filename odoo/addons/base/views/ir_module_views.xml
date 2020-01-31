@@ -48,6 +48,9 @@
                         <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                     </group>
+                    <searchpanel>
+                        <field name="category_id" groupby="parent_id" string="Categories"/>
+                    </searchpanel>
                </search>
             </field>
         </record>

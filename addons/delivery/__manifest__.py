@@ -5,7 +5,7 @@
 {
     'name': 'Delivery Costs',
     'version': '1.0',
-    'category': 'Operations/Inventory/Delivery',
+    'category': 'Inventory/Delivery',
     'description': """
 Allows you to add delivery methods in sale orders and picking.
 ==============================================================

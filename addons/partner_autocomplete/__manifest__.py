@@ -6,7 +6,7 @@
        Auto-complete partner companies' data
     """,
     'author': "Odoo SA",
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'version': '1.0',
 
     'depends': ['web', 'mail', 'iap'],

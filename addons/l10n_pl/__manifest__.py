@@ -8,7 +8,7 @@
     'version' : '2.0',
     'author' : 'Grzegorz Grzelak (OpenGLOBE)',
     'website': 'http://www.openglobe.pl',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the module to manage the accounting chart and taxes for Poland in Odoo.
 ==================================================================================

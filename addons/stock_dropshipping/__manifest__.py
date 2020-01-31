@@ -4,7 +4,7 @@
 {
     'name': 'Drop Shipping',
     'version': '1.0',
-    'category': 'Operations/Inventory',
+    'category': 'Inventory/Inventory',
     'summary': 'Drop Shipping',
     'description': """
 Manage drop shipping orders

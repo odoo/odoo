@@ -3,7 +3,7 @@
 
 {
     'name': 'Forum on Courses',
-    'category': 'Hidden',
+    'category': 'Website/eLearning',
     'version': '1.0',
     'summary': 'Allows to link forum on a course',
     'description': """A Slide channel can be linked to forum. Also, profiles from slide and forum are regrouped together""",

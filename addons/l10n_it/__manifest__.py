@@ -16,7 +16,7 @@ Piano dei conti italiano di un'impresa generica.
 
 Italian accounting chart and localization.
     """,
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'website': 'http://www.odoo.com/',
     'data': [
         'data/l10n_it_chart_data.xml',

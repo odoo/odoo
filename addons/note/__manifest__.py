@@ -4,7 +4,7 @@
 {
     'name': 'Notes',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Productivity/Notes',
     'description': "",
     'website': 'https://www.odoo.com/page/notes',
     'summary': 'Organize your work with memos',
