@@ -115,7 +115,7 @@ odoo.define('point_of_sale.tests.PaymentScreen', function (require) {
     });
 
     QUnit.test('PaymentScreenPaymentLines', async function (assert) {
-        assert.expect(15);
+        assert.expect(12);
 
         class Parent extends PosComponent {
             constructor() {
@@ -156,15 +156,11 @@ odoo.define('point_of_sale.tests.PaymentScreen', function (require) {
         const cashPM = { id: 0, name: 'Cash', is_cash_count: true, use_payment_terminal: false };
         const bankPM = { id: 0, name: 'Bank', is_cash_count: false, use_payment_terminal: false };
 
-        assert.ok(parent.el.querySelector('.paymentlines-empty'), 'empty payment lines');
-
         let paymentline1 = order.add_paymentline(cashPM);
         await testUtils.nextTick();
 
-        assert.notOk(parent.el.querySelector('.paymentlines-empty'), 'not empty anymore');
         let statusContainer = parent.el.querySelector('.payment-status-container');
         let linesEl = parent.el.querySelector('.paymentlines');
-        assert.ok(statusContainer, 'payment status is shown');
         assert.ok(linesEl, 'payment lines are shown');
         let newLine = linesEl.querySelector('.selected');
         assert.ok(newLine, 'the new line is automatically selected');

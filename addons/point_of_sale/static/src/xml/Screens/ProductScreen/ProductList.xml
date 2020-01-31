@@ -3,25 +3,23 @@
 
     <t t-name="ProductList" owl="1">
         <div class="product-list-container">
-            <div class="product-list-scroller touch-scrollable">
-                <div t-if="props.products.length != 0" class="product-list">
-                    <t t-foreach="props.products" t-as="product" t-key="product.id">
-                        <ProductItem product="product" />
+            <div t-if="props.products.length != 0" class="product-list">
+                <t t-foreach="props.products" t-as="product" t-key="product.id">
+                    <ProductItem product="product" />
+                </t>
+            </div>
+            <div t-else="" class="product-list-empty">
+                <div class="product-list-empty">
+                    <t t-if="props.searchWord !== ''">
+                        <p>
+                            No results found for "
+                            <b t-esc="props.searchWord"></b>
+                            ".
+                        </p>
                     </t>
-                </div>
-                <div t-else="" class="product-list-empty">
-                    <div class="product-list-empty">
-                        <t t-if="props.searchWord !== ''">
-                            <p>
-                                No results found for "
-                                <b t-esc="props.searchWord"></b>
-                                ".
-                            </p>
-                        </t>
-                        <t t-else="">
-                            <p>There are no products in this category.</p>
-                        </t>
-                    </div>
+                    <t t-else="">
+                        <p>There are no products in this category.</p>
+                    </t>
                 </div>
             </div>
         </div>

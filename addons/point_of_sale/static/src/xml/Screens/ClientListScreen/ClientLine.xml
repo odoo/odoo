@@ -10,7 +10,7 @@
             <td>
                 <t t-esc="props.partner.address" />
             </td>
-            <td>
+            <td t-if="!env.isMobile">
                 <t t-esc="props.partner.phone or props.partner.mobile or ''" />
             </td>
         </tr>

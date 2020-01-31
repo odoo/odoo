@@ -8,12 +8,14 @@
                 <div class="pos-topheader">
                     <div t-if="tempScreen.isShown" class="block-top-header" />
                     <div class="pos-branding">
-                        <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                        <img t-if= "!env.isMobile" class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                              src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     </div>
                     <div class="pos-rightheader">
                         <OrderSelector />
-                        <CashierName />
+                        <t t-if="!env.isMobile">
+                            <CashierName />
+                        </t>
                         <SaleDetailsButton t-if="env.pos.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <ClientScreenButton t-if="clientScreenButtonIsShown" />

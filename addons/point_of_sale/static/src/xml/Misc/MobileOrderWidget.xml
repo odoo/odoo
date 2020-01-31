@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="MobileOrderWidget" owl="1">
+        <div class="switchpane">
+            <t t-if="pane === 'right'">
+                <button class="btn-switchpane" t-on-click="trigger('click-pay')">
+                    <h1>Pay</h1>
+                    <span><t t-esc="total" /></span>
+                </button>
+                <button class="btn-switchpane secondary" t-on-click="trigger('switchpane')">
+                    <h1>Review</h1>
+                    <span><t t-esc="items_number"/> items</span>
+                </button>
+            </t>
+            <t t-if="pane === 'left'">
+              <button class="btn-switchpane" t-on-click="trigger('switchpane')"><h1>Back</h1></button>
+            </t>
+        </div>
+    </t>
+
+</templates>

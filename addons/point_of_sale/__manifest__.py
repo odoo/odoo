@@ -59,6 +59,7 @@
         'static/src/xml/Screens/PaymentScreen/PaymentScreenNumpad.xml',
         'static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml',
         'static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml',
+        'static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml',
         'static/src/xml/Screens/PaymentScreen/PaymentMethodButton.xml',
         'static/src/xml/Screens/PaymentScreen/PaymentScreen.xml',
         'static/src/xml/Screens/ProductScreen/Orderline.xml',
@@ -103,6 +104,7 @@
         'static/src/xml/Screens/ProductScreen/ControlButtons/SetPricelistButton.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.xml',
         'static/src/xml/ChromeWidgets/ClientScreenButton.xml',
+        'static/src/xml/Misc/MobileOrderWidget.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }
