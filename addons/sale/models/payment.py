@@ -3,7 +3,7 @@
 import logging
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.tools import float_compare
 
 
@@ -121,7 +121,7 @@ class PaymentTransaction(models.Model):
                         mark_invoice_as_sent=True,
                         company_id=trans.acquirer_id.company_id.id,
                     )
-                    for invoice in trans.invoice_ids:
+                    for invoice in trans.invoice_ids.with_user(SUPERUSER_ID):
                         invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
         return res
 
