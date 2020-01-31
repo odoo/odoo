@@ -31,6 +31,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 useWithBarcode: true,
             });
             this.numpadMode = 'quantity';
+            this.mobile_pane = this.props.mobile_pane || 'right';
         }
         mounted() {
             this.env.pos.on('change:selectedClient', this.render, this);
@@ -266,6 +267,16 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         _onClickPay() {
             this.showScreen('PaymentScreen');
+        }
+        switchPane() {
+            if (this.mobile_pane === "left") {
+                this.mobile_pane = "right";
+                this.render();
+            }
+            else {
+                this.mobile_pane = "left";
+                this.render();
+            }
         }
     }
     ProductScreen.template = 'ProductScreen';

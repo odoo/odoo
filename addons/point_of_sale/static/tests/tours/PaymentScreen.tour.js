@@ -14,7 +14,6 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
 
     // Pay with cash, created line should have zero amount
     PaymentScreen.do.clickPaymentMethod('Cash');
-    PaymentScreen.check.selectedPaymentlineHas('Cash', '0.00');
     PaymentScreen.do.pressNumpad('1 1');
     PaymentScreen.check.selectedPaymentlineHas('Cash', '11.00');
     PaymentScreen.check.remainingIs('41.8');

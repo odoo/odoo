@@ -2,13 +2,15 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ProductsWidgetControlPanel" owl="1">
-        <div>
-            <header class="rightpane-header">
+        <div class="products-widget-control">
+            <div class="rightpane-header">
                 <!-- Breadcrumbs -->
                 <div class="breadcrumbs">
-                    <HomeCategoryBreadcrumb />
-                    <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
-                        <CategoryBreadcrumb category="category" />
+                    <HomeCategoryBreadcrumb subcategories="props.subcategories" currentCat="props.breadcrumbs[props.breadcrumbs.length - 1]"/>
+                    <t t-if="!env.isMobile">
+                        <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
+                            <CategoryBreadcrumb category="category" />
+                        </t>
                     </t>
                 </div>
                 <!-- Searchbox -->
@@ -22,9 +24,9 @@
                         <i class="fa fa-remove" />
                     </span>
                 </div>
-            </header>
+            </div>
             <!-- Subcategories -->
-            <t t-if="props.subcategories.length > 0">
+            <t t-if="props.subcategories.length > 0 &amp;&amp; !env.isMobile">
                 <div class="categories">
                     <div class="category-list-scroller touch-scrollable">
                         <div class="category-list"
