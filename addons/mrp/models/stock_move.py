@@ -180,6 +180,7 @@ class StockMove(models.Model):
         # all grouped in the same picking.
         moves_to_return = self.env['stock.move']
         moves_to_unlink = self.env['stock.move']
+        phantom_moves_vals_list = []
         for move in self:
             if not move.picking_type_id:
                 moves_to_return |= move
@@ -188,8 +189,6 @@ class StockMove(models.Model):
             if not bom:
                 moves_to_return |= move
                 continue
-            phantom_moves = self.env['stock.move']
-            processed_moves = self.env['stock.move']
             if move.picking_id.immediate_transfer:
                 factor = move.product_uom._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
             else:
@@ -197,18 +196,17 @@ class StockMove(models.Model):
             boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
                 if move.picking_id.immediate_transfer:
-                    phantom_moves += move._generate_move_phantom(bom_line, 0, line_data['qty'])
+                    phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
                 else:
-                    phantom_moves += move._generate_move_phantom(bom_line, line_data['qty'], 0)
-
-            processed_moves |= phantom_moves.action_explode()
-            if processed_moves and move.state == 'assigned':
-                # Set the state of resulting moves according to 'assigned' as the original move is assigned
-                processed_moves.write({'state': 'assigned'})
+                    phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
             # delete the move with original product which is not relevant anymore
-            moves_to_return |= processed_moves
             moves_to_unlink |= move
+
         moves_to_unlink.sudo().unlink()
+        if phantom_moves_vals_list:
+            phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
+            phantom_moves._adjust_procure_method()
+            moves_to_return |= phantom_moves.action_explode()
         return moves_to_return
 
     def _action_cancel(self):
@@ -232,11 +230,12 @@ class StockMove(models.Model):
         }
 
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
+        vals = []
         if bom_line.product_id.type in ['product', 'consu']:
-            move = self.copy(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
-            move._adjust_procure_method()
-            return move
-        return self.env['stock.move']
+            vals = self.copy_data(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
+            if self.state == 'assigned':
+                vals['state'] = 'assigned'
+        return vals
 
     def _get_upstream_documents_and_responsibles(self, visited):
             if self.production_id and self.production_id.state not in ('done', 'cancel'):
