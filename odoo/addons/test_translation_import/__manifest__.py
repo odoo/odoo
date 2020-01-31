@@ -2,7 +2,7 @@
 {
     'name': 'test-translation-import',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to test translation import.""",
     'depends': ['base'],
     'data': [

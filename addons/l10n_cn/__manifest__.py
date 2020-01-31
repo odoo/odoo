@@ -10,7 +10,7 @@
 {
     'name': 'China - Accounting',
     'version': '1.8',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',

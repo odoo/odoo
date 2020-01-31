@@ -2,14 +2,19 @@
 <odoo>
     <data>
         <record model="ir.module.category" id="module_category_hidden">
-            <field name="name">Technical Settings</field>
+            <field name="name">Technical</field>
             <field name="sequence">0</field>
             <field name="visible" eval="0" />
         </record>
 
-        <record model="ir.module.category" id="module_category_localization">
+        <record model="ir.module.category" id="module_category_accounting">
+            <field name="name">Accounting</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_accounting_localizations">
             <field name="name">Localization</field>
             <field name="visible" eval="0" />
+            <field name="parent_id" ref="module_category_accounting"/>
         </record>
 
         <record model="ir.module.category" id="module_category_payroll_localization">
@@ -18,7 +23,7 @@
         </record>
 
         <record model="ir.module.category" id="module_category_localization_account_charts">
-            <field name="parent_id" ref="module_category_localization" />
+            <field name="parent_id" ref="module_category_accounting_localizations" />
             <field name="name">Account Charts</field>
             <field name="visible" eval="0" />
         </record>

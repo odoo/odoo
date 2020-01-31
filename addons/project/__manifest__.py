@@ -5,7 +5,7 @@
     'name': 'Project',
     'version': '1.1',
     'website': 'https://www.odoo.com/page/project-management',
-    'category': 'Operations/Project',
+    'category': 'Services/Project',
     'sequence': 10,
     'summary': 'Organize and schedule your projects ',
     'depends': [

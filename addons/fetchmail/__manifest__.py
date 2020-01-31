@@ -5,7 +5,7 @@
     'name': 'Email Gateway',
     'version': '1.0',
     'depends': ['mail'],
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'description': """
 Retrieve incoming email on POP/IMAP servers.
 ============================================

@@ -7,7 +7,7 @@
     'name': 'Greece - Accounting',
     'author': 'P. Christeas, OpenERP SA.',
     'website': 'http://openerp.hellug.gr/',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the base module to manage the accounting chart for Greece.
 ==================================================================

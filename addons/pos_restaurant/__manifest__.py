@@ -5,7 +5,7 @@
 {
     'name': 'Restaurant',
     'version': '1.0',
-    'category': 'Sales/Point Of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Restaurant extensions for the Point of Sale ',
     'description': """

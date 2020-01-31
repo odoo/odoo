@@ -7,7 +7,7 @@
     'name': 'Singapore - Accounting',
     'author': 'Tech Receptives',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Singapore accounting chart and localization.
 =======================================================

@@ -3,7 +3,7 @@
 
 {
     'name': 'Skills Management',
-    'category': 'Hidden',
+    'category': 'Human Resources/Employees',
     'version': '1.0',
     'summary': 'Manage skills, knowledge and resumé of your employees',
     'description':

@@ -6,7 +6,7 @@
 {
     'name': 'UK - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the latest UK Odoo localisation necessary to run Odoo accounting for UK SME's with:
 =================================================================================================

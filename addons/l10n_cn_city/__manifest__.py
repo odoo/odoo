@@ -5,7 +5,7 @@
 {
     'name': 'China - City Data',
     'version': '1.8',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'author': 'Jeffery Chen Fan<jeffery9@gmail.com>',
     'description': """
 Includes the following data for the Chinese localization

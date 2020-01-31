@@ -5,7 +5,7 @@
 {
     'name': 'pos_epson_printer_restaurant',
     'version': '1.0',
-    'category': 'Sales/Point Of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Epson Printers as Order Printers',
     'description': """

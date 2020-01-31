@@ -4,7 +4,7 @@
 {
     'name': 'Test API',
     'version': '1.0',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to test the API.""",
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,

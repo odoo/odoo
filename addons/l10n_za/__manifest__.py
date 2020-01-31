@@ -5,7 +5,7 @@
 {
     'name': 'South Africa - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the latest basic South African localisation necessary to run Odoo in ZA:
 ================================================================================

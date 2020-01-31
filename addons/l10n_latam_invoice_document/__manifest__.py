@@ -3,7 +3,7 @@
     "name": "LATAM Document",
     "version": "1.0",
     "author": "ADHOC SA",
-    "category": "Localization",
+    'category': 'Accounting/Localizations',
     "summary": "LATAM Document Types",
     'description': """
 Functional

@@ -3,7 +3,7 @@
 {
     'name': 'Discuss',
     'version': '1.0',
-    'category': 'Discuss',
+    'category': 'Productivity/Discuss',
     'summary': 'Chat, mail gateway and private channels',
     'description': "",
     'website': 'https://www.odoo.com/page/discuss',
