@@ -27,7 +27,9 @@
                                 <div class="content-group" attrs="{'invisible': [('po_order_approval', '=', False)]}">
                                     <div class="row mt16">
                                         <label for="po_double_validation_amount" class="col-md-4 o_light_label"/>
-                                        <field name="po_double_validation_amount" class="col-md-8"/>
+                                        <div class="col-md-8">
+                                            <field name="po_double_validation_amount"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

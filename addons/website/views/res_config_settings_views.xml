@@ -53,11 +53,13 @@
                                     <div class="content-group">
                                         <div class="row mt16">
                                             <label class="col-md-3 o_light_label" string="Name" for="website_name"/>
-                                            <field name="website_name" class="col-md-9" attrs="{'required': [('website_id', '!=', False)]}"/>
+                                            <div class="col-md-9">
+                                                <field name="website_name"  attrs="{'required': [('website_id', '!=', False)]}"/>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <label class="col-lg-3 o_light_label" for="favicon" />
-                                            <field name="favicon" widget="image" class="float-left oe_avatar"/>
+                                            <label class="col-md-3 o_light_label" for="favicon" />
+                                            <field name="favicon" widget="image" class="col-md-9 float-left oe_avatar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -151,16 +153,20 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" for="cdn_url"/>
-                                            <field name="cdn_url"
-                                                   attrs="{'required': [('cdn_activated', '=', True)]}"
-                                                   placeholder="//mycompany.mycdn.com/"
-                                                   t-translation="off"/>
+                                            <label class="col-md-3 o_light_label" for="cdn_url"/>
+                                            <div class="col-md-9">
+                                                <field name="cdn_url"
+                                                    attrs="{'required': [('cdn_activated', '=', True)]}"
+                                                    placeholder="//mycompany.mycdn.com/"
+                                                    t-translation="off"/>
+                                            </div>
                                         </div>
                                         <div class="row" >
-                                            <label class="col-lg-3 o_light_label" for="cdn_filters"/>
-                                            <field name="cdn_filters" class="oe_inline"
-                                                   attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                            <label class="col-md-3 o_light_label" for="cdn_filters"/>
+                                            <div class="col-md-9">
+                                                <field name="cdn_filters" class="oe_inline"
+                                                    attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -178,27 +184,39 @@
                                     <div class="content-group" attrs="{'invisible': [('has_social_network', '=', False)]}">
                                         <div class="row">
                                             <label for="social_twitter" string="Twitter" class="col-md-3 o_light_label"/>
-                                            <field name="social_twitter" class="col-md-9"/>
+                                            <div class="col-md-9">
+                                                <field name="social_twitter"/>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <label for="social_facebook" string="Facebook" class="col-md-3 o_light_label"/>
-                                            <field name="social_facebook" class="col-md-9"/>
+                                            <div class="col-md-9">
+                                                <field name="social_facebook"/>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <label for="social_github" string="GitHub" class="col-md-3 o_light_label"/>
-                                            <field name="social_github" class="col-md-9"/>
+                                            <div class="col-md-9">
+                                                <field name="social_github"/>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <label for="social_linkedin" string="LinkedIn" class="col-md-3 o_light_label"/>
-                                            <field name="social_linkedin" class="col-md-9"/>
+                                            <div class="col-md-9">
+                                                <field name="social_linkedin"/>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <label for="social_youtube" string="YouTube" class="col-md-3 o_light_label"/>
-                                            <field name="social_youtube" class="col-md-9"/>
+                                            <div class="col-md-9">
+                                                <field name="social_youtube"/>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <label for="social_instagram" string="Instagram" class="col-md-3 o_light_label"/>
-                                            <field name="social_instagram" class="col-md-9"/>
+                                            <div class="col-md-9">
+                                                <field name="social_instagram"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -232,8 +250,10 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
-                                            <field name="google_maps_api_key" attrs="{'required': [('has_google_maps', '=', True)]}" />
+                                            <label class="col-md-3 o_light_label" string="API Key" for="google_maps_api_key"/>
+                                            <div class="col-md-9">
+                                                <field name="google_maps_api_key" attrs="{'required': [('has_google_maps', '=', True)]}" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mt8" attrs="{'invisible': [('has_google_maps', '=', False)]}">
@@ -280,8 +300,10 @@
                                     <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                         <div class="row mt16">
                                             <label class="col-md-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
-                                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y" class="col-md-9"
-                                                attrs="{'required': [('has_google_analytics', '=', True)]}"/>
+                                            <div class="col-md-9">
+                                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
+                                                    attrs="{'required': [('has_google_analytics', '=', True)]}"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
@@ -306,9 +328,10 @@
                                     <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
                                         <div class="row mt16">
                                             <label class="col-md-3 o_light_label" string="Code" for="google_search_console"/>
-                                            <field name="google_search_console" placeholder="google1234567890123456.html"
-                                                class="col-md-9"
-                                                attrs="{'required': [('has_google_search_console', '=', True)]}"/>
+                                            <div class="col-md-9"> 
+                                                <field name="google_search_console" placeholder="google1234567890123456.html"
+                                                    attrs="{'required': [('has_google_search_console', '=', True)]}"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
@@ -330,12 +353,16 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
-                                            <field name="google_management_client_id" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
+                                            <label class="col-md-3 o_light_label" string="Client ID" for="google_management_client_id"/>
+                                            <div class="col-md-9">
+                                                <field name="google_management_client_id" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
-                                            <field name="google_management_client_secret" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
+                                            <label class="col-md-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
+                                            <div class="col-md-9">
+                                                <field name="google_management_client_secret" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">

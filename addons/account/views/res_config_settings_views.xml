@@ -32,7 +32,9 @@
                                     <div class="content-group">
                                         <div class="row mt16">
                                             <label for="chart_template_id" string="Package" class="col-md-3 o_light_label"/>
-                                            <field name="chart_template_id" class="col-md-9" widget="selection"/>
+                                            <div class="col-md-9">
+                                                <field name="chart_template_id"  widget="selection"/>
+                                            </div>
                                         </div>
                                         <div class="mt8">
                                             <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
