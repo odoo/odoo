@@ -1755,6 +1755,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls.pool._clear_cache()
 
     @api.model
+    def _read_group_expand_full(self, groups, domain, order):
+        """Extend the group to include all targer records by default."""
+        return groups.search([], order=order)
+
+    @api.model
     def _read_group_fill_results(self, domain, groupby, remaining_groupbys,
                                  aggregated_fields, count_field,
                                  read_group_result, read_group_order=None):

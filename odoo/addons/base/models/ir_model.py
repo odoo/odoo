@@ -4,6 +4,7 @@ import datetime
 import dateutil
 import itertools
 import logging
+import re
 import time
 from ast import literal_eval
 from collections import defaultdict, Mapping
@@ -19,7 +20,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
-
+RE_ORDER_FIELDS = re.compile(r'"?(\w+)"?\s*(?:asc|desc)?', flags=re.I)
 
 # base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
@@ -47,8 +48,8 @@ def query_insert(cr, table, rows):
         rows = [rows]
     cols = list(rows[0])
     query = INSERT_QUERY.format(
-        table=table,
-        cols=",".join(cols),
+        table='"{}"'.format(table),
+        cols=",".join(['"{}"'.format(col) for col in cols]),
         rows=",".join("%s" for row in rows),
     )
     params = [tuple(row[col] for col in cols) for row in rows]
@@ -61,9 +62,9 @@ def query_update(cr, table, values, selectors):
     """
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
-        table=table,
-        assignment=",".join("{0}=%({0})s".format(s) for s in setters),
-        condition=" AND ".join("{0}=%({0})s".format(s) for s in selectors),
+        table='"{}"'.format(table),
+        assignment=",".join('"{0}"=%({0})s'.format(s) for s in setters),
+        condition=" AND ".join('"{0}"=%({0})s'.format(s) for s in selectors),
     )
     cr.execute(query, values)
     return [row[0] for row in cr.fetchall()]
@@ -99,6 +100,8 @@ class IrModel(models.Model):
 
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
+    order = fields.Char(string='Order', default='id', required=True,
+                        help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"')
     info = fields.Text(string='Information')
     field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
                                default=_default_field_id)
@@ -155,6 +158,24 @@ class IrModel(models.Model):
                     raise ValidationError(_("The model name must start with 'x_'."))
             if not models.check_object_name(model.model):
                 raise ValidationError(_("The model name can only contain lowercase characters, digits, underscores and dots."))
+
+    @api.constrains('order', 'field_id')
+    def _check_order(self):
+        for model in self:
+            try:
+                model._check_qorder(model.order)  # regex check for the whole clause ('is it valid sql?')
+            except UserError as e:
+                raise ValidationError(str(e))
+            stored_fields = model.field_id.filtered('store').mapped('name')
+            if self.env.get(model.model) is None:
+                # model hasn't been init'd yet, which means that some fields are not yet in its
+                # list of fields but will be right after its creation - these fields can be used
+                # for ordering, so let's add them to the list of stored fields manually
+                stored_fields += models.MAGIC_COLUMNS
+            order_fields = RE_ORDER_FIELDS.findall(model.order)
+            for field in order_fields:
+                if field not in stored_fields:
+                    raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.") % field)
 
     _sql_constraints = [
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
@@ -238,7 +259,12 @@ class IrModel(models.Model):
         # writes (4,id,False) even for non dirty items.
         if 'field_id' in vals:
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
-        return super(IrModel, self).write(vals)
+        res = super(IrModel, self).write(vals)
+        # ordering has been changed, reload registry to reflect update + signaling
+        if 'order' in vals:
+            self.flush()  # setup_models need to fetch the updated values from the db
+            self.pool.setup_models(self._cr)
+        return res
 
     @api.model
     def create(self, vals):
@@ -264,6 +290,7 @@ class IrModel(models.Model):
         return {
             'model': model._name,
             'name': model._description,
+            'order': model._order,
             'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
@@ -299,6 +326,7 @@ class IrModel(models.Model):
             _module = False
             _custom = True
             _transient = bool(model_data['transient'])
+            _order = model_data['order']
             __doc__ = model_data['info']
 
         return CustomModel
@@ -308,7 +336,7 @@ class IrModel(models.Model):
         # clean up registry first
         custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
         for name in custom_models:
-            del self.pool.models[name]
+            del self.pool[name]
         # add manual models
         cr = self.env.cr
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
@@ -369,6 +397,12 @@ class IrModelFields(models.Model):
                                             "specified as a Python expression defining a list of triplets. "
                                             "For example: [('color','=','red')]")
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id') # CLEANME unimplemented field (empty table)
+    group_expand = fields.Boolean(string="Expand Groups",
+                                  help="If checked, all the records of the target model will be included\n"
+                                        "in a grouped result (e.g. 'Group By' filters, Kanban columns, etc.).\n"
+                                        "Note that it can significantly reduce performance if the target model\n"
+                                        "of the field contains a lot of records; usually used on models with\n"
+                                        "few records (e.g. Stages, Job Positions, Event Types, etc.).")
     selectable = fields.Boolean(default=True)
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the field is defined')
     relation_table = fields.Char(help="Used for custom many2many fields to define a custom relation table name")
@@ -966,6 +1000,7 @@ class IrModelFields(models.Model):
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+            attrs['group_expand'] = '_read_group_expand_full' if field_data['group_expand'] else None
         elif field_data['ttype'] == 'one2many':
             if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
