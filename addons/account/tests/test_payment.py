@@ -572,7 +572,7 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_two.mapped('move_line_ids.move_id.state'), ['draft'], "A posted payment (payment_two) in a bank journal with the 'post at bank reconciliation' option activated should correspond to a draft account.move")
 
         # Reconcile the two payments with an invoice, whose full amount is equal to their sum
-        invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id, account_id=self.partner_agrolait.property_account_receivable_id.id)
         (payment_one.move_line_ids + payment_two.move_line_ids + invoice.move_id.line_ids).filtered(lambda x: x.account_id.user_type_id.type == 'receivable').reconcile()
 
         self.assertTrue(invoice.reconciled, "Invoice should have been reconciled with the payments")
@@ -778,7 +778,7 @@ class TestPayment(AccountingTestCase):
             'partner_id': self.partner_agrolait.id,
             'currency_id': self.currency_usd_id,
             'name': 'out_invoice',
-            'account_id': self.account_receivable.id,
+            'account_id': self.partner_agrolait.property_account_receivable_id.id,
             'type': 'out_invoice',
             'date_invoice': time.strftime('%Y') + '-01-01',
         })
