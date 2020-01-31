@@ -135,7 +135,7 @@ QUnit.test('format binary', function (assert) {
 });
 
 QUnit.test('format percentage', function (assert) {
-    assert.expect(11);
+    assert.expect(12);
 
     var originalParameters = _.clone(core._t.database.parameters);
 
@@ -161,6 +161,7 @@ QUnit.test('format percentage', function (assert) {
     });
     assert.strictEqual(fieldUtils.format.percentage(0.125), '12,5%');
     assert.strictEqual(fieldUtils.format.percentage(0.666666), '66,67%');
+    assert.strictEqual(fieldUtils.format.percentage(0.5, null, { noSymbol: true }), '50');
 
     core._t.database.parameters = originalParameters;
 });

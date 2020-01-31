@@ -374,7 +374,11 @@ function formatPercentage(value, field, options) {
     if (options.humanReadable && options.humanReadable(value * 100)) {
         return result + "%";
     }
-    return (parseFloat(result) + "%").replace('.', _t.database.parameters.decimal_point);
+    const formattedValue = String((parseFloat(result))).replace('.', _t.database.parameters.decimal_point);
+    if (options.noSymbol) {
+        return formattedValue;
+    }
+    return formattedValue + "%";
 }
 /**
  * Returns a string representing the value of the selection.
