@@ -570,11 +570,24 @@ class Picking(models.Model):
                         move[2]['company_id'] = picking_type.company_id.id
         res = super(Picking, self).create(vals)
         res._autoconfirm_picking()
+
+        # set partner as follower
+        if vals.get('partner_id'):
+            for picking in res.filtered(lambda p: p.location_id.usage == 'supplier' or p.location_dest_id.usage == 'customer'):
+                picking.message_subscribe([vals.get('partner_id')])
+
         return res
 
     def write(self, vals):
         if vals.get('picking_type_id') and self.state != 'draft':
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
+        # set partner as a follower and unfollow old partner
+        if vals.get('partner_id'):
+            for picking in self:
+                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
+                    if picking.partner_id:
+                        picking.message_unsubscribe(picking.partner_id.ids)
+                    picking.message_subscribe([vals.get('partner_id')])
         res = super(Picking, self).write(vals)
         # Change locations of moves if those of the picking change
         after_vals = {}
@@ -805,6 +818,9 @@ class Picking(models.Model):
         self.ensure_one()
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some items to move.'))
+
+        # add user as a follower
+        self.message_subscribe([self.env.user.partner_id.id])
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
