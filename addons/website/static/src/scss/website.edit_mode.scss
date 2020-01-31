@@ -137,3 +137,18 @@ table.editorbar-panel {
         cursor: pointer;
     }
 }
+
+// s_popup in edit mode
+.editor_has_snippets {
+    .s_popup_main {
+        z-index: 1000 !important;
+        left: $o-we-sidebar-width !important;
+        top: var(--o-we-toolbar-height) !important;
+
+        &.s_popup_fixed {
+            .s_popup_full .s_popup_content {
+               left: $o-we-sidebar-width !important;
+            }
+        }
+    }
+}
