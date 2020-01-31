@@ -34,24 +34,29 @@ class SurveyUserInput(models.Model):
     is_attempts_limited = fields.Boolean("Limited number of attempts", related='survey_id.is_attempts_limited')
     attempts_limit = fields.Integer("Number of attempts", related='survey_id.attempts_limit')
     attempts_number = fields.Integer("Attempt n°", compute='_compute_attempts_number')
-    is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
+    survey_time_limit_reached = fields.Boolean("Survey Time Limit Reached", compute='_compute_survey_time_limit_reached')
     # identification / access
     access_token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('Email', readonly=True)
+    nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify him in survey sessions rankings.")
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
-    scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_percentage", store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
+    # live sessions
+    is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
+    question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
     ]
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
-    def _compute_scoring_percentage(self):
+    def _compute_scoring_values(self):
         for user_input in self:
             total_possible_score = sum([
                 answer_score if answer_score > 0 else 0
@@ -60,24 +65,48 @@ class SurveyUserInput(models.Model):
 
             if total_possible_score == 0:
                 user_input.scoring_percentage = 0
+                user_input.scoring_total = 0
             else:
-                score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
-                user_input.scoring_percentage = round(score, 2) if score > 0 else 0
+                score_total = sum(user_input.user_input_line_ids.mapped('answer_score'))
+                user_input.scoring_total = score_total
+                score_percentage = (score_total / total_possible_score) * 100
+                user_input.scoring_percentage = round(score_percentage, 2) if score_percentage > 0 else 0
 
     @api.depends('scoring_percentage', 'survey_id.scoring_success_min')
     def _compute_scoring_success(self):
         for user_input in self:
             user_input.scoring_success = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min
 
-    @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
-    def _compute_is_time_limit_reached(self):
+    @api.depends(
+        'start_datetime',
+        'survey_id.is_time_limited',
+        'survey_id.time_limit')
+    def _compute_survey_time_limit_reached(self):
         """ Checks that the user_input is not exceeding the survey's time limit. """
         for user_input in self:
-            if user_input.start_datetime and user_input.survey_id.is_time_limited:
-                datetime_limit = user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
-                user_input.is_time_limit_reached = fields.Datetime.now() > datetime_limit
+            if not user_input.is_session_answer and user_input.start_datetime:
+                start_time = user_input.start_datetime
+                time_limit = user_input.survey_id.time_limit
+                user_input.survey_time_limit_reached = user_input.survey_id.is_time_limited and \
+                    fields.Datetime.now() > start_time + relativedelta(minutes=time_limit)
             else:
-                user_input.is_time_limit_reached = False
+                user_input.survey_time_limit_reached = False
+
+    @api.depends(
+        'survey_id.session_question_id.time_limit',
+        'survey_id.session_question_id.is_time_limited',
+        'survey_id.session_question_start_time')
+    def _compute_question_time_limit_reached(self):
+        """ Checks that the user_input is not exceeding the question's time limit.
+        Only used in the context of survey sessions. """
+        for user_input in self:
+            if user_input.is_session_answer and user_input.survey_id.session_question_start_time:
+                start_time = user_input.survey_id.session_question_start_time
+                time_limit = user_input.survey_id.session_question_id.time_limit
+                user_input.question_time_limit_reached = user_input.survey_id.session_question_id.is_time_limited and \
+                    fields.Datetime.now() > start_time + relativedelta(seconds=time_limit)
+            else:
+                user_input.question_time_limit_reached = False
 
     @api.depends('state', 'test_entry', 'survey_id.is_attempts_limited', 'partner_id', 'email', 'invite_token')
     def _compute_attempts_number(self):
@@ -155,6 +184,13 @@ class SurveyUserInput(models.Model):
     def _generate_invite_token(self):
         return str(uuid.uuid4())
 
+    def _mark_in_progress(self):
+        """ marks the state as 'in_progress' and updates the start_datetime accordingly. """
+        self.write({
+            'start_datetime': fields.Datetime.now(),
+            'state': 'in_progress'
+        })
+
     def _mark_done(self):
         """ This method will:
         1. mark the state as 'done'
@@ -205,6 +241,9 @@ class SurveyUserInput(models.Model):
             self._save_line_simple_answer(question, old_answers, answer)
             if question.save_as_email and answer:
                 self.write({'email': answer})
+            if question.save_as_nickname and answer:
+                self.write({'nickname': answer})
+
         elif question.question_type in ['simple_choice', 'multiple_choice']:
             self._save_line_choice(question, old_answers, answer, comment)
         elif question.question_type == 'matrix':
@@ -244,7 +283,7 @@ class SurveyUserInput(models.Model):
             for row_key, row_answer in answers.items():
                 for answer in row_answer:
                     vals = self._get_line_answer_values(question, answer, 'suggestion')
-                    vals['matrix_row_id'] = row_key
+                    vals['matrix_row_id'] = int(row_key)
                     vals_list.append(vals.copy())
 
         if comment:
@@ -383,13 +422,53 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            suggested_answer_id = vals.get('suggested_answer_id')
-            if suggested_answer_id:
-                vals.update({'answer_score': self.env['survey.question.answer'].browse(int(suggested_answer_id)).answer_score})
+            score = self._get_answer_score(vals.get('user_input_id'), vals.get('suggested_answer_id'))
+            if score and not vals.get('answer_score'):
+                vals.update({'answer_score': score})
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
-        suggested_answer_id = vals.get('suggested_answer_id')
-        if suggested_answer_id:
-            vals.update({'answer_score': self.env['survey.question.answer'].browse(int(suggested_answer_id)).answer_score})
+        score = self._get_answer_score(
+            vals.get('user_input_id'),
+            vals.get('suggested_answer_id'),
+            compute_speed_score=False)
+        if score and not vals.get('answer_score'):
+            vals.update({'answer_score': score})
         return super(SurveyUserInputLine, self).write(vals)
+
+    @api.model
+    def _get_answer_score(self, user_input_id, suggested_answer_id, compute_speed_score=True):
+        """ If score depends on the speed of the answer, we need to compute it.
+        If the user answers in less than 2 seconds, he gets 100% of the points.
+        If he answers after that, he gets minimum 50% of the points.
+        The 50 other % are ponderated between the time limit and the time it took him to answer.
+
+        If the score does not depend on the speed, we just return the answer_score field of the
+        suggested survey.question.answer. """
+
+        if not suggested_answer_id:
+            return None
+
+        answer = self.env['survey.question.answer'].search([('id', '=', suggested_answer_id)], limit=1)
+        answer_score = answer.answer_score
+
+        if compute_speed_score:
+            user_input = self.env['survey.user_input'].browse(user_input_id)
+            session_speed_rating = user_input.exists() and user_input.is_session_answer and user_input.survey_id.session_speed_rating
+            if session_speed_rating and answer.answer_score and answer.answer_score > 0:
+                max_score_delay = 2
+                time_limit = answer.question_id.time_limit
+                now = fields.Datetime.now()
+                seconds_to_answer = (now - user_input.survey_id.session_question_start_time).total_seconds()
+                question_remaining_time = time_limit - seconds_to_answer
+                if seconds_to_answer < max_score_delay:  # if answered within the max_score_delay
+                    answer_score = answer.answer_score
+                elif question_remaining_time < 0:  # if no time left
+                    answer_score = answer.answer_score / 2
+                else:
+                    time_limit -= max_score_delay  # we remove the max_score_delay to have all possible values
+                    question_remaining_time -= max_score_delay
+                    score_proportion = (time_limit - seconds_to_answer) / time_limit
+                    answer_score = (answer.answer_score / 2) * (1 + score_proportion)
+
+        return answer_score

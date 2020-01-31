@@ -7,11 +7,18 @@
         <field name="arch" type="xml">
             <form string="Survey" class="o_survey_form">
                 <field name="id" invisible="1"/>
+                <field name="session_state" invisible="1"/>
                 <header>
                     <button name="action_open" string="Start Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('id', '=', False)]}"/>
                     <button name="action_send_survey" string="Share" type="object" class="oe_highlight" states="open"/>
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       attrs="{'invisible': ['|', ('state', '=', 'draft'), ('answer_done_count', '&lt;=', 0)]}"/>
+                    <button name="action_start_session" string="Create Live Session" type="object"
+                        attrs="{'invisible': ['|', ('session_state', '!=', False), ('state', '=', 'draft')]}" />
+                    <button name="action_open_session_manager" string="Open Session Manager" type="object"
+                        attrs="{'invisible': ['|', ('session_state', '=', False), ('state', '=', 'draft')]}" />
+                    <button name="action_end_session" string="Close Live Session" type="object"
+                        attrs="{'invisible': ['|', ('session_state', '!=', 'in_progress'), ('state', '=', 'draft')]}" />
                     <button name="action_draft" string="Set to draft" type="object" states="closed"/>
                     <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('state', '=', 'closed'), ('id', '=', False)]}"/>
                     <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
@@ -75,9 +82,10 @@
                         <page string="Options" name="options">
                             <group name="options">
                                 <group string="Questions" name="questions">
-                                    <field name="questions_layout" widget="radio" />
+                                    <field name="questions_layout" widget="radio"
+                                        attrs="{'readonly': [('session_state', 'in', ['ready', 'in_progress'])]}"/>
                                     <field name="progression_mode" widget="radio" />
-                                    <label for="is_time_limited" string="Time Limit"/>
+                                    <label for="is_time_limited" string="Survey Time Limit"/>
                                     <div>
                                         <field name="is_time_limited" nolabel="1"/>
                                         <field name="time_limit" widget="float_time" attrs="{'invisible': [('is_time_limited', '=', False)]}" nolabel="1" class="oe_inline" /> <span attrs="{'invisible': [('is_time_limited', '=', False)]}"> minutes</span>
@@ -118,6 +126,9 @@
                                     <field name="certification_badge_id_dummy" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '=', False)]}"
                                            options="{'no_create': True}"
                                            context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
+                                </group>
+                                <group string="Live Session">
+                                    <field name="session_speed_rating" />
                                 </group>
                             </group>
                         </page>

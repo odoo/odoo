@@ -82,8 +82,11 @@ class SurveyQuestion(models.Model):
         ('matrix', 'Matrix')], string='Question Type')
     # -- char_box
     save_as_email = fields.Boolean(
-        "Save as user email", compute='_compute_save_as_email', readonly=False, store=True,
+        "Save as user email", compute='_compute_save_as_email', readonly=False, store=True, copy=True,
         help="If checked, this option will save the user's answer as its email address.")
+    save_as_nickname = fields.Boolean(
+        "Save as user nickname", compute='_compute_save_as_nickname', readonly=False, store=True, copy=True,
+        help="If checked, this option will save the user's answer as its nickname.")
     # -- simple choice / multiple choice / matrix
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
@@ -96,11 +99,14 @@ class SurveyQuestion(models.Model):
     matrix_row_ids = fields.One2many(
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
-    # -- display options
+    # -- display & timing options
     column_nb = fields.Selection([
         ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
         string='Number of columns', default='12',
         help='These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for dropdown-based simple and multiple choice questions.')
+    is_time_limited = fields.Boolean("The question is limited in time",
+        help="Currently only supported for live sessions.")
+    time_limit = fields.Integer("Time limit (seconds)")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
@@ -180,6 +186,12 @@ class SurveyQuestion(models.Model):
         for question in self:
             if question.question_type != 'char_box' or not question.validation_email:
                 question.save_as_email = False
+
+    @api.depends('question_type')
+    def _compute_save_as_nickname(self):
+        for question in self:
+            if question.question_type != 'char_box':
+                question.save_as_nickname = False
 
     # Validation methods
     def validate_question(self, answer, comment=None):

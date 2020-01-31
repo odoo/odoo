@@ -9,7 +9,7 @@
         <field name="users_can_go_back" eval="False"/>
         <field name="scoring_type">scoring_with_answers</field>
         <field name="scoring_success_min">55</field>
-        <field name="questions_layout">page_per_section</field>
+        <field name="questions_layout">page_per_question</field>
         <field name="description" type="html">
 <p>This small quiz will test your knowledge about our Company. Be prepared !</p></field>
         <field name="background_image" type="base64" file="survey/static/src/img/survey_background.jpg"/>
@@ -28,13 +28,30 @@
     <record id="survey_demo_quiz_p1_q1" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">2</field>
-        <field name="title">Where are you from ?</field>
+        <field name="title">What is your email ?</field>
         <field name="question_type">char_box</field>
         <field name="constr_mandatory" eval="True"/>
+        <field name="validation_email" eval="True"/>
+        <field name="save_as_email" eval="True"/>
     </record>
     <record id="survey_demo_quiz_p1_q2" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">3</field>
+        <field name="title">What is your nickname ?</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="save_as_nickname" eval="True"/>
+    </record>
+    <record id="survey_demo_quiz_p1_q3" model="survey.question">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">4</field>
+        <field name="title">Where are you from ?</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+    <record id="survey_demo_quiz_p1_q4" model="survey.question">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">5</field>
         <field name="title">How old are you ?</field>
         <field name="description" type="html"><p>Just to categorize your answers, don't worry.</p></field>
         <field name="question_type">numerical_box</field>
@@ -99,14 +116,14 @@
             <field name="sequence">1</field>
             <field name="value">Fruits</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">2</field>
+            <field name="answer_score">20</field>
         </record>
         <record id="survey_demo_quiz_p3_q1_sug2" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q1"/>
             <field name="sequence">2</field>
             <field name="value">Vegetables</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">1</field>
+            <field name="answer_score">10</field>
         </record>
         <record id="survey_demo_quiz_p3_q1_sug3" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q1"/>
@@ -121,13 +138,15 @@
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
         <field name="constr_mandatory" eval="True"/>
+        <field name="is_time_limited" eval="True"/>
+        <field name="time_limit">15</field>
     </record>
         <record id="survey_demo_quiz_p3_q2_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
             <field name="sequence">1</field>
             <field name="value">Bees</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">2</field>
+            <field name="answer_score">20</field>
         </record>
         <record id="survey_demo_quiz_p3_q2_sug2" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
@@ -148,30 +167,34 @@
         <field name="constr_mandatory" eval="False"/>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="True"/>
+        <field name="is_time_limited" eval="True"/>
+        <field name="time_limit">20</field>
     </record>
         <record id="survey_demo_quiz_p3_q3_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
             <field name="sequence">1</field>
             <field name="value">Apple Trees</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">2</field>
+            <field name="answer_score">20</field>
         </record>
         <record id="survey_demo_quiz_p3_q3_sug2" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
             <field name="sequence">2</field>
             <field name="value">Lemon Trees</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">1</field>
+            <field name="answer_score">10</field>
         </record>
         <record id="survey_demo_quiz_p3_q3_sug3" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
             <field name="sequence">3</field>
             <field name="value">Baobab Trees</field>
+            <field name="answer_score">-10</field>
         </record>
         <record id="survey_demo_quiz_p3_q3_sug4" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q3"/>
             <field name="sequence">4</field>
             <field name="value">Cookies</field>
+            <field name="answer_score">-10</field>
         </record>
     <record id="survey_demo_quiz_p3_q4" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
@@ -181,30 +204,34 @@
         <field name="constr_mandatory" eval="True"/>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
+        <field name="is_time_limited" eval="True"/>
+        <field name="time_limit">20</field>
     </record>
         <record id="survey_demo_quiz_p3_q4_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
             <field name="sequence">1</field>
             <field name="value">Pomelos</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">2</field>
+            <field name="answer_score">20</field>
         </record>
         <record id="survey_demo_quiz_p3_q4_sug2" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
             <field name="sequence">2</field>
             <field name="value">Grapefruits</field>
             <field name="is_correct" eval="True"/>
-            <field name="answer_score">2</field>
+            <field name="answer_score">20</field>
         </record>
         <record id="survey_demo_quiz_p3_q4_sug3" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
             <field name="sequence">3</field>
             <field name="value">Cosmic rays</field>
+            <field name="answer_score">-10</field>
         </record>
         <record id="survey_demo_quiz_p3_q4_sug4" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_quiz_p3_q4"/>
             <field name="sequence">4</field>
             <field name="value">Bricks</field>
+            <field name="answer_score">-10</field>
         </record>
     <record id="survey_demo_quiz_p3_q5" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>

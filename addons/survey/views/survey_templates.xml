@@ -10,14 +10,25 @@
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
         </xpath>
         <xpath expr="//header" position="before">
-            <t t-set="no_header" t-value="no_header or survey.certification"/>
-            <t t-set="no_footer" t-value="no_footer or survey.certification"/>
+            <t t-set="no_header" t-value="no_header or (survey and survey.certification) or (answer and answer.is_session_answer)"/>
+            <t t-set="no_footer" t-value="no_footer or not survey or survey.certification or (answer and answer.is_session_answer)"/>
         </xpath>
         <xpath expr="//header" position="after">
             <div id="wrap" class="oe_structure oe_empty"/>
         </xpath>
+        <xpath expr="//footer" position="after">
+            <div t-if="no_footer" class="py-3">
+                <div class="float-right px-5 py-2 bg-white rounded-left">
+                    <t t-call="web.brand_promotion_message">
+                        <t t-set="_message"></t>
+                        <t t-set="_utm_medium" t-valuef="survey"/>
+                    </t>
+                </div>
+            </div>
+        </xpath>
     </template>
 
+    <!-- Main survey template -->
     <template id="survey_page_fill" name="Survey: main page (take survey)">
         <t t-call="survey.layout">
             <div class="wrap o_survey_wrap mt16 pb16 d-flex">
@@ -36,8 +47,9 @@
             <div class="container m-0 p-0">
                 <div class="row">
                     <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
-                    <div t-if="survey.is_time_limited and answer.state != 'done'" class="o_survey_timer col-lg-4 d-none">
-                        <h1 class="timer text-right">00:00</h1>
+                    <div class="o_survey_timer col-lg-4">
+                        <h1 class="o_survey_timer_container timer text-right">
+                        </h1>
                     </div>
                 </div>
             </div>
@@ -49,15 +61,15 @@
     </template>
 
     <template id="survey_fill_form" name="Survey: main page content">
-        <t t-set="survey_form_readonly" t-value="false"/>
+        <t t-set="survey_form_readonly" t-value="answer.state == 'done'"/>
         <form role="form" method="post" t-att-name="survey.id"
                 class="d-flex flex-grow-1 align-items-center"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
-                t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited
-                    and answer.start_datetime and answer.state != 'done' else False"
-                t-att-data-time-limit-minutes="survey.time_limit"
+                t-att-data-session-in-progress="answer.is_session_answer"
                 t-att-data-is-start-screen="answer.state == 'new'"
+                t-att-data-readonly="survey_form_readonly"
+                t-att-data-has-answered="bool(has_answered)"
                 t-att-data-questions-layout="survey.questions_layout">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.access_token" />
@@ -91,25 +103,38 @@
         <div class="wrap o_survey_start pb256">
             <div class='mt32 mb32'>
                 <div t-field='survey.description' class="oe_no_empty"/>
-                <div t-if="survey.is_time_limited">
-                    <p>
-                        <span>Time limit for this survey: </span>
-                        <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
-                    </p>
-                </div>
-                <button type="submit" class="btn btn-primary btn-lg">
-                    <t t-if="survey.certification">
-                        Start Certification
-                    </t>
-                    <t t-else="">
-                        Start Survey
-                    </t>
-                </button><span class="font-weight-bold ml-2 text-primary d-none d-md-inline">or press Enter</span>
+                <t t-if="survey.session_state == 'ready'">
+                    <div class="font-weight-bold">
+                        The session will begin automatically when the host starts.
+                    </div>
+                </t>
+                <t t-else="">
+                    <div t-if="survey.is_time_limited">
+                        <p>
+                            <span>Time limit for this survey: </span>
+                            <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
+                        </p>
+                    </div>
+                    <button type="submit" value="start" class="btn btn-primary btn-lg">
+                        <t t-if="survey.certification">
+                            Start Certification
+                        </t>
+                        <t t-else="">
+                            Start Survey
+                        </t>
+                    </button>
+                    <span class="o_survey_enter font-weight-bold ml-2">or press Enter</span>
+                </t>
             </div>
         </div>
     </template>
 
     <template id="survey_fill_form_in_progress" name="Survey: form with questions">
+        <div class="o_survey_form_content_data d-none"
+            t-att-data-question-time-limit-reached="answer.question_time_limit_reached"
+            t-att-data-has-answered="bool(has_answered)"
+            t-att-data-timer="timer_start"
+            t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
             <t t-foreach='survey.question_and_page_ids' t-as='question'>
                 <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16" />
@@ -118,7 +143,7 @@
 
             <div class="text-center mt16 mb256">
                 <button type="submit" value="finish" class="btn btn-primary">
-                    Submit</button><span class="font-weight-bold ml-2 text-primary d-none d-md-inline">or press Enter</span>
+                    Submit</button><span class="font-weight-bold ml-2 d-none d-md-inline">or press Enter</span>
             </div>
         </t>
 
@@ -136,35 +161,57 @@
                     <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
                             name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
                     <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                        Continue</button><span class="font-weight-bold ml-2 text-primary d-none d-md-inline"> or press Enter</span>
+                        Continue</button><span class="font-weight-bold ml-2 d-none d-md-inline"> or press Enter</span>
                 </div>
                 <div class="col-3">
-                    <t t-call="survey.survey_progression">
-                        <t t-set="page_ids" t-value="survey.page_ids.ids"/>
-                        <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
-                    </t>
+                    <div class="float-right">
+                        <t t-call="survey.survey_progression">
+                            <t t-set="page_ids" t-value="survey.page_ids.ids"/>
+                            <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
+                        </t>
+                    </div>
                 </div>
             </div>
         </t>
 
         <t t-if="survey.questions_layout == 'page_per_question'">
             <input type="hidden" name="question_id" t-att-value="question.id" />
-            <t t-call="survey.question_container"/>
+            <!-- User has already answered for this session -->
+            <t t-if="answer.is_session_answer and (has_answered or answer.question_time_limit_reached)">
+                <fieldset disabled="disabled">
+                    <t t-set="survey_form_readonly" t-value="True" />
+                    <t t-call="survey.question_container" />
+                </fieldset>
+                <div t-if="answer.question_time_limit_reached and not has_answered" class="font-weight-bold mb128">Sorry, you have not been fast enough.</div>
+                <div t-else="" class="font-weight-bold mb128">We have registered your answer! Please wait for the host to go to the next question.</div>
+            </t>
+            <t t-else="">
+                <t t-call="survey.question_container"/>
 
-            <div class="row">
-                <div class="offset-3 col-6 text-center mt16 mb128">
-                    <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
-                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
-                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                        Continue</button><span class="font-weight-bold ml-2 text-primary d-none d-md-inline">or press Enter</span>
+                <div class="row">
+                    <div class="offset-3 col-6 text-center mt16 mb128">
+                        <button t-if="not answer.is_session_answer and survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
+                                name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
+                        <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                            <t t-if="answer.is_session_answer">
+                                Submit
+                            </t>
+                            <t t-else="">
+                                Continue
+                            </t>
+                        </button>
+                        <span class="font-weight-bold ml-2 d-none d-md-inline">or press Enter</span>
+                    </div>
+                    <div class="col-3">
+                        <div class="float-right">
+                            <t t-call="survey.survey_progression">
+                                <t t-set="page_ids" t-value="survey.question_ids.ids"/>
+                                <t t-set="page_number" t-value="page_ids.index(question.id)"/>
+                            </t>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <t t-call="survey.survey_progression">
-                        <t t-set="page_ids" t-value="survey.question_ids.ids"/>
-                        <t t-set="page_number" t-value="page_ids.index(question.id)"/>
-                    </t>
-                </div>
-            </div>
+            </t>
         </t>
     </template>
 
@@ -176,7 +223,7 @@
                 <div t-field="survey.description_done" class="oe_no_empty" />
                 <div class="row">
                     <div class="col">
-                        <t t-if="survey.scoring_type != 'no_scoring'">
+                        <t t-if="survey.scoring_type != 'no_scoring' and survey.scoring_success_min">
                             <div>You scored <t t-esc="answer.scoring_percentage" />%</div>
                             <t t-if="answer.scoring_success">
                                 <div>Congratulations, you have passed the test!</div>
@@ -301,11 +348,16 @@
     </template>
 
     <template id="question_suggested_value_image" name="Image from the question suggested answer">
-        <div t-if="question.allow_value_image and label.value_image"
-             class="d-flex my-3 justify-content-center">
-            <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
-        </div>
-
+        <t t-if="question.allow_value_image and label.value_image">
+            <!-- Directly use field or route if the user doesn't have access rights -->
+            <div t-if="not env.user.has_group('survey.group_survey_user')"
+                class="d-flex my-3 justify-content-center">
+                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
+            </div>
+            <div t-else=""  t-field="label.value_image"
+                class="d-flex my-3 justify-content-center"
+                t-options="{'widget': 'image', 'alt-field': 'name', 'itemprop': 'image'}"/>
+        </t>
     </template>
 
     <template id="question_simple_choice" name="Question: simple choice">
@@ -488,22 +540,20 @@
     </template>
 
     <template id="survey_progression" name="Survey: Progression">
-        <div class="float-right">
-            <t t-if="len(page_ids) > 1">
-                <t t-set="percentage" t-value="round(100*(page_number/len(page_ids)))"/>
-                <t t-if="survey.progression_mode == 'percent'">
-                    <span class="o_survey_progress_percent" t-esc="percentage"/> % completed
-                </t>
-                <t t-else="">
-                    <span class="o_survey_progress_number" t-esc="page_number"/> of <span t-esc="len(page_ids)"/>
-                    <span t-if="survey.questions_layout == 'page_per_question'">answered</span>
-                    <span t-else="">pages</span>
-                </t>
-                <div class="o_survey_progress progress flex-grow-1">
-                    <div class="progress-bar bg-primary" t-att-style="'width: ' + str(percentage) + '%'"/>
-                </div>
+        <t t-if="len(page_ids) > 1">
+            <t t-set="percentage" t-value="round(100*(page_number/len(page_ids)))"/>
+            <t t-if="survey.progression_mode == 'percent'">
+                <span class="o_survey_progress_percent" t-esc="percentage"/> % completed
             </t>
-        </div>
+            <t t-else="">
+                <span class="o_survey_progress_number" t-esc="page_number"/> of <span t-esc="len(page_ids)"/>
+                <span t-if="survey.questions_layout == 'page_per_question'">answered</span>
+                <span t-else="">pages</span>
+            </t>
+            <div class="o_survey_progress progress flex-grow-1">
+                <div class="progress-bar bg-primary" t-att-style="'width: ' + str(percentage) + '%'"/>
+            </div>
+        </t>
     </template>
 </data>
 </odoo>
