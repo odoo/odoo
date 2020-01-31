@@ -325,17 +325,25 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
+            var allPromises = [];
+
             self.$('.pagination').each(function (){
                 var questionId = $(this).data("question_id");
-                new publicWidget.registry.SurveyResultPagination(self, {
+                allPromises.push(new publicWidget.registry.SurveyResultPagination(self, {
                     'questionsEl': self.$('#survey_table_question_'+ questionId)
-                }).attachTo($(this));
+                }).attachTo($(this)));
             });
 
             self.$('.survey_graph').each(function () {
-                new publicWidget.registry.SurveyResultChart(self)
-                    .attachTo($(this));
+                allPromises.push(new publicWidget.registry.SurveyResultChart(self)
+                    .attachTo($(this)));
             });
+
+            if (allPromises.length !== 0) {
+                return Promise.all(allPromises);
+            } else {
+                return Promise.resolve();
+            }
         });
     },
 
