@@ -6,7 +6,7 @@ from functools import partial
 from itertools import groupby
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
@@ -580,8 +580,12 @@ class SaleOrder(models.Model):
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
-        if not self.env.user.has_group('sales_team.group_sale_salesman'):
-            return []
+        if not self.env['account.move'].check_access_rights('create', False):
+            try:
+                self.check_access_rights('write')
+                self.check_access_rule('write')
+            except AccessError:
+                return self.env['account.move']
 
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
