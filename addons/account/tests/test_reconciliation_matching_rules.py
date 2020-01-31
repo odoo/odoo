@@ -348,16 +348,27 @@ class TestReconciliationMatchingRules(AccountingSavepointCase):
         })
 
         partner = self.env['res.partner'].create({'name': 'Eugene'})
+        account_pay = self.env['account.account'].create({
+            'code': 'X1111',
+            'name': 'Creditors - (test)',
+            'user_type_id': self.env.ref('account.data_account_type_payable').id,
+            'reconcile': True,
+        })
         AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
         AccountMoveLine.create({
-            'account_id': self.account_pay.id,
+            'account_id': account_pay.id,
             'move_id': move.id,
             'partner_id': partner.id,
             'name': 'One of these days',
             'debit': 10,
         })
+        account_liq = self.env['account.account'].create({
+            'code': 'X1014',
+            'name': 'Bank Current Account - (test)',
+            'user_type_id': self.env.ref('account.data_account_type_liquidity').id,
+        })
         payment_bnk_line = AccountMoveLine.create({
-            'account_id': self.account_bnk.id,
+            'account_id': account_liq.id,
             'move_id': move.id,
             'partner_id': partner.id,
             'name': 'I\'m gonna cut you into little pieces',
@@ -371,6 +382,8 @@ class TestReconciliationMatchingRules(AccountingSavepointCase):
         bank_st = self.env['account.bank.statement'].create({
             'name': 'test bank journal', 'journal_id': self.company_data['default_journal_bank'].id,
         })
+        bank_st.journal_id.default_credit_account_id = payment_bnk_line.account_id
+        bank_st.journal_id.default_debit_account_id = payment_bnk_line.account_id
         bank_line_1 = self.env['account.bank.statement.line'].create({
             'statement_id': bank_st.id,
             'name': '8',

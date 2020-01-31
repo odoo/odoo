@@ -91,7 +91,7 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "enter an account",
             trigger: '.o_reconciliation_line:nth-child(2) .o_field_many2one[name="account_id"] input',
-            run: 'text 151000'
+            run: 'text 151000'//not sure this is --- working without the .... TEST IT ---
         },
         {
             content: "select the first account",
@@ -100,12 +100,6 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "reconcile the line with the write-off",
             trigger: '.o_reconciliation_line:nth-child(2) .o_reconcile:visible',
-        },
-
-        // Be done
-        {
-            content: "check the number off validate lines",
-            trigger: '.o_control_panel .progress-reconciliation:contains(3 / 6)'
         },
     ]
 );
