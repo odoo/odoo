@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProductionLot(models.Model):
@@ -27,9 +27,21 @@ class ProductionLot(models.Model):
     display_complete = fields.Boolean(compute='_compute_display_complete')
     company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
 
-    _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, product_id, company_id)', 'The combination of serial number and product must be unique across a company !'),
-    ]
+    @api.constrains('name', 'product_id', 'company_id')
+    def _check_unique_lot(self):
+        domain = [('product_id', 'in', self.product_id.ids),
+                  ('company_id', 'in', self.company_id.ids),
+                  ('name', 'in', self.mapped('name'))]
+        fields = ['company_id', 'product_id', 'name']
+        groupby = ['company_id', 'product_id', 'name']
+        records = self.read_group(domain, fields, groupby, lazy=False)
+        error_message_lines = []
+        for rec in records:
+            if rec['__count'] != 1:
+                product_name = self.env['product.product'].browse(rec['product_id'][0]).display_name
+                error_message_lines.append(_(" - Product: %s, Serial Number: %s") % (product_name, rec['name']))
+        if error_message_lines:
+            raise ValidationError(_('The combination of serial number and product must be unique across a company.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
 
     def _domain_product_id(self):
         domain = [
