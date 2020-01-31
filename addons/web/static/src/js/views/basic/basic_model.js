@@ -3705,6 +3705,8 @@ var BasicModel = AbstractModel.extend({
      * its root parent) of the given dataPoint is a model in 'noCacheModels'.
      *
      * Reloads the currencies if the main model is 'res.currency'.
+     * Reloads the webclient if we modify a res.company, to (un)activate the
+     * multi-company environment.
      *
      * @private
      * @param {Object} dataPoint
@@ -3715,6 +3717,9 @@ var BasicModel = AbstractModel.extend({
         }
         if (dataPoint.model === 'res.currency') {
             session.reloadCurrencies();
+        }
+        if (dataPoint.model === 'res.company') {
+            this.do_action('reload_context');
         }
         if (_.contains(this.noCacheModels, dataPoint.model)) {
             core.bus.trigger('clear_cache');
