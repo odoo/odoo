@@ -14,7 +14,7 @@
 {
     'name': 'Dominican Republic - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 
 Localization Module for Dominican Republic

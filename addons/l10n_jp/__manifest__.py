@@ -6,7 +6,7 @@
 {
     'name': 'Japan - Accounting',
     'version': '2.2',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 
 Overview:

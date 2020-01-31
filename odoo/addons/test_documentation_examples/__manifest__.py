@@ -8,7 +8,7 @@
     syntax-checked and tested.
     """,
 
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'version': '0.1',
     'data': [
         'ir.model.access.csv',

@@ -3,7 +3,7 @@
 
 {
     'name': 'ESC/POS Hardware Driver',
-    'category': 'Sales/Point Of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'summary': 'Hardware Driver for ESC/POS Printers and Cashdrawers',

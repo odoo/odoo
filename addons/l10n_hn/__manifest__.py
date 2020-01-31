@@ -10,7 +10,7 @@
 {
     'name': 'Honduras - Accounting',
     'version': '0.2',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the base module to manage the accounting chart for Honduras.
 ====================================================================

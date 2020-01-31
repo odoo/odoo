@@ -3,7 +3,7 @@
 {
     'name': 'Test Main Flow',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden/Tests',
     'description': """
 This module will test the main workflow of Odoo.
 It will install some main apps and will try to execute the most important actions.

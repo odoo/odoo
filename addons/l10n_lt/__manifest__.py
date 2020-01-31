@@ -19,7 +19,7 @@
     'license': 'LGPL-3',
     'author': "Focusate",
     'website': "http://www.focusate.eu",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': [
         'l10n_multilang',
     ],

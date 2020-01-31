@@ -4,7 +4,7 @@
 {
     'name': 'Indonesian - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:
 =================================================================================================

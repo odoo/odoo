@@ -8,7 +8,7 @@
     "version": "1.1",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     "description": "Kontni načrt za gospodarske družbe",
     "depends": [
         "account",

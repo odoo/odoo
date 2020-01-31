@@ -4,7 +4,7 @@
 {
     'name': 'Default Theme',
     'description': 'Default website theme',
-    'category': 'Theme',
+    'category': 'Website/Theme',
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website'],

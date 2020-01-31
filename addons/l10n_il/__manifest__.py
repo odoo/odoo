@@ -4,7 +4,7 @@
 {
     'name': 'Israel - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the latest basic Israelian localisation necessary to run Odoo in Israel:
 ================================================================================

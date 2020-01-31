@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Products Expiration Date',
-    'category': 'Operations/Inventory',
+    'category': 'Inventory/Inventory',
     'depends': ['stock'],
     'demo': [],
     'description': """

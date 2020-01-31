@@ -9,7 +9,7 @@
 {
     'name' : 'Venezuela - Accounting',
     'author': ['Odoo S.A.', 'Vauxoo'],
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description':
 """
 Chart of Account for Venezuela.

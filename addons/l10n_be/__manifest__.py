@@ -4,7 +4,7 @@
 {
     'name': 'Belgium - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the base module to manage the accounting chart for Belgium in Odoo.
 ==============================================================================

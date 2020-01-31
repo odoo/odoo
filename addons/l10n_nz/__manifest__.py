@@ -6,7 +6,7 @@
 {
     'name': 'New Zealand - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 New Zealand Accounting Module
 =============================

@@ -2,7 +2,7 @@
 {
     'name': 'test-import-export',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to test import/export.""",
     'depends': ['base'],
     'data': ['ir.model.access.csv'],

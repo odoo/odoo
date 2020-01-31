@@ -4,7 +4,7 @@
 {
     'name': 'Point of Sale Receipt Reprinting',
     'version': '1.0',
-    'category': 'Sales/Point Of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Allow cashier to reprint receipts',
     'description': """

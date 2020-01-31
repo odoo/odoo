@@ -11,7 +11,7 @@
 {
     'name': 'Colombian - Accounting',
     'version': '0.8',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': 'Colombian Accounting and Tax Preconfiguration',
     'author': 'David Arnold (XOE Solutions)',
     'website': 'https://xoe.solutions',

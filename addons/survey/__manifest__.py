@@ -3,7 +3,7 @@
 {
     'name': 'Surveys',
     'version': '3.1',
-    'category': 'Marketing/Survey',
+    'category': 'Marketing/Surveys',
     'description': """
 Create beautiful surveys and visualize answers
 ==============================================

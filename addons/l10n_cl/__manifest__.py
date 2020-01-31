@@ -9,7 +9,7 @@ Chilean accounting chart and tax localization.
 Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
     """,
     'author': 'Blanco Martín & Asociados',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': [
         'contacts',
         'base_address_city',

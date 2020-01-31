@@ -6,7 +6,7 @@
     'version': '1.0',
     'author': 'Odoo House ApS',
     'website': 'https://odoohouse.dk',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 
 Localization Module for Denmark

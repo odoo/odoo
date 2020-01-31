@@ -1,6 +1,6 @@
 {
     'name': "Test Action Bindings",
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'data': [
         'ir.model.access.csv',
         'test_data.xml',

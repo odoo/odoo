@@ -3,7 +3,7 @@
 
 {
     'name': 'IoT Box Homepage',
-    'category': 'Sales/Point Of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'summary': 'A homepage for the IoT Box',
