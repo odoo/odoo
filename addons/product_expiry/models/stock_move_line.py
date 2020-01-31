@@ -32,6 +32,6 @@ class StockMoveLine(models.Model):
         else:
             self.expiration_date = False
 
-    def _create_and_assign_production_lot(self):
-        super(StockMoveLine, self)._create_and_assign_production_lot()
+    def _assign_production_lot(self, lot):
+        super()._assign_production_lot(lot)
         self.lot_id._update_date_values(self.expiration_date)
