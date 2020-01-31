@@ -700,10 +700,10 @@ options.registry.gallery = options.Class.extend({
      */
     mode: function (previewMode, value, $li) {
         this.$target.css('height', '');
-        this[value]();
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + value);
+        this[value]();
     },
     /**
      * Displays the images with the standard layout: floating images.
