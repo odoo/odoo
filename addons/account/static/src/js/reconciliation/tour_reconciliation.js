@@ -23,29 +23,29 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "open the last line in match mode to test the partial reconciliation",
             extra_trigger: '.o_reconciliation_line:first[data-mode="match"]',
-            trigger: '.o_reconciliation_line:last .cell_label:contains("First")'
+            trigger: '.o_reconciliation_line .cell_label:contains("First 2000 $ of"):contains("/0001"):last'
         },
         {
             content: "click on partial reconcile",
-            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount',
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .accounting_view .edit_amount',
         },
         {
             content: "Edit amount",
-            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .accounting_view .edit_amount_input:not(.d-none)',
             run: 'text 2000'
         },
         {
             content: "Press enter to validate amount",
-            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .accounting_view .edit_amount_input:not(.d-none)',
             run: 'keydown 13'
         },
         {
             content: "Check that amount has changed",
-            trigger: '.o_reconciliation_line:last .accounting_view .line_amount:contains("2,000.00")'
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .accounting_view .line_amount:contains("2,000.00")'
         },
         {
             content: "reconcile the line",
-            trigger: '.o_reconciliation_line:last .o_reconcile:visible',
+            trigger: '.o_reconciliation_line:contains("First 2000 $ of"):contains("/0001"):last .o_reconcile:visible',
         },
 
         // Reconciliation of 'Prepayment'
@@ -95,12 +95,6 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "reconcile the line with the write-off",
             trigger: '.o_reconciliation_line:nth-child(2) .o_reconcile:visible',
-        },
-
-        // Be done
-        {
-            content: "check the number off validate lines",
-            trigger: '.o_reconciliation .progress-text:contains(3 / 5)'
         },
     ]
 );
