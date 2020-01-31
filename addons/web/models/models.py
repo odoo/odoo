@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import babel.dates
 import pytz
+import base64
 
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
@@ -357,3 +358,41 @@ class Base(models.AbstractModel):
                 })
 
         return filter_values
+
+
+class ResCompany(models.Model):
+    _inherit = 'res.company'
+
+    @api.model
+    def create(self, values):
+        res = super().create(values)
+        if 'primary_color' in values or 'secondary_color' in values or 'font' in values:
+            self._update_asset_style()
+        return res
+
+    def write(self, values):
+        res = super().write(values)
+        if 'primary_color' in values or 'secondary_color' in values or 'font' in values:
+            self._update_asset_style()
+        return res
+
+    def _get_asset_style_b64(self):
+        template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
+        if not template_style:
+            return ''
+        # One bundle for everyone, so this method
+        # necessarily updates the style for every company at once
+        company_ids = self.sudo().search([])
+        company_styles = template_style.render({
+            'company_ids': company_ids,
+        })
+        return base64.b64encode((company_styles))
+
+    def _update_asset_style(self):
+        asset_attachment = self.env.ref('web.asset_styles_company_report', raise_if_not_found=False)
+        if not asset_attachment:
+            return
+        asset_attachment = asset_attachment.sudo()
+        b64_val = self._get_asset_style_b64()
+        if b64_val != asset_attachment.datas:
+            asset_attachment.write({'datas': b64_val})
