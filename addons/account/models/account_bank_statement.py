@@ -646,12 +646,18 @@ class AccountBankStatementLine(models.Model):
         # last case is company in currency A, statement in currency A and transaction in currency A
         # and in this case counterpart line does not need any second currency nor amount_currency
 
+        # Check if default_debit or default_credit account are properly configured
+        account_id = amount >= 0 \
+            and self.statement_id.journal_id.default_credit_account_id.id \
+            or self.statement_id.journal_id.default_debit_account_id.id
+
+        if not account_id:
+            raise UserError(_('No default debit and credit account defined on journal %s (ids: %s).' % (self.statement_id.journal_id.name, self.statement_id.journal_id.ids)))
+
         aml_dict = {
             'name': self.name,
             'partner_id': self.partner_id and self.partner_id.id or False,
-            'account_id': amount >= 0 \
-                and self.statement_id.journal_id.default_credit_account_id.id \
-                or self.statement_id.journal_id.default_debit_account_id.id,
+            'account_id': account_id,
             'credit': amount < 0 and -amount or 0.0,
             'debit': amount > 0 and amount or 0.0,
             'statement_line_id': self.id,
