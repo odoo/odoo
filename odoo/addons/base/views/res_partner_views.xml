@@ -154,11 +154,9 @@
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                                <button name="create_company" type="object" class="oe_edit_only btn-link"
-                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">
-                                       <span class="fa fa-plus-square"/>
-                                       Create company
-                                </button>
+                                <button name="create_company" type="object" icon="fa fa-plus-square"
+                                    class="oe_edit_only btn-link" string="Create company"
+                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
                         </div>
                     </div>
                     <group>
@@ -225,18 +223,16 @@
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                                <button name="create_company" type="object" class="oe_edit_only btn-link"
-                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">
-                                       <span class="fa fa-plus-square"/>
-                                       Create company
-                                </button>
+                                <button name="create_company" icon="fa-plus-square" string="Create company"
+                                    type="object" class="oe_edit_only btn-link"
+                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
                         </div>
                     </div>
 
                     <group>
                         <group>
                             <field name="type" groups="base.group_no_one"/>
-                            <span class="o_form_label" name="address_name">
+                            <span class="o_form_label o_td_label" name="address_name">
                                 <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
