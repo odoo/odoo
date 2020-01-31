@@ -48,13 +48,14 @@ class StockProductionLot(models.Model):
         return res
 
     # Assign dates according to products data
-    @api.model
-    def create(self, vals):
-        dates = self._get_dates(vals.get('product_id') or self.env.context.get('default_product_id'))
-        for d in dates:
-            if not vals.get(d):
-                vals[d] = dates[d]
-        return super(StockProductionLot, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            dates = self._get_dates(vals.get('product_id') or self.env.context.get('default_product_id'))
+            for d in dates:
+                if not vals.get(d):
+                    vals[d] = dates[d]
+        return super().create(vals_list)
 
     @api.onchange('expiration_date')
     def _onchange_expiration_date(self):
