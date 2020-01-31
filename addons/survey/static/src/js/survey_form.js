@@ -753,26 +753,27 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * Initialize datetimepicker in correct format and with constraints
     */
     _initDateTimePicker: function ($dateGroup) {
-        var disabledDates = []
-        var minDateData = $dateGroup.data('mindate')
-        var maxDateData = $dateGroup.data('maxdate')
+        var disabledDates = [];
+        var questionType = $dateGroup.find('input').data('questionType');
+        var minDateData = $dateGroup.data('mindate');
+        var maxDateData = $dateGroup.data('maxdate');
 
-        var datetimepickerFormat = time.getLangDateFormat();
-        if ($dateGroup.find('input').data('questionType') === 'datetime') {
-            datetimepickerFormat = time.getLangDatetimeFormat();
-        } else {
+        var datetimepickerFormat = questionType === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
+
+        var minDate = minDateData
+            ? this._formatDateTime(minDateData, datetimepickerFormat)
+            : moment({ y: 1900 });
+
+        var maxDate = maxDateData
+            ? this._formatDateTime(maxDateData, datetimepickerFormat)
+            : moment().add(200, "y");
+
+        if (questionType === 'date') {
             // Include min and max date in selectable values
             maxDate = moment(maxDate).add(1, "d");
             minDate = moment(minDate).subtract(1, "d");
             disabledDates = [minDate, maxDate];
         }
-
-        var minDate = minDateData
-                        ? this._formatDateTime(minDateData, datetimepickerFormat)
-                        : moment({ y: 1900 });
-        var maxDate = maxDateData
-                        ? this._formatDateTime(maxDateData, datetimepickerFormat)
-                        : moment().add(200, "y");
 
         $dateGroup.datetimepicker({
             format : datetimepickerFormat,
