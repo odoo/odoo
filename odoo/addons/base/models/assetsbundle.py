@@ -266,10 +266,11 @@ class AssetsBundle(object):
              SELECT max(id)
                FROM ir_attachment
               WHERE create_uid = %s
+                AND res_model = %s
                 AND url like %s
            GROUP BY datas_fname
            ORDER BY datas_fname
-         """, [SUPERUSER_ID, url_pattern])
+         """, [SUPERUSER_ID, 'ir.ui.view', url_pattern])
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
