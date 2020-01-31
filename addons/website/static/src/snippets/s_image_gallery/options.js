@@ -205,10 +205,10 @@ options.registry.gallery = options.Class.extend({
     mode: function (previewMode, widgetValue, params) {
         widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
-        this[widgetValue]();
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + widgetValue);
+        this[widgetValue]();
         this.trigger_up('cover_update');
     },
     /**
