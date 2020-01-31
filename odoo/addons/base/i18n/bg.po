@@ -5,7 +5,6 @@
 # Translators:
 # B Dochev, 2020
 # Boris Stefanov <borkata@gmail.com>, 2020
-# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # kalatchev, 2020
 # Георги Пехливанов <sonaris@gmail.com>, 2020
 # Anton Vassilev, 2020
@@ -17,6 +16,7 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2020
 # Maria Boyadjieva <marabo2000@gmail.com>, 2020
 # Ivan Goychev <igoychev.projects@gmail.com>, 2020
+# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ivan Goychev <igoychev.projects@gmail.com>, 2020\n"
+"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"Mодул за Китайска локализация - сметкоплан, данъци, провинции и др 科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
 "\n"
 "    添加中文省份数据\n"
 "\n"
@@ -69,6 +69,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Счетоводни отчети за Австрия.\n"
+"================================\n"
+"\n"
+"* Дефинира следните отчети:\n"
+"* Приходи/Разходи (§ 231 UGB Gesamtkostenverfahren)\n"
+"* Балансов отчет (§ 224 UGB)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -88,6 +96,20 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Добавяне на конструиран Реф № към фактури за клиент.\n"
+"--------------------------------------------------\n"
+"\n"
+"Използване на BBA референтни номера улеснява изравняването между факури и плащания.\n"
+"Може да изберете конструиран реф № да се попълва в основание за плащане от настройките на Фактуриране/Счетоводство.\n"
+"Препоръчваме два алгоритма:\n"
+"\n"
+"    1) Invoice Number +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Invoice Number, **DD =** Check Digits\n"
+"    2) Customer Reference +++RRR/RRRR/SSSDD+++\n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -117,6 +139,17 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Базов модул за Унгарска локализация\n"
+"==========================================\n"
+"\n"
+"Този модул състои от:\n"
+"\n"
+" - Стандартен унгарски сметкоплан\n"
+" - Унгарски данъци\n"
+" - Информация Унгарска банка\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -191,7 +224,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Localization Module for Dominican Republic\n"
+"Модул локализация за Доминиканска Репунлика\n"
 "===========================================\n"
 "\n"
 "Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
@@ -277,6 +310,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Преглед:\n"
+"---------\n"
+"\n"
+"* Шаблон за сметкоплан и данъци за фирми в Япония.\n"
+"* Това вероятно не покрива всички необходими сметки за фирма. Очаква се Вие да добавяте/изтривате/променяте сметките базирайки се на този шаблон.\n"
+"\n"
+"Забележка:\n"
+"-----\n"
+"\n"
+"* Фискалните позиции '内税' и '外税' са добавени за покриване на специалните изисквания, произтичащи от използване на POS. [1]  При нормални условия не би трябвало те избщо да Ви потрябват.\n"
+"\n"
+"[1] Виж https://github.com/odoo/odoo/pull/6470 за подробности\n"
+"\n"
+"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -297,6 +346,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Този модул добавя избран Екип за Продажби към POS, за да можете по-лесно да преглеждате и управлявате продажбите Ви от POS.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -309,6 +361,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Този модул добавя няколко характеристики към Центъра за продажби POS, специфични за управление на ресторанти: \n"
+"- Разпечатване на сметки: Позволява да разпечатате сметката преди поръчката да е платена. \n"
+"- Разделяне на сметки: Може да разделите една поръчка на няколко отделни. \n"
+"- Печат поръчки към кухня: позволява да разпечатате актуализирани поръчки с принтер за кухня или бар.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -319,6 +378,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Този модул позволява на касиера бързо да даде процентна\n"
+"отстъпка на клиента.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -330,6 +394,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Този модул Ви позволява да определите програма за лоялност в\n"
+"центъра за продажби, където клиентите набират точки за лоялност\n"
+"и получават награди.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -338,6 +408,9 @@ msgid ""
 "\n"
 "Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
+"\n"
+"\n"
+"Използвайте принтери Epson като принтер за поръчки в центъра за продажби без IoT Box\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
@@ -346,6 +419,9 @@ msgid ""
 "\n"
 "Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Използвайте принтери Epson ePOS без IoT Box в центъра за продажби \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -464,6 +540,9 @@ msgid ""
 "        Accounting reports for US\n"
 "    "
 msgstr ""
+"\n"
+"Счетоводни отчети за САЩ\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
@@ -482,6 +561,9 @@ msgid ""
 "        App to upload and manage your documents.\n"
 "    "
 msgstr ""
+"\n"
+"        Приложение за качване и управление на Вашите документи.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -490,6 +572,9 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        Таксуване на таймшит по тикет в хелпдеска.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -507,6 +592,8 @@ msgid ""
 "        Bridge module between sale and intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"Връзка между модули 'Продажби' и 'Intrastat'."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -633,6 +720,8 @@ msgid ""
 "\n"
 "        Make calls using a VOIP system"
 msgstr ""
+"\n"
+"Телефонни обаждания с помощта на VOIP система"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_check
@@ -695,6 +784,9 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 "    "
 msgstr ""
+"\n"
+"        Този свързващ модул инсталира се автоматично когато са инсталирани модулите stock_barcode и quality_control.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_support
@@ -704,6 +796,10 @@ msgid ""
 "        of another database on which a counterpart addon is installed.\n"
 "    "
 msgstr ""
+"\n"
+"        Този модул позволва служителите да комуникират с livechat оператори\n"
+"        на друга база данни, където е инсталиран съответния addon.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -808,6 +904,8 @@ msgid ""
 "\n"
 "        Track equipments and maintenance requests"
 msgstr ""
+"\n"
+"        Следете оборудването и управлявайте заявките за обслужване"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -850,6 +948,8 @@ msgid ""
 "\n"
 "        Use myponto.com to retrieve bank statements"
 msgstr ""
+"\n"
+"        Използвайте myponto.com, за да обработвате банкови извлечения"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise
@@ -878,6 +978,9 @@ msgid ""
 "       Auto-complete partner companies' data\n"
 "    "
 msgstr ""
+"\n"
+"       Авто-попълване на данни за партньорски организации\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_product_matrix
@@ -919,6 +1022,8 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders.\n"
 msgstr ""
+"\n"
+"    Добавя контрол качество към работни поръчки\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -1012,6 +1117,9 @@ msgid ""
 "    Schedule your teams across projects and estimate deadlines more accurately.\n"
 "    "
 msgstr ""
+"\n"
+"    Планирайте работата на екипите между проектите, по-точни оценки на срока.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning
@@ -1048,6 +1156,10 @@ msgid ""
 "* Activate grid view for timesheets\n"
 "    "
 msgstr ""
+"\n"
+"* Подаване и валидиране на графици \n"
+"* Активиране на табличния вид за графици\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -1242,6 +1354,10 @@ msgid ""
 "==================\n"
 "    "
 msgstr ""
+"\n"
+"Счетоводните отчети\n"
+"==================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -1295,6 +1411,13 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"Счетоводни отчети за Сингапур\n"
+"================================\n"
+"This module allow to generate the GST Return (F5) and the IRAS Audit File.\n"
+" - To generate the GST Return, go to Accounting -> Reporting -> GST Return\n"
+" - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -1355,6 +1478,10 @@ msgid ""
 "Configure your own methods with a pricing grid or integrate with carriers for a fully automated shipping process.\n"
 "    "
 msgstr ""
+"\n"
+"Добавя избор за начините на доставка към Вашия eCommerce магазин.\n"
+"Конфигурирайте собствени начини с ценови таблици или интеграции с превозвачите за напълно автоматизиран процес на доставка.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -1408,6 +1535,8 @@ msgid ""
 "\n"
 "Add the ability to create invoices from the document module.\n"
 msgstr ""
+"\n"
+"Възможност за създаване на фактури от модул Документи.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_sign
@@ -3299,6 +3428,10 @@ msgid ""
 "==================\n"
 "    "
 msgstr ""
+"\n"
+"Intrastat отчети\n"
+"==================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -3347,6 +3480,14 @@ msgid ""
 "and should not be installed on regular Odoo servers.\n"
 "\n"
 msgstr ""
+"\n"
+"PosBox софтуеърен актуализатор\n"
+"========================\n"
+"\n"
+"Модулът позволява дистанционно да се актуализира софтуерът на IoTBox.\n"
+"Този модул е предназначен конкретно за настройки и среда на IoTBox \n"
+"и не трябва да се инсталира на обикновенни Odoo сървъри.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_iot
@@ -3617,6 +3758,34 @@ msgid ""
 "* Monthly Turnover (Graph)\n"
 "    "
 msgstr ""
+"\n"
+"Управлявайте офертите и поръчките\n"
+"==================================\n"
+"\n"
+"Това приложение Ви позволява да управлявате търговските си цели по ефективен и ефикасен начин, като проследявате всички търговски поръчки и историята.\n"
+"\n"
+"То обработва целия работен процес по продажбите:\n"
+"\n"
+"* **Оферта** -> **Търговска поръчка** -> **Фактура**\n"
+"\n"
+"Преимущества (само с инсталирано складово управление)\n"
+"------------------------------------------------------\n"
+"\n"
+"Ако сте инсталирали и модул Склад, можете да се възползвате от следните преимущества:\n"
+"\n"
+"* Доставка: избор на доставка при еднократно или частично доставяне\n"
+"* Фактуриране: изберете как ще бъдат плащани фактурите\n"
+"* Инкотермс: франкировка, международни условия за доставка\n"
+"\n"
+"\n"
+"С него можете да персонализирате поръчки и отчети на фактурите по\n"
+"категории, междинни суми или прекъсвания на страници.\n"
+"\n"
+"Таблото за управление на мениджъра продажби ще включва\n"
+"------------------------------------------------\n"
+"* Моите оферти\n"
+"* Месечен оборот (графика)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -4728,6 +4897,9 @@ msgid ""
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 "    "
 msgstr ""
+"\n"
+"Показване на адреса на Вашата/партньорска компания в Google Maps. Настройте API key в настройките на модул Уебсайт.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -6660,6 +6832,7 @@ msgid ""
 " This is the base module to manage chart of accounting and localization for "
 "Hong Kong "
 msgstr ""
+"Този базов модул за управлявени на сметкоплана и локализация за Хонг Конг"
 
 #. module: base
 #: code:addons/model.py:0
@@ -7237,7 +7410,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Name</span>"
-msgstr ""
+msgstr "<span>Име</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -7511,7 +7684,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
 msgid "A homepage for the IoT Box"
-msgstr ""
+msgstr "Начална страница за IoT Box"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
@@ -8861,7 +9034,7 @@ msgstr "Аруба"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
-msgstr ""
+msgstr "Достъп към Вашите служители"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
@@ -9220,17 +9393,17 @@ msgstr "Баркод"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
 msgid "Barcode Quality bridge module"
-msgstr ""
+msgstr "Свързващ мост между модули Баркод и Качество"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr ""
+msgstr "Баркод в мобилни устройства"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr ""
+msgstr "Сканиране баркод в мобилни устройства"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -9242,7 +9415,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
-msgstr ""
+msgstr "Тип баркод, напр: UPCA, EAN13, Code128"
 
 #. module: base
 #: model:ir.model,name:base.model_base
@@ -9261,7 +9434,7 @@ msgstr "Основно поле"
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
-msgstr ""
+msgstr "Основният език 'en_US' не може да бъде изтрит."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -9282,7 +9455,7 @@ msgstr "Основни свойства"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "Архитктурата на базовия изглед"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -9314,12 +9487,12 @@ msgstr "Основен 2D матричен изглед за odoo"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_cohort
 msgid "Basic Cohort view for odoo"
-msgstr ""
+msgstr "Основен 2D матричен изглед за odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
 msgid "Basic Feature for Quality"
-msgstr ""
+msgstr "Основни функции за Качество"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
@@ -9329,7 +9502,7 @@ msgstr "Basic models and helpers to support In-App purchases."
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
 msgid "Basic models and helpers to support Internet of Things."
-msgstr ""
+msgstr "Основни модели и помощници за поддръжката на Интернет на Нещата."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
@@ -9518,7 +9691,7 @@ msgstr "Bootswatch Theme"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bootswatch
 msgid "Bootswatch themes"
-msgstr ""
+msgstr "теми Bootswatch"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -9574,7 +9747,7 @@ msgstr "Мостов модул за хелпдеск модули, използ
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
 msgid "Bridge module for project and enterprise"
-msgstr ""
+msgstr "Мостов модул между project и enterprise"
 
 #. module: base
 #: model:res.country,name:base.io
@@ -9600,22 +9773,22 @@ msgstr "Управление на бюджета"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
-msgstr ""
+msgstr "Създавайте автоматизирани пощенски кампании"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form
 msgid "Build custom web forms"
-msgstr ""
+msgstr "Създайте персонализирани уеб форми"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_quotation_builder
 msgid "Build great quotation templates"
-msgstr ""
+msgstr "Създайте шаблони за оферти"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_board
 msgid "Build your own dashboards"
-msgstr ""
+msgstr "Създайте персонализирани информационни екрани"
 
 #. module: base
 #: model:res.country,name:base.bg
@@ -9641,7 +9814,7 @@ msgstr "By"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "By default the widget uses the field informations"
-msgstr ""
+msgstr "Виджетите по подразбиране вземат данние от полето."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -9811,7 +9984,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
-msgstr ""
+msgstr "Не можете да деактивирате език, използван в момента от потребителите."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -9854,12 +10027,12 @@ msgstr "Централноафриканска Република"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr
 msgid "Centralize employee information"
-msgstr ""
+msgstr "Централизирайте информацията за служителите"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
 msgid "Centralize your address book"
-msgstr ""
+msgstr "Централизирайте адресната Ви книга"
 
 #. module: base
 #: model:res.country,name:base.td
@@ -9931,12 +10104,12 @@ msgstr "Работа"
 #: model:ir.module.module,summary:base.module_im_livechat
 #: model:ir.module.module,summary:base.module_website_livechat
 msgid "Chat with your website visitors"
-msgstr ""
+msgstr "Провеждайте чат с посетителите на уебсайта Ви"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Chat, mail gateway and private channels"
-msgstr ""
+msgstr "Чат, поща и приватни канали"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
@@ -10035,7 +10208,7 @@ msgstr "Китай"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "China - Accounting"
-msgstr ""
+msgstr "Китай - Счетоводство"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -10677,7 +10850,7 @@ msgstr "Сътрудници"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control
 msgid "Control the quality of your products"
-msgstr ""
+msgstr "Контрол качество за продуктите Ви"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_iot
@@ -10849,7 +11022,7 @@ msgstr "Създайте меню"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_partner_bank_account_form
 msgid "Create a bank account"
-msgstr ""
+msgstr "Създайте банкова сметка"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -10864,7 +11037,7 @@ msgstr "Create a new Record"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
 msgid "Create a new bank"
-msgstr ""
+msgstr "Създайте нова банка"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
@@ -10895,7 +11068,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
 msgid "Create and customize your Odoo apps"
-msgstr ""
+msgstr "Конструктор за Ваши собствени Odoo приложения"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
@@ -10937,7 +11110,7 @@ msgstr "Create new lead with using /lead command in the channel"
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Create surveys and analyze answers"
-msgstr ""
+msgstr "Пускайте проучванията и анализирайте отговорите"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
@@ -12012,7 +12185,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Displayed fields"
-msgstr ""
+msgstr "Показаните полета"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
@@ -12049,7 +12222,7 @@ msgstr "Шаблон за документ"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents
 msgid "Document management"
-msgstr ""
+msgstr "Управление на документооборота"
 
 #. module: base
 #: code:addons/models.py:0
@@ -12439,7 +12612,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Enterprise website builder"
-msgstr ""
+msgstr "Конструктор за Вашия бизнес сайт"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
@@ -13467,7 +13640,7 @@ msgstr "От"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
 msgid "From quotations to invoices"
-msgstr ""
+msgstr "От заявки до фактури"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -13624,12 +13797,12 @@ msgstr "Генерирай липсващите изрази"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Generate leads from a contact form"
-msgstr ""
+msgstr "Генерирайте лийдове от контактна форма"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
 msgid "Generate recurring invoices and manage renewals"
-msgstr ""
+msgstr "Генерирайте периодичните фактури и управлявайте подновявания"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_links
@@ -13701,7 +13874,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Germany SKR04 - Accounting"
-msgstr ""
+msgstr "Германия SKR04 - счетоводство"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
@@ -14039,7 +14212,7 @@ msgstr "Хаити"
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
-msgstr ""
+msgstr "Поемане на заявки за храна за Вашите служители"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_blackbox_be
@@ -14857,7 +15030,7 @@ msgstr "Въведете QIF банково извлечение"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "Шаблон за импорт на клиенти"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -15162,7 +15335,7 @@ msgstr "Вътрешен източник"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr ""
+msgstr "Вътрешен потребител"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -15369,7 +15542,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Invoices & Payments"
-msgstr ""
+msgstr "Фактури и плащания"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
@@ -16190,12 +16363,12 @@ msgstr "Link using field"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot
 msgid "Link your PoS configuration with an IoT Box"
-msgstr ""
+msgstr "Свързва Вашите настройки за POS с IoT Box"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Link your PoS configuration with an IoT Box for the restaurant"
-msgstr ""
+msgstr "Свързва Вашите настройки за POS с IoT Box за ресторант"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -16349,7 +16522,7 @@ msgstr "M PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -16585,7 +16758,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
 msgid "Manage a forum with FAQ and Q&A"
-msgstr ""
+msgstr "Управлявайте форум с ЧЗВ и В&O"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -16624,11 +16797,13 @@ msgstr ""
 msgid ""
 "Manage engineering change orders on products, bills of material and routings"
 msgstr ""
+"Управление на заявки за конструктивни промени в продукти, рецепти и маршрути"
+" "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr ""
+msgstr "Управление на финансово и аналитично счетоводство"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -16706,17 +16881,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "Управлявайте Вашите МПЗ и следете техните разходи."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
 msgid "Manage your online hiring process"
-msgstr ""
+msgstr "Управлявайте online процеси за наемане на служителите"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
 msgid "Manage your stock and logistics activities"
-msgstr ""
+msgstr "Управлявайте склада и логистичните дейности"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -16730,7 +16905,7 @@ msgstr "Производство"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders & BOMs"
-msgstr ""
+msgstr "Поръчки за производство и спецификации"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__many2one
@@ -20084,12 +20259,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project
 msgid "Organize and schedule your projects "
-msgstr ""
+msgstr "Организирайте и планирайте Вашите проекти"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note
 msgid "Organize your work with memos"
-msgstr ""
+msgstr "Подредете работата си с бележки"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -20895,7 +21070,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
 msgid "Print page width (mm)"
-msgstr ""
+msgstr "Печат - Шир на страница (мм)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
@@ -21222,12 +21397,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_blog
 msgid "Publish blog posts, announces, news"
-msgstr ""
+msgstr "Публикувайте статии в блога, анонси, новини"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "Публикувайте събития, продавайте билети"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
@@ -21299,7 +21474,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase orders, tenders and agreements"
-msgstr ""
+msgstr "Поръчки към доставчици, търгове и споразумения"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
@@ -22365,7 +22540,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_calendar
 msgid "Schedule appointments with clients"
-msgstr ""
+msgstr "Насрочвайте срещи с клиенти"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_calendar
@@ -22599,7 +22774,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale
 msgid "Sell your products online"
-msgstr ""
+msgstr "Продавайте Вашите продукти online"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sms
@@ -22614,7 +22789,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
-msgstr ""
+msgstr "Изпращайте документи за подпис online и пазете подписните копии"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_push_notifications
@@ -22784,7 +22959,7 @@ msgstr "Задай като \"Да се направи\""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_open_base_onboarding_company
 msgid "Set your company data"
-msgstr ""
+msgstr "Настройте данните на Вашата компания"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -22876,7 +23051,7 @@ msgstr "Show technical modules"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_google_map
 msgid "Show your company address on Google Maps"
-msgstr ""
+msgstr "Показва адреса на Вашата компания на Google Maps"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -23421,7 +23596,7 @@ msgstr "Подменю"
 #: model:ir.module.module,summary:base.module_hr_expense
 #: model:ir.module.module,summary:base.module_hr_payroll_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr ""
+msgstr "Приемайте, потвърждавайте и възстановявайте служебните разходи"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
@@ -24604,7 +24779,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid
 msgid "Timesheet Validation and Grid View"
-msgstr ""
+msgstr "Изразходваното време - валидиране и табличен вид"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
@@ -24760,7 +24935,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
 msgid "Track employee attendance"
-msgstr ""
+msgstr "Следете посещенията на служителите"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
@@ -24770,22 +24945,22 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_maintenance
 msgid "Track equipment and manage maintenance requests"
-msgstr ""
+msgstr "Следете оборудването и управлявайте заявките за техн. обслужване"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track help tickets"
-msgstr ""
+msgstr "Проследявайте тикетите към поддръжката"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr ""
+msgstr "Проследявайте лийдове и управлявайте възможностите"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Track your recruitment pipeline"
-msgstr ""
+msgstr "Следете процеса на наемане на сътрудници"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
@@ -25218,7 +25393,7 @@ msgstr "Шипинг чрез Портала за услуги на Съедин
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
 msgid "Units of measure"
-msgstr ""
+msgstr "Мерни единици"
 
 #. module: base
 #: code:addons/model.py:0 code:addons/model.py:0 code:addons/model.py:0
@@ -25380,7 +25555,7 @@ msgstr "Use '1' for yes and '0' for no"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Use barcode scanners to process logistics operations"
-msgstr ""
+msgstr "Използвайте баркод скенери за процедиране на логистичните операции"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -26266,7 +26441,7 @@ msgstr "Yodlee финанси"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "You are inviting a new user."
-msgstr ""
+msgstr "Вие каните нов потребител"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -26284,7 +26459,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "You can archive the contact"
-msgstr ""
+msgstr "Можете да архивирате този контакт"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__type
@@ -26342,7 +26517,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot archive a contact linked to an internal user."
-msgstr ""
+msgstr "Не може да архивирате контакт, свързан с вътрешен потребител."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

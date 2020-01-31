@@ -22,7 +22,7 @@ class Project(models.Model):
                         context={'create': False, 'edit': False, 'delete': False}
                     )
                 })
-            account_invoice_lines = self.env['account.move.line'].search([('analytic_account_id', 'in', accounts)])
+            account_invoice_lines = self.env['account.move.line'].search([('analytic_account_id', 'in', accounts), ('move_id.type', 'in', ['in_invoice', 'in_refund'])])
             account_invoices = account_invoice_lines.mapped('move_id')
             if account_invoices:
                 stat_buttons.append({

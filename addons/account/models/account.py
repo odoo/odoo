@@ -334,11 +334,10 @@ class AccountAccount(models.Model):
             if record.company_id.account_opening_move_id:
                 for line in self.env['account.move.line'].search([('account_id', '=', record.id),
                                                                  ('move_id','=', record.company_id.account_opening_move_id.id)]):
-                    #could be executed at most twice: once for credit, once for debit
                     if line.debit:
-                        opening_debit = line.debit
+                        opening_debit += line.debit
                     elif line.credit:
-                        opening_credit = line.credit
+                        opening_credit += line.credit
             record.opening_debit = opening_debit
             record.opening_credit = opening_credit
 
@@ -361,21 +360,30 @@ class AccountAccount(models.Model):
 
         if opening_move.state == 'draft':
             # check whether we should create a new move line or modify an existing one
-            opening_move_line = self.env['account.move.line'].search([('account_id', '=', self.id),
+            account_op_lines = self.env['account.move.line'].search([('account_id', '=', self.id),
                                                                       ('move_id','=', opening_move.id),
                                                                       (field,'!=', False),
                                                                       (field,'!=', 0.0)]) # 0.0 condition important for import
 
-            counter_part_map = {'debit': opening_move_line.credit, 'credit': opening_move_line.debit}
-            # No typo here! We want the credit value when treating debit and debit value when treating credit
+            if account_op_lines:
+                op_aml_debit = sum(account_op_lines.mapped('debit'))
+                op_aml_credit = sum(account_op_lines.mapped('credit'))
 
-            if opening_move_line:
+                # There might be more than one line on this account if the opening entry was manually edited
+                # If so, we need to merge all those lines into one before modifying its balance
+                opening_move_line = account_op_lines[0]
+                if len(account_op_lines) > 1:
+                    merge_write_cmd = [(1, opening_move_line.id, {'debit': op_aml_debit, 'credit': op_aml_credit, 'partner_id': None ,'name': _("Opening balance")})]
+                    unlink_write_cmd = [(2, line.id) for line in account_op_lines[1:]]
+                    opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
+
                 if amount:
                     # modify the line
                     opening_move_line.with_context(check_move_validity=False)[field] = amount
-                elif counter_part_map[field]:
+                else:
                     # delete the line (no need to keep a line with value = 0)
                     opening_move_line.with_context(check_move_validity=False).unlink()
+
             elif amount:
                 # create a new line, as none existed before
                 self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -460,7 +468,7 @@ class AccountAccount(models.Model):
         if default.get('code', False):
             return super(AccountAccount, self).copy(default)
         try:
-            default['code'] = (str(int(self.code) + 10) or '')
+            default['code'] = (str(int(self.code) + 10) or '').zfill(len(self.code))
             default.setdefault('name', _("%s (copy)") % (self.name or ''))
             while self.env['account.account'].search([('code', '=', default['code']),
                                                       ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):

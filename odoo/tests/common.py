@@ -1008,7 +1008,7 @@ class ChromeBrowser():
 
     LINE_PATTERN = '\tat %(functionName)s (%(url)s:%(lineNumber)d:%(columnNumber)d)\n'
     def _format_stack(self, logrecord):
-        if logrecord['type'] not in ('error', 'trace', 'warning'):
+        if logrecord['type'] not in ['trace']:
             return
 
         trace = logrecord.get('stackTrace')
@@ -1159,13 +1159,8 @@ class HttpCase(TransactionCase):
         - wait for ready object to be available
         - eval(code) inside the page
 
-        To signal success test do:
-        console.log('test successful')
-
-        To signal failure do:
-        console.error('test failed')
-
-        If neither are done before timeout test fails.
+        To signal success test do: console.log('test successful')
+        To signal test failure raise an exception or call console.error
         """
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):

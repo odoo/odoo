@@ -690,6 +690,38 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     },
 });
 
+screens.ProductScreenWidget.include({
+    show: function () {
+        var self = this;
+        this._super();
+        if (this.pos.config.iface_floorplan) {
+            this.$el.bind("mousemove mousedown touchstart click scroll keypress", function () {
+                self.set_idle_timer();
+            });
+            this.set_idle_timer();
+        }
+    },
+    hide: function () {
+        this._super();
+        if (this.pos.config.iface_floorplan) {
+            this.$el.unbind("mousemove mousedown touchstart click scroll keypress");
+            clearTimeout(this.idle_timer);
+        }
+    },
+    /**
+     * Set a timeout to go back to the floorplan and clear the previous timeout
+     *
+     * @param {number} timeout, optional timeout in miliseconds, default one minute.
+     */
+    set_idle_timer: function(timeout=60000) {
+        var self = this;
+        clearTimeout(this.idle_timer);
+        this.idle_timer = setTimeout(function () {
+            self.pos.set_table(null);
+        }, timeout);
+    },
+});
+
 gui.define_screen({
     'name': 'floors',
     'widget': FloorScreenWidget,
@@ -805,14 +837,7 @@ models.PosModel = models.PosModel.extend({
     after_load_server_data: function() {
         var res = _super_posmodel.after_load_server_data.call(this);
         if (this.config.iface_floorplan) {
-	    var self = this;
             this.table = null;
-	    $('.screen').not('.floor-screen').onmousemove = 	function() {self.set_idle_timer()};
-	    $('.screen').not('.floor-screen').onmousedown = 	function() {self.set_idle_timer()}; // touchscreen presses
-	    $('.screen').not('.floor-screen').ontouchstart = function() {self.set_idle_timer()};
-	    $('.screen').not('.floor-screen').onclick = 	function() {self.set_idle_timer()};     // touchpad clicks
-	    $('.screen').not('.floor-screen').onscroll = 	function() {self.set_idle_timer()};    // scrolling with arrow keys
-	    $('.screen').not('.floor-screen').onkeypress = 	function() {self.set_idle_timer()};
         }
         return res;
     },
@@ -868,26 +893,106 @@ models.PosModel = models.PosModel.extend({
         });
     },
 
-    /**
-     * Set or unset a timeout to go back to the floorplan.
-     *
-     * if deactivate is true unset the timeout, Else set a timeout to go back to the floorplan and
-     * force a sync of the current table.
-     * @param {bool} deactivate optional boolean, default false.
-     * @param {number} timeout, optional timeout in miliseconds, default one minute.
-     */
-    set_idle_timer: function(deactivate, timeout) {
-        timeout = timeout || 60000;
-        deactivate = deactivate || false;
-        if (this.idle_timer) {
-            clearTimeout(this.idle_timer);
+    transfer_order_to_table: function(table) {
+        this.order_to_transfer_to_different_table.table = table;
+        this.order_to_transfer_to_different_table.save_to_db();
+    },
+
+    push_order_for_transfer: function(order_ids, table_orders) {
+        order_ids.push(this.order_to_transfer_to_different_table.uid);
+        table_orders.push(this.order_to_transfer_to_different_table);
+    },
+
+    clean_table_transfer: function(table) {
+        if (this.order_to_transfer_to_different_table && table) {
+            this.order_to_transfer_to_different_table = null;
+            this.set_table(table);
         }
+    },
+
+    sync_from_server: function(table, table_orders, order_ids) {
         var self = this;
-        if (deactivate) {
-            clearTimeout(this.idle_timer);
+        var ids_to_remove = this.db.get_ids_to_remove_from_server();
+        var orders_to_sync = this.db.get_unpaid_orders_to_sync(order_ids);
+        if (orders_to_sync.length) {
+            this.set_synch('connecting', orders_to_sync.length);
+            this._save_to_server(orders_to_sync, {'draft': true}).then(function (server_ids) {
+                server_ids.forEach(function(server_id){
+                    table_orders.some(function(o){
+                        if (o.name === server_id.pos_reference) {
+                            o.server_id = server_id.id;
+                            o.save_to_db();
+                        }
+                    });
+                });
+                if (!ids_to_remove.length) {
+                    self.set_synch('connected');
+                } else {
+                    self.remove_from_server_and_set_sync_state(ids_to_remove);
+                }
+            }).catch(function(reason){
+                self.set_synch('error');
+            }).finally(function(){
+                self.clean_table_transfer(table);
+            });
         } else {
-            this.idle_timer = setTimeout(function(){self.set_table(null)}, timeout);
+            if (ids_to_remove.length) {
+                self.remove_from_server_and_set_sync_state(ids_to_remove);
+            }
+            self.clean_table_transfer(table);
         }
+    },
+
+    set_order_on_table: function() {
+        var orders = this.get_order_list();
+        if (orders.length) {
+            this.set_order(orders[0]); // and go to the first one ...
+        } else {
+            this.add_new_order();  // or create a new order with the current table
+        }
+    },
+
+    sync_to_server: function(table) {
+        var self = this;
+        var ids_to_remove = this.db.get_ids_to_remove_from_server();
+
+        clearInterval(this.table_longpolling);
+
+        this.set_synch('connecting', 1);
+        this._get_from_server(table.id).then(function (server_orders) {
+            var orders = self.get_order_list();
+            orders.forEach(function(order){
+                if (order.server_id){
+                    self.get("orders").remove(order);
+                    order.destroy();
+                }
+            });
+            server_orders.forEach(function(server_order){
+                if (server_order.lines.length){
+                    var new_order = new models.Order({},{pos: self, json: server_order});
+                    self.get("orders").add(new_order);
+                    new_order.save_to_db();
+                }
+            })
+            if (!ids_to_remove.length) {
+                self.set_synch('connected');
+            } else {
+                self.remove_from_server_and_set_sync_state(ids_to_remove);
+            }
+        }).catch(function(reason){
+            self.set_synch('error');
+        }).finally(function(){
+            self.set_order_on_table();
+        });
+    },
+
+    get_order_with_uid: function() {
+        var order_ids = [];
+        this.get_order_list().forEach(function(o){
+            order_ids.push(o.uid);
+        });
+
+        return order_ids;
     },
 
     /**
@@ -897,96 +1002,20 @@ models.PosModel = models.PosModel.extend({
      * @param {object} table.
      */
     set_table: function(table) {
-        var self = this;
-        var ids_to_remove = this.db.get_ids_to_remove_from_server();
-        if (!table || this.order_to_transfer_to_different_table) { // no table ? go back to the floor plan, see ScreenSelector
-            this.set_idle_timer(true);
-            var order_ids = [];
-            var table_orders = this.get_order_list();
-            table_orders.forEach(function(o){
-                order_ids.push(o.uid);
-            });
+        if(!table){
+            this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
+            this.set_order(null);
+        } else if (this.order_to_transfer_to_different_table) {
+            var order_ids = this.get_order_with_uid();
 
-            if (this.order_to_transfer_to_different_table && table) {
-                this.order_to_transfer_to_different_table.table = table;
-                this.order_to_transfer_to_different_table.save_to_db();
-                order_ids.push(this.order_to_transfer_to_different_table.uid);
-                table_orders.push(this.order_to_transfer_to_different_table);
-            }
+            this.transfer_order_to_table(table);
+            this.push_order_for_transfer(order_ids, this.get_order_list());
 
-            var orders_to_sync = this.db.get_unpaid_orders_to_sync(order_ids);
-            if (orders_to_sync.length) {
-                this.set_synch('connecting', orders_to_sync.length);
-                this._save_to_server(orders_to_sync, {'draft': true})
-                    .then(function (server_ids) {
-                        server_ids.forEach(function(server_id){
-                            table_orders.some(function(o){
-                                if (o.name === server_id.pos_reference) {
-                                    o.server_id = server_id.id;
-                                    o.save_to_db();
-                                }
-                            });
-                        });
-                        if (!ids_to_remove.length) {
-                            self.set_synch('connected');
-                        } else {
-                            self.remove_from_server_and_set_sync_state(ids_to_remove);
-                        }
-                    }).catch(function(reason){
-                        self.set_synch('error');
-                    }).finally(function(){
-                        if (self.order_to_transfer_to_different_table && table) {
-                            self.order_to_transfer_to_different_table = null;
-                            self.set_table(table);
-                        }
-                    });
-            } else { 
-                if (ids_to_remove.length) {
-                    self.remove_from_server_and_set_sync_state(ids_to_remove);
-                }
-                if (self.order_to_transfer_to_different_table && table) {
-                    self.order_to_transfer_to_different_table = null;
-                    self.set_table(table);
-                }
-            }
-            this.set_order(null); // unset curent selected order
-
+            this.sync_from_server(table, this.get_order_list(), order_ids);
+            this.set_order(null);
         } else {
-
-            clearInterval(this.table_longpolling);
             this.table = table;
-            this.set_idle_timer();
-
-            this.set_synch('connecting', 1);
-            this._get_from_server(table.id)
-                .then(function (server_orders) {
-                    var orders = self.get_order_list();
-                    orders.forEach(function(order){
-                        if (order.server_id){
-                            self.get("orders").remove(order);
-                            order.destroy();
-                        }
-                    });
-                    server_orders.forEach(function(server_order){
-                        var new_order = new models.Order({},{pos: self, json: server_order});
-                        self.get("orders").add(new_order);
-                        new_order.save_to_db();
-                    })
-                    if (!ids_to_remove.length) {
-                        self.set_synch('connected');
-                    } else {
-                        self.remove_from_server_and_set_sync_state(ids_to_remove);
-                    }
-                }).catch(function(reason){
-                    self.set_synch('error');
-                }).finally(function(){
-                    var orders = self.get_order_list();
-                    if (orders.length) {
-                        self.set_order(orders[0]); // and go to the first one ...
-                    } else {
-                        self.add_new_order();  // or create a new order with the current table
-                    }
-                });
+            this.sync_to_server(table);
         }
     },
 

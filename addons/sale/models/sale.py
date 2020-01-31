@@ -507,6 +507,7 @@ class SaleOrder(models.Model):
             'team_id': self.team_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
+            'invoice_partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
@@ -553,6 +554,9 @@ class SaleOrder(models.Model):
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return []
+
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         # 1) Create invoices.
@@ -602,7 +606,7 @@ class SaleOrder(models.Model):
                     payment_refs.add(invoice_vals['invoice_payment_ref'])
                     refs.add(invoice_vals['ref'])
                 ref_invoice_vals.update({
-                    'ref': ', '.join(refs),
+                    'ref': ', '.join(refs)[:2000],
                     'invoice_origin': ', '.join(origins),
                     'invoice_payment_ref': len(payment_refs) == 1 and payment_refs.pop() or False,
                 })
@@ -610,12 +614,14 @@ class SaleOrder(models.Model):
             invoice_vals_list = new_invoice_vals_list
 
         # 3) Create invoices.
-        moves = self.env['account.move'].with_context(default_type='out_invoice').create(invoice_vals_list)
+        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
+        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
+        moves = self.env['account.move'].sudo().with_context(default_type='out_invoice').create(invoice_vals_list)
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
+            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
         for move in moves:
             move.message_post_with_view('mail.message_origin_link',
                 values={'self': move, 'origin': move.line_ids.mapped('sale_line_ids.order_id')},
@@ -1625,10 +1631,10 @@ class SaleOrderLine(models.Model):
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - custom_ptavs):
-            name += "\n" + ptav.display_name
+            name += "\n" + ptav.with_context(lang=self.order_id.partner_id.lang).display_name
 
         # display the is_custom values
         for pacv in self.product_custom_attribute_value_ids:
-            name += "\n" + pacv.display_name
+            name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
 
         return name

@@ -186,6 +186,22 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
+    <!-- Billing record rules for account.move -->
+
+    <record id="account_move_see_all" model="ir.rule">
+        <field name="name">All Journal Entries</field>
+        <field ref="model_account_move" name="model_id"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+    </record>
+
+    <record id="account_move_line_see_all" model="ir.rule">
+        <field name="name">All Journal Items</field>
+        <field ref="model_account_move_line" name="model_id"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+    </record>
+
     <!-- Portal for invoice move and invoice move lines -->
     <record id="account_invoice_rule_portal" model="ir.rule">
         <field name="name">Portal Personal Account Invoices</field>

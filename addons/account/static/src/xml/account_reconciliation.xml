@@ -115,11 +115,13 @@
             </tfoot>
         </table>
         <div class="o_notebook">
-            <ul class="nav nav-tabs ml-0 mr-0">
-                <li class="nav-item" t-attf-title="{{'Match statement with existing lines on receivable/payable accounts&lt;br&gt;* Black line: existing journal entry that should be matched&lt;br&gt;* Blue lines: existing payment that should be matched'}}" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_match_rp_#{state.st_line.id}" class="nav-link active nav-match_rp" role="tab" aria-selected="true">Customer/Vendor Matching</a></li>
-                <li class="nav-item" title="Match with entries that are not from receivable/payable accounts" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_match_other_#{state.st_line.id}" class="nav-link nav-match_other" role="tab" aria-selected="false">Miscellaneous Matching</a></li>
-                <li class="nav-item" title="Create a counterpart" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_create_#{state.st_line.id}" class="nav-link nav-create" role="tab" aria-selected="false">Manual Operations</a></li>
-            </ul>
+            <div class="o_notebook_headers">
+                <ul class="nav nav-tabs ml-0 mr-0">
+                    <li class="nav-item" t-attf-title="{{'Match statement with existing lines on receivable/payable accounts&lt;br&gt;* Black line: existing journal entry that should be matched&lt;br&gt;* Blue lines: existing payment that should be matched'}}" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_match_rp_#{state.st_line.id}" class="nav-link active nav-match_rp" role="tab" aria-selected="true">Customer/Vendor Matching</a></li>
+                    <li class="nav-item" title="Match with entries that are not from receivable/payable accounts" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_match_other_#{state.st_line.id}" class="nav-link nav-match_other" role="tab" aria-selected="false">Miscellaneous Matching</a></li>
+                    <li class="nav-item" title="Create a counterpart" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_create_#{state.st_line.id}" class="nav-link nav-create" role="tab" aria-selected="false">Manual Operations</a></li>
+                </ul>
+            </div>
             <div class="tab-content">
                 <div class="tab-pane active" t-attf-id="notebook_page_match_rp_#{state.st_line.id}">
                     <div class="match">
@@ -331,7 +333,7 @@
         <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
         <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
         <tr><td>Due Date</td><td><t t-esc="line.date_maturity || line.date"/></td></tr>
-        <tr><td>Journal</td><td><t t-esc="line.journal_id[1]"/></td></tr>
+        <tr><td>Journal</td><td><t t-esc="line.journal_id.display_name"/></td></tr>
         <tr t-if="line.partner_id"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
         <tr><td>Label</td><td><t t-esc="line.label"/></td></tr>
         <tr t-if="line.ref"><td>Ref</td><td><t t-esc="line.ref"/></td></tr>
