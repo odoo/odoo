@@ -2452,6 +2452,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         update_custom_fields = self._context.get('update_custom_fields', False)
         must_create_table = not tools.table_exists(cr, self._table)
         parent_path_compute = False
+        fields_to_compute = []
 
         if self._auto:
             if must_create_table:
@@ -2466,7 +2467,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             # update the database schema for fields
             columns = tools.table_columns(cr, self._table)
-            fields_to_compute = []
 
             for field in self._fields.values():
                 if not field.store:
@@ -2477,19 +2477,19 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if new and field.compute:
                     fields_to_compute.append(field.name)
 
-            if fields_to_compute:
-                @self.pool.post_init
-                def mark_fields_to_compute():
-                    recs = self.with_context(active_test=False).search([])
-                    for field in fields_to_compute:
-                        _logger.info("Storing computed values of %s", field)
-                        self.env.add_to_compute(recs._fields[field], recs)
-
         if must_create_table:
             self._execute_sql()
 
         if parent_path_compute:
             self._parent_store_compute()
+        return fields_to_compute
+
+    def _prepare_computes(self, fields):
+        if fields:
+            recs = self.with_context(active_test=False).search([])
+            for field in fields:
+                _logger.info("Storing computed values of %s", field)
+                self.env.add_to_compute(recs._fields[field], recs)
 
     def finalize(self):
         foreign, others = self._get_constraints()

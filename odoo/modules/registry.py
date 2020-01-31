@@ -324,21 +324,25 @@ class Registry(Mapping):
 
         # make sure the queue does not contain some leftover from a former call
         self._post_init_queue.clear()
+        fields_to_compute = []
 
         for model in models:
-            model.initialize()
+            fields_to_compute.append(model.initialize())
             # deprecated but kept for backwards-compatibility, must always be called
             model.init()
 
         for model in models:
             model._reflect()
 
+        for model, fields in zip(models, fields_to_compute):
+            model._prepare_computes(fields)
+            model.flush()
+
         self._ordinary_tables = None
 
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
             func()
-        env['base'].flush()
 
         self.finalize_models(models)
 
