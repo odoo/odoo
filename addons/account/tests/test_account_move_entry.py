@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
 from odoo.tests import tagged, new_test_user
+from odoo.tests.common import Form
 from odoo import fields
 from odoo.exceptions import ValidationError, UserError
 
@@ -309,6 +310,23 @@ class TestAccountMove(InvoiceTestCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves.unlink()
 
+    def test_misc_always_balanced_move(self):
+        ''' Ensure there is no way to make '''
+        # You can't remove a journal item making the journal entry unbalanced.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids[0].unlink()
+
+        # Same check using write instead of unlink.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            balance = self.test_move.line_ids[0].balance + 5
+            self.test_move.line_ids[0].write({
+                'debit': balance if balance > 0.0 else 0.0,
+                'credit': -balance if balance < 0.0 else 0.0,
+            })
+
+        # You can remove journal items if the related journal entry is still balanced.
+        self.test_move.line_ids.unlink()
+
     def test_misc_unique_sequence_number(self):
         ''' Ensure two journal entries can't share the same name when using the same sequence. '''
         self.test_move.post()
@@ -343,3 +361,66 @@ class TestAccountMove(InvoiceTestCommon):
 
         move.post()
         self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner | commercial_partner)
+
+    def test_misc_move_onchange(self):
+        ''' Test the behavior on onchanges for account.move having 'entry' as type. '''
+
+        move_form = Form(self.env['account.move'])
+        # Rate 1:3
+        move_form.date = fields.Date.from_string('2016-01-01')
+
+        # New line that should get 400.0 as debit.
+        with move_form.line_ids.new() as line_form:
+            line_form.name = 'debit_line'
+            line_form.account_id = self.company_data['default_account_revenue']
+            line_form.currency_id = self.currency_data['currency']
+            line_form.amount_currency = 1200.0
+
+        # New line that should get 400.0 as credit.
+        with move_form.line_ids.new() as line_form:
+            line_form.name = 'credit_line'
+            line_form.account_id = self.company_data['default_account_revenue']
+            line_form.currency_id = self.currency_data['currency']
+            line_form.amount_currency = -1200.0
+        move = move_form.save()
+
+        self.assertRecordValues(
+            move.line_ids.sorted('debit'),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1200.0,
+                    'debit': 0.0,
+                    'credit': 400.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': 1200.0,
+                    'debit': 400.0,
+                    'credit': 0.0,
+                },
+            ],
+        )
+
+        # === Change the date to change the currency conversion's rate ===
+
+        with Form(move) as move_form:
+            move_form.date = fields.Date.from_string('2017-01-01')
+
+        self.assertRecordValues(
+            move.line_ids.sorted('debit'),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1200.0,
+                    'debit': 0.0,
+                    'credit': 600.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': 1200.0,
+                    'debit': 600.0,
+                    'credit': 0.0,
+                },
+            ],
+        )

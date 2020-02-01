@@ -55,7 +55,7 @@ class StockMoveLine(models.Model):
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_id.picking_type_id.use_existing_lots', readonly=True)
-    state = fields.Selection(related='move_id.state', store=True, related_sudo=False, readonly=False)
+    state = fields.Selection(related='move_id.state', store=True, related_sudo=False)
     is_initial_demand_editable = fields.Boolean(related='move_id.is_initial_demand_editable', readonly=False)
     is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
@@ -235,6 +235,10 @@ class StockMoveLine(models.Model):
         if self.env.context.get('bypass_reservation_update'):
             return super(StockMoveLine, self).write(vals)
 
+        if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
+            raise UserError(_("Changing the product is only allowed in 'Draft' state."))
+
+        moves_to_recompute_state = self.env['stock.move']
         Quant = self.env['stock.quant']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # We forbid to change the reserved quantity in the interace, but it is needed in the
@@ -293,6 +297,7 @@ class StockMoveLine(models.Model):
                                 pass
                     if new_product_qty != ml.product_qty:
                         new_product_uom_qty = ml.product_id.uom_id._compute_quantity(new_product_qty, ml.product_uom_id, rounding_method='HALF-UP')
+                        moves_to_recompute_state |= ml.move_id
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
@@ -358,6 +363,10 @@ class StockMoveLine(models.Model):
                 move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()
         next_moves._action_assign()
+
+        if moves_to_recompute_state:
+            moves_to_recompute_state._recompute_state()
+
         return res
 
     def unlink(self):
@@ -524,7 +533,7 @@ class StockMoveLine(models.Model):
             # We now have to find the move lines that reserved our now unavailable quantity. We
             # take care to exclude ourselves and the move lines were work had already been done.
             outdated_move_lines_domain = [
-                ('move_id.state', 'not in', ['done', 'cancel']),
+                ('state', 'not in', ['done', 'cancel']),
                 ('product_id', '=', product_id.id),
                 ('lot_id', '=', lot_id.id if lot_id else False),
                 ('location_id', '=', location_id.id),

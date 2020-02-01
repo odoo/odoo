@@ -18,7 +18,9 @@
                                 <label for="activity_date_deadline_range"/>
                                 <div class="o_row">
                                     <field name="activity_date_deadline_range"/>
-                                    <field name="activity_date_deadline_range_type"/>
+                                    <field name="activity_date_deadline_range_type" attrs="{
+                                        'required': [('state', '=', 'next_activity'), ('activity_date_deadline_range', '>', 0)]
+                                    }"/>
                                 </div>
                                 <field name="activity_user_type"/>
                                 <field name="activity_user_field_name" attrs="{

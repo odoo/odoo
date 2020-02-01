@@ -9,15 +9,15 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Mark Lee <odoos@soti.33mail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:14+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,17 +28,17 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">End Date Contract Alert</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">계약 만료일 경고</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span> days before the end date</span>"
-msgstr ""
+msgstr "<span> 시작일과 종료일</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span>Send an alert </span>"
-msgstr ""
+msgstr "<span>경고 보내기 </span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -157,10 +157,12 @@ msgstr "금액"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Apply Change"
-msgstr ""
+msgstr "변경 사항 적용"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
 msgstr "보관"
@@ -275,7 +277,7 @@ msgstr "BIK 계산"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 msgid "Car Manufacturers"
-msgstr ""
+msgstr "차량 제조사"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -374,7 +376,7 @@ msgstr "회사"
 #. module: fleet
 #: model:ir.model,name:fleet.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정"
+msgstr "설정 구성"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
@@ -415,7 +417,7 @@ msgstr "계약 만료 날짜"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Contract Informations"
-msgstr ""
+msgstr "계약 정보"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
@@ -549,7 +551,7 @@ msgstr "비용은 설정된 주기에 따라 정기적으로 지불합니다. �
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid "Create a new contract"
-msgstr "새 근로 계약 생성"
+msgstr "새 근로 계약 만들기"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -561,52 +563,52 @@ msgstr "현재 계약이 종료될 날짜를 제외한 나머지 정보를 동�
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
 msgid "Create a new cost"
-msgstr "새 비용 작성"
+msgstr "새 비용 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
 msgid "Create a new fuel log"
-msgstr "새 주유 기록 작성"
+msgstr "새 주유 기록 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
 msgid "Create a new manufacturer"
-msgstr ""
+msgstr "새로운 제조업체 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "Create a new model"
-msgstr "새 모델 작성"
+msgstr "새 모델 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "Create a new odometer log"
-msgstr "새 주행 기록계 기록 작성"
+msgstr "새 주행 기록계 기록 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid "Create a new service entry"
-msgstr "새 차량 관리 항목 생성"
+msgstr "새 차량 관리 항목 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
 msgid "Create a new type of contract"
-msgstr "새 계약 유형 작성"
+msgstr "새 계약 유형 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Create a new type of service"
-msgstr "새 차량 관리 유형 작성"
+msgstr "새 차량 관리 유형 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Create a new vehicle"
-msgstr "새 차량 작성"
+msgstr "새 차량 만들기"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
 msgid "Create a new vehicle status"
-msgstr "새 차량 상태 작성"
+msgstr "새 차량 상태 만들기"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_uid
@@ -643,7 +645,7 @@ msgstr "작성일"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer
 msgid "Creation Contract Odometer"
-msgstr ""
+msgstr "계약 주행 거리계 생성"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__currency_id
@@ -657,7 +659,7 @@ msgstr "통화"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Current Driver"
-msgstr ""
+msgstr "현재 운전자"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
@@ -707,7 +709,7 @@ msgstr "차량이 등록된 날짜"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
 msgid "Delay alert contract outdated"
-msgstr ""
+msgstr "계약 만료 경고 지연"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
@@ -769,7 +771,7 @@ msgstr "차량 운전자"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Drivers"
-msgstr ""
+msgstr "운전자"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -779,7 +781,7 @@ msgstr "운전자 기록"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
 msgid "Drivers History Count"
-msgstr ""
+msgstr "운전자 이력 수"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
@@ -834,7 +836,7 @@ msgstr "종료일"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Engine"
-msgstr ""
+msgstr "엔진"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -855,12 +857,6 @@ msgstr "엔진/드라이브 벨트 교체"
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
 msgstr "차량 관리 부가가치세 항목"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
-msgid "Exception Activities"
-msgstr "예외 활동"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -894,13 +890,13 @@ msgstr "차량 관리"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Fleet Management"
-msgstr ""
+msgstr "차량 관리"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__manager_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__manager_id
 msgid "Fleet Manager"
-msgstr ""
+msgstr "차량 관리자"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -1002,12 +998,12 @@ msgstr "향후 활동"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
 msgid "Future Driver"
-msgstr ""
+msgstr "향후 운전자"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Future Driver :"
-msgstr ""
+msgstr "향후 운전자 :"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__gasoline
@@ -1375,13 +1371,13 @@ msgstr "수동"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
 msgid "Manufacturer"
-msgstr ""
+msgstr "제조사"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
 msgid "Manufacturer of the vehicle"
-msgstr ""
+msgstr "차량 제조사"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -1493,7 +1489,7 @@ msgstr "다음 활동 유형"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
 msgid "Next Driver of the vehicle"
-msgstr ""
+msgstr "차량의 다음 운전자"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
@@ -1703,12 +1699,12 @@ msgstr "계약에 서명하는 사람"
 #: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
 #: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
 msgid "Plan To Change Car"
-msgstr ""
+msgstr "차량 교체 계획"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Planned for Change"
-msgstr ""
+msgstr "변경 계획"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
@@ -1746,12 +1742,12 @@ msgstr "리터 당 가격"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
 msgid "Purchase Value"
-msgstr ""
+msgstr "구매 금액"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__net_car_value
 msgid "Purchase Value of the car"
-msgstr ""
+msgstr "차량 구매 가격"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
@@ -2063,7 +2059,7 @@ msgstr "온도 조절기 교체"
 msgid ""
 "This is the date at which the car will be available, if not set it means "
 "available instantly"
-msgstr ""
+msgstr "이것은 자동차를 이용할 수있는 날짜이며, 설정하지 않으면 즉시 이용할 수 있습니다."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -2250,7 +2246,7 @@ msgstr "차량 상세 정보"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Vehicle Informations"
-msgstr ""
+msgstr "차량 정보"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_action

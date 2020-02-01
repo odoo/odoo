@@ -9,6 +9,7 @@
 # Nicolas Roussey <nro@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
+# lcaodoo <lca@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"Last-Translator: lcaodoo <lca@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -228,7 +229,7 @@ msgstr "Image de fond"
 #: model:product.product,name:pos_restaurant.pos_food_bacon
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Bacon Burger"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -279,13 +280,13 @@ msgstr "Les changements n'ont pas pu être sauvegardés"
 #: model:product.product,name:pos_restaurant.pos_food_cheeseburger
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
 msgid "Cheese Burger"
-msgstr ""
+msgstr "Cheese Burger"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_chicken
 #: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
 msgid "Chicken Curry Sandwich"
-msgstr ""
+msgstr "Sandwich Chicken Curry"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -299,7 +300,7 @@ msgstr "Fermer"
 #: model:product.product,name:pos_restaurant.pos_food_club
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
 msgid "Club Sandwich"
-msgstr ""
+msgstr "Club Sandwich"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.coke
@@ -336,7 +337,7 @@ msgstr "Supprimer"
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Organisateur de bureau"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -365,6 +366,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Chaque imprimante de ticket possède une adresse IP qui indique l'IoT Box/le proxy matériel \n"
+"où se situe l'imprimante, ainsi qu'une liste de catégories de produits.\n"
+"Les imprimantes peuvent uniquement imprimer les mises à jour des produits appartenant à l'une de\n"
+" ces catégories."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -398,7 +403,7 @@ msgstr "Plans de l'étage"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
-msgstr ""
+msgstr "Étage : %s - Configuration PdV : %s\n"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -414,7 +419,7 @@ msgstr "Alimentation"
 #: model:product.product,name:pos_restaurant.pos_food_funghi
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
-msgstr ""
+msgstr "Funghi"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -524,19 +529,19 @@ msgstr "Gris clair"
 #: model:product.product,name:pos_restaurant.pos_food_maki
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
 msgid "Lunch Maki 18pc"
-msgstr ""
+msgstr "Lunch Maki 18pc"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_salmon
 #: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
 msgid "Lunch Salmon 20pc"
-msgstr ""
+msgstr "Lunch Saumon 20pc"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_temaki
 #: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
 msgid "Lunch Temaki mix 3pc"
-msgstr ""
+msgstr "Lunch Mix Temaki 3pc"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -547,7 +552,7 @@ msgstr "Gérer les commandes des tables"
 #: model:product.product,name:pos_restaurant.pos_food_margherita
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
 msgid "Margherita"
-msgstr ""
+msgstr "Margherita"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.minute_maid
@@ -558,13 +563,13 @@ msgstr "Minute Maid"
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "Monitor Stand"
-msgstr ""
+msgstr "Support d'écran"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_mozza
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
 msgid "Mozzarella Sandwich"
-msgstr ""
+msgstr "Sandwich Mozzarella"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -672,19 +677,19 @@ msgstr "Imprimante PdV"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #, python-format
 msgid "PRO FORMA"
-msgstr ""
+msgstr "PRO FORMA"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_4formaggi
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pasta 4 formaggi "
-msgstr ""
+msgstr "Pasta 4 formaggi "
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_bolo
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
 msgid "Pasta Bolognese"
-msgstr ""
+msgstr "Pasta Bolognese"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -706,7 +711,7 @@ msgstr "Paramétrage du point de vente"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Lignes des commandes du point de vente"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
@@ -828,13 +833,13 @@ msgstr "Ronde"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Round Shape"
-msgstr ""
+msgstr "Forme ronde"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_chirashi
 #: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
 msgid "Salmon and Avocado"
-msgstr ""
+msgstr "Saumon et avocat"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -857,13 +862,13 @@ msgstr "Forme"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
-msgstr ""
+msgstr "Passer la ligne à l'envoi à l'imprimante en cuisine."
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_tuna
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
 msgid "Spicy Tuna Sandwich"
-msgstr ""
+msgstr "Sandwich Thon Piquant"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -994,7 +999,7 @@ msgstr "La largeur de la table en pixels"
 #: code:addons/pos_restaurant/static/src/js/printbill.js:0
 #, python-format
 msgid "There are no order lines"
-msgstr ""
+msgstr "Il n'y a pas de lignes de commande"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1074,7 +1079,7 @@ msgstr "Utilisé pour trier les étages."
 #: model:product.product,name:pos_restaurant.pos_food_vege
 #: model:product.template,name:pos_restaurant.pos_food_vege_product_template
 msgid "Vegetarian"
-msgstr ""
+msgstr "Végétarien"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
@@ -1119,6 +1124,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
+"Vous ne pouvez pas supprimer un étage utilisé pendant une session du PdV, "
+"fermez d'abord la session :\n"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1130,6 +1137,10 @@ msgid ""
 "Changes made to previously synced orders will get lost at the next sync.\n"
 "Orders that where not synced before will be synced next time you open and close the same table."
 msgstr ""
+"Vous devez être connecté à internet pour sauvegarder vos modifications.\n"
+"\n"
+"Les changements apportés à des commandes déjà synchronisées seront perdus à la prochaine synchronisation.\n"
+"Les commandes encore à synchroniser le seront la prochaine fois que vous ouvrez et fermez la même table."
 
 #. module: pos_restaurant
 #. openerp-web

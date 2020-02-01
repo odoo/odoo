@@ -35,6 +35,12 @@
         <value model="res.company" eval="obj().env.ref('l10n_ar.company_ri')"/>
     </function>
 
+    <record id="bank_account_ri" model="res.partner.bank">
+        <field name="acc_number">7982898111100056688080</field>
+        <field name="partner_id" ref="l10n_ar.partner_ri"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+    </record>
+
     <data noupdate="1">
 
         <record id="sale_journal_ri" model="account.journal">

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import babel
+import babel.dates
 from dateutil.relativedelta import relativedelta
 import itertools
 import json

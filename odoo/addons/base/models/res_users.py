@@ -503,8 +503,6 @@ class Users(models.Model):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
-            # clear default ir values when company changes
-            self.env['ir.default'].clear_caches()
 
         if 'company_id' in values or 'company_ids' in values:
             # Reset lazy properties `company` & `companies` on all envs
@@ -545,14 +543,13 @@ class Users(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            if operator not in expression.NEGATIVE_TERM_OPERATORS:
-                domain = [('login', '=', name)]
+        user_ids = []
+        if operator not in expression.NEGATIVE_TERM_OPERATORS:
+            if operator == 'ilike' and not (name or '').strip():
+                domain = []
             else:
-                domain = [('login', '!=', name)]
-        user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+                domain = [('login', '=', name)]
+            user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
             user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
         return models.lazy_name_get(self.browse(user_ids).with_user(name_get_uid))

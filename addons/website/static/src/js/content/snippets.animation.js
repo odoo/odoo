@@ -555,11 +555,13 @@ registry.parallax = Animation.extend({
 
         // Reset offset if parallax effect will not be performed and leave
         this.$target.toggleClass('s_parallax_is_fixed', this.speed === 1);
-        if (this.speed === 0 || this.speed === 1) {
+        var noParallaxSpeed = (this.speed === 0 || this.speed === 1);
+        this.$target.toggleClass('s_parallax_no_overflow_hidden', noParallaxSpeed);
+        if (noParallaxSpeed) {
             this.$bg.css({
                 transform: '',
                 top: '',
-                bottom: ''
+                bottom: '',
             });
             return;
         }
@@ -702,8 +704,14 @@ registry.backgroundVideo = publicWidget.Widget.extend({
             this.videoSrc = this.videoSrc + "&enablejsapi=1";
 
             if (!window.YT) {
+                var oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
                 proms.push(new Promise(resolve => {
-                    window.onYouTubeIframeAPIReady = () => resolve();
+                    window.onYouTubeIframeAPIReady = () => {
+                        if (oldOnYoutubeIframeAPIReady) {
+                            oldOnYoutubeIframeAPIReady();
+                        }
+                        return resolve();
+                    };
                 }));
                 $('<script/>', {
                     src: 'https://www.youtube.com/iframe_api',
@@ -751,6 +759,10 @@ registry.backgroundVideo = publicWidget.Widget.extend({
      * @private
      */
     _adjustIframe: function () {
+        if (!this.$iframe) {
+            return;
+        }
+
         this.$iframe.removeClass('show');
 
         // Adjust the iframe
@@ -1098,6 +1110,7 @@ registry.facebookPage = publicWidget.Widget.extend({
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {
             src: src,
+            class: 'o_temp_auto_element',
             width: params.width,
             height: params.height,
             css: {

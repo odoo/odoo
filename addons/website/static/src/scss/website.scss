@@ -916,7 +916,12 @@ table.table_desc tr td {
 // Parallax
 .parallax {
     position: relative;
-    overflow: hidden;
+
+    // TODO this introduces a limitation: no dropdown will be able to
+    // overflow. Maybe there is a better way to find.
+    &:not(.s_parallax_no_overflow_hidden) {
+        overflow: hidden;
+    }
 
     > * {
         position: relative;

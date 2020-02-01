@@ -44,6 +44,7 @@ PKGS_TO_INSTALL="
     hostapd \
     git \
     rsync \
+    kpartx \
     swig \
     console-data \
     lightdm \
@@ -68,7 +69,7 @@ PKGS_TO_INSTALL="
     python3-feedparser \
     python3-pil \
     python3-jinja2 \
-    python3-ldap3 \
+    python3-ldap \
     python3-lxml \
     python3-mako \
     python3-mock \
@@ -103,7 +104,7 @@ apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-conf
 
 apt-get clean
 localepurge
-rm -rf /usr/share/doc
+rm -rfv /usr/share/doc
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
@@ -129,7 +130,7 @@ groupadd usbusers
 usermod -a -G usbusers pi
 usermod -a -G lp pi
 usermod -a -G input lightdm
-mkdir /var/log/odoo
+mkdir -v /var/log/odoo
 chown pi:pi /var/log/odoo
 chown pi:pi -R /home/pi/odoo/
 
@@ -171,10 +172,10 @@ echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
-    mkdir "${1}_ram"
+    mkdir -v "${1}_ram"
 }
 
 create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
-mkdir /root_bypass_ramdisks
+mkdir -v /root_bypass_ramdisks

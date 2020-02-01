@@ -11,8 +11,8 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Takuya Sawada <takuya@tuntunkun.com>, 2019
 # Martin Trigaux, 2019
-# Tim Siu Lai <tl@roomsfor.hk>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Tim Siu Lai <tl@roomsfor.hk>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9695,7 +9695,7 @@ msgstr "完全な名前"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
-msgstr "集計日"
+msgstr "集計"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
@@ -11620,7 +11620,7 @@ msgstr "Eメールマーケティング"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
-msgstr ""
+msgstr "メール署名"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
@@ -11641,7 +11641,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
 msgid "Employee Presence Control"
-msgstr ""
+msgstr "従業員在席管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
@@ -11839,7 +11839,7 @@ msgstr "イベント販売"
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Everything seems properly set up!"
-msgstr ""
+msgstr "設定に問題はなさそうです。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12995,13 +12995,14 @@ msgid ""
 "                         Group-specific rules grant additional permissions, but are constrained within the bounds of global ones.\n"
 "                         The first group rules restrict further the global rules, but can be relaxed by additional group rules."
 msgstr ""
+"グローバル規則(グループ非依存)は制約であり、回避できません。グループ依存のローカル規則は追加で権限を付与しますが、グローバル規則の制約を越えることはできません。1つ目のグループ依存規則はグローバル規則にさらなる制約を加えますが、その他のグループ規則により制約を緩めることができます。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid ""
 "Global rules are combined together with a logical AND operator, and with the"
 " result of the following steps"
-msgstr ""
+msgstr "グローバル規則は、他のグローバル規則および以下ステップの結果と、論理演算子 AND により結合されます。"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -13170,7 +13171,7 @@ msgstr "連絡先のグループ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Group-specific rules are combined together with a logical OR operator"
-msgstr ""
+msgstr "グループ依存規則は論理演算子 OR で結合されます。"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -13880,6 +13881,7 @@ msgid ""
 "If user belongs to several groups, the results from step 2 are combined with"
 " logical OR operator"
 msgstr ""
+"ユーザが複数グループに属す場合、ステップ2の結果は、各グループ内でのグループ依存規則結合結果が論理演算子 OR で結合されたものになります。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__overwrite
@@ -14169,7 +14171,7 @@ msgstr "個人"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Individuals"
-msgstr ""
+msgstr "個人"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -15165,7 +15167,7 @@ msgstr "最新バージョン"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr ""
+msgstr "最終ログイン"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -15202,12 +15204,12 @@ msgstr "帳票でのレイアウト"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "リードに情報付与"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
 msgid "Lead Generation"
-msgstr ""
+msgstr "リード生成"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
@@ -16782,7 +16784,7 @@ msgstr "ニカラグア"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Nice work! Your configuration is done."
-msgstr ""
+msgstr "よくできました！環境設定は済んでいます。"
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -16853,7 +16855,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No module found!"
-msgstr ""
+msgstr "モジュールが見つかりません"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
@@ -19174,7 +19176,7 @@ msgstr "少なくとも１つのSMTPサーバを定義して下さい。また�
 msgid ""
 "Please note that modifications will be applied for all users of the "
 "specified group"
-msgstr ""
+msgstr "修正内容は指定のグループの全ユーザに適用されます。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -21335,7 +21337,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "技術/スキル管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_slides
@@ -21521,7 +21523,7 @@ msgstr "ソース用語"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Source:"
-msgstr ""
+msgstr "参照元:"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -22039,7 +22041,7 @@ msgstr "ターゲットウィンドウ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "タスクログ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
@@ -22706,7 +22708,7 @@ msgstr "テーマ"
 #: model:ir.ui.menu,name:base.menu_theme_store
 #: model:ir.ui.menu,name:base.theme_store
 msgid "Theme Store"
-msgstr ""
+msgstr "テーマストア"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -25122,7 +25124,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "mrp_subcontracting"
-msgstr ""
+msgstr "mrp_subcontracting"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0

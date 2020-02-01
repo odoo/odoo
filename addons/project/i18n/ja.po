@@ -9,20 +9,20 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # kent_ocean <ke.tanabe@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # Manami Hashi <manami@roomsfor.hk>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2019
-# Tim Siu Lai <tl@roomsfor.hk>, 2019
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
+# Tim Siu Lai <tl@roomsfor.hk>, 2019
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:01+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -264,7 +264,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">添付</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -428,12 +428,12 @@ msgstr "全て"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "全てのタスク"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "全従業員"
 
 #. module: project
 #. openerp-web
@@ -456,7 +456,9 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "アーカイブ済"
@@ -770,7 +772,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 msgid "Create a new task"
-msgstr ""
+msgstr "タスクを作成しましょう"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1069,7 +1071,7 @@ msgstr "Eメールテンプレート"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "メールCC"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1156,7 +1158,7 @@ msgstr "フォロー中"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "フォロー中タスク"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1286,7 +1288,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "I take it"
-msgstr "とります"
+msgstr "自分に割当"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -1440,7 +1442,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "招待された従業員"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2028,7 +2030,7 @@ msgstr "ポータルアクセスURL"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "ポータルユーザと全従業員"
 
 #. module: project
 #. openerp-web
@@ -2271,12 +2273,12 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "次ステージへの準備済"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for next stage"
-msgstr "次のステージに移動可"
+msgstr "次ステージへの準備済"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_19
@@ -2629,7 +2631,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "タスクログ"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -2722,7 +2724,7 @@ msgstr "タスク分析"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "タスク管理"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2773,10 +2775,22 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
+msgid "The parent task belongs to a company you do not have access to."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The subtasks belong to a company you do not have access to."
 msgstr ""
 
 #. module: project
@@ -3045,7 +3059,7 @@ msgstr "作業時間"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "割当作業時間"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2

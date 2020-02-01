@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sales_team
+# 	* sales_team
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Zou Haojun <haojunzou84@gmail.com>, 2018
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2018
-# Robert Frykelius <robert.frykelius@linserv.se>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2019
+# Bengt Evertsson <zyberfart@gmail.com>, 2019
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
+# Robert Frykelius <robert.frykelius@linserv.se>, 2019
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Robert Frykelius <robert.frykelius@linserv.se>, 2018\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +28,18 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>New</span>"
 msgstr "<span>Ny</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Rapportering</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -51,38 +59,57 @@ msgstr "Aktiv"
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 msgid "Activity Types"
+msgstr "Aktivitetstyp"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
+msgid ""
+"Add members to automatically assign their documents to this sales team. You "
+"can only be member of one team."
 msgstr ""
 
 #. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "Amerika"
+
+#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Archived"
 msgstr "Arkiverad"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_type:0
-msgid "Bar"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal bilagor"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:269
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Stor gullig knapp :)"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
-msgid "Channel Leader"
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Cannot delete default team \"%s\""
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Channel Members"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
-msgid "Channel Type"
-msgstr ""
+msgstr "Kanalmedlemmar"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
@@ -105,11 +132,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_model
-msgid "Content"
-msgstr "Innehåll"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
 msgstr "Skapad av"
@@ -125,29 +147,20 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Dashboard"
-msgstr "Anslagstavla"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Översiktsknapp"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Day"
-msgstr "Dag"
+msgstr "Översikts datagraf"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Define a new sales channel"
+msgid "Define a new sales team"
 msgstr ""
 
 #. module: sales_team
@@ -156,15 +169,20 @@ msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Europa"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "Favoritmedlemmar"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
-msgstr ""
+msgstr "Favoritteam att visa i översikten och lätt nå."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -191,24 +209,9 @@ msgid "Followers (Partners)"
 msgstr "Följare (kontakter)"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Graph"
-msgstr "Diagram"
-
-#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Group By..."
-msgstr "Gruppera efter"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_group
-msgid "Group by"
-msgstr "Gruppera efter"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_group
-msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "Gruppera efter..."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
@@ -216,12 +219,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 "Om den är markerad så finns det meddelanden som kräver din uppmärksamhet."
@@ -235,21 +234,16 @@ msgstr ""
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If set, this sales channel will be used for sales and assignations related "
-"to this partner"
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
 msgid ""
-"If the active field is set to false, it will allow you to hide the sales "
-"channel without removing it."
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-msgid "Invoices"
-msgstr "Fakturor"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -262,11 +256,6 @@ msgid "Last Modified on"
 msgstr "Senast redigerad"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "Last Month"
-msgstr "Sista månaden"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
@@ -277,24 +266,9 @@ msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "Last Week"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
+msgid "Main Attachment"
 msgstr ""
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "Last Year"
-msgstr ""
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_type:0
-msgid "Line"
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Manager"
-msgstr "Chef"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -307,29 +281,13 @@ msgid "Messages"
 msgstr "Meddelanden"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Month"
-msgstr "Månad"
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "My Favorites"
-msgstr ""
-
-#. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:255
-#, python-format
-msgid "Not Defined"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Antal åtgärder"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: sales_team
@@ -348,27 +306,9 @@ msgid "Number of unread messages"
 msgstr "Antal olästa meddelanden"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-msgid "Pipeline"
-msgstr "Kanal"
-
-#. module: sales_team
-#: selection:crm.team,team_type:0
+#: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Kassa"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__reply_to
-msgid "Reply-To"
-msgstr "Svar till"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-#: model:crm.team,name:sales_team.team_sales_department
-#: selection:crm.team,team_type:0
-#: model:ir.model.fields,field_description:sales_team.field_res_users__group_sales_team_user
-msgid "Sales"
-msgstr "Försäljning"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -377,50 +317,36 @@ msgstr "Försäljning"
 #: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Channel"
-msgstr ""
+msgid "Sales Team"
+msgstr "Säljlag"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-msgid "Sales Channel Dashboard"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Sales Team name..."
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
 msgid ""
-"Sales Channel the user is member of. Used to compute the members of a sales "
-"channel through the inverse one2many"
+"Sales Team the user is member of. Used to compute the members of a Sales "
+"Team through the inverse one2many"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-msgid "Sales Channels"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
-msgid "Sales Team"
+msgid "Sales Teams"
 msgstr "Säljlag"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Salesperson"
-msgstr "Säljare"
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Salesteam name..."
-msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
-msgstr "Sökning säljlag"
+msgstr "Sök säljteam"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_period
-msgid "Scale"
-msgstr "Våg"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
+msgid "Sequence"
+msgstr "Sekvens"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -430,9 +356,10 @@ msgstr "Inställningar"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Visa i översikt"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "Gruppledare"
@@ -440,51 +367,23 @@ msgstr "Gruppledare"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
-msgstr "Lagmedlemmar"
+msgstr "Teammedlemmar"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_pipelines_act
+msgid "Team Pipelines"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr ""
+msgstr "Färg på kanalen"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
-msgid ""
-"The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales channel"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
-msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
-msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
-msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__team_type
-msgid ""
-"The type of this channel, it will define the resources this channel uses."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_type
-msgid "Type"
-msgstr "Typ"
-
-#. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:146
-#: code:addons/sales_team/models/crm_team.py:173
+#: code:addons/sales_team/models/crm_team.py:0
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Undefined graph model for Sales Channel: %s"
+msgid "Undefined graph model for Sales Team: %s"
 msgstr ""
 
 #. module: sales_team
@@ -499,10 +398,16 @@ msgstr "Räknare olästa meddelanden"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales channels to organize your sales departments. \n"
-"                    Each channel will work with a separate pipeline."
+"Use Sales Teams to organize your sales departments.\n"
+"                    Each team will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User's Sales Team"
 msgstr ""
 
 #. module: sales_team
@@ -516,38 +421,19 @@ msgid "User: Own Documents Only"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users__group_sales_team_user
-msgid ""
-"User: Own Documents Only: the user will have access to his own data in the sales application.\n"
-"User: All Documents: the user will have access to all records of everyone in the sales application.\n"
-"Manager: the user will have an access to the sales configuration as well as statistic reports."
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Användare"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
-#: selection:crm.team,team_type:0
 msgid "Website"
 msgstr "Webbplats"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-msgid "Website Messages"
-msgstr "Webbplatsmeddelanden"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-msgid "Website communication history"
-msgstr "Webbplatsens kommunikationshistorik"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Week"
-msgstr "Vecka"
+#: model:crm.team,name:sales_team.ebay_sales_team
+msgid "eBay"
+msgstr ""
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads

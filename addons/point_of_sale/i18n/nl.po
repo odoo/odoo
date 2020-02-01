@@ -11,16 +11,16 @@
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:01+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
-msgstr ""
+msgstr "<p>Beste %s,<br/>hier is uw electronische ticket voor het %s.</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -403,7 +403,7 @@ msgstr "Activiteitsfase"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Actual in Cash"
-msgstr ""
+msgstr "In kas"
 
 #. module: point_of_sale
 #. openerp-web
@@ -497,7 +497,7 @@ msgstr "Sta globale kortingen op orders toe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
 msgid "Allowed Pricelists"
-msgstr ""
+msgstr "Toegestane prijslijsten"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -538,6 +538,7 @@ msgid "Another session is already opened for this point of sale."
 msgstr "Er is al een andere sessie geopend voor deze kassa."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
 msgstr "Gearchiveerd"
@@ -630,7 +631,7 @@ msgstr "Backspace"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Balance control"
-msgstr ""
+msgstr "Saldocontrole"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -928,6 +929,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Kies een specifieke fiscale positie op het order afhankelijk van het soort "
+"klant (vrijstelling van BTW, ter plaatse of afhaling, enzovoort)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -966,7 +969,7 @@ msgstr "Verbinding verbroken"
 #: code:addons/point_of_sale/static/src/js/chrome.js:0
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the IoT Box"
-msgstr "Cliënt scherm niet ondersteund. Gelieve de IoTBox te updaten"
+msgstr "Cliënt scherm niet ondersteund. Update de IoTBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1151,7 +1154,7 @@ msgstr "Conversie ratio"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
+msgstr "Conversie ratio van bedrijfsvaluta naar order valuta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2019,7 +2022,7 @@ msgstr "Geïntegreerde kaart betalingen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
-msgstr ""
+msgstr "Tussenrekening"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -2206,7 +2209,7 @@ msgstr "Laatste sessie afsluiting kas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
 msgid "Last Session Closing Cashbox"
-msgstr ""
+msgstr "Laatste sessie afsluiting kassa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
@@ -2652,7 +2655,7 @@ msgstr "Open kassa menu"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "Open kassasessies die deze betaalmethode gebruiken."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2716,7 +2719,7 @@ msgstr "Order"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Order %s"
-msgstr ""
+msgstr "Order %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3029,7 +3032,7 @@ msgstr "Pick fouten"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Picking kassa"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3050,14 +3053,14 @@ msgstr "Bevestig groot aantal aub"
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the IoT Box is still connected."
-msgstr "Gelieve te controleren of de IoT box nog steeds verbonden is."
+msgstr "Controleer of de IoT box nog steeds verbonden is."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
-msgstr "Gelieve te controleren of de printer nog steeds verbonden is."
+msgstr "Controleer of de printer nog steeds verbonden is."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -3066,15 +3069,15 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
-"Gelieve alle kassa sessies in deze periode te sluiten voordat u ze afsluit. "
-"De volgende sessies zijn nog geopend: %s"
+"Sluit alle kassasessies in deze periode voordat u ze afsluit. De volgende "
+"sessies zijn nog geopend: %s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr "U dient een betalingsmethodes configureren in uw kassa"
+msgstr "Stel een betalingsmethode in, in uw kassa"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3212,7 +3215,7 @@ msgstr "Kassa factuur rapport"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Kassa maak betaling wizard"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -3607,7 +3610,7 @@ msgstr "Klaar om uw <b>kassa</b> te lanceren?"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr ""
+msgstr "Kassabon %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -3707,7 +3710,7 @@ msgstr "Beperk het aanpassen van prijzen tot managers"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "CV"
+msgstr "Hervatten"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3967,7 +3970,7 @@ msgstr "Sessies"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
-msgstr ""
+msgstr "Afsluitbedrag ingeven"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3979,7 +3982,7 @@ msgstr "Klant instellen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
 msgid "Set Default Cash Opening"
-msgstr ""
+msgstr "Stel standaard opening in"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
@@ -4078,6 +4081,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Sommige orders konden vanwege configuratiefouten niet naar de server worden "
+"verzonden. U kunt de kassa verlaten, maar de sessie niet afsluiten voordat "
+"het probleem is opgelost."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4088,6 +4094,9 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Sommige bestellingen konden niet bij de server worden ingediend vanwege "
+"problemen met de internetverbinding. U kunt het kassa verlaten, maar de "
+"sessie niet afsluiten voordat het probleem is opgelost."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4691,6 +4700,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__allowed_pricelist_ids
 msgid "This is a technical field used for the domain of pricelist_id."
 msgstr ""
+"Dit is een technisch veld dat gebruikt wordt voor het domein van de "
+"pricelist_id."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -4822,6 +4833,7 @@ msgstr "Om nieuwe orders te registreren moet u een nieuwe sessie starten."
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
 msgstr ""
+"Om producten te retourneren moet u een kassasessie openen in de kassa %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -4842,7 +4854,7 @@ msgstr "Totale korting"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Totaalbedrag betalingen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -4928,6 +4940,8 @@ msgid ""
 "Unable to modify this PoS Configuration because there is an open PoS Session"
 " based on it."
 msgstr ""
+"Kon de kassa configuratie niet aanpassen omdat er al een kassa sessie open "
+"is die hierop gebaseerd is."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5184,6 +5198,8 @@ msgid ""
 "You are not allowed to change the cash control status while a session is "
 "already opened."
 msgstr ""
+"U mag de status van de kassacontrole niet wijzigen wanneer er al een sessie "
+"geopend is."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5192,12 +5208,15 @@ msgid ""
 "You can't validate a bank statement that is used in an opened Session of a "
 "Point of Sale."
 msgstr ""
+"U kan een bankafschrift niet afletteren dat gebruikt wordt in een geopende "
+"sessie of kassa."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
 msgstr ""
+"U kan geen sessie aanmaken voor de boekhoudkundige vergrendelingsdatum."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5217,6 +5236,8 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr ""
+"U kan geen contacten verwijderen die zich in actieve kassasessies bevinden. "
+"Sluit de sessie(s) %s eerst."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0

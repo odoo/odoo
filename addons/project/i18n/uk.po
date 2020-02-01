@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:01+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -536,7 +536,9 @@ msgstr ""
 "прибутків на вашому проекті."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "Заархівовано"
@@ -2968,6 +2970,12 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
+msgid "The parent task belongs to a company you do not have access to."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
@@ -2976,6 +2984,12 @@ msgstr ""
 "Проект не може бути спільним з одержувачем(ами), оскільки конфіденційність "
 "проекту занадто обмежена. Установіть конфіденційність на \"Видимий доданим "
 "клієнтами\", щоб зробити його доступною для одержувачів."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The subtasks belong to a company you do not have access to."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -241,13 +241,14 @@ class Channel(models.Model):
         """ Compute statistics based on all existing slide types """
         slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
         keys = ['nbr_%s' % slide_type for slide_type in slide_types]
-        result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
+        result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
-            result[cid]['total_slides'] = 0
-            for slide_type in slide_types:
-                result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
-                result[cid]['total_slides'] += result[cid]['nbr_%s' % slide_type]
+            slide_type = res_group.get('slide_type')
+            if slide_type:
+                slide_type_count = res_group.get('__count', 0)
+                result[cid]['nbr_%s' % slide_type] = slide_type_count
+                result[cid]['total_slides'] += slide_type_count
         return result
 
     def _compute_rating_stats(self):

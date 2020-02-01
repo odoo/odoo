@@ -6,21 +6,21 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -504,6 +504,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender "
+"weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -841,6 +843,7 @@ msgid "Apply"
 msgstr "Toepassen"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
 msgid "Archived"
@@ -2227,11 +2230,6 @@ msgid "Exception"
 msgstr "Fout"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
@@ -3508,7 +3506,7 @@ msgstr "Bericht verstuurd in \""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Message should be a valid Message instance"
-msgstr ""
+msgstr "Bericht moet een geldige Bericht instantie zijn"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
@@ -4574,6 +4572,7 @@ msgstr "Even geduld"
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Please wait..."
 msgstr "Even geduld..."
@@ -5822,6 +5821,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maken': maak een nieuw record met nieuwe waarden\n"
+"- 'Update een record': update de waarden van een record\n"
+"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail verzenden': automatisch een e-mail verzenden (Discuss)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Discuss)\n"
+"- 'Maak volgende activiteit': maak een activiteit aan (Discuss)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6129,8 +6136,8 @@ msgid ""
 "sent. Please contact an administrator to fix this issue."
 msgstr ""
 "Weergave \"mail.mail_channel_send_guidelines\" is niet gevonden. Er is geen "
-"e-mail verzonden. Gelieve een administrator te contacteren om dit probleem "
-"op te lossen."
+"e-mail verzonden. Neem contact op met een beheerder om dit probleem op te "
+"lossen."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6294,6 +6301,13 @@ msgstr "U bent in kanaal <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "U bent niet gemachtigd om hier bijlages toe te voegen."
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid ""
@@ -6449,8 +6463,8 @@ msgid ""
 msgstr ""
 "Uw wachtwoord is het standaard (admin)! Als dit systeem wordt blootgesteld "
 "aan niet-vertrouwde gebruikers, is het belangrijk om het om "
-"veiligheidsredenen onmiddellijk te wijzigen. Ik zal je er blijven over "
-"zeuren ;-) !"
+"veiligheidsredenen onmiddellijk te wijzigen. Ik zal je er over blijven "
+"zeuren!"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0
@@ -6684,6 +6698,8 @@ msgstr "regel:"
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on document creation"
 msgstr ""
+"reageer op een ontbrekend document (%s,%s) en val terug op aanmaken van "
+"nieuw document"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6692,6 +6708,8 @@ msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
 msgstr ""
+"reageer op model %s dat geen document update toestaat, terugval op document "
+"aanmaken"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

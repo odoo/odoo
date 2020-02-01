@@ -269,7 +269,7 @@ class TestTranslationFlow(common.TransactionCase):
         """ Ensure export+import gives the same result as loading a language """
         # load language and generate missing terms to create missing empty terms
         with mute_logger('odoo.addons.base.models.ir_translation'):
-            self.env["base.language.install"].create({'lang': 'fr_FR'}).lang_install()
+            self.env["base.language.install"].create({'lang': 'fr_FR', 'overwrite': True}).lang_install()
         self.env["base.update.translations"].create({'lang': 'fr_FR'}).act_update()
 
         translations = self.env["ir.translation"].search([

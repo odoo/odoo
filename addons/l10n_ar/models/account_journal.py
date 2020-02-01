@@ -21,12 +21,12 @@ class AccountJournal(models.Model):
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """
         return [
-            ('II_IM', 'Pre-printed Invoice'),
-            ('RLI_RLM', 'Online Invoice'),
-            ('BFERCEL', 'Electronic Fiscal Bond - Online Invoice'),
-            ('FEERCELP', 'Export Voucher - Billing Plus'),
-            ('FEERCEL', 'Export Voucher - Online Invoice'),
-            ('CPERCEL', 'Product Coding - Online Voucher'),
+            ('II_IM', _('Pre-printed Invoice')),
+            ('RLI_RLM', _('Online Invoice')),
+            ('BFERCEL', _('Electronic Fiscal Bond - Online Invoice')),
+            ('FEERCELP', _('Export Voucher - Billing Plus')),
+            ('FEERCEL', _('Export Voucher - Online Invoice')),
+            ('CPERCEL', _('Product Coding - Online Voucher')),
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
@@ -48,7 +48,7 @@ class AccountJournal(models.Model):
                 '13': ['C', 'E'],
             },
             'received': {
-                '1': ['A', 'C', 'M', 'I'],
+                '1': ['A', 'B', 'C', 'M', 'I'],
                 '3': ['B', 'C', 'I'],
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
@@ -164,11 +164,15 @@ class AccountJournal(models.Model):
 
     @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):
-        missing_pos_number = self.filtered(
-            lambda x: x.type == 'sale' and x.l10n_latam_use_documents and x.company_id.country_id == self.env.ref('base.ar')
-                      and x.l10n_ar_afip_pos_number == 0)
-        if missing_pos_number:
-            raise ValidationError(_('Please define a valid AFIP POS number'))
+        to_review = self.filtered(
+            lambda x: x.type == 'sale' and x.l10n_latam_use_documents and
+            x.company_id.country_id == self.env.ref('base.ar'))
+
+        if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number == 0):
+            raise ValidationError(_('Please define an AFIP POS number'))
+
+        if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number > 99999):
+            raise ValidationError(_('Please define a valid AFIP POS number (5 digits max)'))
 
     @api.onchange('l10n_ar_afip_pos_system')
     def _onchange_l10n_ar_afip_pos_system(self):
@@ -189,5 +193,4 @@ class AccountJournal(models.Model):
         we add or not a prefix to identify sales journal.
         """
         if self.type == 'sale' and self.l10n_ar_afip_pos_number:
-            pos_num = str(self.l10n_ar_afip_pos_number)
-            self.code = pos_num if len(pos_num) > 4 else _('S') + "%04d" % self.l10n_ar_afip_pos_number
+            self.code = "%05i" % self.l10n_ar_afip_pos_number

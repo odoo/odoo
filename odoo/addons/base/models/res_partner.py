@@ -135,6 +135,14 @@ class Partner(models.Model):
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
+    @api.model
+    def default_get(self, default_fields):
+        """Add the company of the parent as default if we are creating a child partner."""
+        values = super().default_get(default_fields)
+        if 'parent_id' in default_fields and values.get('parent_id'):
+            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+        return values
+
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}
 
@@ -510,6 +518,8 @@ class Partner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
+                if partner.child_ids:
+                    partner.child_ids.write({'company_id': company.id})
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.su:

@@ -788,7 +788,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.1,
+                'price_unit': 0.05,
                 'price_subtotal': 0.01,
                 'price_total': 0.01,
                 'debit': 0.01,
@@ -838,7 +838,10 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(self.invoice, [{'name': 'RINV/2019/0042'}])
 
-        invoice_copy = self.invoice.copy()
+        values = {
+            'invoice_date': self.invoice.invoice_date,
+        }
+        invoice_copy = self.invoice.copy(default=values)
         invoice_copy.post()
 
         self.assertRecordValues(invoice_copy, [{'name': 'RINV/2019/0043'}])

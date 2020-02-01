@@ -13,15 +13,15 @@
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -237,7 +237,7 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
-"<br>Er is een behoefte aangemaakt in <b>%s</b>en er wordt een regel "
+"<br>Er is een behoefte aangemaakt in <b>%s</b> en er wordt een regel "
 "geactiveerd om deze te vervullen."
 
 #. module: stock
@@ -733,17 +733,6 @@ msgid "All returned moves"
 msgstr "Alle retour mutaties"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"All the products currently reserved in the picking are already in a pack. "
-"Please add products to the picking to create a new pack."
-msgstr ""
-"Alle producten die momenteel in de levering zijn gereserveerd, zitten al in "
-"een verpakking. Voeg producten toe aan het verzamelen om een nieuw pakket te"
-" maken."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
 msgstr "Toegestane locatie"
@@ -797,11 +786,17 @@ msgstr ""
 "standaardroutes van het product."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Gearchiveerd"
@@ -2173,11 +2168,6 @@ msgstr ""
 "kan toegepast worden op fysieke, partner of virtuele locaties."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
 msgstr "Uitzondering(en) opgetreden in de picking:"
@@ -3481,7 +3471,7 @@ msgstr "Handmatige verwerking"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr "Manuele heraanvulling"
+msgstr "Handmatige aanvulling"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_config_settings__module_procurement_jit__0
@@ -4295,6 +4285,7 @@ msgstr "Geplande verplaatsing"
 #, python-format
 msgid "Please add 'Done' qantitites to the picking to create a new pack."
 msgstr ""
+"Voeg 'Gereed' aantallen toe aan de picking om een nieuw pakket te maken."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -6851,7 +6842,7 @@ msgstr "Producthoeveelheid bijwerken"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Update Quantity"
-msgstr "Update hoeveelheid"
+msgstr "Hoeveelheid bijwerken"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__2
@@ -7079,6 +7070,7 @@ msgstr "Waarschuwing!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
 msgstr "Waarschuwingen"
 
@@ -7156,8 +7148,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
-"Wanneer producten nodig zijn in <b>%s</b>,<br/> <b> worden %s</b>aangemaakt "
-"in<b>%s</b> om de voorraad aan te vullen."
+"Wanneer producten nodig zijn in <b>%s</b>,<br/> <b> worden %s</b> aangemaakt"
+" in <b>%s</b> om de voorraad aan te vullen."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -7730,3 +7722,9 @@ msgstr "verwerkt in plaats van"
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""

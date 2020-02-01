@@ -43,6 +43,10 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     commitChanges: function () {
         var self = this;
+        if (config.isDebug() && this.mode === 'edit') {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.mode === 'readonly' || !this.isRendered) {
             return this._super();
         }
@@ -131,7 +135,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _renderEdit: function () {
-        this._isFromInline = !this.value;
+        this._isFromInline = !!this.value;
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }

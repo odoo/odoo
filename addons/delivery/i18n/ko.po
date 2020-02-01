@@ -8,7 +8,7 @@
 # Linkup <link-up@naver.com>, 2019
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Mark Lee <odoos@soti.33mail.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    지금 Odoo Enterprise를 구입하여 더 많은 공급자를 확보하세요.\n"
+"                    지금 Odoo 기업용을 구입하여 더 많은 공급자를 확보하세요.\n"
 "                </p>"
 
 #. module: delivery
@@ -64,12 +64,12 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-danger\">No debug</span>"
-msgstr "<span class=\"text-danger\">debug 없음</span>"
+msgstr "<span class=\"text-danger\">디버그 없음</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr "<span class=\"text-success\">Debug 요청</span>"
+msgstr "<span class=\"text-success\">디버그 요청</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -157,7 +157,7 @@ msgstr "무료 배송 혜택을 받을 주문 금액을 회사가 사용하는 �
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "보관"
+msgstr "보존"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -408,6 +408,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
 msgstr ""
+"예상 비용 : 고객에게 예상 운송 비용이 청구됩니다.\n"
+"실제 비용 : 고객에게 실제 운송 비용이 청구되고 배송 비용이 납품 후 SO로 업데이트됩니다."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -736,12 +738,12 @@ msgstr "실제 비용"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "반송 라벨"
+msgstr "반송 이름표"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr "고객 포털에서 반송 라벨을 사용할 수 있음"
+msgstr "고객 포털에서 반송 이름표를 사용할 수 있음"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -843,7 +845,7 @@ msgstr "선적 중량 :"
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
-msgstr ""
+msgstr "국제 운송 및 상품 신고를 위한 표준화된 코드. 현재는 FedEx 운송업체에서만 사용합니다."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -866,12 +868,12 @@ msgstr "게시물"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr ""
+msgstr "반송 이름표는 고객이 고객 포털에서 다운로드할 수 있습니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr "반송 라벨은 배송 시 자동으로 생성됩니다."
+msgstr "반송 이름표는 배송 시 자동으로 생성됩니다."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
@@ -883,7 +885,7 @@ msgstr " 주문량이 %.2f를 초과하여 선적이 무료입니다."
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
-msgstr ""
+msgstr "선적료는 배송이 완료되면 설정됩니다."
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
@@ -929,7 +931,7 @@ msgstr "패키지의 총 중량"
 msgid ""
 "Total weight of the packages and products which are not in a package. That's"
 " the weight used to compute the cost of the shipping."
-msgstr ""
+msgstr "패키지에 포함되지 않은 제품과 패키지의 총 중량입니다. 배송비를 계산하는 데 사용되는 무게입니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight

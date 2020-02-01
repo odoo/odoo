@@ -15,6 +15,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
+        self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):

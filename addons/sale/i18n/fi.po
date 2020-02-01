@@ -17,7 +17,6 @@
 # Martin Trigaux, 2019
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
 # Jukka Paulin <jukka.paulin@gmail.com>, 2019
 # Marko Happonen <marko.happonen@sprintit.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
@@ -30,14 +29,15 @@
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -392,7 +392,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Vahvistusviesti</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2149,7 +2149,7 @@ msgstr "Media"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "Kauppian tilin ID"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
@@ -3685,6 +3685,14 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
+"%s\n"
+"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
 msgid ""
 "The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
@@ -3716,6 +3724,12 @@ msgstr ""
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "The ordered quantity has been updated."
 msgstr ""
 
 #. module: sale

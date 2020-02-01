@@ -46,6 +46,7 @@ class SaleCoupon(models.Model):
     ]
 
     def _compute_expiration_date(self):
+        self.expiration_date = 0
         for coupon in self.filtered(lambda x: x.program_id.validity_duration > 0):
             coupon.expiration_date = (coupon.create_date + relativedelta(days=coupon.program_id.validity_duration)).date()
 

@@ -378,6 +378,7 @@
                                                 <field name="email" widget="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
+                                                <field name="company_id" invisible="1"/>
                                             </group>
                                             <group colspan="1">
                                                 <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'image_preview': 'image_128'}"/>
@@ -398,7 +399,7 @@
                                 </group>
                                 <group name="misc" string="Misc">
                                     <field name="ref" string="Reference"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" force_save="1"/>
                                     <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>
                                 </group>
                             </group>
@@ -467,7 +468,7 @@
                         filter_domain="['|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self)]"/>
                     <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
-                    <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', '=', self)]"/>
+                    <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]"/>
                     <field name="category_id" string="Tag" filter_domain="[('category_id', 'child_of', self)]"/>
                     <field name="user_id"/>
                     <separator/>

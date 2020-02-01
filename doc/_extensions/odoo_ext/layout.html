@@ -19,6 +19,11 @@
   {{ super() }}
 {%- endblock -%}
 
+{%- block linktags -%}
+    <link rel="canonical" href="{{ canonical }}" />
+  {{ super() }}
+{%- endblock -%}
+
 {%- block sidebar1 -%}{%- endblock -%}
 {%- block sidebar2 -%}{%- endblock -%}
 {%- block relbar1 -%}{%- endblock -%}

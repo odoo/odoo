@@ -219,7 +219,7 @@ class Message(models.Model):
 
         ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
 
-        notification = {'type': 'mark_as_read', 'message_ids': notifications}
+        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids]}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids

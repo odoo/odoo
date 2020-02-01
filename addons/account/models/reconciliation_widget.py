@@ -62,7 +62,7 @@ class AccountReconciliation(models.AbstractModel):
                 result
             :param search_str: optional search (can be the amout, display_name,
                 partner name, move line name)
-            :param offset: offset of the search result (to display pager)
+            :param offset: useless but kept in stable to preserve api
             :param limit: number of the result to search
             :param mode: 'rp' for receivable/payable or 'other'
         """
@@ -88,15 +88,13 @@ class AccountReconciliation(models.AbstractModel):
                 "account_move_line".date_maturity ASC,
                 "account_move_line".id ASC
             {limit_str}
-            {offset_str}
         '''.format(
             from_clause=from_clause,
             where_str=where_clause and (" WHERE %s" % where_clause) or '',
             amount=st_line.amount,
             limit_str=limit and ' LIMIT %s' or '',
-            offset_str=offset and ' OFFSET %s' or '',
         )
-        params = where_clause_params + (limit and [limit] or []) + (offset and [offset] or [])
+        params = where_clause_params + (limit and [limit] or [])
         self.env['account.move'].flush()
         self.env['account.move.line'].flush()
         self.env['account.bank.statement'].flush()
@@ -282,7 +280,7 @@ class AccountReconciliation(models.AbstractModel):
 
         domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, search_str)
         recs_count = Account_move_line.search_count(domain)
-        lines = Account_move_line.search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
+        lines = Account_move_line.search(domain, limit=limit, order="date_maturity desc, id desc")
         if target_currency_id:
             target_currency = Currency.browse(target_currency_id)
         else:
@@ -617,7 +615,18 @@ class AccountReconciliation(models.AbstractModel):
     @api.model
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
-        domain = ['&', '&', ('reconciled', '=', False), ('account_id', '=', account_id), '|', ('move_id.state', '=', 'posted'), '&', ('move_id.state', '=', 'draft'), ('move_id.journal_id.post_at', '=', 'bank_rec')]
+        domain = [
+            '&',
+                '&',
+                    ('reconciled', '=', False),
+                    ('account_id', '=', account_id),
+                '|',
+                    ('move_id.state', '=', 'posted'),
+                    '&',
+                        ('move_id.state', '=', 'draft'),
+                        ('move_id.journal_id.post_at', '=', 'bank_rec'),
+            ]
+        domain = expression.AND([domain, [('balance', '!=', 0.0)]])
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         if excluded_ids:
@@ -798,6 +807,8 @@ class AccountReconciliation(models.AbstractModel):
             AND move_b.journal_id = journal_b.id
             AND (move_b.state = 'posted' OR (move_b.state = 'draft' AND journal_b.post_at = 'bank_rec'))
             AND a.amount_residual = -b.amount_residual
+            AND a.balance != 0.0
+            AND b.balance != 0.0
             AND NOT a.reconciled
             AND a.account_id = %s
             AND (%s IS NULL AND b.account_id = %s)

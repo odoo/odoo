@@ -8,15 +8,15 @@
 # Martin Trigaux, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,7 @@ msgstr "# 회의"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "% (Estimated by Odoo)"
-msgstr "% (Odoo 예상)"
+msgstr "% (Odoo 추정)"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -197,7 +197,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> at </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2\"> at </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -298,6 +298,7 @@ msgstr "중복된 항목 삭제"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -386,7 +387,7 @@ msgstr "CRM 단계"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
-msgstr "일정 행사"
+msgstr "행사 일정표"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -424,7 +425,7 @@ msgstr "채널"
 msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
-msgstr "수신된 요청을 영업 기회로 변환하고 영업 사원에게 배정하기 전에 리드로 필터링하고 한정하려면 이 상자를 선택하십시오."
+msgstr "수신된 요청을 영업 기회로 변환하고 영업 사원에게 배정하기 전에 영업제안으로 필터링하고 한정하려면 이 상자를 선택하십시오."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
@@ -453,7 +454,7 @@ msgstr "시"
 msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
-msgstr "리드/영업 기회 범주를 다음과 같이 분류하고 분석하십시오 : 교육, 서비스"
+msgstr "영업제안/영업 기회 범주를 다음과 같이 분류하고 분석하십시오 : 교육, 서비스"
 
 #. module: crm
 #. openerp-web
@@ -469,7 +470,7 @@ msgstr "<b>영업 기회를 추가</b>하려면 여기를 클릭하십시오."
 msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
-msgstr "<b> 첫 번째 영업 기회를 작성하여 </b> 파이프 라인에 추가하려면 여기를 클릭하십시오."
+msgstr "<b> 첫 번째 영업 기회를 작성하여 </b> 순서도에 추가하려면 여기를 클릭하십시오."
 
 #. module: crm
 #. openerp-web
@@ -492,7 +493,7 @@ msgstr "마감일"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "마감/폐기된 리드는 영업 기회로 전환될 수 없습니다."
+msgstr "마감/폐기된 영업제안은 영업 기회로 전환될 수 없습니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -529,7 +530,7 @@ msgstr "완료일"
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정"
+msgstr "설정 구성"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
@@ -591,7 +592,7 @@ msgstr "변환 날짜"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "리드에서 영업 기회로 변환된 날짜"
+msgstr "영업제안에서 영업 기회로 변환된 날짜"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -601,12 +602,12 @@ msgstr "변환 옵션"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr "리드를 영업 기회로 전환 (대량)"
+msgstr "영업제안를 영업 기회로 전환 (대량)"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr "리드를 영업 기회로 전환 (대량이 아님)"
+msgstr "영업제안를 영업 기회로 전환 (대량이 아님)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -666,7 +667,7 @@ msgstr "국가"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead_website
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "웹사이트 트래픽에서 리드 / 기회 창출"
+msgstr "웹사이트 트래픽에서 영업제안/기회 창출"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -676,14 +677,14 @@ msgstr "영업 기회 작성"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr ""
+msgstr "기회 순서도에서 직접 영업제안 발굴 요청을 작성하십시오."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__create
 #: model:ir.model.fields.selection,name:crm.selection__crm_partner_binding__action__create
 msgid "Create a new customer"
-msgstr "신규 고객 작성"
+msgstr "신규 고객 만들기"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -691,7 +692,7 @@ msgstr "신규 고객 작성"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr "신규 영업제안 작성"
+msgstr "새 영업제안 만들기"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -702,24 +703,24 @@ msgstr "이 고객과 관련된 새로운 영업 기회 작성"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Create an opportunity in your pipeline"
-msgstr "귀하의 파이프라인에서 영업 기회 작성"
+msgstr "귀하의 순서도에서 영업 기회 작성"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Create leads from incoming emails"
-msgstr "수신메일에서 영업기회 생성"
+msgstr "수신메일에서 영업제안 만들기"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create new tags for your opportunities"
-msgstr "영업건에 새로운 태그 생성"
+msgstr "영업기회에 새로운 태그 만들기"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and track your opportunities."
-msgstr ""
+msgstr "기회를 보다 잘 관리하고 추적 할 수 있도록 비즈니스(제품 구조, 판매 유형 등)에 맞는 태그를 만듭니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -763,7 +764,7 @@ msgstr "작성일"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr "Crm : 나의 파이프 라인"
+msgstr "Crm : 나의 순서도"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_currency
@@ -815,7 +816,7 @@ msgstr "마감일"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_alias_prefix
 msgid "Default Alias Name for Leads"
-msgstr "리드의 기본 별칭 이름"
+msgstr "영업제안의 기본 별칭 이름"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -913,7 +914,7 @@ msgstr "이메일 참조"
 msgid ""
 "Email sent to <strong>${email}</strong> generate opportunities in your "
 "pipeline.<br>"
-msgstr "<strong>${email}</strong>에 이메일을 보내면 파이프 라인에 영업 기회가 생깁니다.<br>"
+msgstr "<strong>${email}</strong>에 이메일을 보내면 순서도에 영업 기회가 생깁니다.<br>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -923,37 +924,37 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
-"해당 주소로 수신된 이메일은 아직 영업 팀에 할당되지 않은 새로운 리드를 생성합니다. 이것은 영업 기회로 바꿀 때 만들어질 수 있습니다."
-" 수신된 전자 메일은 특정 영업 팀에 자동으로 할당될 수 있습니다. 이렇게 하려면 영업 팀에 전자 메일 별칭을 설정합니다."
+"해당 주소로 수신된 이메일은 아직 영업 팀에 할당되지 않은 새로운 영업제안을 생성합니다. 이것은 영업 기회로 바꿀 때 만들어질 수 "
+"있습니다. 수신된 전자 메일은 특정 영업 팀에 자동으로 할당될 수 있습니다. 이렇게 하려면 영업 팀에 전자 메일 별칭을 설정합니다."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr ""
+msgstr "모든 영업제안을 자동으로 강화"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr ""
+msgstr "영업제안을 자동으로 강화"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr ""
+msgstr "수요에 한해 영업제안 강화"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address"
-msgstr ""
+msgstr "그들의 이메일 주소를 기반으로 회사 데이터로 영업제안을 자동으로 강화"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead_enrich
 msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
-msgstr ""
+msgstr "그들의 이메일 주소를 기반으로 회사 데이터를 사용하여 영업제안을 자동으로 강화하십시오."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -966,12 +967,6 @@ msgstr "이 단계의 내부 요구 사항을 여기에 입력하십시오 (예 
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
 msgstr "영업 기회를 얻기까지의 예상일"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Exception Activities"
-msgstr "예외 활동"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1010,7 +1005,7 @@ msgstr "필드"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__name
 msgid "Field Label"
-msgstr "필드 라벨"
+msgstr "필드 이름표"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
@@ -1025,7 +1020,7 @@ msgstr "확률 계산에 사용되는 필드 :"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
-msgstr "파이프라인 접기"
+msgstr "순서도 접기"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1184,7 +1179,7 @@ msgstr "가져 오기 및 동기화"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr "리드와 영업 기회용 서식 가져오기"
+msgstr "영업제안와 영업 기회용 서식 가져오기"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1240,7 +1235,7 @@ msgstr "칸반 상태"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr "Kpi Crm 리드 생성 값"
+msgstr "Kpi Crm 영업제안 생성 값"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
@@ -1328,22 +1323,22 @@ msgstr "지연된 활동"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__lead_count
 msgid "Lead Count"
-msgstr "리드 수"
+msgstr "영업제안 수"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "영업제안 강화"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Generation"
-msgstr "리드 생성"
+msgstr "영업제안 생성"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1363,7 +1358,7 @@ msgstr "영업제안 점수 갱신 빈도 필드"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr ""
+msgstr "문자열에서 영업제안 점수 갱신 빈도 필드"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
@@ -1378,13 +1373,13 @@ msgstr "문자열에 있는 영업제안 점수 매기기 시작 날짜"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Lead Tag"
-msgstr "리드  태그"
+msgstr "영업제안  태그"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr "리드  태그"
+msgstr "영업제안  태그"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1411,7 +1406,7 @@ msgstr "영업제안/영업기회"
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 msgid "Leads"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -1419,7 +1414,7 @@ msgstr "리드"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 msgid "Leads Analysis"
-msgstr "리드 분석"
+msgstr "영업제안 분석"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
@@ -1428,13 +1423,13 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"리드 분석을 통해 처리 지체나 주당 리드 수와 같은 다양한 CRM 관련 정보를 확인할 수 있습니다. 다양한 그룹별로 리드 분석을 정렬하여"
-" 정확한 세분화된 분석을 얻을 수 있습니다."
+"영업제안 분석을 통해 처리 지체나 주당 영업제안 수와 같은 다양한 CRM 관련 정보를 확인할 수 있습니다. 다양한 그룹별로 영업제안 "
+"분석을 정렬하여 정확한 세분화된 분석을 얻을 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "리드 생성"
+msgstr "영업제안 생성"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -1444,7 +1439,7 @@ msgstr "영업제안 또는 기회"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
-msgstr "나에게 배정된 리드"
+msgstr "나에게 배정된 영업제안"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1456,17 +1451,17 @@ msgstr "할당되지 않은 영업제안"
 msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
-msgstr "선택한 중복 항목이 있는 리드입니다. 목록이 비어 있으면 중복 항목이 발견되지 않았음을 의미합니다."
+msgstr "선택한 중복 항목이 있는 영업제안입니다. 목록이 비어 있으면 중복 항목이 발견되지 않았음을 의미합니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr "중복 항목이 있는 리드(정보용)"
+msgstr "중복 항목이 있는 영업제안(정보용)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__opportunity_ids
 msgid "Leads/Opportunities"
-msgstr "리드/영업 기회"
+msgstr "영업제안/영업 기회"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1493,7 +1488,7 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"연결된 협력사(선택 사항). 일반적으로 리드를 변환할 때 생성됩니다. 협력사는 이름, TIN, 이메일 또는 내부 참조로 찾을 수 "
+"연결된 협력사(선택 사항). 일반적으로 영업제안을 변환할 때 생성됩니다. 협력사는 이름, TIN, 이메일 또는 내부 참조로 찾을 수 "
 "있습니다."
 
 #. module: crm
@@ -1503,6 +1498,7 @@ msgstr "수신메일의 참조 리스트"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1588,7 +1584,7 @@ msgstr "보통"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours"
-msgstr "미팅 일정'%s'<br> 제목: %s <br> 기간: %s 시간"
+msgstr "미팅 일정 '%s'<br> 제목 : %s <br> 기간 : %s 시간"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -1607,7 +1603,7 @@ msgstr "병합"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge Leads/Opportunities"
-msgstr "리드/영업 기회 병합"
+msgstr "영업제안/영업 기회 병합"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -1617,7 +1613,7 @@ msgstr "영업 기회 병합"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr "각 파트너의 기존 리드/영업 기회와 병합"
+msgstr "각 파트너의 기존 영업제안/영업 기회와 병합"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__name__merge
@@ -1629,13 +1625,13 @@ msgstr "기존 영업 기회와 병합"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Merged lead"
-msgstr "리드 병합"
+msgstr "영업제안 병합"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Merged leads"
-msgstr "리드 병합"
+msgstr "영업제안 병합"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1672,7 +1668,7 @@ msgstr "휴대전화"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr "나의 리드"
+msgstr "나의 영업제안"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1683,7 +1679,7 @@ msgstr "내 영업기회"
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr "나의 파이프라인"
+msgstr "나의 순서도"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead1
@@ -1693,7 +1689,7 @@ msgstr "신규"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads/Opportunities"
-msgstr "새로운 리드/영업 기회"
+msgstr "새로운 영업제안/영업 기회"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -1808,7 +1804,7 @@ msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
-"Odoo는 판매 계획을 추적하여 잠재 매출을 추적하고\n"
+"Odoo는 판매 순서도를 추적하여 잠재 매출을 추적하고\n"
 "                    향후 매출을 보다 정확하게 예측할 수 있도록 도와줍니다."
 
 #. module: crm
@@ -1862,7 +1858,7 @@ msgid ""
 " channels of the sales pipeline."
 msgstr ""
 "영업 기회 분석을 사용하면 예상 수익, 계획 비용, 마감 기한 또는 영업 기회 당 상호 작용 수와 같은 정보로 영업 기회에 즉시 접근 할"
-" 수 있습니다. 이 보고서는 주로 판매 관리자가 판매 파이프 라인의 채널을 정기적으로 검토하는 데 사용됩니다."
+" 수 있습니다. 이 보고서는 주로 판매 관리자가 판매 순서도의 채널을 정기적으로 검토하는 데 사용됩니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
@@ -2020,13 +2016,13 @@ msgstr "전화 품질"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 #, python-format
 msgid "Pipeline"
-msgstr "파이프라인"
+msgstr "순서도"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
 msgid "Pipeline Activities"
-msgstr "파이프라인 활동"
+msgstr "순서도 활동"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -2035,7 +2031,7 @@ msgstr "파이프라인 활동"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "파이프라인 분석"
+msgstr "순서도 분석"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2046,6 +2042,10 @@ msgid ""
 "                mainly used by the sales manager in order to do the periodic review with the\n"
 "                teams of the sales pipeline."
 msgstr ""
+"순서도 분석은 예상 수익, 계획된 비용, 마감 시간 누락 또는 \n"
+"                   기회당 상호 작용 수와 같은 정보를 통해 기회에 즉시 접근할 수 있도록 해준다.\n"
+"                   이 보고서는 판매 순서도 팀과 정기적으로 검토하기 위해 \n"
+"                   판매관리자에 의해 주로 사용됩니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2053,7 +2053,7 @@ msgstr ""
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
 "view."
-msgstr "목록보기에서 두 개 이상의 요소(리드 또는 영업 기회)를 선택하십시오."
+msgstr "목록보기에서 두 개 이상의 요소(영업제안 또는 영업 기회)를 선택하십시오."
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
@@ -2100,7 +2100,7 @@ msgstr "자격 요건 확인"
 msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
 " <b>CRM</b> app."
-msgstr "판매를 촉진할 준비가 되셨습니까? 귀하의 <b>파이프라인</b>은 여기 <b>CRM</b> 앱에서 찾을 수 있습니다."
+msgstr "판매를 촉진할 준비가 되셨습니까? 귀하의 <b>순서도</b>는 여기 <b>CRM</b> 앱에서 찾을 수 있습니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -2200,7 +2200,7 @@ msgstr "영업사원"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
-msgstr "리드 검색"
+msgstr "영업제안 검색"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -2211,7 +2211,7 @@ msgstr "영업 기회 검색"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "리드/영업 기회 선택"
+msgstr "영업제안/영업 기회 선택"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
@@ -2231,7 +2231,7 @@ msgstr "차량 관리"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr "영업 기회 파이프라인에 새 단계 설정"
+msgstr "영업 기회 순서도에 새 단계 설정"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -2242,7 +2242,7 @@ msgstr "환경 설정"
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr "리드 메뉴 표시"
+msgstr "영업제안 메뉴 표시"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2254,7 +2254,7 @@ msgstr "다음 작업 날짜가 오늘 이전인 모든 기회 표시"
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
-msgstr "리드만 보기"
+msgstr "영업제안만 보기"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2411,21 +2411,21 @@ msgstr "태그"
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Team Pipelines"
-msgstr "팀 파이프라인"
+msgstr "팀 순서도"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
-msgstr "이 채널과 연결된 이메일 주소입니다. 새로운 이메일을 수신하면 채널에 배정된 새 리드가 자동으로 작성됩니다."
+msgstr "이 채널과 연결된 이메일 주소입니다. 새로운 이메일을 수신하면 채널에 배정된 새 영업제안이 자동으로 작성됩니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
 msgid ""
 "The name of the future partner company that will be created while converting"
 " the lead into opportunity"
-msgstr "리드를 영업 기회로 전환하면서 만들어지는 미래의 협력사 이름"
+msgstr "영업제안을 영업 기회로 전환하면서 만들어지는 미래의 협력사 이름"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
@@ -2491,7 +2491,7 @@ msgstr "이 영업 기회는 <b>계획된 활동이 아닙니다</b>."
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This report analyses the source of your leads."
-msgstr "이 보고서는 리드의 출처를 분석합니다."
+msgstr "이 보고서는 영업제안의 출처를 분석합니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -2549,7 +2549,7 @@ msgstr "유형"
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 #: model:ir.model.fields,help:crm.field_crm_lead__type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "유형은 리드와 영업 기회를 분리하는 데 사용됩니다"
+msgstr "유형은 영업제안과 영업 기회를 분리하는 데 사용됩니다"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
@@ -2570,13 +2570,13 @@ msgstr "미할당"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Lead"
-msgstr "미배정 리드"
+msgstr "미배정 영업제안"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__unassigned_leads_count
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Leads"
-msgstr "미배정 리드"
+msgstr "미배정 영업제안"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_unread
@@ -2594,7 +2594,7 @@ msgstr "읽지 않은 메시지 수"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_activated
 msgid "Use Leads"
-msgstr "리드 이용"
+msgstr "영업제안 이용"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2615,7 +2615,7 @@ msgid ""
 "                    prospects you import, etc."
 msgstr ""
 "영업 기회 또는 고객을 만들기 전에 자격 단계가 필요한 경우 \n"
-"                         리드를 사용 하십시오. \n"
+"                         영업제안을 사용 하십시오. \n"
 "                         귀하가 받은 명함, 귀하의 웹 사이트에 기입된 연락처 양식, 또는 \n"
 "                         귀하가 가져온 부적격의 잠재 고객, 등."
 
@@ -2628,9 +2628,9 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"영업 기회 또는 고객을 만들기 전에 자격 증명 단계가 필요한 경우 리드를 사용합니다. 받은 명함, 웹 사이트에 기재된 연락처 양식 또는 "
-"가져온 부적격 잠재 고객의 파일 등이 될 수 있습니다. 자격을 갖추면 잠재 고객을 비즈니스 기회 및 주소록에서 신규 고객으로 전환할 수 "
-"있습니다."
+"영업 기회 또는 고객을 만들기 전에 자격 증명 단계가 필요한 경우 영업제안을 사용합니다. 받은 명함, 웹 사이트에 기재된 연락처 양식 "
+"또는 가져온 부적격 잠재 고객의 파일 등이 될 수 있습니다. 자격을 갖추면 잠재 고객을 비즈니스 기회 및 주소록에서 신규 고객으로 전환할"
+" 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2643,7 +2643,7 @@ msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
 msgstr ""
-"영업 파이프라인을 추적하고, 잠재적 매출을 추적하고, \n"
+"영업 순서도를 추적하고, 잠재적 매출을 추적하고, \n"
 "                  향후 매출을 보다 정확하게 예측할 수 있는 기회를 활용합니다."
 
 #. module: crm
@@ -2651,7 +2651,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
-msgstr "이동 경로를 사용하여 <b>영업 업무 경로로 돌아갑니다</b>."
+msgstr "이동 경로를 사용하여 <b>영업 순서도로 돌아갑니다</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -2732,6 +2732,7 @@ msgstr "메일을 보낼 때 기본 이메일 주소를 영업팀에서 가져�
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format

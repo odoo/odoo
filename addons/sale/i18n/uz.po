@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Language-Team: Uzbek (https://www.transifex.com/odoo/teams/41243/uz/)\n"
 "MIME-Version: 1.0\n"
@@ -3564,6 +3564,14 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
+"%s\n"
+"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
 msgid ""
 "The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
@@ -3590,6 +3598,12 @@ msgstr ""
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "The ordered quantity has been updated."
 msgstr ""
 
 #. module: sale

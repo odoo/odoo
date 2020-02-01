@@ -185,7 +185,7 @@ class HolidaysRequest(models.Model):
     request_date_to = fields.Date('Request End Date')
     # Interface fields used when using hour-based computation
     request_hour_from = fields.Selection([
-        ('0', '12:00 PM'), ('0.5', '0:30 AM'),
+        ('0', '12:00 AM'), ('0.5', '0:30 AM'),
         ('1', '1:00 AM'), ('1.5', '1:30 AM'),
         ('2', '2:00 AM'), ('2.5', '2:30 AM'),
         ('3', '3:00 AM'), ('3.5', '3:30 AM'),
@@ -197,7 +197,7 @@ class HolidaysRequest(models.Model):
         ('9', '9:00 AM'), ('9.5', '9:30 AM'),
         ('10', '10:00 AM'), ('10.5', '10:30 AM'),
         ('11', '11:00 AM'), ('11.5', '11:30 AM'),
-        ('12', '12:00 AM'), ('12.5', '0:30 PM'),
+        ('12', '12:00 PM'), ('12.5', '0:30 PM'),
         ('13', '1:00 PM'), ('13.5', '1:30 PM'),
         ('14', '2:00 PM'), ('14.5', '2:30 PM'),
         ('15', '3:00 PM'), ('15.5', '3:30 PM'),
@@ -210,7 +210,7 @@ class HolidaysRequest(models.Model):
         ('22', '10:00 PM'), ('22.5', '10:30 PM'),
         ('23', '11:00 PM'), ('23.5', '11:30 PM')], string='Hour from')
     request_hour_to = fields.Selection([
-        ('0', '12:00 PM'), ('0.5', '0:30 AM'),
+        ('0', '12:00 AM'), ('0.5', '0:30 AM'),
         ('1', '1:00 AM'), ('1.5', '1:30 AM'),
         ('2', '2:00 AM'), ('2.5', '2:30 AM'),
         ('3', '3:00 AM'), ('3.5', '3:30 AM'),
@@ -222,7 +222,7 @@ class HolidaysRequest(models.Model):
         ('9', '9:00 AM'), ('9.5', '9:30 AM'),
         ('10', '10:00 AM'), ('10.5', '10:30 AM'),
         ('11', '11:00 AM'), ('11.5', '11:30 AM'),
-        ('12', '12:00 AM'), ('12.5', '0:30 PM'),
+        ('12', '12:00 PM'), ('12.5', '0:30 PM'),
         ('13', '1:00 PM'), ('13.5', '1:30 PM'),
         ('14', '2:00 PM'), ('14.5', '2:30 PM'),
         ('15', '3:00 PM'), ('15.5', '3:30 PM'),
@@ -419,8 +419,24 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             calendar = holiday._get_calendar()
             if holiday.date_from and holiday.date_to:
-                number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
-                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
+                # Take attendances into account, in case the leave validated
+                # Otherwise, this will result into number_of_hours = 0
+                # and number_of_hours_display = 0 or (#day * calendar.hours_per_day),
+                # which could be wrong if the employee doesn't work the same number
+                # hours each day
+                if holiday.state == 'validate':
+                    start_dt = holiday.date_from
+                    end_dt = holiday.date_to
+                    if not start_dt.tzinfo:
+                        start_dt = start_dt.replace(tzinfo=UTC)
+                    if not end_dt.tzinfo:
+                        end_dt = end_dt.replace(tzinfo=UTC)
+                    intervals = calendar._attendance_intervals(start_dt, end_dt, holiday.employee_id.resource_id) \
+                                - calendar._leave_intervals(start_dt, end_dt, None)  # Substract Global Leaves
+                    number_of_hours = sum((stop - start).total_seconds() / 3600 for start, stop, dummy in intervals)
+                else:
+                    number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
+                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY))
             else:
                 holiday.number_of_hours_display = 0
 
@@ -479,6 +495,12 @@ class HolidaysRequest(models.Model):
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
                                         'Please also check the time off waiting for validation.'))
+
+    @api.constrains('date_from', 'date_to', 'employee_id')
+    def _check_date_state(self):
+        for holiday in self:
+            if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
+                raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
@@ -895,7 +917,7 @@ class HolidaysRequest(models.Model):
                 if state == 'draft':
                     if holiday.state == 'refuse':
                         raise UserError(_('Only a Leave Manager can reset a refused leave.'))
-                    if holiday.date_from.date() <= fields.Date.today():
+                    if holiday.date_from and holiday.date_from.date() <= fields.Date.today():
                         raise UserError(_('Only a Leave Manager can reset a started leave.'))
                     if holiday.employee_id != current_employee:
                         raise UserError(_('Only a Leave Manager can reset other people leaves.'))

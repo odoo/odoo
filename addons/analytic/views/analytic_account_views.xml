@@ -42,6 +42,7 @@
             <field name="model">account.analytic.tag</field>
             <field name="arch" type="xml">
                 <search string="Search Analytic Tags">
+                    <field name="name" />
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>

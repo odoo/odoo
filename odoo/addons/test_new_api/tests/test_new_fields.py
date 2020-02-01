@@ -977,6 +977,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.with_user(user1).tag_id, tag2)
         self.assertEqual(record.with_user(user2).tag_id, tag0)
 
+        # regression: duplicated records caused values to be browse(browse(id))
+        recs = record.create({}) + record + record
+        recs.invalidate_cache()
+        for rec in recs.with_user(user0):
+            self.assertIsInstance(rec.tag_id.id, int)
+
         # unlink value of a many2one (tag2), and check again
         tag2.unlink()
         self.assertEqual(record.with_user(user0).tag_id, tag1)
@@ -1759,6 +1765,38 @@ class TestX2many(common.TransactionCase):
         parent.active = False
         self.assertFalse(child4.parent_active)
 
+    def test_12_active_test_one2many_with_context(self):
+        Model = self.env['test_new_api.model_active_field']
+        parent = Model.create({})
+        all_children = Model.create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = all_children[0]
+
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        self.assertEqual(parent.all_children_ids, all_children)
+        self.assertEqual(parent.with_context(active_test=True).all_children_ids, all_children)
+        self.assertEqual(parent.with_context(active_test=False).all_children_ids, all_children)
+
+        self.assertEqual(parent.active_children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).active_children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
+
+        # check read()
+        self.env.cache.invalidate()
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.all_children_ids, all_children)
+        self.assertEqual(parent.active_children_ids, act_children)
+
+        self.env.cache.invalidate()
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+        self.assertEqual(parent.with_context(active_test=False).all_children_ids, all_children)
+        self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
@@ -1870,6 +1908,14 @@ class TestX2many(common.TransactionCase):
 
         result = recs.search([('id', 'in', recs.ids), ('lines', '!=', False)])
         self.assertEqual(result, recs - recZ)
+
+    def test_create_batch_m2m(self):
+        lines = self.env['test_new_api.multi.line'].create([{
+            'tags': [(0, 0, {'name': str(j)}) for j in range(3)],
+        } for i in range(3)])
+        self.assertEqual(len(lines), 3)
+        for line in lines:
+            self.assertEqual(len(line.tags), 3)
 
 
 class TestHtmlField(common.TransactionCase):

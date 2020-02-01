@@ -71,7 +71,7 @@ class StockMove(models.Model):
                     float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
                 return self._action_record_components()
         action = super(StockMove, self).action_show_details()
-        if self.is_subcontract:
+        if self.is_subcontract and self._has_tracked_subcontract_components():
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
             action['context'].update({
                 'show_lots_m2o': self.has_tracking != 'none',
@@ -92,6 +92,12 @@ class StockMove(models.Model):
             'target': 'current',
             'domain': [('id', 'in', moves.ids)],
         }
+
+    def _action_cancel(self):
+        for move in self:
+            if move.is_subcontract:
+                move.move_orig_ids.production_id._action_cancel()
+        return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
         subcontract_details_per_picking = defaultdict(list)

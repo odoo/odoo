@@ -34,7 +34,7 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span> ימים</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
@@ -79,19 +79,19 @@ msgstr "התראות תפוגה"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr ""
+msgstr "התפוגה הוזכרה"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "סידורי/אצווה"
+msgstr "מס' סידורי/אצווה"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
-msgstr "מספר הימים לפני שיש לתת התראה על האצווה / המספר הסידורי."
+msgstr "מספר הימים לפני שיש לתת התראה על האצווה / המס' הסידורי."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -101,7 +101,7 @@ msgid ""
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
 "מספר הימים לפני שהסחורה עלולה להיות מסוכנת ואסור לצרוך אותה. יחושב עפ\"י "
-"האצווה / המספר הסידורי."
+"האצווה / המס' הסידורי."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -110,7 +110,7 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
-"מספר הימים לפני שהסחורה צריכה לצאת מהמלאי. זה יחושב עפ\"י האצווה / המספר "
+"מספר הימים לפני שהסחורה צריכה לצאת מהמלאי. זה יחושב עפ\"י האצווה / המס' "
 "הסידורי."
 
 #. module: product_expiry
@@ -120,8 +120,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
-"מספר הימים לפני שהסחורה מתחילה להידרדר, מבלי להיות מסוכנת עדיין. זה יחושב "
-"באמצעות האצווה / המספר הסידורי."
+"מספר הימים לפני שהסחורה מתחילה להידרדר, מבלי להיות מסוכנת עדיין. יחושב "
+"באמצעות האצווה / המס' הסידורי."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -132,7 +132,7 @@ msgstr "קבוצת רכש"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
-msgstr "זמן התראת מוצר"
+msgstr "זמן התראה למוצר"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
@@ -154,7 +154,7 @@ msgstr "זמן הסרת המוצר"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr "תבנית למוצר "
+msgstr "תבנית מוצר "
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
@@ -182,7 +182,7 @@ msgstr "תאריך ההתראה הגיע."
 #: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr "תאריך ההתראה הושג עבור אצווה / מספר סידורי זה"
+msgstr "תאריך ההתראה הגיע עבור אצווה / מס' סידורי זה"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
@@ -200,6 +200,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
+"זהו התאריך בו יש להסיר את הסחורה עם המספר הסידורי הזה מהמלאי. תאריך זה ישמש "
+"באסטרטגיית FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date

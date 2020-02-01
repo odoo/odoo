@@ -9,3 +9,4 @@ declaration.
 Signed,
 
 Jeffery Chen Fan  jeffery9@gmail.com  https://github.com/jeffery9
+Jeffery 陈帆  jeffery9@outlook.com  https://github.com/jeffery9

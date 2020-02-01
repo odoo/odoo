@@ -2520,7 +2520,11 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
      */
     _render: function () {
         var self = this;
-        this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
+
+        if (this.$el) {
+            this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
+        }
+
         _.each(this.value.data, function (m2m) {
             if (self.colorField in m2m.data && !m2m.data[self.colorField]) {
                 // When a color field is specified and that color is the default
@@ -2566,17 +2570,27 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     /**
      * @private
      */
-    _render: function () {
+    _renderCheckboxes: function () {
         var self = this;
-        this._super.apply(this, arguments);
+        this.m2mValues = this.record.specialData[this.name];
+        this.$el.html(qweb.render(this.template, {widget: this}));
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },
     /**
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        this._renderCheckboxes();
+    },
+    /**
+     * @override
      * @private
      */
     _renderReadonly: function () {
+        this._renderCheckboxes();
         this.$("input").prop("disabled", true);
     },
 

@@ -387,7 +387,11 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="Invoices" decoration-muted="state == 'cancel'" js_class="account_tree">
+                <tree string="Invoices"
+                      decoration-info="state == 'draft'"
+                      decoration-muted="state == 'cancel'"
+                      banner_route="/account/account_invoice_onboarding"
+                      js_class="account_tree">
                     <field name="name"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="invoice_source_email" invisible="1"/>
@@ -821,7 +825,7 @@
                                             <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
                                             <label for="name" string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                                             <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
-                                            <field name="name"/>
+                                            <field name="name" widget="text"/>
                                         </sheet>
                                     </form>
                                 </field>
@@ -1000,6 +1004,8 @@
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
                                     </group>
                                 </group>
+                                <!-- Internal note -->
+                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
                         </notebook>
                     </sheet>

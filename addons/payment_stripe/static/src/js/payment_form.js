@@ -81,7 +81,9 @@ PaymentForm.include({
         }).guardedCatch(function (error) {
             // We don't want to open the Error dialog since
             // we already have a container displaying the error
-            error.event.preventDefault();
+            if (error.event) {
+                error.event.preventDefault();
+            }
             // if the rpc fails, pretty obvious
             self.enableButton(button);
             self.displayError(
