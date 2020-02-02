@@ -5495,19 +5495,19 @@ msgstr ""
 "DA FARE\n"
 "\n"
 "vecchia descrizione:\n"
-"Fatturazione & Pagamenti con Voucher contabile & Ricevute\n"
-"=====================================================\n"
-"Il sistema di fatturazione specifico e facile da usare di Odoo ti consente di tenere traccia della tua contabilità, anche se non sei un revisore dei conti. Fornisce un modo semplice di seguire i tuoi fornitori e clienti. \n"
+"Fatturazione e pagamenti con ricevute contabili\n"
+"============================================\n"
+"Il sistema di fatturazione \"facile da usare\" specifico di Odoo consente di tenere traccia della contabilità anche senza essere un contabile. Fornisce un modo semplice per seguire i fornitori e i clienti. \n"
 "\n"
-"Questa contabilità semplificata può essere usata nel caso in cui lavori con un revisore dei conti (esterno) per gestire i tuoi libri contabili e vuoi tenere traccia dei pagamenti.\n"
+"Questa contabilità semplificata può essere usata nel caso in cui la gestione dei libri contabili venga effettuata esternamente, ma sia comunque necessario tenere traccia dei pagamenti.\n"
 "\n"
-"Il sistema di fatturazione comprende ricevute e voucher (un modo semplice di tenere traccia delle vendite e degli acquisti. Offre anche un metodo semplice per registrare i pagamenti, senza dover registrare completi estratti conto.\n"
+"Il sistema di fatturazione si basa sulle ricevute (un metodo semplificato per tenere traccia delle vendite e degli acquisti). Offre anche un modo semplice per registrare i pagamenti, senza la necessità di definire estratti conto completi.\n"
 "\n"
 "Questo modulo gestisce:\n"
 "\n"
-"* Registrazione di Voucher\n"
-"* Ricevuta di Voucher [Vendite & Acquisto]\n"
-"* Pagamento con Voucher [Cliente & Venditori]\n"
+"* Registrazioni\n"
+"* Ricevute [vendita e acquisto]\n"
+"* Pagamenti [clienti e fornitori]\n"
 "    "
 
 #. module: base
@@ -11449,12 +11449,12 @@ msgstr "Codice nazione"
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr "Aree Geografiche"
+msgstr "Raggruppamento nazioni"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
 msgid "Country Groups"
-msgstr "Gruppi di nazioni"
+msgstr "Raggruppamenti nazioni"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
@@ -12635,9 +12635,9 @@ msgid ""
 "Display and manage the list of all countries group. You can create or delete"
 " country group to make sure the ones you are working on will be maintained."
 msgstr ""
-"Mostra e gestisce l'elenco di tutti i gruppi di paesi. È possibile creare o "
-"cancellare un gruppo di paesi per assicurarti che quelli su cui stai "
-"lavorando verranno mantenuti."
+"Mostra e gestisce l'elenco di tutti i raggruppamenti nazioni. È possibile "
+"creare o eliminare un gruppo per garantire il mantenimento di quelli ai "
+"quali si sta lavorando."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -16268,7 +16268,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.ui.view:0
 msgid "Invalid key: QWeb view should have a key"
-msgstr "Chiave non valida: la vista qweb dovrebbe avere una chiave"
+msgstr "Chiave non valida: la vista QWeb deve possedere una chiave"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:140
@@ -17582,8 +17582,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_voucher
 msgid "Manage your debts and credits thanks to simple sale/purchase receipts"
 msgstr ""
-"Gestisci i tuoi debiti e i tuoi crediti grazie a semplici ricevute di "
-"vendita/acquisto"
+"Gestione debiti e crediti grazie a semplici ricevute di vendita/acquisto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll
@@ -20745,7 +20744,7 @@ msgstr "Applicazioni Aperte"
 #. module: base
 #: model:ir.actions.client,name:base.action_client_base_menu
 msgid "Open Settings Menu"
-msgstr "Apri menu impostazioni"
+msgstr "Apri menù impostazioni"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_tree
@@ -21284,7 +21283,7 @@ msgstr "Azienda madre"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr "Menù padre"
+msgstr "Menù superiore"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
@@ -22136,12 +22135,12 @@ msgstr "Q ATTIVITÀ RELATIVE ALLA SALUTE UMANA E AL LAVORO SOCIALE"
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "QWeb"
-msgstr "Qweb"
+msgstr "QWeb"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "QWeb views"
-msgstr "Viste qweb"
+msgstr "Viste QWeb"
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -22198,53 +22197,53 @@ msgstr "Azioni rapide per installazione nuove app, aggiunta utenti ecc."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr "Costruttore di preventivi"
+msgstr "Creatore preventivi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr "Preventivi, Ordini di Vendita, Consegne & Controllo delle Fatture"
+msgstr "Preventivi, ordini di vendita, consegne e controllo fatture"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
 msgid "Qweb"
-msgstr "Qweb"
+msgstr "QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
 msgid "Qweb Field"
-msgstr "Campo qweb"
+msgstr "Campo QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_barcode
 msgid "Qweb Field Barcode"
-msgstr "Campo Qweb Codice a Barre"
+msgstr "Campo QWeb codice a barre"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr "Campo qweb contatto"
+msgstr "Campo QWeb contatto"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
 msgid "Qweb Field Date"
-msgstr "Campo qweb data"
+msgstr "Campo QWeb data"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_datetime
 msgid "Qweb Field Datetime"
-msgstr "Campo qweb data e ora"
+msgstr "Campo QWeb data/ora"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_duration
 msgid "Qweb Field Duration"
-msgstr "Campo qweb durata"
+msgstr "Campo QWeb durata"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
 msgid "Qweb Field Float"
-msgstr "Campo qweb float"
+msgstr "Campo QWeb virgola mobile"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float_time
@@ -22254,27 +22253,27 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
 msgid "Qweb Field HTML"
-msgstr "Campo qweb HTML"
+msgstr "Campo QWeb HTML"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr "Campo qweb immagine"
+msgstr "Campo QWeb immagine"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
 msgid "Qweb Field Integer"
-msgstr "Campo qweb intero"
+msgstr "Campo QWeb intero"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "Qweb Field Many to One"
-msgstr "Campo qweb molti a uno"
+msgstr "Campo QWeb molti a uno"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "Qweb Field Monerary"
-msgstr "Campo qweb monetario"
+msgstr "Campo QWeb monetario"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
@@ -22284,22 +22283,22 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
 msgid "Qweb Field Selection"
-msgstr "Selezione campo qweb"
+msgstr "Campo QWeb selezione"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_text
 msgid "Qweb Field Text"
-msgstr "Campo qweb"
+msgstr "Campo QWeb testo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_qweb
 msgid "Qweb Field qweb"
-msgstr "Campo qweb qweb"
+msgstr "Campo QWeb qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr "campo qweb molti a molti"
+msgstr "Campo QWeb molti a molti"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:362
@@ -22903,7 +22902,7 @@ msgstr "Configuratore di salario"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Sale & Purchase Vouchers"
-msgstr "Voucher di vendita e di acquisto"
+msgstr "Ricevute di vendita e acquisto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
@@ -23417,7 +23416,7 @@ msgstr "Imposta Password"
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Set as Todo"
-msgstr "Imposta come DaFare"
+msgstr "Imposta da fare"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_open_base_onboarding_company
@@ -27215,7 +27214,7 @@ msgid ""
 "sequence. Low number means high priority."
 msgstr ""
 "Per le azioni multiple, l'ordine di esecuzione è basato sulla sequenza. Un "
-"numero piccolo indica la massima priorità."
+"numero piccolo indica alta priorità."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__sequence
@@ -27913,7 +27912,7 @@ msgstr "selezione"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "serialized"
-msgstr ""
+msgstr "serializzato"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account

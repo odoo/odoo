@@ -77,6 +77,22 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Добавяне на конструиран Реф № към фактури за клиент.\n"
+"--------------------------------------------------\n"
+"\n"
+"Използване на BBA референтни номера улеснява изравняването между факури и плащания.\n"
+"Може да изберете конструиран реф № да се попълва в основание за плащане от настройките на Фактуриране/Счетоводство\n"
+"Препоръчваме три алгоритма:\n"
+"\n"
+"    1) Random : +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Случайни числа, **DD =** Контролни числа\n"
+"    2) Date : +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** Ден в годината, **SSS =** Пореден номер, **DD =** Контролни числа\n"
+"    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** Клиентска референция без нечислови знаци, **SSS =** Пореден номер **DD =** Контролни числа\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -204,6 +220,88 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Модул локализация за Дания\n"
+"===============================\n"
+"\n"
+"This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"        \n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -893,7 +991,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Print amount in words on checks issued for expenses\n"
+"        Разпечатвайте сумата, описана с думи, за чекове, издавани за разходи\n"
 "    "
 
 #. module: base
@@ -1350,6 +1448,11 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"Модул, който добавя управление на наличностите в отчети за интрастат.\n"
+"============================================================\n"
+"\n"
+"Този модул задава подробности за стоки, търгувани между държавите от Европейския съюз. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -7537,11 +7640,13 @@ msgid ""
 "<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
 "title=\"Enterprise\"/>"
 msgstr ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -9109,7 +9214,7 @@ msgstr "Планирайте отпуските и следете молбите
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_reprint
 msgid "Allow cashier to reprint receipts"
-msgstr "Allow cashier to reprint receipts"
+msgstr "Позволи на касиера да разпечатва повторно касови бележки"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ocn_client
@@ -10480,7 +10585,7 @@ msgstr "Check Printing Base"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_check
 msgid "Check Printing in Expenses"
-msgstr "Check Printing in Expenses"
+msgstr "Разпечатване на чек при разходите"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__is_company
@@ -10492,7 +10597,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing commons"
-msgstr "Check printing commons"
+msgstr "Проверете консумативите за печат"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__customer
@@ -11001,7 +11106,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Конфиг Настройки"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -17334,9 +17439,9 @@ msgid ""
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs."
 msgstr ""
-"Manage the contact titles you want to have available in your system and the "
-"way you want to print them in letters and other documents. Some example: "
-"Mr., Mrs."
+"Управлявайте обръщенията към контактите си, които поддържате в системата си "
+"и начина, по който искате да ги разпечатвате в писма и други документи. "
+"Някои примери: Г-н, Г-жа."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
@@ -21449,7 +21554,7 @@ msgstr "Print amount in words on checks issued for expenses"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_height
 msgid "Print page height (mm)"
-msgstr ""
+msgstr "Печат - Вис. на страница (мм)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
@@ -22761,7 +22866,7 @@ msgstr "Запазете"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_report_form_with_print
 msgid "Save and Print"
-msgstr "Save and Print"
+msgstr "Запис и Печат"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment

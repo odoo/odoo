@@ -27,7 +27,7 @@
 # Lorenzo Battistini <lb@takobi.online>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -789,9 +789,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"Un estratto conto bancario è un riepilogo di tutte le operazioni\n"
-"                finanziarie avvenute in un determinato periodo di tempo su un\n"
-"                conto bancario. La banca dovrebbe inviarlo periodicamente."
+"Un estratto conto è un riepilogo di tutte le operazioni\n"
+"                finanziarie avvenute su un conto bancario in un determinato periodo\n"
+"                di tempo. La banca dovrebbe inviarlo periodicamente."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
@@ -1258,7 +1258,7 @@ msgstr "Opzioni applicazione contabilità"
 #: model:ir.model.fields,field_description:account.field_account_invoice__date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__date
 msgid "Accounting Date"
-msgstr "Data contabile"
+msgstr "Data registrazione"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2621,7 +2621,7 @@ msgstr "Annulla: crea nota di credito e riconcilia"
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: selection:account.payment,state:0
 msgid "Cancelled"
-msgstr "Annullata"
+msgstr "Annullato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3321,7 +3321,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__body
 msgid "Contents"
-msgstr "Contenuti"
+msgstr "Contenuto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contracts_count
@@ -3384,7 +3384,7 @@ msgstr "Nazione"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_group_id
 msgid "Country Group"
-msgstr "Gruppo nazione"
+msgstr "Raggruppamento nazioni"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3477,7 +3477,7 @@ msgstr "Crea una nota di credito fornitore"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr "Crea e genera movimento"
+msgstr "Crea e registra movimento"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:281
@@ -5920,7 +5920,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "Fatturato"
+msgstr "Fatturate"
 
 #. module: account
 #: code:addons/account/models/account_invoice_import_wizard.py:38
@@ -6853,7 +6853,7 @@ msgstr "Analisi dei margini"
 #: selection:account.payment,payment_difference_handling:0
 #: selection:account.register.payments,payment_difference_handling:0
 msgid "Mark invoice as fully paid"
-msgstr "Impostare fattura come pagata"
+msgstr "Segnare fattura come pagata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
@@ -7610,9 +7610,9 @@ msgid ""
 "href=#id=%s&model=account.journal>email alias</a> to allow draft vendor "
 "bills to be created upon reception of an email."
 msgstr ""
-"O imposta un <a data-oe-id=%s data-oe-model=\"account.journal\" "
-"href=#id=%s&model=account.journal>alias email</a> per far sì che le fatture "
-"fornitore in bozza vengano create in base alla ricezione di un'email."
+"Oppure imposta un <a data-oe-id=%s data-oe-model=\"account.journal\" "
+"href=#id=%s&model=account.journal>alias e-mail</a> per creare le fatture "
+"fornitore in bozza dalla ricezione di una e-mail."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:692
@@ -8229,7 +8229,7 @@ msgstr "Generare con riconciliazione bancaria"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Post Difference In"
-msgstr "Generare la differenza in"
+msgstr "Registrare la differenza in"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -8243,7 +8243,7 @@ msgstr "Genera registrazioni contabili"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Generata"
+msgstr "Registrato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -8527,7 +8527,7 @@ msgstr "Crediti"
 #: selection:account.payment,payment_type:0
 #: selection:account.register.payments,payment_type:0
 msgid "Receive Money"
-msgstr "Ricevere denaro"
+msgstr "Ricezione denaro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__partner_bank_account_id
@@ -9276,7 +9276,7 @@ msgstr "Invio fattura"
 #: selection:account.payment,payment_type:0
 #: selection:account.register.payments,payment_type:0
 msgid "Send Money"
-msgstr "Inviare denaro"
+msgstr "Invio denaro"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -10584,7 +10584,7 @@ msgstr "Il conto ricavi o costi relativo al prodotto selezionato."
 #: model:ir.model.fields,help:account.field_account_journal__code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
-"Le registrazioni contabili di questo registro vengono identificate usando "
+"Le registrazioni contabili per il registro vengono identificate usando "
 "questo prefisso."
 
 #. module: account
@@ -10643,13 +10643,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
-"Per la prossima nota di credito verrà utilizzato il seguente numero di "
-"sequenza."
+"Per la prossima nota di credito verrà usato questo numero di sequenza."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr "Per la prossima fattura verrà usato il successivo numero di sequenza."
+msgstr "Per la prossima fattura verrà usato questo numero di sequenza."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1983
@@ -11514,7 +11513,7 @@ msgstr "fatture non pagate"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Non generata"
+msgstr "Non registrato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
