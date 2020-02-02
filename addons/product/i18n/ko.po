@@ -1187,7 +1187,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "상품 목록을 표시 할 때 주문 순서를 제공합니다"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1277,14 +1277,14 @@ msgstr ""
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "이 측정 단위가 이 범주의 기준 측정 단위보다 몇 배 더 큰지 : 1 * (해당 단위) = 비율 * (기준 단위)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "이 범주의 기준 측정 단위와 비교하여이 단위가 얼마나 크거나 작습니까 : 1 * (기준 단위) = 비율 * (해당 단위)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2001,7 +2001,7 @@ msgstr "제품측정단위"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "상품 측정 단위 범주"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2522,12 +2522,12 @@ msgstr ""
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr ""
+msgstr "계산된 수량은 이 값의 배수입니다. 조각과 같이 더 이상 분할 할 수 없는 측정 단위에는 1.0을 사용하십시오."
 
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "측정 단위의 변환 비율은 0 일 수 없습니다!"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -2796,7 +2796,7 @@ msgstr "아주 얇은 디자인"
 #: model:ir.model.fields,help:product.field_product_uom_active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
+msgstr "측정 단위를 삭제하지 않고 비활성화하려면 필드 활성화를 선택 취소하십시오."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -2841,6 +2841,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"동일한 범주에 속하는 측정 단위는 서로 변환할 수 있습니다. \n"
+"             예를 들어 <i>'시간'</i> 범주에는 \n"
+"             다음과 같은 측정 단위가 있습니다 : \n"
+"             시간, 일."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3077,6 +3081,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"동일한 범주 내에서 여러 측정 단위 간의 \n"
+"              변환 비율을 정의해야 합니다."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
