@@ -5,6 +5,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessE
 from odoo.tools import float_is_zero, float_compare, date_utils, email_split, email_escape_char, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
 
+from collections import defaultdict
 from datetime import date, timedelta
 from collections import defaultdict
 from itertools import zip_longest
@@ -4707,10 +4708,60 @@ class AccountPartialReconcile(models.Model):
             newly_created_move.write({'date': move_date, 'name': '/'})
             newly_created_move.recompute(['name'])
 
+    def _get_tax_cash_basis_base_key(self, tax, move, line):
+        account_id = self._get_tax_cash_basis_base_account(line, tax)
+        tax_rep_lines = tax.refund_repartition_line_ids if line.move_id.type in ('in_refund', 'out_refund') else tax.invoice_repartition_line_ids
+        original_base_tags = tax_rep_lines.filtered(lambda x: x.repartition_type == 'base').tag_ids
+        base_tags = tuple(line._convert_tags_for_cash_basis(original_base_tags).ids)
+        return (line.id, account_id.id, tax.id, line.tax_repartition_line_id.id, base_tags,line.currency_id.id, line.partner_id.id, line.move_id.type)
+
+    def _get_tax_cash_basis_base_common_vals(self, key, new_move):
+        self.ensure_one()
+        line_id, account_id, tax_id, tax_repartition_line_id, base_tags, currency_id, partner_id, move_type = key
+        line = self.env['account.move.line'].browse(line_id)
+        return {
+            'name': line.name,
+            'account_id': account_id,
+            'journal_id': new_move.journal_id.id,
+            'tax_exigible': True,
+            'tax_ids': [(6, 0, [tax_id])],
+            'tag_ids': [(6, 0, base_tags)],
+            'move_id': new_move.id,
+            'currency_id': currency_id,
+            'partner_id': partner_id,
+            'tax_repartition_line_id': tax_repartition_line_id,
+        }
+
+    def _create_tax_cash_basis_base_line(self, amount_dict, amount_currency_dict, tax_amount_dict, new_move):
+        for key in amount_dict.keys():
+            base_line = self._get_tax_cash_basis_base_common_vals(key, new_move)
+            currency_id = base_line.get('currency_id', False)
+            rounded_amt = amount_dict[key]
+            tax_base_amount = tax_amount_dict[key]
+            amount_currency = amount_currency_dict[key] if currency_id else 0.0
+            aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+            aml_obj.create(dict(
+                base_line,
+                tax_base_amount=tax_base_amount,
+                debit=rounded_amt > 0 and rounded_amt or 0.0,
+                credit=rounded_amt < 0 and abs(rounded_amt) or 0.0,
+                amount_currency=amount_currency))
+            aml_obj.create(dict(
+                base_line,
+                credit=rounded_amt > 0 and rounded_amt or 0.0,
+                debit=rounded_amt < 0 and abs(rounded_amt) or 0.0,
+                amount_currency=-amount_currency,
+                tax_repartition_line_id=False,
+                tax_ids=[],
+                tag_ids=[]))
+
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
         move_date = self.debit_move_id.date
         newly_created_move = self.env['account.move']
+        cash_basis_amount_dict = defaultdict(float)
+        cash_basis_base_amount_dict = defaultdict(float)
+        cash_basis_amount_currency_dict = defaultdict(float)
         # We use a set here in case the reconciled lines belong to the same move (it happens with POS)
         for move in {self.debit_move_id.move_id, self.credit_move_id.move_id}:
             #move_date is the max of the 2 reconciled items
@@ -4770,6 +4821,7 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
                     else:
+<<<<<<< HEAD
                         taxes_payment_exigible = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.tax_exigibility == 'on_payment')
                         if taxes_payment_exigible:
                             if not newly_created_move:
@@ -4805,6 +4857,23 @@ class AccountPartialReconcile(models.Model):
                                     'partner_id': line.partner_id.id,
                                     'journal_id': newly_created_move.journal_id.id,
                                 })
+=======
+                        #create cash basis entry for the base
+                        for tax in line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.tax_exigibility == 'on_payment'):
+                            # We want to group base lines as much as
+                            # possible to avoid creating too many of them.
+                            # This will result in a more readable report
+                            # tax and less cumbersome to analyse.
+                            key = self._get_tax_cash_basis_base_key(tax, move, line)
+                            cash_basis_amount_dict[key] += rounded_amt
+                            cash_basis_base_amount_dict[key] += line.tax_base_amount
+                            cash_basis_amount_currency_dict[key] += line.currency_id.round(line.amount_currency * amount / line.balance) if line.currency_id and self.amount_currency else 0.0
+
+        if cash_basis_amount_dict:
+            if not newly_created_move:
+                newly_created_move = self._create_tax_basis_move()
+            self._create_tax_cash_basis_base_line(cash_basis_amount_dict, cash_basis_amount_currency_dict, cash_basis_base_amount_dict, newly_created_move)
+>>>>>>> 5c12e40b34c... temp
         if newly_created_move:
             self._set_tax_cash_basis_entry_date(move_date, newly_created_move)
             # post move
