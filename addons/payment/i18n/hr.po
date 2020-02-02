@@ -47,7 +47,7 @@ msgstr "3D Secure HTML"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Iznos:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -57,7 +57,7 @@ msgstr "<b>Komunikacija: </b>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Referenca:</b>"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -85,11 +85,13 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"This payment method is "
+"verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -104,7 +106,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Briši"
 
 #. module: payment
 #. openerp-web
@@ -165,7 +167,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "Transakcija plaćanja već postoji."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -356,7 +358,7 @@ msgstr "Autorizirano"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_move__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Autorizirane transkacije"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -461,7 +463,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "Kliknite ovdje"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
@@ -681,6 +683,7 @@ msgstr "Odredite redoslijed prikaza"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
 msgstr "Onemogućen"
 
@@ -752,7 +755,7 @@ msgstr "Greška"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "Greška :"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -956,7 +959,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Račun(i)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1701,6 +1704,7 @@ msgstr "Predložak za registraciju metoda"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Test Mode"
 msgstr "Testni način rada"
 

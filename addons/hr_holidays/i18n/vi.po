@@ -920,7 +920,7 @@ msgstr "Giới hạn số dư"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Người dùng cơ bản"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__black
@@ -2449,6 +2449,12 @@ msgid "This indicates if it is still possible to use this type of leave"
 msgstr "Điều này cho biết nếu vẫn có thể sử dụng loại nghỉ này"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "This modification is not allowed in the current state."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of times offThis is "
@@ -2484,7 +2490,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:mail.message.subtype,name:hr_holidays.mt_leave
 msgid "Time Off"
-msgstr ""
+msgstr "Thời gian nghỉ"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation

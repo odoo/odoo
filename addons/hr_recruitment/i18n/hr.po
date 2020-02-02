@@ -6,7 +6,6 @@
 # Ivan Marijanović <ivanm101@yahoo.com>, 2019
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
 # Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
@@ -18,6 +17,7 @@
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
 # Milan Tribuson <one.mile.code@gmail.com>, 2019
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2019
+# Bole <bole@dajmi5.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2019\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -48,12 +48,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -375,7 +375,7 @@ msgstr "Alias ID"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr ""
+msgstr "Svi prijavljeni"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -387,7 +387,7 @@ msgstr "Kandidat"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Applicant Degree"
-msgstr ""
+msgstr "Stručna sprema"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -461,7 +461,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
 msgid "Application Count"
-msgstr ""
+msgstr "Broj kandidata"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -471,7 +471,7 @@ msgstr "Sažetak prijave"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr ""
+msgstr "Email kandidata"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -837,7 +837,7 @@ msgstr "Doktorat"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__documents_count
 msgid "Document Count"
-msgstr ""
+msgstr "Broj dokumenata"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1026,17 +1026,17 @@ msgstr "Zeleno"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Zelena kanban oznaka"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__normal
 msgid "Grey"
-msgstr ""
+msgstr "Sivo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Siva kanban oznaka"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1052,7 +1052,7 @@ msgstr "Odjel ljudskih resursa"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "Odgovoran"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
@@ -1162,7 +1162,7 @@ msgstr "Radno mjesto"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
-msgstr ""
+msgstr "Kandidati za posao"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
@@ -1422,7 +1422,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "Newly Hired"
-msgstr ""
+msgstr "Novo zaposleni"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
@@ -1464,7 +1464,7 @@ msgstr "Bez naslova"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
-msgstr ""
+msgstr "Nema još kandidata"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
