@@ -1,7 +1,6 @@
 odoo.define('website_sale.tour_shop_list_view_b2c', function (require) {
 'use strict';
 
-var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
 
 tour.register('shop_list_view_b2c', {
@@ -9,30 +8,6 @@ tour.register('shop_list_view_b2c', {
     url: '/shop?search=Test Product',
 },
     [
-        {
-            content: "activate b2c",
-            trigger: 'body',
-            run: function () {
-                return rpc.query({
-                    model: 'res.config.settings',
-                    method: 'create',
-                    args: [{
-                        'auth_signup_uninvited': 'b2c',
-                        'show_line_subtotals_tax_selection': 'tax_included',
-                        'group_show_line_subtotals_tax_excluded': false,
-                        'group_show_line_subtotals_tax_included': true,
-                    }],
-                }).then(function (resId) {
-                    return rpc.query({
-                        model: 'res.config.settings',
-                        method: 'execute',
-                        args: [[resId]],
-                    }).then(function () {
-                        window.location.reload();
-                    });
-                });
-            },
-        },
         {
             content: "check price on /shop",
             trigger: '.oe_product_cart .oe_currency_value:contains("825.00")',
