@@ -141,6 +141,7 @@ class MrpWorkorder(models.Model):
     allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
     is_finished_lines_editable = fields.Boolean(compute='_compute_is_finished_lines_editable')
     json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
+    show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
 
     def _compute_json_popover(self):
         previous_wo_data = self.env['mrp.workorder'].read_group(
@@ -183,11 +184,13 @@ class MrpWorkorder(models.Model):
                         'color': 'text-danger',
                         'msg': _("Planned at the same time than other workorder(s) at %s" % wo.workcenter_id.display_name)
                     })
-            color_icon = infos and infos[-1]['color'] or 'd-none'
+            color_icon = infos and infos[-1]['color'] or False
+            wo.show_json_popover = bool(color_icon)
             wo.json_popover = json.dumps({
                 'infos': infos,
                 'color': color_icon,
-                'replan': color_icon not in ['d-none', 'text-primary']
+                'icon': 'fa-exclamation-triangle' if color_icon in ['text-warning', 'text-danger'] else 'fa-info-circle',
+                'replan': color_icon not in [False, 'text-primary']
             })
 
     # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say

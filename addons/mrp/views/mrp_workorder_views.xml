@@ -92,7 +92,8 @@
                 <field name="state"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" "/>
+                <field name="show_json_popover" invisible="1"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
         </field>
     </record>
@@ -154,7 +155,8 @@
                             <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
                             <strong class="mr8 oe_inline">to</strong>
                             <field name="date_planned_finished" class="oe_inline" required="True"/>
-                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2"/>
+                            <field name="show_json_popover" invisible="1"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                         </div>
                         <label for="date_start" string="Effective Date" attrs="{'invisible': [('date_start', '=', False)]}"/>
                         <div class="o_row" attrs="{'invisible': [('date_start', '=', False)]}">
