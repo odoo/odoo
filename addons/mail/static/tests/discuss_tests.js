@@ -1913,6 +1913,14 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     await testUtils.nextTick();
     assert.verifySteps(['message_fetch'],
         "should fetch messages once for history");
+    let hasEnoughMessages = false;
+    while (!hasEnoughMessages) {
+        if (discuss.$('.o_thread_message').length === 30) {
+            hasEnoughMessages = true;
+        } else {
+            await testUtils.nextTick();
+        }
+    }
     assert.containsN(discuss, '.o_thread_message', 30,
         "there should be 30 messages in History");
 
