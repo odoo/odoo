@@ -120,9 +120,9 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--upgrades-paths", dest="upgrades_paths",
-                         help="specify an additional upgrades path.",
-                         action="callback", callback=self._check_upgrades_paths, nargs=1, type="string")
+        group.add_option("--upgrade-path", dest="upgrade_path",
+                         help="specify an additional upgrade path.",
+                         action="callback", callback=self._check_upgrade_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
@@ -425,7 +425,7 @@ class configmanager(object):
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
-                'db_maxconn', 'import_partial', 'addons_path', 'upgrades_paths',
+                'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
@@ -490,10 +490,10 @@ class configmanager(object):
                 self._normalize(x)
                 for x in self.options['addons_path'].split(','))
 
-        self.options["upgrades_paths"] = (
+        self.options["upgrade_path"] = (
             ",".join(self._normalize(x)
-                for x in self.options['upgrades_paths'].split(','))
-            if self.options['upgrades_paths']
+                for x in self.options['upgrade_path'].split(','))
+            if self.options['upgrade_path']
             else ""
         )
 
@@ -553,8 +553,8 @@ class configmanager(object):
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
 
-    def _check_upgrades_paths(self, option, opt, value, parser):
-        upgrades_paths = []
+    def _check_upgrade_path(self, option, opt, value, parser):
+        upgrade_path = []
         for path in value.split(','):
             path = path.strip()
             res = self._normalize(path)
@@ -562,9 +562,9 @@ class configmanager(object):
                 raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
             if not self._is_upgrades_path(res):
                 raise optparse.OptionValueError("option %s: the path %r is not a valid upgrade directory" % (opt, path))
-            if res not in upgrades_paths:
-                upgrades_paths.append(res)
-        setattr(parser.values, option.dest, ",".join(upgrades_paths))
+            if res not in upgrade_path:
+                upgrade_path.append(res)
+        setattr(parser.values, option.dest, ",".join(upgrade_path))
 
     def _is_upgrades_path(self, res):
         return any(
