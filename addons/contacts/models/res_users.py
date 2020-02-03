@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, modules
+from odoo import api, models, modules, _
 
 
 class Users(models.Model):
@@ -19,7 +19,7 @@ class Users(models.Model):
             activity['icon'] = modules.module.get_module_icon('contacts')
             activity['actions'] = [{
                 'icon': 'fa-th',
-                'name': 'Summary',
+                'name': 'Resumo',
                 'action_xmlid': 'contacts.action_contacts_summary'
             }]
         return activities
