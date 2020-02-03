@@ -339,13 +339,9 @@ const UserValueWidget = Widget.extend({
             return;
         }
 
-        // Don't notify a reset update if the widget was not previewed before.
-        const isPreviewed = this.isPreviewed();
-        if (previewMode === 'reset' && !isPreviewed) {
-            return;
-        }
         // In the case we notify a change update, force a preview update if it
         // was not already previewed
+        const isPreviewed = this.isPreviewed();
         if (!previewMode && !isPreviewed) {
             this.notifyValueChange(true);
         }
