@@ -139,7 +139,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'analytic_tag_ids': analytic_tag_ids,
             'tax_id': [(6, 0, tax_ids)],
             'is_downpayment': True,
-            'sequence': order.order_line[-1].sequence + 1
+            'sequence': order.order_line[-1].sequence + 1 if order.order_line else 10,
         }
         return so_values
 
