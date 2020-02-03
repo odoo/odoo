@@ -86,9 +86,9 @@ class PurchaseRequisition(models.Model):
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
         if not self.vendor_id:
-            self.currency_id = self.env.company.currency_id.id
+            self.currency_id = self.env.user.company_id.currency_id.id
         else:
-            self.currency_id = self.vendor_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+            self.currency_id = self.vendor_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
 
         requisitions = self.env['purchase.requisition'].search([
             ('vendor_id', '=', self.vendor_id.id),
