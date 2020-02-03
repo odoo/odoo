@@ -124,6 +124,15 @@ var ServicesMixin = {
         return result;
     },
     /**
+     * @private
+     * @param {Object} libs - @see ajax.loadLibs
+     * @param {Object} [context] - @see ajax.loadLibs
+     * @returns {Promise}
+     */
+    _loadLibs: function (libs, context) {
+        return this.call('ajax', 'loadLibs', libs, context);
+    },
+    /**
      * Builds and executes RPC query. Returns a promise resolved with
      * the RPC result.
      *
