@@ -83,8 +83,8 @@ class TestEventSecurity(TestEventCommon):
         event._onchange_type()
         event.flush()
 
-        registration = self.env['event.registration'].create({'event_id': event.id})
-        registration.write({'name': 'Myself'})
+        registration = self.env['event.registration'].create({'event_id': event.id, 'name': 'Myself'})
+        registration.write({'name': 'Myself2'})
 
         stage = self.env.ref('event.event_stage_done')
         stage.write({'name': 'ManagerEnded'})

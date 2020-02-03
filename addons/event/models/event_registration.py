@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
-    name = fields.Char(string='Attendee Name', index=True)
+    name = fields.Char(string='Attendee Name', index=True, required=True, tracking=True)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     mobile = fields.Char(string='Mobile')
