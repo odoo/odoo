@@ -252,7 +252,7 @@ class Website(models.Model):
                 sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = self.env['sale.order'].with_company(request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         if not (sale_order or force_create or code):
             if request.session.get('sale_order_id'):
