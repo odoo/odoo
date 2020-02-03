@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mail_client_extension.app_auth" name="Accept app">
+        <t t-call="web.login_layout">
+            <form class="oe_login_form" role="form" method="post" action="/mail_client_extension/auth/confirm">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
+                <input type="hidden" name="scope" t-att-value="scope"/>
+                <input type="hidden" name="friendlyname" t-att-value="friendlyname"/>
+                <p>
+                    <t t-esc="friendlyname" /> wants to access Odoo.
+                </p>
+
+                <p class="text-justify">If you allow it, an access-key will be created in your profile. You can manage your keys in your Preferences. You can give more information related to this key here, to recognize it easier later.</p>
+
+                <div class="form-group">
+                    <label for="info">Additional information</label>
+                    <input type="text" name="info" t-att-value="info" class="form-control" maxlength="100"/>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" name="do" value="1" class="btn btn-link btn-sm">Allow</button>
+                    <button type="submit" name="do" class="btn btn-link btn-sm">Deny</button>
+                </div>
+            </form>
+        </t>
+    </template>
+</odoo>
