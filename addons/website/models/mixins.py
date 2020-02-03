@@ -97,6 +97,21 @@ class SeoMetadata(models.AbstractModel):
         }
 
 
+class WebsiteCoverPropertiesMixin(models.AbstractModel):
+
+    _name = 'website.cover_properties.mixin'
+    _description = 'Cover Properties Website Mixin'
+
+    cover_properties = fields.Text('Cover Properties', default=lambda s: str(s._default_cover_properties()))
+
+    def _default_cover_properties(self):
+        return {
+            "background-image": "none",
+            "opacity": "0.2",
+            "resize_class": "o_half_screen_height",
+        }
+
+
 class WebsiteMultiMixin(models.AbstractModel):
 
     _name = 'website.multi.mixin'
