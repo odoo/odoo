@@ -378,6 +378,7 @@ class Registry(Mapping):
         return sorted(constraints, key=sort_constraints)
 
     def _constraint_models(self, models):
+        models = [model for model in models if model._auto]
         constraints = self._get_model_constraints(models)
         for constraint in constraints:
             self._upsert_constraint(constraint)
