@@ -343,8 +343,8 @@ class Registry(Mapping):
         for model in models:
             model._reflect()
 
-    def _compute_models(self, models, fields):
-        for model in zip(models, fields):
+    def _compute_models(self, models, fields_list):
+        for model, fields in zip(models, fields_list):
             model._prepare_computes(fields)
             model.flush()
 
