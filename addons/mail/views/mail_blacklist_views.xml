@@ -17,6 +17,7 @@
         <field name="arch" type="xml">
             <form string="Add Email Blacklist" duplicate="false" edit="false">
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="email"/>
@@ -44,7 +45,7 @@
     </record>
 
     <record id="mail_blacklist_action" model="ir.actions.act_window">
-        <field name="name">Blacklist</field>
+        <field name="name">Blacklisted Email Addresses</field>
         <field name="res_model">mail.blacklist</field>
         <field name="view_id" ref="mail_blacklist_view_tree"/>
         <field name="search_view_id" ref="mail_blacklist_view_search"/>
