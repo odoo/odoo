@@ -11,6 +11,9 @@
     'data': [
         'views/event_lead_views.xml',
     ],
+    'demo': [
+        'data/event_crm_demo.xml',
+    ],
     'installable': True,
     'auto_install': True,
 }
