@@ -943,6 +943,10 @@ var SnippetsMenu = Widget.extend({
             $(range && range.sc).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
         });
 
+        if ($('.o_we_snippet_autofocus').length) {
+            this._activateSnippet($('.o_we_snippet_autofocus').first());
+        }
+
         return Promise.all(defs).then(() => {
             this.$('[data-title]').tooltip({
                 delay: 0,
