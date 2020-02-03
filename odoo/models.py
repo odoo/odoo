@@ -2491,42 +2491,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 _logger.info("Storing computed values of %s", field)
                 self.env.add_to_compute(recs._fields[field], recs)
 
-    def finalize(self):
-        foreign, others = self._get_constraints()
-        self._process_constraints(others)
-        # FK constraints require both columns in the relation to have a UNIQUE constraint
-        # this implies that we must first apply *all* non-FK constraints on *all* models
-        # and *then* apply all FK constraints
-        return foreign
-
-    def _get_constraints(self):
-        foreign = []
-        others = []
-        for (key, definition, _) in self._sql_constraints:
-            if regex_foreign_key.match(definition):
-                foreign.append((key, definition))
-            else:
-                others.append((key, definition))
-        return foreign, others
-
-    @api.model
-    def _process_constraints(self, constraints):
-        if not constraints:
-            return
-
-        # TODO: delegate to each field
-        cr = self._cr
-        for key, definition in constraints:
-            conname = f"{self._table}_{key}"
-            current_def = tools.constraint_definition(cr, self._table, conname)
-            if not current_def:
-                # constraint does not exist, simply add it
-                tools.add_constraint(cr, self._table, conname, definition)
-            elif current_def != definition:
-                # constraint exists but its definition has changed
-                tools.drop_constraint(cr, self._table, conname)
-                tools.add_constraint(cr, self._table, conname, definition)
-
     def init(self):
         """
         .. deprecated:: 14.0

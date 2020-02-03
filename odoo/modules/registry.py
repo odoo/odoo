@@ -11,6 +11,7 @@ from operator import attrgetter
 from weakref import WeakValueDictionary
 import logging
 import os
+import re
 import threading
 
 import odoo
@@ -21,6 +22,10 @@ from odoo.tools import (assertion_report, config, existing_tables, ignore,
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
+
+
+regex_foreign_key = re.compile(r'\s*foreign\s+key\b.*', re.I)
+regex_unique = re.compile(r'\s*unique\b.*', re.I)
 
 
 class Registry(Mapping):
@@ -357,13 +362,40 @@ class Registry(Mapping):
             model.init()
         return fields_to_compute
 
+    def _get_model_constraints(self, models):
+        def sort_constraints(constraint):
+            _, definition, _ = constraint
+            if regex_foreign_key.match(definition):
+                return 2
+            elif regex_unique.match(definition):
+                return 1
+            return 0
+
+        constraints = []
+        for model in models:
+            for (key, definition, _) in model._sql_constraints:
+                constraints.append((key, definition, model))
+        return sorted(constraints, key=sort_constraints)
+
     def _constraint_models(self, models):
-        all_foreign = []
-        auto_models = [model for model in models if model._auto]
-        for model in auto_models:
-            all_foreign.append(model.finalize())
-        for fks, model in zip(all_foreign, auto_models):
-            model._process_constraints(fks)
+        constraints = self._get_model_constraints(models)
+        for constraint in constraints:
+            self._upsert_constraint(constraint)
+
+    def _upsert_constraint(self, constraint):
+        from odoo import tools
+        key, definition, model = constraint
+        cr = model._cr
+        conname = f"{model._table}_{key}"
+        current_def = tools.constraint_definition(cr, model._table, conname)
+        if not current_def:
+            # new constraint, create it
+            tools.add_constraint(cr, model._table, conname, definition)
+        elif current_def != definition:
+            # existing constraint modified by an extending module, update it
+            tools.drop_constraint(cr, model._table, conname)
+            tools.add_constraint(cr, model._table, conname, definition)
+        # else: constraint already exists, don't do anything
 
     def check_tables_exist(self, cr):
         """
