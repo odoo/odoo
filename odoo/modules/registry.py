@@ -333,7 +333,8 @@ class Registry(Mapping):
             func = self._post_init_queue.popleft()
             func()
 
-        self.finalize_models(models)
+        # must be done after the processing of post_init
+        self._constraint_models(models)
 
         # make sure all tables are present
         self.check_tables_exist(cr)
@@ -353,8 +354,9 @@ class Registry(Mapping):
             fields_to_compute.append(model.initialize())
             # deprecated but kept for backwards-compatibility, must always be called
             model.init()
+        return fields_to_compute
 
-    def finalize_models(self, models):
+    def _constraint_models(self, models):
         all_foreign = []
         auto_models = [model for model in models if model._auto]
         for model in auto_models:
