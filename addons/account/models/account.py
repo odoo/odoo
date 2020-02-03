@@ -1511,7 +1511,7 @@ class AccountTax(models.Model):
     - Group of Taxes: The tax is a set of sub taxes.
     - Fixed: The tax amount stays the same whatever the price.
     - Percentage of Price: The tax amount is a % of the price:
-        e.g 100 * 10% = 110 (not price included)
+        e.g 100 * (1 + 10%) = 110 (not price included)
         e.g 110 / (1 + 10%) = 100 (price included)
     - Percentage of Price Tax Included: The tax amount is a division of the price:
         e.g 180 / (1 - 10%) = 200 (not price included)
