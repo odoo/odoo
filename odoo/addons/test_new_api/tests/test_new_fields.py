@@ -932,6 +932,13 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(AccessError):
             cat1.name
 
+        # take a discussion, use mapped(), and check prefetching
+        self.env.clear()
+        discussion = self.env.ref('test_new_api.discussion_0')
+        discussion.mapped('messages.name')
+        # message authors are ready to prefetch
+        self.assertTrue(discussion._prefetch.get('res.users'))
+
     def test_40_new(self):
         """ test new records. """
         discussion = self.env.ref('test_new_api.discussion_0')
