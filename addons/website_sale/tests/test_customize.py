@@ -305,4 +305,11 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_06_admin_list_view_b2c(self):
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
+
+        # activate b2c
+        config = self.env['res.config.settings'].create({})
+        config.show_line_subtotals_tax_selection = "tax_included"
+        config._onchange_sale_tax()
+        config.execute()
+
         self.start_tour("/", 'shop_list_view_b2c', login="admin")
