@@ -72,19 +72,6 @@
 
     <!-- Purchase Orders -->
 
-    <record model="ir.ui.view" id="supplier_info_form_inherit">
-        <field name="name">product.supplierinfo.requisition.view</field>
-        <field name="model">product.supplierinfo</field>
-        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
-        <field name="arch" type="xml">
-            <field name="product_code" position="after">
-                <field name="purchase_requisition_id"
-                    attrs="{'invisible': [('purchase_requisition_id', '=', False)]}"
-                    />
-            </field>
-        </field>
-    </record>
-
     <record model="ir.actions.act_window" id="action_purchase_requisition_to_so">
         <field name="name">Request for Quotation</field>
         <field name="type">ir.actions.act_window</field>

@@ -241,16 +241,6 @@
         </field>
     </record>
 
-    <record id="website_visitor_view_graph" model="ir.ui.view">
-        <field name="name">website.visitor.view.graph</field>
-        <field name="model">website.visitor</field>
-        <field name="arch" type="xml">
-            <graph string="Visitors last connection">
-                <field name="visit_count"/>
-            </graph>
-        </field>
-    </record>
-
     <record id="website_visitor_view_search" model="ir.ui.view">
         <field name="name">website.visitor.view.search</field>
         <field name="model">website.visitor</field>
@@ -282,6 +272,7 @@
         <field name="arch" type="xml">
             <graph string="Visitors">
                 <field name="create_date" type="row"/>
+                <field name="visit_count"/>
             </graph>
         </field>
     </record>
