@@ -25,7 +25,7 @@ _logger = logging.getLogger(__name__)
 # HTML Sanitizer
 #----------------------------------------------------------
 
-tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
+tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "base", "object", "embed"]
 tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
@@ -187,7 +187,8 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         'forms': True,                     # True = remove form tags
         'remove_unknown_tags': False,
         'comments': False,
-        'processing_instructions': False
+        'processing_instructions': False,
+        'embedded': False,
     }
     if sanitize_tags:
         kwargs['allow_tags'] = allowed_tags
