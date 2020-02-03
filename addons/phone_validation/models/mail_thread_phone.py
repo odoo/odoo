@@ -33,7 +33,7 @@ class PhoneMixin(models.AbstractModel):
     phone_blacklisted = fields.Boolean(
         string='Phone Blacklisted', compute="_compute_phone_blacklisted", compute_sudo=True, store=False,
         search="_search_phone_blacklisted", groups="base.group_user",
-        help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list")
+        help="If the phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list")
 
     @api.depends(lambda self: self._phone_get_number_fields())
     def _compute_phone_sanitized(self):
