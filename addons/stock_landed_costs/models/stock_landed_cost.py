@@ -331,7 +331,7 @@ class AdjustmentLines(models.Model):
         'Weight', default=1.0,
         digits='Stock Weight')
     volume = fields.Float(
-        'Volume', default=1.0)
+        'Volume', default=1.0, digits='Volume')
     former_cost = fields.Float(
         'Original Value', digits='Product Price')
     additional_landed_cost = fields.Float(
