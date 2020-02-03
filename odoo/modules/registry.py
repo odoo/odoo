@@ -324,21 +324,10 @@ class Registry(Mapping):
 
         # make sure the queue does not contain some leftover from a former call
         self._post_init_queue.clear()
-        fields_to_compute = []
 
-        for model in models:
-            fields_to_compute.append(model.initialize())
-            # deprecated but kept for backwards-compatibility, must always be called
-            model.init()
-
-        for model in models:
-            model._reflect()
-
-        for model, fields in zip(models, fields_to_compute):
-            model._prepare_computes(fields)
-            model.flush()
-
-        self._ordinary_tables = None
+        fields_to_compute = self._init_models(models)
+        self._reflect_models(models)
+        self._compute_models(models, fields_to_compute)
 
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
@@ -348,6 +337,22 @@ class Registry(Mapping):
 
         # make sure all tables are present
         self.check_tables_exist(cr)
+
+    def _reflect_models(self, models):
+        for model in models:
+            model._reflect()
+
+    def _compute_models(self, models, fields):
+        for model in zip(models, fields):
+            model._prepare_computes(fields)
+            model.flush()
+
+    def _init_models(self, models):
+        fields_to_compute = []
+        for model in models:
+            fields_to_compute.append(model.initialize())
+            # deprecated but kept for backwards-compatibility, must always be called
+            model.init()
 
     def finalize_models(self, models):
         all_foreign = []
