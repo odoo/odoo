@@ -1060,11 +1060,15 @@ var FormRenderer = BasicRenderer.extend({
     _onNavigationMove: function (ev) {
         ev.stopPropagation();
         var index;
+        let target = ev.data.target || ev.target;
+        if (target.__owl__) {
+            target = target.__owl__.parent; // Owl fields are wrapped by the FieldWrapper
+        }
         if (ev.data.direction === "next") {
-            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target || ev.target);
+            index = this.allFieldWidgets[this.state.id].indexOf(target);
             this._activateNextFieldWidget(this.state, index);
         } else if (ev.data.direction === "previous") {
-            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
+            index = this.allFieldWidgets[this.state.id].indexOf(target);
             this._activatePreviousFieldWidget(this.state, index);
         }
     },
