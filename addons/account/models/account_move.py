@@ -1808,6 +1808,7 @@ class AccountMove(models.Model):
         """Compute the percentage to apply for cash basis method. This value is relevant only for moves that
         involve journal items on receivable or payable accounts.
         """
+<<<<<<< HEAD
         self.ensure_one()
         query = '''
             SELECT
@@ -1854,6 +1855,23 @@ class AccountMove(models.Model):
         :return:                The updated default_values.
         '''
         self.ensure_one()
+=======
+        for move in self:
+            total_amount = 0.0
+            total_reconciled = 0.0
+            for line in move.line_ids:
+                if line.account_id.user_type_id.type in ('receivable', 'payable'):
+                    amount = abs(line.balance)
+                    total_amount += amount
+                    for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
+                        total_reconciled += partial_line.amount
+            precision_currency = move.currency_id or move.company_id.currency_id
+
+            if float_is_zero(total_amount, precision_rounding=precision_currency.rounding):
+                move.matched_percentage = 1.0
+            else:
+                move.matched_percentage = total_reconciled / total_amount
+>>>>>>> fcc2e99d0a7... temp
 
         def compute_tax_repartition_lines_mapping(move_vals):
             ''' Computes and returns a mapping between the current repartition lines to the new expected one.
