@@ -251,7 +251,7 @@ function addMockEnvironment(widget, params) {
             var service = services[ev.data.service];
             args = (ev.data.args || []);
             result = service[ev.data.method].apply(service, args);
-        } else if (ev.data.service === 'ajax') {
+        } else if (ev.data.service === 'ajax' && ev.data.method === 'rpc') {
             // use ajax service that is mocked by the server
             var route = ev.data.args[0];
             args = ev.data.args[1];
