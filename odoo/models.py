@@ -1680,7 +1680,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             name
             for name, field in self._fields.items()
             if name not in values
-            if self._log_access and name not in MAGIC_COLUMNS
+            if not (self._log_access and name in MAGIC_COLUMNS)
             if not (field.inherited and field.related_field.model_name in avoid_models)
         }
 
