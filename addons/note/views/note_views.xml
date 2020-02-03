@@ -113,16 +113,14 @@
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
-                  <div class="oe_kanban_bottom_right">
-                    <div class="o_kanban_inline_block mr4">
-                        <field name="activity_ids" widget="kanban_activity" />
-                    </div>
+                  <div class="o_kanban_inline_block float-right mr4">
+                    <field name="activity_ids" widget="kanban_activity" />
                   </div>
                 </span>
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'image_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right" t-att-data-member_id="follower" alt="Follower"/>
+                        <img t-att-src="kanban_image('res.partner', 'image_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right mt-2" t-att-data-member_id="follower" alt="Follower"/>
                       </t>
                     <div class="clearfix"></div>
                 </t>
