@@ -194,7 +194,7 @@ options.registry.gallery = options.Class.extend({
                     $lowest = $col;
                 }
             });
-            $lowest.append(imgs.pop());
+            $lowest.append(imgs.shift());
         }
     },
     /**
