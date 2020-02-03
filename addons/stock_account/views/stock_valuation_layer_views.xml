@@ -54,17 +54,6 @@
         </field>
     </record>
 
-    <record id="stock_valuation_layer_search" model="ir.ui.view">
-        <field name="name">stock.valuation.layer.search</field>
-        <field name="model">stock.valuation.layer</field>
-        <field name="arch" type="xml">
-            <search string="Valuation Layer?">
-                <field name="product_id"/>
-                <filter string="Product" name="group_by_product_id" context="{'group_by':'product_id'}"/>
-            </search>
-        </field>
-    </record>
-
     <record id="stock_valuation_layer_action" model="ir.actions.act_window">
         <field name="name">Stock Valuation</field>
         <field name="type">ir.actions.act_window</field>
@@ -80,6 +69,25 @@
         </field>
     </record>
 
+    <record id="view_inventory_valuation_search" model="ir.ui.view">
+        <field name="name">Inventory Valuation</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <search string="Inventory Valuation">
+                <field name="product_id"/>
+                <field name="categ_id" />
+                <field name="product_tmpl_id" />
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <group expand='0' string='Group by...'>
+                    <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="stock_valuation_layer_action"/>
+
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>
         <field name="model">stock.picking</field>
@@ -93,4 +101,5 @@
             </xpath>
         </field>
     </record>
+    
 </odoo>
