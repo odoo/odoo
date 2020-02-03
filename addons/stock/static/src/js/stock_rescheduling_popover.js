@@ -9,8 +9,9 @@ var _t = core._t;
 
 var PopoverStockPicking = PopoverWidgetField.extend({
     title: _t('Planning Issue'),
-    color: 'text-warning',
     trigger: 'focus',
+    color: 'text-danger',
+    icon: 'fa-exclamation-triangle',
 
     _render: function () {
         this._super();
