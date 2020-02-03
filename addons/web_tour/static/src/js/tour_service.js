@@ -7,9 +7,6 @@ var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
-if (config.device.isMobile) {
-    return Promise.reject();
-}
 /**
  * @namespace
  * @property {Object} active_tooltips
