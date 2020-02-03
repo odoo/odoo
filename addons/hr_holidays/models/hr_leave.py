@@ -593,17 +593,28 @@ class HolidaysRequest(models.Model):
                 else:
                     target = leave.employee_id.name
                 if leave.leave_type_request_unit == 'hour':
-                    res.append(
-                        (leave.id,
-                        _("%s on %s : %.2f hours") %
-                        (target, leave.holiday_status_id.name, leave.number_of_hours_display))
-                    )
+                    res.append((
+                        leave.id,
+                        _("%s on %s: %.2f hours on %s") % (
+                            target,
+                            leave.holiday_status_id.name,
+                            leave.number_of_hours_display,
+                            fields.Date.to_string(leave.date_from),
+                        )
+                    ))
                 else:
-                    res.append(
-                        (leave.id,
-                        _("%s on %s: %.2f days") %
-                        (target, leave.holiday_status_id.name, leave.number_of_days))
-                    )
+                    display_date = fields.Date.to_string(leave.date_from)
+                    if leave.number_of_days > 1:
+                        display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
+                    res.append((
+                        leave.id,
+                        _("%s on %s: %.2f days (%s)") % (
+                            target,
+                            leave.holiday_status_id.name,
+                            leave.number_of_days,
+                            display_date,
+                        )
+                    ))
         return res
 
     def add_follower(self, employee_id):
