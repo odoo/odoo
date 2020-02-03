@@ -133,24 +133,24 @@ def initialize_sys_path():
     if base_path not in odoo.addons.__path__ and os.path.isdir(base_path):
         odoo.addons.__path__.append(base_path)
 
-    # hook odoo.upgrades on upgrades paths
-    from odoo import upgrades
-    for up in tools.config['upgrades_paths'].split(','):
+    # hook odoo.upgrade on upgrade-path
+    from odoo import upgrade
+    for up in tools.config['upgrade_path'].split(','):
         up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
-        if up not in upgrades.__path__:
-            upgrades.__path__.append(up)
+        if up not in upgrade.__path__:
+            upgrade.__path__.append(up)
 
-    # hook odoo.upgrades on legacy odoo/addons/base/maintenance/migrations symlink
-    if not tools.config['upgrades_paths']:
-        upgrades.__path__.append(os.path.join(
+    # hook odoo.upgrade on legacy odoo/addons/base/maintenance/migrations symlink
+    if not tools.config['upgrade_path']:
+        upgrade.__path__.append(os.path.join(
             base_path, 'base', 'maintenance', 'migrations'))
 
-    # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrades
+    # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
     spec = importlib.machinery.ModuleSpec("odoo.addons.base.maintenance", None, is_package=True)
     maintenance_pkg = importlib.util.module_from_spec(spec)
-    maintenance_pkg.migrations = upgrades
+    maintenance_pkg.migrations = upgrade
     sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
-    sys.modules["odoo.addons.base.maintenance.migrations"] = upgrades
+    sys.modules["odoo.addons.base.maintenance.migrations"] = upgrade
 
     if not hooked:
         sys.meta_path.insert(0, OdooHook())

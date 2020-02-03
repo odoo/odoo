@@ -106,7 +106,7 @@ def registry(database_name=None):
 #----------------------------------------------------------
 # Imports
 #----------------------------------------------------------
-from . import upgrades  # this namespace must be imported first
+from . import upgrade  # this namespace must be imported first
 from . import addons
 from . import conf
 from . import loglevels
