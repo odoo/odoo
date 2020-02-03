@@ -231,6 +231,7 @@ list of filtered posts (by date or tag).
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="blog_post"/>
+                    <t t-set="snippet_autofocus" t-value="True"/>
                     <t t-set="use_filters" t-value="True"/>
                     <t t-set="use_size" t-value="True"/>
                     <t t-set="display_opt_name">Blog Post Cover</t>
