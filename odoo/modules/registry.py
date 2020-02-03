@@ -328,6 +328,7 @@ class Registry(Mapping):
         fields_to_compute = self._init_models(models)
         self._reflect_models(models)
         self._compute_models(models, fields_to_compute)
+        self._ordinary_tables = None
 
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
