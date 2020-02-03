@@ -441,6 +441,7 @@ registry.slider = publicWidget.Widget.extend({
         this._computeHeights();
         // Initialize carousel and pause if in edit mode.
         this.$target.carousel(this.editableMode ? 'pause' : undefined);
+        $(window).on('resize.slider', _.debounce(() => this._computeHeights(), 250));
         return this._super.apply(this, arguments);
     },
     /**
@@ -454,6 +455,7 @@ registry.slider = publicWidget.Widget.extend({
         _.each(this.$('.carousel-item'), function (el) {
             $(el).css('min-height', '');
         });
+        $(window).off('.slider');
     },
 
     //--------------------------------------------------------------------------

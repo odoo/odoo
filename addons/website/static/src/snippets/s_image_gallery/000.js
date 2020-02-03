@@ -7,7 +7,7 @@ var publicWidget = require('web.public.widget');
 var qweb = core.qweb;
 
 const GalleryWidget = publicWidget.Widget.extend({
-    selector: '.o_gallery:not(.o_slideshow)',
+    selector: '.s_image_gallery:not(.o_slideshow)',
     xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
     events: {
         'click img': '_onClickImg',
@@ -28,9 +28,7 @@ const GalleryWidget = publicWidget.Widget.extend({
         var self = this;
         var $cur = $(ev.currentTarget);
 
-        var milliseconds = undefined;
-        var params = undefined;
-        var $images = $cur.closest('.o_gallery').find('img');
+        var $images = $cur.closest('.s_image_gallery').find('img');
         var size = 0.8;
         var dimensions = {
             min_width: Math.round(window.innerWidth * size * 0.9),
@@ -43,7 +41,7 @@ const GalleryWidget = publicWidget.Widget.extend({
 
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
 
-        milliseconds = $cur.closest('.o_gallery').data('interval') || false;
+        const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
         var $modal = $(qweb.render('website.gallery.slideshow.lightbox', {
             images: $images.get(),
             index: $images.index($img),
