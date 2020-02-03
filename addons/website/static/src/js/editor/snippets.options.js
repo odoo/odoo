@@ -2,6 +2,7 @@ odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
 require('website.s_popup_options');
+const ColorpickerDialog = require('web.ColorpickerDialog');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 const wUtils = require('website.utils');
@@ -1036,6 +1037,15 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
+        let colorPickerWidget = null;
+        this.trigger_up('user_value_widget_request', {
+            name: 'bg_color_opt',
+            onSuccess: _widget => colorPickerWidget = _widget,
+        });
+        const color = colorPickerWidget._value;
+        const isCSSColor = ColorpickerDialog.isCSSColor(color);
+        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : 'bg-' + color;
+        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color:${color};` : '';
     },
 
     //--------------------------------------------------------------------------

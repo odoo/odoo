@@ -107,6 +107,7 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
 
     def _default_cover_properties(self):
         return {
+            "background_color_class": "bg-secondary",
             "background-image": "none",
             "opacity": "0.2",
             "resize_class": "o_half_screen_height",
