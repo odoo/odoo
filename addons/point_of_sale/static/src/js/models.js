@@ -956,6 +956,7 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     // wrapper around the _save_to_server that updates the synch status widget
+    // Resolves to the backend ids of the synced orders.
     _flush_orders: function(orders, options) {
         var self = this;
         this.set_synch('connecting', orders.length);
@@ -1241,6 +1242,12 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     format_currency_no_symbol: function(amount, precision, currency) {
+        if (!currency) {
+            currency =
+                this && this.currency
+                    ? this.currency
+                    : { symbol: '$', position: 'after', rounding: 0.01, decimals: 2 };
+        }
         var decimals = currency.decimals;
 
         if (precision && this.dp[precision] !== undefined) {

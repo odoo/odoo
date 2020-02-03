@@ -908,6 +908,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
 	var paymentlines = this.pos.get_order().get_paymentlines();
 	var open_paymentline = false;
 
+    // if one of the paymentlines is not paid,
+    // then do not make a new line.
+    // if everything is paid, then make a new line.
 	for (var i = 0; i < paymentlines.length; i++) {
 	    if (! paymentlines[i].paid) {
 		open_paymentline = true;
@@ -1212,7 +1215,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var order = this.pos.get_order();
         if(this.old_order){
             this.old_order.stop_electronic_payment();
-            // TODO
+            // TODO jcb
             // This doesn't properly remove the bound events in the old_order
             // So when you switch back-and-forth between to orders, the on 'all'
             // events are duplicated several times.
@@ -1583,7 +1586,6 @@ return {
     OrderWidget: OrderWidget,
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
-    ClientListScreenWidget: ClientListScreenWidget,
     ActionpadWidget: ActionpadWidget,
     DomCache: DomCache,
     ScaleScreenWidget: ScaleScreenWidget,
