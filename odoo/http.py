@@ -761,7 +761,7 @@ class HttpRequest(WebRequest):
         if self._is_cors_preflight(request.endpoint):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
             }
             return Response(status=200, headers=headers)
 
