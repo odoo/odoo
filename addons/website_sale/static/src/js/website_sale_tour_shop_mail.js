@@ -51,14 +51,8 @@ tour.register('shop_mail', {
         content: "check product is in cart, get cart id, go to backend",
         trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
         run: function () {
-            rpc.query({
-                'model': 'website',
-                'method': 'sale_get_order',
-                'args': [[$('html').data('website-id')]],
-            }).then(function (data) {
-                var orderId = parseInt(data.match(/sale\.order\((\d+),\)/)[1]);
-                window.location.href = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
-            });
+            var orderId = $('.my_cart_quantity').data('order-id');
+            window.location.href = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
         },
     },
     {
