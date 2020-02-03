@@ -9,7 +9,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Mark Lee <odoos@soti.33mail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -304,12 +304,12 @@ msgstr "팔로워 (협력사)"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr "입금"
+msgstr "반입 결제에 대해"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
 msgid "For Outgoing Payments"
-msgstr "출금"
+msgstr "반출 결제에 대해"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
@@ -352,14 +352,14 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "If it contains transactions for more than one account, it must be imported "
 "on each of them."
-msgstr ""
+msgstr "둘 이상의 계정에 대한 거래가 포함된 경우 각 계정에서 가져와야 합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
 msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
-msgstr ""
+msgstr "선택하면 회계 항목 또는 송장이 전기되는 즉시 해시를 받고 더 이상 수정할 수 없습니다."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:0
@@ -406,7 +406,7 @@ msgstr "차변 금액의 기본 계정 역할을 합니다."
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr ""
+msgstr "이메일을 보내서 송장 및 청구서 초안을 작성합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -446,7 +446,7 @@ msgstr "JSON 활동 데이터"
 msgid ""
 "Just click OK to create the account/journal and finish the upload. If this "
 "was a mistake, hit cancel to abort the upload."
-msgstr ""
+msgstr "확인을 클릭하여 계정/분개장을 작성하고 업로드를 완료하십시오. 이것이 실수인 경우 취소를 눌러 업로드를 중단하십시오."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -479,7 +479,7 @@ msgstr "최근 갱신일"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr ""
+msgstr "해시로 전기된 항목 잠금"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -582,7 +582,7 @@ msgstr "확인"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at
 msgid "Post At"
-msgstr ""
+msgstr "다음에 전기"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -602,7 +602,7 @@ msgstr "SMS메시지 전송 에러"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
 msgid "Secure Sequence"
-msgstr ""
+msgstr "안전한 순서"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -630,7 +630,7 @@ msgstr "순서"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr ""
+msgstr "데이터 보안을 보장하기 위해 사용할 순서"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
@@ -667,6 +667,7 @@ msgid ""
 "In order to proceed with the upload, you need to create a bank journal for "
 "this account."
 msgstr ""
+"업로드 한 명세서의 계정이 아직 Odoo에 기록되지 않았습니다. 업로드를 진행하려면 이 계정에 대한 은행 분개장을 작성해야 합니다."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -691,7 +692,7 @@ msgstr "명세서 입력에 사용하는 통화"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "이 분개장의 분개는 이 접두사를 사용하여 이름을 지정합니다."
+msgstr "이 분개장의 분개장 기입 항목은 이 접두사를 사용하여 이름을 지정합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
@@ -715,7 +716,7 @@ msgstr "이 필드는 이 분개장의 대변 전표 항목에 번호를 지정�
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "이 필드는 이 분개장의 분개에 번호를 지정하는 작업과 관련된 정보가 포함되어 있습니다."
+msgstr "이 필드는 이 분개장의 분개장 기입 항목에 번호를 지정하는 작업과 관련된 정보가 포함되어 있습니다."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -805,7 +806,7 @@ msgstr "해당 파일은 이미 가져왔습니다."
 msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
-msgstr ""
+msgstr "참조 유형마다 다른 모델을 선택할 수 있습니다. 기본 설정은 Odoo 참조입니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type

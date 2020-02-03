@@ -11,7 +11,7 @@
 # Sergey Doroshenko <sdoroshenko@artwebny.com>, 2019
 # Bohdan Lisnenko, 2019
 # Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10858,6 +10858,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Рахунок вже використовується у журналі 'продажі' або 'купівлі'. Це означає, "
+"що тип рахунку не може бути 'дебіторським' або 'оплачуваним'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10917,6 +10919,10 @@ msgid ""
 "field has to be left empty when the amount is expressed in the company "
 "currency."
 msgstr ""
+"Сума виражена у другій валюті повинна бути більше нуля, коли  in the "
+"secondary currencyповинні бути позитивними при списанні рахунку та "
+"негативними, коли рахунок зараховується. Більше того, поле валюти повинно "
+"залишатися порожнім, коли сума виражається у валюті компанії."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11500,6 +11506,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
+"Тип кредиторського/дебеторського рахунку журналу за замовчуванням не повинен"
+" бути «дебіторським» або «кредиторським»."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
