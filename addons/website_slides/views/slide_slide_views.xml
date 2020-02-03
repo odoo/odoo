@@ -46,8 +46,7 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
-                            attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))], 'invisible': [('is_category', '=', True)]}"
-                        />
+                            attrs="{'invisible': [('is_category', '=', True)]}"/>
                         <div class="oe_title">
                             <div>
                                 <label for="name" string="Content Title" class="oe_edit_only"/>

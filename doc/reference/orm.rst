@@ -127,7 +127,11 @@ Basic Fields
 Advanced Fields
 ---------------
 
+.. autoclass:: Binary()
+
 .. autoclass:: Html()
+
+.. autoclass:: Image()
 
 .. autoclass:: Monetary()
 
@@ -858,6 +862,16 @@ Map
 '''
 
 .. automethod:: Model.mapped
+
+.. note::
+
+    Since V13, multi-relational field access is supported and works like a mapped call:
+
+    .. code-block:: python3
+
+        records.partner_id  # == records.mapped('partner_id')
+        records.partner_id.bank_ids  # == records.mapped('partner_id.bank_ids')
+        records.partner_id.mapped('name')  # == records.mapped('partner_id.name')
 
 Sort
 ''''
