@@ -15,8 +15,9 @@
         <field name="name">phone.blacklist.view.form</field>
         <field name="model">phone.blacklist</field>
         <field name="arch" type="xml">
-            <form string="Phone Blacklist" duplicate="false">
+            <form string="Phone Blacklist" duplicate="false" edit="false">
                 <sheet>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="number"/>
@@ -44,7 +45,7 @@
     </record>
 
     <record id="phone_blacklist_action" model="ir.actions.act_window">
-        <field name="name">Phone Blacklist</field>
+        <field name="name">Blacklisted Phone Numbers</field>
         <field name="res_model">phone.blacklist</field>
         <field name="view_id" ref="phone_blacklist_view_tree"/>
         <field name="search_view_id" ref="phone_blacklist_view_search"/>
