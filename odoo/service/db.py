@@ -3,6 +3,7 @@ import base64
 import json
 import logging
 import os
+import re
 import shutil
 import tempfile
 import threading
@@ -383,6 +384,13 @@ def list_dbs(force=False):
             res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
         except Exception:
             res = []
+
+    if odoo.tools.config['dbfilter']:
+        # In case --db-filter is provided, Odoo will fetch the list of databases
+        # available on the postgres server and filter them.
+        r = odoo.tools.config['dbfilter'].replace('%h', '').replace('%d', '')
+        res = [i for i in res if re.match(r, i)]
+
     res.sort()
     return res
 
