@@ -46,6 +46,9 @@
     ],
     'installable': True,
     'application': True,
-    'qweb': ['static/src/xml/pos.xml'],
+    'qweb': [
+        'static/src/xml/pos.xml',
+        'static/src/components/OrderWidget/templates.xml',
+    ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

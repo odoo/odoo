@@ -1224,6 +1224,60 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     electronic_payment_interfaces: {},
+
+    format_currency: function(amount, precision) {
+        var currency =
+            this && this.currency
+                ? this.currency
+                : { symbol: '$', position: 'after', rounding: 0.01, decimals: 2 };
+
+        amount = this.format_currency_no_symbol(amount, precision, currency);
+
+        if (currency.position === 'after') {
+            return amount + ' ' + (currency.symbol || '');
+        } else {
+            return (currency.symbol || '') + ' ' + amount;
+        }
+    },
+
+    format_currency_no_symbol: function(amount, precision, currency) {
+        var decimals = currency.decimals;
+
+        if (precision && this.dp[precision] !== undefined) {
+            decimals = this.dp[precision];
+        }
+
+        if (typeof amount === 'number') {
+            amount = round_di(amount, decimals).toFixed(decimals);
+            amount = field_utils.format.float(round_di(amount, decimals), {
+                digits: [69, decimals],
+            });
+        }
+
+        return amount;
+    },
+
+    format_pr: function(value, precision) {
+        var decimals =
+            precision > 0
+                ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10)))
+                : 0;
+        return value.toFixed(decimals);
+    },
+
+    format_fixed: function(value, integer_width, decimal_width) {
+        value = value.toFixed(decimal_width || 0);
+        var width = value.indexOf('.');
+        if (width < 0) {
+            width = value.length;
+        }
+        var missing = integer_width - width;
+        while (missing > 0) {
+            value = '0' + value;
+            missing--;
+        }
+        return value;
+    },
 });
 
 /**

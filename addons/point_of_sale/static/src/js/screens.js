@@ -37,6 +37,8 @@ var field_utils = require('web.field_utils');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 var Printer = require('point_of_sale.Printer').Printer;
 
+const { OrderWidget } = require('point_of_sale.OrderWidget');
+
 var QWeb = core.qweb;
 var _t = core._t;
 
@@ -507,177 +509,6 @@ var ActionpadWidget = PosBaseWidget.extend({
     }
 });
 
-/* --------- The Order Widget --------- */
-
-// Displays the current Order.
-
-var OrderWidget = PosBaseWidget.extend({
-    template:'OrderWidget',
-    init: function(parent, options) {
-        var self = this;
-        this._super(parent,options);
-
-        this.numpad_state = options.numpad_state;
-        this.numpad_state.reset();
-        this.numpad_state.on('set_value',   this.set_value, this);
-
-        this.pos.on('change:selectedOrder', this.change_selected_order, this);
-
-        this.line_click_handler = function(event){
-            self.click_line(this.orderline, event);
-        };
-
-        if (this.pos.get_order()) {
-            this.bind_order_events();
-        }
-
-    },
-    click_line: function(orderline, event) {
-        this.pos.get_order().select_orderline(orderline);
-        this.numpad_state.reset();
-    },
-
-
-    set_value: function(val) {
-    	var order = this.pos.get_order();
-    	if (order.get_selected_orderline()) {
-            var mode = this.numpad_state.get('mode');
-            if( mode === 'quantity'){
-                order.get_selected_orderline().set_quantity(val);
-            }else if( mode === 'discount'){
-                order.get_selected_orderline().set_discount(val);
-            }else if( mode === 'price'){
-                var selected_orderline = order.get_selected_orderline();
-                selected_orderline.price_manually_set = true;
-                selected_orderline.set_unit_price(val);
-            }
-            if (this.pos.config.iface_customer_facing_display) {
-                this.pos.send_current_order_to_customer_facing_display();
-            }
-    	}
-    },
-    change_selected_order: function() {
-        if (this.pos.get_order()) {
-            this.bind_order_events();
-            this.numpad_state.reset();
-            this.renderElement();
-        }
-    },
-    orderline_add: function(){
-        this.numpad_state.reset();
-        this.renderElement('and_scroll_to_bottom');
-    },
-    orderline_remove: function(line){
-        this.remove_orderline(line);
-        this.numpad_state.reset();
-        // This method call is unnecessary because orderline_change is also called
-        // which already calls the update_summary.
-        // this.update_summary();
-    },
-    orderline_change: function(line){
-        this.rerender_orderline(line);
-        this.update_summary();
-    },
-    bind_order_events: function() {
-        var order = this.pos.get_order();
-            order.off('change:client', this.update_summary, this);
-            order.on('change:client',   this.update_summary, this);
-            order.off('change',        this.update_summary, this);
-            order.on('change',          this.update_summary, this);
-
-        var lines = order.orderlines;
-            lines.off('add',     this.orderline_add,    this);
-            lines.on('add',       this.orderline_add,    this);
-            lines.off('remove',  this.orderline_remove, this);
-            lines.on('remove',    this.orderline_remove, this);
-            lines.off('change',  this.orderline_change, this);
-            lines.on('change',    this.orderline_change, this);
-
-    },
-    render_orderline: function(orderline){
-        var el_str  = QWeb.render('Orderline',{widget:this, line:orderline}); 
-        var el_node = document.createElement('div');
-            el_node.innerHTML = _.str.trim(el_str);
-            el_node = el_node.childNodes[0];
-            el_node.orderline = orderline;
-            el_node.addEventListener('click',this.line_click_handler);
-        var el_lot_icon = el_node.querySelector('.line-lot-icon');
-        if(el_lot_icon){
-            el_lot_icon.addEventListener('click', (function() {
-                this.show_product_lot(orderline);
-            }.bind(this)));
-        }
-
-        orderline.node = el_node;
-        return el_node;
-    },
-    remove_orderline: function(order_line){
-        if(this.pos.get_order().get_orderlines().length === 0){
-            this.renderElement();
-        }else{
-            order_line.node.parentNode.removeChild(order_line.node);
-        }
-    },
-    rerender_orderline: function(order_line){
-        var node = order_line.node;
-        var replacement_line = this.render_orderline(order_line);
-        node.parentNode.replaceChild(replacement_line,node);
-    },
-    // overriding the openerp framework replace method for performance reasons
-    replace: function($target){
-        this.renderElement();
-        var target = $target[0];
-        target.parentNode.replaceChild(this.el,target);
-    },
-    renderElement: function(scrollbottom){
-        var order  = this.pos.get_order();
-        if (!order) {
-            return;
-        }
-        var orderlines = order.get_orderlines();
-
-        var el_str  = QWeb.render('OrderWidget',{widget:this, order:order, orderlines:orderlines});
-
-        var el_node = document.createElement('div');
-            el_node.innerHTML = _.str.trim(el_str);
-            el_node = el_node.childNodes[0];
-
-
-        var list_container = el_node.querySelector('.orderlines');
-        for(var i = 0, len = orderlines.length; i < len; i++){
-            var orderline = this.render_orderline(orderlines[i]);
-            list_container.appendChild(orderline);
-        }
-
-        if(this.el && this.el.parentNode){
-            this.el.parentNode.replaceChild(el_node,this.el);
-        }
-        this.el = el_node;
-        this.update_summary();
-
-        if(scrollbottom){
-            this.el.querySelector('.order-scroller').scrollTop = 100 * orderlines.length;
-        }
-    },
-    update_summary: function(){
-        var order = this.pos.get_order();
-        if (!order.get_orderlines().length) {
-            return;
-        }
-
-        var total     = order ? order.get_total_with_tax() : 0;
-        var taxes     = order ? total - order.get_total_without_tax() : 0;
-
-        this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
-        this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
-    },
-    show_product_lot: function(orderline){
-        this.pos.get_order().select_orderline(orderline);
-        var order = this.pos.get_order();
-        order.display_lot_popup();
-    },
-});
-
 /* ------ The Product Categories ------ */
 
 // Display and navigate the product categories.
@@ -1047,10 +878,22 @@ var ProductScreenWidget = ScreenWidget.extend({
         this.numpad = new NumpadWidget(this,{});
         this.numpad.replace(this.$('.placeholder-NumpadWidget'));
 
-        this.order_widget = new OrderWidget(this,{
-            numpad_state: this.numpad.state,
+        this.orderWidget = new OrderWidget(null, {
+            order: this.pos.get_order(),
+            pos: this.pos,
+            numpadState: this.numpad.state,
         });
-        this.order_widget.replace(this.$('.placeholder-OrderWidget'));
+        this.orderWidget.mount(this.$('.placeholder-OrderWidget')[0], {position: "self"});
+
+        this.pos.on('change:selectedOrder', () => {
+            this.orderWidget.unmount();
+            this.orderWidget = new OrderWidget(null, {
+                pos: this.pos,
+                order: this.pos.get_order(),
+                numpadState: this.numpad.state,
+            });
+            this.orderWidget.mount(this.$('.placeholder-OrderWidget')[0], {position: "self"})
+        })
 
         this.product_list_widget = new ProductListWidget(this,{
             click_product_action: function(product){ self.click_product(product); },
@@ -2247,6 +2090,10 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var order = this.pos.get_order();
         if(this.old_order){
             this.old_order.stop_electronic_payment();
+            // TODO
+            // This doesn't properly remove the bound events in the old_order
+            // So when you switch back-and-forth between to orders, the on 'all'
+            // events are duplicated several times.
             this.old_order.off(null, null, this);
             this.old_order.paymentlines.off(null, null, this);
         }
