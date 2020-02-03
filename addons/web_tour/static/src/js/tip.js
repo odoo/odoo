@@ -135,6 +135,7 @@ var Tip = Widget.extend({
             p = $location.css("position");
         } while (
             $location.hasClass('dropdown-menu') ||
+            $location.hasClass('o_notebook_headers') ||
             (
                 (o === "visible" || o === "hidden") &&
                 p !== "fixed" &&
