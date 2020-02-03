@@ -123,3 +123,21 @@ class TestUi(odoo.tests.HttpCase):
             'website_id': website.id,
         })
         self.start_tour("/", 'website_navbar_menu')
+
+    def test_05_specific_website_editor(self):
+        website_default = self.env['website'].search([], limit=1)
+        new_website = self.env['website'].create({'name': 'New Website'})
+        website_editor_assets_view = self.env.ref('website.assets_wysiwyg')
+        self.env['ir.ui.view'].create({
+            'name': 'Editor Extension',
+            'type': 'qweb',
+            'inherit_id': website_editor_assets_view.id,
+            'website_id': new_website.id,
+            'arch': """
+                <xpath expr="." position="inside">
+                    <script type="text/javascript">document.body.dataset.hello = 'world';</script>
+                </xpath>
+            """,
+        })
+        self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
+        self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')

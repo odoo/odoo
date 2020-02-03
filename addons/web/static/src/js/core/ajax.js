@@ -428,6 +428,8 @@ var loadXML = (function () {
  * Loads a template file according to the given xmlId.
  *
  * @param {string} [xmlId] - the template xmlId
+ * @param {Object} [context]
+ *        additionnal rpc context to be merged with the default one
  * @returns {Deferred} resolved with an object
  *          cssLibs: list of css files
  *          cssContents: list of style tag contents
@@ -437,16 +439,17 @@ var loadXML = (function () {
 var loadAsset = (function () {
     var cache = {};
 
-    var load = function loadAsset(xmlId) {
+    var load = function loadAsset(xmlId, context) {
         if (cache[xmlId]) {
             return Promise.resolve(cache[xmlId]);
         }
+        context = _.extend({}, odoo.session_info.user_context, context);
         var params = {
             args: [xmlId, {
                 debug: config.isDebug()
             }],
             kwargs: {
-                context: odoo.session_info.user_context,
+                context: context,
             },
             method: 'render_template',
             model: 'ir.ui.view',
@@ -499,10 +502,12 @@ var loadAsset = (function () {
  *      List of inline styles to add after loading the CSS files.
  * @param {string[]} [libs.jsContents=[]]
  *      List of inline scripts to add after loading the JS files.
+ * @param {Object} [context]
+ *        additionnal rpc context to be merged with the default one
  *
  * @returns {Promise}
  */
-function loadLibs(libs) {
+function loadLibs(libs, context) {
     var mutex = new concurrency.Mutex();
     mutex.exec(function () {
         var defs = [];
@@ -525,7 +530,7 @@ function loadLibs(libs) {
     });
     mutex.exec(function () {
         return _loadArray(libs.assetLibs || [], function (xmlID) {
-            return ajax.loadAsset(xmlID).then(function (asset) {
+            return ajax.loadAsset(xmlID, context).then(function (asset) {
                 return ajax.loadLibs(asset);
             });
         });
