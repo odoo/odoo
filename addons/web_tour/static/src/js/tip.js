@@ -320,6 +320,10 @@ Tip.getConsumeEventType = function ($element) {
         if ($element.hasClass("o_field_date_range")) {
             return "apply.daterangepicker input";
         }
+        if (config.device.isMobile &&
+            $element.closest('.o_field_widget').is('.o_field_many2one, .o_field_many2many')) {
+            return "click";
+        }
         return "input";
     } else if ($element.hasClass('ui-draggable-handle')) {
         return "drag";
