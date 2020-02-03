@@ -11,8 +11,12 @@ class WebsiteEvent(WebsiteEventController):
         registrations = super(WebsiteEvent, self)._process_attendees_form(event, form_details)
         for registration in registrations:
             answer_ids = []
+            keys = []
             for key, value in registration.items():
                 if key.startswith('answer_ids-'):
                     answer_ids.append([4, int(value)])
+                    keys.append(key)
             registration['answer_ids'] = answer_ids
+            for key in keys:
+                registration.pop(key)
         return registrations

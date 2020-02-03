@@ -303,8 +303,10 @@ class WebsiteEventController(http.Controller):
         global_values = {}
         for key, value in form_details.items():
             counter, field_name = key.split('-', 1)
+            f_name = field_name.split('-', 1)
             if field_name not in registration_fields:
-                continue
+                if f_name[0] not in registration_fields:
+                    continue
             elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
                 value = int(value)
             else:
