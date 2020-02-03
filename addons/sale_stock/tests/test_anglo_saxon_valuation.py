@@ -855,3 +855,79 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
 
+    def test_fifo_delivered_invoice_post_delivery_2(self):
+        """Receive at 8 then at 10. Sale order 10@12 and deliver without receiving the 2 missing.
+        receive 2@12. Invoice."""
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+
+        in_move_1 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 8,
+            'price_unit': 10,
+        })
+        in_move_1._action_confirm()
+        in_move_1.quantity_done = 8
+        in_move_1._action_done()
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 12,
+                    'tax_id': False,  # no love taxes amls
+                })],
+        })
+        sale_order.action_confirm()
+
+        # Deliver 10
+        sale_order.picking_ids.move_lines.quantity_done = 10
+        sale_order.picking_ids.button_validate()
+
+        # Make the second receipt
+        in_move_2 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 2,
+            'price_unit': 12,
+        })
+        in_move_2._action_confirm()
+        in_move_2.quantity_done = 2
+        in_move_2._action_done()
+        self.assertEqual(self.product.stock_valuation_layer_ids[-1].value, -4)  # we sent two at 10 but they should have been sent at 12
+        self.assertEqual(self.product.stock_valuation_layer_ids[-1].quantity, 0)
+        self.assertEqual(sale_order.order_line.move_ids.stock_valuation_layer_ids[-1].quantity, 0)
+
+        # Invoice the sale order.
+        invoice = sale_order._create_invoices()
+        invoice.post()
+
+        # Check the resulting accounting entries
+        amls = invoice.line_ids
+        self.assertEqual(len(amls), 4)
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.stock_output_account)
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 104)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.expense_account)
+        self.assertEqual(cogs_aml.debit, 104)
+        self.assertEqual(cogs_aml.credit, 0)
+        receivable_aml = amls.filtered(lambda aml: aml.account_id == self.recv_account)
+        self.assertEqual(receivable_aml.debit, 120)
+        self.assertEqual(receivable_aml.credit, 0)
+        income_aml = amls.filtered(lambda aml: aml.account_id == self.income_account)
+        self.assertEqual(income_aml.debit, 0)
+        self.assertEqual(income_aml.credit, 120)
+
