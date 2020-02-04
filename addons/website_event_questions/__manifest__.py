@@ -9,7 +9,6 @@
     'data': [
         'views/event_views.xml',
         'views/event_templates.xml',
-        'report/report_event_question_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
