@@ -12,12 +12,7 @@ import sys
 import threading
 import traceback
 
-
-try:
-    from xmlrpc import client as xmlrpclib
-except ImportError:
-    # pylint: disable=bad-python3-import
-    import xmlrpclib
+from xmlrpc import client as xmlrpclib
 
 import werkzeug.exceptions
 import werkzeug.wrappers
