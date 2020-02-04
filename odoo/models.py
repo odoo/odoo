@@ -4307,8 +4307,14 @@ Record ids: %(records)s
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
-    def _flush_search(self, domain, fields=None, order=None):
+    def _flush_search(self, domain, fields=None, order=None, seen=None):
         """ Flush all the fields appearing in `domain`, `fields` and `order`. """
+        if seen is None:
+            seen = set()
+        elif self._name in seen:
+            return
+        seen.add(self._name)
+
         to_flush = defaultdict(set)             # {model_name: field_names}
         if fields:
             to_flush[self._name].update(fields)
@@ -4354,8 +4360,11 @@ Record ids: %(records)s
         order_spec = order or self._order
         for order_part in order_spec.split(','):
             order_field = order_part.split()[0]
-            if order_field in self._fields:
+            field = self._fields.get(order_field)
+            if field is not None:
                 to_flush[self._name].add(order_field)
+                if field.relational:
+                    self.env[field.comodel_name]._flush_search([], seen=seen)
 
         if self._active_name:
             to_flush[self._name].add(self._active_name)
