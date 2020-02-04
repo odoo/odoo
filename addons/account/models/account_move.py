@@ -11,6 +11,7 @@ from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
 
+import ast
 import json
 import re
 
@@ -3967,9 +3968,12 @@ class AccountMoveLine(models.Model):
         return ids
 
     def open_reconcile_view(self):
-        [action] = self.env.ref('account.action_account_moves_all_a').read()
+        [action] = self.env.ref('account.action_account_moves_journal_misc').read()
         ids = self._reconciled_lines()
         action['domain'] = [('id', 'in', ids)]
+        action['context'] = ast.literal_eval(action['context'])
+        action['context']['search_default_misc_filter'] = 0
+        action['context']['search_default_posted'] = 0
         return action
 
     def action_accrual_entry(self):
