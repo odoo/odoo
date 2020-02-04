@@ -171,7 +171,7 @@ class StockMoveLine(models.Model):
             # associated done move.
             if 'picking_id' in vals and not vals.get('move_id'):
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
-                if picking.state == 'done':
+                if picking.state == 'done' or (picking.immediate_transfer and picking.state == 'draft' and self.env.user.has_group('stock.group_tracking_lot')):
                     product = self.env['product.product'].browse(vals['product_id'])
                     new_move = self.env['stock.move'].create({
                         'name': _('New Move:') + product.display_name,
@@ -180,7 +180,7 @@ class StockMoveLine(models.Model):
                         'product_uom': vals['product_uom_id'],
                         'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
                         'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
-                        'state': 'done',
+                        'state': picking.state,
                         'additional': True,
                         'picking_id': picking.id,
                     })
