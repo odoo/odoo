@@ -90,7 +90,6 @@ class StockRule(models.Model):
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
-            'date_planned_finished': fields.Datetime.from_string(values['date_planned']),
             'date_planned_start': date_deadline,
             'procurement_group_id': False,
             'delay_alert': self.delay_alert,
@@ -106,11 +105,10 @@ class StockRule(models.Model):
 
     def _get_date_planned(self, product_id, company_id, values):
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
-        if product_id.produce_delay:
-            date_planned = format_date_planned - relativedelta(days=product_id.produce_delay)
-        else:
-            date_planned = format_date_planned - relativedelta(hours=1)
+        date_planned = format_date_planned - relativedelta(days=product_id.produce_delay)
         date_planned = date_planned - relativedelta(days=company_id.manufacturing_lead)
+        if date_planned == format_date_planned:
+            date_planned = date_planned - relativedelta(hours=1)
         return date_planned
 
     def _get_lead_days(self, product):
