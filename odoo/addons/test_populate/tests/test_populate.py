@@ -5,10 +5,7 @@ import logging
 from odoo.tests import common
 from odoo.cli.populate import Populate
 from odoo.tools import mute_logger, populate
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from unittest.mock import patch
 
 
 _logger = logging.getLogger(__name__)

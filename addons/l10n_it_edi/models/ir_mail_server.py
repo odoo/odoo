@@ -10,14 +10,10 @@ import email.policy
 import dateutil
 import pytz
 import base64
-try:
-    from xmlrpc import client as xmlrpclib
-except ImportError:
-    import xmlrpclib
-
 
 from lxml import etree
 from datetime import datetime
+from xmlrpc import client as xmlrpclib
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError

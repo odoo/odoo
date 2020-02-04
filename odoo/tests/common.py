@@ -32,7 +32,9 @@ from datetime import datetime, date
 from unittest.mock import patch
 
 from decorator import decorator
+from itertools import zip_longest as izip_longest
 from lxml import etree, html
+from xmlrpc import client as xmlrpclib
 
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
@@ -41,21 +43,11 @@ from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
 try:
-    from itertools import zip_longest as izip_longest
-except ImportError:
-    from itertools import izip_longest
-
-try:
     import websocket
 except ImportError:
     # chrome headless tests will be skipped
     websocket = None
 
-try:
-    from xmlrpc import client as xmlrpclib
-except ImportError:
-    # pylint: disable=bad-python3-import
-    import xmlrpclib
 
 import odoo
 import pprint

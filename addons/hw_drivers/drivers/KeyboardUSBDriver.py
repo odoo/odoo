@@ -13,10 +13,7 @@ import time
 from threading import Lock
 from usb import util
 import urllib3
-try:
-    from queue import Queue, Empty
-except ImportError:
-    from Queue import Queue, Empty  # pylint: disable=deprecated-module
+from queue import Queue, Empty
 
 from odoo import http, _
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers

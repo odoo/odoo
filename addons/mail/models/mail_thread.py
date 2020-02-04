@@ -16,15 +16,12 @@ import re
 import socket
 import time
 import threading
-try:
-    from xmlrpc import client as xmlrpclib
-except ImportError:
-    import xmlrpclib
 
 from collections import namedtuple
 from email.message import EmailMessage
 from lxml import etree
 from werkzeug import urls
+from xmlrpc import client as xmlrpclib
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
 from odoo.exceptions import MissingError
