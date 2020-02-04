@@ -9,9 +9,6 @@ var _t = core._t;
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = Widget.extend({
-    events: {
-        'click .o_wevent_registration_btn': '_onRegistrationBtnClick',
-    },
 
     /**
      * @override
@@ -44,7 +41,7 @@ var EventRegistrationForm = Widget.extend({
         var $button = $(ev.currentTarget).closest('[type="submit"]');
         var post = {};
         $('#registration_form table').siblings('.alert').remove();
-        $('#registration_form select').each(function () {
+        $('#registration_form select, #registration_form textarea').each(function () {
             post[$(this).attr('name')] = $(this).val();
         });
         var tickets_ordered = _.some(_.map(post, function (value, key) { return parseInt(value); }));
@@ -69,15 +66,6 @@ var EventRegistrationForm = Widget.extend({
                 });
             });
         }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onRegistrationBtnClick: function (ev) {
-        var $btn = $(ev.currentTarget);
-        $btn.toggleClass('btn-primary text-left pl-0');
-        $btn.siblings().toggleClass('d-none');
     },
 });
 

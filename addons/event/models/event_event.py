@@ -21,7 +21,7 @@ except ImportError:
 
 class EventType(models.Model):
     _name = 'event.type'
-    _description = 'Event Category'
+    _description = 'Event Template'
     _order = 'sequence, id'
 
     @api.model
@@ -39,7 +39,7 @@ class EventType(models.Model):
             'template_id': self.env.ref('event.event_reminder').id,
         })]
 
-    name = fields.Char('Event Category', required=True, translate=True)
+    name = fields.Char('Event Template', required=True, translate=True)
     sequence = fields.Integer()
     # tickets
     use_ticket = fields.Boolean('Ticketing')
@@ -47,6 +47,7 @@ class EventType(models.Model):
         'event.type.ticket', 'event_type_id',
         string='Tickets', compute='_compute_event_type_ticket_ids',
         readonly=False, store=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
     default_registration_min = fields.Integer(
@@ -91,7 +92,6 @@ class EventType(models.Model):
             self.default_registration_min = 0
             self.default_registration_max = 0
 
-
 class EventEvent(models.Model):
     """Event"""
     _name = 'event.event'
@@ -118,9 +118,10 @@ class EventEvent(models.Model):
         'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    event_type_id = fields.Many2one('event.type', string='Category', ondelete='set null')
+    event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags")
     # Kanban fields
     kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')])
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, store=True)
@@ -310,6 +311,9 @@ class EventEvent(models.Model):
                     all_ticket_values.append(ticket_vals)
 
                 self.event_ticket_ids = [(5, 0, 0)] + [(0, 0, item) for item in all_ticket_values]
+
+            if self.event_type_id.tag_ids:
+                self.tag_ids = self.event_type_id.tag_ids
 
     @api.constrains('seats_min', 'seats_max', 'seats_availability')
     def _check_seats_min_max(self):

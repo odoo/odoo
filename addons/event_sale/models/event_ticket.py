@@ -78,6 +78,7 @@ class EventTemplateTicket(models.Model):
 
 class EventTicket(models.Model):
     _inherit = 'event.event.ticket'
+    _order = 'event_id ASC, price ASC'
 
     # product
     price_reduce_taxinc = fields.Float(string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc')

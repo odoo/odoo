@@ -5,6 +5,8 @@ import re
 import werkzeug
 from werkzeug.datastructures import OrderedMultiDict
 
+from ast import literal_eval
+from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -12,6 +14,7 @@ from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools.misc import get_lang
 
 
@@ -28,6 +31,7 @@ class WebsiteEventController(http.Controller):
 
         searches.setdefault('search', '')
         searches.setdefault('date', 'all')
+        searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
 
@@ -39,30 +43,28 @@ class WebsiteEventController(http.Controller):
         def sd(date):
             return fields.Datetime.to_string(date)
         today = datetime.today()
+        first_day_of_the_month = today.replace(day=1)
+        datetime_format = '%Y-%m-%d 00:00:00'
         dates = [
-            ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
+            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
                 ("date_end", ">", sd(today)),
                 ("date_begin", "<", sdn(today))],
                 0],
-            ['week', _('This Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=6-today.weekday())))],
-                0],
-            ['nextweek', _('Next Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=7-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=13-today.weekday())))],
-                0],
             ['month', _('This month'), [
-                ("date_end", ">=", sd(today.replace(day=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", ">=", sd(first_day_of_the_month)),
+                ("date_begin", "<", (first_day_of_the_month + relativedelta(months=1)).strftime(datetime_format))],
                 0],
-            ['nextmonth', _('Next month'), [
-                ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
+            ['nextmonth1', _((today + relativedelta(months=1)).strftime('%B')), [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=1))),
+                ("date_begin", "<", (first_day_of_the_month + relativedelta(months=2)).strftime(datetime_format))],
+                0],
+            ['nextmonth2', _((today + relativedelta(months=2)).strftime('%B')), [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=2))),
+                ("date_begin", "<", (first_day_of_the_month + relativedelta(months=3)).strftime(datetime_format))],
                 0],
             ['old', _('Past Events'), [
-                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", "<", today.strftime(datetime_format))],
                 0],
         ]
 
@@ -71,6 +73,19 @@ class WebsiteEventController(http.Controller):
 
         if searches['search']:
             domain_search['search'] = [('name', 'ilike', searches['search'])]
+
+        search_tags = self._extract_searched_event_tags(searches)
+        if search_tags:
+            # Example: You filter on age: 10-12 and activity: football.
+            # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
+            # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
+            # ("age: 10-12" OR "age: 12-15") AND "activity: football
+            grouped_tags = defaultdict(list)
+            for tag in search_tags:
+                grouped_tags[tag.category_id].append(tag)
+            domain_search['tags'] = []
+            for group in grouped_tags:
+                domain_search['tags'] = expression.AND([domain_search['tags'], [('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])]])
 
         current_date = None
         current_type = None
@@ -104,11 +119,6 @@ class WebsiteEventController(http.Controller):
                 date[3] = Event.search_count(dom_without('date') + date[2])
 
         domain = dom_without('type')
-        types = Event.read_group(domain, ["id", "event_type_id"], groupby=["event_type_id"], orderby="event_type_id")
-        types.insert(0, {
-            'event_type_id_count': sum([int(type['event_type_id_count']) for type in types]),
-            'event_type_id': ("all", _("All Categories"))
-        })
 
         domain = dom_without('country')
         countries = Event.read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
@@ -137,16 +147,22 @@ class WebsiteEventController(http.Controller):
 
         keep = QueryURL('/event', **{key: value for key, value in searches.items() if (key == 'search' or value != 'all')})
 
+        first_three_attendees_per_event = {}
+        for event in events:
+            first_three_attendees_per_event[event.id] = (', ').join([registration.name.split(' ')[0] for registration in event.sudo().registration_ids[:3]])
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
+            'first_three_attendees_per_event': first_three_attendees_per_event,
             'dates': dates,
-            'types': types,
+            'categories': request.env['event.tag.category'].search([]),
             'countries': countries,
             'pager': pager,
             'searches': searches,
+            'search_tags': search_tags,
             'keep': keep,
         }
 
@@ -345,3 +361,15 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
         })
+
+    def _extract_searched_event_tags(self, searches):
+        tags = request.env['event.tag']
+        if searches.get('tags'):
+            try:
+                tag_ids = literal_eval(searches['tags'])
+            except:
+                pass
+            else:
+                # perform a search to filter on existing / valid tags implicitely
+                tags = request.env['event.tag'].search([('id', 'in', tag_ids)])
+        return tags

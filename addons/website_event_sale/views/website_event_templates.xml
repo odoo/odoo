@@ -15,6 +15,14 @@
         </t>
         <span t-else="" class="font-weight-bold text-uppercase">Free</span>
     </xpath>
+    <xpath expr="//div[@id='price-range']" position="inside">
+        <span class="text-muted">
+            From
+            <span t-esc="event.event_ticket_ids[0].price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+            to
+            <span t-esc="event.event_ticket_ids[-1].price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+        </span>
+    </xpath>
     <!-- Add price information on tickets (mono ticket, aka not in collapse) -->
     <xpath expr="//div[hasclass('o_wevent_registration_single')]//h6" position="after">
         <div class="border-right px-3">
