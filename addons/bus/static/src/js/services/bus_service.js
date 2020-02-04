@@ -80,7 +80,14 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      * @param {function} [callback] if given callback will be called when user clicks on notification
      */
     _sendNativeNotification: function (title, content, callback) {
-        var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoobot_transparent.png"});
+        var notification = new Notification(
+            // The native Notification API works with plain text and not HTML
+            // unescaping is safe because done only at the **last** step
+            _.unescape(title),
+            {
+                body: _.unescape(content),
+                icon: "/mail/static/src/img/odoobot_transparent.png"
+            });
         notification.onclick = function () {
             window.focus();
             if (this.cancel) {
