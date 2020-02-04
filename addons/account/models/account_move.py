@@ -1444,7 +1444,7 @@ class AccountMove(models.Model):
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
-        self.env['account.move.line'].flush(['debit', 'credit', 'move_id'])
+        self.env['account.move.line'].flush(self.env['account.move.line']._fields)
         self.env['account.move'].flush(['journal_id'])
         self._cr.execute('''
             SELECT line.move_id, ROUND(SUM(debit - credit), currency.decimal_places)
