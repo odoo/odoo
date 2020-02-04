@@ -29,8 +29,17 @@
         <field name="model">event.registration</field>
         <field name="inherit_id" ref="event.view_event_registration_form" />
         <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_sale_order" type="object"
+                            class="oe_stat_button" icon="fa-usd" string="Sale Order">
+                    </button>
+                </div>
+                <field name="is_paid" invisible="1"/>
+                <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
+            </xpath>
             <group name="event" position="after">
-                <group string="Origin">
+                <group string="Origin" groups="base.group_no_one">
                     <field name="sale_order_id"/>
                     <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
                     <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>

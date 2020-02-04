@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
-    name = fields.Char(string='Attendee Name', index=True)
+    name = fields.Char(string='Attendee Name', index=True, required=True, tracking=True)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     mobile = fields.Char(string='Mobile')
@@ -133,8 +133,6 @@ class EventRegistration(models.Model):
         return ret_list
 
     def _check_auto_confirmation(self):
-        if self._context.get('registration_force_draft'):
-            return False
         if any(not registration.event_id.auto_confirm or
                (not registration.event_id.seats_available and registration.event_id.seats_availability == 'limited') for registration in self):
             return False
@@ -249,6 +247,12 @@ class EventRegistration(models.Model):
         else:
             return _('on ') + format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium')
 
-    def summary(self):
+    def _get_registration_summary(self):
         self.ensure_one()
-        return {'information': []}
+        return {
+            'id': self.id,
+            'partner_id': self.partner_id.id,
+            'ticket_name': self.event_ticket_id.name or _('None'),
+            'name': self.name,
+            'event_name': self.event_id.name,
+        }
