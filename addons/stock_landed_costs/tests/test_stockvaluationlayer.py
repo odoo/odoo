@@ -238,9 +238,9 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLCFIFOVB, cls).setUpClass()
-        cls.vendor1 = cls.env['res.partner'].search([], limit=1)
+        cls.vendor1 = cls.env['res.partner'].create({'name': 'vendor1'})
         cls.vendor1.property_account_payable_id = cls.payable_account
-        cls.vendor2 = cls.env['res.partner'].search([], limit=2)[-1]
+        cls.vendor2 = cls.env['res.partner'].create({'name': 'vendor2'})
         cls.vendor2.property_account_payable_id = cls.payable_account
         cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         cls.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
@@ -355,7 +355,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         # Process the receipt
         receipt = rfq.picking_ids
         wiz = receipt.button_validate()
-        wiz = self.env['stock.immediate.transfer'].browse(wiz['res_id']).process()
+        wiz = Form(self.env['stock.immediate.transfer'].with_context(wiz['context'])).save()
+        wiz.process()
         self.assertEqual(rfq.order_line.qty_received, 10)
 
         input_aml = self._get_stock_input_move_lines()[-1]
