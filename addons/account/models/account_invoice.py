@@ -1694,8 +1694,9 @@ class AccountInvoiceLine(models.Model):
 
     @api.model
     def _default_account(self):
-        if self._context.get('journal_id'):
-            journal = self.env['account.journal'].browse(self._context.get('journal_id'))
+        journal_id = self._context.get('journal_id') or self._context.get('default_journal_id')
+        if journal_id:
+            journal = self.env['account.journal'].browse(journal_id)
             if self._context.get('type') in ('out_invoice', 'in_refund'):
                 return journal.default_credit_account_id.id
             return journal.default_debit_account_id.id
@@ -1829,6 +1830,8 @@ class AccountInvoiceLine(models.Model):
             if type not in ('in_invoice', 'in_refund'):
                 self.price_unit = 0.0
             domain['uom_id'] = []
+            if fpos:
+                self.account_id = fpos.map_account(self.account_id)
         else:
             self_lang = self
             if part.lang:
