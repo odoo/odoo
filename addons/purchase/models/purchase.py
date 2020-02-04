@@ -168,6 +168,9 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def copy(self, default=None):
+        ctx = dict(self.env.context)
+        ctx.pop('default_product_id', None)
+        self = self.with_context(ctx)
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
