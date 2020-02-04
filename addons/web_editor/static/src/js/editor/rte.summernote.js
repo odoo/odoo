@@ -455,7 +455,9 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         options: {
             lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
-            noVideos: $editable.data('oe-model') === "mail.compose.message",
+            noVideos:
+                $editable.data('oe-model') === "mail.compose.message" ||
+                $editable.data('oe-model') === "mail.mass_mailing",
         },
     });
     return new $.Deferred().reject();
