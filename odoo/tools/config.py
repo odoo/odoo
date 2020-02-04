@@ -1,11 +1,7 @@
 #odoo.loggers.handlers. -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
-
+import configparser as ConfigParser
 import errno
 import logging
 import optparse

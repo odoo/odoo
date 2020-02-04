@@ -3,11 +3,7 @@
 
 from odoo.tests import common
 from lxml import etree
-
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from unittest.mock import patch
 
 
 class TestMassMailingShortener(common.TransactionCase):

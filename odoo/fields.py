@@ -6,18 +6,12 @@
 from collections import defaultdict
 from datetime import date, datetime, time
 from operator import attrgetter
+from xmlrpc.client import MAXINT
 import itertools
 import logging
 import base64
 import binascii
 import pytz
-
-try:
-    from xmlrpc.client import MAXINT
-except ImportError:
-    #pylint: disable=bad-python3-import
-    from xmlrpclib import MAXINT
-
 import psycopg2
 
 from .tools import (
