@@ -355,7 +355,7 @@ class PurchaseOrderLine(models.Model):
 
         move_dests = self.move_dest_ids
         if not move_dests:
-            move_dests = self.move_ids.move_dest_ids
+            move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier')
 
         if not move_dests:
             qty_to_attach = 0
