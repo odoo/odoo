@@ -1,4 +1,4 @@
-odoo.define('web.data_export_tests', function (require) {
+odoo.define('stock.popover_widget_tests', function (require) {
 "use strict";
 
 var testUtils = require('web.test_utils');
@@ -19,7 +19,7 @@ QUnit.module('ModelFieldSelector', {
             }
         };
     },
-}, function () { 
+}, function () {
     QUnit.test("Test creation/usage popover widget form", async function (assert) {
         assert.expect(6);
 
@@ -40,7 +40,7 @@ QUnit.module('ModelFieldSelector', {
         assert.strictEqual($popoverButton.length, 1, "Should have a popover icon/button in red");
         assert.strictEqual($popoverButton.prop('special_click'), true, "Special click properpy should be activated");
         await testUtils.dom.triggerEvents($popoverButton, ['focus']);
-        var $popover = $('div.popover');
+        $popover = $('div.popover');
         assert.strictEqual($popover.length, 1, "Should have a popover container in DOM");
         assert.strictEqual($popover.html().includes("var that = self // why not?"), true, "The message should be in DOM");
         assert.strictEqual($popover.html().includes("JS Master"), true, "The title should be in DOM");
