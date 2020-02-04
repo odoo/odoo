@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import tagged
+from odoo.exceptions import AccessError
 
 
 @tagged('post_install', '-at_install')
@@ -296,3 +297,60 @@ record['name'] = record.name + 'X'""",
         self.assertEqual(lead.name, 'XX', "No update should have happened.")
         lead.partner_id = partner1
         self.assertEqual(lead.name, 'XXX', "One update should have happened.")
+
+    def test_30_modelwithoutaccess(self):
+        """
+        Ensure a domain on a M2O without user access doesn't fail.
+        We create a base automation with a filter on a model the user haven't access to
+        - create a group
+        - restrict acl to this group and set only admin in it
+        - create base.automation with a filter
+        - create a record in the restricted model in admin
+        - create a record in the non restricted model in demo
+        """
+        Model = self.env['base.automation.link.test']
+        Comodel = self.env['base.automation.linked.test']
+
+        access = self.env.ref("test_base_automation.access_base_automation_linked_test")
+        access.group_id = self.env['res.groups'].create({
+            'name': "Access to base.automation.linked.test",
+            "users": [(6, 0, [self.user_admin.id,])]
+        })
+
+        # sanity check: user demo has no access to the comodel of 'linked_id'
+        with self.assertRaises(AccessError):
+            Comodel.with_user(self.user_demo).check_access_rights('read')
+
+        # check base automation with filter that performs Comodel.search()
+        self.env['base.automation'].create({
+            'name': 'test no access',
+            'model_id': self.env['ir.model']._get_id("base.automation.link.test"),
+            'trigger': 'on_create_or_write',
+            'filter_pre_domain': "[('linked_id.another_field', '=', 'something')]",
+            'state': 'code',
+            'active': True,
+            'code': "action = [rec.name for rec in records]"
+        })
+        Comodel.create([
+            {'name': 'a first record', 'another_field': 'something'},
+            {'name': 'another record', 'another_field': 'something different'},
+        ])
+        rec1 = Model.create({'name': 'a record'})
+        rec1.write({'name': 'a first record'})
+        rec2 = Model.with_user(self.user_demo).create({'name': 'another record'})
+        rec2.write({'name': 'another value'})
+
+        # check base automation with filter that performs Comodel.name_search()
+        self.env['base.automation'].create({
+            'name': 'test no name access',
+            'model_id': self.env['ir.model']._get_id("base.automation.link.test"),
+            'trigger': 'on_create_or_write',
+            'filter_pre_domain': "[('linked_id', '=', 'whatever')]",
+            'state': 'code',
+            'active': True,
+            'code': "action = [rec.name for rec in records]"
+        })
+        rec3 = Model.create({'name': 'a random record'})
+        rec3.write({'name': 'a first record'})
+        rec4 = Model.with_user(self.user_demo).create({'name': 'again another record'})
+        rec4.write({'name': 'another value'})

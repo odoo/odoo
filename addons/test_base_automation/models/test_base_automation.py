@@ -49,3 +49,19 @@ class LineTest(models.Model):
     name = fields.Char()
     lead_id = fields.Many2one('base.automation.lead.test', ondelete='cascade')
     user_id = fields.Many2one('res.users')
+
+
+class ModelWithAccess(models.Model):
+    _name = "base.automation.link.test"
+    _description = "Automated Rule Link Test"
+
+    name = fields.Char()
+    linked_id = fields.Many2one('base.automation.linked.test', ondelete='cascade')
+
+
+class ModelWithoutAccess(models.Model):
+    _name = "base.automation.linked.test"
+    _description = "Automated Rule Linked Test"
+
+    name = fields.Char()
+    another_field = fields.Char()
