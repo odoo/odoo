@@ -4,6 +4,7 @@
 import json
 import datetime
 from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 from odoo import api, fields, models, _
@@ -584,6 +585,10 @@ class MrpProduction(models.Model):
         return True
 
     def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
+        date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
+        date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
+        if date_planned_finished == self.date_planned_start:
+            date_planned_finished = date_planned_finished + relativedelta(hours=1)
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
@@ -592,7 +597,7 @@ class MrpProduction(models.Model):
             'byproduct_id': byproduct_id,
             'name': self.name,
             'date': self.date_planned_start,
-            'date_expected': self.date_planned_finished,
+            'date_expected': date_planned_finished,
             'picking_type_id': self.picking_type_id.id,
             'location_id': self.product_id.with_company(self.company_id).property_stock_production.id,
             'location_dest_id': self.location_dest_id.id,
