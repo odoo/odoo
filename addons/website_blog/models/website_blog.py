@@ -145,7 +145,7 @@ class BlogPost(models.Model):
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
-    visits = fields.Integer('No of Views', copy=False)
+    visits = fields.Integer('No of Views', copy=False, default=0)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
     @api.depends('content', 'teaser_manual')
