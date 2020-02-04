@@ -180,7 +180,7 @@ class TestProcurement(TestMrpCommon):
             ('state', '=', 'confirmed')
         ])
 
-        self.assertAlmostEqual(mo.move_finished_ids.date_expected, mo.move_raw_ids.date_expected + timedelta(hours=1))
+        self.assertAlmostEqual(mo.move_finished_ids.date_expected, mo.move_raw_ids.date_expected + timedelta(hours=1), delta=timedelta(seconds=1))
 
         self.assertEqual(len(mo), 1, 'the manufacture order is not created')
 
