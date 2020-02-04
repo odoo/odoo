@@ -62,23 +62,35 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         }
         mounted() {
             this.numpadState.on('set_value', this.set_value, this);
-            this.order.orderlines.on('change', () => {
-                this.render();
-            });
-            this.order.orderlines.on('add remove', () => {
-                this.scrollToBottom = true;
-                this.render();
-                this.numpadState.reset();
-            });
-            this.order.on('change', () => {
-                this.numpadState.reset();
-                this.render();
-            });
+            this.order.orderlines.on(
+                'change',
+                () => {
+                    this.render();
+                },
+                this
+            );
+            this.order.orderlines.on(
+                'add remove',
+                () => {
+                    this.scrollToBottom = true;
+                    this.render();
+                    this.numpadState.reset();
+                },
+                this
+            );
+            this.order.on(
+                'change',
+                () => {
+                    this.numpadState.reset();
+                    this.render();
+                },
+                this
+            );
         }
         willUnmount() {
-            this.numpadState.off();
-            this.order.orderlines.off();
-            this.order.off();
+            this.numpadState.off('set_value', null, this);
+            this.order.orderlines.off('add remove', null, this);
+            this.order.off('change', null, this);
         }
         selectLine(event) {
             this.order.select_orderline(event.detail.orderline);
@@ -109,5 +121,5 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
 
     OrderWidget.components = { Orderline, OrderSummary };
 
-    return { OrderWidget, Orderline, OrderSummary }
+    return { OrderWidget, Orderline, OrderSummary };
 });

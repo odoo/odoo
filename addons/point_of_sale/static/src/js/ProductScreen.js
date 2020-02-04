@@ -17,12 +17,16 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             this.numpadState = new NumpadState();
         }
         mounted() {
-            this.pos.on('change:selectedOrder', () => {
-                this.render();
-            });
+            this.pos.on(
+                'change:selectedOrder',
+                () => {
+                    this.render();
+                },
+                this
+            );
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder');
+            this.pos.off('change:selectedOrder', null, this);
         }
         clickProduct(event) {
             const product = event.detail;

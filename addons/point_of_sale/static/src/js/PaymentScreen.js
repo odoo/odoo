@@ -61,20 +61,32 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this.payment_interface = null;
         }
         mounted() {
-            this.pos.on('change:selectedOrder', () => {
-                this.render();
-            });
-            this.currentOrder.on('change', () => {
-                this.render();
-            });
-            this.currentOrder.paymentlines.on('change', () => {
-                this.render();
-            });
+            this.pos.on(
+                'change:selectedOrder',
+                () => {
+                    this.render();
+                },
+                this
+            );
+            this.currentOrder.on(
+                'change',
+                () => {
+                    this.render();
+                },
+                this
+            );
+            this.currentOrder.paymentlines.on(
+                'change',
+                () => {
+                    this.render();
+                },
+                this
+            );
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder');
-            this.currentOrder.off('change');
-            this.currentOrder.paymentlines.off('change');
+            this.pos.off('change:selectedOrder', null, this);
+            this.currentOrder.off('change', null, this);
+            this.currentOrder.paymentlines.off('change', null, this);
         }
         get currentOrder() {
             return this.pos.get_order();

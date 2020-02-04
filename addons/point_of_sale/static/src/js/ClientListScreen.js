@@ -174,19 +174,23 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         // Lifecycle hooks
 
         mounted() {
-            this.pos.on('change:selectedOrder', () => {
-                // RECOMMENDATION
-                // perhaps there is a better way than resetting the state.
-                // maybe we save the clientlistscreen ui state in the current order
-                // so that when we return to a viewed order, we resume to its
-                // previous state. e.g. if we are in edit mode in order 1, then we open
-                // order 2, then we go back to order 1, the client list screen should
-                // return to edit mode state.
-                this._resetState();
-            });
+            this.pos.on(
+                'change:selectedOrder',
+                () => {
+                    // RECOMMENDATION
+                    // perhaps there is a better way than resetting the state.
+                    // maybe we save the clientlistscreen ui state in the current order
+                    // so that when we return to a viewed order, we resume to its
+                    // previous state. e.g. if we are in edit mode in order 1, then we open
+                    // order 2, then we go back to order 1, the client list screen should
+                    // return to edit mode state.
+                    this._resetState();
+                },
+                this
+            );
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder');
+            this.pos.off('change:selectedOrder', null, this);
         }
 
         // Getters
