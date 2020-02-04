@@ -816,3 +816,20 @@ class ModelParentM2o(models.Model):
 
     name = fields.Char('Name')
     child_ids = fields.One2many('test_new_api.model_child_m2o', 'parent_id', string="Children")
+
+
+class Country(models.Model):
+    _name = 'test_new_api.country'
+    _description = 'Country, ordered by name'
+    _order = 'name, id'
+
+    name = fields.Char()
+
+
+class City(models.Model):
+    _name = 'test_new_api.city'
+    _description = 'City, ordered by country then name'
+    _order = 'country_id, name, id'
+
+    name = fields.Char()
+    country_id = fields.Many2one('test_new_api.country')
