@@ -329,8 +329,8 @@ class Survey(http.Controller):
         and send back this html to the survey_form widget that will inject it into the page."""
         data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
         if answer_sudo.state == 'done':
-            return request.env.ref('survey.survey_fill_form_done').render(data).decode('UTF-8')
-        return request.env.ref('survey.survey_fill_form_in_progress').render(data).decode('UTF-8')
+            return request.env.ref('survey.survey_fill_form_done').render(data)
+        return request.env.ref('survey.survey_fill_form_in_progress').render(data)
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
