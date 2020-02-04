@@ -24,4 +24,4 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.sale_line_id.order_id.carrier_id,)
+        return keys + (self.sale_line_id.order_id.carrier_id.id,)

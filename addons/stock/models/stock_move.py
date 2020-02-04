@@ -868,7 +868,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         self.ensure_one()
-        return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
+        return self.group_id.id, self.location_id.id, self.location_dest_id.id, self.picking_type_id.id
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
@@ -888,7 +888,7 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
-        grouped_moves = groupby(sorted(self, key=lambda m: [f.id for f in m._key_assign_picking()]), key=lambda m: [m._key_assign_picking()])
+        grouped_moves = groupby(sorted(self, key=lambda m: m._key_assign_picking()), key=lambda m: [m._key_assign_picking()])
         for group, moves in grouped_moves:
             moves = self.env['stock.move'].concat(*list(moves))
             new_picking = False
