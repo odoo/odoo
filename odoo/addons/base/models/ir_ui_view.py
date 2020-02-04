@@ -14,7 +14,6 @@ import time
 import uuid
 
 from dateutil.relativedelta import relativedelta
-from difflib import HtmlDiff
 
 import werkzeug, werkzeug.urls
 from lxml import etree
@@ -25,7 +24,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
-from odoo.tools import config, ConstantMapping, pycompat, apply_inheritance_specs, locate_node
+from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
@@ -308,6 +307,9 @@ actual arch.
             view_wo_lang.arch = view.arch_base
 
     def reset_arch(self, mode='soft'):
+        """ Reset the view arch to its previous arch (soft) or its XML file arch
+        if exists (hard).
+        """
         for view in self:
             arch = False
             if mode == 'soft':
@@ -1682,76 +1684,81 @@ actual arch.
 
 
 class ResetViewArchWizard(models.TransientModel):
-    """ A wizard to reset views architecture. """
+    """ A wizard to compare and reset views architecture. """
     _name = "reset.view.arch.wizard"
     _description = "Reset View Architecture Wizard"
 
-    def _default_view_id(self):
-        view_id = self._context.get('active_model') == 'ir.ui.view' and self._context.get('active_id') or []
-        return view_id
-
-    view_id = fields.Many2one('ir.ui.view', string='View', default=_default_view_id)
+    view_id = fields.Many2one('ir.ui.view', string='View')
     view_name = fields.Char(related='view_id.name', string='View Name')
-    arch_diff = fields.Html(string='Architecture Diff', compute='_compute_arch_diff', readonly=True, sanitize_tags=False)
+    has_diff = fields.Boolean(compute='_compute_arch_diff')
+    arch_diff = fields.Html(string='Architecture Diff', readonly=True,
+                            compute='_compute_arch_diff', sanitize_tags=False)
     reset_mode = fields.Selection([
         ('soft', 'Restore previous version (soft reset).'),
-        ('hard', 'Reset to file version (hard reset).')
-    ], string='Reset Mode', default='soft', required=True, help="You might want to try a soft reset first.")
+        ('hard', 'Reset to file version (hard reset).'),
+        ('other_view', 'Reset to another view.')],
+        string='Reset Mode', default='soft', required=True)
+    compare_view_id = fields.Many2one('ir.ui.view', string='Compare To View')
+    arch_to_compare = fields.Text('Arch To Compare To', compute='_compute_arch_diff')
 
-    @api.depends('reset_mode', 'view_id')
+    @api.model
+    def default_get(self, fields):
+        view_ids = (self._context.get('active_model') == 'ir.ui.view' and
+                    self._context.get('active_ids') or [])
+        if len(view_ids) > 2:
+            raise ValidationError(_("Can't compare more than two views."))
+
+        result = super().default_get(fields)
+        result['view_id'] = view_ids and view_ids[0]
+        if len(view_ids) == 2:
+            result['reset_mode'] = 'other_view'
+            result['compare_view_id'] = view_ids[1]
+        return result
+
+    @api.depends('reset_mode', 'view_id', 'compare_view_id')
     def _compute_arch_diff(self):
-        ''' Return the differences between the current view arch and either its
-        previous or initial arch, depending of `reset_mode` (soft/hard).
-        The diff will be returned in an HTML table like on github.com.
-        '''
-        def handle_style(html_diff):
-            ''' The HtmlDiff lib will add some usefull classes on the DOM to
-            identify elements. Simply replace those classes by BS4 ones.
-            For the table to fit the modal width, some custom style is needed.
-            '''
-            to_replace = {
-                'diff_header': 'diff_header bg-600 text-center align-top px-2',
-                'diff_next': 'd-none',
-                'diff_add': 'bg-success',
-                'diff_chg': 'bg-warning',
-                'diff_sub': 'bg-danger',
-                'nowrap': '',
-            }
-            for old, new in to_replace.items():
-                html_diff = html_diff.replace(old, new)
-            html_diff += '''
-                <style>
-                    table.diff { width: 100%; }
-                    table.diff .diff_header { white-space: nowrap; }
-                    table.diff th.diff_header { width: 50%; }
-                    table.diff td { word-break: break-all; }
-                </style>
-            '''
-            return html_diff
+        """ Depending of `reset_mode`, return the differences between the
+        current view arch and either its previous arch, its initial arch or
+        another view arch.
+        """
+        def get_table_name(view_id):
+            name = view_id.display_name
+            if view_id.key or view_id.xml_id:
+                span = '<span class="ml-1 font-weight-normal small">(%s)</span>'
+                name += span % (view_id.key or view_id.xml_id)
+            return name
 
         for view in self:
-            soft = view.reset_mode == 'soft'
-            arch_to_compare = False
-            if soft:
-                arch_to_compare = view.view_id.arch_prev
-            elif not soft and view.view_id.arch_fs:
-                arch_to_compare = view.view_id.with_context(read_arch_from_file=True).arch
+            diff_to = False
+            diff_to_name = False
+            if view.reset_mode == 'soft':
+                diff_to = view.view_id.arch_prev
+                diff_to_name = _("Previous Arch")
+            elif view.reset_mode == 'other_view':
+                diff_to = view.compare_view_id.arch
+                diff_to_name = get_table_name(view.compare_view_id)
+            elif view.reset_mode == 'hard' and view.view_id.arch_fs:
+                diff_to = view.view_id.with_context(read_arch_from_file=True).arch
+                diff_to_name = _("File Arch")
 
-            diff = False
-            if arch_to_compare:
-                diff = HtmlDiff(tabsize=2).make_table(
-                    arch_to_compare.splitlines(),
-                    view.view_id.arch.splitlines(),
-                    _("Previous Arch") if soft else _("File Arch"),
-                    _("Current Arch"),
-                    context=True,  # Show only diff lines, not all the code
+            view.arch_to_compare = diff_to
+
+            if not diff_to:
+                view.arch_diff = False
+                view.has_diff = False
+            else:
+                view.arch_diff = get_diff(
+                    (view.view_id.arch, get_table_name(view.view_id) if view.reset_mode == 'other_view' else _("Current Arch")),
+                    (diff_to, diff_to_name),
                 )
-                diff = handle_style(diff)
-            view.arch_diff = diff
+                view.has_diff = view.view_id.arch != diff_to
 
     def reset_view_button(self):
         self.ensure_one()
-        self.view_id.reset_arch(self.reset_mode)
+        if self.reset_mode == 'other_view':
+            self.view_id.write({'arch_db': self.arch_to_compare})
+        else:
+            self.view_id.reset_arch(self.reset_mode)
         return {'type': 'ir.actions.act_window_close'}
 
 

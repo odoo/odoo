@@ -261,7 +261,6 @@
         <!-- ir.ui.view views -->
         <record model="ir.ui.view" id="view_view_form_extend">
             <field name="model">ir.ui.view</field>
-
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
                 <field name="inherit_id" position="attributes">
@@ -284,6 +283,7 @@
                 </sheet>
             </field>
         </record>
+
         <record id="view_view_tree_inherit_website" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="inherit_id" ref="base.view_view_tree"/>
@@ -293,6 +293,16 @@
                 </field>
                 <field name="xml_id" position="before">
                     <field name="key" groups="website.group_multi_website"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="reset_view_arch_wizard_view" model="ir.ui.view">
+            <field name="model">reset.view.arch.wizard</field>
+            <field name="inherit_id" ref="base.reset_view_arch_wizard_view"/>
+            <field name="arch" type="xml">
+                <field name="compare_view_id" position="attributes">
+                    <attribute name="context">{'display_website': True}</attribute>
                 </field>
             </field>
         </record>
