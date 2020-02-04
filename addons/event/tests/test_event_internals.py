@@ -21,7 +21,7 @@ class TestEventData(TestEventCommon):
 
         event = self.event_0.with_user(self.env.user)
         event.write({
-            'registration_ids': [(0, 0, {'partner_id': self.customer.id})],
+            'registration_ids': [(0, 0, {'partner_id': self.customer.id, 'name': 'test_reg'})],
             'date_begin': datetime(2020, 1, 31, 15, 0, 0),
             'date_end': datetime(2020, 4, 5, 18, 0, 0),
         })
@@ -79,15 +79,18 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event.auto_confirm)
         for x in range(5):
             reg = self.env['event.registration'].create({
-                'event_id': event.id
+                'event_id': event.id,
+                'name': 'reg_open',
             })
             self.assertEqual(reg.state, 'open')
         reg_draft = self.env['event.registration'].create({
-            'event_id': event.id
+            'event_id': event.id,
+            'name': 'reg_draft',
         })
         reg_draft.write({'state': 'draft'})
         reg_done = self.env['event.registration'].create({
-            'event_id': event.id
+            'event_id': event.id,
+            'name': 'reg_done',
         })
         reg_done.write({'state': 'done'})
         self.assertEqual(event.seats_available, event.event_type_id.default_registration_max - 6)
