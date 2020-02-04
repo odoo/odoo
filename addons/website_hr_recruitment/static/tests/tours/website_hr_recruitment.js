@@ -30,7 +30,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         run: "text ### HR RECRUITMENT TEST DATA ###"
     }, { // TODO: Upload a file ?
         content: "Send the form",
-        trigger: ".o_website_form_send"
+        trigger: ".s_website_form_send"
     }, {
         content: "Check the form is submited without errors",
         trigger: ".oe_structure:has(h1:contains('Congratulations'))"

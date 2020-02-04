@@ -1,92 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_website_form" name="Form Builder">
-    <form action="/website_form/" method="post" class="s_website_form container-fluid mt32" enctype="multipart/form-data">
+<template id="s_website_form" name="Form">
+    <section class="s_website_form" data-vcss="001">
         <div class="container">
-            <div class="form-group row">
-                <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
-                    <button class="btn btn-primary btn-lg o_website_form_send">Send</button>
-                    <span id="o_website_form_result"></span>
+            <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+                    <div class="form-group col-12 s_website_form_submit">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <div style="width: 200px" class="col-sm-auto s_website_form_label"/>
+                            <div class="col-sm">
+                                <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                <span id="s_website_form_result"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </section>
 </template>
 
-<template id="snippet_options" inherit_id="website.snippet_options">
-    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .s_website_form</xpath>
+<template id="s_website_form_options" inherit_id="website.snippet_options">
     <xpath expr="//div" position="after">
         <!-- Form -->
-        <div data-js="website_form_editor" data-selector=".s_website_form">
-            <we-button data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</we-button>
-            <we-button data-website_form_field_modal="" data-no-preview="true">Add an existing field</we-button>
-            <we-select string="Add a custom field" data-no-preview="true">
-                <we-button data-website_form_custom_field="char">Text</we-button>
-                <we-button data-website_form_custom_field="text">Long Text</we-button>
-                <we-button data-website_form_custom_field="email">Email</we-button>
-                <we-button data-website_form_custom_field="integer">Number</we-button>
-                <we-button data-website_form_custom_field="float">Decimal Number</we-button>
-                <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
-                <we-button data-website_form_custom_field="selection">Radio Buttons</we-button>
-                <we-button data-website_form_custom_field="many2one">Selection</we-button>
-                <we-button data-website_form_custom_field="one2many">Multiple Checkboxes</we-button>
-                <we-button data-website_form_custom_field="date">Date</we-button>
-                <we-button data-website_form_custom_field="datetime">Date &amp; Time</we-button>
-                <we-button data-website_form_custom_field="binary">File Upload</we-button>
+        <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
+            <we-select string="Display Fields Mark" data-name="field_mark_select" data-no-preview="true">
+                <we-button data-select-class="">None</we-button>
+                <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
+                <we-button data-select-class="o_mark_optional" data-name="form_optional_opt">Optional</we-button>
             </we-select>
+            <we-input data-set-mark="" data-dependencies="form_required_opt, form_optional_opt"/>
+            <we-input string="Labels Width"
+                data-select-style="" data-css-property="width"
+                data-unit="px" data-apply-to=".s_website_form_label"/>
+            <we-row>
+                <we-select string="On Success" data-no-preview="true">
+                    <we-button data-on-success="nothing">Nothing</we-button>
+                    <we-button data-on-success="redirect" data-name="show_redirect_opt">Redirect</we-button>
+                    <we-button data-on-success="message" data-name="show_message_opt">Show Message</we-button>
+                </we-select>
+                <we-button class="fa fa-fw fa-edit align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
+            </we-row>
+            <we-urlpicker string="URL" data-select-data-attribute="/contactus-thank-you" data-attribute-name="successPage" data-name="url_opt" data-dependencies="show_redirect_opt"/>
+        </div>
+
+        <!-- Add Field Form -->
+        <div data-js="AddFieldForm" data-selector=".s_website_form" data-target="form">
+            <we-button class="fa fa-fw fa-plus"
+                title="Add a new field at the end"
+                data-add-field=""
+                data-no-preview="true"/>
+        </div>
+
+        <!-- Add Field -->
+        <div data-js="AddField" data-selector=".s_website_form_field">
+            <we-button class="fa fa-fw fa-plus"
+                title="Add a new field after this one"
+                data-add-field=""
+                data-no-preview="true"/>
         </div>
 
         <!-- Field -->
-        <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">
-            <we-checkbox string="Hidden" data-no-preview="true"
-                            data-select-class="o_website_form_field_hidden"/>
-        </div>
-
-        <!-- Add an option to display radio buttons / checkboxes horizontally or vertically -->
-        <div data-js='website_form_editor_choice_field_display' data-selector=".o_website_form_flex">
-            <we-select string="Display" data-no-preview="true">
-                <we-button data-website_form_choice_field_display="horizontal">Horizontal</we-button>
-                <we-button data-website_form_choice_field_display="vertical">Vertical</we-button>
+        <div data-js='WebsiteFieldEditor' data-selector=".s_website_form_field" data-drop-near=".s_website_form_field">
+            <we-select data-name="type_opt" string="Type" data-no-preview="true">
+                <we-title>Custom field</we-title>
+                <we-button data-custom-field="char">Text</we-button>
+                <we-button data-custom-field="text">Long Text</we-button>
+                <we-button data-custom-field="email">Email</we-button>
+                <we-button data-custom-field="integer">Number</we-button>
+                <we-button data-custom-field="float">Decimal Number</we-button>
+                <we-button data-custom-field="boolean">Checkbox</we-button>
+                <we-button data-custom-field="one2many">Multiple Checkboxes</we-button>
+                <we-button data-custom-field="selection">Radio Buttons</we-button>
+                <we-button data-custom-field="many2one">Selection</we-button>
+                <we-button data-custom-field="date">Date</we-button>
+                <we-button data-custom-field="datetime">Date &amp; Time</we-button>
+                <we-button data-custom-field="binary">File Upload</we-button>
             </we-select>
+            <we-select string="Display" data-name="multi_check_display_opt" data-no-preview="true">
+                <we-button data-multi-checkbox-display="horizontal">Horizontal</we-button>
+                <we-button data-multi-checkbox-display="vertical">Vertical</we-button>
+            </we-select>
+            <we-input string="Label Name" data-set-label-text=""/>
+            <we-select string="Label Position" data-no-preview="true">
+                <we-button data-select-label-position="none">None</we-button>
+                <we-button data-select-label-position="top">Top</we-button>
+                <we-button data-select-label-position="left">Left</we-button>
+                <we-button data-select-label-position="right">Right</we-button>
+            </we-select>
+            <we-input string="Input Placeholder" data-name="placeholder_opt" data-set-placeholder=""/>
+            <we-checkbox string="Required" data-name="required_opt" data-no-preview="true"
+                data-toggle-required="s_website_form_required"/>
+            <we-checkbox string="Hidden" data-name="hidden_opt" data-no-preview="true"
+                data-select-class="s_website_form_field_hidden"/>
         </div>
 
-        <!-- Add move, duplicate and remove controllers to checkboxes and radio buttons -->
-        <div data-selector=".o_website_form_flex_item" data-drop-near=".o_website_form_flex_item"/>
+        <!-- Remove the duplicate option of model fields -->
+        <div data-js="WebsiteFormFieldModel" data-selector=".s_website_form .s_website_form_field:not(.s_website_form_custom)"/>
 
-        <!-- Add move and remove controllers to select items -->
-        <div data-selector=".s_website_form .form-field.o_website_form_custom .o_website_form_select_item" data-drop-near=".o_website_form_select_item"/>
+        <!-- Remove the delete option of model required fields -->
+        <div data-js="WebsiteFormFieldRequired" data-selector=".s_website_form .s_website_form_model_required"/>
 
-        <!-- Required option for fields that are not required fields of the model -->
-        <div data-js='website_form_editor_field' data-selector=".form-field:not(.o_website_form_required)">
-            <we-checkbox string="Required" data-no-preview="true"
-                        data-website_form_field_require=""
-                        data-select-class="o_website_form_required_custom"/>
-        </div>
-
-        <!-- Remove the duplicate options of model fields -->
-        <div data-js="website_form_editor_field_model" data-selector=".s_website_form .form-field:not(.o_website_form_custom)"/>
-
-        <!-- Remove the delete options of model required fields -->
-        <div data-js="website_form_editor_field_required" data-selector=".s_website_form .o_website_form_required"/>
-
-        <!-- Remove the duplicate options of radio and checkboxes of model fields -->
-        <div data-js="website_form_editor_field_x2many" data-selector=".s_website_form .form-field:not(.o_website_form_custom) .o_website_form_flex_item"/>
-
-        <!-- Transform the select inputs into editable constructs -->
-        <div data-js="website_form_editor_field_select" data-selector=".s_website_form .form-field:has(select)"/>
-
-        <!-- Remove the duplicate option of model select items -->
-        <div data-js="website_form_editor_field_x2many" data-selector=".s_website_form .form-field:not(.o_website_form_custom) .o_website_form_select_item" data-drop-near=".o_website_form_select_item"/>
-
-        <!-- Remove the delete options of the Submit button -->
-        <div data-js="website_form_editor_field_required" data-selector=".s_website_form .o_website_form_send"/>
+        <!-- Remove the delete and duplicate option of the submit button -->
+        <div data-js="WebsiteFormSubmitRequired" data-selector=".s_website_form .s_website_form_submit"/>
     </xpath>
 </template>
 
 <template id="assets_snippet_s_website_form_css_000" inherit_id="website.assets_frontend">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website_form/static/src/snippets/s_website_form/000.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_website_form_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_form/static/src/snippets/s_website_form/001.scss"/>
     </xpath>
 </template>
 

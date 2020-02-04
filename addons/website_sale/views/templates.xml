@@ -746,44 +746,47 @@
                             <t t-call="website_sale.cart_summary"/>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
-                            <div class="row">
-                                <div class="col">
-                                    <form action="/website_form/" method="post" class="s_website_form container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
-                                        <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-md-right">
-                                                <label class="col-form-label" for="client_order_ref">Your Reference</label>
+                            <section class="s_website_form" data-vcss="001">
+                                <div class="container">
+                                    <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" data-success-mode="redirect" data-success-page="/shop/payment" hide-change-model="true">
+                                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                                            <div class="form-group col-12 s_website_form_field" data-type="char">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale1">Your Reference</label>
+                                                    <div class="col-sm">
+                                                        <input id="sale1" type="text" class="form-control s_website_form_input" name="client_order_ref"/>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-9 col-md-8">
-                                                <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="text">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale2">Give us your feedback</label>
+                                                    <div class="col-sm">
+                                                        <textarea id="sale2" class="form-control s_website_form_input" name="Give us your feedback" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-md-right">
-                                                <label class="col-form-label" for="Give us your feedback">Give us your feedback</label>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">A document to provide</label>
+                                                    <div class="col-sm">
+                                                        <input id="sale3" type="file" class="form-control-file s_website_form_input" name="a_document" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-9 col-md-8">
-                                                <textarea class="form-control o_website_form_input" rows="8" name="Give us your feedback" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-md-right">
-                                                <label class="col-form-label" for="a_document">A document to provide</label>
-                                            </div>
-                                            <div class="col-lg-9 col-md-8">
-                                                <input type="file" class="form-control o_website_form_input" name="a_document" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-3 col-md-4">
-                                            </div>
-                                            <div class="col-lg-9 col-md-8">
-                                                <a role="button" href="/shop/checkout" class="btn btn-secondary mb32 float-left"><span class="fa fa-chevron-left" /> Previous</a>
-                                                <a role="button" class="btn btn-primary float-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                            <div class="form-group col-12 s_website_form_submit">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <div style="width: 200px" class="col-sm-auto s_website_form_label"/>
+                                                    <div class="col-sm">
+                                                        <a role="button" href="/shop/checkout" class="btn btn-secondary float-left"><span class="fa fa-chevron-left"/> Previous</a>
+                                                        <a role="button" class="btn btn-primary float-right s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </section>
                         </div>
                     </div>
                 </div>
