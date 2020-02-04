@@ -363,6 +363,21 @@
         </field>
     </record>
 
+    <record id="hr_leave_view_form_dashboard_new_time_off" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.dashboard.new.time.off</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_dashboard"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button string="Save" special="save" class="oe_highlight" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
     <record id="hr_leave_view_form_manager" model="ir.ui.view">
         <field name="name">hr.leave.view.form.manager</field>
         <field name="model">hr.leave</field>
@@ -588,7 +603,7 @@
     <record id="hr_leave_action_my_request_view_form" model="ir.actions.act_window.view">
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="hr_leave_action_my_request"/>
-        <field name="view_id" ref="hr_leave_view_form_dashboard"/>
+        <field name="view_id" ref="hr_leave_view_form_dashboard_new_time_off"/>
     </record>
 
     <record id="hr_leave_action_my" model="ir.actions.act_window">
