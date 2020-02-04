@@ -191,6 +191,14 @@ class TestBankStatement(AccountTestCommon):
         self.assertEqual(cash2.balance_start, 200)
         self.assertEqual(cash2.balance_end_real, 1000)
 
+    def test_is_valid_balance_start(self):
+        bnk1 = self.create_bank_statement('2019-01-01', 100, 100.0000001)
+        bnk2 = self.create_bank_statement('2019-01-10', 50)
+        bnk2.write({'balance_start': 100})
+        self.assertTrue(bnk2.is_valid_balance_start)
+        bnk2.write({'balance_start': 100.01})
+        self.assertFalse(bnk2.is_valid_balance_start)
+
     def test_unlink_bank_statement(self):
         bnk1 = self.create_bank_statement('2019-01-02', 100)
         bnk2 = self.create_bank_statement('2019-01-10', 50)
