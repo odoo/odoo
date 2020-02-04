@@ -29,6 +29,7 @@ import unicodedata
 import werkzeug.utils
 import zipfile
 from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
+from difflib import HtmlDiff
 from itertools import islice, groupby as itergroupby, repeat
 from lxml import etree
 
@@ -1470,3 +1471,48 @@ class DotDict(dict):
     def __getattr__(self, attrib):
         val = self.get(attrib)
         return DotDict(val) if type(val) is dict else val
+
+
+def get_diff(data_from, data_to, custom_style=False):
+    """
+    Return, in an HTML table, the diff between two texts.
+
+    :param tuple data_from: tuple(text, name), name will be used as table header
+    :param tuple data_to: tuple(text, name), name will be used as table header
+    :param tuple custom_style: string, style css including <style> tag.
+    :return: a string containing the diff in an HTML table format.
+    """
+    def handle_style(html_diff, custom_style):
+        """ The HtmlDiff lib will add some usefull classes on the DOM to
+        identify elements. Simply append to those classes some BS4 ones.
+        For the table to fit the modal width, some custom style is needed.
+        """
+        to_append = {
+            'diff_header': 'bg-600 text-center align-top px-2',
+            'diff_next': 'd-none',
+            'diff_add': 'bg-success',
+            'diff_chg': 'bg-warning',
+            'diff_sub': 'bg-danger',
+        }
+        for old, new in to_append.items():
+            html_diff = html_diff.replace(old, "%s %s" % (old, new))
+        html_diff = html_diff.replace('nowrap', '')
+        html_diff += custom_style or '''
+            <style>
+                table.diff { width: 100%; }
+                table.diff th.diff_header { width: 50%; }
+                table.diff td.diff_header { white-space: nowrap; }
+                table.diff td { word-break: break-all; }
+            </style>
+        '''
+        return html_diff
+
+    diff = HtmlDiff(tabsize=2).make_table(
+        data_from[0].splitlines(),
+        data_to[0].splitlines(),
+        data_from[1],
+        data_to[1],
+        context=True,  # Show only diff lines, not all the code
+        numlines=3,
+    )
+    return handle_style(diff, custom_style)
