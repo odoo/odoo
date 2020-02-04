@@ -46,6 +46,16 @@ class AccountMoveReversal(models.TransientModel):
             record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
             record.move_type = move_ids.type if len(move_ids) == 1 else (any(move.type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
 
+    def _prepare_default_reversal(self, move):
+        return {
+            'ref': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name),
+            'date': self.date or move.date,
+            'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
+            'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
+            'invoice_payment_term_id': None,
+            'auto_post': True if self.date > fields.Date.context_today(self) else False,
+        }
+
     def reverse_moves(self):
         self.ensure_one()
         moves = self.move_ids
@@ -53,14 +63,7 @@ class AccountMoveReversal(models.TransientModel):
         # Create default values.
         default_values_list = []
         for move in moves:
-            default_values_list.append({
-                'ref': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name),
-                'date': self.date or move.date,
-                'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
-                'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
-                'invoice_payment_term_id': None,
-                'auto_post': True if self.date > fields.Date.context_today(self) else False,
-            })
+            default_values_list.append(self._prepare_default_reversal(move))
 
         # Handle reverse method.
         if self.refund_method == 'cancel':
