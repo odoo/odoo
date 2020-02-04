@@ -3,26 +3,20 @@
 
 import ast
 import collections
-import imp
 import importlib
 import inspect
 import itertools
 import logging
 import os
-import pkg_resources
-import re
 import sys
 import time
-import types
 import unittest
 import threading
-from operator import itemgetter
 from os.path import join as opj
 
 import odoo
 import odoo.tools as tools
 import odoo.release as release
-from odoo import SUPERUSER_ID, api
 from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
