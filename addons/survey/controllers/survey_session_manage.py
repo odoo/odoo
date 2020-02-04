@@ -58,7 +58,7 @@ class UserInputSession(http.Controller):
         survey._session_trigger_next_question()
         template_values = self._prepare_manage_session_values(survey)
         template_values['is_rpc_call'] = True
-        return request.env.ref('survey.user_input_session_manage_content').render(template_values).decode('UTF-8')
+        return request.env.ref('survey.user_input_session_manage_content').render(template_values)
 
     @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):
@@ -86,7 +86,7 @@ class UserInputSession(http.Controller):
             'survey': survey,
             'question': survey.session_question_id,
             'question_data': question_statistics,
-        }).decode('UTF-8')
+        })
 
     @http.route('/survey/session/ranking/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_ranking(self, survey_token, **kwargs):
@@ -104,7 +104,7 @@ class UserInputSession(http.Controller):
         return request.env.ref('survey.user_input_session_ranking').render({
             'animate_width': True,
             'ranking': survey._prepare_ranking_values()
-        }).decode('UTF-8')
+        })
 
     def _prepare_manage_session_values(self, survey):
         is_last_question = False
