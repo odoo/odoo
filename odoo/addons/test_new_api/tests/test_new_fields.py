@@ -1714,7 +1714,23 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record_no_bin_size.binary_computed, expected_value)
         self.assertEqual(record_bin_size.binary_computed, expected_value)
 
-    def test_96_ir_rule_m2m_field(self):
+    def test_96_order_m2o(self):
+        belgium, congo = self.env['test_new_api.country'].create([
+            {'name': "Duchy of Brabant"},
+            {'name': "Congo"},
+        ])
+        cities = self.env['test_new_api.city'].create([
+            {'name': "Brussels", 'country_id': belgium.id},
+            {'name': "Kinshasa", 'country_id': congo.id},
+        ])
+        # cities are sorted by country_id, name
+        self.assertEqual(cities.sorted().mapped('name'), ["Kinshasa", "Brussels"])
+
+        # change order of countries, and check sorted()
+        belgium.name = "Belgium"
+        self.assertEqual(cities.sorted().mapped('name'), ["Brussels", "Kinshasa"])
+
+    def test_97_ir_rule_m2m_field(self):
         """Ensures m2m fields can't be read if the left records can't be read.
         Also makes sure reading m2m doesn't take more queries than necessary."""
         tag = self.env['test_new_api.multi.tag'].create({})
