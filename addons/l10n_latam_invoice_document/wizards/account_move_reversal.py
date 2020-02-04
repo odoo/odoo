@@ -10,6 +10,7 @@ class AccountMoveReversal(models.TransientModel):
     l10n_latam_use_documents = fields.Boolean(compute='_compute_document_type')
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False)
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_document_type')
+    l10n_latam_document_number = fields.Char(string='Document Number')
 
     @api.model
     def _reverse_type_map(self, move_type):
@@ -45,6 +46,20 @@ class AccountMoveReversal(models.TransientModel):
                 record.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
                 record.l10n_latam_available_document_type_ids = refund.l10n_latam_available_document_type_ids
 
-    def reverse_moves(self):
-        return super(AccountMoveReversal, self.with_context(
-            default_l10n_latam_document_type_id=self.l10n_latam_document_type_id.id)).reverse_moves()
+    def _prepare_default_reversal(self, move):
+        """ Set the default document type and number in the new revsersal move taking into account the ones selected in
+        the wizard """
+        res = super()._prepare_default_reversal(move)
+        res.update({
+            'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id,
+            'name': self.l10n_latam_document_number,
+        })
+        return res
+
+    @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
+    def _onchange_l10n_latam_document_number(self):
+        if self.l10n_latam_document_type_id:
+            l10n_latam_document_number = self.l10n_latam_document_type_id._format_document_number(
+                self.l10n_latam_document_number)
+            if self.l10n_latam_document_number != l10n_latam_document_number:
+                self.l10n_latam_document_number = l10n_latam_document_number
