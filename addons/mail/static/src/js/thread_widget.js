@@ -260,11 +260,14 @@ var ThreadWidget = Widget.extend({
      */
     removeMessageAndRender: function (messageID, thread, options) {
         var self = this;
+        this._currentThreadID = thread.getID();
         return new Promise(function (resolve, reject) {
             self.$('.o_thread_message[data-message-id="' + messageID + '"]')
             .fadeOut({
                 done: function () {
-                    self.render(thread, options);
+                    if (self._currentThreadID === thread.getID()) {
+                        self.render(thread, options);
+                    }
                     resolve();
                 },
                 duration: 200,
