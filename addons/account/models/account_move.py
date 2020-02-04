@@ -2318,6 +2318,9 @@ class AccountMove(models.Model):
         if any(move.type not in ('in_invoice', 'out_invoice') for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 
+        # this is necessary, go figure why
+        self.flush()
+
         for move in self:
             move.type = move.type.replace('invoice', 'refund')
             reversed_move = move._reverse_move_vals({}, False)
