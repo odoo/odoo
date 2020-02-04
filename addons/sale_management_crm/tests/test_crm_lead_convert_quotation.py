@@ -28,7 +28,8 @@ class TestLeadConvertToTicket(crm_common.TestCrmCommon):
         # invoke wizard and apply it
         convert = self.env['crm.quotation.partner'].with_context({
             'active_model': 'crm.lead',
-            'active_id': lead.id
+            'active_id': lead.id,
+            'is_sale_order': True,
         }).create({})
 
         self.assertEqual(convert.action, 'create')
@@ -52,7 +53,8 @@ class TestLeadConvertToTicket(crm_common.TestCrmCommon):
         # invoke wizard and apply it
         convert = self.env['crm.quotation.partner'].with_context({
             'active_model': 'crm.lead',
-            'active_id': lead.id
+            'active_id': lead.id,
+            'is_sale_order': True,
         }).create({'action': 'exist'})
 
         self.assertEqual(convert.action, 'exist')
@@ -86,6 +88,7 @@ class TestLeadConvertToTicket(crm_common.TestCrmCommon):
             'active_model': 'crm.lead',
             'active_id': lead.id,
             'default_action': 'nothing',
+            'is_sale_order': True,
         }).create({})
 
         self.assertEqual(convert.action, 'nothing')

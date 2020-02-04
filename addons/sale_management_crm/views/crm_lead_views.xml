@@ -12,16 +12,46 @@
         <field name="name">crm.lead.form.inherit.sale.management</field>
         <field name="model">crm.lead</field>
         <field name="priority">10</field>
-        <field name="inherit_id" ref="sale_crm.view_crm_lead_form_inherit_sale_crm"/>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_new_quotation_handle_partner']" position="attributes">
-                <attribute name="invisible">0</attribute>
+            <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
+                <button name="action_new_quotation_handle_partner"
+                        type="object"
+                        class="oe_highlight"
+                        string="New Quotation"
+                        attrs="{'invisible': ['|', ('type', '=', 'lead'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"
+                        context="{'is_sale_order': True}"/>
             </xpath>
-            <xpath expr="//button[@id='view_quotation_button']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//button[@id='view_order_button']" position="attributes">
-                <attribute name="invisible">0</attribute>
+            <xpath expr="//button[@name='action_schedule_meeting']" position="after">
+                <button id="view_quotation_button"
+                        name="action_view_sale_order"
+                        type="object"
+                        context="{'order_status': 'quotation'}"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('type', '=', 'lead')]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="quotation_count"/>
+                        </span>
+                        <span class="o_stat_text">Quotation</span>
+                    </div>
+                </button>
+                <button id="view_order_button"
+                        name="action_view_sale_order"
+                        type="object"
+                        context="{'order_status': 'order'}"
+                        class="oe_stat_button"
+                        icon="fa-usd"
+                        attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('type', '=', 'lead')]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                        </span>
+                        <span class="o_stat_text"> Orders</span>
+                        <field name="sale_order_count" invisible="1"/>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>

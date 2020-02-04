@@ -16,7 +16,6 @@ When several opportunities are selected, a separate quotation is generated for e
     'depends': ['sale', 'crm'],
     'data': [
         'views/sale_order_views.xml',
-        'views/crm_lead_views.xml',
         'wizard/crm_opportunity_to_quotation_views.xml'
     ],
     'auto_install': True,
