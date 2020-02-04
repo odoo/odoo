@@ -3,70 +3,82 @@
 
     <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
         <xpath expr="//div[@name='mail_button']" position="replace">
-            <form id="contactus_form" t-ignore="true" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-success_page="/contactus-thank-you">
-                <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Name">Your Name</label>
+            <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email}" />
+            <div>
+                <section id="contactus_section" class="s_website_form" data-vcss="001">
+                    <div class="container">
+                        <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact1">Your Name<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="contact1" type="text" class="form-control s_website_form_input" name="Name" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact2">Phone Number</label>
+                                        <div class="col-sm">
+                                            <input id="contact2" type="text" class="form-control s_website_form_input" name="Phone"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact3">Email<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact4">Your Company</label>
+                                        <div class="col-sm">
+                                            <input id="contact4" type="text" class="form-control s_website_form_input" name="Partner Name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact5">Subject<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact6">Your Question</label>
+                                        <div class="col-sm">
+                                            <textarea id="contact6" class="form-control s_website_form_input" name="Description" required=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field d-none">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact7">Email To</label>
+                                        <div class="col-sm">
+                                            <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_submit">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div style="width: 200px" class="col-sm-auto s_website_form_label"/>
+                                        <div class="col-sm">
+                                            <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                            <span id="s_website_form_result"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="Name" required=""/>
-                    </div>
-                </div>
-                <div class="form-group row form-field o_website_form_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Phone">Phone Number</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="Phone"/>
-                    </div>
-                </div>
-                <div class="form-group row form-field o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="email_from">Email</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
-                    </div>
-                </div>
-                <div class="form-group row form-field o_website_form_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Partner Name">Your Company</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="Partner Name"/>
-                    </div>
-                </div>
-                <div class="form-group row form-field o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="subject">Subject</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="subject" required=""/>
-                    </div>
-                </div>
-                <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Description">Your Question</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <textarea class="form-control o_website_form_input" name="Description" required=""></textarea>
-                    </div>
-                </div>
-                <div class="form-group row form-field d-none">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="email_to">Email To</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
-                        <a href="#" class="btn btn-primary btn-lg o_website_form_send">Send</a>
-                        <span id="o_website_form_result"></span>
-                    </div>
-                </div>
-            </form>
+                </section>
+            </div>
         </xpath>
     </template>
 

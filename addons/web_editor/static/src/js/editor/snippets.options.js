@@ -696,6 +696,10 @@ const SelectUserValueWidget = UserValueWidget.extend({
             this.trigger_up('user_value_widget_opening');
         }
         this.menuTogglerEl.classList.toggle('active');
+        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
+        if (activeButton) {
+            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+        }
     },
 });
 

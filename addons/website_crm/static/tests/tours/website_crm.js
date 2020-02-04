@@ -32,7 +32,7 @@ odoo.define('website_crm.tour', function(require) {
         run: "text ### TOUR DATA ###"
     }, {
         content: "Send the form",
-        trigger: ".o_website_form_send"
+        trigger: ".s_website_form_send"
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thanks')):has(div.alert-success)"
