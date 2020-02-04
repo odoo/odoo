@@ -1,53 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website_form.contactus_form" customize_show="True">
-            <xpath expr="//form[@id='contactus_form']" position="replace">
-                <div t-ignore="true">
-                    <form action="/website_form/" method="post" data-model_name="crm.lead" data-success_page="/contactus-thank-you" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-editable-form="false">
-                        <div class="form-group row form-field o_website_form_required_custom">
-                            <label class="col-lg-3 col-md-4 col-form-label" for="contact_name">Your Name</label>
-                            <div class="col-lg-7 col-md-8">
-                                <input type="text" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+            <xpath expr="//span[@data-for='contactus_form']" position="attributes">
+                <attribute name="t-att-data-values">{
+                    'contact_name': request.params.get('contact_name', ''),
+                    'phone': request.params.get('phone', ''),
+                    'email_from': request.params.get('email_from', ''),
+                    'partner_name': request.params.get('partner_name', ''),
+                    'name': request.params.get('name', ''),
+                    'description': request.params.get('description', ''),
+                }</attribute>
+            </xpath>
+            <xpath expr="//section[@id='contactus_section']" position="replace">
+                <section class="s_website_form" data-vcss="001">
+                    <div class="container">
+                        <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" data-model_name="crm.lead" data-success-mode="redirect" data-success-page="/contactus-thank-you" class="o_mark_required" data-mark="*" data-editable-form="false">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity1">Your Name<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="opportunity1" type="text" class="form-control s_website_form_input" name="contact_name" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity2">Phone Number</label>
+                                        <div class="col-sm">
+                                            <input id="opportunity2" type="text" class="form-control s_website_form_input" name="phone" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity3">Email<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="opportunity3" type="text" class="form-control s_website_form_input" name="email_from" required="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity4">Your Company</label>
+                                        <div class="col-sm">
+                                            <input id="opportunity4" type="text" class="form-control s_website_form_input" name="partner_name" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_model_required" data-type="char">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity5">Subject</label>
+                                        <div class="col-sm">
+                                            <input id="opportunity5" type="text" class="form-control s_website_form_input" name="name" required="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="text">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity6">Your Question<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <textarea id="opportunity6" class="form-control s_website_form_input" name="description" required=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_submit">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div style="width: 200px" class="col-sm-auto s_website_form_label"/>
+                                        <div class="col-sm">
+                                            <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                            <span id="s_website_form_result"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row form-field">
-                            <label class="col-lg-3 col-md-4 col-form-label" for="phone">Phone Number</label>
-                            <div class="col-lg-7 col-md-8">
-                                <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
-                            </div>
-                        </div>
-                        <div class="form-group row form-field o_website_form_required_custom">
-                            <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Email</label>
-                            <div class="col-lg-7 col-md-8">
-                                <input type="text" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
-                            </div>
-                        </div>
-                        <div class="form-group row form-field">
-                            <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Your Company</label>
-                            <div class="col-lg-7 col-md-8">
-                                <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
-                            </div>
-                        </div>
-                        <div class="form-group row form-field o_website_form_required">
-                            <label class="col-lg-3 col-md-4 col-form-label" for="name">Subject</label>
-                            <div class="col-lg-7 col-md-8">
-                                <input type="text" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
-                            </div>
-                        </div>
-                        <div class="form-group row form-field o_website_form_required_custom">
-                            <label class="col-lg-3 col-md-4 col-form-label" for="description">Your Question</label>
-                            <div class="col-lg-7 col-md-8">
-                                <textarea class="form-control o_website_form_input" name="description" required=""><t t-esc="request.params.get('description', '')"/></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
-                                <a href="#" role="button" class="btn btn-primary btn-lg o_website_form_send">Send</a>
-                                <span id="o_website_form_result"></span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>
+                </section>
 			</xpath>
 		</template>
 

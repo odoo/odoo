@@ -16,8 +16,35 @@ var FormEditorRegistry = require('website_form.form_editor_registry');
 var _t = core._t;
 
 FormEditorRegistry.add('send_mail', {
-    defaultTemplateName: 'website_form.default_contactus_form',
-    defaultTemplatePath: '/website_form/static/src/xml/website_form.xml',
+    formFields: [{
+        type: 'char',
+        custom: true,
+        required: true,
+        name: 'Your Name',
+    }, {
+        type: 'char',
+        custom: true,
+        name: 'Phone Number',
+    }, {
+        type: 'email',
+        modelRequired: true,
+        name: 'email_from',
+        string: 'Your Email',
+    }, {
+        type: 'char',
+        custom: true,
+        name: 'Your Company',
+    }, {
+        type: 'char',
+        modelRequired: true,
+        name: 'subject',
+        string: 'Subject',
+    }, {
+        type: 'text',
+        custom: true,
+        required: true,
+        name: 'Your Question',
+    }],
     fields: [{
         name: 'email_to',
         type: 'char',
