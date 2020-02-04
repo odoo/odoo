@@ -194,7 +194,7 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the precondition of action ``self``. """
         if self.filter_pre_domain and records:
             domain = [('id', 'in', records.ids)] + safe_eval(self.filter_pre_domain, self._get_eval_context())
-            return records.search(domain)
+            return records.sudo().search(domain).with_env(records.env)
         else:
             return records
 
@@ -205,7 +205,7 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_domain and records:
             domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
-            return records.search(domain), domain
+            return records.sudo().search(domain).with_env(records.env), domain
         else:
             return records, None
 
