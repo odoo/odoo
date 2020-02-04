@@ -34,7 +34,7 @@
 
             <!-- Droppable-area shared across all blog's pages -->
             <t t-set="oe_structure_blog_footer_description">Visible in all blogs' pages</t>
-            <div class="oe_structure"
+            <div class="oe_structure oe_structure_small"
                 id="oe_structure_blog_footer"
                 t-att-data-editor-sub-message="oe_structure_blog_footer_description"/>
         </div>
@@ -158,7 +158,6 @@ list of filtered posts (by date or tag).
         <t t-if="blog or first_post" t-call="website.record_cover">
             <t t-set="_record" t-value="blog or first_post"/>
             <t t-set="use_filters" t-value="True"/>
-            <t t-set="use_text_size" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
 
@@ -232,15 +231,17 @@ list of filtered posts (by date or tag).
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="blog_post"/>
+                    <t t-set="snippet_autofocus" t-value="True"/>
                     <t t-set="use_filters" t-value="True"/>
                     <t t-set="use_size" t-value="True"/>
-                    <t t-set="use_text_size" t-value="True"/>
+                    <t t-set="display_opt_name">Blog Post Cover</t>
                     <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
+
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title #{opt_blog_post_select_to_tweet and 'js_tweet'} #{opt_blog_post_select_to_comment and 'js_comment'}">
-                            <div t-field="blog_post.name" id="o_wblog_post_name" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                            <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                            <div t-field="blog_post.name" id="o_wblog_post_name" class="o_editable_no_shadow" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
+                            <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle" class="o_editable_no_shadow" placeholder="Subtitle"/>
                         </div>
                         <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class').split(' '))"/>
                         <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
@@ -437,7 +438,6 @@ list of filtered posts (by date or tag).
 
                         <a id="o_wblog_next_post_info" class="d-none"
                            t-att-data-size="_cp.get('resize_class')"
-                           t-att-data-text="_cp.get('text_size_class')"
                            t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
 
                         <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>

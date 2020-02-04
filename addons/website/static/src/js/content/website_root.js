@@ -161,6 +161,13 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             $data.toggleClass("css_unpublished css_published");
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+            if (result) {
+                self.displayNotification({
+                    type: 'success',
+                    title: _t("Congratulation"),
+                    message: _t("You've published your ") + $data.data('description'),
+                });
+            }
         })
         .guardedCatch(function (err, data) {
             data = data || {statusText: err.message.message};

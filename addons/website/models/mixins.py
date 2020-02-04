@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
 
 
@@ -94,6 +95,22 @@ class SeoMetadata(models.AbstractModel):
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
             'meta_description': default_meta.get('default_meta_description')
+        }
+
+
+class WebsiteCoverPropertiesMixin(models.AbstractModel):
+
+    _name = 'website.cover_properties.mixin'
+    _description = 'Cover Properties Website Mixin'
+
+    cover_properties = fields.Text('Cover Properties', default=lambda s: json.dumps(s._default_cover_properties()))
+
+    def _default_cover_properties(self):
+        return {
+            "background_color_class": "bg-secondary",
+            "background-image": "none",
+            "opacity": "0.2",
+            "resize_class": "o_half_screen_height",
         }
 
 
