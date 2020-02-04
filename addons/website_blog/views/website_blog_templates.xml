@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website_blog/static/src/scss/primary_variables.scss"/>
+<template id="assets_wysiwyg" inherit_id="website.assets_wysiwyg" name="Blog posts snippet options">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_blog/static/src/snippets/s_latest_posts/options.js"/>
     </xpath>
 </template>
 
 <template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
-        <script type="text/javascript" src="/website_blog/static/src/js/s_latest_posts_editor.js"/>
         <script type="text/javascript" src="/website_blog/static/src/js/tours/website_blog.js"></script>
     </xpath>
 </template>
@@ -21,7 +20,6 @@
 
         <script type="text/javascript" src="/website_blog/static/src/js/contentshare.js"/>
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
-        <script type="text/javascript" src="/website_blog/static/src/js/s_latest_posts_frontend.js"/>
     </xpath>
 </template>
 
@@ -473,72 +471,6 @@ list of filtered posts (by date or tag).
             </t>
         </div>
     </xpath>
-</template>
-
-<!-- ======   'Latest Posts' Snippets   ========================================
-============================================================================ -->
-<template id="s_latest_posts" name="Latest Posts - List">
-    <section class="s_latest_posts pt16 pb16">
-        <div class="container">
-            <h2>Latest Posts</h2>
-            <div class="row s_col_no_bgcolor s_nb_column_fixed js_get_posts"
-                data-loading="true"
-                data-template="website_blog.s_latest_posts_list_template"/>
-        </div>
-    </section>
-</template>
-
-<template id="s_latest_posts_big_picture" name="Latest Posts - Big Images">
-    <section class="s_latest_posts_big_picture pt16 pb16">
-        <div class="container">
-            <h2 style="text-align: center">Latest Posts</h2>
-            <div class="row s_col_no_bgcolor s_nb_column_fixed js_get_posts"
-                data-loading="true"
-                data-template="website_blog.s_latest_posts_big_picture_template"/>
-        </div>
-    </section>
-</template>
-
-<template id="s_latest_posts_list_template">
-    <div t-foreach="posts" t-as="p" class="d-flex col-12 mt-3 s_latest_posts_post">
-        <a class="s_latest_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}" t-att-title="'Read' + p.name">
-            <t t-call="website.record_cover">
-                <t t-set="_record" t-value="p"/>
-                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
-
-                <div class="s_latest_posts_loader d-flex align-items-center justify-content-center bg-200">
-                    <div class="d-none rounded-circle bg-black-25 w-25 h-25"/>
-                </div>
-            </t>
-        </a>
-        <div class="pl-2">
-            <a class="" t-att-title="'Read' + p.name" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">
-                <div class="s_latest_posts_post_title mb-1" t-field="p.name"/>
-            </a>
-            <div class="s_latest_posts_post_subtitle mb-1 d-none d-sm-block" t-field="p.subtitle"/>
-        </div>
-    </div>
-</template>
-
-<template id="s_latest_posts_big_picture_template">
-    <figure t-foreach="posts" t-as="p" class="col-12 col-md-6 col-xl-4 my-3 s_latest_posts_post">
-        <a class="s_latest_posts_post_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">
-            <t t-call="website.record_cover">
-                <t t-set="_record" t-value="p"/>
-                <t t-set="use_filters" t-value="True"/>
-                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
-            </t>
-
-            <figcaption class="text-center w-100 h-100 px-3 d-flex flex-column flex-grow-1">
-                <div class="s_latest_posts_post_title text-white" t-field="p.name"/>
-                <div class="s_latest_posts_post_subtitle text-white" t-field="p.subtitle"/>
-            </figcaption>
-
-            <div class="s_latest_posts_loader d-flex align-items-center justify-content-center bg-200">
-                <div class="d-none rounded-circle bg-black-25 w-25 h-25"/>
-            </div>
-        </a>
-    </figure>
 </template>
 
 <!-- ======   Technical Templates   ============================================
