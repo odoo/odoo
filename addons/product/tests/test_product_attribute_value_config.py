@@ -352,8 +352,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_1)
         self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_2)
         self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
-        with self.assertRaises(StopIteration):
-            next(gen)
+        self.assertIsNone(next(gen, None))
 
         # Give priority to ram_16 but it is not allowed by hdd_1 so it should return hhd_2 instead
         # Test invalidate_cache on product.attribute.value write
@@ -392,8 +391,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_exclude(computer_ram_32, computer_hdd_4)
         self.assertEqual(self.computer._get_first_possible_combination(), self.env['product.template.attribute.value'])
         gen = self.computer._get_possible_combinations()
-        with self.assertRaises(StopIteration):
-            next(gen)
+        self.assertIsNone(next(gen, None))
 
     def test_get_closest_possible_combinations(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -417,8 +415,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertEqual(next(gen), computer_ssd_256 + computer_ram_32 + computer_hdd_1)
         self.assertEqual(next(gen), computer_ssd_512 + computer_ram_8 + computer_hdd_1)
         self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_1)
-        with self.assertRaises(StopIteration):
-            next(gen)
+        self.assertIsNone(next(gen, None))
 
         # CASE contains computer_hdd_2
         self.assertEqual(self.computer._get_closest_possible_combination(computer_hdd_2),

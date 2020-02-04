@@ -24,7 +24,6 @@ except ImportError:
 from collections import namedtuple
 from email.message import EmailMessage
 from lxml import etree
-from werkzeug import url_encode
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
@@ -2482,7 +2481,7 @@ class MailThread(models.AbstractModel):
             token = self._notify_encode_link(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, url_encode(params))
+        link = '%s?%s' % (base_link, urls.url_encode(params))
         if self:
             link = self[0].get_base_url() + link
 

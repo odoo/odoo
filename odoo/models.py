@@ -5625,7 +5625,7 @@ Record ids: %(records)s
         return set(self._ids) >= set(other._ids)
 
     def __int__(self):
-        return self.id
+        return self.id or 0
 
     def __str__(self):
         return "%s%s" % (self._name, getattr(self, '_ids', ""))
