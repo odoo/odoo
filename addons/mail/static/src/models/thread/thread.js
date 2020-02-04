@@ -404,6 +404,16 @@ function factory(dependencies) {
         }
 
         /**
+         * Returns the domain for attachments used in thread chatter.
+         *
+         * @private
+         * @returns {Array} "ir.attachment" odoo domain.
+         */
+        _getAttachmentsDomain() {
+            return [['res_id', '=', this.id], ['res_model', '=', this.model]]
+        }
+
+        /**
          * Fetch attachments linked to a record. Useful for populating the store
          * with these attachments, which are used by attachment box in the chatter.
          */
@@ -411,10 +421,7 @@ function factory(dependencies) {
             const attachmentsData = await this.async(() => this.env.services.rpc({
                 model: 'ir.attachment',
                 method: 'search_read',
-                domain: [
-                    ['res_id', '=', this.id],
-                    ['res_model', '=', this.model],
-                ],
+                domain: this._getAttachmentsDomain(),
                 fields: ['id', 'name', 'mimetype'],
                 orderBy: [{ name: 'id', asc: false }],
             }));

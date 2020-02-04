@@ -279,6 +279,15 @@ class FleetVehicle(models.Model):
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
 
+    def action_get_attachment_view(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        action.update({
+            'name': _('Documents'),
+            'domain': [('res_id', '=', self.id), ('res_model', '=', 'fleet.vehicle')],
+            'context': dict(self._context, default_res_id=self.id, default_res_model=self._name)
+        })
+        return action
+
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['fleet.vehicle.state'].search([], order=order)
