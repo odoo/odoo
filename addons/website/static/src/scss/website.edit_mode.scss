@@ -20,7 +20,7 @@ $-editor-messages-margin-x: 2%;
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):hover {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
         }
     }
@@ -47,6 +47,9 @@ $-editor-messages-margin-x: 2%;
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
         &:empty {
             @extend %o-editor-messages;
+            &.oe_structure_small {
+                padding: 15px 0px;
+            }
         }
         > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;
