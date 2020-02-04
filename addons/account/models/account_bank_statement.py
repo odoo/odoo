@@ -201,7 +201,7 @@ class AccountBankStatement(models.Model):
     @api.depends('balance_start', 'previous_statement_id')
     def _compute_is_valid_balance_start(self):
         for bnk in self:
-            bnk.is_valid_balance_start = bnk.balance_start == bnk.previous_statement_id.balance_end_real
+            bnk.is_valid_balance_start = float_is_zero(bnk.balance_start - bnk.previous_statement_id.balance_end_real, precision_digits=bnk.currency_id.decimal_places)
 
     @api.depends('date', 'journal_id')
     def _get_previous_statement(self):
