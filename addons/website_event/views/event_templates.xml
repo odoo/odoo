@@ -675,60 +675,107 @@
 
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website_event.layout">
-        <div class="container my-5">
-            <div class="row">
-                <div class="col-12">
-                    <h2>Registration confirmed!</h2>
-                    <table class="table table-striped my-4">
-                        <thead class="bg-secondary">
-                            <tr>
-                                <th>Name</th>
-                                <th>Ticket</th>
-                                <th>E-mail</th>
-                                <th>Phone</th>
-                                <th>Reference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="attendees" t-as="attendee">
-                                <tr>
-                                    <td><t t-if="attendee.name" t-esc="attendee.name"/><t t-else="">N/A</t></td>
-                                    <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
-                                    <td><t t-if="attendee.email" t-esc="attendee.email"/><t t-else="">N/A</t></td>
-                                    <td><t t-if="attendee.phone" t-esc="attendee.phone"/><t t-else="">N/A</t></td>
-                                    <td><t t-esc="attendee.id"/></td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-8">
-                    <h3><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h3>
-                    <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
-                    <div id="add_to_calendar" class="mt-4">
-                        <a role="button" class="btn btn-primary" t-att-href="iCal_url">
-                            <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
-                        </a>
-                        <a role="button" class="btn btn-primary" t-att-href="google_url" target='_blank'>
-                            <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
-                        </a>
+        <t t-call="website.record_cover">
+            <t t-set="_record" t-value="event"/>
+            <t t-set="use_filters" t-value="True"/>
+            <t t-set="additionnal_classes" t-value="'o_record_has_cover cover_auto p-5 mb-n5'"/>
+        </t>
+        <div class="bg-200 pb-5">
+            <section class="container">
+                <div class="position-relative bg-white mb-5 rounded-sm shadow-sm overflow-hidden">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-lg-8 p-3">
+                            <h1 class="mb-0">Almost done!</h1>
+                            <p class="lead text-muted mb-0">Don't forget to add the event in your calendar.</p>
+                        </div>
+                        <div class="col-lg-4 p-3 justify-content-end bg-light mb-3 mb-lg-0">
+                            <div class="row align-items-center justify-content-end">
+                                <div class="col-12">
+                                    <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
+                                </div>
+                                <div class="col pr-lg-0">
+                                    <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                                    <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                                    <t t-if="not event.is_one_day">Start -</t>
+                                    <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                                    <t t-if="event.is_one_day">
+                                        <i class="fa fa-long-arrow-right mx-1"/>
+                                        <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                                    </t>
+                                    <t t-else="">
+                                        <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
+                                        <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                                        <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
+                                        <t t-if="not event.is_one_day">End -</t>
+                                        <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                                    </t>
+                                    <!-- Timezone -->
+                                    <small t-esc="event.date_tz" class="d-block mt-2 text-muted"/>
+                                </div>
+                                <div id="add_to_calendar" class="col text-nowrap">
+                                    <a role="button" class="btn btn-beta btn-block  text-left" t-att-href="iCal_url">
+                                        <i class="fa fa-fw fa-calendar mr-2"/>iCal/Outlook
+                                    </a>
+                                    <a role="button" class="btn btn-dark btn-block  text-left" t-att-href="google_url" target='_blank'>
+                                        <i class="fa fa-fw fa-google mr-2"/>Google Calendar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-lg-8 p-3 bg-white">
+                            <hr class="d-none d-lg-block mt-n2"/>
+                            <h5 class="mt-lg-4 mb-lg-3">
+                                <i class="fa fa-check text-success mr-2"/>Registration confirmed.</h5>
+                            <table class="table table-sm table-responsive table-striped table-borderless">
+                                <thead>
+                                    <tr class="text-muted ">
+                                        <th>Name</th>
+                                        <th>Ticket</th>
+                                        <th>E-mail</th>
+                                        <th>Phone</th>
+                                        <th>Reference</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="attendees" t-as="attendee">
+                                        <tr>
+                                            <td class="lead"><t t-if="attendee.name" t-esc="attendee.name"/><t t-else="">N/A</t></td>
+                                            <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
+                                            <td><t t-if="attendee.email" t-esc="attendee.email"/><t t-else="">N/A</t></td>
+                                            <td><t t-if="attendee.phone" t-esc="attendee.phone"/><t t-else="">N/A</t></td>
+                                            <td><t t-esc="attendee.id"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-lg-4 bg-light p-3">
+                            <!-- Location -->
+                            <div t-if="not event.is_online and event.address_id" class="o_wevent_sidebar_block p-0">
+                                <hr class="d-none d-lg-block mt-n2"/>
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                                <h4 t-field="event.address_id" class="" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["name"]
+                                }'/>
+                                <i class="fa fa-map-marker fa-fw" role="img"/>
+                                <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" class="d-inline-block  mb-2" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["address"],
+                                    "no_marker": True
+                                }'/>
+                                <div class="mb-3" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["phone", "mobile", "email"]
+                                }'/>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <h4 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
-                        "widget": "contact",
-                        "fields": ["name"]
-                        }'/>
-                    <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" temprop="location" t-field="event.address_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["address"]
-                        }'/>
-                    <div itemprop="location" t-field="event.address_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["phone", "mobile", "email"]
-                        }'/>
-                </div>
-            </div>
+            </section>
         </div>
     </t>
 </template>
