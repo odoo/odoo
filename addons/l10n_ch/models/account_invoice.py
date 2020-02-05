@@ -102,7 +102,7 @@ class AccountMove(models.Model):
 
 
     @api.depends(
-        'currency_id.name', 'amount_total', 'name',
+        'currency_id.name', 'amount_residual', 'name',
         'invoice_partner_bank_id.l10n_ch_postal',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
@@ -132,7 +132,7 @@ class AccountMove(models.Model):
                     currency_code = '01'
                 elif record.currency_id.name == 'EUR':
                     currency_code = '03'
-                units, cents = float_split_str(record.amount_total, 2)
+                units, cents = float_split_str(record.amount_residual, 2)
                 amount_to_display = units + cents
                 amount_ref = amount_to_display.zfill(10)
                 left = currency_code + amount_ref
@@ -163,7 +163,7 @@ class AccountMove(models.Model):
         This function is needed on the model, as it must be called in the report
         template, which cannot reference static functions
         """
-        return float_split_str(self.amount_total, 2)
+        return float_split_str(self.amount_residual, 2)
 
     def display_swiss_qr_code(self):
         """ Trigger the print of the Swiss QR code in the invoice report or not

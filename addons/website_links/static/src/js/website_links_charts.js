@@ -171,27 +171,27 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
 
             // Process all time line chart data
             var now = moment();
-            self.charts.all_time_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
+            self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
             self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
 
             // Process month line chart data
             beginDate = moment().subtract(30, 'days');
-            self.charts.last_month_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
+            self.charts.last_month_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
             self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
 
             // Process week line chart data
             beginDate = moment().subtract(7, 'days');
-            self.charts.last_week_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
+            self.charts.last_week_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
             self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
 
             // Process pie charts
-            self.charts.all_time_pie = new PieChart(this, _clicksByCountry);
+            self.charts.all_time_pie = new PieChart(self, _clicksByCountry);
             self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
 
-            self.charts.last_month_pie = new PieChart(this, _lastMonthClicksByCountry);
+            self.charts.last_month_pie = new PieChart(self, _lastMonthClicksByCountry);
             self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
 
-            self.charts.last_week_pie = new PieChart(this, _lastWeekClicksByCountry);
+            self.charts.last_week_pie = new PieChart(self, _lastWeekClicksByCountry);
             self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
 
             var rowWidth = $('#all_time_countries_charts').parent().width();

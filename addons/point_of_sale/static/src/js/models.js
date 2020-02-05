@@ -977,7 +977,7 @@ exports.PosModel = Backbone.Model.extend({
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
+        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * orders.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback

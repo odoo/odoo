@@ -241,7 +241,8 @@ class AccountChartTemplate(models.Model):
             })
 
         # Set the transfer account on the company
-        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[:1]
+        company.transfer_account_id = self.env['account.account'].search([
+            ('code', '=like', self.transfer_account_code_prefix + '%'), ('company_id', '=', company.id)], limit=1)
 
         # Create Bank journals
         self._create_bank_journals(company, acc_template_ref)

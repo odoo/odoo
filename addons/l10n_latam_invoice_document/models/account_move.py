@@ -14,7 +14,7 @@ class AccountMove(models.Model):
     l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type', string='Document Type', copy=False, readonly=False, auto_join=True, index=True,
+        'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index=True,
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(

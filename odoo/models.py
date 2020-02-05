@@ -5172,10 +5172,10 @@ Record ids: %(records)s
             records.mapped('name')
 
             # returns a recordset of partners
-            record.mapped('partner_id')
+            records.mapped('partner_id')
 
             # returns the union of all partner banks, with duplicates removed
-            record.mapped('partner_id.bank_ids')
+            records.mapped('partner_id.bank_ids')
         """
         if not func:
             return self                 # support for an empty path of fields
