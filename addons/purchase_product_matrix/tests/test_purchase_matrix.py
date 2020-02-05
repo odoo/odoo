@@ -12,7 +12,7 @@ class TestPurchaseMatrixUi(TestMatrixCommon):
         self.start_tour("/web", 'purchase_matrix_tour', login="admin")
 
         # Ensures some dynamic create variants have been created by the matrix
-        # Ensures a SO has been created with exactly x lines ...
+        # Ensures a PO has been created with exactly x lines ...
 
         self.assertEqual(len(self.matrix_template.product_variant_ids), 8)
         self.assertEqual(len(self.matrix_template.product_variant_ids.product_template_attribute_value_ids), 6)
@@ -25,7 +25,7 @@ class TestPurchaseMatrixUi(TestMatrixCommon):
             # 5 and 9.2 because of no variant attributes
             self.assertIn(round(variant.purchased_product_qty, 2), [5, 9.2])
 
-        # Ensure no duplicate line has been created on the SO.
+        # Ensure no duplicate line has been created on the PO.
         # NB: the *2 is because the no_variant attribute doesn't create a variant
         # but still gives different order lines.
         self.assertEqual(

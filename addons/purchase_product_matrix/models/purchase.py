@@ -14,7 +14,7 @@ class PurchaseOrder(models.Model):
 
     NOTE: The matrix functionality was done in python, server side, to avoid js
         restriction.  Indeed, the js framework only loads the x first lines displayed
-        in the client, which means in case of big matrices and lots of so_lines,
+        in the client, which means in case of big matrices and lots of po_lines,
         the js doesn't have access to the 41st and following lines.
 
         To force the loading, a 'hack' of the js framework would have been needed...
@@ -22,7 +22,7 @@ class PurchaseOrder(models.Model):
 
     grid_product_tmpl_id = fields.Many2one('product.template', store=False, help="Technical field for product_matrix functionalities.")
     grid_update = fields.Boolean(default=False, store=False, help="Whether the grid field contains a new matrix to apply or not.")
-    grid = fields.Char(store=False, help="Technical storage of grid. \nIf grid_update, will be loaded on the SO. \nIf not, represents the matrix to open.")
+    grid = fields.Char(store=False, help="Technical storage of grid. \nIf grid_update, will be loaded on the PO. \nIf not, represents the matrix to open.")
 
     @api.onchange('grid_product_tmpl_id')
     def _set_grid_up(self):
@@ -57,7 +57,7 @@ class PurchaseOrder(models.Model):
                     if qty == 0:
                         if self.state in ['draft', 'sent']:
                             # Remove lines if qty was set to 0 in matrix
-                            # only if SO state = draft/sent
+                            # only if PO state = draft/sent
                             self.order_line -= order_lines
                         else:
                             order_lines.update({'product_qty': 0.0})
