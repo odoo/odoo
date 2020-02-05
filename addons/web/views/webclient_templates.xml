@@ -595,6 +595,10 @@
         </t>
     </template>
 
+    <template id="web.css_tests_assets">
+        <link type="text/css" rel="stylesheet" href="/web/static/lib/daterangepicker/daterangepicker.css"/>
+    </template>
+
     <template id="web.js_tests_assets">
         <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_backend" t-js="false"/>
@@ -614,6 +618,9 @@
         <script type="text/javascript" src="/web/static/lib/ace/mode-python.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-js.js"></script>
+        <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"></script>
+        <script type="text/javascript" src="/web/static/lib/daterangepicker/daterangepicker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/daterangepicker.js"></script>
 
         <script type="text/javascript" src="/web/static/tests/main_tests.js"></script>
 
@@ -657,6 +664,7 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Tests</t>
             <t t-set="head">
+                <t t-call="web.css_tests_assets"/>
                 <t t-call="web.js_tests_assets"/>
 
                 <script type="text/javascript" src="/base/static/tests/base_settings_tests.js"></script>
