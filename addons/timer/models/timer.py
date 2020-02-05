@@ -2,29 +2,35 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
-
-class TimerMixin(models.AbstractModel):
-    _name = 'timer.mixin'
-    _description = 'Timer Mixin'
-    # YTI Note: This mixin is supposed to be extended to
-    # any models
+class TimerTimer(models.Model):
+    _name = 'timer.timer'
+    _description = 'Timer Module'
 
     timer_start = fields.Datetime("Timer Start")
     timer_pause = fields.Datetime("Timer Last Pause")
-    is_timer_running = fields.Boolean(compute="_compute_timer")
+    is_timer_running = fields.Boolean(compute="_compute_is_timer_running")
+    res_model = fields.Char(required=True)
+    res_id = fields.Char(required=True)
+    user_id = fields.Many2one('res.users')
 
-    @api.depends('timer_start')
-    def _compute_timer(self):
+    _sql_constraints = [(
+        'unique_timer', 'UNIQUE(res_model, res_id, user_id)',
+        'Only one timer occurrence by model, record and user')]
+
+    @api.depends('timer_start', 'timer_pause')
+    def _compute_is_timer_running(self):
         for record in self:
-            record.is_timer_running = bool(record.timer_start)
+            record.is_timer_running = record.timer_start and not record.timer_pause
+
+    @api.model
+    def create(self, vals):
+        # Reset the user_timer_id to force the recomputation
+        self.env[vals['res_model']].invalidate_cache(fnames=['user_timer_id'], ids=[vals['res_id']])
+        return super().create(vals)
 
     def action_timer_start(self):
-        """ Action start the timer.
-            Start timer and search if another timer hasn't been launched.
-            If yes, then stop the timer before launch this timer.
-        """
-        self.ensure_one()
         if not self.timer_start:
             self.write({'timer_start': fields.Datetime.now()})
 
@@ -33,7 +39,6 @@ class TimerMixin(models.AbstractModel):
             :return minutes_spent if the timer is started,
                     otherwise return False
         """
-        self.ensure_one()
         if not self.timer_start:
             return False
         minutes_spent = self._get_minutes_spent()

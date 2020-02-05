@@ -15,9 +15,6 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(ProjectTaskCreateTimesheet, self).default_get(fields)
-        active_model = self._context.get('active_model')
-        if active_model != 'project.task':
-            raise UserError(_("You can only apply this action from a task."))
 
         active_id = self._context.get('active_id')
         if 'task_id' in fields and active_id:

@@ -6,7 +6,7 @@ const fieldUtils = require('web.field_utils');
 
 const fieldRegistry = require('web.field_registry');
 
-const Timer = require('hr_timesheet.Timer');
+const Timer = require('timer.Timer');
 
 // We need the field registry to be populated, as we bind the
 // timesheet_uom widget on existing field widgets.
@@ -92,9 +92,9 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
         // Check if the timer_start exists and it's not false
         // In other word, when user clicks on play button, this button
         // launches the "action_timer_start".
-        if (this.recordData.timer_start) {
+        if (this.recordData.timer_start && !this.recordData.timer_pause) {
             const time = await this._rpc({
-                model: this.model,
+                model: 'timer.timer',
                 method: 'get_server_time',
                 args: []
             });
