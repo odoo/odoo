@@ -128,6 +128,13 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="tax_repartition_line_comp_rule" model="ir.rule">
+        <field name="name">Tax Repartition Line multi-company</field>
+        <field name="model_id" ref="model_account_tax_repartition_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <record id="tax_comp_rule" model="ir.rule">
         <field name="name">Tax multi-company</field>
         <field name="model_id" ref="model_account_tax"/>
