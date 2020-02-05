@@ -224,8 +224,9 @@ class Inventory(models.Model):
 
         domain = [('company_id', '=', self.company_id.id),
                   ('quantity', '!=', '0'),
-                  ('product_id.active', '=', True),
                   ('location_id', 'in', locations_ids)]
+        if self.prefill_counted_quantity == 'zero':
+            domain.append(('product_id.active', '=', True))
 
         if self.product_ids:
             domain = expression.AND([domain, [('product_id', 'in', self.product_ids.ids)]])

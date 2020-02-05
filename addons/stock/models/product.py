@@ -164,8 +164,8 @@ class Product(models.Model):
             domain_move_in += date_date_expected_domain_to
             domain_move_out += date_date_expected_domain_to
 
-        Move = self.env['stock.move']
-        Quant = self.env['stock.quant']
+        Move = self.env['stock.move'].with_context(active_test=False)
+        Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_move_in_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_in
         domain_move_out_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_out
         moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
@@ -512,16 +512,11 @@ class Product(models.Model):
         return theoretical_quantity
 
     def write(self, values):
-        res = super(Product, self).write(values)
-        if 'active' in values and not values['active']:
-            products = self.mapped('orderpoint_ids').filtered(lambda r: r.active).mapped('product_id')
-            if products:
-                msg = _('You still have some active reordering rules on this product. Please archive or delete them first.')
-                msg += '\n\n'
-                for product in products:
-                    msg += '- %s \n' % product.display_name
-                raise UserError(msg)
-        return res
+        if 'active' in values:
+            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).orderpoint_ids.write({
+                'active': values['active']
+            })
+        return super().write(values)
 
     def _get_rules_from_location(self, location, seen_rules=False):
         if not seen_rules:
@@ -611,14 +606,14 @@ class ProductTemplate(models.Model):
 
     def _compute_quantities_dict(self):
         # TDE FIXME: why not using directly the function fields ?
-        variants_available = self.mapped('product_variant_ids')._product_available()
+        variants_available = self.with_context(active_test=False).mapped('product_variant_ids')._product_available()
         prod_available = {}
         for template in self:
             qty_available = 0
             virtual_available = 0
             incoming_qty = 0
             outgoing_qty = 0
-            for p in template.product_variant_ids:
+            for p in template.with_context(active_test=False).product_variant_ids:
                 qty_available += variants_available[p.id]["qty_available"]
                 virtual_available += variants_available[p.id]["virtual_available"]
                 incoming_qty += variants_available[p.id]["incoming_qty"]
@@ -711,7 +706,7 @@ class ProductTemplate(models.Model):
 
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
-        return self.product_variant_ids.action_open_quants()
+        return self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.qty_available != 0).action_open_quants()
 
     def action_update_quantity_on_hand(self):
         advanced_option_groups = [
@@ -773,8 +768,9 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
+        product_ids = self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.virtual_available != 0)
         action['domain'] = [
-            ('product_id', 'in', self.product_variant_ids.ids),
+            ('product_id', 'in', product_ids.ids)
         ]
         return action
 
