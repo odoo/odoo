@@ -874,9 +874,7 @@
     </t>
 
     <t t-name="OrderReceiptWrappedProductNameLines">
-        <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line">
-            <t t-esc="wrapped_line"/>
-        </t>
+        <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line"><t t-esc="wrapped_line"/></t>
     </t>
 
     <t t-name="OrderReceipt">
