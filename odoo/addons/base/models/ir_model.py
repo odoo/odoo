@@ -1534,6 +1534,8 @@ class IrModelAccess(models.Model):
         if model not in self.env:
             _logger.error('Missing model %s', model)
 
+        self.flush(self._fields)
+
         # We check if a specific rule exists
         self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
                               FROM ir_model_access a
