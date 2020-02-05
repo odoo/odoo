@@ -1489,6 +1489,8 @@ class IrModelAccess(models.Model):
         elif self.env[model].is_transient():
             return True
 
+        self.flush(self._fields)
+
         # We check if a specific rule exists
         self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
                               FROM ir_model_access a
