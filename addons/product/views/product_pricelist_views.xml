@@ -146,7 +146,7 @@
                           <p>The computed price is expressed in the default Unit of Measure of the product.</p>
                       </div>
                       <group name="pricelist_rule_advanced" col="6" attrs="{'invisible':[('compute_price', '!=', 'formula')]}" groups="product.group_sale_pricelist">
-                          <span class="o_form_label">New Price =</span>
+                          <label for="base" string="New Price = "/>
                           <div>
                               <span attrs="{'invisible':[('base', '!=', 'list_price')]}">Sales Price  -  </span>
                               <span attrs="{'invisible':[('base', '!=', 'standard_price')]}">Cost  -  </span>
