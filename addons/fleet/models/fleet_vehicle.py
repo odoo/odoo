@@ -238,6 +238,7 @@ class FleetVehicle(models.Model):
             })
 
     def action_accept_driver_change(self):
+        self._close_driver_history()
         # Find all the vehicles for which the driver is the future_driver_id
         # remove their driver_id and close their history using current date
         vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids)])
