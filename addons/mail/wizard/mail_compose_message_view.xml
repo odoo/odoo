@@ -60,7 +60,7 @@
                         <field name="subject" placeholder="Subject..." required="True"/>
                         <!-- mass post -->
                         <field name="notify"
-                            attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_post')]}"/>
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_post')]}"/>
                         <!-- mass mailing -->
                         <field name="no_auto_thread" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="reply_to" placeholder="Email address to redirect replies..."

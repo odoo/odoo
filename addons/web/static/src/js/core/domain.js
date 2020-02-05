@@ -383,8 +383,10 @@ var Domain = collections.Tree.extend({
      *                       to normalize (! will be normalized in-place)
      * @returns {Array} the normalized JS prefix-array representation of the
      *                  given domain
+     * @throws {Error} if the domain is invalid and can't be normalised
      */
     normalizeArray: function (domain) {
+        if (domain.length === 0) { return domain; }
         var expected = 1;
         _.each(domain, function (item) {
             if (item === "&" || item === "|") {
@@ -395,6 +397,11 @@ var Domain = collections.Tree.extend({
         });
         if (expected < 0) {
             domain.unshift.apply(domain, _.times(Math.abs(expected), _.constant("&")));
+        } else if (expected > 0) {
+            throw new Error(_.str.sprintf(
+                "invalid domain %s (missing %d segment(s))",
+                JSON.stringify(domain), expected
+            ));
         }
         return domain;
     },

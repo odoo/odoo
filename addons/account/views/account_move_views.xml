@@ -634,7 +634,7 @@
                                            placeholder="Terms"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                     <span class="o_form_label mx-3 oe_edit_only"
-                                          attrs="{'invisible': [ '|', '|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
+                                          attrs="{'invisible': [ '|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
                                     <field name="invoice_date_due" force_save="1"
                                            placeholder="Date"
                                            attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
@@ -1024,7 +1024,7 @@
                     </sheet>
                     <!-- Attachment preview -->
                     <div class="o_attachment_preview"
-                         attrs="{'invisible': ['|', '|',
+                         attrs="{'invisible': ['|',
                                 ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')),
                                 ('state', '!=', 'draft')]}" />
                     <!-- Chatter -->
