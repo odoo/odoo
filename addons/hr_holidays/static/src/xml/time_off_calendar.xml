@@ -22,7 +22,10 @@
 
                 <b><span t-esc="timeoff[0]" class="o_timeoff_name"/></b>
 
-                <span class="mb-4" t-if="need_allocation"><span t-attf-class="mr-1 font-weight-bold {{ cl }}" t-esc="timeoff[1]['remaining_leaves']"/><span>remaining</span></span>
+                <span class="mb-4" t-if="need_allocation">
+                    <span t-attf-class="mr-1 font-weight-bold {{ cl }}" t-esc="timeoff[1]['remaining_leaves']"/><span>remaining</span>
+                    <t t-if="timeoff[3]"> (Expire on <span t-esc="moment(timeoff[3]).format('L')"/>)</t>
+                </span>
             </div>
         </div>
     </t>
