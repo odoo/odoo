@@ -491,7 +491,23 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         },
         onSave: function (media) {
             if(!document.body.contains(media)) {
-            r.insertNode(media);
+                var isInline = dom.isInline(media);
+                var rng = r.wrapBodyInlineWithPara().deleteContents();
+                var ancestor = dom.ancestor(rng.sc, function(node) {
+                  node = node.parentNode;
+                  return dom.isBodyContainer(node) ||
+                    dom.isPara(node) ||
+                    (isInline && dom.isAnchor(node) && node.classList.contains('btn')); // don't split button to insert text, icons...
+                });
+                var pivot = dom.splitTree(ancestor, rng.getStartPoint(), {
+                  isSkipPaddingBlankHTML: isInline,
+                  isNotSplitEdgePoint: isInline
+                });
+                if (pivot) {
+                  pivot.parentNode.insertBefore(media, pivot);
+                } else {
+                  ancestor.appendChild(media);
+                }
             };
         },
     });
