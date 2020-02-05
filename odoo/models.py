@@ -557,7 +557,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if ModelClass._transient:
             assert ModelClass._log_access, \
                 "TransientModels must have log_access turned on, " \
-                "in order to implement their access rights policy"
+                "in order to implement their vacuum policy"
 
         # link the class to the registry, and update the registry
         ModelClass.pool = pool
@@ -3241,9 +3241,6 @@ Record ids: %(records)s
         forbidden = invalid.exists()
         if forbidden:
             # the invalid records are (partially) hidden by access rules
-            if self.is_transient():
-                raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
-
             raise self.env['ir.rule']._make_access_error(operation, forbidden)
 
         # If we get here, the invalid records are not in the database.
@@ -4165,15 +4162,6 @@ Record ids: %(records)s
                 for table in tables:
                     if table not in query.tables:
                         query.tables.append(table)
-
-        if self._transient:
-            # One single implicit access rule for transient models: owner only!
-            # This is ok because we assert that TransientModels always have
-            # log_access enabled, so that 'create_uid' is always there.
-            domain = [('create_uid', '=', self._uid)]
-            tquery = self._where_calc(domain, active_test=False)
-            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
-            return
 
         # apply main rules on the object
         Rule = self.env['ir.rule']
