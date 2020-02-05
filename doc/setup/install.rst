@@ -497,7 +497,7 @@ Under Windows a typical way to execute odoo would be:
 
 Where ``odoo``, ``odoo`` are the postgresql login and password
 and ``mydb`` the default db to serve on localhost:8069. You can add other
-directory paths separated by a comma to ``addons`` at the end of addons-path option.
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Under Unix a typical way to execute odoo would be:
 
@@ -506,7 +506,7 @@ Under Unix a typical way to execute odoo would be:
     $ ./odoo-bin --addons-path=addons -d mydb
 
 Where ``mydb`` is the default db to serve on localhost:8069. You can add other
-directory paths separated by a comma to ``addons`` at the end of addons-path option.
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Virtualenv
 ----------
