@@ -88,7 +88,7 @@ class SaleOrder(models.Model):
         # The carrier might also be invalid, eg: if you bought things that are too heavy
         # -> this may cause a bug if you go to the checkout screen, choose a carrier,
         #    then update your cart (the cart becomes uneditable)
-        self._cr.execute("""UPDATE sale_order set carrier_id=NULL WHERE id = %s """,(self.id,))
+        self._cr.execute("""UPDATE sale_order set carrier_id=NULL WHERE id = %s """,(self.id,)) 
 
         values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
 
