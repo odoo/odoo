@@ -245,6 +245,13 @@ form: module.record_id""" % (xml_id,)
                 modcnt = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
+    def parse_groups(self, groups, xid):
+        from odoo.fields import Command  # noqa: PLC0415
+        groups = groups.split(",") if groups else []
+        if any(group.startswith("-") for group in groups):
+            _logger.warning("bad `groups` for %s: %r", xid, groups)
+        return [Command.set([self.id_get(group) for group in groups])]
+
     def _tag_delete(self, rec):
         d_model = rec.get("model")
         records = self.env[d_model]
@@ -275,6 +282,7 @@ form: module.record_id""" % (xml_id,)
     def _tag_menuitem(self, rec, parent=None):
         rec_id = rec.attrib["id"]
         self._test_xml_id(rec_id)
+        xid = self.make_xml_id(rec_id)
 
         # The parent attribute was specified, if non-empty determine its ID, otherwise
         # explicitly make a top-level menu
@@ -311,21 +319,10 @@ form: module.record_id""" % (xml_id,)
         if not values.get('name'):
             values['name'] = rec_id or '?'
 
-        from odoo.fields import Command  # noqa: PLC0415
-        groups = []
-        for group in rec.get('groups', '').split(','):
-            if group.startswith('-'):
-                group_id = self.id_get(group[1:])
-                groups.append(Command.unlink(group_id))
-            elif group:
-                group_id = self.id_get(group)
-                groups.append(Command.link(group_id))
-        if groups:
-            values['group_ids'] = groups
-
+        values["group_ids"] = self.parse_groups(rec.get("groups"), xid)
 
         data = {
-            'xml_id': self.make_xml_id(rec_id),
+            'xml_id': xid,
             'values': values,
             'noupdate': self.noupdate,
         }
