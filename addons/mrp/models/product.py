@@ -30,6 +30,13 @@ class ProductTemplate(models.Model):
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
                 [('bom_line_ids.product_id', 'in', template.product_variant_ids.ids)])
 
+    def write(self, values):
+        if 'active' in values:
+            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).bom_ids.write({
+                'active': values['active']
+            })
+        return super().write(values)
+
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
@@ -69,6 +76,13 @@ class ProductProduct(models.Model):
     def _compute_used_in_bom_count(self):
         for product in self:
             product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
+
+    def write(self, values):
+        if 'active' in values:
+            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).variant_bom_ids.write({
+                'active': values['active']
+            })
+        return super().write(values)
 
     def get_components(self):
         """ Return the components list ids in case of kit product.
