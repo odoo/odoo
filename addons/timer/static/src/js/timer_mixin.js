@@ -1,4 +1,4 @@
-odoo.define('hr_timesheet.Timer', function (require) {
+odoo.define('timer.Timer', function (require) {
 "use strict";
 
     /**
