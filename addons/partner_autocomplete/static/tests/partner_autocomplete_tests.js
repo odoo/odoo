@@ -1,3 +1,14 @@
+odoo.define('partner_autocomplete.tests.dependencies', function (require) {
+'use strict';
+
+var ajax = require('web.ajax');
+
+// TODO remove in master
+// The following file is added here as a stable fix but they are already
+// added in the test assets bundles directly in master
+return ajax.loadJS('/partner_autocomplete/static/lib/jsvat.js');
+});
+
 odoo.define('partner_autocomplete.tests', function (require) {
     "use strict";
 
@@ -7,6 +18,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
     var AutocompleteField = require('partner.autocomplete.fieldchar');
     var PartnerField = require('partner.autocomplete.many2one');
     var NotificationService = require('web.NotificationService');
+    require('partner_autocomplete.tests.dependencies');
 
     var createView = testUtils.createView;
 
