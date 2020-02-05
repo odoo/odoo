@@ -391,7 +391,7 @@ class HolidaysAllocation(models.Model):
                 today = fields.Date.today()
 
                 if vstop < today:
-                    raise ValidationError(_('You can allocate %s only before %s') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
+                    raise ValidationError(_('You can allocate %s only before %s.') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):
