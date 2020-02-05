@@ -51,10 +51,10 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
             // The real implementation should be checking the product lots
             // validity first. The above commented code is the proposed
             // implementation.
-            this.trigger('show-screen', { screenName: 'PaymentScreen' });
+            this.trigger('show-screen', { name: 'PaymentScreen' });
         }
         selectCustomer() {
-            this.trigger('show-screen', { screenName: 'ClientListScreen' });
+            this.trigger('show-screen', { name: 'ClientListScreen' });
         }
     }
 

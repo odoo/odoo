@@ -334,7 +334,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     title: _t(title),
                     body: _t(body),
                     confirm: function() {
-                        this.trigger('show-screen', { screenName: 'ClientListScreen' });
+                        this.trigger('show-screen', { name: 'ClientListScreen' });
                     },
                 });
                 return false;

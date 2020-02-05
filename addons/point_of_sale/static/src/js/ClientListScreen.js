@@ -251,7 +251,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             } else if (this.nextButton.command === 'deselect') {
                 this.pos.get_order().set_client(null);
             }
-            this.trigger('show-screen', { screenName: 'ProductScreen' });
+            this.trigger('show-screen', { name: 'ProductScreen' });
         }
         activateEditMode(event) {
             const { isNewClient } = event.detail;

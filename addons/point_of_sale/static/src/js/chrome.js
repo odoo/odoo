@@ -590,7 +590,8 @@ class Chrome extends PosComponent {
         this.pos = new models.PosModel(session, {chrome:this});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.state = owl.useState({ activeScreenName: null });
-        this.props = { pos: this.pos, gui: this.gui }
+        this.defaultScreenProps = { pos: this.pos, gui: this.gui }
+        this.additionalScreenProps = {}
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
 
@@ -695,8 +696,14 @@ class Chrome extends PosComponent {
         return this.constructor.components[this.state.activeScreenName];
     }
 
+    get screenProps() {
+        return { ...this.defaultScreenProps, ...this.additionalScreenProps };
+    }
+
     showScreen(event) {
-        this.state.activeScreenName = event.detail.screenName;
+        const { name, props } = event.detail;
+        this.additionalScreenProps = props || {};
+        this.state.activeScreenName = name;
     }
 
     cleanup_dom() {

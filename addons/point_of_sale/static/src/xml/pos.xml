@@ -26,7 +26,7 @@
                     <div class='subwindow'>
                         <div class='subwindow-container'>
                             <div class='subwindow-container-fix screens'>
-                                <t t-if="state.activeScreenName" t-component="screenComponent" t-props="props"
+                                <t t-if="state.activeScreenName" t-component="screenComponent" t-props="screenProps"
                                    t-on-show-screen="showScreen" t-key="state.activeScreenName" />
                             </div>
                         </div>
