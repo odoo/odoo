@@ -55,6 +55,9 @@
         'static/src/xml/NumpadWidget.xml',
         'static/src/xml/ActionpadWidget.xml',
         'static/src/xml/ProductsWidget.xml',
+        'static/src/xml/WrappedProductNameLines.xml',
+        'static/src/xml/OrderReceipt.xml',
+        'static/src/xml/ReceiptScreen.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

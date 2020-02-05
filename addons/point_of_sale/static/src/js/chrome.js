@@ -706,6 +706,28 @@ class Chrome extends PosComponent {
         this.state.activeScreenName = name;
     }
 
+    /**
+     * This is the generic function the handles the rendering error and triggerred
+     * `pos-error` events.
+     *
+     * @param {Object} error
+     */
+    catchError(error) {
+        this.gui.show_popup('error', error.message);
+    }
+
+    /**
+     * This is responsible on catching error outside the rendering context
+     * of owl. What we do is trigger a `pos-error` event in the place where
+     * we caught an error.
+     *
+     * @param {Event} event
+     */
+    onPosError(event) {
+        const { error } = event.detail
+        this.catchError(error);
+    }
+
     cleanup_dom() {
         // remove default webclient handlers that induce click delay
         $(document).off();

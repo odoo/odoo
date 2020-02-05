@@ -220,70 +220,6 @@ var ScreenWidget = PosBaseWidget.extend({
     },
 });
 
-/*--------------------------------------*\
- |          THE DOM CACHE               |
-\*======================================*/
-
-// The Dom Cache is used by various screens to improve
-// their performances when displaying many time the 
-// same piece of DOM.
-//
-// It is a simple map from string 'keys' to DOM Nodes.
-//
-// The cache empties itself based on usage frequency 
-// stats, so you may not always get back what
-// you put in.
-
-var DomCache = core.Class.extend({
-    init: function(options){
-        options = options || {};
-        this.max_size = options.max_size || 2000;
-
-        this.cache = {};
-        this.access_time = {};
-        this.size = 0;
-    },
-    cache_node: function(key,node){
-        var cached = this.cache[key];
-        this.cache[key] = node;
-        this.access_time[key] = new Date().getTime();
-        if(!cached){
-            this.size++;
-            while(this.size >= this.max_size){
-                var oldest_key = null;
-                var oldest_time = new Date().getTime();
-                for(key in this.cache){
-                    var time = this.access_time[key];
-                    if(time <= oldest_time){
-                        oldest_time = time;
-                        oldest_key  = key;
-                    }
-                }
-                if(oldest_key){
-                    delete this.cache[oldest_key];
-                    delete this.access_time[oldest_key];
-                }
-                this.size--;
-            }
-        }
-        return node;
-    },
-    clear_node: function(key) {
-        var cached = this.cache[key];
-        if (cached) {
-            delete this.cache[key];
-            delete this.access_time[key];
-            this.size --;
-        }
-    },
-    get_node: function(key){
-        var cached = this.cache[key];
-        if(cached){
-            this.access_time[key] = new Date().getTime();
-        }
-        return cached;
-    },
-});
 
 /*--------------------------------------*\
  |          THE SCALE SCREEN            |
@@ -614,165 +550,6 @@ var ProductScreenWidget = ScreenWidget.extend({
 gui.define_screen({name:'products', widget: ProductScreenWidget});
 
 
-/*--------------------------------------*\
- |         THE RECEIPT SCREEN           |
-\*======================================*/
-
-// The receipt screen displays the order's
-// receipt and allows it to be printed in a web browser.
-// The receipt screen is not shown if the point of sale
-// is set up to print with the proxy. Altough it could
-// be useful to do so...
-
-var ReceiptScreenWidget = ScreenWidget.extend({
-    template: 'ReceiptScreenWidget',
-    show: function(){
-        this._super();
-        var self = this;
-
-        this.render_change();
-        this.render_receipt();
-        this.handle_auto_print();
-    },
-    handle_auto_print: function() {
-        if (this.should_auto_print() && !this.pos.get_order().is_to_email()) {
-            this.print();
-            if (this.should_close_immediately()){
-                this.click_next();
-            }
-        } else {
-            this.lock_screen(false);
-        }
-    },
-    should_auto_print: function() {
-        return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
-    },
-    should_close_immediately: function() {
-        var order = this.pos.get_order();
-        var invoiced_finalized = order.is_to_invoice() ? order.finalized : true;
-        return this.pos.proxy.printer && this.pos.config.iface_print_skip_screen && invoiced_finalized;
-    },
-    lock_screen: function(locked) {
-        this._locked = locked;
-        if (locked) {
-            this.$('.next').removeClass('highlight');
-        } else {
-            this.$('.next').addClass('highlight');
-        }
-    },
-    get_receipt_render_env: function() {
-        var order = this.pos.get_order();
-        return {
-            widget: this,
-            pos: this.pos,
-            order: order,
-            receipt: order.export_for_printing(),
-            orderlines: order.get_orderlines(),
-            paymentlines: order.get_paymentlines(),
-        };
-    },
-    print_web: function() {
-        if ($.browser.safari) {
-            document.execCommand('print', false, null);
-        } else {
-            try {
-                window.print();
-            } catch(err) {
-                if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
-                    this.gui.show_popup('error',{
-                        'title':_t('Printing is not supported on some android browsers'),
-                        'body': _t('Printing is not supported on some android browsers due to no default printing protocol is available. It is possible to print your tickets by making use of an IoT Box.'),
-                    });
-                } else {
-                    throw err;
-                }
-            }
-        }
-        this.pos.get_order()._printed = true;
-    },
-    print_html: function () {
-        var receipt = QWeb.render('OrderReceipt', this.get_receipt_render_env());
-
-        this.pos.proxy.printer.print_receipt(receipt);
-        this.pos.get_order()._printed = true;
-    },
-    print: function() {
-        var self = this;
-
-        if (!this.pos.proxy.printer) { // browser (html) printing
-
-            // The problem is that in chrome the print() is asynchronous and doesn't
-            // execute until all rpc are finished. So it conflicts with the rpc used
-            // to send the orders to the backend, and the user is able to go to the next 
-            // screen before the printing dialog is opened. The problem is that what's 
-            // printed is whatever is in the page when the dialog is opened and not when it's called,
-            // and so you end up printing the product list instead of the receipt... 
-            //
-            // Fixing this would need a re-architecturing
-            // of the code to postpone sending of orders after printing.
-            //
-            // But since the print dialog also blocks the other asynchronous calls, the
-            // button enabling in the setTimeout() is blocked until the printing dialog is 
-            // closed. But the timeout has to be big enough or else it doesn't work
-            // 1 seconds is the same as the default timeout for sending orders and so the dialog
-            // should have appeared before the timeout... so yeah that's not ultra reliable. 
-
-            this.lock_screen(true);
-
-            setTimeout(function(){
-                self.lock_screen(false);
-            }, 1000);
-
-            this.print_web();
-        } else {    // proxy (html) printing
-            this.print_html();
-            this.lock_screen(false);
-        }
-    },
-    click_next: function() {
-        this.pos.get_order().finalize();
-    },
-    click_back: function() {
-        // Placeholder method for ReceiptScreen extensions that
-        // can go back ...
-    },
-    renderElement: function() {
-        var self = this;
-        this._super();
-        this.$('.next').click(function(){
-            if (!self._locked) {
-                self.click_next();
-            }
-        });
-        this.$('.back').click(function(){
-            if (!self._locked) {
-                self.click_back();
-            }
-        });
-        this.$('.button.print').click(function(){
-            if (!self._locked) {
-                self.print();
-            }
-        });
-
-    },
-    render_change: function() {
-        var self = this;
-        this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
-        var order = this.pos.get_order();
-        var order_screen_params = order.get_screen_data('params');
-        var button_print_invoice = this.$('h2.print_invoice');
-        if (order_screen_params && order_screen_params.button_print_invoice) {
-            button_print_invoice.show();
-        } else {
-            button_print_invoice.hide();
-        }
-    },
-    render_receipt: function() {
-        this.$('.pos-receipt-container').html(QWeb.render('OrderReceipt', this.get_receipt_render_env()));
-    },
-});
-gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
 
 /*--------------------------------------*\
  |         THE PAYMENT SCREEN           |
@@ -1578,7 +1355,6 @@ define_action_button({
 });
 
 return {
-    ReceiptScreenWidget: ReceiptScreenWidget,
     ActionButtonWidget: ActionButtonWidget,
     define_action_button: define_action_button,
     ScreenWidget: ScreenWidget,
@@ -1587,7 +1363,6 @@ return {
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
     ActionpadWidget: ActionpadWidget,
-    DomCache: DomCache,
     ScaleScreenWidget: ScaleScreenWidget,
     set_fiscal_position_button: set_fiscal_position_button,
     set_pricelist_button: set_pricelist_button,

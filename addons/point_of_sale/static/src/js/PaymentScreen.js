@@ -230,7 +230,11 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
 
                 invoiced.catch(
                     () => {
-                        console.log('Error handler later');
+                        this.trigger('show-screen', {
+                            name: 'ReceiptScreen',
+                            props: { isShowPrintInvoice: true },
+                        });
+                        console.log('TODO jcb: Error handler later');
                     }
                     // this._handleFailedPushForInvoice.bind(this, this.currentOrder, false)
                 );
@@ -239,12 +243,13 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     self.invoicing = false;
                     self._postPushOrderResolve(this.currentOrder, server_ids)
                         .then(function() {
-                            // self.gui.show_screen('receipt');
-                            alert('order pushed. showing receipt...')
+                            this.trigger('show-screen', { name: 'ReceiptScreen' });
                         })
                         .catch(function(error) {
-                            // self.gui.show_screen('receipt');
-                            alert('order pushed. showing receipt...')
+                            this.trigger('show-screen', {
+                                name: 'ReceiptScreen',
+                                props: { isShowPrintInvoice: true },
+                            });
                             if (error) {
                                 self.gui.show_popup('error', {
                                     title: 'Error: no internet connection',
@@ -264,12 +269,10 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                         .finally(function() {
                             self._postPushOrderResolve(this.currentOrder, server_ids)
                                 .then(function() {
-                                    // self.gui.show_screen('receipt');
-                                    alert('order pushed. showing receipt...')
+                                    this.trigger('show-screen', { name: 'ReceiptScreen' });
                                 })
                                 .catch(function(error) {
-                                    // self.gui.show_screen('receipt');
-                                    alert('order pushed. showing receipt...')
+                                    this.trigger('show-screen', { name: 'ReceiptScreen' });
                                     if (error) {
                                         self.gui.show_popup('error', {
                                             title: 'Error: no internet connection',
@@ -279,8 +282,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                                 });
                         });
                 } else {
-                    // self.gui.show_screen('receipt');
-                    alert('order pushed. showing receipt...')
+                    this.trigger('show-screen', { name: 'ReceiptScreen' });
                 }
             }
         }
