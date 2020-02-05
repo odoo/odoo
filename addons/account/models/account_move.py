@@ -2165,6 +2165,8 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
             if move.restrict_mode_hash_table and move.state == 'posted' and move.id not in excluded_move_ids:
                 raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
+            if any(asset_id.state != 'draft' for asset_id in move.asset_ids):
+                raise UserError(_('You cannot reset to draft an entry having a posted deferred revenue/expense'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
 
