@@ -18,9 +18,7 @@ class CrmLead(models.Model):
             quotation_cnt = 0
             sale_order_cnt = 0
             company_currency = lead.company_currency or self.env.company.currency_id
-            orders = lead.order_ids
-            if orders and hasattr(orders[0], 'is_rental_order'):
-                orders = orders.filtered(lambda so: not so.is_rental_order)
+            orders = self._get_filtered_sale_order(lead.order_ids)
             for order in orders:
                 if order.state in ('draft', 'sent'):
                     quotation_cnt += 1
@@ -33,11 +31,11 @@ class CrmLead(models.Model):
             lead.sale_order_count = sale_order_cnt
 
     def action_new_quotation(self):
-        action = super().action_new_quotation()
         if self.env.context.get('is_sale_order'):
             action = self.env.ref("sale_management_crm.new_quotation_action").read()[0]
             action['context'] = self._get_quotation_action_context()
-        return action
+            return action
+        return super().action_new_quotation()
 
     def action_view_sale_order(self):
         if self.env.context.get('order_status') == 'quotation':
@@ -47,7 +45,8 @@ class CrmLead(models.Model):
             action_id = 'sale.action_orders'
             order_states = ('sale', 'done')
         action = self.env.ref(action_id).read()[0]
-        action.update(self._get_base_view_order_action(states=order_states))
+        orders = self._get_filtered_sale_order(self.mapped('order_ids'))
+        action.update(self._get_base_view_order_action(states=order_states, sale_orders=orders))
         if action.get('res_id'):
             action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
         return action
