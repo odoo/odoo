@@ -182,6 +182,8 @@ class Assets(models.AbstractModel):
             new_attach.update(self._save_asset_attachment_hook())
             self.env["ir.attachment"].create(new_attach)
 
+        attachment_view = self.env["ir.ui.view"].search([['name', '=', custom_url]])
+        if not attachment_view:
             # Create a view to extend the template which adds the original file
             # to link the new modified version instead
             file_type_info = {
