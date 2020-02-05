@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PaymentScreenElectronicPayment" owl="1">
+        <div class="paymentline electronic_payment">
+            <t t-if="props.line.payment_status == 'pending'">
+                <div>
+                    Payment request pending
+                </div>
+                <div class="button send_payment_request highlight" title="Send Payment Request"
+                     t-att-data-cid="props.line.cid">
+                    Send
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'retry'">
+                <div>
+                    Transaction cancelled
+                </div>
+                <div class="button send_payment_request highlight" title="Send Payment Request"
+                     t-att-data-cid="props.line.cid">
+                    Retry
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'force_done'">
+                <div>
+                    Connection error
+                </div>
+                <div class="button send_force_done" title="Force Done"
+                     t-att-data-cid="props.line.cid">
+                    Force done
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'waitingCard'">
+                <div>
+                    Waiting for card
+                </div>
+                <div class="button send_payment_cancel" title="Cancel Payment Request"
+                     t-att-data-cid="props.line.cid">
+                    Cancel
+                </div>
+            </t>
+            <t t-elif="['waiting', 'waitingCancel'].includes(props.line.payment_status)">
+                <div>
+                    Request sent
+                </div>
+                <div>
+                    <i class="fa fa-spinner fa-spin" role="img" />
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'reversing'">
+                <div>
+                    Reversal request sent to terminal
+                </div>
+                <div>
+                    <i class="fa fa-spinner fa-spin" role="img" />
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'done'">
+                <t t-if="props.line.can_be_reversed">
+                    <div>
+                        Payment Successful
+                    </div>
+                    <div class="button send_payment_reversal" title="Reverse Payment"
+                         t-att-data-cid="props.line.cid">
+                        Reverse
+                    </div>
+                </t>
+                <t t-else="">
+                    <div>
+                        Payment Successful
+                    </div>
+                    <div></div>
+                </t>
+            </t>
+            <t t-elif="props.line.payment_status == 'reversed'">
+                <div class="paymentline electronic_payment">
+                    <div>
+                        Payment reversed
+                    </div>
+                    <div></div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

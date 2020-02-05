@@ -1,51 +1,13 @@
 odoo.define('point_of_sale.PaymentScreen', function(require) {
     'use strict';
 
-    const core = require('web.core');
-    const field_utils = require('web.field_utils');
+    const { _t, qweb } = require('web.core');
+    const { parse } = require('web.field_utils');
     const { PosComponent } = require('point_of_sale.PosComponent');
     const { Chrome } = require('point_of_sale.chrome');
-
-    const _t = core._t;
-    const QWeb = core.qweb;
-
-    class PSNumpadInputButton extends PosComponent {
-        get _class() {
-            return this.props.changeClassTo || 'input-button number-char';
-        }
-    }
-
-    class PaymentScreenNumpad extends PosComponent {}
-    PaymentScreenNumpad.addComponents([PSNumpadInputButton]);
-
-    class PaymentMethodButton extends PosComponent {}
-
-    class PaymentScreenElectronicPayment extends PosComponent {}
-
-    class PaymentScreenPaymentLines extends PosComponent {
-        get changeText() {
-            return this.props.pos.format_currency(this.currentOrder.get_change());
-        }
-        get totalDueText() {
-            return this.props.pos.format_currency(
-                this.currentOrder.get_total_with_tax() + this.currentOrder.get_rounding_applied()
-            );
-        }
-        get remainingText() {
-            return this.props.pos.format_currency(
-                this.currentOrder.get_due() > 0 ? this.currentOrder.get_due() : 0
-            );
-        }
-        get currentOrder() {
-            return this.props.pos.get_order();
-        }
-        get formattedInputBuffer() {
-            return this.props.pos.format_currency_no_symbol(
-                field_utils.parse.float(this.props.inputBuffer)
-            );
-        }
-    }
-    PaymentScreenPaymentLines.addComponents([PaymentScreenElectronicPayment]);
+    const { PaymentMethodButton } = require('point_of_sale.PaymentMethodButton');
+    const { PaymentScreenNumpad } = require('point_of_sale.PaymentScreenNumpad');
+    const { PaymentScreenPaymentLines } = require('point_of_sale.PaymentScreenPaymentLines');
 
     class PaymentScreen extends PosComponent {
         constructor() {
@@ -142,7 +104,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 if (this.selectedPaymentLine) {
                     let amount = this.inputBuffer;
                     if (this.inputBuffer !== '-') {
-                        amount = field_utils.parse.float(this.inputBuffer);
+                        amount = parse.float(this.inputBuffer);
                     }
                     this.selectedPaymentLine.set_amount(amount);
                 }
@@ -176,7 +138,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 title: tip ? _t('Change Tip') : _t('Add Tip'),
                 value: this.pos.format_currency_no_symbol(value),
                 confirm: value => {
-                    self.currentOrder.set_tip(field_utils.parse.float(value));
+                    self.currentOrder.set_tip(parse.float(value));
                 },
             });
         }
@@ -405,7 +367,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 paymentlines: order.get_paymentlines(),
             };
 
-            var receipt = QWeb.render('OrderReceipt', data);
+            var receipt = qweb.render('OrderReceipt', data);
             var printer = new Printer();
 
             return new Promise(function(resolve, reject) {
@@ -428,11 +390,11 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             });
         }
     }
-    PaymentScreen.addComponents([
+    PaymentScreen.components = {
         PaymentScreenNumpad,
         PaymentMethodButton,
         PaymentScreenPaymentLines,
-    ]);
+    };
 
     Chrome.addComponents([PaymentScreen]);
 

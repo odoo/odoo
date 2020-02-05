@@ -3,40 +3,8 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
 
     const { useRef, onPatched } = owl.hooks;
     const { PosComponent } = require('point_of_sale.PosComponent');
-
-    class Orderline extends PosComponent {
-        constructor() {
-            super(...arguments);
-            this.line = this.props.line;
-            this.pos = this.props.pos;
-        }
-        selectLine() {
-            this.trigger('select-line', { orderline: this.line });
-        }
-        lotIconClicked() {
-            this.trigger('show-product-lot', { orderline: this.line });
-        }
-    }
-
-    class OrderSummary extends PosComponent {
-        constructor() {
-            super(...arguments);
-            this.order = this.props.order;
-            this.pos = this.props.pos;
-            this.update();
-        }
-        mounted() {
-            this.order.orderlines.on('change', () => {
-                this.update();
-            });
-        }
-        update() {
-            const total = this.order ? this.order.get_total_with_tax() : 0;
-            const tax = this.order ? total - this.order.get_total_without_tax() : 0;
-            this.total = this.pos.format_currency(total);
-            this.tax = this.pos.format_currency(tax);
-        }
-    }
+    const { Orderline } = require('point_of_sale.Orderline');
+    const { OrderSummary } = require('point_of_sale.OrderSummary');
 
     class OrderWidget extends PosComponent {
         constructor() {
@@ -121,5 +89,5 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
 
     OrderWidget.components = { Orderline, OrderSummary };
 
-    return { OrderWidget, Orderline, OrderSummary };
+    return { OrderWidget };
 });
