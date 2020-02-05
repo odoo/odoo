@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_product_product_matrix_tree_view">
+        <field name="name">product.product.product_matrix.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="has_configurable_attributes" optional="hide" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_product_matrix_tree_view">
+        <field name="name">product.template.product_matrix.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="has_configurable_attributes" optional="hide" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_product_matrix_search_view" model="ir.ui.view">
+        <field name="name">product.template.product_matrix.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_purchase" position="after">
+                <filter string="Is Configurable" name="filter_to_matrix" domain="[('has_configurable_attributes', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
