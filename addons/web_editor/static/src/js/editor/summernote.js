@@ -958,12 +958,28 @@ range.WrappedRange.prototype.isContentEditable = function () {
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 renderer.tplButtonInfo.fontsize = function (lang, options) {
-    var items = options.fontSizes.reduce(function (memo, v) {
+    var items = options.fontSizes.slice(0, -1).reduce(function (memo, v) {
         return memo + '<a data-event="fontSize" href="#" class="dropdown-item" data-value="' + v + '">' +
                   '<i class="fa fa-check"></i> ' + v +
                 '</a>';
     }, '');
-
+    var last = options.fontSizes[options.fontSizes.length - 1];
+    items += '<div style="text-align: center;">' +
+              '<input type="number" value="' + last + '" oninput="' +
+                  '$(this.nextSibling).attr(\'data-value\', this.value);' +
+                  '$(this.nextSibling).data(\'value\', this.value)' +
+                  '" style="' +
+                      'display: inline-block;' +
+                      'width: 50px;' +
+                      'padding-left: 6px;' +
+                      'border-radius: 5px;' +
+                      'background: transparent;' +
+                      'color: rgb(212, 213, 215);' +
+                  '">' +
+              '<a class="btn btn-outline-secondary" type="button" data-event="fontSize" data-value="' + last + '">' +
+                  '<i class="fa fa-check-circle"></i>' +
+              '</a>' +
+          '</div>';
     var sLabel = '<span class="note-current-fontsize">11</span>';
     return renderer.getTemplate().button(sLabel, {
         title: lang.font.size,
