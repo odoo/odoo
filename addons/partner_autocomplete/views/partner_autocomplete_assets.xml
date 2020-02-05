@@ -9,6 +9,12 @@
         </xpath>
     </template>
 
+    <template id="js_tests_assets" inherit_id="web.js_tests_assets">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/partner_autocomplete/static/lib/jsvat.js"/>
+        </xpath>
+    </template>
+
     <template id="qunit_suite" inherit_id="web.qunit_suite">
         <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/partner_autocomplete/static/tests/partner_autocomplete_tests.js"/>
