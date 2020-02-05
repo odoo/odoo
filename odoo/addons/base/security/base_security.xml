@@ -68,6 +68,12 @@
             <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
 
+        <record id="change_password_rule" model="ir.rule">
+            <field name="name">change user password rule</field>
+            <field name="model_id" ref="model_change_password_user"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
         <!-- Security restriction for private addresses -->
         <record id="res_partner_rule_private_employee" model="ir.rule">
             <field name="name">res.partner.rule.private.employee</field>

@@ -22,8 +22,7 @@ GOOGLE_TOKEN_ENDPOINT = 'https://accounts.google.com/o/oauth2/token'
 GOOGLE_API_BASE_URL = 'https://www.googleapis.com'
 
 
-# FIXME : this needs to become an AbstractModel, to be inhereted by google_calendar_service and google_drive_service
-class GoogleService(models.TransientModel):
+class GoogleService(models.AbstractModel):
     _name = 'google.service'
     _description = 'Google Service'
 

@@ -47,5 +47,16 @@
             <field name="model_id" ref="model_mail_moderation"/>
             <field name="domain_force">[('channel_id.moderator_ids', 'in', user.id)]</field>
         </record>
+
+        <record id="mail_compose_message_rule" model="ir.rule">
+            <field name="name">Mail Compose Message Rule</field>
+            <field name="model_id" ref="model_mail_compose_message"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="global" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

@@ -1455,7 +1455,7 @@ class IrModelAccess(models.Model):
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
-    model_id = fields.Many2one('ir.model', string='Object', required=True, domain=[('transient', '=', False)], index=True, ondelete='cascade')
+    model_id = fields.Many2one('ir.model', string='Object', required=True, index=True, ondelete='cascade')
     group_id = fields.Many2one('res.groups', string='Group', ondelete='cascade', index=True)
     perm_read = fields.Boolean(string='Read Access')
     perm_write = fields.Boolean(string='Write Access')
@@ -1533,8 +1533,6 @@ class IrModelAccess(models.Model):
         # TransientModel records have no access rights, only an implicit access rule
         if model not in self.env:
             _logger.error('Missing model %s', model)
-        elif self.env[model].is_transient():
-            return True
 
         # We check if a specific rule exists
         self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
