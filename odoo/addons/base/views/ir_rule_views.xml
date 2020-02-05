@@ -80,6 +80,9 @@
                     <filter string="Delete Access Right" name="delete_access_right" domain="[('perm_unlink', '=', True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group string="Group By">
+                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
