@@ -193,6 +193,42 @@ class TestEventData(TestEventCommon):
         self.assertTrue(ticket.is_expired)
         self.assertFalse(event.event_registrations_open)
 
+    @users('user_eventmanager')
+    def test_ongoing_events(self):
+        self.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
+        self.mock_datetime = self.patcher.start()
+        self.mock_datetime.now.return_value = datetime(2020, 1, 10, 8, 0, 0)
+
+        event_1 = self.env['event.event'].create({
+            'name': 'Test Event 1',
+            'date_begin': datetime(2020, 1, 10, 8, 0, 0),
+            'date_end': datetime(2020, 1, 13, 18, 0, 0),
+        })
+        self.assertTrue(event_1.is_ongoing)
+        ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
+        self.assertIn(event_1.id, ongoing_event_ids)
+
+        event_1.update({'date_begin': datetime(2020, 1, 10, 9, 0, 0)})
+        self.assertFalse(event_1.is_ongoing)
+        ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
+        self.assertNotIn(event_1.id, ongoing_event_ids)
+
+        event_2 = self.env['event.event'].create({
+            'name': 'Test Event 2',
+            'date_begin': datetime(2020, 1, 7, 8, 0, 0),
+            'date_end': datetime(2020, 1, 10, 8, 0, 0),
+        })
+        self.assertFalse(event_2.is_ongoing)
+        finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
+        self.assertIn(event_2.id, finished_or_upcoming_event_ids)
+
+        event_2.update({'date_end': datetime(2020, 1, 10, 8, 0, 1)})
+        self.assertTrue(event_2.is_ongoing)
+        finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
+        self.assertNotIn(event_2.id, finished_or_upcoming_event_ids)
+
+        self.patcher.stop()
+
 
 class TestEventTicketData(TestEventCommon):
 
