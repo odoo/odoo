@@ -55,7 +55,7 @@
                                 class="oe_stat_button"
                                 disabled="1"
                                 invisible="context.get('from_my_profile', False)"
-                                attrs="{'invisible': ['|', ('hr_presence_state', '=', 'absent')]}">
+                                attrs="{'invisible': [('hr_presence_state', '=', 'absent')]}">
                                 <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
                                 <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
                                 <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>

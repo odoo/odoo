@@ -547,6 +547,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      *   value (if not given, it is set to this.mode, the mode of the renderer)
      * @returns {Object} for code efficiency, returns the last evaluated
      *   modifiers for the given node and record.
+     * @throws {Error} if one of the modifier domains is not valid
      */
     _registerModifiers: function (node, record, element, options) {
         options = options || {};
@@ -575,7 +576,15 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
 
         // Evaluate if necessary
         if (!modifiersData.evaluatedModifiers[record.id]) {
-            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+            try {
+                modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+            } catch (e) {
+                throw new Error(_.str.sprintf(
+                    "While parsing modifiers for %s%s: %s",
+                    node.tag, node.tag === 'field' ? ' ' + node.attrs.name : '',
+                    e.message
+                ));
+            }
         }
 
         // Element might not be given yet (a second call to the function can
@@ -597,7 +606,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             }
             modifiersData.elementsByRecord[record.id].push(newElement);
 
-            this._applyModifiers(modifiersData, record, newElement, options);
+            this._applyModifiers(modifiersData, record, newElement);
         }
 
         return modifiersData.evaluatedModifiers[record.id];
