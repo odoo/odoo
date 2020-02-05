@@ -926,7 +926,7 @@ exports.PosModel = Backbone.Model.extend({
                         transfer.then(function(order_server_id){
                             // generate the pdf and download it
                             if (order_server_id.length && !order.is_to_email()) {
-                                self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
+                                self.chrome.webClient.do_action('point_of_sale.pos_invoice_report',{additional_context:{
                                     active_ids:order_server_id,
                                 }}).then(function () {
                                     resolveInvoiced(order_server_id);

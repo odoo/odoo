@@ -594,6 +594,7 @@ class Chrome extends PosComponent {
         this.additionalScreenProps = {}
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
+        this.webClient = this.props.webClient;
 
         this.logo_click_time  = 0;
         this.logo_click_count = 0;
