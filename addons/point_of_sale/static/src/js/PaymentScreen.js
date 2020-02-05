@@ -23,9 +23,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     class PaymentScreenElectronicPayment extends PosComponent {}
 
     class PaymentScreenPaymentLines extends PosComponent {
-        constructor() {
-            super(...arguments);
-        }
         get changeText() {
             return this.props.pos.format_currency(this.currentOrder.get_change());
         }
@@ -215,8 +212,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             }
         }
         _finalizeValidation() {
-            var self = this;
-
             if (this.currentOrder.is_paid_with_cash() && this.pos.config.iface_cashdrawer) {
                 this.pos.proxy.printer.open_cashbox();
             }
@@ -239,19 +234,19 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     // this._handleFailedPushForInvoice.bind(this, this.currentOrder, false)
                 );
 
-                invoiced.then(function(server_ids) {
-                    self.invoicing = false;
-                    self._postPushOrderResolve(this.currentOrder, server_ids)
-                        .then(function() {
+                invoiced.then(server_ids => {
+                    this.invoicing = false;
+                    this._postPushOrderResolve(this.currentOrder, server_ids)
+                        .then(() => {
                             this.trigger('show-screen', { name: 'ReceiptScreen' });
                         })
-                        .catch(function(error) {
+                        .catch(error => {
                             this.trigger('show-screen', {
                                 name: 'ReceiptScreen',
                                 props: { isShowPrintInvoice: true },
                             });
                             if (error) {
-                                self.gui.show_popup('error', {
+                                this.gui.show_popup('error', {
                                     title: 'Error: no internet connection',
                                     body: error,
                                 });
@@ -263,18 +258,18 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 if (this.currentOrder.wait_for_push_order()) {
                     var server_ids = [];
                     ordered
-                        .then(function(ids) {
+                        .then(ids => {
                             server_ids = ids;
                         })
-                        .finally(function() {
-                            self._postPushOrderResolve(this.currentOrder, server_ids)
-                                .then(function() {
+                        .finally(() => {
+                            this._postPushOrderResolve(this.currentOrder, server_ids)
+                                .then(() => {
                                     this.trigger('show-screen', { name: 'ReceiptScreen' });
                                 })
-                                .catch(function(error) {
+                                .catch(error => {
                                     this.trigger('show-screen', { name: 'ReceiptScreen' });
                                     if (error) {
-                                        self.gui.show_popup('error', {
+                                        this.gui.show_popup('error', {
                                             title: 'Error: no internet connection',
                                             body: error,
                                         });
