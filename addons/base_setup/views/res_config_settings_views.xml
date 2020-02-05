@@ -22,10 +22,8 @@
                                         <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&lt;=', '1')]}">
                                             Active Users
                                         </span>
-
                                         <br/>
                                         <button name="%(base.action_res_users)d" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
-
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-6 o_setting_box" id="invite_users_setting">
@@ -58,9 +56,7 @@
                                             Companies
                                         </span>
                                         <br/>
-                                        <div class="mt8">
-                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
-                                        </div>
+                                        <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link mt8"/>
                                     </div>
                                 </div>
                             </div>
@@ -81,9 +77,7 @@
                                                 Languages
                                             </span>
                                         </div>
-                                        <div class="mt8">
-                                            <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
-                                        </div>
+                                        <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link mt8"/>
                                     </div>
                                 </div>
                             </div>
@@ -119,11 +113,9 @@
                                                 <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
                                                 <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                             </div>
-                                            <div class="mt8">
-                                                <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
-                                                <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
-                                                <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
-                                            </div>
+                                            <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link mt8" icon="fa-arrow-right"/>
+                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
+                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
                                         </div>
                                     </div>
                                 </div>
@@ -173,9 +165,7 @@
                                     Set custom access rights for new users
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
-                                    <div class="mt8">
-                                        <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
-                                    </div>
+                                    <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link mt8"/>
                                 </div>
                             </div>
                         </div>

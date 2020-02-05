@@ -126,9 +126,7 @@
                                     <div class="text-muted">
                                         Compute shipping costs and ship with UPS
                                     </div>
-                                    <div class="content-group">
-                                        <div id="stock_delivery_ups"/>
-                                    </div>
+                                    <div id="stock_delivery_ups"/>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_dhl">
@@ -214,11 +212,12 @@
                                     <div class="text-muted">
                                         Set product attributes (e.g. color, size) to manage variants
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_product_variant', '=', False)]}">
-                                            <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
-                                        </div>
-                                    </div>
+                                    <button type="action"
+                                        name="%(product.attribute_action)d"
+                                        string="Attributes"
+                                        icon="fa-arrow-right"
+                                        class="btn-link mt8"
+                                        attrs="{'invisible': [('group_product_variant', '=', False)]}"/>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="sell_purchase_uom">
@@ -230,11 +229,12 @@
                                     <div class="text-muted">
                                         Sell and purchase products in different units of measure
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
-                                            <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
-                                        </div>
-                                    </div>
+                                    <button type="action"
+                                        name="%(uom.product_uom_form_action)d"
+                                        string="Units Of Measure"
+                                        icon="fa-arrow-right" 
+                                        class="btn-link mt8"
+                                        attrs="{'invisible': [('group_uom', '=', False)]}"/>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box"
@@ -248,11 +248,12 @@
                                     <div class="text-muted">
                                         Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
-                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
-                                        </div>
-                                    </div>
+                                    <button type="action"
+                                        name="%(product.action_packaging_view)d"
+                                        string="Product Packagings"
+                                        icon="fa-arrow-right"
+                                        class="btn-link mt8"
+                                        attrs="{'invisible': [('group_stock_packaging', '=', False)]}"/>
                                 </div>
                             </div>
                         </div>
@@ -319,11 +320,9 @@
                                     <div class="text-muted">
                                         Track product location in your warehouse
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
-                                            <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
-                                            <button name="stock.action_putaway_tree" icon="fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
-                                        </div>
+                                    <div class="btn-group-vertical mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                                        <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/>
+                                        <button name="stock.action_putaway_tree" icon="fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -336,11 +335,12 @@
                                     <div class="text-muted">
                                         Manage several warehouses
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
-                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
-                                        </div>
-                                    </div>
+                                    <button type="action"
+                                        string="Warehouses"
+                                        name="%(stock.action_warehouse_form)d"
+                                        icon="fa-arrow-right"
+                                        class="btn-link mt8"
+                                        attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}"/>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box"
@@ -354,11 +354,12 @@
                                     <div class="text-muted">
                                         Use your own routes
                                     </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
-                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
-                                        </div>
-                                    </div>
+                                    <button type="action"
+                                        name="%(stock.action_warehouse_form)d"
+                                        string="Set Warehouse Routes"
+                                        icon="fa-arrow-right"
+                                        class="btn-link mt8"
+                                        attrs="{'invisible': [('group_stock_adv_location', '=', False)]}"/>
                                 </div>
                             </div>
                         </div>

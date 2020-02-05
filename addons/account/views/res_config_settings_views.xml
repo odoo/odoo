@@ -36,9 +36,7 @@
                                                 <field name="chart_template_id"  widget="selection"/>
                                             </div>
                                         </div>
-                                        <div class="mt8">
-                                            <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
-                                        </div>
+                                        <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link mt8"/>
                                     </div>
                                 </div>
                             </div>
@@ -151,10 +149,8 @@
                                     <div class="text-muted">
                                         Record transactions in foreign currencies
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                        <div class="mt8">
-                                            <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
-                                        </div>
+                                    <div attrs="{'invisible': [('group_multi_currency', '=', False)]}">
+                                        <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link mt8"/>
                                         <div class="row mt16">
                                             <label for="currency_exchange_journal_id" class="col-md-3 o_light_label"/>
                                             <field name="currency_exchange_journal_id" class="col-md-9"/>
@@ -265,11 +261,9 @@
                                     <div class="text-muted">
                                         Define the smallest coinage of the currency used to pay by cash
                                     </div>
-                                    <div class="mt8">
-                                        <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
-                                                type="action" string="Cash Roundings" class="btn-link"
-                                                attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
-                                    </div>
+                                    <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
+                                            type="action" string="Cash Roundings" class="btn-link mt8"
+                                            attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" id="intrastat_statistics">
