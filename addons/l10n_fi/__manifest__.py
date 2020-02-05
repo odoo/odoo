@@ -34,6 +34,6 @@ Chart of accounts (if COA is not defined yet), Taxes, Tax tags (used in l10n_fi_
         'data/account_chart_template_configuration_data.xml',
 
     ],
-    "active": False,
+    "active": True,
     "installable": True,
 }
