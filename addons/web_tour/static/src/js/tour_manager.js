@@ -105,7 +105,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         return self._waitBeforeTourStart().then(function () {
             return Promise.all(_.map(self.tours, function (tour, name) {
                 return self._register(do_update, tour, name);
-            }));
+            })).then(() => self.update());
         });
     },
     _register: function (do_update, tour, name) {
@@ -128,7 +128,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
                 this._to_next_step(name, 0);
-                this.update(name);
             }
         }).bind(this));
     },
