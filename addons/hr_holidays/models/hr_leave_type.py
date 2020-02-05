@@ -241,7 +241,7 @@ class HolidaysType(models.Model):
                     'max_leaves': ('%.2f' % lt.max_leaves).rstrip('0').rstrip('.'),
                     'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
                     'request_unit': lt.request_unit,
-                }, lt.allocation_type)
+                }, lt.allocation_type, lt.validity_stop)
             for lt in leave_types]
 
     def _get_contextual_employee_id(self):
