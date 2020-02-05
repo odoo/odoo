@@ -127,6 +127,7 @@ class AccountBankStatement(models.Model):
 
     @api.depends('previous_statement_id', 'previous_statement_id.balance_end_real')
     def _compute_ending_balance(self):
+        latest_statement = self.env['account.bank.statement'].search([('journal_id', '=', self[0].journal_id.id)], limit=1)
         for statement in self:
             # recompute balance_end_real in case we are in a bank journal and if we change the
             # balance_end_real of previous statement as we don't want
@@ -135,8 +136,13 @@ class AccountBankStatement(models.Model):
             # journal for verification and creating cash difference entries so we don't want
             # to recompute the value in that case
             if statement.journal_type == 'bank':
-                total_entry_encoding = sum([line.amount for line in statement.line_ids])
-                statement.balance_end_real = statement.previous_statement_id.balance_end_real + total_entry_encoding
+                # If we are on last statement and that statement already has a balance_end_real, don't change the balance_end_real
+                # Otherwise, recompute balance_end_real to prevent holes between statement.
+                if latest_statement.id and statement.id == latest_statement.id and not float_is_zero(statement.balance_end_real, precision_digits=statement.currency_id.decimal_places):
+                    statement.balance_end_real = statement.balance_end_real or 0.0
+                else:
+                    total_entry_encoding = sum([line.amount for line in statement.line_ids])
+                    statement.balance_end_real = statement.previous_statement_id.balance_end_real + total_entry_encoding
             else:
                 # Need default value
                 statement.balance_end_real = statement.balance_end_real or 0.0
