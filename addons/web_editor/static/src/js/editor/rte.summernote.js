@@ -293,8 +293,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         if (dom.isImgFont(oStyle.image)) {
             $container.find('[data-event="customColor"][data-value="foreColor"]').attr('data-color', $(oStyle.image).css('color'));
             $container.find('[data-event="customColor"][data-value="backColor"]').attr('data-color', $(oStyle.image).css('background-color'));
-            $container.find('.note-fore-color-preview > button').css('border-bottom-color', $(oStyle.image).css('color'));
-            $container.find('.note-back-color-preview > button').css('border-bottom-color', $(oStyle.image).css('background-color'));
+            $container.find('.note-fore-color-preview > button').css('box-shadow', 'inset 0 -3px ' + $(oStyle.image).css('color'));
+            $container.find('.note-back-color-preview > button').css('box-shadow', 'inset 0 -3px ' + $(oStyle.image).css('background-color'));
 
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
             $container.find('.only_fa').removeClass('d-none');
@@ -337,8 +337,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     } else {
         $container.find('[data-event="customColor"][data-value="foreColor"]').attr('data-color', oStyle.color);
         $container.find('[data-event="customColor"][data-value="backColor"]').attr('data-color', oStyle['background-color']);
-        $container.find('.note-fore-color-preview > button').css('border-bottom-color', oStyle.color);
-        $container.find('.note-back-color-preview > button').css('border-bottom-color', oStyle['background-color']);
+        $container.find('.note-fore-color-preview > button').css('box-shadow', 'inset 0 -3px ' + oStyle.color);
+        $container.find('.note-back-color-preview > button').css('box-shadow', 'inset 0 -3px ' + oStyle['background-color']);
     }
 };
 
