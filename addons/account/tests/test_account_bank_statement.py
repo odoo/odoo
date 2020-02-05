@@ -106,10 +106,12 @@ class TestBankStatement(AccountTestCommon):
         # and since we are propagating an update, the balance_end_real should have been recomputed to
         # the correct value
         self.assertEqual(bnk3.balance_start, 250)
-        self.assertEqual(bnk3.balance_end_real, 275)
+        self.assertEqual(bnk3.balance_end_real, 200) # This should not have been recomputed as this is the last of the chain
         self.assertEqual(bnk3.balance_end, 275)
+        bnk3.balance_end_real = 275 # Correct ending balance
 
         # Change date of bank stmt4 to be the last
+        self.assertEqual(bnk4.balance_end_real, 200) #Check balance before moving it to the last
         bnk4.date = '2019-01-20'
         self.assertEqual(bnk1.previous_statement_id.id, False)
         self.assertEqual(bnk2.previous_statement_id.id, bnk1.id)
@@ -122,7 +124,8 @@ class TestBankStatement(AccountTestCommon):
         self.assertEqual(bnk1.balance_end_real, 100)
         self.assertEqual(bnk2.balance_end_real, 150)
         self.assertEqual(bnk3.balance_end_real, 175)
-        self.assertEqual(bnk4.balance_end_real, 275)
+        self.assertEqual(bnk4.balance_end_real, 200) # This should not have change
+        bnk4.balance_end_real = 275 # Correct ending balance
 
         # Move bnk3 to first position
         bnk3.date = '2019-01-01'
@@ -210,6 +213,10 @@ class TestBankStatement(AccountTestCommon):
         self.assertEqual(bnk3.previous_statement_id.id, bnk2.id)
         self.assertEqual(bnk4.previous_statement_id.id, bnk3.id)
         self.assertEqual(bnk5.previous_statement_id.id, bnk4.id)
+        self.assertEqual(bnk1.balance_start, 0)
+        self.assertEqual(bnk1.balance_end_real, 100)
+        self.assertEqual(bnk2.balance_start, 100)
+        self.assertEqual(bnk2.balance_end_real, 150)
         self.assertEqual(bnk3.balance_start, 150)
         self.assertEqual(bnk3.balance_end_real, 175)
         self.assertEqual(bnk4.balance_start, 175)
@@ -228,10 +235,10 @@ class TestBankStatement(AccountTestCommon):
         self.assertEqual(bnk4.balance_start, 125)
         self.assertEqual(bnk4.balance_end_real, 225)
         self.assertEqual(bnk5.balance_start, 225)
-        self.assertEqual(bnk5.balance_end_real, 325)
+        self.assertEqual(bnk5.balance_end_real, 375) # Ending balance of last statement should not have changed
 
         # Delete bnk1 bnk3 and bnk4 at the same time and check that balance are correct
         (bnk1 + bnk3 + bnk4).unlink()
         self.assertEqual(bnk5.previous_statement_id.id, False)
         self.assertEqual(bnk5.balance_start, 0)
-        self.assertEqual(bnk5.balance_end_real, 100)
+        self.assertEqual(bnk5.balance_end_real, 375) # Ending balance of last statement should not have changed
