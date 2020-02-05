@@ -21,6 +21,7 @@ from odoo.tools import (assertion_report, config, existing_tables, ignore,
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
+_schema = logging.getLogger('odoo.schema')
 
 
 class Registry(Mapping):
@@ -110,6 +111,7 @@ class Registry(Mapping):
         self._fields_by_model = None
         self._ordinary_tables = None
         self._post_init_queue = deque()
+        self._constraint_queue = deque()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -303,7 +305,27 @@ class Registry(Mapping):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
 
-    def init_models(self, cr, model_names, context):
+    def post_constraint(self, func, *args, **kwargs):
+        """ Call the given function, and delay it if it fails during an upgrade. """
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            if self._mode == 'init':
+                _schema.error(*e.args)
+            else:
+                _schema.info(*e.args)
+                self._constraint_queue.append(partial(func, *args, **kwargs))
+
+    def finalize_constraints(self):
+        """ Call the delayed functions from above. """
+        while self._constraint_queue:
+            func = self._constraint_queue.popleft()
+            try:
+                func()
+            except Exception as e:
+                _schema.error(*e.args)
+
+    def init_models(self, cr, model_names, context, mode='init'):
         """ Initialize a list of models (given by their name). Call methods
             ``_auto_init`` and ``init`` on each model to create or update the
             database tables supporting the models.
@@ -322,6 +344,7 @@ class Registry(Mapping):
 
         # make sure the queue does not contain some leftover from a former call
         self._post_init_queue.clear()
+        self._mode = mode
 
         for model in models:
             model._auto_init()
