@@ -170,15 +170,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
         Supported aggregate functions are:
 
-            * ``array_agg`` : values, including nulls, concatenated into an array
-            * ``count`` : number of rows
-            * ``count_distinct`` : number of distinct rows
-            * ``bool_and`` : true if all values are true, otherwise false
-            * ``bool_or`` : true if at least one value is true, otherwise false
-            * ``max`` : maximum value of all values
-            * ``min`` : minimum value of all values
-            * ``avg`` : the average (arithmetic mean) of all values
-            * ``sum`` : sum of all values
+        * ``array_agg`` : values, including nulls, concatenated into an array
+        * ``count`` : number of rows
+        * ``count_distinct`` : number of distinct rows
+        * ``bool_and`` : true if all values are true, otherwise false
+        * ``bool_or`` : true if at least one value is true, otherwise false
+        * ``max`` : maximum value of all values
+        * ``min`` : minimum value of all values
+        * ``avg`` : the average (arithmetic mean) of all values
+        * ``sum`` : sum of all values
 
     :param str group_expand: function used to expand read_group results when grouping on
         the current field.
