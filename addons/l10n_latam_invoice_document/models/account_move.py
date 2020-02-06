@@ -68,16 +68,11 @@ class AccountMove(models.Model):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
         return super().post()
 
-    @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
-        """ Do not apply unique sequence number for vendoer bills and refunds.
-        Also apply constraint when state change """
-        vendor = self.filtered(lambda x: x.type in ['in_refund', 'in_invoice'])
-        try:
-            return super(AccountMove, self - vendor)._check_unique_sequence_number()
-        except ValidationError:
-            raise ValidationError(_('Duplicated invoice number detected. You probably added twice the same vendor'
-                                    ' bill/debit note.'))
+        """ This uniqueness verification is only valid for customer invoices, and vendor bills that does not use
+        documents. A new constraint method _check_unique_vendor_number has been created just for validate for this purpose """
+        vendor = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
+        return super(AccountMove, self - vendor)._check_unique_sequence_number()
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
