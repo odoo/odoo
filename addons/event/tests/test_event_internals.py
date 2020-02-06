@@ -120,13 +120,11 @@ class TestEventData(TestEventCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
             'auto_confirm': False,
-            'twitter_hashtag': 'somuchwow',
             'is_online': True,
         })
         self.assertEqual(event.date_tz, self.env.user.tz)
         self.assertEqual(event.seats_availability, 'unlimited')
         self.assertFalse(event.auto_confirm)
-        self.assertEqual(event.twitter_hashtag, 'somuchwow')
         self.assertTrue(event.is_online)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
@@ -137,7 +135,6 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.seats_min, event_type.default_registration_min)
         self.assertEqual(event.seats_max, event_type.default_registration_max)
         self.assertTrue(event.auto_confirm)
-        self.assertEqual(event.twitter_hashtag, event_type.default_hashtag)
         self.assertFalse(event.is_online)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
