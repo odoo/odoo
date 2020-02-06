@@ -9,7 +9,7 @@ from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
@@ -2923,6 +2923,20 @@ class TestValidationTools(common.BaseCase):
             {'x', 'y', 'z'},
         )
 
+class TestAccessRights(common.TransactionCase):
+
+    @common.users('demo')
+    def test_access(self):
+        # a user can not access directly a view
+        with self.assertRaises(AccessError):
+            self.env['ir.ui.view'].search([("model", '=', "res.partner"), ('type', '=', 'form')])
+
+        # but can call fields_view_get
+        self.env['res.partner'].fields_view_get(view_type='form')
+
+        # unless he does not have access to the model
+        with self.assertRaises(AccessError):
+            self.env['ir.ui.view'].fields_view_get(view_type='form')
 
 @common.tagged('post_install', '-at_install', '-standard', 'migration')
 class TestAllViews(common.TransactionCase):
