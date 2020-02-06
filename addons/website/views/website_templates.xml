@@ -145,6 +145,9 @@
         </t>
     </xpath>
 
+    <xpath expr="//footer" position="attributes">
+        <attribute name="data-name">Footer</attribute>
+    </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]//span[@t-field='res_company.name']" position="after">
         <t t-call="website.language_selector"/>
     </xpath>
@@ -368,135 +371,6 @@
 </template>
 
 <template id="pager" name="Pager" inherit_id="portal.pager">
-</template>
-
-<!--
-    XML template to be processed for theme customization modal.
-
-    Allowed tags in the root <div/> elements:
-
-    <content>: Declares a new set of options (a tab pane in the dialog)
-        -> string = tab's nav text
-        -> title = tab's heading
-
-    In the <content/> elements:
-
-    <opt>: Declares a new toggle option
-        -> id (optional) = an ID to associate to the option
-
-        -> string (optional) = option's text
-        -> data-icon (optional) = an image URL to set as option's background
-        -> data-font (optional) = indicates which fonts to use to style the
-                option and adds default sample text if no 'string' is specified
-                (see $o-theme-fonts in scss)
-        -> data-col (optional, default 6) = bootstrap column size for the option
-                (ignored for options in a <list/>)
-
-        -> data-xmlid (optional) = template(s) to enable if the input is
-                checked (list of comma-separated xml ids)
-        -> data-enable (optional) = enable other options (list of
-                comma-separated option ids)
-        -> data-disable (optional) = disable other options (list of
-                comma-separated option ids)
-        -> data-reload (optional) = force the reloading of the page if the url
-                matches the value. Otherwise, only the main assets are reloaded
-
-        -> data-widget (optional) = indicates which widget to use (available
-                widgets are: color_palette)
-
-    <list>: Declares a subset of options showed as a list
-        -> string = list's title
-        -> data-col (optional, default 6) = bootstrap column size for the list
-
-    <selection>: Declares a subset of options showed as a selection (dropdown)
-        -> data-col (optional, default 6) = bootstrap column size for the option
-                (ignored for options in a <list/>)
-
-    Other elements will be ignored and their children will be processed as if
-    that element was omitted, except that those children will be considered as
-    in a new set of option. That allows to wrap an option in a fake element to
-    indicate it is a standalone option for example.
-
-    Note: if an option is the only one of its group, a toggle element will be
-    rendered.
--->
-<template id="theme_customize">
-    <div>
-        <!-- Color options -->
-        <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
-            <list string="Main">
-                <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="alpha" string="Primary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="beta" string="Secondary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="gamma" string="Extra Color"/>
-                <opt data-widget="color" data-color-type="theme" data-color="delta" string="Extra Color"/>
-                <opt data-widget="color" data-color-type="theme" data-color="epsilon" string="Extra Color"/>
-            </list>
-            <list string="Status">
-                <opt data-widget="color" data-color-type="theme" data-color="success" string="Success"/>
-                <opt data-widget="color" data-color-type="theme" data-color="info" string="Info"/>
-                <opt data-widget="color" data-color-type="theme" data-color="warning" string="Warning"/>
-                <opt data-widget="color" data-color-type="theme" data-color="danger" string="Error"/>
-            </list>
-            <list string="Text">
-                <opt data-widget="color" data-color="text" string="Text"/>
-                <opt data-widget="color" data-color="h1" string="Headings 1"/>
-                <opt data-widget="color" data-color="h2" string="Headings 2"/>
-                <opt data-widget="color" data-color="h3" string="Headings 3"/>
-                <opt data-widget="color" data-color="h4" string="Headings 4"/>
-                <opt data-widget="color" data-color="h5" string="Headings 5"/>
-                <opt data-widget="color" data-color="h6" string="Headings 6"/>
-            </list>
-            <list string="Background">
-                <opt data-widget="color" data-color="body" string="Body"/>
-                <opt data-widget="color" data-color="menu" string="Menus"/>
-                <opt data-widget="color" data-color="footer" string="Footer"/>
-            </list>
-        </content>
-
-        <!-- Menu options -->
-        <content id="theme_customize_content_navbar" string="Navbar" title="Choose your navbar">
-            <list string="Main Layout">
-                <checkbox><opt data-xmlid="website.affix_top_menu" data-reload="/"/></checkbox>
-                <checkbox><opt data-xmlid="portal.portal_show_sign_in" data-reload="/"/></checkbox>
-                <opt data-widget="input" data-unit="rem" data-variable="header-font-size" string="Font Size"/>
-            </list>
-            <list string="Logo">
-                <checkbox><opt data-xmlid="website.layout_logo_show" data-reload="/"/></checkbox>
-                <opt data-widget="input" data-unit="rem" data-variable="logo-height" string="Logo Height"/>
-            </list>
-        </content>
-
-        <!-- Layout Options -->
-        <content id="theme_customize_content_layout" string="Layout" title="Choose your layout">
-            <list string="Body">
-                <opt string="Full" data-xmlid="" data-icon="/website/static/src/img/options/layout-full.png"/>
-                <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed_variables" data-icon="/website/static/src/img/options/layout-boxed.png"/>
-            </list>
-            <list string="Background">
-                <opt id="option_no_background" string="None" data-xmlid=""/>
-                <opt string="Choose an image" data-xmlid="website.option_custom_body_image"/>
-                <opt string="Choose a pattern" data-xmlid="website.option_custom_body_image, website.option_custom_body_pattern"/>
-            </list>
-        </content>
-
-        <!-- Font options -->
-        <content id="theme_customize_content_fonts" string="Fonts" title="Choose your fonts">
-            <list string="Title">
-                <fontselection data-variable="headings-font-number"/>
-            </list>
-            <list string="Body">
-                <fontselection data-variable="font-number"/>
-            </list>
-            <list string="Button">
-                <fontselection data-variable="buttons-font-number"/>
-            </list>
-            <list string="Navbar">
-                <fontselection data-variable="navbar-font-number"/>
-            </list>
-        </content>
-    </div>
 </template>
 
 <!-- Layout options -->
