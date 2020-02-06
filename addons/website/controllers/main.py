@@ -359,35 +359,33 @@ class Website(Home):
         domain = [("key", "in", xml_ids)] + request.website.website_domain()
         return View.search(domain).filter_duplicate()
 
-    @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
+    @http.route(['/website/theme_customize_get'], type='json', auth='user', website=True)
     def theme_customize_get(self, xml_ids):
         views = self._get_customize_views(xml_ids)
-        return {
-            'enabled': views.filtered('active').mapped('key'),
-            'names': {view.key: view.name for view in views},
-        }
+        return views.filtered('active').mapped('key')
 
-    @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, enable=None, disable=None, get_bundle=False):
-        """ enable or Disable lists of ``xml_id`` of the inherit templates """
+    @http.route(['/website/theme_customize'], type='json', auth='user', website=True)
+    def theme_customize(self, enable=None, disable=None):
+        """
+        Enables and/or disables views according to list of keys.
 
+        :param enable: list of views' keys to enable
+        :param disable: list of views' keys to disable
+        """
         self._get_customize_views(disable).write({'active': False})
         self._get_customize_views(enable).write({'active': True})
 
-        if get_bundle:
-            context = dict(request.context)
-            return {
-                'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', options=context),
-                'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', options=context),
-                'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor', options=context),
-            }
-
-        return True
-
-    @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
-    def theme_customize_reload(self, href, enable, disable, tab=0, **kwargs):
-        self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
-        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
+    @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
+    def theme_customize_bundle_reload(self):
+        """
+        Reloads asset bundles and returns their unique URLs.
+        """
+        context = dict(request.context)
+        return {
+            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', options=context),
+            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', options=context),
+            'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor', options=context),
+        }
 
     @http.route(['/website/make_scss_custo'], type='json', auth='user', website=True)
     def make_scss_custo(self, url, values):

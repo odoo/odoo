@@ -251,6 +251,17 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
+
+            &.o_we_primary_btn {
+                display: inline-flex !important;
+                width: auto;
+                background-color: $o-brand-primary;
+                color: white;
+
+                &, & > div {
+                    justify-content: center;
+                }
+            }
         }
         we-toggler {
             @include we-icon-button('\f107');
