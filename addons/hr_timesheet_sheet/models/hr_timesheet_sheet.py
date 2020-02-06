@@ -143,17 +143,30 @@ class HrTimesheetSheet(models.Model):
             for r in self.read(['date_from'], load='_classic_write')]
 
     @api.multi
-    def unlink(self):
+    def _raise_error_if_confirmed(self):
         sheets = self.read(['state'])
         for sheet in sheets:
             if sheet['state'] in ('confirm', 'done'):
-                raise UserError(_('You cannot delete a timesheet which is already confirmed.'))
+                raise UserError(_(
+                    'You cannot delete a timesheet which is already confirmed.'
+                ))
 
-        analytic_timesheet_toremove = self.env['account.analytic.line']
+    @api.multi
+    def _get_timesheet_lines_toremove(self):
+        self.ensure_one()
+        return self.timesheet_ids.filtered(lambda t: not t.task_id)
+
+    @api.multi
+    def _remove_timesheet_lines_without_task(self):
+        timesheet_lines_toremove = self.env['account.analytic.line']
         for sheet in self:
-            analytic_timesheet_toremove += sheet.timesheet_ids.filtered(lambda t: not t.task_id)
-        analytic_timesheet_toremove.unlink()
+            timesheet_lines_toremove += sheet._get_timesheet_lines_toremove()
+        timesheet_lines_toremove.unlink()
 
+    @api.multi
+    def unlink(self):
+        self._raise_error_if_confirmed()
+        self._remove_timesheet_lines_without_task()
         return super(HrTimesheetSheet, self).unlink()
 
     # ------------------------------------------------
