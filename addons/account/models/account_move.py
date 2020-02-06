@@ -952,7 +952,8 @@ class AccountMove(models.Model):
         param = {'journal_id': self.journal_id.id}
 
         if not relaxed:
-            reference_move = self.search([('journal_id', '=', self.journal_id.id), ('date', '<=', self.date), ('id', '!=', self.id or self._origin.id)], order='date desc', limit=1) or self.search([('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id)], order='date asc', limit=1)
+            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
+            reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
@@ -974,7 +975,8 @@ class AccountMove(models.Model):
         # Try to find a pattern already used by relaxing a domain. If we are here, the domain non relaxed should return nothing.
         last_sequence = self._get_last_sequence(relaxed=True)
         if last_sequence:
-            reference_move = self.search([('journal_id', '=', self.journal_id.id), ('date', '<=', self.date), ('id', '!=', self.id or self._origin.id)], order='date asc', limit=1) or self.search([('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id)], order='date desc', limit=1)
+            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
+            reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
             if sequence_number_reset == 'year':
                 sequence = re.match(self._sequence_yearly_regex, last_sequence)
