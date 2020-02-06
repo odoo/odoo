@@ -2505,7 +2505,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # set up field triggers (on database-persisted models only)
             for field in cls._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
-                exceptions = (Exception,) if field.manual else ()
+                exceptions = (Exception,) if field.base_field.manual else ()
                 with tools.ignore(*exceptions):
                     field.setup_triggers(self)
 
