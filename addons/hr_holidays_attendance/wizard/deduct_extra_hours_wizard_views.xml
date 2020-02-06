@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="deduct_extra_hours_wizard_view_form" model="ir.ui.view">
+        <field name="name">deduct.extra.hours.wizard.view.form</field>
+        <field name="model">deduct.extra.hours.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="leave_type_id"/>
+                    </group>
+                    <group>
+                        <field name="request_unit" invisible="1"/>
+                        <field name="extra_hours" invisible="1"/>
+                        <label for="extra_hours" string="Extra Hours Available"/>
+                        <div>
+                            <field name="extra_hours_display" class="oe_inline" nolabel="1"/>
+                            <span class="ml8" attrs="{'invisible': [('request_unit', '=', 'hour')]}">Days</span>
+                            <span class="ml8" attrs="{'invisible': [('request_unit', '!=', 'hour')]}">Hours</span>
+                        </div>
+                        <field name="number_of_days" invisible="1"/>
+                        <label for="number_of_days" string="Duration"/>
+                        <div>
+                            <field name="number_of_days_display" class="oe_inline" nolabel="1"
+                                attrs="{'readonly': [('request_unit', '=', 'hour')], 'invisible': [('request_unit', '=', 'hour')]}"/>
+                            <field name="number_of_hours_display" class="oe_inline" nolabel="1"
+                                attrs="{'readonly': [('request_unit', '!=', 'hour')], 'invisible': [('request_unit', '!=', 'hour')]}"/>
+                            <span class="ml8" attrs="{'invisible': [('request_unit', '=', 'hour')]}">Days</span>
+                            <span class="ml8" attrs="{'invisible': [('request_unit', '!=', 'hour')]}">Hours</span>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_request_allocation" string="Request Allocation" type="object"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="deduct_extra_hours_wizard_action" model="ir.actions.act_window">
+        <field name="name">Deduct Extra Hours</field>
+        <field name="res_model">deduct.extra.hours.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="deduct_extra_hours_wizard_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
