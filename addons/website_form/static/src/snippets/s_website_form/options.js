@@ -403,8 +403,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * @override
      */
-    notify: async function (name, data) {
-        await this._super(...arguments);
+    notify: function (name, data) {
+        this._super(...arguments);
         if (name === 'field_mark') {
             this._setLabelsMark();
         } else if (name === 'add_field') {
