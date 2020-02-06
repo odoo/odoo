@@ -184,6 +184,15 @@
     </xpath>
 </template>
 
+<template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
+    <xpath expr="//head" position="inside">
+        <t t-raw="website.custom_code_head"/>
+    </xpath>
+    <xpath expr="//body" position="inside">
+        <t t-raw="website.custom_code_footer"/>
+    </xpath>
+</template>
+
 <template id="brand_promotion" inherit_id="web.brand_promotion" name="Brand Promotion">
     <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
         <t t-call="web.brand_promotion_message">

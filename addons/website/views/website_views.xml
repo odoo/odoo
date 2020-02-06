@@ -42,6 +42,15 @@
                                 <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
                             </group>
                         </div>
+                        <notebook>
+                            <page string="Custom Code" groups="base.group_no_one">
+                                <label for="custom_code_head"/>
+                                <field name="custom_code_head" widget="ace" options="{'mode': 'xml'}"/>
+
+                                <label for="custom_code_footer"/>
+                                <field name="custom_code_footer" widget="ace" options="{'mode': 'xml'}"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -71,6 +80,7 @@
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
+                <xpath expr="//notebook" position="replace"/>
             </field>
         </record>
 
