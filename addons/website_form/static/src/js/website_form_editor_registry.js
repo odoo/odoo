@@ -50,6 +50,7 @@ FormEditorRegistry.add('send_mail', {
         type: 'char',
         required: true,
         string: _t('Recipient Email'),
+        defaultValue: 'info@yourcompany.example.com',
     }],
 });
 

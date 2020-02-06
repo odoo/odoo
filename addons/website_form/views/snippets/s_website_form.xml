@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_website_form" name="Form">
+<template id="s_website_form" name="Form Builder">
     <section class="s_website_form" data-vcss="001">
         <div class="container">
             <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*">
@@ -40,7 +40,7 @@
                     <we-button data-on-success="redirect" data-name="show_redirect_opt">Redirect</we-button>
                     <we-button data-on-success="message" data-name="show_message_opt">Show Message</we-button>
                 </we-select>
-                <we-button class="fa fa-fw fa-edit align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
+                <we-button class="fa fa-fw fa-eye align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
             </we-row>
             <we-urlpicker string="URL" data-select-data-attribute="/contactus-thank-you" data-attribute-name="successPage" data-name="url_opt" data-dependencies="show_redirect_opt"/>
         </div>

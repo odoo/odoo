@@ -4,12 +4,12 @@
     <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
         <xpath expr="//div[@name='mail_button']" position="replace">
             <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email}" />
-            <div>
-                <section id="contactus_section" class="s_website_form" data-vcss="001">
+            <div id="contactus_section">
+                <section class="s_website_form" data-vcss="001">
                     <div class="container">
                         <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                             <div class="s_website_form_rows row s_col_no_bgcolor">
-                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char">
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact1">Your Name<span class="s_website_form_mark"> *</span></label>
                                         <div class="col-sm">
@@ -17,7 +17,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char">
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact2">Phone Number</label>
                                         <div class="col-sm">
@@ -25,7 +25,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email">
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact3">Email<span class="s_website_form_mark"> *</span></label>
                                         <div class="col-sm">
@@ -33,7 +33,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char">
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact4">Your Company</label>
                                         <div class="col-sm">
@@ -41,7 +41,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char">
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact5">Subject<span class="s_website_form_mark"> *</span></label>
                                         <div class="col-sm">
@@ -49,7 +49,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text">
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact6">Your Question</label>
                                         <div class="col-sm">

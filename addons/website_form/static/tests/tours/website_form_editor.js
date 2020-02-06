@@ -136,10 +136,10 @@ odoo.define('website_form_editor.tour', function (require) {
             content: "Check the resulting field",
             trigger: ".s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(.s_website_form_multiple[data-display='horizontal'])" +
-                        ":has(.checkbox label:contains('Iphone'):has(input[type='checkbox'][required]))" +
-                        ":has(.checkbox label:contains('Galaxy S'):has(input[type='checkbox'][required]))" +
-                        ":has(.checkbox label:contains('Xperia'):has(input[type='checkbox'][required]))" +
-                        ":has(.checkbox label:contains('Wiko Stairway'):has(input[type='checkbox'][required]))",
+                        ":has(.checkbox:has(label:contains('Iphone')):has(input[type='checkbox'][required]))" +
+                        ":has(.checkbox:has(label:contains('Galaxy S')):has(input[type='checkbox'][required]))" +
+                        ":has(.checkbox:has(label:contains('Xperia')):has(input[type='checkbox'][required]))" +
+                        ":has(.checkbox:has(label:contains('Wiko Stairway')):has(input[type='checkbox'][required]))",
             run: function () {},
         },
         ...selectButtonByData('data-multi-checkbox-display="vertical"'),
@@ -147,10 +147,10 @@ odoo.define('website_form_editor.tour', function (require) {
             content: "Check the resulting field",
             trigger: ".s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(.s_website_form_multiple[data-display='vertical'])" +
-                        ":has(.checkbox label:contains('Iphone'):has(input[type='checkbox'][required]))" +
-                        ":has(.checkbox label:contains('Galaxy S'):has(input[type='checkbox'][required]))" +
-                        ":has(.checkbox label:contains('Xperia'):has(input[type='checkbox'][required]))" +
-                        ":has(.checkbox label:contains('Wiko Stairway'):has(input[type='checkbox'][required]))",
+                        ":has(.checkbox:has(label:contains('Iphone')):has(input[type='checkbox'][required]))" +
+                        ":has(.checkbox:has(label:contains('Galaxy S')):has(input[type='checkbox'][required]))" +
+                        ":has(.checkbox:has(label:contains('Xperia')):has(input[type='checkbox'][required]))" +
+                        ":has(.checkbox:has(label:contains('Wiko Stairway')):has(input[type='checkbox'][required]))",
             run: function () {},
         },
 
@@ -180,10 +180,10 @@ odoo.define('website_form_editor.tour', function (require) {
         }, {
             content: "Check the resulting field",
             trigger: ".s_website_form_field.s_website_form_custom:not(.s_website_form_required)" +
-                        ":has(.radio label:contains('After-sales Service'):has(input[type='radio']:not([required])))" +
-                        ":has(.radio label:contains('Invoicing Service'):has(input[type='radio']:not([required])))" +
-                        ":has(.radio label:contains('Development Service'):has(input[type='radio']:not([required])))" +
-                        ":has(.radio label:contains('Management Service'):has(input[type='radio']:not([required])))",
+                        ":has(.radio:has(label:contains('After-sales Service')):has(input[type='radio']:not([required])))" +
+                        ":has(.radio:has(label:contains('Invoicing Service')):has(input[type='radio']:not([required])))" +
+                        ":has(.radio:has(label:contains('Development Service')):has(input[type='radio']:not([required])))" +
+                        ":has(.radio:has(label:contains('Management Service')):has(input[type='radio']:not([required])))",
             run: function () {},
         },
 
