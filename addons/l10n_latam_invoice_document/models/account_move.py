@@ -70,14 +70,10 @@ class AccountMove(models.Model):
 
     @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
-        """ Do not apply unique sequence number for vendoer bills and refunds.
-        Also apply constraint when state change """
-        vendor = self.filtered(lambda x: x.type in ['in_refund', 'in_invoice'])
-        try:
-            return super(AccountMove, self - vendor)._check_unique_sequence_number()
-        except ValidationError:
-            raise ValidationError(_('Duplicated invoice number detected. You probably added twice the same vendor'
-                                    ' bill/debit note.'))
+        """ This uniqueness verification is only valid for customer invoices, and vendor bills that does not use
+        documents. A new constraint method _check_unique_vendor_number has been created just for validate for this purpose """
+        vendor = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
+        return super(AccountMove, self - vendor)._check_unique_sequence_number()
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
@@ -163,11 +159,10 @@ class AccountMove(models.Model):
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 
-    @api.constrains('name', 'partner_id', 'company_id')
+    @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
     def _check_unique_vendor_number(self):
         """ The constraint _check_unique_sequence_number is valid for customer bills but not valid for us on vendor
-        bills because the uniqueness must be per partner and also because we want to validate on entry creation and
-        not on entry validation """
+        bills because the uniqueness must be per partner """
         for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents):
             domain = [
                 ('type', '=', rec.type),
