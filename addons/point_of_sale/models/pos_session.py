@@ -359,7 +359,16 @@ class PosSession(models.Model):
         })
         self.write({'move_id': account_move.id})
 
-        ## SECTION: Accumulate the amounts for each accounting lines group
+        data = {}
+        data = self._accumulate_amounts(data)
+        data = self._create_non_reconciliable_move_lines(data)
+        data = self._create_cash_statement_lines_and_cash_move_lines(data)
+        data = self._create_invoice_receivable_lines(data)
+        data = self._create_stock_output_lines(data)
+        data = self._reconcile_account_move_lines(data)
+
+    def _accumulate_amounts(self, data):
+        # Accumulate the amounts for each accounting lines group
         # Each dict maps `key` -> `amounts`, where `key` is the group key.
         # E.g. `combine_receivables` is derived from pos.payment records
         # in the self.order_ids with group key of the `payment_method_id`
@@ -472,15 +481,38 @@ class PosSession(models.Model):
                     amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
                     stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
+        MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
-        ## SECTION: Create non-reconcilable move lines
+        data.update({
+            'taxes':                               taxes,
+            'sales':                               sales,
+            'stock_expense':                       stock_expense,
+            'split_receivables':                   split_receivables,
+            'combine_receivables':                 combine_receivables,
+            'split_receivables_cash':              split_receivables_cash,
+            'combine_receivables_cash':            combine_receivables_cash,
+            'invoice_receivables':                 invoice_receivables,
+            'stock_output':                        stock_output,
+            'order_account_move_receivable_lines': order_account_move_receivable_lines,
+            'rounding_difference':                 rounding_difference,
+            'MoveLine':                            MoveLine
+        })
+        return data
+
+    def _create_non_reconciliable_move_lines(self, data):
         # Create account.move.line records for
         #   - sales
         #   - taxes
         #   - stock expense
         #   - non-cash split receivables (not for automatic reconciliation)
         #   - non-cash combine receivables (not for automatic reconciliation)
-        MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+        taxes = data.get('taxes')
+        sales = data.get('sales')
+        stock_expense = data.get('stock_expense')
+        split_receivables = data.get('split_receivables')
+        combine_receivables = data.get('combine_receivables')
+        rounding_difference = data.get('rounding_difference')
+        MoveLine = data.get('MoveLine')
 
         tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items() if amounts['amount']]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
@@ -504,14 +536,19 @@ class PosSession(models.Model):
             + [self._get_combine_receivable_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in combine_receivables.items()]
             + rounding_vals
         )
+        return data
 
-        ## SECTION: Create cash statement lines and cash move lines
+    def _create_cash_statement_lines_and_cash_move_lines(self, data):
         # Create the split and combine cash statement lines and account move lines.
         # Keep the reference by statement for reconciliation.
         # `split_cash_statement_lines` maps `statement` -> split cash statement lines
         # `combine_cash_statement_lines` maps `statement` -> combine cash statement lines
         # `split_cash_receivable_lines` maps `statement` -> split cash receivable lines
         # `combine_cash_receivable_lines` maps `statement` -> combine cash receivable lines
+        MoveLine = data.get('MoveLine')
+        split_receivables_cash = data.get('split_receivables_cash')
+        combine_receivables_cash = data.get('combine_receivables_cash')
+
         statements_by_journal_id = {statement.journal_id.id: statement for statement in self.statement_ids}
         # handle split cash payments
         split_cash_statement_line_vals = defaultdict(list)
@@ -540,9 +577,21 @@ class PosSession(models.Model):
             split_cash_receivable_lines[statement] = MoveLine.create(split_cash_receivable_vals[statement])
             combine_cash_receivable_lines[statement] = MoveLine.create(combine_cash_receivable_vals[statement])
 
-        ## SECTION: Create invoice receivable lines for this session's move_id.
+        data.update(
+            {'split_cash_statement_lines':    split_cash_statement_lines,
+             'combine_cash_statement_lines':  combine_cash_statement_lines,
+             'split_cash_receivable_lines':   split_cash_receivable_lines,
+             'combine_cash_receivable_lines': combine_cash_receivable_lines
+             })
+        return data
+
+    def _create_invoice_receivable_lines(self, data):
+        # Create invoice receivable lines for this session's move_id.
         # Keep reference of the invoice receivable lines because
         # they are reconciled with the lines in order_account_move_receivable_lines
+        MoveLine = data.get('MoveLine')
+        invoice_receivables = data.get('invoice_receivables')
+
         invoice_receivable_vals = defaultdict(list)
         invoice_receivable_lines = {}
         for receivable_account_id, amounts in invoice_receivables.items():
@@ -550,9 +599,15 @@ class PosSession(models.Model):
         for receivable_account_id, vals in invoice_receivable_vals.items():
             invoice_receivable_lines[receivable_account_id] = MoveLine.create(vals)
 
-        ## SECTION: Create stock output lines
+        data.update({'invoice_receivable_lines': invoice_receivable_lines})
+        return data
+
+    def _create_stock_output_lines(self, data):
         # Keep reference to the stock output lines because
         # they are reconciled with output lines in the stock.move's account.move.line
+        MoveLine = data.get('MoveLine')
+        stock_output = data.get('stock_output')
+
         stock_output_vals = defaultdict(list)
         stock_output_lines = {}
         for output_account, amounts in stock_output.items():
@@ -560,8 +615,19 @@ class PosSession(models.Model):
         for output_account, vals in stock_output_vals.items():
             stock_output_lines[output_account] = MoveLine.create(vals)
 
-        ## SECTION: Reconcile account move lines
+        data.update({'stock_output_lines': stock_output_lines})
+        return data
+
+    def _reconcile_account_move_lines(self, data):
         # reconcile cash receivable lines
+        split_cash_statement_lines = data.get('split_cash_statement_lines')
+        combine_cash_statement_lines = data.get('combine_cash_statement_lines')
+        split_cash_receivable_lines = data.get('split_cash_receivable_lines')
+        combine_cash_receivable_lines = data.get('combine_cash_receivable_lines')
+        order_account_move_receivable_lines = data.get('order_account_move_receivable_lines')
+        invoice_receivable_lines = data.get('invoice_receivable_lines')
+        stock_output_lines = data.get('stock_output_lines')
+
         for statement in self.statement_ids:
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
@@ -592,6 +658,7 @@ class PosSession(models.Model):
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).reconcile()
+        return data
 
     def _prepare_line(self, order_line):
         """ Derive from order_line the order date, income account, amount and taxes information.
