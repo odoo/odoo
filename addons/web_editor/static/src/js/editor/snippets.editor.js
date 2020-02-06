@@ -319,8 +319,8 @@ var SnippetEditor = Widget.extend({
             var styles = _.values(editor.styles);
             _.sortBy(styles, '__order').forEach(style => {
                 if (show) {
-                    style.updateUI();
                     style.onFocus();
+                    style.updateUI();
                 } else {
                     style.onBlur();
                 }

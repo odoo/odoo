@@ -1317,9 +1317,9 @@ const SnippetOptionWidget = Widget.extend({
      * @param {*} data
      * @returns {Promise}
      */
-    notify: async function (name, data) {
+    notify: function (name, data) {
         if (name === 'target') {
-            await this.setTarget(data);
+            this.setTarget(data);
         }
     },
     /**
@@ -1328,12 +1328,13 @@ const SnippetOptionWidget = Widget.extend({
      * per-slide options to be in the main menu of the whole snippet. This
      * function allows to set the option's target.
      *
+     * Note: the UI is not updated accordindly automatically.
+     *
      * @param {jQuery} $target - the new target element
      * @returns {Promise}
      */
-    setTarget: async function ($target) {
+    setTarget: function ($target) {
         this.$target = $target;
-        await this.updateUI();
         this.$target.trigger('snippet-option-change', [this]);
     },
     /**
@@ -1803,8 +1804,8 @@ registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    setTarget: async function () {
-        await this._super(...arguments);
+    setTarget: function () {
+        this._super(...arguments);
         this._onResize();
     },
     /**
@@ -2006,8 +2007,8 @@ registry.background = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    setTarget: async function () {
-        await this._super(...arguments);
+    setTarget: function () {
+        this._super(...arguments);
         // TODO should be automatic for all options as equal to the start method
         this.bindBackgroundEvents();
         this.__customImageSrc = this._getSrcFromCssValue();
