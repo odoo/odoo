@@ -115,26 +115,6 @@ var Mailbox = SearchableThread.extend({
         this._mailboxCounter = Math.max(this._mailboxCounter + num, 0);
     },
     /**
-     * Marks all messages from the mailbox as read. At the moment, this method
-     * makes only sense for 'Inbox'.
-     *
-     * @param  {Array} domain
-     * @return {Promise} resolved when all messages have been marked as read
-     *   on the server
-     */
-    markAllMessagesAsRead: function (domain) {
-        if (this._id === 'mailbox_inbox' && this.getMailboxCounter() > 0) {
-            return this._rpc({
-                model: 'mail.message',
-                method: 'mark_all_as_read',
-                kwargs: {
-                    domain: domain,
-                },
-            });
-        }
-        return Promise.resolve();
-    },
-    /**
      * @param {integer} newCounter
      */
     setMailboxCounter(newCounter) {
@@ -186,12 +166,8 @@ var Mailbox = SearchableThread.extend({
     _getThreadDomain: function () {
         if (this._id === 'mailbox_inbox') {
             return [['needaction', '=', true]];
-        } else if (this._id === 'mailbox_starred') {
-            return [['starred', '=', true]];
         } else if (this._id === 'mailbox_history') {
             return [['needaction', '=', false]];
-        } else if (this._id === 'mailbox_moderation') {
-            return [['need_moderation', '=', true]];
         } else {
             throw (_.str(_t("Missing domain for mailbox with ID '%s'"), this._id));
         }

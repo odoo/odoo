@@ -6,6 +6,7 @@ odoo.define('im_support.systray_no_support_tests', function (require) {
  * on the webclient when the support is not available.
  */
 
+const { patchMessagingService } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
@@ -29,6 +30,11 @@ QUnit.module('systray', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
+        this.unpatchMessagingService = unpatchMessagingService;
+    },
+    afterEach() {
+        this.unpatchMessagingService();
     },
 });
 

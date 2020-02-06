@@ -347,8 +347,6 @@ MailManager.include({
             .on('new_channel', this, this._onNewChannel)
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onUnsubscribeFromChannel)
-            .on('updated_im_status', this, this._onUpdatedImStatus)
-            .on('updated_out_of_office', this, this._onUpdatedOutOfOffice)
             .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter);
 
         core.bus.on('resize', this, _.debounce(this._repositionThreadWindows.bind(this), 100));
@@ -687,40 +685,6 @@ MailManager.include({
      */
     _onUnsubscribeFromChannel: function (channelID) {
         this._closeThreadWindow(channelID);
-    },
-    /**
-     * Called when there is a change of the im status of the partner.
-     * The header of the thread window should be updated accordingly,
-     * in order to display the correct new im status of this users.
-     *
-     * @private
-     * @param {integer} partnerID
-     */
-    _onUpdatedImStatus: function (partnerIDs) {
-        var self = this;
-        _.each(partnerIDs, function (partnerID) {
-            var thread = self.getDMChatFromPartnerID(partnerID);
-            if (! thread) {
-                return;
-            }
-            var threadWindow = self._getThreadWindow(thread.getID());
-            if (!threadWindow) {
-                return;
-            }
-            threadWindow.renderHeader();
-        });
-    },
-    /**
-     * @private
-     * @param {Object} data
-     * @param {integer} data.threadID
-     */
-    _onUpdatedOutOfOffice: function (data) {
-        var threadWindow = this._getThreadWindow(data.threadID);
-        if (!threadWindow) {
-            return;
-        }
-        threadWindow.renderOutOfOffice();
     },
     /**
      * Called when a thread has its unread counter that has changed.

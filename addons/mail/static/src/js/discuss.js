@@ -54,13 +54,6 @@ var PartnerInviteDialog = Dialog.extend({
             width: '100%',
             allowClear: true,
             multiple: true,
-            formatResult: function (item) {
-                var status = QWeb.render('mail.UserStatus', {
-                    status: self.call('mail_service', 'getImStatus', { partnerID: item.id }),
-                    partnerID: item.id,
-                });
-                return $('<span>').text(item.text).prepend(status);
-            },
             query: function (query) {
                 self.call('mail_service', 'searchPartner', query.term, 20)
                     .then(function (partners) {
@@ -175,75 +168,11 @@ var RenameConversationDialog = Dialog.extend({
     },
 });
 
-/**
- * Widget : Moderator reject message dialog
- *
- * Popup containing message title and reject message body.
- * This let the moderator provide a reason for rejecting the messages.
- */
-var ModeratorRejectMessageDialog = Dialog.extend({
-    template: 'mail.ModeratorRejectMessageDialog',
-
-    /**
-     * @override
-     * @param {web.Widget} parent
-     * @param {Object} params
-     * @param {integer[]} params.messageIDs list of message IDs to send
-     *   'reject' decision reason
-     * @param {function} params.proceedReject
-     *
-     *      a function to call when the
-     *      moderator confirms the reason for rejecting the
-     *      messages. This function passes an object as the
-     *      reason for reject, which is structured as follow::
-     *
-     *          {
-     *              title: <string>,
-     *              comment: <string>,
-     *          }
-     */
-    init: function (parent, params) {
-        this._messageIDs = params.messageIDs;
-        this._proceedReject = params.proceedReject;
-        this._super(parent, {
-            title: _t("Send explanation to author"),
-            size: 'medium',
-            buttons: [{
-                text: _t("Send"),
-                close: true,
-                classes: 'btn-primary',
-                click: _.bind(this._onSendClicked, this),
-            }],
-        });
-    },
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when the moderator would like to submit reason for rejecting the
-     * messages.
-     *
-     * @private
-     */
-    _onSendClicked: function () {
-        var title = this.$('#message_title').val();
-        var comment = this.$('#reject_message').val();
-        if (title && comment) {
-            this._proceedReject({
-                title: title,
-                comment: comment
-            });
-        }
-    },
-});
-
 var Discuss = AbstractAction.extend({
     contentTemplate: 'mail.discuss',
     custom_events: _.extend({}, AbstractAction.prototype.custom_events, {
         discard_extended_composer: '_onDiscardExtendedComposer',
-        message_moderation: '_onMessageModeration',
-        update_moderation_buttons: '_onUpdateModerationButtons',
+        search: '_onSearch',
     }),
     events: {
         'click .o_mail_sidebar_title .o_add': '_onAddThread',
@@ -380,55 +309,6 @@ var Discuss = AbstractAction.extend({
         );
     },
     /**
-     * Ban the authors of the messages with ID in `messageIDs`
-     * Show a confirmation dialog to the moderator.
-     *
-     * @private
-     * @param {integer[]} messageIDs IDs of messages for which we should ban authors
-     */
-    _banAuthorsFromMessageIDs: function (messageIDs) {
-        var self = this;
-        var emailList = _.map(messageIDs, function (messageID) {
-            return self.call('mail_service', 'getMessage', messageID).getEmailFrom();
-        }).join(", ");
-        var text = _.str.sprintf(
-            _t("You are going to ban: %s. Do you confirm the action?"),
-            emailList
-        );
-        var options = {
-            confirm_callback: function () {
-                self._moderateMessages(messageIDs, 'ban');
-            }
-        };
-        Dialog.confirm(this, text, options);
-    },
-    /**
-     * Discard the messages with ID in `messageIDs`
-     * Show a confirmation dialog to the moderator.
-     *
-     * @private
-     * @param {integer[]]} messageIDs list of message IDs to discard
-     */
-    _discardMessages: function (messageIDs) {
-        var self = this;
-        var num = messageIDs.length;
-        var text;
-        if (num > 1) {
-            text = _.str.sprintf(
-                _t("You are going to discard %s messages. Do you confirm the action?"),
-                num
-            );
-        } else if (num === 1) {
-            text = _t("You are going to discard 1 message. Do you confirm the action?");
-        }
-        var options = {
-            confirm_callback: function () {
-                self._moderateMessages(messageIDs, 'discard');
-            }
-        };
-        Dialog.confirm(this, text, options);
-    },
-    /**
      * @private
      * @returns {Promise}
      */
@@ -440,7 +320,6 @@ var Discuss = AbstractAction.extend({
                     self._thread,
                     self._getThreadRenderingOptions()
                 );
-                self._updateButtonStatus(!self._thread.hasMessages());
                 return self._loadEnoughMessages();
             });
     },
@@ -471,38 +350,12 @@ var Discuss = AbstractAction.extend({
             displayEmptyThread: !hasThreadMessages && !this.domain.length,
             displayNoMatchFound: !hasThreadMessages && !!this.domain.length,
             displaySubjectOnMessages: this._thread.isMassMailing() ||
-                this._thread.getID() === 'mailbox_inbox' ||
-                this._thread.getID() === 'mailbox_moderation',
+                this._thread.getID() === 'mailbox_inbox',
             displayEmailIcons: false,
             displayReplyIcons: true,
             displayBottomThreadFreeSpace: true,
-            displayModerationCommands: true,
         };
     },
-    /**
-     * Determine the action to apply on messages with ID in `messageIDs`
-     * based on the moderation decision `decision`.
-     *
-     * @private
-     * @param {number[]} messageIDs list of message ids that are moderated
-     * @param {string} decision of the moderator, could be either 'reject',
-     *   'discard', 'ban', 'accept', 'allow'.
-     */
-     _handleModerationDecision: function (messageIDs, decision) {
-        if (messageIDs) {
-            if (decision === 'reject') {
-                this._rejectMessages(messageIDs);
-            } else if (decision === 'discard') {
-                this._discardMessages(messageIDs);
-            } else if (decision === 'ban') {
-                this._banAuthorsFromMessageIDs(messageIDs);
-            } else {
-                // other decisions do not need more information,
-                // confirmation dialog, etc.
-                this._moderateMessages(messageIDs, decision);
-            }
-        }
-     },
     /**
      * @private
      */
@@ -616,33 +469,6 @@ var Discuss = AbstractAction.extend({
             });
     },
     /**
-     * Apply the moderation decision `decision` on the messages with ID in
-     * `messageIDs`.
-     *
-     * @private
-     * @param {integer[]} messageIDs list of message IDs to apply the
-     *   moderation decision.
-     * @param {string} decision the moderation decision to apply on the
-     *   messages. Could be either 'reject', 'discard', 'ban', 'accept',
-     *   or 'allow'.
-     * @param {Object|undefined} [kwargs] optional data to pass on
-     *   message moderation. This is provided when rejecting the messages
-     *   for which title and comment give reason(s) for reject.
-     * @param {string} [kwargs.title]
-     * @param {string} [kwargs.comment]
-     * @return {undefined|$.Promise}
-     */
-    _moderateMessages: function (messageIDs, decision, kwargs) {
-        if (messageIDs.length && decision) {
-            return this._rpc({
-                model: 'mail.message',
-                method: 'moderate',
-                args: [messageIDs, decision],
-                kwargs: kwargs
-            });
-        }
-    },
-    /**
      * Binds handlers on the given $input to make them autocomplete and/or
      * create threads.
      *
@@ -721,24 +547,6 @@ var Discuss = AbstractAction.extend({
         }
     },
     /**
-     * Reject the messages
-     *
-     * The moderator must provide a reason for reject, and may also
-     * cancel his action.
-     *
-     * @private
-     * @param {number[]} messageIDs list of message IDs to reject
-     */
-    _rejectMessages: function (messageIDs) {
-        var self = this;
-        new ModeratorRejectMessageDialog(this, {
-            messageIDs: messageIDs,
-            proceedReject: function (reason) {
-                self._moderateMessages(messageIDs, 'reject', reason);
-            }
-        }).open();
-    },
-    /**
      * @private
      */
     _renderButtons: function () {
@@ -746,11 +554,6 @@ var Discuss = AbstractAction.extend({
         this.$buttons.find('button').css({display:'inline-block'});
         this.$buttons
             .on('click', '.o_mail_discuss_button_invite', this._onInviteButtonClicked.bind(this))
-            .on('click', '.o_mail_discuss_button_mark_all_read', this._onMarkAllAsReadClicked.bind(this))
-            .on('click', '.o_mail_discuss_button_unstar_all', this._onUnstarAllClicked.bind(this))
-            .on('click', '.o_mail_discuss_button_moderate_all', this._onModerateAllClicked.bind(this))
-            .on('click', '.o_mail_discuss_button_select_all', this._onSelectAllClicked.bind(this))
-            .on('click', '.o_mail_discuss_button_unselect_all', this._onUnselectAllClicked.bind(this));
     },
     /**
      * Render the sidebar of discuss app
@@ -764,10 +567,7 @@ var Discuss = AbstractAction.extend({
         var $sidebar = $(QWeb.render('mail.discuss.Sidebar', {
             activeThreadID: this._thread ? this._thread.getID() : undefined,
             inbox: this.call('mail_service', 'getMailbox', 'inbox'),
-            starred: this.call('mail_service', 'getMailbox', 'starred'),
-            moderation: this.call('mail_service', 'getMailbox', 'moderation'),
             channels: channels,
-            isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
             displayQuickSearch: channels.length >= this.options.channelQuickSearchThreshold,
             options: this.options,
         }));
@@ -803,9 +603,6 @@ var Discuss = AbstractAction.extend({
             QWeb.render('mail.discuss.SidebarMailboxes', {
                 activeThreadID: this._thread ? this._thread.getID() : undefined,
                 inbox: this.call('mail_service', 'getMailbox', 'inbox'),
-                starred: this.call('mail_service', 'getMailbox', 'starred'),
-                moderation: this.call('mail_service', 'getMailbox', 'moderation'),
-                isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
             })
         );
     },
@@ -847,10 +644,6 @@ var Discuss = AbstractAction.extend({
             .on('load_more_messages', this, this._loadMoreMessages)
             .on('mark_as_read', this, function (messageID) {
                 this.call('mail_service', 'markMessagesAsRead', [messageID]);
-            })
-            .on('toggle_star_status', this, function (messageID) {
-                var message = this.call('mail_service', 'getMessage', messageID);
-                message.toggleStarStatus();
             })
             .on('select_message', this, this._selectMessage)
             .on('unselect_message', this, this._unselectMessage);
@@ -941,7 +734,7 @@ var Discuss = AbstractAction.extend({
      * @returns {Promise}
      */
     _setThread: async function (threadID) {
-        this.$('.o_out_of_office').remove();
+
         // Store scroll position and composer state of the previous thread
         this._storeThreadState();
 
@@ -984,13 +777,6 @@ var Discuss = AbstractAction.extend({
         // message
         this._unselectMessage();
 
-        if (this._thread.hasOutOfOffice()) {
-            const $outOfOffice = $(QWeb.render('mail.thread.OutOfOffice', {
-                thread: this._thread
-            }));
-            $outOfOffice.prependTo(this.$('.o_mail_discuss_content'));
-        }
-
         this.action_manager.do_push_state({
             action: this.action.id,
             active_id: this._thread.getID(),
@@ -1017,12 +803,9 @@ var Discuss = AbstractAction.extend({
             .on('new_channel', this, this._onNewChannel)
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onChannelLeft)
-            .on('updated_im_status', this, this._onUpdatedImStatus)
             .on('update_needaction', this, this._onUpdateNeedaction)
-            .on('update_starred', this, this._onUpdateStarred)
             .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
             .on('activity_updated', this, this._onActivityUpdated)
-            .on('update_moderation_counter', this, this._onUpdateModerationCounter)
             .on('update_typing_partners', this, this._onTypingPartnersUpdated)
             .on('update_channel', this, this._onUpdateChannel);
     },
@@ -1068,40 +851,6 @@ var Discuss = AbstractAction.extend({
         this._selectedMessage = null;
     },
     /**
-     * @private
-     * @param {boolean} disabled
-     * @param {string} type
-     */
-    _updateButtonStatus: function (disabled, type) {
-        if (this._thread.getID() === 'mailbox_inbox') {
-            this.$buttons
-                .find('.o_mail_discuss_button_mark_all_read')
-                .toggleClass('disabled', disabled);
-            // Display Rainbowman when all inbox messages are read through
-            // 'MARK ALL READ' or marking last inbox message as read
-            if (disabled && type === 'mark_as_read') {
-                this.trigger_up('show_effect', {
-                    message: _t("Congratulations, your inbox is empty!"),
-                    type: 'rainbow_man',
-                });
-            }
-        }
-        if (this._thread.getID() === 'mailbox_starred') {
-            this.$buttons
-                .find('.o_mail_discuss_button_unstar_all')
-                .toggleClass('disabled', disabled);
-        }
-        if (
-            this._thread.getID() === 'mailbox_moderation' ||
-            (
-                this._thread.isModerated() &&
-                this._thread.isMyselfModerator()
-            )
-        ) {
-            this._updateModerationButtons();
-        }
-    },
-    /**
      * Updates the control panel buttons visibility based on thread type
      *
      * @private
@@ -1121,102 +870,12 @@ var Discuss = AbstractAction.extend({
                 .removeClass('d-none d-md-inline-block')
                 .addClass('d-none');
         }
-        // Mark All Read
-        if (thread.getID() === 'mailbox_inbox') {
-            this.$buttons
-                .find('.o_mail_discuss_button_mark_all_read')
-                .removeClass('d-none d-md-inline-block')
-                .addClass('d-none d-md-inline-block');
-        } else {
-            this.$buttons
-                .find('.o_mail_discuss_button_mark_all_read')
-                .removeClass('d-none d-md-inline-block')
-                .addClass('d-none');
-        }
-        // Unstar All
-        if (thread.getID() === 'mailbox_starred') {
-            this.$buttons
-                .find('.o_mail_discuss_button_unstar_all')
-                .removeClass('d-none');
-        } else {
-            this.$buttons
-                .find('.o_mail_discuss_button_unstar_all')
-                .addClass('d-none');
-        }
-        // Select All & Unselect All
-        if (
-            (thread.isModerated() && thread.isMyselfModerator()) ||
-            thread.getID() === 'mailbox_moderation'
-        ) {
-            this.$buttons
-                .find('.o_mail_discuss_button_select_all')
-                .removeClass('d-none');
-            this.$buttons
-                .find('.o_mail_discuss_button_unselect_all')
-                .removeClass('d-none');
-        } else {
-            this.$buttons
-                .find('.o_mail_discuss_button_select_all')
-                .addClass('d-none');
-            this.$buttons
-                .find('.o_mail_discuss_button_unselect_all')
-                .addClass('d-none');
-        }
-        this.$buttons.find('.o_mail_discuss_button_moderate_all').addClass('d-none');
 
         this.$('.o_mail_discuss_item')
             .removeClass('o_active')
             .filter('[data-thread-id=' + thread.getID() + ']')
             .removeClass('o_unread_message')
             .addClass('o_active');
-    },
-    /**
-     * Update the moderation buttons.
-     *
-     * @private
-     */
-    _updateModerationButtons: function () {
-        this._updateSelectUnselectAllButtons();
-        this._updateModerationDecisionButton();
-    },
-    /**
-     * Display/hide the "moderate all" button based on whether
-     * some moderation checkboxes are checked or not.
-     * If some checkboxes are checked, display this button,
-     * otherwise hide it.
-     *
-     * @private
-     */
-    _updateModerationDecisionButton: function () {
-        if (this._threadWidget.$('.moderation_checkbox:checked').length) {
-            this.$buttons.find('.o_mail_discuss_button_moderate_all').removeClass('d-none');
-        } else {
-            this.$buttons.find('.o_mail_discuss_button_moderate_all').addClass('d-none');
-        }
-    },
-    /**
-     * @private
-     */
-    _updateSelectUnselectAllButtons: function () {
-        var buttonSelect = this.$buttons.find('.o_mail_discuss_button_select_all');
-        var buttonUnselect = this.$buttons.find('.o_mail_discuss_button_unselect_all');
-        var numCheckboxes = this._threadWidget.$('.moderation_checkbox').length;
-        var numCheckboxesChecked = this._threadWidget.$('.moderation_checkbox:checked').length;
-        if (numCheckboxes) {
-            if (numCheckboxesChecked === numCheckboxes) {
-                buttonSelect.toggleClass('disabled', true);
-                buttonUnselect.toggleClass('disabled', false);
-            } else if (numCheckboxesChecked === 0) {
-                buttonSelect.toggleClass('disabled', false);
-                buttonUnselect.toggleClass('disabled', true);
-            } else {
-                buttonSelect.toggleClass('disabled', false);
-                buttonUnselect.toggleClass('disabled', false);
-            }
-        } else {
-            buttonSelect.toggleClass('disabled', true);
-            buttonUnselect.toggleClass('disabled', true);
-        }
     },
     /**
      * Re-renders the mainside bar with current threads
@@ -1371,23 +1030,6 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     */
-    _onMarkAllAsReadClicked: function () {
-        this._thread.markAllMessagesAsRead(this.domain);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {integer} ev.data.messageID ID of the moderated message
-     * @param {string} ev.data.decision can be 'reject', 'discard', 'ban', 'accept', 'allow'.
-     */
-    _onMessageModeration: function (ev) {
-        var messageIDs = [ev.data.messageID];
-        var decision = ev.data.decision;
-        this._handleModerationDecision(messageIDs, decision);
-    },
-    /**
-     * @private
      * @param {mail.model.Message} message
      * @param {string} [type] the channel
      */
@@ -1395,17 +1037,12 @@ var Discuss = AbstractAction.extend({
         var self = this;
         var currentThreadID = this._thread.getID();
         if (
-            (currentThreadID === 'mailbox_starred' && !message.isStarred()) ||
-            (currentThreadID === 'mailbox_inbox' && !message.isNeedaction()) ||
-            (currentThreadID === 'mailbox_moderation' && !message.needsModeration())
+            (currentThreadID === 'mailbox_inbox' && !message.isNeedaction())
         ) {
             this._thread.fetchMessages(this.domain)
                 .then(function () {
                     var options = self._getThreadRenderingOptions();
-                    self._threadWidget.removeMessageAndRender(message.getID(), self._thread, options)
-                        .then(function () {
-                            self._updateButtonStatus(!self._thread.hasMessages(), type);
-                        });
+                    self._threadWidget.removeMessageAndRender(message.getID(), self._thread, options);
                 });
         } else if (_.contains(message.getThreadIDs(), currentThreadID)) {
             this._fetchAndRenderThread();
@@ -1423,19 +1060,6 @@ var Discuss = AbstractAction.extend({
             return;
         }
         this._initRender();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onModerateAllClicked: function (ev) {
-        var decision = $(ev.target).data('decision');
-        var messageIDs = this._threadWidget.$('.moderation_checkbox:checked')
-                            .map(function () {
-                                return $(this).data('message-id');
-                            })
-                            .get();
-        this._handleModerationDecision(messageIDs, decision);
     },
     /**
      * @private
@@ -1535,17 +1159,6 @@ var Discuss = AbstractAction.extend({
             this._fetchAndRenderThread();
         }
     },
-     /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onSelectAllClicked: function (ev) {
-        var $button = $(ev.target);
-        if (!$button.hasClass('disabled')) {
-            this._threadWidget.toggleModerationCheckboxes(true);
-            this._updateModerationButtons();
-        }
-    },
     /**
      * @private
      */
@@ -1568,23 +1181,6 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onUnselectAllClicked: function (ev) {
-        var $button = $(ev.target);
-        if (!$button.hasClass('disabled')) {
-            this._threadWidget.toggleModerationCheckboxes(false);
-            this._updateModerationButtons();
-        }
-    },
-    /**
-     * @private
-     */
-    _onUnstarAllClicked: function () {
-        this.call('mail_service', 'unstarAll');
-    },
-    /**
-     * @private
      * @param {integer} channelID
      */
     _onUpdateChannel: function (channelID) {
@@ -1596,35 +1192,7 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      */
-    _onUpdatedImStatus: function () {
-        this._throttledUpdateThreads();
-    },
-    /**
-     * Update the moderation buttons.
-     * This is triggered when a moderation checkbox
-     * has its checked property changed.
-     *
-     * @private
-     */
-    _onUpdateModerationButtons: function () {
-        this._updateModerationButtons();
-    },
-    /**
-     * @private
-     */
-    _onUpdateModerationCounter: function () {
-        this._throttledUpdateThreads();
-    },
-    /**
-     * @private
-     */
     _onUpdateNeedaction: function () {
-        this._throttledUpdateThreads();
-    },
-    /**
-     * @private
-     */
-    _onUpdateStarred: function () {
         this._throttledUpdateThreads();
     },
     /**

@@ -3,6 +3,7 @@ odoo.define('im_support.systray_tests', function (require) {
 
 var imSupportTestUtils = require('im_support.test_utils');
 
+const { patchMessagingService } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
@@ -20,12 +21,17 @@ QUnit.module('systray', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
+        this.unpatchMessagingService = unpatchMessagingService;
 
         this.supportParams = {
             db_uuid: 'some_uuid',
             support_token: 'ABCDEFGHIJ',
             support_origin: 'something.com',
         };
+    },
+    afterEach() {
+        this.unpatchMessagingService();
     },
 });
 
@@ -48,13 +54,15 @@ QUnit.test('messaging menu displays the Support channel', async function (assert
 });
 
 QUnit.test('clicking on Support channel: channel not available', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
 
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            // ignore images and init_messaging
+            // temporarily adapted because mail service and messaging service are both doing init_messaging
+            if (!_.string.endsWith(route, '.png') && route !== '/mail/init_messaging') {
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -87,7 +95,6 @@ QUnit.test('clicking on Support channel: channel not available', async function 
         "should have no composer");
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'message_fetch',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
@@ -97,13 +104,15 @@ QUnit.test('clicking on Support channel: channel not available', async function 
 });
 
 QUnit.test('clicking on Support channel: channel available', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
 
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            // ignore images and init_messaging
+            // temporarily adapted because mail service and messaging service are both doing init_messaging
+            if (!_.string.endsWith(route, '.png') && route !== '/mail/init_messaging') {
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -132,7 +141,6 @@ QUnit.test('clicking on Support channel: channel available', async function (ass
         "should have a composer");
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'message_fetch',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
@@ -142,13 +150,15 @@ QUnit.test('clicking on Support channel: channel available', async function (ass
 });
 
 QUnit.test('post messages in Support channel', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            // ignore images and init_messaging
+            // temporarily adapted because mail service and messaging service are both doing init_messaging
+            if (!_.string.endsWith(route, '.png') && route !== '/mail/init_messaging') {
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -176,7 +186,6 @@ QUnit.test('post messages in Support channel', async function (assert) {
     await testUtils.fields.triggerKeydown($('.o_thread_window .o_composer_input .o_input'), 'enter');
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'message_fetch',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
@@ -187,13 +196,15 @@ QUnit.test('post messages in Support channel', async function (assert) {
 });
 
 QUnit.test('fold Support channel', async function (assert) {
-    assert.expect(11);
+    assert.expect(10);
 
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            // ignore images and init_messaging
+            // temporarily adapted because mail service and messaging service are both doing init_messaging
+            if (!_.string.endsWith(route, '.png') && route !== '/mail/init_messaging') {
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -228,7 +239,6 @@ QUnit.test('fold Support channel', async function (assert) {
     testUtils.dom.click($('.o_thread_window .o_thread_window_close'));
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'message_fetch',
         'cors: /odoo_im_support/get_support_channel',
         'LocalStorage: setItem im_support.channel_state,open',
@@ -242,14 +252,16 @@ QUnit.test('fold Support channel', async function (assert) {
 });
 
 QUnit.test('restore Support channel if necessary', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
     await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            // ignore images and init_messaging
+            // temporarily adapted because mail service and messaging service are both doing init_messaging
+            if (!_.string.endsWith(route, '.png') && route !== '/mail/init_messaging') {
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -270,7 +282,6 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
         "should have open a chat window");
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
     ]);
@@ -279,7 +290,7 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
 });
 
 QUnit.test('receive messages in the Support channel', async function (assert) {
-    assert.expect(10);
+    assert.expect(9);
 
     var supportChannelID;
 
@@ -288,7 +299,9 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
         data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            // ignore images and init_messaging
+            // temporarily adapted because mail service and messaging service are both doing init_messaging
+            if (!_.string.endsWith(route, '.png') && route !== '/mail/init_messaging') {
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -330,7 +343,6 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
         'A message', "message is correct");
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
     ]);

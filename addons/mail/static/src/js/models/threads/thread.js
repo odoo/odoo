@@ -229,25 +229,6 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         return false;
     },
     /**
-
-     * States whether the thread is moderated or not.
-     * By default, threads are not moderated.
-     *
-     * @returns {boolean}
-     */
-    isModerated: function () {
-        return false;
-    },
-    /**
-     * States whether the current user is moderator of this thread.
-     * By default, the current user is not moderator of this thread.
-     *
-     * @returns {boolean}
-     */
-    isMyselfModerator: function () {
-        return false;
-    },
-    /**
      * States whether this is a two-user thread or not. In particular, public
      * and private channels are not two-user threads, but DMs and Livechats are
      * two-user threads. Two-user threads are used for communication between

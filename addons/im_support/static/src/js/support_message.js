@@ -49,16 +49,6 @@ var SupportMessage = Message.extend({
     shouldRedirectToAuthor: function () {
         return false;
     },
-    /**
-     * Overrides to prevent from calling the server for messages of the Support
-     * channel (which are records on the Support database).
-     *
-     * @override
-     * @returns {Promise}
-     */
-    toggleStarStatus: function () {
-        return Promise.resolve();
-    },
 });
 
 return SupportMessage;

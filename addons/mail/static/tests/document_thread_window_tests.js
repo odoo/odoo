@@ -1,6 +1,7 @@
 odoo.define('mail.documentThreadWindowTests', function (require) {
 "use strict";
 
+const { patchMessagingService } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
@@ -28,10 +29,6 @@ QUnit.module('Document Thread', {
                         type: 'many2many',
                         relation: 'mail.channel',
                     },
-                    starred: {
-                        string: "Starred",
-                        type: 'boolean',
-                    },
                     needaction: {
                       string: "Need Action",
                       type: 'boolean',
@@ -41,10 +38,6 @@ QUnit.module('Document Thread', {
                         type: 'one2many',
                         relation: 'res.partner',
                     },
-                    starred_partner_ids: {
-                      string: "partner ids",
-                      type: 'integer',
-                    }
                 },
                 records: [{
                     id: 1,
@@ -84,6 +77,11 @@ QUnit.module('Document Thread', {
             partner_id: partnerID, // so that needaction messages are treated as needactions
         };
         this.services = mailTestUtils.getMailServices();
+        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
+        this.unpatchMessagingService = unpatchMessagingService;
+    },
+    afterEach() {
+        this.unpatchMessagingService();
     },
 });
 

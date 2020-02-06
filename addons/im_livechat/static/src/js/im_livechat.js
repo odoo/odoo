@@ -356,7 +356,6 @@ var LivechatButton = Widget.extend({
                 body: this.options.default_message,
                 channel_ids: [this._livechat.getID()],
                 date: time.datetime_to_str(new Date()),
-                tracking_value_ids: [],
             }, {prepend: true});
         }
     },

@@ -88,12 +88,6 @@ var SearchableThread = Thread.extend({
         return !_.isEmpty(this.getMessages({ domain: domain }));
     },
     /**
-     * Invalidate the caches of the thread
-     */
-    invalidateCaches: function () {
-        this._cache = _.pick(this._cache, '[]');
-    },
-    /**
      * State whether all messages have been loaded or not
      *
      * @param  {Array} domain

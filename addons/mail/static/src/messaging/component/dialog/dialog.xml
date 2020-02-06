@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.messaging.component.Dialog" owl="1">
+        <div class="o_Dialog">
+            <t t-if="dialog">
+                <t t-if="dialog.entity">
+                    <t
+                        t-component="{{ dialog.entity.name }}"
+                        class="o_Dialog_component"
+                        t-ref="component"
+                    />
+                </t>
+                <t t-else="">
+                    <span>Only dialog linked to an entity is currently supported!</span>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

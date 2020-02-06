@@ -2,6 +2,7 @@ odoo.define('mail.blankThreadWindowTests', function (require) {
 "use strict";
 
 var AbstractThreadWindow = require('mail.AbstractThreadWindow');
+const { patchMessagingService } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
@@ -30,6 +31,8 @@ QUnit.module('Blank', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
+        this.unpatchMessagingService = unpatchMessagingService;
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
         this.createParent = function (params) {
@@ -84,6 +87,7 @@ QUnit.module('Blank', {
     afterEach: function () {
         // reset thread window append to body
         this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+        this.unpatchMessagingService();
     },
 });
 

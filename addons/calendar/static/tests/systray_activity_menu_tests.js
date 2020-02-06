@@ -1,6 +1,7 @@
 odoo.define('calendar.systray.ActivityMenuTests', function (require) {
 "use strict";
 
+const { patchMessagingService } = require('mail.messaging.testUtils');
 var ActivityMenu = require('mail.systray.ActivityMenu');
 var mailUtils = require('mail.testUtils');
 
@@ -12,6 +13,8 @@ QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu', {
     beforeEach: function () {
         this.services = mailUtils.getMailServices();
+        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
+        this.unpatchMessagingService = unpatchMessagingService;
         this.data = {
             'calendar.event': {
                 records: [{
@@ -34,6 +37,9 @@ QUnit.module('ActivityMenu', {
                 }],
             },
         };
+    },
+    afterEach() {
+        this.unpatchMessagingService();
     }
 });
 

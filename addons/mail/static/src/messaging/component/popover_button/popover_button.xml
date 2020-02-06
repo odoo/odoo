@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.messaging.component.PopoverButton" owl="1">
+        <button class="o_PopoverButton btn" t-att-class="{ 'o-open': state.isOpen }" data-selector="true" data-toggle="popover" t-att-title="props.popoverTitle" type="button" t-att-aria-label="props.popoverTitle">
+            <t t-slot="buttonHtml">
+                <t t-esc="props.buttonText ? props.buttonText : ''"/>
+            </t>
+        </button>
+    </t>
+
+</templates>

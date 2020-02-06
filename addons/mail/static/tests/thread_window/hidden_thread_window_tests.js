@@ -1,6 +1,7 @@
 odoo.define('mail.hiddenThreadWindowTests', function (require) {
 "use strict";
 
+const { patchMessagingService } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
@@ -29,6 +30,8 @@ QUnit.module('Hidden', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
+        this.unpatchMessagingService = unpatchMessagingService;
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
         this.createParent = function (params) {
@@ -53,6 +56,7 @@ QUnit.module('Hidden', {
         $target.find('.o_thread_window_dropdown').remove();
         // reset thread window append to body
         this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
+        this.unpatchMessagingService();
     },
 });
 
@@ -72,7 +76,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
     });
 
     var channels = [];
-    for (var i = 0; i < 3; i++) {
+    for (var i = 1; i < 4; i++) {
         channels.push({
             id: i,
             channel_type: 'channel',
@@ -91,46 +95,46 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
         services: this.services,
     });
     await testUtils.nextTick();
-    parent.call('mail_service', 'getChannel', 0).detach();
     parent.call('mail_service', 'getChannel', 1).detach();
+    parent.call('mail_service', 'getChannel', 2).detach();
     await testUtils.nextTick();
 
     var $visibleThreadWindows = $('.o_thread_window:not(.o_thread_window_dropdown, .o_hidden)');
 
     assert.strictEqual($visibleThreadWindows.length, 2,
         "should have 2 thread windows visible (as many as available slots)");
-    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="0"]').length, 1,
-        "the thread window with ID 0 should be visible");
     assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="1"]').length, 1,
         "the thread window with ID 1 should be visible");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="2"]').length, 1,
+        "the thread window with ID 2 should be visible");
     assert.strictEqual($('.o_thread_window.o_hidden').length, 0,
         "there should be no hidden thread when less or exactly as many as available slots");
     assert.strictEqual($('.o_thread_window_dropdown').length, 0,
         "there should be no thread window dropdown when all thread windows are visible");
 
     // detach a channel so that it exceeds available slots
-    parent.call('mail_service', 'getChannel', 2).detach();
+    parent.call('mail_service', 'getChannel', 3).detach();
     await testUtils.nextTick();
     // update list of visible thread windows
     $visibleThreadWindows = $('.o_thread_window:not(.o_thread_window_dropdown, .o_hidden)');
 
     assert.strictEqual($visibleThreadWindows.length, 2,
         "should have as many thread window visible as available slots");
-    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="0"]').length, 1,
-        "the thread window with ID 0 should be visible");
-    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="2"]').length, 1,
-        "the thread window with ID 2 should be visible (swapped with ID 1)");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="1"]').length, 1,
+        "the thread window with ID 1 should be visible");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="3"]').length, 1,
+        "the thread window with ID 3 should be visible (swapped with ID 2)");
     assert.strictEqual($('.o_thread_window.o_hidden').length, 1,
         "there should be a hidden thread when more windows than available slots");
-    assert.strictEqual($('.o_thread_window.o_hidden').data('thread-id'), 1,
-        "hidden thread window should be thread window with ID 1 (swapped with ID 2)");
+    assert.strictEqual($('.o_thread_window.o_hidden').data('thread-id'), 2,
+        "hidden thread window should be thread window with ID 2 (swapped with ID 3)");
     var $hiddenDropdown = $('.o_thread_window_dropdown');
     assert.strictEqual($hiddenDropdown.length, 1,
         "there should be a thread window dropdown");
     assert.strictEqual($('.o_thread_window_dropdown_toggler').text().trim(), "1",
         "should display that there is one hidden thread window");
-    assert.strictEqual($hiddenDropdown.find('.o_thread_window_header[data-thread-id="1"]').length,
-        1, "should contain thread window with ID 1 in hidden dropdown menu");
+    assert.strictEqual($hiddenDropdown.find('.o_thread_window_header[data-thread-id="2"]').length,
+        1, "should contain thread window with ID 2 in hidden dropdown menu");
 
     parent.destroy();
     testUtils.mock.unpatch(this.services.mail_service);
@@ -158,7 +162,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
     });
 
     var channels = [];
-    for (var i = 0; i < 4; i++) {
+    for (var i = 1; i < 5; i++) {
         channels.push({
             id: i,
             channel_type: 'channel',
@@ -177,53 +181,53 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
         services: this.services,
     });
     await testUtils.nextTick();
-    parent.call('mail_service', 'getChannel', 0).detach();
     parent.call('mail_service', 'getChannel', 1).detach();
     parent.call('mail_service', 'getChannel', 2).detach();
+    parent.call('mail_service', 'getChannel', 3).detach();
     await testUtils.nextTick();
 
     var $visibleThreadWindows = $('.o_thread_window:not(.o_thread_window_dropdown, .o_hidden)');
 
     assert.strictEqual($visibleThreadWindows.length, 3,
         "should have 3  thread windows visible (as many as available slots)");
-    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="0"]').length, 1,
-        "the thread window with ID 0 should be visible");
     assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="1"]').length, 1,
         "the thread window with ID 1 should be visible");
     assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="2"]').length, 1,
         "the thread window with ID 2 should be visible");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="3"]').length, 1,
+        "the thread window with ID 3 should be visible");
     assert.strictEqual($('.o_thread_window.o_hidden').length, 0,
         "there should be no hidden thread when exactly as many as available slots");
     assert.strictEqual($('.o_thread_window_dropdown').length, 0,
         "there should be no thread window dropdown when all thread windows are visible");
 
     // detach a channel so that it exceeds available slots
-    parent.call('mail_service', 'getChannel', 3).detach();
+    parent.call('mail_service', 'getChannel', 4).detach();
     await testUtils.nextTick();
     // update list of visible thread windows
     $visibleThreadWindows = $('.o_thread_window:not(.o_thread_window_dropdown, .o_hidden)');
 
     assert.strictEqual($visibleThreadWindows.length, 2,
         "should have 2 thread windows visible (as many as available slots)");
-    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="0"]').length, 1,
-        "the thread window with ID 0 should be visible");
-    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="3"]').length, 1,
-        "the thread window with ID 3 should be visible (swapped with IDs 1 and 2)");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="1"]').length, 1,
+        "the thread window with ID 1 should be visible");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="4"]').length, 1,
+        "the thread window with ID 4 should be visible (swapped with IDs 2 and 3)");
     assert.strictEqual($('.o_thread_window.o_hidden').length, 2,
         "there should be two hidden thread when more windows than available slots");
-    assert.strictEqual($('.o_thread_window.o_hidden[data-thread-id="1"]').length, 1,
-        "thread window with ID 1 should be hidden");
     assert.strictEqual($('.o_thread_window.o_hidden[data-thread-id="2"]').length, 1,
         "thread window with ID 2 should be hidden");
+    assert.strictEqual($('.o_thread_window.o_hidden[data-thread-id="3"]').length, 1,
+        "thread window with ID 3 should be hidden");
     var $hiddenDropdown = $('.o_thread_window_dropdown');
     assert.strictEqual($hiddenDropdown.length, 1,
         "there should be a thread window dropdown");
     assert.strictEqual($('.o_thread_window_dropdown_toggler').text().trim(), "2",
         "should display that there is 2 hidden thread windows");
-    assert.strictEqual($hiddenDropdown.find('.o_thread_window_header[data-thread-id="1"]').length,
-        1, "should contain thread window with ID 1 in hidden dropdown menu");
     assert.strictEqual($hiddenDropdown.find('.o_thread_window_header[data-thread-id="2"]').length,
         1, "should contain thread window with ID 2 in hidden dropdown menu");
+    assert.strictEqual($hiddenDropdown.find('.o_thread_window_header[data-thread-id="3"]').length,
+        1, "should contain thread window with ID 3 in hidden dropdown menu");
 
     parent.destroy();
     testUtils.mock.unpatch(this.services.mail_service);

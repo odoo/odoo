@@ -1,0 +1,58 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ComposerTextInput {
+    min-width: 0;
+}
+
+.o_ComposerTextInput_textarea {
+    padding: 10px;
+    max-height: 200px;
+    resize: none;
+    border-radius: 10px 0 0 10px;
+    border: none;
+    overflow: auto
+}
+
+.o_ComposerTextInput_mentionMenuItem {
+    white-space: nowrap;
+    overflow: hidden;
+
+    &.o-mobile {
+        padding: 5px;
+    }
+
+    > .o_extra {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ComposerTextInput > .note-editor {
+    background-color: white;
+    border: none;
+
+    > .note-resizebar {
+        display: none;
+    }
+}
+
+.o_ComposerTextInput_mentionMenuItem {
+    text-overflow: ellipsis;
+
+    .o_PartnerImStatusIcon {
+        display: inline-flex;
+        margin-right: 5px;
+    }
+
+    > .o_extra {
+        text-overflow: ellipsis;
+        font-style: italic;
+        color: gray('500');
+    }
+}

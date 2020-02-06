@@ -131,14 +131,15 @@ MockServer.include({
      */
     _mockInitMessaging: function () {
         return _.defaults(this.initMessagingData || {}, {
-            'needaction_inbox_counter': 0,
-            'starred_counter': 0,
             'channel_slots': [],
             'commands': [],
-            'mention_partner_suggestions': [],
-            'shortcodes': [],
-            'menu_id': false,
             'mail_failures': [],
+            'mention_partner_suggestions': [],
+            'menu_id': false,
+            'needaction_inbox_counter': 0,
+            'partner_root': [2, "OdooBot"],
+            'shortcodes': [],
+            'starred_counter': 0,
         });
     },
     /**
@@ -219,7 +220,7 @@ MockServer.include({
                 var dbName = undefined; // useless for tests
                 var messageData = message;
                 message.moderation_status = 'accepted';
-                var metaData = [dbName, 'mail.channel'];
+                var metaData = [dbName, 'mail.channel', message.res_id];
                 var notification = [metaData, messageData];
                 notifications.push(notification);
             });

@@ -92,7 +92,8 @@
         }
         notifyCB() { }
         observe(value, parent) {
-            if (value === null || typeof value !== "object" || value instanceof Date) {
+            if (value === null || typeof value !== "object" || value instanceof Date || value instanceof Promise) {
+                // Cannot use `then` on proxified promises: https://github.com/odoo/owl/issues/677
                 // fun fact: typeof null === 'object'
                 return value;
             }
@@ -3173,7 +3174,8 @@
             if (index >= 0) {
                 const [task] = this.tasks.splice(index, 1);
                 fiber.cancel();
-                fiber.error = new Error(reason);
+                // Do not leak Mounting operation cancelled as a crash: https://github.com/odoo/owl/issues/676
+                fiber.error = reason;
                 task.callback();
             }
         }

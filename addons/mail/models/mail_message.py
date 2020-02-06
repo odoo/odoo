@@ -981,7 +981,9 @@ class Message(models.Model):
                     'filename': attachment.name,
                     'name': attachment.name,
                     'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                    'is_main': main_attachment == attachment
+                    'is_main': main_attachment == attachment,
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
                 })
 
             # Tracking values

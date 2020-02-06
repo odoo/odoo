@@ -27,16 +27,12 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      *   created the channel.
      * @param {boolean} params.data.group_based_subscription
      * @param {boolean} [params.data.is_minimized=false]
-     * @param  {boolean} params.data.is_moderator whether the current user is
-     *   moderator of this channel.
      * @param {string} [params.data.last_message_date] date in server-format
      * @param {Object[]} [params.data.members=[]]
      * @param {integer} [params.data.members[i].id]
      * @param {string} [params.data.members[i].name]
      * @param {string} [params.data.members[i].email]
      * @param {integer} [params.data.message_unread_counter]
-     * @param {boolean} [params.data.moderation=false] whether the channel is
-     *   moderated or not
      * @param {Object[]} [params.data.partners_info=[]]
      * @param {integer} [params.data.partners_info[i].partner_id]
      * @param {integer} [params.data.partners_info[i].fetched_message_id]
@@ -67,8 +63,6 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._folded = data.state === 'folded';
         // if set: hide 'Leave channel' button
         this._groupBasedSubscription = data.group_based_subscription;
-        this._isModerated = data.moderation;
-        this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
         this._members = data.members || [];
         // Promise that is resolved on fetched members of this channel.
@@ -284,15 +278,6 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         return this._groupBasedSubscription;
     },
     /**
-     * States whether the channel is moderated or not.
-     *
-     * @override
-     * @returns {boolean}
-     */
-    isModerated: function () {
-        return this._isModerated;
-    },
-    /**
      * Tells whether the current user is administrator of the channel.
      * Note that there is no administrator for two-user channels
      *
@@ -300,14 +285,6 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      */
     isMyselfAdministrator: function () {
         return session.uid === this._creatorUID && !this.isTwoUserThread();
-    },
-    /**
-     * States whether the current user is moderator of this channel.
-     *
-     * @returns {boolean}
-     */
-    isMyselfModerator: function () {
-        return this._isMyselfModerator;
     },
     /**
      * Unsubscribes from channel
@@ -338,34 +315,11 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._detached = 'detached' in params ? params.detached : this._detached;
         this._warnUpdatedWindowState();
     },
-    /**
-     * Reset the needaction counter to 0.
-     */
-    resetNeedactionCounter: function () {
-        this._needactionCounter = 0;
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Override so that it tells whether the channel is moderated or not. This
-     * is useful in order to display pending moderation messages when the
-     * current user is either moderator of the channel or has posted some
-     * messages that are pending moderation.
-     *
-     * @override
-     * @private
-     * @returns {Object}
-     */
-    _getFetchMessagesKwargs: function () {
-        var kwargs = this._super.apply(this, arguments);
-        if (this.isModerated()) {
-            kwargs.moderated_channel_ids = [this.getID()];
-        }
-        return kwargs;
-    },
     /**
      * Get the domain to fetch all the messages in the current channel
      *

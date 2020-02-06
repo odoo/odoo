@@ -48,10 +48,6 @@ var ThreadField = AbstractField.extend({
         this._threadWidget.on('load_more_messages', this, this._onLoadMoreMessages);
         this._threadWidget.on('redirect', this, this._onRedirect);
         this._threadWidget.on('redirect_to_channel', this, this._onRedirectToChannel);
-        this._threadWidget.on('toggle_star_status', this, function (messageID) {
-            var message = self.call('mail_service', 'getMessage', messageID);
-            message.toggleStarStatus();
-        });
 
         var def1 = this._threadWidget.appendTo(this.$el);
         var def2 = this._super.apply(this, arguments);
