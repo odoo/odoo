@@ -16,8 +16,19 @@
                 <div id="o_portal_signature" class="card-body" style="padding: 0"/>
             </div>
             <div class="mt16 clearfix">
+<<<<<<< HEAD
               <t t-set='defaultSignLabel'>Accept &amp; Sign</t>
               <button type="submit" class="btn btn-primary o_portal_sign_submit float-right"><t t-esc="widget.options.signLabel or defaultSignLabel"/></button>
+=======
+              <button type="submit" class="btn btn-primary o_portal_sign_submit pull-right">
+                <t t-if="widget.options.signLabel">
+                    <t t-esc="widget.options.signLabel"/>
+                </t>
+                <t t-if="!widget.options.signLabel">
+                    Accept and Sign
+                </t>
+              </button>
+>>>>>>> 4cd646ae74e... temp
             </div>
         </form>
     </t>
