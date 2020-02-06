@@ -340,7 +340,10 @@ class Website(Home):
 
     @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
     def toggle_switchable_view(self, view_key):
-        request.website.viewref(view_key).toggle_active()
+        if request.website.user_has_groups('website.group_website_designer'):
+            request.website.viewref(view_key).toggle_active()
+        else:
+            return werkzeug.exceptions.Forbidden()
 
     @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):

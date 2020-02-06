@@ -552,7 +552,7 @@ class IrActionsReport(models.Model):
                 website = request.website
                 context = dict(context, translatable=context.get('lang') != request.env['ir.http']._get_default_lang().code)
 
-        view_obj = self.env['ir.ui.view'].with_context(context)
+        view_obj = self.env['ir.ui.view'].sudo().with_context(context)
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
