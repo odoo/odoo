@@ -263,7 +263,7 @@ class Registry(Mapping):
                 continue
             for field in model._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
-                exceptions = (Exception,) if field.manual else ()
+                exceptions = (Exception,) if field.base_field.manual else ()
                 with ignore(*exceptions):
                     dependencies[field] = set(field.resolve_depends(model))
 
