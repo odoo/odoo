@@ -171,12 +171,15 @@ class IapAccount(models.Model):
             order='id desc')
         if not accounts:
             if force_create:
-                account = self.create({'service_name': service_name})
+                cr = self.pool.cursor()
+                new_account = self.with_env(self.env(cr=cr))
+                account_id = new_account.create({ 'service_name': service_name }).id
                 # Since the account did not exist yet, we will encounter a NoCreditError,
                 # which is going to rollback the database and undo the account creation,
                 # preventing the process to continue any further.
-                self.env.cr.commit()
-                return account
+                cr.commit()
+                cr.close()
+                return self.browse(account_id)
             return accounts
         accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
         if accounts_with_company:
