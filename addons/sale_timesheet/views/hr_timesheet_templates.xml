@@ -146,13 +146,17 @@
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
-                                                    <td>Invoiced</td>
+                                                    <td title="Revenues linked to Timesheets already invoiced.">
+                                                        Invoiced
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['to_invoice']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
-                                                    <td>To invoice</td>
+                                                    <td title="Revenues linked to Timesheets not yet invoiced.">
+                                                        To invoice
+                                                    </td>
                                                 </tr>
                                                 <tr t-if="dashboard['profit']['other_revenues'] > 0">
                                                     <td class="o_timesheet_plan_dashboard_cell">
@@ -172,13 +176,17 @@
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['expense_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
-                                                    <td>Other costs</td>
+                                                    <td title="Any cost linked to the Analytic Account of the Project.">
+                                                        Other costs
+                                                    </td>
                                                 </tr>
                                                 <tr t-if="display_cost &amp; (dashboard['profit']['expense_amount_untaxed_invoiced'] != 0)">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['expense_amount_untaxed_invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
-                                                    <td>Re-invoiced costs</td>
+                                                    <td title="Costs from expenses that were reinvoiced to your customer (provided that the Analytic Account of the Project was set on the Expense).">
+                                                        Re-invoiced costs
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="o_timesheet_plan_dashboard_total">
