@@ -849,7 +849,11 @@ class AccountMoveLine(models.Model):
         digits_rounding_precision = amls[0].company_id.currency_id.rounding
         if (
                 (
-                    not cash_basis_partial or (cash_basis_partial and all([p >= 1.0 for p in amls._get_matched_percentage().values()]))
+                    amls[0].account_id.internal_type not in ('receivable', 'payable') # We don't want to consider cash basis when reconciling something else (e.g. reconcilable tax account)
+                    or
+                    (   not cash_basis_partial
+                        or (cash_basis_partial and all([p >= 1.0 for p in amls._get_matched_percentage().values()]))
+                    )
                 ) and
                 (
                     currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or
@@ -1344,6 +1348,7 @@ class AccountMoveLine(models.Model):
                                 else:
                                     all_same_currency = False
                                     break
+
                 if not all_same_currency:
                     #we cannot rely on amount_currency fields as it is not present on all partial reconciliation
                     matched_percentage_per_move[line.move_id.id] = line.move_id.matched_percentage
