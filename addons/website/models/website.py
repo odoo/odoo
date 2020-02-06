@@ -107,6 +107,8 @@ class Website(models.Model):
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
+    custom_code_head = fields.Text('Custom <head> code')
+    custom_code_footer = fields.Text('Custom end of <body> code')
 
     robots_txt = fields.Text('Robots.txt', translate=False, groups='website.group_website_designer')
 

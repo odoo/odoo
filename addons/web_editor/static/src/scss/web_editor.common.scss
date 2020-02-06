@@ -350,7 +350,6 @@ a.o_underline {
         flex: 1 1 auto;
 
         .ace_gutter {
-            display: block !important; // display even with aria-hidden
             cursor: ew-resize;
 
             .ace_gutter-cell.o_error {
@@ -376,6 +375,10 @@ a.o_underline {
             @include ace-line-error-mixin;
         }
     }
+}
+
+.ace_editor > .ace_gutter {
+    display: block !important; // display even with aria-hidden
 }
 
 .o_ace_select2_dropdown {
