@@ -313,9 +313,9 @@
             <field name="arch" type="xml">
                 <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" optional="show"/>
+                    <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead"/>
-                    <field name="contact_name" optional="show"/>
+                    <field name="contact_name" optional="hide"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
                     <field name="phone" optional="show"/>
@@ -323,16 +323,17 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="user_id" optional="show"/>
                     <field name="team_id" optional="show"/>
-                    <field name="user_id" optional="show" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
-                    <field name="campaign_id" invisible="1"/>
+                    <field name="campaign_id" optional="hide"/>
                     <field name="referred" invisible="1"/>
-                    <field name="medium_id" invisible="1"/>
+                    <field name="medium_id" optional="hide"/>
+                    <field name="source_id" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -591,29 +592,29 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" optional="show"/>
+                    <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer" optional="show"/>
-                    <field name="email_from" optional="hide"/>
-                    <field name="phone" optional="hide"/>
-                    <field name="city" optional="hide"/>
+                    <field name="email_from" optional="show"/>
+                    <field name="phone" optional="show"/>
+                    <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
-                    <field name="activity_date_deadline" optional="show"/>
-                    <field name="activity_summary" optional="show" readonly="1"/>
-                    <field name="medium_id" invisible="1"/>
-                    <field name="campaign_id" invisible="1"/>
-                    <field name="source_id" invisible="1"/>
+                    <field name="activity_date_deadline" optional="hide"/>
+                    <field name="activity_summary" optional="hide" readonly="1"/>
                     <field name="stage_id" required="1" optional="show"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
-                    <field name="probability" avg="Avg. of Probability" optional="show"/>
-                    <field name="user_id" optional="hide"/>
+                    <field name="probability" avg="Avg. of Probability" optional="hide"/>
+                    <field name="user_id" optional="show"/>
                     <field name="team_id" optional="show"/>
+                    <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" />
+                    <field name="campaign_id" optional="hide"/>
+                    <field name="medium_id" optional="hide"/>
+                    <field name="source_id" optional="hide"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
