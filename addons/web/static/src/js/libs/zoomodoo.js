@@ -29,6 +29,9 @@ var defaults = {
     // event to trigger zoom
     event: 'click', //or mouseenter
 
+    // Timer before trigger zoom
+    timer: 0,
+
     // Prevent clicks on the zoom image link.
     preventClicks: true,
 
@@ -197,13 +200,17 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
  * @param {Event} e
  */
 ZoomOdoo.prototype._onEnter = function (e) {
+    var self = this;
     var touches = e.originalEvent.touches;
-
+    e.preventDefault();
     this.isMouseOver = true;
-    if (!touches || touches.length === 1) {
-        e.preventDefault();
-        this.show(e, true);
-    }
+
+    setTimeout(function () {
+        if (self.isMouseOver && (!touches || touches.length === 1)) {
+            self.show(e, true);
+        }
+      }, this.opts.timer);
+
 };
 
 /**
