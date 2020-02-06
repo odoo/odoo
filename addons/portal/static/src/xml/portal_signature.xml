@@ -16,7 +16,14 @@
                 <div id="o_portal_signature" class="panel-body" style="padding: 0"/>
             </div>
             <div class="mt16 clearfix">
-              <button type="submit" class="btn btn-primary o_portal_sign_submit pull-right"><t t-esc="widget.options.signLabel or 'Accept &amp; Sign'"/></button>
+              <button type="submit" class="btn btn-primary o_portal_sign_submit pull-right">
+                <t t-if="widget.options.signLabel">
+                    <t t-esc="widget.options.signLabel"/>
+                </t>
+                <t t-if="!widget.options.signLabel">
+                    Accept and Sign
+                </t>
+              </button>
             </div>
         </form>
     </t>
