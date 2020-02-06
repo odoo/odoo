@@ -55,7 +55,7 @@ class SurveyUserInput(models.Model):
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
     ]
 
-    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
+    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids')
     def _compute_scoring_values(self):
         for user_input in self:
             total_possible_score = sum([
@@ -209,6 +209,9 @@ class SurveyUserInput(models.Model):
                 if user_input.survey_id.certification_give_badge:
                     badge_ids.append(user_input.survey_id.certification_badge_id.id)
 
+            # Update predefined_question_id to remove inactive questions
+            user_input.predefined_question_ids -= user_input._get_inactive_conditional_questions()
+
         if badge_ids:
             challenges = Challenge.search([('reward_id', 'in', badge_ids)])
             if challenges:
@@ -358,6 +361,90 @@ class SurveyUserInput(models.Model):
             {'text': _("Incorrect"), 'count': res[user_input]['incorrect']},
             {'text': _("Unanswered"), 'count': res[user_input]['skipped']}
         ] for user_input in self]
+
+    # ------------------------------------------------------------
+    # Conditional Questions Management
+    # ------------------------------------------------------------
+
+    def _get_conditional_values(self):
+        """ For survey containing conditional questions, we need a triggered_questions_by_answer map that contains
+                {key: answer, value: the question that the answer triggers, if selected},
+         The idea is to be able to verify, on every answer check, if this answer is triggering the display
+         of another question.
+         If answer is not in the conditional map:
+            - nothing happens.
+         If the answer is in the conditional map:
+            - If we are in ONE PAGE survey : (handled at CLIENT side)
+                -> display immediately the depending question
+            - If we are in PAGE PER SECTION : (handled at CLIENT side)
+                - If related question is on the same page :
+                    -> display immediately the depending question
+                - If the related question is not on the same page :
+                    -> keep the answers in memory and check at next page load if the depending question is in there and
+                       display it, if so.
+            - If we are in PAGE PER QUESTION : (handled at SERVER side)
+                -> During submit, determine which is the next question to display getting the next question
+                   that is the next in sequence and that is either not triggered by another question's answer, or that
+                   is triggered by an already selected answer.
+         To do all this, we need to return:
+            - list of all selected answers: [answer_id1, answer_id2, ...] (for survey reloading, otherwise, this list is
+              updated at client side)
+            - triggered_questions_by_answer: dict -> for a given answer, list of questions triggered by this answer;
+                Used mainly for dynamic show/hide behaviour at client side
+            - triggering_answer_by_question: dict -> for a given question, the answer that triggers it
+                Used mainly to ease template rendering
+        """
+        triggering_answer_by_question, triggered_questions_by_answer = {}, {}
+        # Ignore conditional configuration if randomised questions selection
+        if self.survey_id.questions_selection != 'random':
+            triggering_answer_by_question, triggered_questions_by_answer = self.survey_id._get_conditional_maps()
+        selected_answers = self._get_selected_suggested_answers()
+
+        return triggering_answer_by_question, triggered_questions_by_answer, selected_answers
+
+    def _get_selected_suggested_answers(self):
+        """
+        For now, only simple and multiple choices question type are handled by the conditional questions feature.
+        Mapping all the suggested answers selected by the user will also include answers from matrix question type,
+        Those ones won't be used.
+        Maybe someday, conditional questions feature will be extended to work with matrix question.
+        :return: all the suggested answer selected by the user.
+        """
+        return self.mapped('user_input_line_ids.suggested_answer_id')
+
+    def _clear_inactive_conditional_answers(self):
+        """
+        Clean eventual answers on conditional questions that should not have been displayed to user.
+        This method is used mainly for page per question survey, a similar method does the same treatment
+        at client side for the other survey layouts.
+        E.g.: if depending answer was uncheck after answering conditional question, we need to clear answers
+              of that conditional question, for two reasons:
+              - ensure correct scoring
+              - if the selected answer triggers another question later in the survey, if the answer is not cleared,
+                a question that should not be displayed to the user will be.
+        
+        TODO DBE: Maybe this can be the only cleaning method, even for section_per_page or one_page where 
+        conditional questions are, for now, cleared in JS directly. But this can be annoying if user typed a long 
+        answer, changed his mind unchecking depending answer and changed again his mind by rechecking the depending 
+        answer -> For now, the long answer will be lost. If we use this as the master cleaning method, 
+        long answer will be cleared only during submit.
+        """
+        inactive_questions = self._get_inactive_conditional_questions()
+
+        # delete user.input.line on question that should not be answered.
+        answers_to_delete = self.user_input_line_ids.filtered(lambda answer: answer.question_id in inactive_questions)
+        answers_to_delete.unlink()
+
+    def _get_inactive_conditional_questions(self):
+        triggering_answer_by_question, triggered_questions_by_answer, selected_answers = self._get_conditional_values()
+
+        # get questions that should not be answered
+        inactive_questions = self.env['survey.question']
+        for answer in triggered_questions_by_answer.keys():
+            if answer not in selected_answers:
+                for question in triggered_questions_by_answer[answer]:
+                    inactive_questions |= question
+        return inactive_questions
 
 
 class SurveyUserInputLine(models.Model):

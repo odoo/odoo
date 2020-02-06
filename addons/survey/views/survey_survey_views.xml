@@ -57,6 +57,7 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
+                            <field name="has_conditional_questions" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -68,7 +69,11 @@
                                     <field name="question_type" />
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
+                                    <field name="survey_id" invisible="1"/>
+                                    <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
+                                    <button icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
+                                        title="This question depends on another question's answer." class="icon_rotates"/>
                                     <control>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                         <create name="add_question_control" string="Add a question"/>
@@ -96,8 +101,9 @@
                                 <group string="Candidates" name="candidates">
                                     <field name="access_mode"/>
                                     <field name="users_login_required"/>
-                                    <label for="is_attempts_limited" string="Attempts Limit" attrs="{'invisible': [('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
-                                    <div attrs="{'invisible': [('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
+                                    <label for="is_attempts_limited" string="Attempts Limit"
+                                           attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                    <div attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
                                         <field name="is_attempts_limited" nolabel="1"/>
                                         <field name="attempts_limit" attrs="{'invisible': [('is_attempts_limited', '=', False)]}" nolabel="1" class="oe_inline" /> <span attrs="{'invisible': [('is_attempts_limited', '=', False)]}"> attempts</span>
                                     </div>

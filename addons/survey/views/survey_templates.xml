@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div t-att-class="'o_survey_breadcrumb_container mt8' + (' d-none ' if answer.state != 'in_progress' else '')"
-                 t-if="survey.questions_layout == 'page_per_section' and answer.state != 'done'"
+                 t-if="not survey.has_conditional_questions and survey.questions_layout == 'page_per_section' and answer.state != 'done'"
                 t-att-data-can-go-back="survey.users_can_go_back"
                 t-att-data-pages="json.dumps(breadcrumb_pages)" />
         </div>
@@ -74,7 +74,9 @@
                 t-att-data-is-start-screen="answer.state == 'new'"
                 t-att-data-readonly="survey_form_readonly"
                 t-att-data-has-answered="bool(has_answered)"
-                t-att-data-questions-layout="survey.questions_layout">
+                t-att-data-questions-layout="survey.questions_layout"
+                t-att-data-triggered-questions-by-answer="json.dumps(triggered_questions_by_answer)"
+                t-att-data-selected-answers="json.dumps(selected_answers)">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.access_token" />
             <div class="o_survey_error alert alert-danger d-none" role="alert">
@@ -164,7 +166,7 @@
                 <div class="offset-3 col-6 text-center mt16 mb128">
                     <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
                             name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
-                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                    <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                         Continue</button><span class="font-weight-bold ml-2 d-none d-md-inline"> or press Enter</span>
                 </div>
                 <div class="col-3">
@@ -196,7 +198,7 @@
                     <div class="offset-3 col-6 text-center mt16 mb128">
                         <button t-if="not answer.is_session_answer and survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
                                 name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
-                        <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                        <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                             <t t-if="answer.is_session_answer">
                                 Submit
                             </t>
@@ -274,11 +276,17 @@
 
     <!-- Question widgets -->
     <template id="question_container" name="Survey: question container">
+        <t t-set="display_question"
+           t-value="survey.questions_layout == 'page_per_question'
+                    or (survey.questions_layout == 'one_page' and not question.is_conditional)
+                    or (survey.questions_layout == 'page_per_section' and (not question.is_conditional or triggering_answer_by_question[question.id] in selected_answers))"/>
+
         <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
         <!--Use Key selection if number of choices is < 26 to keep Z for other choice if any-->
         <t t-set="letters" t-value="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
         <t t-set="useKeySelection" t-value="len(question.suggested_answer_ids) &lt; len(letters) and survey.questions_layout == 'page_per_question'"/>
-        <div class="js_question-wrapper pb-4" t-att-id="question.id" t-att-data-required="question.constr_mandatory"
+        <div t-att-class="'js_question-wrapper pb-4 %s' % ('d-none' if not display_question else '')"
+             t-att-id="question.id" t-att-data-required="question.constr_mandatory"
              t-att-data-constr-error-msg="question.constr_error_msg"
              t-att-data-validation-error-msg="question.validation_error_msg">
             <h4>
@@ -544,7 +552,7 @@
     </template>
 
     <template id="survey_progression" name="Survey: Progression">
-        <t t-if="len(page_ids) > 1">
+        <t t-if="len(page_ids) > 1 and not survey.has_conditional_questions">
             <t t-set="percentage" t-value="round(100*(page_number/len(page_ids)))"/>
             <t t-if="survey.progression_mode == 'percent'">
                 <span class="o_survey_progress_percent" t-esc="percentage"/> % completed
