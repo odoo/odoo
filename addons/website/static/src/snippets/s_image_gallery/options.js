@@ -294,8 +294,8 @@ options.registry.gallery = options.Class.extend({
      *
      * @override
      */
-    notify: async function (name, data) {
-        await this._super(...arguments);
+    notify: function (name, data) {
+        this._super(...arguments);
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
             this.mode('reset', this.getMode());
