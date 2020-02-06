@@ -484,7 +484,6 @@
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">SHARE</h6>
                             <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
-                            <p t-if="event.twitter_hashtag" class="font-weight-bold">Hashtag: <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank">#<span t-field="event.twitter_hashtag"/></a></p>
                             <t t-call="website.s_share">
                                 <t t-set="_no_title" t-value="True"/>
                                 <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>

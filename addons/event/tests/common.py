@@ -57,8 +57,6 @@ class TestEventCommon(common.SavepointCase):
             'default_registration_max': 30,
             'use_timezone': True,
             'default_timezone': 'Europe/Paris',
-            'use_hashtag': True,
-            'default_hashtag': 'amazing',
             'use_ticket': True,
             'event_type_ticket_ids': [(0, 0, {
                 'name': 'First Ticket',

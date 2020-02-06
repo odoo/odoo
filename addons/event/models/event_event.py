@@ -66,8 +66,6 @@ class EventType(models.Model):
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
-    use_hashtag = fields.Boolean('Use Default Hashtag')
-    default_hashtag = fields.Char('Twitter Hashtag')
     use_mail_schedule = fields.Boolean(
         'Automatically Send Emails', default=True)
     event_type_mail_ids = fields.One2many(
@@ -180,7 +178,6 @@ class EventEvent(models.Model):
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
-    twitter_hashtag = fields.Char('Twitter Hashtag')
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -302,9 +299,6 @@ class EventEvent(models.Model):
 
             if self.event_type_id.auto_confirm:
                 self.auto_confirm = self.event_type_id.auto_confirm
-
-            if self.event_type_id.use_hashtag:
-                self.twitter_hashtag = self.event_type_id.default_hashtag
 
             if self.event_type_id.use_timezone:
                 self.date_tz = self.event_type_id.default_timezone

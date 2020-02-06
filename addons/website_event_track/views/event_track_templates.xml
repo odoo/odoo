@@ -264,27 +264,6 @@
     </t>
 </template>
 
-<template id="event_track_social" name="Social Widgets" inherit_id="website_event_track.track_view" active="False" customize_show="True">
-    <xpath expr="//div[@id='right_column']" position="inside">
-        <div class="card">
-            <h4 class="card-header">Social Stream</h4>
-            <div class="card-body">
-                <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
-                <div t-if="event.twitter_hashtag" class="mt16">
-                    <p><strong>Participate on Twitter</strong></p>
-                    <p class="text-muted">
-                        Find out what people see and say about this event,
-                        and join the conversation.
-                    </p>
-                    <p><strong>Use this tag:
-                        <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="badge badge-primary">#<span t-field="event.twitter_hashtag"/></a>
-                    </strong></p>
-                </div>
-            </div>
-        </div>
-    </xpath>
-</template>
-
 <template id="event_track_proposal">
     <t t-call="website_event.layout">
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
