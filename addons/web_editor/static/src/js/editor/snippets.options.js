@@ -2107,6 +2107,13 @@ const SnippetOptionWidget = Widget.extend({
             await this._select(previewMode, widget);
             this.$target.trigger('content_changed');
 
+            // Enabling an option and notifying that the $target has changed
+            // may destroy the option (if the DOM is altered in such a way the
+            // option is not attached to it anymore). In that case, we must not
+            // wait for a response to the option update.
+            if (this.isDestroyed()) {
+                return;
+            }
             await new Promise(resolve => {
                 // Will update the UI of the correct widgets for all options
                 // related to the same $target/editor if necessary
