@@ -1628,7 +1628,7 @@ class AccountTax(models.Model):
             return base_amount - (base_amount / (1 + self.amount / 100))
         # base / (1 - tax_amount) = new_base
         if self.amount_type == 'division' and not price_include:
-            return base_amount / (1 - self.amount / 100) - base_amount
+            return base_amount / (1 - self.amount / 100) - base_amount if (1 - self.amount / 100) else 0.0
         # <=> new_base * (1 - tax_amount) = base
         if self.amount_type == 'division' and price_include:
             return base_amount - (base_amount * (self.amount / 100))
