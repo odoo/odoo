@@ -38,7 +38,7 @@
                         <field name="scheduled_date" attrs="{'invisible':[('scheduled_date','=', False)]}"/>
                     </group>
                     <field name="body_html" widget="html" nolabel="1" options='{"safe": True}'/>
-                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="attachment_ids" widget="many2many_binary" class="col-7"/>
                     <footer>
                         <button string="Close" class="btn-secondary" special="cancel"/>
                     </footer>

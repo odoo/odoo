@@ -69,6 +69,20 @@ class MailTemplatePreview(models.TransientModel):
                 copy_depends_values['resource_ref'] = '%s,%s' % (self.resource_ref._name, self.resource_ref.id)
                 mail_values = mail_template.with_context(template_preview_lang=self.lang).generate_email(
                     self.resource_ref.id, self._MAIL_TEMPLATE_FIELDS)
+                attachment_ids = []
+                Attachment = self.env['ir.attachment']
+                # Attachments will be automatically removed from db thanks to _garbage_collect_attachments() from mail.thread
+                for attach_fname, attach_datas in mail_values.pop('attachments', []):
+                    data_attach = {
+                        'name': attach_fname,
+                        'datas': attach_datas,
+                        'res_model': 'mail.compose.message',
+                        'res_id': 0,
+                        'type': 'binary',
+                    }
+                attachment_ids.append(Attachment.create(data_attach).id)
+                if mail_values.get('attachment_ids', []) or attachment_ids:
+                    mail_values['attachment_ids'] = [(6, 0, mail_values.get('attachment_ids', []) + attachment_ids)]
                 self._set_mail_attributes(values=mail_values)
             self.error_msg = False
         except UserError as user_error:
