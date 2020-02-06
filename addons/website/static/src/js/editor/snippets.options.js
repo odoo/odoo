@@ -575,6 +575,10 @@ options.registry.background.include({
 });
 
 options.registry.Theme = options.Class.extend({
+    jsLibs: [
+        '/web/static/lib/ace/ace.js',
+        '/web/static/lib/ace/mode-xml.js',
+    ],
 
     /**
      * @override
@@ -621,6 +625,67 @@ options.registry.Theme = options.Class.extend({
         }
 
         await this._reloadBundles();
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async openCustomCodeDialog(previewMode, widgetValue, params) {
+        let fieldName, title, contentText;
+        if (widgetValue === 'head') {
+            fieldName = 'custom_code_head';
+            title = _t('Custom head code');
+            contentText = _t('Enter code that will be added into the <head> of every page of your site.');
+        } else {
+            fieldName = 'custom_code_footer';
+            title = _t('Custom end of body code');
+            contentText = _t('Enter code that will be added before the </body> of every page of your site.');
+        }
+
+        let websiteId;
+        this.trigger_up('context_get', {
+            callback: (ctx) => {
+                websiteId = ctx['website_id'];
+            },
+        });
+        const websites = await this._rpc({
+            model: 'website',
+            method: 'read',
+            args: [[websiteId], ['custom_code_head', 'custom_code_footer']],
+        });
+
+        await new Promise(resolve => {
+            const $content = $(core.qweb.render('website.custom_code_dialog_content', {
+                contentText,
+            }));
+            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], websites[0][fieldName] || '');
+            const dialog = new Dialog(this, {
+                title,
+                $content,
+                buttons: [
+                    {
+                        text: _t("Save"),
+                        classes: 'btn-primary',
+                        click: async () => {
+                            await this._rpc({
+                                model: 'website',
+                                method: 'write',
+                                args: [
+                                    [websiteId],
+                                    {[fieldName]: aceEditor.getValue()},
+                                ],
+                            });
+                        },
+                        close: true,
+                    },
+                    {
+                        text: _t("Discard"),
+                        close: true,
+                    },
+                ],
+            });
+            dialog.on('closed', this, resolve);
+            dialog.open();
+        });
     },
     /**
      * @see this.selectClass for parameters
@@ -676,6 +741,34 @@ options.registry.Theme = options.Class.extend({
             return this._betaEqualsSecondary;
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @param {DOMElement} node
+     * @param {String} content text of the editor
+     * @returns {Object}
+     */
+    _renderAceEditor(node, content) {
+        const aceEditor = window.ace.edit(node);
+        aceEditor.setTheme('ace/theme/monokai');
+        aceEditor.setValue(content, 1)
+        aceEditor.setOptions({
+            minLines: 20,
+            maxLines: Infinity,
+            showPrintMargin: false,
+        });
+        aceEditor.renderer.setOptions({
+            highlightGutterLine: true,
+            showInvisibles: true,
+            fontSize: 14,
+        });
+
+        const aceSession = aceEditor.getSession();
+        aceSession.setOptions({
+            mode: "ace/mode/xml",
+            useWorker: false,
+        });
+        return aceEditor;
     },
 });
 
