@@ -26,9 +26,9 @@
     <t t-name="website_form.field">
         <div t-attf-class="form-group s_website_form_field #{field.formatInfo.col or 'col-12'} #{field.custom and 's_website_form_custom' or ''} #{(field.required and 's_website_form_required' or '') or (field.modelRequired and 's_website_form_model_required' or '')} #{field.hidden and 's_website_form_field_hidden' or ''} #{field.dnone and 'd-none' or ''}"
             t-att-data-type="field.type"
-            t-att-data-name="Field">
+            data-name="Field">
             <div t-if="field.formatInfo.labelPosition != 'none' and field.formatInfo.labelPosition != 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="col-form-label col-sm-auto s_website_form_label #{field.formatInfo.labelPosition == 'right' and 'text-right' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition == 'right' and 'text-right' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
                      <t t-call="website_form.label_content"/>
                 </label>
                 <div class="col-sm">
@@ -46,7 +46,7 @@
 
     <t t-name="website_form.label_content">
         <t t-if="field.custom" t-set="field.string" t-value="field.name"/>
-        <t t-esc="field.string"/>
+        <span class="s_website_form_label_content" t-esc="field.string"/>
         <t t-if="field.required or field.modelRequired">
             <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-esc="' ' + field.formatInfo.mark"/>
         </t>
@@ -198,25 +198,25 @@
 
     <!-- Boolean Field -->
     <t t-name="website_form.field_boolean">
+        <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website_form.field">
-            <div class="col-form-label">
-                <input
-                    type="checkbox"
-                    value="Yes"
-                    class="s_website_form_input"
-                    t-att-name="field.name"
-                    t-att-required="field.required || field.modelRequired || None"
-                    t-att-id="field.id"
-                />
-            </div>
+            <input
+                type="checkbox"
+                value="Yes"
+                class="s_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att-id="field.id"
+            />
         </t>
     </t>
 
     <!-- Selection Field -->
     <t t-name="website_form.field_selection">
+        <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website_form.field">
             <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                <t t-if="!field.selection">
+                <t t-if="!field.records">
                     <input
                         class="s_website_form_input"
                         t-att-name="field.name"
@@ -225,7 +225,7 @@
                         placeholder="No matching record !"
                     />
                 </t>
-                <t t-foreach="field.selection" t-as="record">
+                <t t-foreach="field.records" t-as="record">
                     <t t-call="website_form.radio"/>
                 </t>
             </div>
@@ -234,19 +234,21 @@
 
     <!-- Radio -->
     <t t-name="website_form.radio">
+        <t t-set="recordId" t-value="field.id + record_index"/>
         <div t-attf-class="radio col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
-            <label class="col-form-label">
+            <div class="form-check">
                 <input
                     type="radio"
-                    class="s_website_form_input"
+                    class="s_website_form_input form-check-input"
+                    t-att-id="recordId"
                     t-att-name="field.name"
-                    t-att-value="record[0]"
+                    t-att-value="record.id"
                     t-att-required="field.required || field.modelRequired || None"
                 />
-                <span>
-                    <t t-esc="record[1]"/>
-                </span>
-            </label>
+                <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
+                    <t t-esc="record.display_name"/>
+                </label>
+            </div>
         </div>
     </t>
 
@@ -280,6 +282,7 @@
         </t>
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
+            <t t-set="field.isCheck" t-value="true"/>
             <t t-call="website_form.field">
                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
                     <t t-if="!field.records">
@@ -301,19 +304,21 @@
 
     <!-- Checkbox -->
     <t t-name="website_form.checkbox">
+        <t t-set="recordId" t-value="field.id + record_index"/>
         <div t-attf-class="checkbox col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
-            <label class="col-form-label">
+            <div class="form-check">
                 <input
                     type="checkbox"
-                    class="s_website_form_input"
+                    class="s_website_form_input form-check-input"
+                    t-att-id="recordId"
                     t-att-name="field.name"
                     t-att-value="record.id"
                     t-att-required="field.required || field.modelRequired || None"
                 />
-                <span>
+                <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
                     <t t-esc="record.display_name"/>
-                </span>
-            </label>
+                </label>
+            </div>
         </div>
     </t>
 
@@ -324,6 +329,7 @@
 
     <!-- Binary Field -->
     <t t-name="website_form.field_binary">
+        <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website_form.field">
             <input
                 type="file"

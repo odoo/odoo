@@ -135,79 +135,81 @@
                 <span t-field="job.name"/>
             </h2>
             <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
-            <section id="forms" class="s_website_form" data-vcss="001">
-                <div class="container">
-                    <form id="hr_recruitment_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
-                        <div class="s_website_form_rows row s_col_no_bgcolor">
-                            <div class="form-group col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment1">Your Name<span class="s_website_form_mark"> *</span></label>
-                                    <div class="col-sm">
-                                        <input id="recruitment1" type="text" class="form-control s_website_form_input" name="partner_name" required=""/>
+            <div id="jobs_section">
+                <section id="forms" class="s_website_form" data-vcss="001">
+                    <div class="container">
+                        <form id="hr_recruitment_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="form-group col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment1">Your Name<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="recruitment1" type="text" class="form-control s_website_form_input" name="partner_name" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment2">Your Email<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="recruitment2" type="email" class="form-control s_website_form_input" name="email_from" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment3">Your Phone Number<span class="s_website_form_mark"> *</span></label>
+                                        <div class="col-sm">
+                                            <input id="recruitment3" type="text" class="form-control s_website_form_input" name="partner_phone" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field" data-type="text" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment4">Short Introduction</label>
+                                        <div class="col-sm">
+                                            <textarea id="recruitment4" class="form-control s_website_form_input" name="description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment5">Resume</label>
+                                        <div class="col-sm">
+                                            <input id="recruitment5" type="file" class="form-control s_website_form_input" name="Resume"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field d-none">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment6">Job</label>
+                                        <div class="col-sm">
+                                            <input id="recruitment6" type="hidden" class="form-control s_website_form_input" name="job_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field d-none">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">Department</label>
+                                        <div class="col-sm">
+                                            <input id="recruitment7" type="hidden" class="form-control s_website_form_input" name="department_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_submit">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div style="width: 200px" class="col-sm-auto s_website_form_label"/>
+                                        <div class="col-sm">
+                                            <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                            <span id="s_website_form_result"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment2">Your Email<span class="s_website_form_mark"> *</span></label>
-                                    <div class="col-sm">
-                                        <input id="recruitment2" type="email" class="form-control s_website_form_input" name="email_from" required=""/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment3">Your Phone Number<span class="s_website_form_mark"> *</span></label>
-                                    <div class="col-sm">
-                                        <input id="recruitment3" type="text" class="form-control s_website_form_input" name="partner_phone" required=""/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 s_website_form_field" data-type="text">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment4">Short Introduction</label>
-                                    <div class="col-sm">
-                                        <textarea id="recruitment4" class="form-control s_website_form_input" name="description"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment5">Resume</label>
-                                    <div class="col-sm">
-                                        <input id="recruitment5" type="file" class="form-control s_website_form_input" name="Resume"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 s_website_form_field d-none">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment6">Job</label>
-                                    <div class="col-sm">
-                                        <input id="recruitment6" type="hidden" class="form-control s_website_form_input" name="job_id"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 s_website_form_field d-none">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">Department</label>
-                                    <div class="col-sm">
-                                        <input id="recruitment7" type="hidden" class="form-control s_website_form_input" name="department_id"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 s_website_form_submit">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <div style="width: 200px" class="col-sm-auto s_website_form_label"/>
-                                    <div class="col-sm">
-                                        <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
-                                        <span id="s_website_form_result"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </section>
+                        </form>
+                    </div>
+                </section>
+            </div>
             <div class="oe_structure mt-2"/>
         </div>
     </t>
