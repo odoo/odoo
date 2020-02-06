@@ -359,10 +359,7 @@ class View(models.Model):
         """
         error = False
 
-        try:
-            self.visibility  # avoid useless sudo() in case page is public
-        except AccessError:
-            self = self.sudo()
+        self = self.sudo()
 
         if self.visibility and not request.env.user.has_group('website.group_website_designer'):
             if (self.visibility == 'connected' and request.website.is_public_user()):

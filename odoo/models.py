@@ -1463,7 +1463,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].sudo()
         result = {
             'model': self._name,
             'field_parent': False,
@@ -1528,7 +1528,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
         """
-        view = self.env['ir.ui.view'].browse(view_id)
+        self.check_access_rights('read')
+        view = self.env['ir.ui.view'].sudo().browse(view_id)
 
         # Get the view arch and all other attributes describing the composition of the view
         result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
