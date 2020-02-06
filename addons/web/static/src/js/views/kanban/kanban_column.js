@@ -220,7 +220,7 @@ var KanbanColumn = Widget.extend({
      * Closes the quick create widget if it isn't dirty.
      */
     cancelQuickCreate: function () {
-        if (this.quickCreateWidget) {
+        if (this.quickCreateWidget && this.quickCreateWidget.controller) {
             this.quickCreateWidget.cancel();
         }
     },
