@@ -117,6 +117,11 @@ QUnit.module('Views', {
                     lang_code: 'en_US'
                 }]
             },
+            "res.company": {
+                fields: {
+                    name: { string: "Name", type: "char" },
+                },
+            },
         };
         this.actions = [{
             id: 1,
@@ -8805,6 +8810,79 @@ QUnit.module('Views', {
         so writing a test that will always succeed is not useful.
             */
         assert.ok("Behavior can't be tested");
+    });
+
+    QUnit.test('reload company when creating records of model res.company', async function (assert) {
+        assert.expect(6);
+
+        var form = await createView({
+            View: FormView,
+            model: 'res.company',
+            data: this.data,
+            arch: '<form><field name="name"/></form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                do_action: function (ev) {
+                    assert.step('reload company');
+                    assert.strictEqual(ev.data.action, "reload_context", "company view reloaded");
+                },
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('input[name="name"]'), 'Test Company');
+        await testUtils.form.clickSave(form);
+
+        assert.verifySteps([
+            'default_get',
+            'create',
+            'reload company',
+            'read',
+        ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('reload company when writing on records of model res.company', async function (assert) {
+        assert.expect(6);
+        this.data['res.company'].records = [{
+            id: 1, name: "Test Company"
+        }];
+
+        var form = await createView({
+            View: FormView,
+            model: 'res.company',
+            data: this.data,
+            arch: '<form><field name="name"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                do_action: function (ev) {
+                    assert.step('reload company');
+                    assert.strictEqual(ev.data.action, "reload_context", "company view reloaded");
+                },
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('input[name="name"]'), 'Test Company2');
+        await testUtils.form.clickSave(form);
+
+        assert.verifySteps([
+            'read',
+            'write',
+            'reload company',
+            'read',
+        ]);
+
+        form.destroy();
     });
 });
 
