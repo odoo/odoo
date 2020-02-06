@@ -2325,11 +2325,7 @@ class AccountMove(models.Model):
         if any(move.type not in ('in_invoice', 'out_invoice') for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 
-        # this is necessary, go figure why
-        self.flush()
-
         for move in self:
-            move.type = move.type.replace('invoice', 'refund')
             reversed_move = move._reverse_move_vals({}, False)
             new_invoice_line_ids = []
             for cmd, virtualid, line_vals in reversed_move['line_ids']:
@@ -2344,7 +2340,11 @@ class AccountMove(models.Model):
                         'debit' : line_vals['credit'],
                         'credit' : line_vals['debit']
                     })
-            move.write({'invoice_line_ids' : [(5, 0, 0)], 'invoice_partner_bank_id': False})
+            move.write({
+                'type': move.type.replace('invoice', 'refund'),
+                'invoice_line_ids' : [(5, 0, 0)],
+                'invoice_partner_bank_id': False,
+            })
             move.write({'invoice_line_ids' : new_invoice_line_ids})
 
     def _get_report_base_filename(self):
