@@ -1867,10 +1867,11 @@ class AccountMove(models.Model):
         params = [self.id, self.id]
         self._cr.execute(query, params)
         total_amount, total_reconciled = self._cr.fetchone()
-        if float_is_zero(total_amount, precision_rounding=self.company_id.currency_id.rounding):
+        currency = self.company_id.currency_id
+        if float_is_zero(total_amount, precision_rounding=currency.rounding):
             return 1.0
         else:
-            return abs(total_reconciled / total_amount)
+            return abs(currency.round(total_reconciled) / currency.round(total_amount))
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
@@ -3973,7 +3974,9 @@ class AccountMoveLine(models.Model):
                     if total_amount_currency == 0.0:
                         matched_percentage_per_move[line.move_id.id] = 1.0
                     else:
-                        matched_percentage_per_move[line.move_id.id] = total_reconciled_currency / total_amount_currency
+                        # lines_to_consider is always non-empty when total_amount_currency is 0
+                        currency = lines_to_consider[0].currency_id or lines_to_consider[0].company_id.currency_id
+                        matched_percentage_per_move[line.move_id.id] = currency.round(total_reconciled_currency) / currency.round(total_amount_currency)
         return matched_percentage_per_move
 
     def _get_analytic_tag_ids(self):
