@@ -14,7 +14,7 @@ from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
-from odoo.tools import pycompat
+from odoo.tools import pycompat, unique
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -1957,7 +1957,7 @@ class IrModelData(models.Model):
                     delete(records[half_size:])
 
         # remove non-model records first, grouped by batches of the same model
-        for model, items in itertools.groupby(records_items, itemgetter(0)):
+        for model, items in itertools.groupby(unique(records_items), itemgetter(0)):
             delete(self.env[model].browse(item[1] for item in items))
 
         # Remove copied views. This must happen after removing all records from
@@ -1969,7 +1969,7 @@ class IrModelData(models.Model):
         modules._remove_copied_views()
 
         # remove constraints
-        delete(self.env['ir.model.constraint'].browse(constraint_ids))
+        delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
@@ -1978,13 +1978,13 @@ class IrModelData(models.Model):
         # column no longer exists. We can therefore completely ignore them. That
         # is why selections are removed after fields: most selections are
         # deleted on cascade by their corresponding field.
-        delete(self.env['ir.model.fields'].browse(field_ids))
-        delete(self.env['ir.model.fields.selection'].browse(selection_ids).exists())
+        delete(self.env['ir.model.fields'].browse(unique(field_ids)))
+        delete(self.env['ir.model.fields.selection'].browse(unique(selection_ids)).exists())
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 
         # remove models
-        delete(self.env['ir.model'].browse(model_ids))
+        delete(self.env['ir.model'].browse(unique(model_ids)))
 
         # remove remaining module data records
         (module_data - self.browse(undeletable_ids)).unlink()
