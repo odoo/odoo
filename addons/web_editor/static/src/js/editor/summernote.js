@@ -1004,7 +1004,11 @@ renderer.tplButtonInfo.color = function (lang, options) {
         '<div class="note-color-palette" data-target-event="foreColor"></div>',
         '<h6 class="note-custom-color mt8" data-event="customColor" data-value="foreColor" title="' + lang.color.custom + '">',
         lang.color.custom + '</h6>',
-        '<div class="note-custom-color-palette" data-target-event="foreColor"></div>',
+        '<div class="note-custom-color-palette" data-target-event="foreColor">',
+            '<div class="note-color-row">',
+                '<span class="fa fa-plus-square" data-event="customColor" data-value="foreColor" style="font-size: 18px; cursor: pointer;"></span>',
+            '</div>',
+        '</div>',
         '</div></li>',
     ];
     var backColorItems = [
@@ -1014,7 +1018,11 @@ renderer.tplButtonInfo.color = function (lang, options) {
         '<div class="note-color-palette" data-target-event="backColor"></div>',
         '<h6 class="note-custom-color mt8" data-event="customColor" data-value="backColor" title="' + lang.color.custom + '">',
         lang.color.custom + '</h6>',
-        '<div class="note-custom-color-palette" data-target-event="backColor"></div>',
+        '<div class="note-custom-color-palette" data-target-event="backColor">',
+            '<div class="note-color-row">',
+                '<span class="fa fa-plus-square" data-event="customColor" data-value="backColor" style="font-size: 18px; cursor: pointer;"></span>',
+            '</div>',
+        '</div>',
         '</div></li>',
     ];
     var foreColorButton = renderer.getTemplate().button(foreColorButtonLabel, {

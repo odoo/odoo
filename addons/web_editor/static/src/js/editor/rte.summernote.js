@@ -98,13 +98,17 @@ renderer.createPalette = function ($container, options) {
         }
     });
 
-    var $customColorPalettes = $container.find('.note-color .note-custom-color-palette').append($('<div/>', {class: "note-color-row"}));
+    var $customColorPalettes = $container.find('.note-color .note-custom-color-palette');
     var $customColorRows = $customColorPalettes.find('.note-color-row');
+    if (!$customColorRows.length) {
+        $customColorRows = $('<div/>', {class: 'note-color-row'});
+        $customColorPalettes.append($customColorRows);
+    }
     _.each(_.uniq(colors), function (color) {
         var hexColor = _rgbToHex(color);
         if (_.indexOf(_.flatten(options.colors), hexColor) < 0) {
             // Create button for used custom color for backColor and foreColor both and add them into palette
-            $customColorRows.append('<button type="button" class="o_custom_color" data-color="' + color + '" style="background-color:' + color + ';" />');
+            $customColorRows.prepend('<button type="button" class="o_custom_color" data-color="' + color + '" style="background-color:' + color + ';" />');
         }
     });
 
@@ -527,7 +531,7 @@ $.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, cus
         color: defaultColor === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 0, 0)' : defaultColor,
         onSave: function (color) {
             var $palettes = $(event.currentTarget).find('.note-custom-color-palette > .note-color-row')
-                .append(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
+                .prepend(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
             $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'backColor');
             $palettes.filter(':even').find('button:not([data-event])').attr('data-event', 'foreColor');
             if (customColor === 'foreColor') {
