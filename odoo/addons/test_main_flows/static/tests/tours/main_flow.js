@@ -1,10 +1,10 @@
-odoo.define('test_main_flows.tour', function(require) {
+odoo.define('test_main_flows.tour', function (require) {
 "use strict";
 
-var core = require('web.core');
-var tour = require('web_tour.tour');
+const core = require('web.core');
+const tour = require('web_tour.tour');
 
-var _t = core._t;
+const _t = core._t;
 
 tour.register('main_flow_tour', {
     test: true,
@@ -23,26 +23,26 @@ tour.register('main_flow_tour', {
 // Add Stockable product
     trigger: ".o_menu_sections a:contains('Products')",
     extra_trigger: '.o_main_navbar',
-    content: _t("Let\'s create products."),
+    content: _t("Let's create products."),
     position: "bottom",
 }, {
     trigger: ".o_menu_sections a:has(span:contains('Products'))",
-    content: _t("Let\'s create products."),
+    content: _t("Let's create products."),
     position: "bottom"
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
-    content: _t('Let\'s create your first product.'),
+    content: _t("Let's create your first product."),
     position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
-    content: _t('Let\'s enter the name.'),
+    content: _t("Let's enter the name."),
     position: 'left',
     run: 'text the_flow.product',
 }, {
-    trigger:  "select[name=type]",
-    content: _t('Let\'s enter the product type'),
+    trigger: "select[name=type]",
+    content: _t("Let's enter the product type"),
     position: 'left',
     run: 'text "product"',
 }, {
@@ -70,7 +70,7 @@ tour.register('main_flow_tour', {
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        var $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
+        const $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
         if ($e.length) {
             actions.click($e);
         } else {
@@ -79,7 +79,7 @@ tour.register('main_flow_tour', {
     },
 }, {
     trigger: '.o_form_button_save',
-    content: _t('Save this product and the modifications you\'ve made to it.'),
+    content: _t("Save this product and the modifications you've made to it."),
     position: 'bottom',
 }, {
     trigger: ".oe_button_box",
@@ -87,12 +87,12 @@ tour.register('main_flow_tour', {
     auto: true,
     run: function (actions) {
         // auto expand "More" buttons
-        var $more = $(".oe_button_box .o_button_more");
+        const $more = $(".oe_button_box .o_button_more");
         if ($more.length) {
             actions.click($more);
         }
     },
-},{
+}, {
     trigger: ".oe_button_box .oe_stat_button:has(div[name=bom_count])",
     extra_trigger: '.o_form_readonly',
     content: _t('See Bill of material'),
@@ -133,11 +133,11 @@ tour.register('main_flow_tour', {
     content: _t('Go to purchase tab'),
     position: 'top',
 }, {
-    trigger:  ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > a",
-    content: _t('Let\'s enter the cost price'),
+    trigger: ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > a",
+    content: _t("Let's enter the cost price"),
     position: 'right',
 }, {
-    trigger:  ".o_field_widget[name=name] input",
+    trigger: ".o_field_widget[name=name] input",
     extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
@@ -146,7 +146,7 @@ tour.register('main_flow_tour', {
     trigger: ".ui-menu-item > a:contains('the_flow.vendor')",
     in_modal: false,
 }, {
-    trigger:  ".o_field_widget[name=price]",
+    trigger: ".o_field_widget[name=price]",
     content: _t('Set the cost price'),
     position: 'right',
     run: "text 1",
@@ -154,27 +154,23 @@ tour.register('main_flow_tour', {
     trigger: 'label:contains("Vendor Taxes")',
     extra_trigger: ".o_field_widget[name=name] > .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
-},
-{
+}, {
     trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
-},
- {
+}, {
 // Add second component
     trigger: ".o_field_x2many_list_row_add > a",
     extra_trigger: "body:not(:has(table.o_list_table div.o_field_widget[name='product_id'] input))",
     content: _t("Click here to add some lines."),
     position: "bottom",
-},
-{
+}, {
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
     extra_trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component2",
-},
-{
+}, {
     trigger: ".ui-menu-item > a:contains('the_flow.component2')",
     auto: true,
 }, {
@@ -187,11 +183,11 @@ tour.register('main_flow_tour', {
     content: _t('Go to purchase tab'),
     position: 'top',
 }, {
-    trigger:  ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > a",
-    content: _t('Let\'s enter the cost price'),
+    trigger: ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > a",
+    content: _t("Let's enter the cost price"),
     position: 'right',
 }, {
-    trigger:  ".o_field_widget[name=name] input",
+    trigger: ".o_field_widget[name=name] input",
     extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
@@ -201,14 +197,14 @@ tour.register('main_flow_tour', {
     auto: true,
     in_modal: false,
 }, {
-    trigger:  ".o_field_widget[name=price]",
+    trigger: ".o_field_widget[name=price]",
     content: _t('Set the cost price'),
     position: 'right',
     run: "text 1",
 }, {
     trigger: 'label:contains("Vendor Taxes")',
     // click somewhere else to exit cell focus
-},{
+}, {
     trigger: ".modal-footer .btn-primary",
     extra_trigger: ".o_field_widget[name=seller_ids] .o_data_row td:nth-child(2):contains('the_flow.vendor')",
     content: _t('Save'),
@@ -226,12 +222,12 @@ tour.register('main_flow_tour', {
 // Add service product
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
-    content: _t('Let\'s create your second product.'),
+    content: _t("Let's create your second product."),
     position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
-    content: _t('Let\'s enter the name.'),
+    content: _t("Let's enter the name."),
     position: 'left',
     run: 'text the_flow.service',
 }, {
@@ -244,7 +240,7 @@ tour.register('main_flow_tour', {
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        var $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
+        const $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
         if ($e.length) {
             actions.click($e);
         } else {
@@ -274,7 +270,7 @@ tour.register('main_flow_tour', {
 }, {
     trigger: '.o_form_button_save',
     extra_trigger: '.o_field_widget[name=project_id] > .o_external_button', // Wait name_create
-    content: _t('Save this product and the modifications you\'ve made to it.'),
+    content: _t("Save this product and the modifications you've made to it."),
     position: 'bottom',
 }, {
 // Create an opportunity
@@ -345,13 +341,13 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.text("the_flow.product", this.$anchor);
         // fake keydown to trigger search
-        var keyDownEvent = jQuery.Event("keydown");
+        const keyDownEvent = $.Event("keydown");
         keyDownEvent.which = 42;
         this.$anchor.trigger(keyDownEvent);
-        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        const $descriptionElement = $('.o_form_editable textarea[name="name"]');
         // when description changes, we know the product has been loaded
-        $descriptionElement.change(function () {
-            if ($(this).val().indexOf('the_flow.product') !== -1){
+        $descriptionElement.on('change', function () {
+            if ($(this).val().indexOf('the_flow.product') !== -1) {
                 $(this).addClass('product_loading_success');
             }
         });
@@ -378,13 +374,13 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.text("the_flow.service", this.$anchor);
         // fake keydown to trigger search
-        var keyDownEvent = jQuery.Event("keydown");
+        const keyDownEvent = $.Event("keydown");
         keyDownEvent.which = 42;
         this.$anchor.trigger(keyDownEvent);
-        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        const $descriptionElement = $('.o_form_editable textarea[name="name"]');
         // when description changes, we know the product has been loaded
-        $descriptionElement.change(function () {
-            if ($(this).val().indexOf('the_flow.service') !== -1){
+        $descriptionElement.on('change', function () {
+            if ($(this).val().indexOf('the_flow.service') !== -1) {
                 $(this).addClass('product_service_loading_success');
             }
         });
@@ -407,11 +403,11 @@ tour.register('main_flow_tour', {
     content: _t("Enter an email address"),
     position: "right",
     run: "text test@the_flow.com",
-},{
+}, {
     trigger: ".modal-footer .btn-primary",
     content: _t("Save your changes"),
     position: "bottom",
-},  {
+}, {
     trigger: ".modal-footer .btn-primary span:contains('Send')",
     content: _t("Try to send it to email"),
     position: "bottom",
@@ -479,7 +475,7 @@ tour.register('main_flow_tour', {
     trigger: ".o_menu_sections a:contains('Operations')",
     content: _t("Go to Run Schedulers"),
     position: "bottom"
-},{
+}, {
     trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_procurement_compute']",
     content: _t("Click on schedulers"),
     position: "bottom"
@@ -529,7 +525,7 @@ tour.register('main_flow_tour', {
     trigger: ".o_back_button a, .breadcrumb-item:not('.active'):last",
     content: _t('go back to the purchase order'),
     position: 'bottom',
- }, {
+}, {
     trigger: ".o_statusbar_buttons > button:enabled:contains('Create Bill')",
     content: _t('go to Vendor Bills'),
     position: 'bottom',
@@ -581,7 +577,7 @@ tour.register('main_flow_tour', {
     content: _t("Produce"),
     position: "bottom",
 }, {
-    trigger:  ".modal-footer .btn-primary:nth-child(3)",
+    trigger: ".modal-footer .btn-primary:nth-child(3)",
     content: _t('Record Production'),
     position: 'bottom',
 }, {
@@ -718,18 +714,18 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: 'input[name=name]',
-    content: _t('Let\'s enter the reference.'),
+    content: _t("Let's enter the reference."),
     position: 'left',
     run: 'text the_flow.statement',
 }, {
     edition: "enterprise",
-    trigger:  ".o_field_widget[name=balance_end_real] input",
-    content: _t('Let\'s calculate the ending balance.'),
+    trigger: ".o_field_widget[name=balance_end_real] input",
+    content: _t("Let's calculate the ending balance."),
     position: 'right',
     run: 'text 9010.85', // + 12.65
 }, {
     edition: "enterprise",
-    trigger:  ".o_field_widget[name=line_ids] .o_field_x2many_list_row_add > a",
+    trigger: ".o_field_widget[name=line_ids] .o_field_x2many_list_row_add > a",
     content: _t("Click here to add some lines."),
     position: "bottom",
 }, {
@@ -752,7 +748,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: ".o_selected_row .o_field_widget[name=name]",
-    content: _t('Let\'s enter a name.'),
+    content: _t("Let's enter a name."),
     position: "bottom",
     run: "text the_flow.statement.line",
 }, {
