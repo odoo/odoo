@@ -132,7 +132,6 @@ class TestEventData(TestEventCommon):
         event._onchange_type()
         self.assertEqual(event.date_tz, 'Europe/Paris')
         self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_min, event_type.default_registration_min)
         self.assertEqual(event.seats_max, event_type.default_registration_max)
         self.assertTrue(event.auto_confirm)
         self.assertFalse(event.is_online)
@@ -259,13 +258,11 @@ class TestEventTypeData(TestEventCommon):
         event_type = self.env['event.type'].create({
             'name': 'Testing fields computation',
             'has_seats_limitation': True,
-            'default_registration_min': 5,
             'default_registration_max': 30,
             'use_ticket': True,
         })
         event_type._onchange_has_seats_limitation()
         self.assertTrue(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_min, 5)
         self.assertEqual(event_type.default_registration_max, 30)
         self.assertEqual(event_type.event_type_ticket_ids.mapped('name'), ['Registration'])
 
@@ -273,7 +270,6 @@ class TestEventTypeData(TestEventCommon):
         event_type.write({'has_seats_limitation': False})
         event_type._onchange_has_seats_limitation()
         self.assertFalse(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_min, 0)
         self.assertEqual(event_type.default_registration_max, 0)
 
         # reset tickets

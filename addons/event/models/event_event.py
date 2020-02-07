@@ -49,9 +49,6 @@ class EventType(models.Model):
         readonly=False, store=True)
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
-    default_registration_min = fields.Integer(
-        'Minimum Registrations', default=0,
-        help="It will select this default minimum value when you choose this event")
     default_registration_max = fields.Integer(
         'Maximum Registrations', default=0,
         help="It will select this default maximum value when you choose this event")
@@ -86,7 +83,6 @@ class EventType(models.Model):
     @api.onchange('has_seats_limitation')
     def _onchange_has_seats_limitation(self):
         if not self.has_seats_limitation:
-            self.default_registration_min = 0
             self.default_registration_max = 0
 
 
@@ -135,9 +131,6 @@ class EventEvent(models.Model):
     seats_availability = fields.Selection(
         [('unlimited', 'Unlimited'), ('limited', 'Limited')],
         'Maximum Attendees', required=True, default='unlimited')
-    seats_min = fields.Integer(
-        string='Minimum Attendees',
-        help="For each event you can define a minimum reserved seats (number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)")
     seats_reserved = fields.Integer(
         string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
@@ -292,7 +285,6 @@ class EventEvent(models.Model):
     @api.onchange('event_type_id')
     def _onchange_type(self):
         if self.event_type_id:
-            self.seats_min = self.event_type_id.default_registration_min
             self.seats_max = self.event_type_id.default_registration_max
             if self.event_type_id.default_registration_max:
                 self.seats_availability = 'limited'
@@ -324,11 +316,6 @@ class EventEvent(models.Model):
                     all_ticket_values.append(ticket_vals)
 
                 self.event_ticket_ids = [(5, 0, 0)] + [(0, 0, item) for item in all_ticket_values]
-
-    @api.constrains('seats_min', 'seats_max', 'seats_availability')
-    def _check_seats_min_max(self):
-        if any(event.seats_availability == 'limited' and event.seats_min > event.seats_max for event in self):
-            raise ValidationError(_('Maximum attendees number should be greater than minimum attendees number.'))
 
     @api.constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
