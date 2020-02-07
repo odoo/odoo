@@ -2,6 +2,7 @@ odoo.define('web_tour.TourManager', function(require) {
 "use strict";
 
 var core = require('web.core');
+var config = require('web.config');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web_tour.utils');
@@ -116,7 +117,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
             tour.steps = _.filter(tour.steps, (function (step) {
-                return !step.edition || step.edition === this.edition;
+                return (!step.edition || step.edition === this.edition) &&
+                    (step.mobile === undefined || step.mobile === config.device.isMobile);
             }).bind(this));
 
             if (tour_is_consumed || tour.current_step >= tour.steps.length) {
