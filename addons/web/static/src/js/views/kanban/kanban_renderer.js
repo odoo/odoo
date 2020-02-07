@@ -88,7 +88,7 @@ var KanbanRenderer = BasicRenderer.extend({
     },
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events || {}, {
         close_quick_create: '_onCloseQuickCreate',
-        cancel_quick_create: '_onCloseQuickCreate',
+        cancel_quick_create: '_onCancelQuickCreate',
         set_progress_bar_state: '_onSetProgressBarState',
         start_quick_create: '_onStartQuickCreate',
         quick_create_column_updated: '_onQuickCreateColumnUpdated',
@@ -540,6 +540,12 @@ var KanbanRenderer = BasicRenderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onCancelQuickCreate: function () {
+        this._toggleNoContentHelper();
+    },
     /**
      * Closes the opened quick create widgets in columns
      *
