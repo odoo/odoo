@@ -296,7 +296,7 @@ class Website(Home):
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
-    @http.route(['/website/publish'], type='json', auth="public", website=True)
+    @http.route(['/website/publish'], type='json', auth="user", website=True)
     def publish(self, id, object):
         Model = request.env[object]
         record = Model.browse(int(id))
