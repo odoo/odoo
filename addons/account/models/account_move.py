@@ -2142,8 +2142,7 @@ class AccountMove(models.Model):
                 # installing Accounting- with bank statements)
                 move.company_id.account_bank_reconciliation_start = move.date
 
-        for move in self:
-            if move.is_sale_document() and move.journal_id.sale_activity_type_id:
+            if move.is_sale_document() and move.journal_id.sale_activity_type_id and (move.journal_id.sale_activity_user_id or move.invoice_user_id).id not in (self.env.ref('base.user_root').id, False):
                 move.activity_schedule(
                     date_deadline=min((date for date in move.line_ids.mapped('date_maturity') if date), default=move.date),
                     activity_type_id=move.journal_id.sale_activity_type_id.id,
