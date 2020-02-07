@@ -103,12 +103,3 @@ class AccountMove(models.Model):
         # OVERRIDE
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
-
-    def _get_invoice_intrastat_country_id(self):
-        # OVERRIDE
-        self.ensure_one()
-        if self.is_sale_document():
-            intrastat_country_id = self.partner_shipping_id.country_id.id
-        else:
-            intrastat_country_id = super(AccountMove, self)._get_invoice_intrastat_country_id()
-        return intrastat_country_id
