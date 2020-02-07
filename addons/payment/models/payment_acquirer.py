@@ -149,7 +149,7 @@ class PaymentAcquirer(models.Model):
     fees_dom_var = fields.Float('Variable domestic fees (in percents)')
     fees_int_fixed = fields.Float('Fixed international fees')
     fees_int_var = fields.Float('Variable international fees (in percents)')
-    qr_code = fields.Boolean('Use SEPA QR Code')
+    qr_code = fields.Boolean('Enable QR Codes', help="Enable the use of QR-codes for payments made on this provider.")
 
     # TDE FIXME: remove that brol
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')

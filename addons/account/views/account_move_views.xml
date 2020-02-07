@@ -571,6 +571,7 @@
                         <field name="company_currency_id" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="bank_partner_id" invisible="1"/>
+                        <field name="display_qr_code" invisible="1"/>
 
                         <field name="invoice_has_outstanding" invisible="1"/>
                         <field name="invoice_sent" invisible="1"/>
@@ -1001,6 +1002,7 @@
                                                context="{'default_partner_id': commercial_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="qr_code_method" attrs="{'invisible': [('display_qr_code', '=', False)]}"/>
                                     </group>
                                 </group>
                             </page>
