@@ -97,7 +97,14 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
-                move.amount_residual_signed                                 AS residual,
+                ROUND(move.amount_residual_signed / (SELECT count(*) FROM account_move_line aml where line.move_id = aml.move_id AND NOT aml.exclude_from_invoice_tab),
+                  COALESCE((SELECT decimal_places
+                    FROM res_currency rc INNER JOIN res_currency_rate cr ON
+                    rc.id = cr.currency_id
+                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
+                         cr.company_id = line.company_id
+                   LIMIT 1
+                   ),2))                                                   AS residual,
                 ROUND(
                   line.price_total / COALESCE(
                     (SELECT rate FROM res_currency_rate cr WHERE
