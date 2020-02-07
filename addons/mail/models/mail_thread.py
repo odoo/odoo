@@ -467,6 +467,7 @@ class MailThread(models.AbstractModel):
         for record in records:
             changes, tracking_value_ids = tracking.get(record.id, (None, None))
             record._message_track_post_template(changes)
+        self.flush()
 
     def with_lang(self):
         if not self._context.get("lang"):
