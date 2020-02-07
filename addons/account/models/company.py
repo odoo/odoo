@@ -71,7 +71,7 @@ class ResCompany(models.Model):
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
-    qr_code = fields.Boolean(string='Display SEPA QR code')
+    qr_code = fields.Boolean(string='Display QR-code on invoices')
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)

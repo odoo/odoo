@@ -80,7 +80,7 @@ class ResConfigSettings(models.TransientModel):
                This is useful if you install accounting after having used invoicing for some time and
                don't want to reconcile all the past payments with bank statements.""")
 
-    qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code', readonly=False)
+    qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
