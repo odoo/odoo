@@ -197,7 +197,6 @@
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
-            <field name="context">{'search_default_location': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Add a new track
@@ -211,7 +210,7 @@
             <field name="res_model">event.track</field>
             <field name="name">Event Tracks</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_location': 1}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new track
