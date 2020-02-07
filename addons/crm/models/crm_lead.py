@@ -812,7 +812,7 @@ class Lead(models.Model):
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
-    def merge_opportunity(self, user_id=False, team_id=False):
+    def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
                 - merge at least 1 opp with anything else (lead or opp) = 1 new opp
@@ -855,7 +855,8 @@ class Lead(models.Model):
 
         # delete tail opportunities
         # we use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
-        opportunities_tail.sudo().unlink()
+        if auto_unlink:
+            opportunities_tail.sudo().unlink()
 
         return opportunities_head
 
