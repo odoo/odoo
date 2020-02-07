@@ -246,7 +246,7 @@ class Website(models.Model):
             self = self.with_context(pricelist=pricelist_id)
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         # create so if needed
         if not sale_order and (force_create or code):
@@ -333,7 +333,7 @@ class Website(models.Model):
 
         else:
             request.session['sale_order_id'] = None
-            return self.env['sale.order']
+            return self.env['sale.order'].with_context(force_company=request.website.company_id.id)
 
         return sale_order
 
