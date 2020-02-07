@@ -40,8 +40,6 @@ class MassMailing(models.Model):
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
-    # number of periods for tracking mail_mail statistics
-    _period_number = 6
     _order = 'sent_date DESC'
     _inherits = {'utm.source': 'source_id'}
     _rec_name = "subject"
