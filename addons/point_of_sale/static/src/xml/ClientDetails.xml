@@ -76,7 +76,7 @@
                             <span class="detail vat empty">N/A</span>
                         </t>
                     </div>
-                    <div t-if="props.pos.pricelists.length lte 1" class="client-detail">
+                    <div t-if="env.pos.pricelists.length lte 1" class="client-detail">
                         <span class='label'>Pricelist</span>
                         <t t-if="props.partner.property_product_pricelist">
                             <span class="detail property_product_pricelist">

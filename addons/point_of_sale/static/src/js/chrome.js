@@ -601,7 +601,6 @@ class Chrome extends PosComponent {
         };
 
         this.pos = new models.PosModel(posModelDefaultAttributes);
-        this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.state = owl.useState({ activeScreenName: null });
         this.defaultScreenProps = { pos: this.pos, gui: this.gui }
         this.additionalScreenProps = {}
@@ -690,18 +689,31 @@ class Chrome extends PosComponent {
         ];
 
         this.cleanup_dom();
-        this.pos.ready.then(() => {
-            this.build_chrome();
-            this.build_widgets();
-            this.disable_rubberbanding();
-            this.disable_backpace_back();
-            this.ready.resolve();
-            this.loading_hide();
-            this.replace_crashmanager();
-            this.pos.push_order();
-        }).guardedCatch((err) => { // error when loading models data from the backend
-            this.loading_error(err);
-        });
+    }
+
+    mounted() {
+        // We want the loading of pos models to be done when this root component
+        // is already mounted. This way, we are able to use the state of this component
+        // to rerender changes in the app.
+        (async () => {
+            try {
+                await this.pos.ready;
+                this.env.pos = this.pos;
+                this.build_chrome();
+                this.gui = new gui.Gui({pos: this.pos, chrome: this});
+                this.pos.gui = this.gui;
+                await this.build_widgets();
+                this.disable_rubberbanding();
+                this.disable_backpace_back();
+                await this.ready.resolve();
+                this.loading_hide();
+                this.replace_crashmanager();
+                await this.pos.push_order();
+                this.showScreen({ detail: { name: 'ProductScreen', props: { gui: this.gui } } });
+            } catch (error) {
+                this.loading_error(error)
+            }
+        })();
     }
 
     get screenComponent() {
@@ -958,18 +970,16 @@ class Chrome extends PosComponent {
     }
 
     // This method instantiates all the screens, widgets, etc.
-    build_widgets() {
-        var self = this;
+    async build_widgets() {
         this.load_widgets(this.widgets);
 
         this.popups = {};
-        _.forEach(this.gui.popup_classes, function (classe) {
-            if (!classe.condition || classe.condition.call(self)) {
-                var popup = new classe.widget(self,{});
-                popup.appendTo(self.$('.popups')).then(function () {
-                    self.popups[classe.name] = popup;
-                    self.gui.add_popup(classe.name, popup);
-                });
+        _.forEach(this.gui.popup_classes, async (classe) => {
+            if (!classe.condition || classe.condition.call(this)) {
+                var popup = new classe.widget(this,{});
+                await popup.appendTo(this.$('.popups'));
+                this.popups[classe.name] = popup;
+                this.gui.add_popup(classe.name, popup);
             }
         });
     }

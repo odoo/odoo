@@ -9,7 +9,6 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
     class OrderReceipt extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.receiptEnv = this.props.receiptEnv;
             this.order = this.receiptEnv.order;
             this.receipt = this.receiptEnv.receipt;

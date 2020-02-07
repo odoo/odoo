@@ -9,7 +9,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     class OrderWidget extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.numpadState = this.props.numpadState;
             this.orderlinesArray = this.order.get_orderlines();
             this.numpadState.reset();
@@ -26,7 +25,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
             });
         }
         get order() {
-            return this.pos.get_order();
+            return this.env.pos.get_order();
         }
         mounted() {
             this.numpadState.on('set_value', this.set_value, this);
@@ -80,8 +79,8 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
                 }
-                if (this.pos.config.iface_customer_facing_display) {
-                    this.pos.send_current_order_to_customer_facing_display();
+                if (this.env.pos.config.iface_customer_facing_display) {
+                    this.env.pos.send_current_order_to_customer_facing_display();
                 }
             }
         }

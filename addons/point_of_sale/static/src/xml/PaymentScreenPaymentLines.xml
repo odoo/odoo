@@ -55,7 +55,7 @@
                                    t-if="line and line.payment_status and ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
                                     <div class="col-tendered">
                                         <t
-                                           t-esc="props.pos.format_currency_no_symbol(line.get_amount())" />
+                                           t-esc="env.pos.format_currency_no_symbol(line.get_amount())" />
                                     </div>
                                 </t>
                                 <t t-else="">
@@ -87,7 +87,7 @@
                                  t-on-click="trigger('select-payment-line', { cid: line.cid })">
                                 <div class="col-tendered">
                                     <t
-                                       t-esc="props.pos.format_currency_no_symbol(line.get_amount())" />
+                                       t-esc="env.pos.format_currency_no_symbol(line.get_amount())" />
                                 </div>
                                 <div class="col-name">
                                     <t t-esc="line.payment_method.name" />

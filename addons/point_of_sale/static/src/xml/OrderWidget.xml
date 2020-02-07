@@ -16,14 +16,13 @@
                             <t t-foreach="orderlinesArray" t-as="orderline">
                                 <Orderline
                                     line="orderline"
-                                    pos="pos"
                                     t-key="orderline.id"
                                     t-on-select-line="selectLine"
                                     t-on-show-product-lot="showProductLot"
                                 />
                             </t>
                         </ul>
-                        <OrderSummary order="order" pos="pos" />
+                        <OrderSummary order="order" />
                     </t>
                 </div>
             </div>

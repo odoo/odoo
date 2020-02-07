@@ -8,11 +8,10 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
     class ActionpadWidget extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.gui = this.props.gui;
         }
         mounted() {
-            this.pos.on(
+            this.env.pos.on(
                 'change:selectedClient',
                 () => {
                     this.render();
@@ -21,16 +20,16 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
             );
         }
         willUnmount() {
-            this.pos.off('change:selectedClient', null, this);
+            this.env.pos.off('change:selectedClient', null, this);
         }
         get isLongName() {
-            return this.pos.get_client() && this.pos.get_client().name.length > 10;
+            return this.env.pos.get_client() && this.env.pos.get_client().name.length > 10;
         }
         get client() {
-            return this.pos.get_client();
+            return this.env.pos.get_client();
         }
         startPayment() {
-            // const productLotsAreValid = this.pos
+            // const productLotsAreValid = this.env.pos
             //     .get_order()
             //     .get_orderlines()
             //     .every(line => line.has_valid_product_lot());

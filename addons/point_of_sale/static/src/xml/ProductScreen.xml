@@ -8,7 +8,7 @@
                     <div class="subwindow">
                         <div class="subwindow-container">
                             <div class="subwindow-container-fix">
-                                <OrderWidget pos="pos" numpadState="numpadState" />
+                                <OrderWidget numpadState="numpadState" />
                             </div>
                         </div>
                     </div>
@@ -22,8 +22,8 @@
                                            t-props="controlButton.props"></t>
                                     </t>
                                 </div> -->
-                                <ActionpadWidget pos="pos" gui="gui" />
-                                <NumpadWidget pos="pos" state="numpadState" />
+                                <ActionpadWidget gui="gui" />
+                                <NumpadWidget state="numpadState" />
                             </div>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="rightpane">
-                <ProductsWidget pos="pos" t-on-click-product="clickProduct" />
+                <ProductsWidget t-on-click-product="clickProduct" />
             </div>
         </div>
     </t>

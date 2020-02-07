@@ -20,7 +20,7 @@
                 <div class="left-content pc40 touch-scrollable scrollable-y">
                     <div class="paymentmethods-container">
                         <div class="paymentmethods">
-                            <t t-foreach="pos.payment_methods" t-as="paymentMethod"
+                            <t t-foreach="env.pos.payment_methods" t-as="paymentMethod"
                                t-key="paymentMethod.id">
                                 <PaymentMethodButton paymentMethod="paymentMethod"
                                                      t-on-new-payment-line="addNewPaymentLine(paymentMethod)" />
@@ -33,7 +33,7 @@
                     <section class="paymentlines-container"
                              t-on-delete-payment-line="deletePaymentLine"
                              t-on-select-payment-line="selectPaymentLine">
-                        <PaymentScreenPaymentLines pos="pos" paymentLines="paymentLines"
+                        <PaymentScreenPaymentLines paymentLines="paymentLines"
                                                    inputBuffer="inputBuffer" />
                     </section>
 
@@ -47,15 +47,15 @@
                             <i class="fa fa-user" role="img" aria-label="Customer"
                                title="Customer" />
                             <span class="js_customer_name">
-                                <t t-if="pos.get_client()">
-                                    <t t-esc="pos.get_client().name" />
+                                <t t-if="env.pos.get_client()">
+                                    <t t-esc="env.pos.get_client().name" />
                                 </t>
-                                <t t-if="!pos.get_client()">
+                                <t t-if="!env.pos.get_client()">
                                     Customer
                                 </t>
                             </span>
                         </div>
-                        <div t-if="pos.config.module_account" class="button js_invoice"
+                        <div t-if="env.pos.config.module_account" class="button js_invoice"
                              t-att-class="{ highlight: currentOrder.is_to_invoice() }"
                              t-on-click="toggleIsToInvoice">
                             <i class="fa fa-file-text-o" /> Invoice
@@ -65,11 +65,11 @@
                              t-on-click="toggleIsToEmail">
                             <i class="fa fa-inbox" /> Email
                         </div>
-                        <div t-if="pos.config.tip_product_id" class="button js_tip"
+                        <div t-if="env.pos.config.tip_product_id" class="button js_tip"
                              t-on-click="addTip">
                             <i class="fa fa-heart" /> Tip
                         </div>
-                        <div t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer"
+                        <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
                              t-on-click="openCashbox">
                             <i class="fa fa-archive" /> Open Cashbox
                         </div>

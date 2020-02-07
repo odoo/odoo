@@ -26,15 +26,9 @@ var Gui = core.Class.extend({
         this.current_screen = null;
         this.show_sync_errors = true;
 
-        this.chrome.ready.then(function(){
+        this.chrome.pos.ready.then(function(){
             self.close_other_tabs();
-            self._show_first_screen();
         });
-    },
-
-    _show_first_screen: function() {
-        this.chrome.state.activeScreenName = 'ProductScreen';
-        this.chrome.props = { pos: this.chrome.pos, gui: this.chrome.gui };
     },
 
     /* ---- Gui: SCREEN MANIPULATION ---- */

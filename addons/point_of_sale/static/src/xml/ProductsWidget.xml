@@ -6,7 +6,7 @@
             <tbody>
                 <tr class="header-row">
                     <td class="header-cell">
-                        <ProductsWidgetControlPanel pos="pos" breadcrumbs="breadcrumbs"
+                        <ProductsWidgetControlPanel breadcrumbs="breadcrumbs"
                                                subcategories="subcategories"
                                                t-on-switch-category="switchCategory"
                                                t-on-update-search="updateSearch"
@@ -17,7 +17,7 @@
                 <tr class="content-row">
                     <td class="content-cell">
                         <div class="content-container">
-                            <ProductsList pos="pos" products="productsToDisplay"
+                            <ProductsList products="productsToDisplay"
                                           searchWord="searchWord" />
                         </div>
                     </td>

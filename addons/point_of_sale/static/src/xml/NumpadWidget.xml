@@ -7,21 +7,21 @@
             <button class="input-button number-char" t-on-click="clickAppendNewChar">2</button>
             <button class="input-button number-char" t-on-click="clickAppendNewChar">3</button>
             <button class="mode-button"
-                    t-att-class="{'selected-mode': state.get('mode')==='quantity'}"
+                    t-att-class="{'selected-mode': props.state.get('mode')==='quantity'}"
                     data-mode="quantity" t-on-click="clickChangeMode">Qty</button>
             <br />
             <button class="input-button number-char" t-on-click="clickAppendNewChar">4</button>
             <button class="input-button number-char" t-on-click="clickAppendNewChar">5</button>
             <button class="input-button number-char" t-on-click="clickAppendNewChar">6</button>
             <button class="mode-button"
-                    t-att-class="{'selected-mode': state.get('mode')==='discount'}"
+                    t-att-class="{'selected-mode': props.state.get('mode')==='discount'}"
                     data-mode="discount" t-on-click="clickChangeMode">Disc</button>
             <br />
             <button class="input-button number-char" t-on-click="clickAppendNewChar">7</button>
             <button class="input-button number-char" t-on-click="clickAppendNewChar">8</button>
             <button class="input-button number-char" t-on-click="clickAppendNewChar">9</button>
             <button class="mode-button" t-att-class="{
-                    'selected-mode': state.get('mode')==='price',
+                    'selected-mode': props.state.get('mode')==='price',
                     'disabled-mode': !hasPriceControlRights
                 }" t-att-disabled="!hasPriceControlRights" data-mode="price"
                     t-on-click="clickChangeMode">Price</button>

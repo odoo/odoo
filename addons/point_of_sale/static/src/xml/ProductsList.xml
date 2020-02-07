@@ -6,7 +6,7 @@
             <div class="product-list-scroller touch-scrollable">
                 <div t-if="props.products.length != 0" class="product-list">
                     <t t-foreach="props.products" t-as="product" t-key="product.id">
-                        <ProductDisplay product="product" pos="props.pos" />
+                        <ProductDisplay product="product" />
                     </t>
                 </div>
                 <div t-else="" class="product-list-empty">

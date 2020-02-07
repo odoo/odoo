@@ -28,9 +28,9 @@
                 <div class="categories">
                     <div class="category-list-scroller touch-scrollable">
                         <div class="category-list"
-                             t-att-class="{simple: !props.pos.config.iface_display_categ_images}">
+                             t-att-class="{simple: !env.pos.config.iface_display_categ_images}">
                             <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                <t t-if="props.pos.config.iface_display_categ_images">
+                                <t t-if="env.pos.config.iface_display_categ_images">
                                     <CategoryButton category="category" />
                                 </t>
                                 <t t-else="">

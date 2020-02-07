@@ -7,7 +7,6 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
         constructor() {
             super(...arguments);
             this.order = this.props.order;
-            this.pos = this.props.pos;
             this.update();
         }
         mounted() {
@@ -18,8 +17,8 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
         update() {
             const total = this.order ? this.order.get_total_with_tax() : 0;
             const tax = this.order ? total - this.order.get_total_without_tax() : 0;
-            this.total = this.pos.format_currency(total);
-            this.tax = this.pos.format_currency(tax);
+            this.total = this.env.pos.format_currency(total);
+            this.tax = this.env.pos.format_currency(tax);
         }
     }
 

@@ -12,7 +12,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     class PaymentScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.gui = this.props.gui;
             this.inputBuffer = '';
             this.isFirstInput = true;
@@ -20,7 +19,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this.payment_interface = null;
         }
         mounted() {
-            this.pos.on(
+            this.env.pos.on(
                 'change:selectedOrder',
                 () => {
                     this.render();
@@ -43,12 +42,12 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             );
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder', null, this);
+            this.env.pos.off('change:selectedOrder', null, this);
             this.currentOrder.off('change', null, this);
             this.currentOrder.paymentlines.off('change', null, this);
         }
         get currentOrder() {
-            return this.pos.get_order();
+            return this.env.pos.get_order();
         }
         get paymentLines() {
             return this.currentOrder.get_paymentlines();
@@ -77,7 +76,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             const { value } = event.detail;
 
             if (this.paymentLines.every(line => line.paid)) {
-                this.currentOrder.add_paymentline(this.pos.payment_methods[0]);
+                this.currentOrder.add_paymentline(this.env.pos.payment_methods[0]);
             }
 
             // disable changing amount on paymentlines with running or done payments on a payment terminal
@@ -121,7 +120,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this.render();
         }
         openCashbox() {
-            this.pos.proxy.printer.open_cashbox();
+            this.env.pos.proxy.printer.open_cashbox();
         }
         addTip() {
             // click_tip
@@ -136,7 +135,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
 
             this.gui.show_popup('number', {
                 title: tip ? _t('Change Tip') : _t('Add Tip'),
-                value: this.pos.format_currency_no_symbol(value),
+                value: this.env.pos.format_currency_no_symbol(value),
                 confirm: value => {
                     self.currentOrder.set_tip(parse.float(value));
                 },
@@ -174,15 +173,15 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             }
         }
         _finalizeValidation() {
-            if (this.currentOrder.is_paid_with_cash() && this.pos.config.iface_cashdrawer) {
-                this.pos.proxy.printer.open_cashbox();
+            if (this.currentOrder.is_paid_with_cash() && this.env.pos.config.iface_cashdrawer) {
+                this.env.pos.proxy.printer.open_cashbox();
             }
 
             this.currentOrder.initialize_validation_date();
             this.currentOrder.finalized = true;
 
             if (this.currentOrder.is_to_invoice()) {
-                var invoiced = this.pos.push_and_invoice_order(this.currentOrder);
+                var invoiced = this.env.pos.push_and_invoice_order(this.currentOrder);
                 this.invoicing = true;
 
                 invoiced.catch(
@@ -216,7 +215,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                         });
                 });
             } else {
-                var ordered = this.pos.push_order(this.currentOrder);
+                var ordered = this.env.pos.push_order(this.currentOrder);
                 if (this.currentOrder.wait_for_push_order()) {
                     var server_ids = [];
                     ordered
@@ -278,8 +277,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 ) > 0.00001
             ) {
                 var cash = false;
-                for (var i = 0; i < this.pos.payment_methods.length; i++) {
-                    cash = cash || this.pos.payment_methods[i].is_cash_count;
+                for (var i = 0; i < this.env.pos.payment_methods.length; i++) {
+                    cash = cash || this.env.pos.payment_methods[i].is_cash_count;
                 }
                 if (!cash) {
                     this.gui.show_popup('error', {
@@ -322,11 +321,11 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     body:
                         _t('Are you sure that the customer wants to  pay') +
                         ' ' +
-                        this.pos.format_currency(this.currentOrder.get_total_paid()) +
+                        this.env.pos.format_currency(this.currentOrder.get_total_paid()) +
                         ' ' +
                         _t('for an order of') +
                         ' ' +
-                        this.pos.format_currency(this.currentOrder.get_total_with_tax()) +
+                        this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
                         ' ' +
                         _t('? Clicking "Confirm" will validate the payment.'),
                     confirm: function() {
@@ -341,7 +340,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         _resetInput() {
             this.isFirstInput = true;
             if (this.selectedPaymentLine) {
-                this.inputBuffer = this.pos.format_currency_no_symbol(
+                this.inputBuffer = this.env.pos.format_currency_no_symbol(
                     this.selectedPaymentLine.get_amount()
                 );
             } else {
@@ -357,7 +356,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         }
         async _sendReceiptToCustomer(order_server_ids) {
             // TODO: which QWeb will render?
-            var order = this.pos.get_order();
+            var order = this.env.pos.get_order();
             var data = {
                 widget: this,
                 pos: order.pos,

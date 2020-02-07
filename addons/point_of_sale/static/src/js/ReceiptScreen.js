@@ -14,12 +14,11 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          */
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.gui = this.props.gui;
             this.receiptRenderEnv = this._receiptRenderEnv();
         }
         mounted() {
-            this.pos.on(
+            this.env.pos.on(
                 'change:selectedOrder',
                 () => {
                     this.render();
@@ -34,13 +33,13 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             setTimeout(async () => await this.handleAutoPrint(), 0);
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder', null, this);
+            this.env.pos.off('change:selectedOrder', null, this);
         }
         get change() {
-            return this.pos.format_currency(this.currenOrder.get_change());
+            return this.env.pos.format_currency(this.currenOrder.get_change());
         }
         get currenOrder() {
-            return this.pos.get_order();
+            return this.env.pos.get_order();
         }
         /**
          * This function is called outside the rendering call stack. This way,
@@ -65,7 +64,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         }
         async onPrintReceipt() {
             try {
-                if (this.pos.proxy.printer) {
+                if (this.env.pos.proxy.printer) {
                     await this._printHtml();
                 } else {
                     this._printWeb();
@@ -83,7 +82,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         _receiptRenderEnv() {
             // old name: get_receipt_render_env
             return {
-                pos: this.pos,
+                pos: this.env.pos,
                 order: this.currenOrder,
                 receipt: this.currenOrder.export_for_printing(),
                 orderlines: this.currenOrder.get_orderlines(),
@@ -91,15 +90,15 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             };
         }
         _shouldAutoPrint() {
-            return this.pos.config.iface_print_auto && !this.currenOrder._printed;
+            return this.env.pos.config.iface_print_auto && !this.currenOrder._printed;
         }
         _shouldCloseImmediately() {
             var invoiced_finalized = this.currenOrder.is_to_invoice()
                 ? this.currenOrder.finalized
                 : true;
             return (
-                this.pos.proxy.printer &&
-                this.pos.config.iface_print_skip_screen &&
+                this.env.pos.proxy.printer &&
+                this.env.pos.config.iface_print_skip_screen &&
                 invoiced_finalized
             );
         }
@@ -129,11 +128,11 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         }
         async _printHtml() {
             const orderReceipt = this.env.qweb.render('OrderReceipt', {
-                pos: this.pos,
+                pos: this.env.pos,
                 receiptEnv: this.receiptRenderEnv,
             });
             // Important to await because we want to catch the error
-            await this.pos.proxy.printer.print_receipt(orderReceipt);
+            await this.env.pos.proxy.printer.print_receipt(orderReceipt);
         }
     }
     ReceiptScreen.components = { OrderReceipt };

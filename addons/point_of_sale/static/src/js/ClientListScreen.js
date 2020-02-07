@@ -12,7 +12,6 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     class ClientListScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.gui = this.props.gui;
             this.state = {
                 query: null,
@@ -21,10 +20,10 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 isEditMode: false,
                 editModeProps: {
                     partner: {
-                        country_id: this.pos.company.country_id,
-                        state_id: this.pos.company.state_id,
+                        country_id: this.env.pos.company.country_id,
+                        state_id: this.env.pos.company.state_id,
                     },
-                    pos: this.pos,
+                    pos: this.env.pos,
                 },
             };
             // TODO jcb: to remove
@@ -38,7 +37,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         // Lifecycle hooks
 
         mounted() {
-            this.pos.on(
+            this.env.pos.on(
                 'change:selectedOrder',
                 () => {
                     // RECOMMENDATION
@@ -54,19 +53,19 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             );
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder', null, this);
+            this.env.pos.off('change:selectedOrder', null, this);
         }
 
         // Getters
 
         get currentOrderClient() {
-            return this.pos.get_order().get_client();
+            return this.env.pos.get_order().get_client();
         }
         get clients() {
             if (this.state.query && this.state.query.trim() !== '') {
-                return this.pos.db.search_partner(this.state.query.trim());
+                return this.env.pos.db.search_partner(this.state.query.trim());
             } else {
-                return this.pos.db.get_partners_sorted(1000);
+                return this.env.pos.db.get_partners_sorted(1000);
             }
         }
         get isNextButtonVisible() {
@@ -115,9 +114,9 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         }
         clickNext() {
             if (this.nextButton.command === 'set') {
-                this.pos.get_order().set_client(this.state.selectedClient);
+                this.env.pos.get_order().set_client(this.state.selectedClient);
             } else if (this.nextButton.command === 'deselect') {
-                this.pos.get_order().set_client(null);
+                this.env.pos.get_order().set_client(null);
             }
             this.trigger('show-screen', { name: 'ProductScreen' });
         }
@@ -126,7 +125,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.state.isEditMode = true;
             this.state.isShowDetails = true;
             if (!isNewClient) {
-                this.state.editModeProps = { partner: this.state.selectedClient, pos: this.pos };
+                this.state.editModeProps = { partner: this.state.selectedClient, pos: this.env.pos };
             }
             this.render();
         }
@@ -135,10 +134,10 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             // TODO jcb: set default values here?
             this.state.editModeProps = {
                 partner: {
-                    country_id: this.pos.company.country_id,
-                    state_id: this.pos.company.state_id,
+                    country_id: this.env.pos.company.country_id,
+                    state_id: this.env.pos.company.state_id,
                 },
-                pos: this.pos,
+                pos: this.env.pos,
             };
             this.render();
         }
@@ -149,13 +148,13 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     method: 'create_from_ui',
                     args: [event.detail.processedChanges],
                 });
-                await this.pos.load_new_partners();
-                this.state.selectedClient = this.pos.db.get_partner_by_id(partnerId);
+                await this.env.pos.load_new_partners();
+                this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
                 if (
                     this.currentOrderClient &&
                     this.state.selectedClient.id === this.currentOrderClient.id
                 ) {
-                    this.pos.get_order().set_client(this.state.selectedClient);
+                    this.env.pos.get_order().set_client(this.state.selectedClient);
                 }
                 this.deactivateEditMode();
             } catch (err) {

@@ -12,12 +12,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     class ProductScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pos = this.props.pos;
             this.gui = this.props.gui;
             this.numpadState = new NumpadState();
         }
         mounted() {
-            this.pos.on(
+            this.env.pos.on(
                 'change:selectedOrder',
                 () => {
                     this.render();
@@ -26,14 +25,14 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             );
         }
         willUnmount() {
-            this.pos.off('change:selectedOrder', null, this);
+            this.env.pos.off('change:selectedOrder', null, this);
         }
         clickProduct(event) {
             const product = event.detail;
-            if (product.to_weight && this.pos.config.iface_electronic_scale) {
+            if (product.to_weight && this.env.pos.config.iface_electronic_scale) {
                 this.gui.show_screen('scale', { product: product });
             } else {
-                this.pos.get_order().add_product(product);
+                this.env.pos.get_order().add_product(product);
             }
         }
     }
