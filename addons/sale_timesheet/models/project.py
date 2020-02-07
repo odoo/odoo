@@ -160,7 +160,8 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     # override sale_order_id and make it computed stored field instead of regular field.
-    sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False)
+    sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
+    domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
     analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
