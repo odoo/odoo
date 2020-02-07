@@ -88,7 +88,7 @@ class PosConfig(models.Model):
         return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
 
     def _default_pricelist(self):
-        return self.env['product.pricelist'].search([('currency_id', '=', self.env.company.currency_id.id)], limit=1)
+        return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
 
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
