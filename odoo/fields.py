@@ -661,6 +661,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 return get_context('active_test', self.context.get('active_test', True))
             else:
                 v = get_context(key)
+                # The web client may set a list in the context:
+                # https://github.com/odoo/odoo/blob/4b06fe19fa68255b7982d15e5847da2f6d6209fd/addons/web/static/src/js/views/control_panel/control_panel_model.js#L962
+                # Therefore, we automatically convert lists into tuples
+                if type(v) is list:
+                    v = tuple(v)
                 try: hash(v)
                 except TypeError:
                     raise TypeError(
