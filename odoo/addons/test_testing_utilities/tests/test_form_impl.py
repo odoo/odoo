@@ -651,3 +651,22 @@ class TestEdition(TransactionCase):
             self.assertEqual(f.m2m[:], (b | c))
 
         self.assertEqual(r.m2m, (b | c))
+
+class TestCallables(TransactionCase):
+
+    def test_click_button(self):
+        click = self.env['test_testing_utilities.click_button']
+        click.create({})
+
+        with Form(click) as c:
+            self.assertFalse(c.approved)
+            self.assertFalse(c.user_is_happy)
+            c.apply_method("approve")
+
+            self.assertTrue(c.approved)
+            self.assertTrue(c.user_is_happy)
+
+            # if we don't do this save, then the following assert fails
+            click = c.save()
+
+        self.assertTrue(click.user_is_happy)

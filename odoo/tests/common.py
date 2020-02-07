@@ -1484,6 +1484,17 @@ class Form(object):
                 descr['type'] = f.get('widget')
             if level and descr['type'] == 'one2many':
                 self._o2m_set_edition_view(descr, f, level)
+        object_buttons = {}
+        for f in fvg['tree'].xpath('//button[@type="object"]'):
+            fname = f.get('name')
+
+            button_modifiers = {
+                modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
+                for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
+            }
+            if hasattr(model, fname) and callable(getattr(model, fname)):
+                object_buttons.setdefault(fname, button_modifiers)
+        fvg['object_buttons'] = object_buttons
 
         fvg['onchange'] = model._onchange_spec(fvg)
 
@@ -1757,6 +1768,29 @@ class Form(object):
             values[f] = v
         return values
 
+    def apply_method(self, method_name, *args):
+        """ When calling a visible button object in the view, do as follows:
+
+                 with Form(so) as f2:
+                    f2.apply_method('button_name')
+                    # f2 is saved here
+
+            In case the method called in apply_method has arguments, do as follows:
+
+                 with Form(so) as f2:
+                    f2.apply_method('some_method_with_two_arguments', (arg1, arg2))
+                    # f2 is saved here
+        """
+        descr = self._view['object_buttons'].get(method_name)
+        if descr is not None and descr.get('invisible') is not False:
+            record = self._model.browse(self._values.get('id'))
+            spec = list(self._view['onchange'])
+            result = record.method(self._onchange_values(), method_name, spec, *args)
+            self._cleanup_result(result)
+            values = result.get('value', {})
+            if values:
+                self._perform_onchange(list(values.keys()))
+
     def _perform_onchange(self, fields):
         assert isinstance(fields, list)
         # marks any onchange source as changed
@@ -1770,6 +1804,9 @@ class Form(object):
 
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
+        self._cleanup_result(result)
+
+    def _cleanup_result(self, result):
         self._model.flush()
         self._model.invalidate_cache()
         if result.get('warning'):

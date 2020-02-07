@@ -299,3 +299,19 @@ class O2MChangesChildrenLines(models.Model):
     parent_id = fields.Many2one('o2m_changes_children')
     v = fields.Integer()
     vv = fields.Integer()
+
+class ClickButton(models.Model):
+    _name = _description = 'test_testing_utilities.click_button'
+
+    approved = fields.Boolean(string="Mark to be happy")
+    user_is_happy = fields.Boolean()
+
+    def approve(self):
+        self.approved = True
+
+    @api.onchange('approved')
+    def _onchange_approved(self):
+        if self.approved:
+            self.user_is_happy = True
+        else:
+            self.user_is_happy = False

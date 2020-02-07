@@ -5881,101 +5881,7 @@ Record ids: %(records)s
         if not all(name in self._fields for name in names):
             return {}
 
-        def PrefixTree(model, dotnames):
-            """ Return a prefix tree for sequences of field names. """
-            if not dotnames:
-                return {}
-            # group dotnames by prefix
-            suffixes = defaultdict(list)
-            for dotname in dotnames:
-                # name, *names = dotname.split('.', 1)
-                names = dotname.split('.', 1)
-                name = names.pop(0)
-                suffixes[name].extend(names)
-            # fill in prefix tree in fields order
-            tree = OrderedDict()
-            for name, field in model._fields.items():
-                if name in suffixes:
-                    tree[name] = subtree = PrefixTree(model[name], suffixes[name])
-                    if subtree and field.type == 'one2many':
-                        subtree.pop(field.inverse_name, None)
-            return tree
-
-        class Snapshot(dict):
-            """ A dict with the values of a record, following a prefix tree. """
-            __slots__ = ()
-
-            def __init__(self, record, tree):
-                # put record in dict to include it when comparing snapshots
-                super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
-                for name in tree:
-                    self.fetch(name)
-
-            def fetch(self, name):
-                """ Set the value of field ``name`` from the record's value. """
-                record = self['<record>']
-                tree = self['<tree>']
-                if record._fields[name].type in ('one2many', 'many2many'):
-                    # x2many fields are serialized as a list of line snapshots
-                    self[name] = [Snapshot(line, tree[name]) for line in record[name]]
-                else:
-                    self[name] = record[name]
-
-            def has_changed(self, name):
-                """ Return whether a field on record has changed. """
-                record = self['<record>']
-                subnames = self['<tree>'][name]
-                if record._fields[name].type not in ('one2many', 'many2many'):
-                    return self[name] != record[name]
-                return (
-                    len(self[name]) != len(record[name])
-                    or (
-                        set(line_snapshot["<record>"].id for line_snapshot in self[name])
-                        != set(record[name]._ids)
-                    )
-                    or any(
-                        line_snapshot.has_changed(subname)
-                        for line_snapshot in self[name]
-                        for subname in subnames
-                    )
-                )
-
-            def diff(self, other):
-                """ Return the values in ``self`` that differ from ``other``.
-                    Requires record cache invalidation for correct output!
-                """
-                record = self['<record>']
-                result = {}
-                for name, subnames in self['<tree>'].items():
-                    if (name == 'id') or (other.get(name) == self[name]):
-                        continue
-                    field = record._fields[name]
-                    if field.type not in ('one2many', 'many2many'):
-                        result[name] = field.convert_to_onchange(self[name], record, {})
-                    else:
-                        # x2many fields: serialize value as commands
-                        result[name] = commands = [(5,)]
-                        for line_snapshot in self[name]:
-                            line = line_snapshot['<record>']
-                            line = line._origin or line
-                            if not line.id:
-                                # new line: send diff from scratch
-                                line_diff = line_snapshot.diff({})
-                                commands.append((0, line.id.ref or 0, line_diff))
-                            else:
-                                # existing line: check diff from database
-                                # (requires a clean record cache!)
-                                line_diff = line_snapshot.diff(Snapshot(line, subnames))
-                                if line_diff:
-                                    # send all fields because the web client
-                                    # might need them to evaluate modifiers
-                                    line_diff = line_snapshot.diff({})
-                                    commands.append((1, line.id, line_diff))
-                                else:
-                                    commands.append((4, line.id))
-                return result
-
-        nametree = PrefixTree(self.browse(), field_onchange)
+        nametree = prefix_tree(self.browse(), field_onchange)
 
         # prefetch x2many lines without data (for the initial snapshot)
         for name, subnames in nametree.items():
@@ -6075,10 +5981,10 @@ Record ids: %(records)s
         # format warnings
         warnings = result.pop('warnings')
         if len(warnings) == 1:
-            title, message, type = warnings.pop()
-            if not type:
-                type = 'dialog'
-            result['warning'] = dict(title=title, message=message, type=type)
+            title, message, warn_type = warnings.pop()
+            if not warn_type:
+                warn_type = 'dialog'
+            result['warning'] = dict(title=title, message=message, type=warn_type)
         elif len(warnings) > 1:
             # concatenate warning titles and messages
             title = _("Warnings")
@@ -6086,6 +5992,204 @@ Record ids: %(records)s
             result['warning'] = dict(title=title, message=message, type='dialog')
 
         return result
+
+    def method(self, values, method_name, method_spec, *args):
+        """ Perform an onchange on the given field.
+
+            :param values: dictionary mapping field names to values, giving the
+                current state of modification
+            :param method_name: name of the method that will be called
+            :param method_spec: list of fields in a form view
+            :param args: arguments of the method_name method closed in a tuple
+        """
+        # this is for tests using `Form`
+        self.flush()
+
+        if not hasattr(self, method_name):
+            return {}
+        if not callable(getattr(self, method_name)):
+            return {}
+
+        nametree = prefix_tree(self.browse(), method_spec)
+
+        # prefetch x2many lines without data (for the initial snapshot)
+        for name, subnames in nametree.items():
+            if subnames and values.get(name):
+                # retrieve all ids in commands
+                line_ids = set()
+                for cmd in values[name]:
+                    if cmd[0] in (1, 4):
+                        line_ids.add(cmd[1])
+                    elif cmd[0] == 6:
+                        line_ids.update(cmd[2])
+                # build corresponding new lines, and prefetch fields
+                new_lines = self[name].browse(NewId(id_) for id_ in line_ids)
+                for subname in subnames:
+                    new_lines.mapped(subname)
+
+        changed_values = {}
+        initial_values = dict(values.items())
+
+        # create a new record with values
+        record = self.new(initial_values, origin=self)
+
+        # make a snapshot based on the initial values of record
+        snapshot0 = Snapshot(record, nametree)
+
+        # store changed values in cache, and update snapshot0
+        record._update_cache(changed_values, validate=False)
+
+        # determine which field(s) should be triggered an onchange
+        todo = list(nametree)
+
+        # dummy assignment: trigger invalidations on the record
+        for name in todo:
+            if name == 'id':
+                continue
+            value = record[name]
+            field = self._fields[name]
+            if field.type == 'many2one' and field.delegate and not value:
+                # do not nullify all fields of parent record for new records
+                continue
+            record[name] = value
+
+        result = {'warnings': OrderedSet()}
+
+        def process(res):
+            if not res:
+                return
+            if res.get('value'):
+                res['value'].pop('id', None)
+                self.update({key: val for key, val in res['value'].items() if key in self._fields})
+            if res.get('domain'):
+                result.setdefault('domain', {}).update(res['domain'])
+            if res.get('warning'):
+                result['warnings'].add((
+                    res['warning'].get('title') or _("Warning"),
+                    res['warning'].get('message') or "",
+                    res['warning'].get('type') or "",
+                ))
+
+        func = getattr(record, method_name)
+        method_res = func(*args)
+        process(method_res)
+
+        # make the snapshot with the final values of record
+        snapshot1 = Snapshot(record, nametree)
+
+        # determine values that have changed by comparing snapshots
+        self.invalidate_cache()
+        result['value'] = snapshot1.diff(snapshot0)
+
+        # format warnings
+        warnings = result.pop('warnings')
+        if len(warnings) == 1:
+            title, message, warn_type = warnings.pop()
+            if not warn_type:
+                warn_type = 'dialog'
+            result['warning'] = dict(title=title, message=message, type=warn_type)
+        elif len(warnings) > 1:
+            # concatenate warning titles and messages
+            title = _("Warnings")
+            message = '\n\n'.join([warn_title + '\n\n' + warn_message for warn_title, warn_message, warn_type in warnings])
+            result['warning'] = dict(title=title, message=message, type='dialog')
+
+        return result
+
+def prefix_tree(model, dotnames):
+    """ Return a prefix tree for sequences of field names. """
+    if not dotnames:
+        return {}
+    # group dotnames by prefix
+    suffixes = defaultdict(list)
+    for dotname in dotnames:
+        # name, *names = dotname.split('.', 1)
+        names = dotname.split('.', 1)
+        name = names.pop(0)
+        suffixes[name].extend(names)
+    # fill in prefix tree in fields order
+    tree = OrderedDict()
+    for name, field in model._fields.items():
+        if name in suffixes:
+            tree[name] = subtree = prefix_tree(model[name], suffixes[name])
+            if subtree and field.type == 'one2many':
+                subtree.pop(field.inverse_name, None)
+    return tree
+
+class Snapshot(dict):
+    """ A dict with the values of a record, following a prefix tree. """
+    __slots__ = ()
+
+    def __init__(self, record, tree):
+        # put record in dict to include it when comparing snapshots
+        super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
+        for name in tree:
+            self.fetch(name)
+
+    def fetch(self, name):
+        """ Set the value of field ``name`` from the record's value. """
+        record = self['<record>']
+        tree = self['<tree>']
+        if record._fields[name].type in ('one2many', 'many2many'):
+            # x2many fields are serialized as a list of line snapshots
+            self[name] = [Snapshot(line, tree[name]) for line in record[name]]
+        else:
+            self[name] = record[name]
+
+    def has_changed(self, name):
+        """ Return whether a field on record has changed. """
+        record = self['<record>']
+        subnames = self['<tree>'][name]
+        if record._fields[name].type not in ('one2many', 'many2many'):
+            return self[name] != record[name]
+        return (
+            len(self[name]) != len(record[name])
+            or (
+                set(line_snapshot["<record>"].id for line_snapshot in self[name])
+                != set(record[name]._ids)
+            )
+            or any(
+                line_snapshot.has_changed(subname)
+                for line_snapshot in self[name]
+                for subname in subnames
+            )
+        )
+
+    def diff(self, other):
+        """ Return the values in ``self`` that differ from ``other``.
+            Requires record cache invalidation for correct output!
+        """
+        record = self['<record>']
+        result = {}
+        for name, subnames in self['<tree>'].items():
+            if (name == 'id') or (other.get(name) == self[name]):
+                continue
+            field = record._fields[name]
+            if field.type not in ('one2many', 'many2many'):
+                result[name] = field.convert_to_onchange(self[name], record, {})
+            else:
+                # x2many fields: serialize value as commands
+                result[name] = commands = [(5,)]
+                for line_snapshot in self[name]:
+                    line = line_snapshot['<record>']
+                    line = line._origin or line
+                    if not line.id:
+                        # new line: send diff from scratch
+                        line_diff = line_snapshot.diff({})
+                        commands.append((0, line.id.ref or 0, line_diff))
+                    else:
+                        # existing line: check diff from database
+                        # (requires a clean record cache!)
+                        line_diff = line_snapshot.diff(Snapshot(line, subnames))
+                        if line_diff:
+                            # send all fields because the web client
+                            # might need them to evaluate modifiers
+                            line_diff = line_snapshot.diff({})
+                            commands.append((1, line.id, line_diff))
+                        else:
+                            commands.append((4, line.id))
+        return result
+
 
 collections.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
