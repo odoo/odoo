@@ -1196,10 +1196,10 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the attribute
+    """The precision digits are given by the (optional) digits attribute.
 
-    :param digits: a pair (total, decimal) or a
-        string referencing a `decimal.precision` record.
+    :param digits: a pair (total, decimal) or a string referencing a
+        :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
     :type digits: tuple(int,int) or str
 
     When a float is a quantity associated with an unit of measure, it is important
