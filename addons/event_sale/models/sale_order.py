@@ -65,6 +65,12 @@ class SaleOrderLine(models.Model):
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
+    @api.depends('state', 'event_id')
+    def _compute_product_uom_readonly(self):
+        event_lines = self.filtered(lambda line: line.event_id)
+        event_lines.update({'product_uom_readonly': True})
+        super(SaleOrderLine, self - event_lines)._compute_product_uom_readonly()
+
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None, mark_as_paid=False):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
