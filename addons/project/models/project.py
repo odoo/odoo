@@ -66,7 +66,6 @@ class Project(models.Model):
     _description = "Project"
     _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'rating.parent.mixin']
     _order = "sequence, name, id"
-    _period_number = 5
     _rating_satisfaction_days = False  # takes all existing ratings
     _check_company_auto = True
 
