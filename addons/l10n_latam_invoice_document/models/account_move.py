@@ -98,6 +98,7 @@ class AccountMove(models.Model):
             rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
         return super().post()
 
+    @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
         """ This uniqueness verification is only valid for customer invoices, and vendor bills that does not use
         documents. A new constraint method _check_unique_vendor_number has been created just for validate for this purpose """
