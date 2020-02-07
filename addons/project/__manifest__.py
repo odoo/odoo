@@ -37,6 +37,7 @@
         'data/digest_data.xml',
         'data/project_mail_template_data.xml',
         'data/project_data.xml',
+        'wizard/project_edit_recurrence_views.xml',
     ],
     'demo': ['data/project_demo.xml'],
     'test': [

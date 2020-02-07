@@ -187,6 +187,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6 o_setting_box"  id="recurrency_settings" groups="project.group_recurring_task_project">
+                                    <div class="o_setting_left_pane">
+                                        <field name="allow_recurring_tasks" />
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="allow_recurring_tasks" />
+                                        <div class="text-muted">
+                                            Auto-generate tasks for regular activities
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <group name="misc">
                                 <group string="Time Scheduling">
@@ -305,6 +316,7 @@
                             <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                 <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </div>
+                            <field name="allow_recurring_tasks" groups="project.group_recurring_task_project"/>
                         </group>
                     </group>
                 </form>
@@ -471,6 +483,7 @@
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
                     <field name="allow_subtasks" invisible="1" />
+                    <field name="allow_recurring_tasks" invisible="1"/>
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
@@ -553,6 +566,40 @@
                                     <field name="working_hours_close" string="Hours"/>
                                     <field name="working_days_close" string="Days"/>
                                 </group>
+                            </group>
+                        </page>
+                        <page name="Recurrency" string="Recurrency" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}">
+                            <group>
+                                <field name="recurrency"/>
+                                <field name="recurring_parent_id" attrs="{'invisible': ['|', ('recurrency', '=', False), ('recurring_parent_id', '=', False)]}"/>
+                                <field name="recurring_next_date" groups="base.group_no_one" attrs="{'invisible': [('recurrency', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <div class="o_row" attrs="{'invisible': [('recurrency', '=', False)]}">
+                                    <span class="o_label">Every</span>
+                                    <field name="recurrency_interval" attrs="{'required': [('recurrency','=', True)]}"/>
+                                    <field name="recurrency_type" attrs="{'required': [('recurrency','=', True)]}"/>
+                                </div>
+                                <div class="o_row" attrs="{'invisible': ['|', ('recurrency', '=', False), ('recurrency_type', '!=', 'weeks')]}">
+                                    <span class="o_label">on</span>
+                                    <group>
+                                        <field name="mo"/>
+                                        <field name="tu"/>
+                                        <field name="we"/>
+                                        <field name="th"/>
+                                        <field name="fr"/>
+                                        <field name="sa"/>
+                                        <field name="su"/>
+                                    </group>
+                                </div>
+                                <div class="o_row" attrs="{'invisible': [('recurrency', '=', False)]}">
+                                    <span class="o_label">until</span>
+                                    <field name="recurrency_end_type" attrs="{'required': [('recurrency','=', True)]}"/>
+                                    <field name="recurrency_until_date" attrs="{'invisible': [('recurrency_end_type', '!=', 'last_date')], 'required': [('recurrency','=', True), ('recurrency_end_type', '=', 'last_date')]}"/>
+                                </div>
+                            </group>
+                            <group attrs="{'invisible': [('recurrency', '=', False)]}">
+                                <field name="recurrency_stage_id"/>
                             </group>
                         </page>
                     </notebook>
@@ -889,6 +936,7 @@
                             </group>
                             <group>
                                 <field name="fold"/>
+                                <field name="is_closed" groups="base.group_no_one"/>
                                 <field name="project_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>

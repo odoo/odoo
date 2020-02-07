@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="project_task_edit_recurrence_view_form" model="ir.ui.view">
+        <field name="name">project.task.edit.recurrence.wizard.form</field>
+        <field name="model">project.task.edit.recurrence</field>
+        <field name="arch" type="xml">
+            <form string="Edit the recurrence">
+                <group>
+                    <field name="task_id" readonly="1"/>
+                </group>
+                <group>
+                    <field name="editing_type" invisible="1"/>
+                    <field name="editing_style" required="1" widget="radio"/>
+                </group>
+                <footer>
+                    <button string="Edit recurrence" type="object" name="action_edit_recurrence" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" type="object" class="btn btn-secondary oe_inline"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_task_action_edit_recurrence" model="ir.actions.act_window">
+        <field name="name">Edit the recurrence</field>
+        <field name="res_model">project.task.edit.recurrence</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_task_edit_recurrence_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

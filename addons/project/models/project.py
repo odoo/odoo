@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-from datetime import timedelta
+from datetime import timedelta, datetime
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
 from odoo.tools.misc import format_date
 
 
@@ -32,6 +33,7 @@ class ProjectTaskType(models.Model):
     legend_normal = fields.Char(
         'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, required=True,
         help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.')
+    is_closed = fields.Boolean('Is a closed stage ?', help="Tasks in this stage are considered as closed.")
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',
@@ -217,6 +219,7 @@ class Project(models.Model):
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
     allow_subtasks = fields.Boolean('Sub-tasks', compute='_compute_allow_subtasks')
+    allow_recurring_tasks = fields.Boolean('Recurring tasks', default=lambda self: self.user_has_groups('project.group_recurring_task_project'))
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
@@ -471,9 +474,16 @@ class Task(models.Model):
     _order = "priority desc, sequence, id desc"
     _check_company_auto = True
 
+    TRACKED_FIELDS_IN_RECURRENCY = ['name', 'description', 'sequence', 'email_cc', 
+                                    'company_id', 'partner_id', 'partner_phone', 'partner_email', 'project_id', 'tag_ids', 
+                                    'planned_hours', 'displayed_image_id', 'parent_id', 'user_id', 'date_deadline']
+    RECURRENCY_FIELDS = ['recurrency_interval', 'recurrency_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su',
+                        'recurrency_stage_id', 'recurrency_end_type', 'recurrency_until_date']
+
     def _get_default_stage_id(self):
         """ Gives default stage_id """
         project_id = self.env.context.get('default_project_id')
+        # import pdb; pdb.set_trace()
         if not project_id:
             return False
         return self.stage_find(project_id, [('fold', '=', False)])
@@ -567,6 +577,32 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+
+    # recurring task fields
+    allow_recurring_tasks = fields.Boolean(related="project_id.allow_recurring_tasks")
+    recurrency = fields.Boolean(string="Recurring Task", copy=False, help="Set up a repetition scheme for this task")  # , compute="_compute_recurrency_field", inverse="_inverse_recurrency_field", store=True
+    recurrency_interval = fields.Integer(string='Repeat Every', default=1, help="Repeat every X (weeks/months/years)", copy=False)
+    recurrency_type = fields.Selection([
+        ('weeks', 'Weeks'),
+        ('months', 'Months'),
+        ('years', 'Years')
+    ], string='Recurrence', default='months', help="Let the task automatically repeat at that interval", copy=False)
+    mo = fields.Boolean('Mon', copy=False)
+    tu = fields.Boolean('Tue', copy=False)
+    we = fields.Boolean('Wed', copy=False)
+    th = fields.Boolean('Thu', copy=False)
+    fr = fields.Boolean('Fri', copy=False)
+    sa = fields.Boolean('Sat', copy=False)
+    su = fields.Boolean('Sun', copy=False)
+    recurrency_stage_id = fields.Many2one('project.task.type', string="Recurrency Stage", domain ="[('project_ids', 'in', project_id)]", copy=False) # add domain to this to allow only stages from this project   
+    recurrency_end_type = fields.Selection([
+        ('forever', 'Forever'),
+        ('end_date', 'End date')
+    ], string='Recurrence Termination', default='forever', copy=False)
+    recurrency_until_date = fields.Date('Repeat Until', copy=False)
+    recurring_parent_id = fields.Many2one('project.task', string="Recurring Parent Task", copy=False, readonly=True)
+    recurring_child_ids = fields.One2many('project.task', 'recurring_parent_id')
+    recurring_next_date = fields.Date(compute="_compute_recurring_next_date", store=True, string='Date of Next Task', help="The next Task will be created on this date then the period will be extended.", copy=False)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -750,6 +786,19 @@ class Task(models.Model):
     # CRUD overrides
     # ------------------------------------------------
 
+    def action_edit_recurrence(self):
+        return {
+            "name": _("Edit recurrence"),
+            "type": 'ir.actions.act_window',
+            "res_model": 'project.task.edit.recurrence',
+            "views": [[False, "form"]],
+            "target": 'new',
+            "context": {
+                'default_task_id': self.id,
+                'active_model': 'project.task',
+            },
+        }
+
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
@@ -760,7 +809,7 @@ class Task(models.Model):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
-        # Stage change: Update date_end if folded stage and date_last_stage_update
+        # Stage change: Update date_end if stage is closed and date_last_stage_update
         if vals.get('stage_id'):
             vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -769,6 +818,44 @@ class Task(models.Model):
 
     def write(self, vals):
         now = fields.Datetime.now()
+        for task in self:
+            print(vals)
+            if task._origin.recurrency:
+                print('bbbbbbb')
+                if 'active' in vals:
+                    action = self.env.ref('project.project_task_action_edit_recurrence')
+                    msg = _('It seems that this is a recurrent task.')
+                    context = self.env.context.copy()
+                    context.update({'task_id': task.id, 'editing_type': 'archive'})
+                    if not self.env.context.get('archive', False):
+                        raise RedirectWarning(msg, action.id, _('This is a recurrent task. Please use the wizard.'), context)
+                if any(x in vals for x in self.RECURRENCY_FIELDS):
+                    values = dict((k, vals[k]) for k in self.RECURRENCY_FIELDS 
+                                        if k in vals)
+                    action = self.env.ref('project.project_task_action_edit_recurrence')
+                    msg = _('It seems that this is a recurrent task.')
+                    context = self.env.context.copy()
+                    context.update({'task_id': task.id, 'editing_type': 'edit_recurrence_settings', 'modified_values': values})
+                    if not self.env.context.get('edit', False):
+                        raise RedirectWarning(msg, action.id, _('This is a recurrent task. Please use the wizard.'), context)
+                if any(x in vals for x in self.TRACKED_FIELDS_IN_RECURRENCY):
+                    print('aaaaa')
+                    values = dict((k, vals[k]) for k in self.TRACKED_FIELDS_IN_RECURRENCY 
+                                        if k in vals)
+                    action = self.env.ref('project.project_task_action_edit_recurrence')
+                    msg = _('It seems that this is a recurrent task.')
+                    context = self.env.context.copy()
+                    context.update({'task_id': task.id, 'editing_type': 'edit', 'modified_values': values})
+                    if not self.env.context.get('edit', False):
+                        raise RedirectWarning(msg, action.id, _('This is a recurrent task. Please use the wizard.'), context)
+                if vals.get('recurrency', 'NO') != 'NO':
+                    values['recurrency'] = vals.get('recurrency')
+                    action = self.env.ref('project.project_task_action_edit_recurrence')
+                    msg = _('It seems that this is a recurrent task.')
+                    context = self.env.context.copy()
+                    context.update({'task_id': task.id, 'editing_type': 'edit_recurrence', 'values': values})
+                    if not self.env.context.get('edit', False):
+                        raise RedirectWarning(msg, action.id, _('This is a recurrent task. Please use the wizard.'), context)
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
         # stage change: update date_last_stage_update
@@ -788,9 +875,28 @@ class Task(models.Model):
             self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         return result
 
+    def unlink(self):
+        print("Open modal to ask if user wants to delete just this one, all of them or this one and the next")
+        for task in self:
+            if task.recurrency:
+                action = self.env.ref('project.project_task_action_edit_recurrence')
+                msg = _('It seems that this is a recurrent task.')
+                context = self.env.context.copy()
+                context.update({'task_id': task.id, 'editing_type': 'unlink'})
+                if not self.env.context.get('force_delete', False):
+                    raise RedirectWarning(msg, action.id, _('This is a recurrent task. Please use the wizard.'), context)
+                else:
+                    print(self.env.context)
+                    return super().unlink()
+            else:
+                return super().unlink()
+
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
-        if project_task_type.fold:
+        if project_task_type.is_closed:
+            for task in self:
+                if task.recurring_parent_id:
+                    task.recurring_parent_id._compute_recurring_next_date()
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
@@ -1020,6 +1126,128 @@ class Task(models.Model):
 
     def _rating_get_parent_field_name(self):
         return 'project_id'
+
+
+    # ---------------------------------------------------
+    # Recurrency
+    # ---------------------------------------------------
+
+    @api.depends('recurrency', 'recurrency_until_date', 'recurrency_type', 'recurrency_end_type', 'recurrency_interval')
+    def _compute_recurring_next_date(self):
+        for task in self:
+            if task.recurrency and task.recurrency_interval and task.recurrency_type and task.recurrency_end_type:
+                if task.search([('date_end', '=', False), ('id', 'in', task.recurring_child_ids.ids)]):
+                    task.recurring_next_date = False
+                elif task.recurring_child_ids:
+                    task.recurring_next_date = task._get_next_recurring_date(task.search([('id', 'in', task.recurring_child_ids.ids)], order='date_deadline desc', limit=1).date_deadline)    
+                else:
+                    task.recurring_next_date = task._get_next_recurring_date(task.create_date)
+                task.recurring_child_ids.write({'recurring_next_date': task.recurring_next_date})
+
+    def _get_next_recurring_date(self, date_from=False):
+        self.ensure_one()
+        recurring_next_date = fields.Date.to_date(date_from) + relativedelta(**{self.recurrency_type: self.recurrency_interval})
+        if self.recurrency_end_type == 'end_date' and self.recurrency_until_date and recurring_next_date > self.recurrency_until_date:
+            return False
+        return recurring_next_date
+
+    @api.constrains('recurrency_interval')
+    def _check_recurrency_interval(self):
+        if self.filtered(lambda task: task.recurrency and task.recurrency_interval <= 0):
+            raise ValidationError(_("The recurring interval must be positive"))
+    
+    def _get_all_tasks_from_this_recurrence(self):
+        for task in self:
+            if not task.recurrency:
+                return False
+            else:
+                ids = []
+                if task.recurring_child_ids:
+                    ids += task.recurring_child_ids.ids
+                    ids+= [task.id]
+                elif task.recurring_parent_id:
+                    ids += task.search([('recurring_parent_id', '=', task.recurring_parent_id.id)]).ids
+                    ids += [task.recurring_parent_id.id]
+                print(ids)
+                return ids
+    
+    def _get_all_following_tasks_from_this_recurrence(self):
+        for task in self:
+            if not task.recurrency:
+                return False
+            else:
+                ids = [task.id]
+                if task.recurring_child_ids:
+                    ids += task.search([('id', 'in', task.recurring_child_ids.ids), ('create_date', '>', task.create_date)]).ids #date dealine
+                elif task.recurring_parent_id:
+                    ids += task.search([('recurring_parent_id', '=', task.recurring_parent_id.id), '|', ('date_deadline', '>', task.date_deadline), ('create_date', '>', task.create_date)]).ids
+                return ids
+
+    def _get_recurrent_task_values(self):
+        self.ensure_one()
+        values = self.read(self.TRACKED_FIELDS_IN_RECURRENCY)[0]
+        values.update(self.read(self.RECURRENCY_FIELDS)[0])
+        values.update({'recurrency': self.recurrency})
+        print(values)
+        values = {key:(value[0] if type(value) is tuple else value) for (key, value) in values.items()}
+        if self.recurrency_stage_id:
+            values['stage_id'] = self.recurrency_stage_id.id
+        return values
+
+    def _get_next_day(self, date, day):
+        next_date = date + relativedelta(days=-date.weekday()+day)
+        if next_date < date:
+            next_date += relativedelta(weeks=1)
+        return next_date
+
+
+    @api.model
+    def _cron_create_recurring_tasks(self):
+        tasks = self.search([('recurrency', '=', True), ('recurring_next_date', '=', fields.Date.today()), ('recurring_parent_id', '=', False)])
+        for task in tasks:
+            values = task._get_recurrent_task_values()
+            if task.recurrency_type == 'weeks':
+                date = fields.Date.today()
+                if task.mo:
+                    monday_values = values
+                    monday_values['date_deadline'] = self._get_next_day(date, 0)
+                    new_task = task.create(monday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+                if task.tu:
+                    tuesday_values = values
+                    tuesday_values['date_deadline'] = self._get_next_day(date, 1)
+                    new_task = task.create(tuesday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+                if task.we:
+                    wednesday_values = values
+                    wednesday_values['date_deadline'] = self._get_next_day(date, 2)
+                    new_task = task.create(wednesday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+                if task.th:
+                    thursday_values = values
+                    thursday_values['date_deadline'] = self._get_next_day(date, 3)
+                    new_task = task.create(thursday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+                if task.fr:
+                    friday_values = values
+                    friday_values['date_deadline'] = self._get_next_day(date, 4)
+                    new_task = task.create(friday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+                if task.sa:
+                    saturday_values = values
+                    saturday_values['date_deadline'] = self._get_next_day(date, 5)
+                    new_task = task.create(saturday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+                if task.su:
+                    sunday_values = values
+                    sunday_values['date_deadline'] = self._get_next_day(date, 6)
+                    new_task = task.create(sunday_values)
+                    task.recurring_child_ids = [(4, new_task.id)]
+            else:
+                new_task = task.create(values)
+                task.recurring_child_ids = [(4, new_task.id)]
+            task.recurring_child_ids.message_post_with_view("project.project_recurring_task_template", values={'task': task})
+            task.write({'recurring_next_date': task._get_next_recurring_date(fields.Date.today())})
 
 
 class ProjectTags(models.Model):

@@ -261,4 +261,25 @@
             <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
         </record>
 
+        <!-- Recurrency cron -->
+        <record id="project_recurring_task" model="ir.cron">
+            <field name="name">Tasks: Generate recurring tasks</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="active" eval="False"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_create_recurring_tasks()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <template id="project_recurring_task_template">
+            <span>This task has been generated from 
+                <a href="#" data-oe-model="project.task" t-att-data-oe-id="task.id">
+                    <t t-esc="task.name"/>
+                </a>
+            </span>
+        </template>
+
 </odoo>
