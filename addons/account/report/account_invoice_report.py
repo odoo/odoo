@@ -195,15 +195,35 @@ class AccountInvoiceReport(models.Model):
         ))
 
 
-class ReportInvoiceWithPayment(models.AbstractModel):
-    _name = 'report.account.report_invoice_with_payments'
-    _description = 'Account report with payment lines'
+class ReportInvoiceWithoutPayment(models.AbstractModel):
+    _name = 'report.account.report_invoice'
+    _description = 'Account report without payment lines'
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        docs = self.env['account.move'].browse(docids)
+
+        qr_code_urls = {}
+        for invoice in docs:
+            if invoice.display_qr_code:
+                new_code_url = invoice.generate_qr_code()
+                if new_code_url:
+                    qr_code_urls[invoice.id] = new_code_url
+
         return {
             'doc_ids': docids,
             'doc_model': 'account.move',
-            'docs': self.env['account.move'].browse(docids),
-            'report_type': data.get('report_type') if data else '',
+            'docs': docs,
+            'qr_code_urls': qr_code_urls,
         }
+
+class ReportInvoiceWithPayment(models.AbstractModel):
+    _name = 'report.account.report_invoice_with_payments'
+    _description = 'Account report with payment lines'
+    _inherit = 'report.account.report_invoice'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        rslt = super()._get_report_values(docids, data)
+        rslt['report_type'] = data.get('report_type') if data else ''
+        return rslt

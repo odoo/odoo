@@ -166,11 +166,12 @@ class AccountMove(models.Model):
         return float_split_str(self.amount_residual, 2)
 
     def display_swiss_qr_code(self):
-        """ Trigger the print of the Swiss QR code in the invoice report or not
+        """ Returns whether or not to print the QR-bills additional page when
+        generation an invoice pdf.
         """
         self.ensure_one()
-        qr_parameter = self.env['ir.config_parameter'].sudo().get_param('l10n_ch.print_qrcode')
-        return self.partner_id.country_id.code == 'CH' and qr_parameter
+        return self.display_qr_code and \
+               self.invoice_partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id)
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.

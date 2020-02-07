@@ -1625,13 +1625,12 @@
                 <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
                     <b>Communication: </b><span t-esc='order.reference'/>
                 </div>
-                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.currency_id.name == 'EUR')">
-                    <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
+
+                <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
+                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                    <div class="card-body" t-if="qr_code">
                         <h3>Or scan me with your banking app.</h3>
-                        <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
-                    </div>
-                    <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid == False">
-                        <h3>The SEPA QR Code informations are not set correctly.</h3>
+                        <img class="border border-dark rounded" t-att-src="qr_code"/>
                     </div>
                 </div>
             </div>

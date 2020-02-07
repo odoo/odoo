@@ -128,6 +128,8 @@
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
                         <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object" groups="account.group_account_invoice"/>
                         <button name="cancel" attrs="{'invisible': [('state', 'in', ('cancelled', 'posted', 'invoicing_legacy'))]}" string="Cancel" type="object"/>
+                        <button name="mark_as_sent" string="Mark as Sent" type="object" attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('payment_method_code', '!=', 'manual')]}"/>
+                        <button name="unmark_as_sent"  string="Unmark as Sent" type="object" attrs="{'invisible': ['|', ('state', '!=', 'sent'), ('payment_method_code', '!=', 'manual')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
                     </header>
 
@@ -200,6 +202,13 @@
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
                                         <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                     </div>
+                                </div>
+                            </group>
+
+                            <group>
+                                <field name="qr_code" invisible="1"/>
+                                <div attrs="{'invisible': [('qr_code', '=', False)]}" colspan="2" class="text-center">
+                                    <field name="qr_code" widget="html"/>
                                 </div>
                             </group>
                         </group>

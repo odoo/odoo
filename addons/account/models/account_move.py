@@ -242,6 +242,10 @@ class AccountMove(models.Model):
     invoice_incoterm_id = fields.Many2one('account.incoterms', string='Incoterm',
         default=_get_default_invoice_incoterm,
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
+    display_qr_code = fields.Boolean(string="Display QR-code", related='company_id.qr_code')
+    qr_code_method = fields.Selection(string="Payment QR-code",
+        selection=lambda self: self.env['res.partner.bank'].get_available_qr_methods_in_sequence(),
+        help="Type of QR-code to be generated for the payment of this invoice, when printing it. If left blank, the first available and usable method will be used.")
 
     # ==== Payment widget fields ====
     invoice_outstanding_credits_debits_widget = fields.Text(groups="account.group_account_invoice,account.group_account_readonly",
@@ -2469,6 +2473,45 @@ class AccountMove(models.Model):
             line[2]['credit'] = currency_id and formatLang(self.env, line[2]['credit'], currency_obj=currency_id) or line[2]['debit']
         return preview_vals
 
+    def generate_qr_code(self):
+        """ Generates and returns a QR-code generation URL for this invoice,
+        raising an error message if something is misconfigured.
+
+        The chosen QR generation method is the one set in qr_method field if there is one,
+        or the first eligible one found. If this search had to be performed and
+        and eligible method was found, qr_method field is set to this method before
+        returning the URL. If no eligible QR method could be found, we return None.
+        """
+        self.ensure_one()
+
+        if not self.is_invoice():
+            raise UserError(_("QR-codes can only be generated for invoice entries."))
+
+        qr_code_method = self.qr_code_method
+        if qr_code_method:
+            # If the user set a qr code generator manually, we check that we can use it
+            if not self.invoice_partner_bank_id._eligible_for_qr_code(self.qr_code_method, self.partner_id, self.currency_id):
+                raise UserError(_("The chosen QR-code type is not eligible for this invoice."))
+        else:
+            # Else we find one that's eligible and assign it to the invoice
+            for candidate_method, candidate_name in self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
+                if self.invoice_partner_bank_id._eligible_for_qr_code(candidate_method, self.partner_id, self.currency_id):
+                    qr_code_method = candidate_method
+                    break
+
+        if not qr_code_method:
+            # No eligible method could be found; we can't generate the QR-code
+            return None
+
+        unstruct_ref = self.ref if self.ref else self.name
+        rslt = self.invoice_partner_bank_id.build_qr_code_url(self.amount_residual, unstruct_ref, self.invoice_payment_ref, self.currency_id, self.partner_id, qr_code_method, silent_errors=False)
+
+        # We only set qr_code_method after generating the url; otherwise, it
+        # could be set even in case of a failure in the QR code generation
+        # (which would change the field, but not refresh UI, making the displayed data inconsistent with db)
+        self.qr_code_method = qr_code_method
+
+        return rslt
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
