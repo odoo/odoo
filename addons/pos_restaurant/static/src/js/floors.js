@@ -8,7 +8,6 @@ var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
 var rpc = require('web.rpc');
-var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -871,13 +870,12 @@ models.PosModel = models.PosModel.extend({
      */
     _get_from_server: function (table_id, options) {
         options = options || {};
-        var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
         return rpc.query({
                 model: 'pos.order',
                 method: 'get_table_draft_orders',
                 args: [table_id],
-                kwargs: {context: session.user_context},
+                kwargs: {context: this.session.user_context},
             }, {
                 timeout: timeout,
                 shadow: false,

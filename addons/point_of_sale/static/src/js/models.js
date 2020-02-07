@@ -11,7 +11,6 @@ var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
 var rpc = require('web.rpc');
-var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 
@@ -34,12 +33,13 @@ var exports = {};
 // 'pos' and is available to all widgets extending PosWidget.
 
 exports.PosModel = Backbone.Model.extend({
-    initialize: function(session, attributes) {
+    initialize: function(attributes) {
         Backbone.Model.prototype.initialize.call(this, attributes);
         var  self = this;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
         this.chrome = attributes.chrome;
         this.gui    = attributes.gui;
+        this.session = attributes.session;
 
         this.proxy = new devices.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
         this.barcode_reader = new BarcodeReader({'pos': this, proxy:this.proxy});
@@ -166,7 +166,7 @@ exports.PosModel = Backbone.Model.extend({
     {
         label:  'version',
         loaded: function (self) {
-            return session.rpc('/web/webclient/version_info',{}).then(function (version) {
+            return self.session.rpc('/web/webclient/version_info',{}).then(function (version) {
                 self.version = version;
             });
         },
@@ -174,7 +174,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.company',
         fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
-        ids:    function(self){ return [session.user_context.allowed_company_ids[0]]; },
+        ids:    function(self){ return [self.session.user_context.allowed_company_ids[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
         model:  'decimal.precision',
@@ -311,7 +311,7 @@ exports.PosModel = Backbone.Model.extend({
                         return true;
                     }
                 });
-                if (user.id === session.uid) {
+                if (user.id === self.session.uid) {
                     self.user = user;
                     self.employee.name = user.name;
                     self.employee.role = user.role;
@@ -533,7 +533,7 @@ exports.PosModel = Backbone.Model.extend({
                     reject();
                 };
                 self.company_logo.crossOrigin = "anonymous";
-                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + session.db + '&_' + Math.random();
+                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + self.session.db + '&_' + Math.random();
             });
         },
     }, {
@@ -577,7 +577,7 @@ exports.PosModel = Backbone.Model.extend({
                     if( model.model ){
                         var params = {
                             model: model.model,
-                            context: _.extend(context, session.user_context || {}),
+                            context: _.extend(context, self.session.user_context || {}),
                         };
 
                         if (model.ids) {
@@ -1009,7 +1009,7 @@ exports.PosModel = Backbone.Model.extend({
                 model: 'pos.order',
                 method: 'create_from_ui',
                 args: args,
-                kwargs: {context: session.user_context},
+                kwargs: {context: this.session.user_context},
             }, {
                 timeout: timeout,
                 shadow: !options.to_invoice
@@ -1063,7 +1063,7 @@ exports.PosModel = Backbone.Model.extend({
                 model: 'pos.order',
                 method: 'remove_from_ui',
                 args: [server_ids],
-                kwargs: {context: session.user_context},
+                kwargs: {context: this.session.user_context},
             }, {
                 timeout: timeout,
                 shadow: true,

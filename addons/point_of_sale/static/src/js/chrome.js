@@ -10,7 +10,6 @@ var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager').CrashManager;
 var rpc = require('web.rpc');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
-var session = require('web.session');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var round_di = utils.round_decimals;
@@ -587,7 +586,7 @@ class Chrome extends PosComponent {
         this.started  = new $.Deferred(); // resolves when DOM is online
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
 
-        this.pos = new models.PosModel(session, {chrome:this});
+        this.pos = new models.PosModel({chrome:this, session: this.env.session});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.state = owl.useState({ activeScreenName: null });
         this.defaultScreenProps = { pos: this.pos, gui: this.gui }
