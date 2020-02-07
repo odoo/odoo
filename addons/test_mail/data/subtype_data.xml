@@ -27,7 +27,7 @@
     <record id="st_mail_test_child_full" model="mail.message.subtype">
         <field name="name">Umbrella Child Full Subtype</field>
         <field name="res_model">mail.test</field>
-        <field name="parent_id" eval="ref('test_mail.st_mail_test_full_umbrella_upd')"/>
+        <field name="parent_id" ref="test_mail.st_mail_test_full_umbrella_upd"/>
         <field name="relation_field">umbrella_id</field>
         <field name="default" eval="False"/>
         <field name="internal" eval="False"/>

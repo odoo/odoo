@@ -3,22 +3,22 @@
     <data noupdate="1">
         <!-- Lead scoring frequency fields -->
         <record id="frequency_field_state_id" model="crm.lead.scoring.frequency.field">
-            <field name="field_id" eval="ref('crm.field_crm_lead__state_id')"/>
+            <field name="field_id" ref="crm.field_crm_lead__state_id"/>
         </record>
         <record id="frequency_field_country_id" model="crm.lead.scoring.frequency.field">
-            <field name="field_id" eval="ref('crm.field_crm_lead__country_id')"/>
+            <field name="field_id" ref="crm.field_crm_lead__country_id"/>
         </record>
         <record id="frequency_field_phone_state" model="crm.lead.scoring.frequency.field">
-            <field name="field_id" eval="ref('crm.field_crm_lead__phone_state')"/>
+            <field name="field_id" ref="crm.field_crm_lead__phone_state"/>
         </record>
         <record id="frequency_field_email_state" model="crm.lead.scoring.frequency.field">
-            <field name="field_id" eval="ref('crm.field_crm_lead__email_state')"/>
+            <field name="field_id" ref="crm.field_crm_lead__email_state"/>
         </record>
         <record id="frequency_field_source_id" model="crm.lead.scoring.frequency.field">
-            <field name="field_id" eval="ref('crm.field_crm_lead__source_id')"/>
+            <field name="field_id" ref="crm.field_crm_lead__source_id"/>
         </record>
         <record id="frequency_field_lang_id" model="crm.lead.scoring.frequency.field">
-            <field name="field_id" eval="ref('crm.field_crm_lead__lang_id')"/>
+            <field name="field_id" ref="crm.field_crm_lead__lang_id"/>
         </record>
         <record id="crm_pls_fields_param" model="ir.config_parameter">
             <field name="key">crm.pls_fields</field>

@@ -20,7 +20,7 @@
             <field name="name">Contract to Renew</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_contract_pending')"/>
+            <field name="parent_id" ref="mt_contract_pending"/>
             <field name="relation_field">department_id</field>
             <field name="description">Contract about to expire</field>
         </record>

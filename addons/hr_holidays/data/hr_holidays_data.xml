@@ -8,8 +8,8 @@
             <field name="leave_validation_type">both</field>
             <field name="allocation_validation_type">both</field>
             <field name="color_name">black</field>
-            <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
-            <field name="allocation_notif_subtype_id" eval="ref('mt_leave_allocation')"/>
+            <field name="leave_notif_subtype_id" ref="mt_leave"/>
+            <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
             <field name="validity_start" eval="time.strftime('%Y-%m-01')"/>
             <field name="responsible_id" ref="base.user_admin"/>
         </record>
@@ -20,7 +20,7 @@
             <field name="allocation_type">no</field>
             <field name="color_name">red</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
-            <field name="leave_notif_subtype_id" eval="ref('mt_leave_sick')"/>
+            <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
             <field name="responsible_id" ref="base.user_admin"/>
         </record>
 
@@ -33,7 +33,7 @@
             <field name="request_unit">hour</field>
             <field name="color_name">lavender</field>
             <field name="validity_start" eval="False"/>
-            <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
+            <field name="leave_notif_subtype_id" ref="mt_leave"/>
             <field name="responsible_id" ref="base.user_admin"/>
         </record>
 
@@ -47,7 +47,7 @@
             <field name="request_unit">hour</field>
             <field name="unpaid" eval="True"/>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
-            <field name="leave_notif_subtype_id" eval="ref('mt_leave_unpaid')"/>
+            <field name="leave_notif_subtype_id" ref="mt_leave_unpaid"/>
             <field name="responsible_id" ref="base.user_admin"/>
         </record>
     </data>

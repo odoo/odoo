@@ -232,9 +232,9 @@ Thank you,
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
-            <field name="action_id" eval="ref('base.action_res_users_my')" />
+            <field name="action_id" ref="base.action_res_users_my"/>
             <field name="res_id_field">user.id</field>
         </record>
 
@@ -243,10 +243,10 @@ Thank you,
             <field name="description">Write some information about your company (specify at least a name)</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="model_id" ref="base.model_res_company"/>
             <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
             <field name="condition">lower</field>
-            <field name="action_id" eval="ref('base.action_res_company_form')" />
+            <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>
 
@@ -254,9 +254,9 @@ Thank you,
             <field name="name">Set your Company Logo</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="model_id" ref="base.model_res_company"/>
             <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
-            <field name="action_id" eval="ref('base.action_res_company_form')" />
+            <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>
 
@@ -275,9 +275,9 @@ Thank you,
             <field name="description">Create at least another user</field>
             <field name="display_mode">boolean</field>
             <field name="computation_mode">count</field>
-            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="domain">[('id', '!=', user.id)]</field>
-            <field name="action_id" eval="ref('action_new_simplified_res_users')" />
+            <field name="action_id" ref="action_new_simplified_res_users"/>
         </record>
 
         <!-- challenges -->
@@ -303,25 +303,25 @@ Thank you,
 
         <!-- lines -->
         <record model="gamification.challenge.line" id="line_base_discover1">
-            <field name="definition_id" eval="ref('definition_base_timezone')" />
+            <field name="definition_id" ref="definition_base_timezone"/>
             <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_discover')" />
+            <field name="challenge_id" ref="challenge_base_discover"/>
         </record>
 
         <record model="gamification.challenge.line" id="line_base_admin2">
-            <field name="definition_id" eval="ref('definition_base_company_logo')" />
+            <field name="definition_id" ref="definition_base_company_logo"/>
             <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+            <field name="challenge_id" ref="challenge_base_configure"/>
         </record>
         <record model="gamification.challenge.line" id="line_base_admin1">
-            <field name="definition_id" eval="ref('definition_base_company_data')" />
+            <field name="definition_id" ref="definition_base_company_data"/>
             <field name="target_goal">0</field>
-            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+            <field name="challenge_id" ref="challenge_base_configure"/>
         </record>
         <record model="gamification.challenge.line" id="line_base_admin3">
-            <field name="definition_id" eval="ref('definition_base_invite')" />
+            <field name="definition_id" ref="definition_base_invite"/>
             <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+            <field name="challenge_id" ref="challenge_base_configure"/>
         </record>
     </data>
 
