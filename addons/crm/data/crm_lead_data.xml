@@ -40,21 +40,21 @@
             <field name="sequence">10</field>
             <field name="res_model">crm.team</field>
             <field name="default" eval="True"/>
-            <field name="parent_id" eval="ref('mt_lead_create')"/>
+            <field name="parent_id" ref="mt_lead_create"/>
             <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
             <field name="name">Opportunity Stage Changed</field>
             <field name="sequence">11</field>
             <field name="res_model">crm.team</field>
-            <field name="parent_id" eval="ref('mt_lead_stage')"/>
+            <field name="parent_id" ref="mt_lead_stage"/>
             <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_won" model="mail.message.subtype">
             <field name="name">Opportunity Won</field>
             <field name="sequence">12</field>
             <field name="res_model">crm.team</field>
-            <field name="parent_id" eval="ref('mt_lead_won')"/>
+            <field name="parent_id" ref="mt_lead_won"/>
             <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_lost" model="mail.message.subtype">
@@ -62,7 +62,7 @@
             <field name="sequence">13</field>
             <field name="res_model">crm.team</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_lead_lost')"/>
+            <field name="parent_id" ref="mt_lead_lost"/>
             <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_restored" model="mail.message.subtype">
@@ -70,7 +70,7 @@
             <field name="sequence">14</field>
             <field name="res_model">crm.team</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_lead_restored')"/>
+            <field name="parent_id" ref="mt_lead_restored"/>
             <field name="relation_field">team_id</field>
         </record>
 

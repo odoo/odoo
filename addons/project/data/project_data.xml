@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <record id="ir_cron_rating_project" model="ir.cron">
             <field name="name">Project: Send rating</field>
@@ -49,7 +48,7 @@
             <field name="sequence">10</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_task_new')"/>
+            <field name="parent_id" ref="mt_task_new"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_task_blocked" model="mail.message.subtype">
@@ -57,7 +56,7 @@
             <field name="sequence">11</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_task_blocked')"/>
+            <field name="parent_id" ref="mt_task_blocked"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_task_ready" model="mail.message.subtype">
@@ -65,7 +64,7 @@
             <field name="sequence">12</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_task_ready')"/>
+            <field name="parent_id" ref="mt_task_ready"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_task_stage" model="mail.message.subtype">
@@ -73,7 +72,7 @@
             <field name="sequence">13</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_task_stage')"/>
+            <field name="parent_id" ref="mt_task_stage"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_task_rating" model="mail.message.subtype">
@@ -81,12 +80,9 @@
             <field name="sequence">14</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="True"/>
-            <field name="parent_id" eval="ref('mt_task_rating')"/>
+            <field name="parent_id" ref="mt_task_rating"/>
             <field name="relation_field">project_id</field>
         </record>
-    </data>
-
-    <data noupdate="1">
 
         <record forcecreate="False" id="project_project_data" model="project.project">
             <field name="name">Start here to discover Odoo</field>
@@ -265,5 +261,4 @@
             <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
         </record>
 
-    </data>
 </odoo>

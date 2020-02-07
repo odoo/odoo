@@ -322,14 +322,14 @@
         <field name="name">Applicant Stage Changed</field>
         <field name="res_model">hr.job</field>
         <field name="default" eval="False"/>
-        <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
+        <field name="parent_id" ref="mt_applicant_stage_changed"/>
         <field name="relation_field">job_id</field>
     </record>
     <record id="mt_job_applicant_hired" model="mail.message.subtype">
         <field name="name">Applicant Hired</field>
         <field name="res_model">hr.job</field>
         <field name="default" eval="True"/>
-        <field name="parent_id" eval="ref('mt_applicant_hired')"/>
+        <field name="parent_id" ref="mt_applicant_hired"/>
         <field name="relation_field">job_id</field>
     </record>
 
@@ -338,7 +338,7 @@
         <field name="name">Job Position Created</field>
         <field name="res_model">hr.department</field>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" eval="ref('mt_job_new')"/>
+        <field name="parent_id" ref="mt_job_new"/>
         <field name="relation_field">department_id</field>
     </record>
 

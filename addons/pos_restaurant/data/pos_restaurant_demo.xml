@@ -211,12 +211,12 @@
         <record id="floor_main" model="restaurant.floor">
             <field name="name">Main Floor</field>
             <field name="background_color">rgb(136,137,242)</field>
-            <field name="pos_config_id" eval="ref('pos_restaurant.pos_config_restaurant')" />
+            <field name="pos_config_id" ref="pos_restaurant.pos_config_restaurant"/>
         </record>
 
         <record id="table_01" model="restaurant.table">
             <field name="name">T1</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -228,7 +228,7 @@
 
         <record id="table_02" model="restaurant.table">
             <field name="name">T2</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -240,7 +240,7 @@
 
         <record id="table_03" model="restaurant.table">
             <field name="name">T3</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -252,7 +252,7 @@
 
         <record id="table_04" model="restaurant.table">
             <field name="name">T4</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -264,7 +264,7 @@
 
         <record id="table_05" model="restaurant.table">
             <field name="name">T5</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -276,7 +276,7 @@
 
         <record id="table_06" model="restaurant.table">
             <field name="name">T6</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -288,7 +288,7 @@
 
         <record id="table_07" model="restaurant.table">
             <field name="name">T7</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,109,109)</field>
             <field name="shape">square</field>
@@ -300,7 +300,7 @@
 
         <record id="table_08" model="restaurant.table">
             <field name="name">T8</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,109,109)</field>
             <field name="shape">square</field>
@@ -312,7 +312,7 @@
 
         <record id="table_09" model="restaurant.table">
             <field name="name">T9</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,109,109)</field>
             <field name="shape">square</field>
@@ -324,7 +324,7 @@
 
         <record id="table_10" model="restaurant.table">
             <field name="name">T10</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,109,109)</field>
             <field name="shape">square</field>
@@ -336,7 +336,7 @@
 
         <record id="table_11" model="restaurant.table">
             <field name="name">T11</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_main')" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
             <field name="color">rgb(78,210,190)</field>
             <field name="shape">round</field>
@@ -351,14 +351,14 @@
         <record id="floor_patio" model="restaurant.floor">
             <field name="name">Patio</field>
             <field name="background_color">rgb(130, 233, 171)</field>
-            <field name="pos_config_id" eval="ref('pos_restaurant.pos_config_restaurant')" />
+            <field name="pos_config_id" ref="pos_restaurant.pos_config_restaurant"/>
         </record>
 
         <!-- Patio: Left table row -->
 
         <record id="table_21" model="restaurant.table">
             <field name="name">T1</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -370,7 +370,7 @@
 
         <record id="table_22" model="restaurant.table">
             <field name="name">T2</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -382,7 +382,7 @@
 
         <record id="table_23" model="restaurant.table">
             <field name="name">T3</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -394,7 +394,7 @@
 
         <record id="table_24" model="restaurant.table">
             <field name="name">T4</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -408,7 +408,7 @@
 
         <record id="table_25" model="restaurant.table">
             <field name="name">T5</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -420,7 +420,7 @@
 
         <record id="table_26" model="restaurant.table">
             <field name="name">T6</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -432,7 +432,7 @@
 
         <record id="table_27" model="restaurant.table">
             <field name="name">T7</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -444,7 +444,7 @@
 
         <record id="table_28" model="restaurant.table">
             <field name="name">T8</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
             <field name="color">rgb(53,211,116)</field>
             <field name="shape">square</field>
@@ -458,7 +458,7 @@
 
         <record id="table_29" model="restaurant.table">
             <field name="name">T9</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,191,109)</field>
             <field name="shape">square</field>
@@ -470,7 +470,7 @@
 
         <record id="table_29" model="restaurant.table">
             <field name="name">T9</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,191,109)</field>
             <field name="shape">square</field>
@@ -482,7 +482,7 @@
 
         <record id="table_30" model="restaurant.table">
             <field name="name">T10</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,191,109)</field>
             <field name="shape">square</field>
@@ -494,7 +494,7 @@
 
         <record id="table_31" model="restaurant.table">
             <field name="name">T11</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,191,109)</field>
             <field name="shape">square</field>
@@ -506,7 +506,7 @@
 
         <record id="table_32" model="restaurant.table">
             <field name="name">T12</field>
-            <field name="floor_id" eval="ref('pos_restaurant.floor_patio')" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
             <field name="color">rgb(235,191,109)</field>
             <field name="shape">square</field>
