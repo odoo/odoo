@@ -725,6 +725,8 @@ class Environment(Mapping):
                     return get_context('active_test', field.context.get('active_test', True))
                 else:
                     val = get_context(key)
+                    if type(val) is list:
+                        val = tuple(val)
                     try:
                         hash(val)
                     except TypeError:
