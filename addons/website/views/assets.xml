@@ -51,10 +51,14 @@
 
 <template id="_assets_frontend_helpers" inherit_id="portal._assets_frontend_helpers">
     <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers_user_custom" inherit_id="web._assets_frontend_helpers" priority="99">
+    <xpath expr="//link" position="before">
         <!-- Custom empty file for user custom bootstrap override -->
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_bootstrap_overridden.scss"/>
-
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
 
@@ -62,9 +66,6 @@
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
-
-        <!-- Custom empty file for user custom rules -->
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_rules.scss"/>
     </xpath>
     <xpath expr="//script[@src='/web/static/src/js/public/public_root_instance.js']" position="replace">
         <script type="text/javascript" src="/website/static/src/js/content/website_root_instance.js"/>
@@ -86,6 +87,13 @@
         <script type="text/javascript" src="/website/static/src/js/show_password.js"/>
         <!-- Custom empty file for user javascript -->
         <script type="text/javascript" src="/website/static/src/js/user_custom_javascript.js"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend_user_custom" inherit_id="web.assets_frontend" name="Website Assets user custom" priority="99">
+    <xpath expr="//link[last()]" position="after">
+        <!-- Custom empty file for user custom rules -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_rules.scss"/>
     </xpath>
 </template>
 
