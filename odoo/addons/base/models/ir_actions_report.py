@@ -117,6 +117,10 @@ class IrActionsReport(models.Model):
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+    with_internal_links = fields.Boolean(
+        string='With internal links',
+        help='If you check this, then you can refer by id inside report.',
+    )
 
     @api.depends('model')
     def _compute_model_id(self):
@@ -370,7 +374,7 @@ class IrActionsReport(models.Model):
             # set context language to body language
             if node.get('data-oe-lang'):
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
-            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url, with_internal_links=self.with_internal_links))
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -380,6 +384,10 @@ class IrActionsReport(models.Model):
         if not bodies:
             body = bytearray().join([lxml.html.tostring(c) for c in body_parent.getchildren()])
             bodies.append(body)
+
+        # use internal links
+        if self.with_internal_links:
+            self._adapt_for_internal_links(bodies, base_url)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
         # paperformat-record arguments.
@@ -825,3 +833,24 @@ class IrActionsReport(models.Model):
             return action
 
         return report_action
+
+    def _adapt_for_internal_links(self, bodies, base_url):
+        """
+        Adapt bodies for internal links like
+        <a href='#tag_id'>Go to tag with id=tag_id</a>
+        :param bodies: list of bytes
+        :return: None
+        """
+        replace_values = self._get_internal_link_replace_values(base_url)
+        for index in range(len(bodies)):
+            new_html = bodies[index].decode("utf-8")
+            for old_sub_string, new_sub_string in replace_values:
+                new_html = new_html.replace(old_sub_string, new_sub_string)
+            bodies[index] = new_html.encode()
+
+    def _get_internal_link_replace_values(self, base_url):
+        return [
+            # set full links for resources
+            ('src="/web', 'src="%s/web' % base_url),
+            ('href="/web', 'href="%s/web' % base_url),
+        ]

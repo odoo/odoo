@@ -286,6 +286,7 @@ form: module.record_id""" % (xml_id,)
             res['header'] = safe_eval(rec.get('header','False'))
 
         res['multi'] = rec.get('multi') and safe_eval(rec.get('multi','False'))
+        res['with_internal_links'] = rec.get('with_internal_links') and safe_eval(rec.get('with_internal_links', 'False'))
 
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
