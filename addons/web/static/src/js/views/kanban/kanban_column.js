@@ -74,8 +74,8 @@ var KanbanColumn = Widget.extend({
 
         this.record_options = _.clone(recordOptions);
 
-        if (options.grouped_by_m2o) {
-            // For many2one, a false value means that the field is not set.
+        if (options.grouped_by_m2o || options.grouped_by_date ) {
+            // For many2one and datetime, a false value means that the field is not set.
             this.title = value ? value : _t('Undefined');
         } else {
             // False and 0 might be valid values for these fields.
