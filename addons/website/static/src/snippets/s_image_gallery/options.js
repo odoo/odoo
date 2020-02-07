@@ -46,7 +46,7 @@ options.registry.gallery = options.Class.extend({
             }
         });
 
-        if (this.$('.container:first > *:not(div)').length) {
+        if (this.$('> div:first-child > *:not(div)').length) {
             self.mode(null, self.getMode());
         }
 
@@ -83,7 +83,7 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
-        var $container = this.$('.container:first');
+        var $container = this.$('> div:first-child');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
@@ -429,7 +429,7 @@ options.registry.gallery = options.Class.extend({
      * @returns {jQuery} the main container of the snippet
      */
     _replaceContent: function ($content) {
-        var $container = this.$('.container:first');
+        var $container = this.$('> div:first-child');
         $container.empty().append($content);
         return $container;
     },
