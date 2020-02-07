@@ -1838,13 +1838,6 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.partner_id.address_get(['delivery'])['delivery']
 
-    def _get_invoice_intrastat_country_id(self):
-        ''' Hook allowing to retrieve the intrastat country depending of installed modules.
-        :return: A res.country record's id.
-        '''
-        self.ensure_one()
-        return self.partner_id.country_id.id
-
     def _get_cash_basis_matched_percentage(self):
         """Compute the percentage to apply for cash basis method. This value is relevant only for moves that
         involve journal items on receivable or payable accounts.
