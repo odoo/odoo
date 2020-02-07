@@ -42,7 +42,10 @@ can take the following attributes:
     the model your report will be about
 ``report_type`` (mandatory)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
-``report_name``
+``file``
+    The path to the main report file (depending on Report Type)
+    or empty if the content is in another field
+``print_report_name``
     the name of your report (which will be the name of the PDF output)
 ``groups``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
