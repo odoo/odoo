@@ -115,8 +115,7 @@ class SaleCoupon(models.Model):
         }
 
     def action_coupon_cancel(self):
-        for coupon in self:
-            coupon.state = 'cancel'
+        self.state = 'cancel'
 
     def cron_expire_coupon(self):
         self._cr.execute("""
