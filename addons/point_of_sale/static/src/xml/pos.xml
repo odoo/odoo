@@ -779,7 +779,7 @@
                 <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
                     <div><t t-esc="orderline.product.display_name" /></div>
                     <div><t t-esc="orderline.get_quantity_str()" /></div>
-                    <div><t t-esc="widget.format_currency(orderline.get_display_price())"/></div>
+                    <div><t t-esc="pos.format_currency(orderline.get_display_price())"/></div>
             </div>
         </t>
     </t>
@@ -790,7 +790,7 @@
                 <span><t t-esc="paymentline.name"/></span>
             </div>
             <div>
-                <span><t t-esc="widget.format_currency(paymentline.get_amount())"/></span>
+                <span><t t-esc="pos.format_currency(paymentline.get_amount())"/></span>
             </div>
         </t>
         <t t-if="order.get_paymentlines().length > 0">
@@ -798,7 +798,7 @@
                 <span class="pos-change_title">Change:</span>
             </div>
             <div >
-                <span class="pos-change_amount"><t t-esc="widget.format_currency(order.get_change())"/></span>
+                <span class="pos-change_amount"><t t-esc="pos.format_currency(order.get_change())"/></span>
             </div>
         </t>
     </t>

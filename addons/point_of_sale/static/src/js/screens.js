@@ -174,7 +174,7 @@ var ScreenWidget = PosBaseWidget.extend({
      * @param {Boolean} refresh_screens: whether or not displayed screens should refresh
      * @param {Object} error: the error provided by Ajax
      */
-    _handleFailedPushForInvoice: function (order, refresh_screen, error) {
+    _handleFailedPushOrder: function (order, refresh_screen, error) {
         var self = this;
         order = order || this.pos.get_order();
         this.invoicing = false;
@@ -1121,7 +1121,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
 
-            invoiced.catch(this._handleFailedPushForInvoice.bind(this, order, false));
+            invoiced.catch(this._handleFailedPushOrder.bind(this, order, false));
 
             invoiced.then(function (server_ids) {
                 self.invoicing = false;
@@ -1143,6 +1143,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var ordered = this.pos.push_order(order);
             if (order.wait_for_push_order()){
                 var server_ids = [];
+                ordered.catch(this._handleFailedPushOrder.bind(this, order, false));
                 ordered.then(function (ids) {
                   server_ids = ids;
                 }).finally(function() {

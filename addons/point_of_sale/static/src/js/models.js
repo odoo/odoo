@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
 var BarcodeReader = require('point_of_sale.BarcodeReader');
 var PosDB = require('point_of_sale.DB');
@@ -10,7 +9,6 @@ var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
-var rpc = require('web.rpc');
 var time = require('web.time');
 var utils = require('web.utils');
 
@@ -37,9 +35,13 @@ exports.PosModel = Backbone.Model.extend({
         Backbone.Model.prototype.initialize.call(this, attributes);
         var  self = this;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
-        this.chrome = attributes.chrome;
-        this.gui    = attributes.gui;
-        this.session = attributes.session;
+
+        this.rpc = this.get('rpc');
+        this.session = this.get('session');
+        this.do_action = this.get('do_action');
+        this.loading_message = this.get('loading_message');
+        this.loading_progress = this.get('loading_progress');
+        this.loading_skip = this.get('loading_skip');
 
         this.proxy = new devices.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
         this.barcode_reader = new BarcodeReader({'pos': this, proxy:this.proxy});
@@ -123,14 +125,14 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         return new Promise(function (resolve, reject) {
             self.barcode_reader.disconnect_from_proxy();
-            self.chrome.loading_message(_t('Connecting to the IoT Box'), 0);
-            self.chrome.loading_skip(function () {
+            self.loading_message(_t('Connecting to the IoT Box'), 0);
+            self.loading_skip(function () {
                 self.proxy.stop_searching();
             });
             self.proxy.autoconnect({
                 force_ip: self.config.proxy_ip || undefined,
                 progress: function(prog){
-                    self.chrome.loading_progress(prog);
+                    self.loading_progress(prog);
                 },
             }).then(
                 function () {
@@ -140,16 +142,20 @@ exports.PosModel = Backbone.Model.extend({
                     resolve();
                 },
                 function (statusText, url) {
-                    var show_loading_error = (self.gui.current_screen === null);
-                    resolve();
-                    if (show_loading_error && statusText == 'error' && window.location.protocol == 'https:') {
-                        self.gui.show_popup('alert', {
+                    // this should reject so that it can be captured when we wait for pos.ready
+                    // in the chrome component.
+                    // then, if it got really rejected, we can show the error.
+                    if (statusText == 'error' && window.location.protocol == 'https:') {
+                        reject({
                             title: _t('HTTPS connection to IoT Box failed'),
                             body: _.str.sprintf(
                               _t('Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'),
                               url
                             ),
+                            popup: 'alert',
                         });
+                    } else {
+                        resolve();
                     }
                 }
             );
@@ -247,7 +253,7 @@ exports.PosModel = Backbone.Model.extend({
             });
             return new Promise(function (resolve, reject) {
               var tax_ids = _.pluck(self.taxes, 'id');
-              rpc.query({
+              self.rpc({
                   model: 'account.tax',
                   method: 'get_real_tax_amount',
                   args: [tax_ids],
@@ -559,7 +565,7 @@ exports.PosModel = Backbone.Model.extend({
                     resolve();
                 } else {
                     var model = self.models[index];
-                    self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+                    self.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
                     if (!cond) {
@@ -590,7 +596,7 @@ exports.PosModel = Backbone.Model.extend({
                             params.orderBy = order;
                         }
 
-                        rpc.query(params).then(function (result) {
+                        self.rpc(params).then(function (result) {
                             try { // catching exceptions in model.loaded(...)
                                 Promise.resolve(model.loaded(self, result, tmp))
                                     .then(function () { load_model(index + 1); },
@@ -637,7 +643,7 @@ exports.PosModel = Backbone.Model.extend({
         return new Promise(function (resolve, reject) {
             var fields = _.find(self.models, function(model){ return model.label === 'load_partners'; }).fields;
             var domain = self.prepare_new_partners_domain();
-            rpc.query({
+            self.rpc({
                 model: 'res.partner',
                 method: 'search_read',
                 args: [domain, fields],
@@ -832,18 +838,18 @@ exports.PosModel = Backbone.Model.extend({
         return Promise.all(get_image_promises).then(function () {
             var rendered_order_lines = "";
             var rendered_payment_lines = "";
-            var order_total_with_tax = self.chrome.format_currency(0);
+            var order_total_with_tax = self.format_currency(0);
 
             if (order) {
                 rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
                     'orderlines': order.get_orderlines(),
-                    'widget': self.chrome,
+                    'pos': self,
                 });
                 rendered_payment_lines = QWeb.render('CustomerFacingDisplayPaymentLines', {
                     'order': order,
-                    'widget': self.chrome,
+                    'pos': self,
                 });
-                order_total_with_tax = self.chrome.format_currency(order.get_total_with_tax());
+                order_total_with_tax = self.format_currency(order.get_total_with_tax());
             }
 
             var $rendered_html = $(rendered_html);
@@ -926,7 +932,7 @@ exports.PosModel = Backbone.Model.extend({
                         transfer.then(function(order_server_id){
                             // generate the pdf and download it
                             if (order_server_id.length && !order.is_to_email()) {
-                                self.chrome.webClient.do_action('point_of_sale.pos_invoice_report',{additional_context:{
+                                self.do_action('point_of_sale.pos_invoice_report',{additional_context:{
                                     active_ids:order_server_id,
                                 }}).then(function () {
                                     resolveInvoiced(order_server_id);
@@ -1005,7 +1011,7 @@ exports.PosModel = Backbone.Model.extend({
                 return order;
             })];
         args.push(options.draft || false);
-        return rpc.query({
+        return this.rpc({
                 model: 'pos.order',
                 method: 'create_from_ui',
                 args: args,
@@ -1022,6 +1028,7 @@ exports.PosModel = Backbone.Model.extend({
                 return server_ids;
             }).catch(function (reason){
                 var error = reason.message;
+                console.warn('Failed to send orders:', orders);
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     //if warning do not need to display traceback!!
                     if (error.data.exception_type == 'warning') {
@@ -1030,15 +1037,10 @@ exports.PosModel = Backbone.Model.extend({
 
                     // Hide error if already shown before ...
                     if ((!self.get('failed') || options.show_error) && !options.to_invoice) {
-                        self.gui.show_popup('error-traceback',{
-                            'title': error.data.message,
-                            'body':  error.data.debug
-                        });
+                        self.set('failed',error);
+                        throw error;
                     }
-                    self.set('failed',error);
                 }
-                console.warn('Failed to send orders:', orders);
-                self.gui.show_sync_error_popup();
                 throw error;
             });
     },
@@ -1059,7 +1061,7 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * server_ids.length;
 
-        return rpc.query({
+        return this.rpc({
                 model: 'pos.order',
                 method: 'remove_from_ui',
                 args: [server_ids],
@@ -1079,8 +1081,10 @@ exports.PosModel = Backbone.Model.extend({
                         delete error.data.debug;
                     }
                 }
-                self.gui.show_sync_error_popup();
-                console.error('Failed to remove orders:', server_ids);
+                // important to throw error here and let the rendering component handle the
+                // error
+                console.warn('Failed to remove orders:', server_ids);
+                throw error;
             });
     },
 
@@ -2249,7 +2253,7 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
-        this.pos.send_current_order_to_customer_facing_display();
+        if (this.pos.iface_customer_facing_display) this.pos.send_current_order_to_customer_facing_display();
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline
@@ -2531,7 +2535,7 @@ exports.Order = Backbone.Model.extend({
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 
-                return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.chrome,'order':self, 'receipt': receipt}) ;
+                return qweb.render('subreceipt',{'pos':self.pos,'order':self, 'receipt': receipt}) ;
             }
         }
 
@@ -2764,7 +2768,11 @@ exports.Order = Backbone.Model.extend({
         }
 
         if(line.has_product_lot){
-            this.display_lot_popup();
+            // TODO jcb: There should be popup here asking for required product lot.
+            // This popup should be handled in chrome.
+            // e.g. if (product.tracking !== 'none') { let result = await trackingPopup.show({params}); }
+            // if (result) then add_product()
+            // this.display_lot_popup();
         }
         if (this.pos.config.iface_customer_facing_display) {
             this.pos.send_current_order_to_customer_facing_display();
@@ -2797,18 +2805,21 @@ exports.Order = Backbone.Model.extend({
         }
     },
 
-    display_lot_popup: function() {
-        var order_line = this.get_selected_orderline();
-        if (order_line){
-            var pack_lot_lines =  order_line.compute_lot_lines();
-            this.pos.gui.show_popup('packlotline', {
-                'title': _t('Lot/Serial Number(s) Required'),
-                'pack_lot_lines': pack_lot_lines,
-                'order_line': order_line,
-                'order': this,
-            });
-        }
-    },
+    // TODO jcb: this logic needs to be placed in the chrome component
+    // display_lot_popup: function() {
+    //     var order_line = this.get_selected_orderline();
+    //     if (order_line){
+    //         var pack_lot_lines =  order_line.compute_lot_lines();
+    //         // this is not good because we are asking for the required information very late.
+    //         // Before adding the product, we should ask for this information first.
+    //         this.pos.gui.show_popup('packlotline', {
+    //             'title': _t('Lot/Serial Number(s) Required'),
+    //             'pack_lot_lines': pack_lot_lines,
+    //             'order_line': order_line,
+    //             'order': this,
+    //         });
+    //     }
+    // },
 
     /* ---- Payment Lines --- */
     add_paymentline: function(payment_method) {

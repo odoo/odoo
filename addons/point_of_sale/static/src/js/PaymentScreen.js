@@ -193,7 +193,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                         });
                         console.log('TODO jcb: Error handler later');
                     }
-                    // this._handleFailedPushForInvoice.bind(this, this.currentOrder, false)
+                    // this._handleFailedPushOrder.bind(this, this.currentOrder, false)
                 );
 
                 invoiced.then(server_ids => {

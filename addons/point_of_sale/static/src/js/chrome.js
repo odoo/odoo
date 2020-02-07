@@ -583,17 +583,29 @@ class Chrome extends PosComponent {
         super(...arguments);
         this.$ = $;
 
-        this.started  = new $.Deferred(); // resolves when DOM is online
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
+        this.webClient = this.props.webClient;
 
-        this.pos = new models.PosModel({chrome:this, session: this.env.session});
+        // Instead of passing chrome to the instantiation the PosModel,
+        // we inject functions needed by pos.
+        // This way, we somehow decoupled Chrome from PosModel.
+        // We can then test PosModel independently from Chrome by supplying
+        // mocked version of these default attributes.
+        const posModelDefaultAttributes = {
+            rpc: this.rpc.bind(this),
+            session: this.env.session,
+            do_action: this.webClient.do_action.bind(this.webClient),
+            loading_message: this.loading_message.bind(this),
+            loading_skip: this.loading_skip.bind(this),
+            loading_progress: this.loading_progress.bind(this),
+        };
+
+        this.pos = new models.PosModel(posModelDefaultAttributes);
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.state = owl.useState({ activeScreenName: null });
         this.defaultScreenProps = { pos: this.pos, gui: this.gui }
         this.additionalScreenProps = {}
         this.chrome = this; // So that chrome's childs have chrome set automatically
-        this.pos.gui = this.gui;
-        this.webClient = this.props.webClient;
 
         this.logo_click_time  = 0;
         this.logo_click_count = 0;
@@ -858,6 +870,14 @@ class Chrome extends PosComponent {
 
     loading_error(err){
         var self = this;
+
+        if (err.popup) {
+            self.gui.show_popup('alert', {
+                title: err.title,
+                body: err.body,
+            });
+            return;
+        }
 
         var title = err.message;
         var body  = err.stack;

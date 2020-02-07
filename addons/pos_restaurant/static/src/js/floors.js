@@ -853,11 +853,12 @@ models.PosModel = models.PosModel.extend({
     remove_from_server_and_set_sync_state: function(ids_to_remove){
         var self = this;
         this.set_synch('connecting', ids_to_remove.length);
-        self._remove_from_server(ids_to_remove)
+        return self._remove_from_server(ids_to_remove)
             .then(function(server_ids) {
                 self.set_synch('connected');
             }).catch(function(reason){
                 self.set_synch('error');
+                throw reason;
             });
     },
 
