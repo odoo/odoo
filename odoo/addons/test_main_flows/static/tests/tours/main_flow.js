@@ -425,12 +425,12 @@ tour.register('main_flow_tour', {
     content: _t('Go back to the home menu'),
     position: 'bottom',
 }, tour.STEPS.SHOW_APPS_MENU_ITEM, {
-    trigger: '.o_app:contains("Inventory")',
+    trigger: '.o_app[data-menu-xmlid="stock.menu_stock_root"]',
     content: _t('Go to Inventory'),
     position: 'right',
     edition: 'community'
 }, {
-    trigger: '.o_app > div:contains("Inventory")',
+    trigger: '.o_app[data-menu-xmlid="stock.menu_stock_root"]',
     content: _t('Go to Inventory'),
     position: 'bottom',
     edition: 'enterprise'
@@ -489,12 +489,12 @@ tour.register('main_flow_tour', {
     content: _t('Go back to the home menu'),
     position: 'bottom',
 }, tour.STEPS.SHOW_APPS_MENU_ITEM, {
-    trigger: '.o_app:contains("Purchase")',
+    trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     content: _t('Go to Purchase'),
     position: 'right',
     edition: 'community'
 }, {
-    trigger: '.o_app > div:contains("Purchase")',
+    trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     content: _t('Go to Purchase'),
     position: 'bottom',
     edition: 'enterprise'
@@ -545,12 +545,12 @@ tour.register('main_flow_tour', {
     content: _t('Go back to the home menu'),
     position: 'bottom',
 }, tour.STEPS.SHOW_APPS_MENU_ITEM, {
-    trigger: '.o_app:contains("Manufacturing")',
+    trigger: '.o_app[data-menu-xmlid="mrp.menu_mrp_root"]',
     content: _t('Go to Manufacturing'),
     position: 'right',
     edition: 'community'
 }, {
-    trigger: '.o_app > div:contains("Manufacturing")',
+    trigger: '.o_app[data-menu-xmlid="mrp.menu_mrp_root"]',
     content: _t('Go to Manufacturing'),
     position: 'bottom',
     edition: 'enterprise'
