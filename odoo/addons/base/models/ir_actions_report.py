@@ -491,7 +491,7 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).search(conditions, limit=1)
 
     @api.model
-    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1):
+    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
@@ -502,6 +502,15 @@ class IrActionsReport(models.Model):
                 barcode_type, value=value, format='png', width=width, height=height,
                 humanReadable=humanreadable, quiet=quiet
             )
+
+            # If a mask is asked and it is available, call its function to
+            # post-process the generated QR-code image
+            if mask:
+                available_masks = self.get_available_barcode_masks()
+                mask_to_apply = available_masks.get(mask)
+                if mask_to_apply:
+                    mask_to_apply(width, height, barcode)
+
             return barcode.asString('png')
         except (ValueError, AttributeError):
             if barcode_type == 'Code128':
@@ -509,6 +518,19 @@ class IrActionsReport(models.Model):
             else:
                 return self.barcode('Code128', value, width=width, height=height,
                     humanreadable=humanreadable, quiet=quiet)
+
+    @api.model
+    def get_available_barcode_masks(self):
+        """ Hook for extension.
+        This function returns the available QR-code masks, in the form of a
+        list of (code, mask_function) elements, where code is a string identifying
+        the mask uniquely, and mask_function is a function returning a reportlab
+        Drawing object with the result of the mask, and taking as parameters:
+            - width of the QR-code, in pixels
+            - height of the QR-code, in pixels
+            - reportlab Drawing object containing the barcode to apply the mask on
+        """
+        return {}
 
     def render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
