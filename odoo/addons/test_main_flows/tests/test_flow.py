@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 import odoo.tests
+import unittest
 
+class BaseTestUi(odoo.tests.HttpCase):
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
-
-    def test_01_main_flow_tour(self):
+    def main_flow_tour(self):
         # Define minimal accounting data to run without CoA
         a_expense = self.env['account.account'].create({
             'code': 'X2120',
@@ -68,3 +68,21 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         self.start_tour("/web", 'main_flow_tour', login="admin", timeout=180)
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUi(BaseTestUi):
+
+    def test_01_main_flow_tour(self):
+        self.main_flow_tour()
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUiMobile(BaseTestUi):
+
+    browser_size = '375x667'
+
+    def test_01_main_flow_tour_mobile(self):
+
+        if odoo.release.version_info[-1] == 'e':
+            self.main_flow_tour()
+        else:
+            raise unittest.SkipTest("Mobile testing not needed in community")
