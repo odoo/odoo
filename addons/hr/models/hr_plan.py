@@ -50,7 +50,7 @@ class HrPlanActivityType(models.Model):
         elif self.responsible == 'other':
             responsible = self.responsible_id
             if not responsible:
-                raise UserError(_('No specific user given on activity.') % employee.name)
+                raise UserError(_('No specific user given on activity.'))
         return responsible
 
 
