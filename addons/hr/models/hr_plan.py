@@ -24,6 +24,10 @@ class HrPlanActivityType(models.Model):
     responsible_id = fields.Many2one('res.users', 'Responsible Person', help='Specific responsible of activity if not linked to the employee.')
     note = fields.Html('Note')
 
+    @api.onchange('responsible')
+    def _onchange_responsible(self):
+        self.responsible_id = False
+
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id and self.activity_type_id.summary and not self.summary:

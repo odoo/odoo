@@ -44,7 +44,8 @@
                                     <field name="activity_type_id"/>
                                     <field name="summary"/>
                                     <field name="responsible"/>
-                                    <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
+                                    <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"
+                                        force_save="1"/>
                                 </tree>
                             </field>
                         </group>
