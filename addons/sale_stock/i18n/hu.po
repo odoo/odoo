@@ -137,9 +137,9 @@ msgid ""
 msgstr ""
 "A termék konfigurációjától függően a kiszállított mennyiség az alábbi módokon számítható:\n"
 "  - Manuális: a mennyiség kézi megadása a soron\n"
-"  - Analitikus kiadás: a mennyiség a könyvelésre küldött kiadások összesítéséből számítódik\n"
+"  - Analitikusan kiadások alapján: a mennyiség a könyvelésre küldött kiadások összesítéséből számítódik\n"
 "  - Időnyilvántartás: a mennyiség az értékesítési rendelés soraihoz kapcsolt feladatokra rögzített órák összege\n"
-"  - Készletmozgások: a mennyiség a jóváhagyott kigyűjtések mennyisége\n"
+"  - Készletmozgások: a mennyiség a jóváhagyott kiszedések mennyisége\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -233,7 +233,7 @@ msgstr "Útvonal bekapcsolása értékesítési rendelés tétel soron"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr "Kivétel merült fel a kigyűjtésen:"
+msgstr "Kivétel(ek) merült(ek) fel a kiszedés kapcsán:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -391,12 +391,12 @@ msgstr "Csomag"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr "Kigyűjtési politika"
+msgstr "Kiszedési politika"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Pickings"
-msgstr "Kigyűjtések"
+msgstr "Kiszedések"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
