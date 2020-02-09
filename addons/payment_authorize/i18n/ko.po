@@ -3,8 +3,8 @@
 # 	* payment_authorize
 # 
 # Translators:
-# JH CHOI <hwangtog@gmail.com>, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Link Up링크업 <linkup.way@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr "계정이 없는 경우 영업 담당자에게 포털 접근 권한을 �
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API 클라이언트 키"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -41,7 +41,7 @@ msgstr "API 로그인 Id"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API 서명 키"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -61,6 +61,9 @@ msgid ""
 "Code: %s\n"
 "Message: %s"
 msgstr ""
+"Authorize.net 오류 :\n"
+"코드 : %s\n"
+"메시지 : %s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
@@ -78,7 +81,7 @@ msgstr "승인 : 누락된 참조(%s) 또는 trans_id(%s) 또는 fingerprint(%s)
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
-msgstr ""
+msgstr "클라이언트 키 생성"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -177,7 +180,7 @@ msgstr ""
 msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
-msgstr ""
+msgstr "클라이언트 키를 가져올 수 없습니다. API 로그인 및 트랜잭션 키가 올바른지 확인하십시오."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
