@@ -58,13 +58,13 @@
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Florian Hatat, 2019
-# Martin Trigaux, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # lcaodoo <lca@odoo.com>, 2019
 # Corentin Delacroix <edc@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
 # Frederic Gilson <frederic.gilson@logicasoft.eu>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -72,7 +72,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7647,6 +7647,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Adresse de la société</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Adresse de facturation</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Adresse de livraison</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Autre Adresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Adresse privée</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresse</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
