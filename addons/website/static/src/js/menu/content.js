@@ -9,6 +9,7 @@ var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 var websiteRootData = require('website.root');
 var Widget = require('web.Widget');
+var SeoConfigurator = require('website.seo').SeoConfigurator;
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -953,6 +954,7 @@ var PageManagement = Widget.extend({
         'click a.js_page_properties': '_onPagePropertiesButtonClick',
         'click a.js_clone_page': '_onClonePageButtonClick',
         'click a.js_delete_page': '_onDeletePageButtonClick',
+        'click a.js_seo_configurator': '_onSeoConfiguratorButtonClick',
     },
 
     //--------------------------------------------------------------------------
@@ -973,11 +975,46 @@ var PageManagement = Widget.extend({
             args: [moID],
         });
     },
+    /**
+     * Retrieving an HTML resource as a DOM using XMLHttpRequest
+     *
+     * @private
+     * @param {String} url
+     */
+    _getHtmlResource: function (url) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(new SeoConfigurator(self, {
+                    $targetPage: $(this.response.documentElement),
+                }));
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'document';
+            xhr.onerror = reject;
+            xhr.send();
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Open an SEO Configurator to promote the current page on the web
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSeoConfiguratorButtonClick : function (ev) {
+        return this._getHtmlResource(window.location.origin + ev.currentTarget.dataset.url).then(function (configurator) {
+            configurator.open();
+        }).catch(function (error) {
+            console.error(error.message, error.stack);
+            return false;
+        });
+    },
     _onPagePropertiesButtonClick: function (ev) {
         var moID = $(ev.currentTarget).data('id');
         var dialog = new PagePropertiesDialog(this,moID, {'fromPageManagement': true}).open();
