@@ -135,12 +135,12 @@ msgstr "${object.subject}"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr ""
+msgstr "3 방향 매칭"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr ""
+msgstr "3가지 일치 : 구매, 영수증 및 청구서"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.mail_template_data_notification_email_purchase_order
@@ -238,7 +238,7 @@ msgstr "취소됨"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
-msgstr ""
+msgstr "<strong>금액</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -307,7 +307,7 @@ msgstr "<strong>세금</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "<strong>The ordered quantity has been updated.</strong>"
-msgstr ""
+msgstr "<strong>주문 수량이 갱신되었습니다.</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -328,7 +328,7 @@ msgstr "<strong>단가</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>주문 참조 :</strong>"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:72
@@ -415,7 +415,7 @@ msgstr "평균금액"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
 msgid "Bill Control"
-msgstr ""
+msgstr "청구서 관리"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
@@ -430,7 +430,7 @@ msgstr "청구 수량"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr ""
+msgstr "청구된 수량 :"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -486,6 +486,8 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"입찰 요청은 특정 제품 세트에 대해 여러 공급 업체에 견적 요청을 생성하려는 경우 사용됩니다. 한 개의 공급업체에 견적을 직접 요청하거나"
+" 여러 공급업체의 제안을 비교하도록 입찰을 요청하게 상품별로 구성할 수 있습니다."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:95
@@ -606,7 +608,7 @@ msgstr "작업제어정책"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_move_created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr ""
+msgstr "생성된 구매 주문 명세"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
@@ -650,7 +652,7 @@ msgstr "검증 소요 날짜"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr ""
+msgstr "이용 약관 정의 ..."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_type_id
@@ -710,7 +712,7 @@ msgstr "이중 검증 금액"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "하위로 이동"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -775,7 +777,7 @@ msgstr "구매 주문 확인을 위해 2 단계의 승인을 받으십시오."
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr ""
+msgstr "제품 또는 공급업체에 대한 주문 경고"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -811,7 +813,7 @@ msgstr "ID"
 msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
-msgstr ""
+msgstr "사용 가능한 경우 공급업체 청구서에서 3가지 일치를 활성화합니다. 송장을 지불하려면 품목을 수령해야 합니다."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -869,12 +871,12 @@ msgstr "송장 발행"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
 msgid "Is Shipped"
-msgstr ""
+msgstr "선적 여부"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr ""
+msgstr "판매 모듈 설치 여부"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
@@ -936,7 +938,7 @@ msgstr "물류"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
-msgstr ""
+msgstr "주문한 상품을 수령한 청구서만 지불하십시오"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -946,7 +948,7 @@ msgstr "공급 업체 가격 관리"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr ""
+msgstr "구매 계약 관리 (입찰 요청, 일괄 주문 요청)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -982,6 +984,8 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"공급업체 영업제안 시간에 대한 오차 범위. 시스템이 제품 재구매를 위한 구매 주문을 생성할 때, 예상치 못한 공급업체 지연에 대처하기 "
+"위해 그 며칠 전에 예약될 것입니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -998,7 +1002,7 @@ msgstr "구매 주문 명세에 대한 메시지"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation_amount
 msgid "Minimum Amount"
-msgstr ""
+msgstr "최소 금액"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse_orderpoint
@@ -1028,7 +1032,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "배송 예정일을 다음으로 이동"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1144,7 +1148,7 @@ msgstr "일별 주문"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
-msgstr ""
+msgstr "주문한 수량 :"
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
@@ -1466,7 +1470,7 @@ msgstr "공급 업체에서 고객에게 직접 전달하려는 경우 주소를
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr ""
+msgstr "공급업체가 청구한 수량"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1532,7 +1536,7 @@ msgstr "수령한 수량"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
-msgstr ""
+msgstr "입고 수량 :"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1557,7 +1561,7 @@ msgstr "측정의 기준 단위"
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
-msgstr ""
+msgstr "이 구매 주문 요청을 생성한 전표 참조 (예 : 판매 주문)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1589,7 +1593,7 @@ msgstr "견적 요청 #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr ""
+msgstr "공급업체에게 고객에게 배달하도록 요청"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1617,7 +1621,7 @@ msgstr "반환 출고"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "지연을 피하기 위해 수령 일정을 일찍 계획하기"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
@@ -1634,7 +1638,7 @@ msgstr "구매 주문 검색"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "상품에 대한 보안 리드타임"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
@@ -1788,7 +1792,7 @@ msgstr ""
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
-msgstr ""
+msgstr "구매 주문 수량이 청구서보다 적습니다. 환불을 요청해야 합니다."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1843,6 +1847,8 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"이는 공급 업체가 고객에게 제공하도록 요청하기 위해 제품에 적용 할 수있는 운송 방법을 추가합니다. 직배송할 상품은 판매 주문이 확인되면"
+" 견적 요청 구매를 생성합니다. 이것은 주문형 흐름입니다. 요청된 배송 주소는 창고가 아닌 고객 배송 주소입니다."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1863,7 +1869,7 @@ msgstr "이 통화는 현재 파트너의 구매시 설정 된 통화 대신 사
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr ""
+msgstr "이 기본값은 생성된 모든 새 상품에 적용됩니다. 상품 세부 사항 양식에서 변경할 수 있습니다."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1890,7 +1896,7 @@ msgstr "이 공급 업체에는 구매 오더가 없습니다. 새 견적요청�
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "이것은 입고 선적의 운영 유형을 결정합니다"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1986,7 +1992,7 @@ msgstr "공급가액"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Untaxed Amount:"
-msgstr ""
+msgstr "공급가액 :"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
