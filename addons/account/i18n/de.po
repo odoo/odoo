@@ -51,7 +51,6 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Silvan Wyden <silvan.wyden@braintec-group.com>, 2019
 # Matt <matt.fasola@braintec-group.com>, 2019
-# Franziska Schutte <fsc@odoo.com>, 2019
 # Oliver Roch <oliver.roch@d9t.de>, 2019
 # Jürgen Bereuter <jub@matchcut.at>, 2019
 # e2f <projects@e2f.com>, 2019
@@ -91,22 +90,13 @@ msgid ""
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
 "    - Percentage of Price: The tax amount is a % of the price:\n"
-"        e.g 100 * 10% = 110 (not price included)\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
 "    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
-"\n"
-"- Steuergruppe: Die Steuer setzt sich aus einer Reihe von Nebensteuern zusammen.\n"
-"- Fix: Der Steuerbetrag bleibt gleich, unabhängig vom Preis.\n"
-"- Prozentsatz des Preises: Der Steuerbetrag ist ein % des Preises:\n"
-"Beispiel: 100 * 10% = 110 ( nicht im Preis inbegriffen)\n"
-"Beispiel: 110 / (1 + 10%) = 100 (im Preis inbegriffen.)\n"
-"Prozentsatz der enthaltenen Preissteuer: Der Steuerbetrag stellt sich aus der Aufteilung des Preises zusammen:\n"
-"Beispiel: 180 / (1 - 10%) = 200 (nicht im Preis inbegriffen)\n"
-"Beispiel: 200 * (1-10%) = 180 (im Preis inbegriffen)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits

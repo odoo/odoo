@@ -64,7 +64,7 @@
 # Fred Gilson <fgi@odoo.com>, 2019
 # Florian Hatat, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
-# Oriane Malburny <oma@odoo.com>, 2019
+# omaodoo <oma@odoo.com>, 2019
 # Vincent Luba <vincent@biz-4-africa.com>, 2019
 # Jonathan <jcs@odoo.com>, 2019
 # e34d4dcb8e697b071167e94624cfbccb, 2019
@@ -110,22 +110,13 @@ msgid ""
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
 "    - Percentage of Price: The tax amount is a % of the price:\n"
-"        e.g 100 * 10% = 110 (not price included)\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
 "    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
-"\n"
-"  - Groupe de taxes : La taxe est un ensemble de sous-impôts.\n"
-"  - Fixe : Le montant de la taxe reste le même quel que soit le prix.\n"
-"  - Pourcentage sur le prix hors taxes : Le montant de la taxe est un pourcentage direct du prix hors taxes, exemples avec une taxe à 10% :\n"
-"      100 * 10 % = 110 (base de prix = 100 HT)\n"
-"      110 / (1 + 10%) = 100 (base de prix = 110 TTC)\n"
-"  - Pourcentage sur le prix TTC (toutes taxes comprises) : Le lien entre le pourcentage et le montant de la taxe est plus complexe, exemples avec une taxe à 10% :\n"
-"      180 / (1 - 10%) = 200 (base de prix = 180 HT)\n"
-"      200 * (1 - 10%) = 180 (base de prix = 200 TTC)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
