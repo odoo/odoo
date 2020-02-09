@@ -43,8 +43,12 @@ var SearchFacet = Widget.extend({
      */
     _getFilterDescription: function (filter) {
         if (filter.type === 'field') {
-            var values = _.pluck(filter.autoCompleteValues, 'label');
-            return values.join(_t(' or '));
+            let filterDiscription = '';
+            for (const [index, value] of filter.autoCompleteValues.entries()) {
+                filterDiscription += index === 0 ? value.label
+                    : (value.operator === "AND" ? _t(' and ') : _t(' or ')) + value.label;
+            }
+            return filterDiscription;
         }
         var description = filter.description;
         if (filter.hasOptions) {
