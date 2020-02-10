@@ -15,13 +15,17 @@ logger = logging.getLogger('openerp.manage')
 DEFAULT_OPENERP_CONF = '/srv/openerp-server.conf'
 
 
-def start_bootstrap(dbname, config_path=None):
+def start_bootstrap(dbname, config_path=None, loglevel=None):
     """
     Heavily copy/paste from default openerp-server script.
     """
     os.environ["TZ"] = "UTC"
 
-    conf_args = ['--debug']  # Maybe useless?
+    conf_args = []
+
+    if loglevel:  # Sometime, needs to override default config from file
+        conf_args.append('--log-level')
+        conf_args.append(loglevel)
 
     conf_args.append('-c')
     if config_path:
