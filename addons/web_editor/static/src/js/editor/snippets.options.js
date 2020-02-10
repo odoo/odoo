@@ -82,31 +82,6 @@ function _buildRowElement(title, options) {
 
     return groupEl;
 }
-/**
- * Creates a proxy for an object where one property is replaced by a different
- * value. This value is captured in the closure and can be read and written to.
- *
- * @param {Object} obj - the object for which to create a proxy
- * @param {string} propertyName - the name/key of the property to replace
- * @param {*} value - the initial value to give to the property's copy
- * @returns {Proxy} a proxy of the object with the property replaced
- */
-function createPropertyProxy(obj, propertyName, value) {
-    return new Proxy(obj, {
-        get: function (obj, prop) {
-            if (prop === propertyName) {
-                return value;
-            }
-            return obj[prop];
-        },
-        set: function (obj, prop, val) {
-            if (prop === propertyName) {
-                return (value = val);
-            }
-            return Reflect.set(...arguments);
-        },
-    });
-}
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -1709,35 +1684,34 @@ const SnippetOptionWidget = Widget.extend({
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
-        const proms = this._userValueWidgets.map(async widget => {
+        for (const widget of this._userValueWidgets) {
             // Update widget value (for each method)
             const methodsNames = widget.getMethodsNames();
-            const proms = methodsNames.map(async methodName => {
+            for (const methodName of methodsNames) {
                 const params = widget.getMethodsParams(methodName);
 
-                let obj = this;
+                const $originalTarget = this.$target;
                 if (params.applyTo) {
-                    const $firstSubTarget = this.$(params.applyTo).eq(0);
+                    const $firstSubTarget = this.$(params.applyTo).first();
                     if (!$firstSubTarget.length) {
-                        return;
+                        continue;
                     }
-                    obj = createPropertyProxy(this, '$target', $firstSubTarget);
+                    this.$target = $firstSubTarget;
                 }
 
-                const value = await this._computeWidgetState.call(obj, methodName, params);
+                const value = await this._computeWidgetState(methodName, params);
+                this.$target = $originalTarget;
                 if (value === undefined) {
-                    return;
+                    continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
                 widget.setValue(normalizedValue, methodName);
-            });
-            await Promise.all(proms);
+            }
 
             // Refresh the UI of all widgets (after all the current values they
             // hold have been updated).
-            return widget.updateUI(widget === forced);
-        });
-        await Promise.all(proms);
+            widget.updateUI(widget === forced);
+        }
 
         if (!noVisibility) {
             await this.updateUIVisibility();
@@ -1750,23 +1724,24 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise}
      */
     updateUIVisibility: async function () {
-        const proms = this._userValueWidgets.map(async widget => {
+        for (const widget of this._userValueWidgets) {
             const params = widget.getMethodsParams();
 
-            let obj = this;
+            const $originalTarget = this.$target;
             if (params.applyTo) {
-                const $firstSubTarget = this.$(params.applyTo).eq(0);
+                const $firstSubTarget = this.$(params.applyTo).first();
                 if (!$firstSubTarget.length) {
                     widget.toggleVisibility(false);
-                    return;
+                    continue;
                 }
-                obj = createPropertyProxy(this, '$target', $firstSubTarget);
+                this.$target = $firstSubTarget;
             }
 
-            const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+            const show = await this._computeWidgetVisibility(widget.getName(), params);
+            this.$target = $originalTarget;
             if (!show) {
                 widget.toggleVisibility(false);
-                return;
+                continue;
             }
 
             const dependencies = widget.getDependencies();
@@ -1790,12 +1765,10 @@ const SnippetOptionWidget = Widget.extend({
             });
 
             widget.toggleVisibility(dependenciesOK);
-        });
+        }
 
         const showUI = await this._computeVisibility();
         this.el.classList.toggle('d-none', !showUI);
-
-        return Promise.all(proms);
     },
 
     //--------------------------------------------------------------------------
@@ -2058,12 +2031,13 @@ const SnippetOptionWidget = Widget.extend({
             const params = widget.getMethodsParams(methodName);
 
             if (params.applyTo) {
+                const $originalTarget = this.$target;
                 const $subTargets = this.$(params.applyTo);
-                const proms = _.each($subTargets, subTargetEl => {
-                    const proxy = createPropertyProxy(this, '$target', $(subTargetEl));
-                    return this[methodName].call(proxy, previewMode, widgetValue, params);
-                });
-                await Promise.all(proms);
+                for (const subTargetEl of $subTargets) {
+                    this.$target = $(subTargetEl);
+                    await this[methodName](previewMode, widgetValue, params);
+                }
+                this.$target = $originalTarget;
             } else {
                 await this[methodName](previewMode, widgetValue, params);
             }
