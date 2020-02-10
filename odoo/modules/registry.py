@@ -239,6 +239,12 @@ class Registry(Mapping):
         lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
+        if env.all.tocompute:
+            _logger.error(
+                "Remaining fields to compute before setting up registry: %s",
+                env.all.tocompute, stack_info=True,
+            )
+
         # add manual models
         if self._init_modules:
             env['ir.model']._add_manual_models()
