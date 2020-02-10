@@ -2059,7 +2059,7 @@ const SnippetOptionWidget = Widget.extend({
 
             if (params.applyTo) {
                 const $subTargets = this.$(params.applyTo);
-                const proms = _.each($subTargets, subTargetEl => {
+                const proms = _.map($subTargets, subTargetEl => {
                     const proxy = createPropertyProxy(this, '$target', $(subTargetEl));
                     return this[methodName].call(proxy, previewMode, widgetValue, params);
                 });
