@@ -78,9 +78,9 @@ class Attendee(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False, ignore_recurrence=False):
+    def _send_mail_to_attendees(self, invitation_template, force_send=False, ignore_recurrence=False):
         """ Send mail for event invitation to event attendees.
-            :param template_xmlid: xml id of the email template to use to send the invitation
+            :param invitation_template: the email template to use to send the invitation
             :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
             :param ignore_recurrence: ignore event recurrence
         """
@@ -90,9 +90,8 @@ class Attendee(models.Model):
             return res
 
         calendar_view = self.env.ref('calendar.view_calendar_event_calendar')
-        invitation_template = self.env.ref(template_xmlid, raise_if_not_found=False)
         if not invitation_template:
-            _logger.warning("Template %s could not be found. %s not notified." % (template_xmlid, self))
+            _logger.warning("No template passed to _send_mail_to_attendees. %s not notified.", self)
             return
         # get ics file for all meetings
         ics_files = self.mapped('event_id')._get_ics_file()

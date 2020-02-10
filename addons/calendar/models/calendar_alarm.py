@@ -33,6 +33,10 @@ class Alarm(models.Model):
         'Duration in minutes', store=True,
         search='_search_duration_minutes', compute='_compute_duration_minutes',
         help="Duration in minutes")
+    mail_template_id = fields.Many2one('mail.template', string="Email Template", domain=[('model', 'in', ['calendar.event', 'calendar.attendee'])],
+        default=lambda self: self.env.ref('calendar.calendar_template_meeting_reminder', False),
+        help="Template that would be used to send the reminder.")
+    body = fields.Text("Additional Message", help="Additional message that would be sent with the notification for the reminder")
 
     def _search_duration_minutes(self, operator, value):
         return [
