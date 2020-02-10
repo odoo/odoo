@@ -983,7 +983,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
                 except Exception as e:
-                    _logger.exception("Error while loading record")
+                    _logger.debug("Error while loading record", exc_info=True)
                     info = rec_data['info']
                     message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
                     moreinfo = _('Resolve other errors first')
