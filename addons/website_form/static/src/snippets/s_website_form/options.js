@@ -1097,13 +1097,15 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const params = {
                 field: {
                     name: name,
+                    id: Math.random().toString(36).substring(2, 15), // Big unique ID
                     required: isRequiredField,
                     formatInfo: {
                         multiPosition: multiInputsWrap.dataset.display,
                     }
                 }
             };
-            this._getListItems().forEach(record => {
+            this._getListItems().forEach((record, idx) => {
+                params.record_index = idx;
                 params.record = record;
                 const template = document.createElement('template');
                 template.innerHTML = qweb.render(`website_form.${type}`, params);
